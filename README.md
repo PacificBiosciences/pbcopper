@@ -6,7 +6,7 @@ for C++ applications.
 ## Getting Started
 
   - git clone https://github.com/PacificBiosciences/pbcopper.git
-  - mkdir build && cd build
+  - cd pbcopper && mkdir build && cd build
   - cmake .. 
   - make
  
