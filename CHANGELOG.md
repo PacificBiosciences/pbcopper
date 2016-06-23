@@ -9,11 +9,11 @@
 ## [0.0.1] - 2016-06-22
 
 ### Added
- - **PacBio::CLI** : command-line parsing & tool-contract integration
-   - CLI - entry-point methods for parsing args & invoking application callback
-   - Interface - define application's options, description, etc.
-   - Results - contains the results of arg parsing (or resolved tool contract), will be passed to the application callback
-   - ToolContract sub-namespace: contains all APIs for setting up tool contract integration
+- **PacBio::CLI** : command-line parsing & tool-contract integration
+  - CLI - entry-point methods for parsing args & invoking application callback
+  - Interface - define application's options, description, etc.
+  - Results - contains the results of arg parsing (or resolved tool contract), will be passed to the application callback
+  - ToolContract sub-namespace: contains all APIs for setting up tool contract integration
 - **PacBio::Data**: main data types & data structures
   - Interval, Position, Zmw - basic data types (same as pbbam)
   - MovieName - query parts of a PacBio movie name
