@@ -20,7 +20,7 @@ string formatOption(string optionOutput,
                     string description,
                     Json defaultValue)
 {
-    auto result = stringstream{ };
+    auto result = stringstream("");
     auto fullDescription = description;
     // if opt is not a switch & a default value is available, add to description
     if ( !defaultValue.is_boolean() && !defaultValue.empty()) {
@@ -80,7 +80,7 @@ string formatOption(string optionOutput,
 static
 string formatOptionNames(const Option& option)
 {
-    auto optionOutput = stringstream{ };
+    auto optionOutput = stringstream("");
     auto first = true;
     for(const auto& name : option.Names()) {
         if (first)
@@ -105,14 +105,14 @@ string formatOptionNames(const Option& option)
 static
 string makeHelpText(const Interface& interface)
 {
-    auto result = stringstream{ };
+    auto result = stringstream("");
 
     const auto options = interface.RegisteredOptions();
     const auto posArgs = interface.RegisteredPositionalArgs();
 
     // setup usage output
     {
-        auto usage = stringstream{ };
+        auto usage = stringstream("");
         usage << interface.ApplicationName();
         if (!options.empty())
             usage << " [options]";
