@@ -39,7 +39,7 @@ To build Doxygen API documentation: (**not yet available**)
   - MovieName - query parts of a PacBio movie name
   - ReadName - query parts of a PacBio read name
 - **PacBio::JSON** : JSON support
-  - Json - wrapper around nlohmann::json 
+  - Json - wrapper around [nlohmann::json](https://github.com/nlohmann/json) 
 - **PacBio::Logging** : logging utilities
   - Logger, LogMessage, etc - basic logging (same as pbccs)
 - **PacBio::Stream** : functional-programming-like data streaming
