@@ -10,9 +10,9 @@ namespace Utility {
 inline std::vector<std::string> Split(const std::string& line,
                                       const char delim)
 {
-    auto tokens     = std::vector<std::string>{ };
-    auto lineStream = std::stringstream{ line };
-    auto token      = std::string{ };
+    std::vector<std::string> tokens;
+    std::stringstream lineStream{ line };
+    std::string token;
     while (std::getline(lineStream, token, delim))
         tokens.push_back(token);
     return tokens;
