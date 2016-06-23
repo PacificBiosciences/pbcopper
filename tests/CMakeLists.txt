@@ -55,3 +55,14 @@ add_dependencies(check-quiet
     test_pbcopper
     pbcopper
 )
+
+# add 'make check-quiet' for 'make check' w/ simple pass/fail summary
+add_custom_target(check-xunit
+    COMMAND "test_pbcopper" "--gtest_output=xml:$ENV{CIRCLE_TEST_REPORTS}/"
+    WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/bin
+)
+add_dependencies(check-xunit
+    # list all explicitly to get re-compile on any changes to lib or tests
+    test_pbcopper
+    pbcopper
+)

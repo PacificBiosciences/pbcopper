@@ -11,8 +11,6 @@
 #include <memory>
 #include <string>
 
-#include <experimental/optional>
-
 namespace PacBio {
 namespace Data {
 

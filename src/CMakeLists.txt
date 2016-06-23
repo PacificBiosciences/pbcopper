@@ -1,6 +1,6 @@
 
 # define pbcopper library dependencies
-set(pbcopperwise_DependencyIncludes
+set(pbcopper_DependencyIncludes
     ${Boost_INCLUDE_DIRS}
     ${ZLIB_INCLUDE_DIRS}
 )
