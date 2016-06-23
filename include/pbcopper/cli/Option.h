@@ -62,7 +62,7 @@ public:
     Option(const std::string& id,
            const std::string& name,
            const std::string& description,
-           const JSON::Json& defaultValue = JSON::Json());
+           const JSON::Json& defaultValue = JSON::Json(nullptr));
 
     /// \brief Constructs a command line option object with the given arguments.
     ///
@@ -96,7 +96,7 @@ public:
     Option(const std::string& id,
            const std::vector<std::string>& names,
            const std::string& description,
-           const JSON::Json& defaultValue = JSON::Json());
+           const JSON::Json& defaultValue = JSON::Json(nullptr));
 
     /// \brief Constructs a command line option object with the given arguments.
     ///
@@ -130,7 +130,7 @@ public:
     Option(const std::string& id,
            const std::initializer_list<std::string>& names,
            const std::string& description,
-           const JSON::Json& defaultValue = JSON::Json());
+           const JSON::Json& defaultValue = JSON::Json(nullptr));
 
     Option(const Option& other);
     Option(Option&& other);
