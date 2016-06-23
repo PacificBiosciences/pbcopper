@@ -17,4 +17,4 @@ test:
         - pushd _build ; CC=gcc-4.8 CXX=g++-4.8 $(readlink -f ../_deps/cmake-3.3.0-Linux-x86_64/bin/cmake) -DBoost_INCLUDE_DIRS=$(readlink -f ../_deps/boost_1_55_0) -DGTEST_SRC_DIR=/usr/src/gtest ..    
 override:
         - pushd _build ; make 
-        - pushd _build ; make check
+        - pushd _build ; make check 
