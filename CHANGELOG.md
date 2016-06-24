@@ -6,6 +6,11 @@
 - Interface groups
 - Initial sequence-related data structures
 
+### Added
+- RSMovieName: Sequel and RSII movie names are composed of different data, and thus need to be handled separately.
+
+
+
 ## [0.0.1] - 2016-06-22
 
 ### Added

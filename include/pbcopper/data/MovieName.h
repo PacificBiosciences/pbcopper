@@ -23,11 +23,8 @@ public:
     explicit MovieName(std::string&& name);
 
     // create MovieName from name parts
-    MovieName(const std::string& runStartTime,
-              const std::string& instrumentSerialNumber,
-              const std::string& smrtCellBarcode,
-              const std::string& setNumber,
-              const std::string& partNumber);
+    MovieName(const std::string& instrumentSerialNumber,
+              const std::string& runStartTime);
 
     MovieName(void);
     MovieName(const MovieName& other);
@@ -42,11 +39,8 @@ public:
     /// \name Name Parts
     /// \{
 
-    boost::string_ref InstrumentSerialNumber(void) const;
-    boost::string_ref PartNumber(void) const;
+    boost::string_ref InstrumentName(void) const;
     boost::string_ref RunStartTime(void) const;
-    boost::string_ref SetNumber(void) const;
-    boost::string_ref SMRTCellBarcode(void) const;
 
     /// \}
 
@@ -54,7 +48,6 @@ public:
     /// \name Additional Methods & Operators
     /// \{
 
-    bool IsReagentExpired(void) const;
     std::string ToStdString(void) const;
 
     /// \}
