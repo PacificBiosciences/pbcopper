@@ -44,8 +44,7 @@ TEST(Data_MovieName, construct_from_name_parts)
 {
     EXPECT_NO_THROW(
     {
-        const MovieName m("54001",
-                         "160623_195125");
+        const MovieName m("54001", "160623_195125");
         EXPECT_EQ("160623_195125", m.RunStartTime());
         EXPECT_EQ("54001", m.InstrumentName());
     });
@@ -135,8 +134,7 @@ TEST(Data_MovieName, constructed_from_name_parts_prints_expected_value_to_output
 {
     const string expected = "m54001_160623_195125";
 
-    const MovieName m("54001",
-                      "160623_195125");
+    const MovieName m("54001", "160623_195125");
     stringstream s;
     s << m;
 

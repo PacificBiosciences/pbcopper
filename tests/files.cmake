@@ -22,6 +22,7 @@ set( pbcopperTest_CPP
     ${pbcopper_TestsDir}/src/data/test_MovieName.cpp
     ${pbcopper_TestsDir}/src/data/test_ReadName.cpp
     ${pbcopper_TestsDir}/src/data/test_RSMovieName.cpp
+    ${pbcopper_TestsDir}/src/data/test_RSReadName.cpp
 
     # JSON
     ${pbcopper_TestsDir}/src/json/test_JSON.cpp
