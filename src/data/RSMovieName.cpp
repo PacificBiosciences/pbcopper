@@ -1,7 +1,4 @@
 #include "pbcopper/data/RSMovieName.h"
-
-#include <memory>
-
 using namespace PacBio;
 using namespace PacBio::Data;
 using namespace std;
