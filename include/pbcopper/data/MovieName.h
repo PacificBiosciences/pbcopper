@@ -23,7 +23,7 @@ public:
     explicit MovieName(std::string&& name);
 
     // create MovieName from name parts
-    MovieName(const std::string& instrumentSerialNumber,
+    MovieName(const std::string& instrumentName,
               const std::string& runStartTime);
 
     MovieName(void);
