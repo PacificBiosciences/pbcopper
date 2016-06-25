@@ -1,7 +1,4 @@
 #include "pbcopper/data/MovieName.h"
-
-#include <memory>
-
 using namespace PacBio;
 using namespace PacBio::Data;
 using namespace std;
@@ -18,7 +15,6 @@ MovieName::MovieName(const std::string& instrumentName,
     result += "_";
     result += runStartTime;
     movieName_ = result;
-
     // don't update cache until actually requested
 }
 

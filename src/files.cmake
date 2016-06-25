@@ -60,7 +60,6 @@ set(pbcopper_H
 
     ${pbcopper_IncludeDir}/pbcopper/data/internal/Interval-inl.h
     ${pbcopper_IncludeDir}/pbcopper/data/internal/MovieName-inl.h
-    ${pbcopper_IncludeDir}/pbcopper/data/internal/ReadName-inl.h
     ${pbcopper_IncludeDir}/pbcopper/data/internal/ReadNameBase.h
     ${pbcopper_IncludeDir}/pbcopper/data/internal/ReadNameBase-inl.h
     ${pbcopper_IncludeDir}/pbcopper/data/internal/RSMovieName-inl.h
