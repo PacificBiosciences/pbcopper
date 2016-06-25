@@ -127,7 +127,6 @@ set(pbcopper_CPP
     # -------
 
     ${pbcopper_SourceDir}/data/MovieName.cpp
-    ${pbcopper_SourceDir}/data/ReadName.cpp
     ${pbcopper_SourceDir}/data/RSMovieName.cpp
 
     # ---------
