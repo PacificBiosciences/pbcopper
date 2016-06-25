@@ -6,26 +6,17 @@ using namespace PacBio;
 using namespace PacBio::Data;
 using namespace std;
 
-MovieName::MovieName(const std::string& runStartTime,
-                     const std::string& instrumentSerialNumber,
-                     const std::string& smrtCellBarcode,
-                     const std::string& setNumber,
-                     const std::string& partNumber)
+MovieName::MovieName(const std::string& instrumentName,
+                     const std::string& runStartTime)
     : partsCache_(nullptr)
 {
     // construct name from parts
     auto result = string{ };
     result.reserve(128);
     result += "m";
+    result += instrumentName;
+    result += "_";
     result += runStartTime;
-    result += "_";
-    result += instrumentSerialNumber;
-    result += "_";
-    result += smrtCellBarcode;
-    result += "_";
-    result += setNumber;
-    result += "_";
-    result += partNumber;
     movieName_ = result;
 
     // don't update cache until actually requested
@@ -41,42 +32,24 @@ void MovieName::UpdatePartsCache(void) const
     // calculate name parts
     const char underscore = '_';
     const size_t firstUnderscore  = movieName_.find(underscore);
-    const size_t secondUnderscore = movieName_.find(underscore, firstUnderscore+1);
-    const size_t thirdUnderscore  = movieName_.find(underscore, secondUnderscore+1);
-    const size_t fourthUnderscore = movieName_.find(underscore, thirdUnderscore+1);
-    const size_t fifthUnderscore  = movieName_.find(underscore, fourthUnderscore+1);
 
-    const auto movieCStr = movieName_.c_str();
-    const char* rstStart       = movieCStr + 1; // skip 'm' and include first '_'
-    const char* serialNumStart = movieCStr + secondUnderscore + 1; // skip '_'
-    const char* scbStart       = movieCStr + thirdUnderscore  + 1; // skip '_'
-    const char* setNumStart    = movieCStr + fourthUnderscore + 1; // skip '_'
-    const char* partNumStart   = movieCStr + fifthUnderscore  + 1; // skip '_'
-    const size_t rstSize       = (secondUnderscore - 1);
-    const size_t serialNumSize = (thirdUnderscore - secondUnderscore) - 1;  // skip '_'
-    const size_t scbSize       = (fourthUnderscore - thirdUnderscore) - 1;  // skip '_'
-    const size_t setNumSize    = (fifthUnderscore - fourthUnderscore) - 1;  // skip '_'
-    const size_t partNumSize   = (movieName_.size() - fifthUnderscore) - 1; // skip '\0 '
+    const char* movieCStr  = movieName_.c_str();
+    const char* nameStart = movieCStr + 1;
+    const char* rstStart  = movieCStr + firstUnderscore + 1; // skip '_'
+    const size_t nameSize = (firstUnderscore - 1);
+    const size_t rstSize  = (movieName_.size() - firstUnderscore) - 1; // skip '\0 '
 
     // cache name parts
     partsCache_.reset(new PartsCache
     {
-        boost::string_ref{ rstStart,       rstSize },       // runStartTime
-        boost::string_ref{ serialNumStart, serialNumSize }, // serialNumber
-        boost::string_ref{ scbStart,       scbSize },       // smrtCellBarcode
-        boost::string_ref{ setNumStart,    setNumSize },    // setNumber
-        boost::string_ref{ partNumStart,   partNumSize },   // partNumber
+        boost::string_ref{ nameStart, nameSize }, // instrumentName
+        boost::string_ref{ rstStart, rstSize }    // runStartTime
     });
 
     // checks - here? or elsewhere?
+    if (partsCache_->instrumentName_.empty())
+        throw runtime_error("MovieName: instrument name must not be empty");
     if (partsCache_->runStartTime_.empty())
         throw runtime_error("MovieName: run start time must not be empty");
-    if (partsCache_->serialNumber_.empty())
-        throw runtime_error("MovieName: instrument serial number must not be empty");
-    if (partsCache_->smrtCellBarcode_.empty())
-        throw runtime_error("MovieName: SMRT cell barcode must not be empty");
-    if (partsCache_->setNumber_.empty())
-        throw runtime_error("MovieName: set number must not be empty");
-    if (partsCache_->partNumber_.empty())
-        throw runtime_error("MovieName: part number must not be empty");
- }
+
+}

@@ -54,11 +54,16 @@ set(pbcopper_H
     ${pbcopper_IncludeDir}/pbcopper/data/MovieName.h
     ${pbcopper_IncludeDir}/pbcopper/data/Position.h
     ${pbcopper_IncludeDir}/pbcopper/data/ReadName.h
+    ${pbcopper_IncludeDir}/pbcopper/data/RSMovieName.h
+    ${pbcopper_IncludeDir}/pbcopper/data/RSReadName.h
     ${pbcopper_IncludeDir}/pbcopper/data/Zmw.h
 
     ${pbcopper_IncludeDir}/pbcopper/data/internal/Interval-inl.h
     ${pbcopper_IncludeDir}/pbcopper/data/internal/MovieName-inl.h
     ${pbcopper_IncludeDir}/pbcopper/data/internal/ReadName-inl.h
+    ${pbcopper_IncludeDir}/pbcopper/data/internal/ReadNameBase.h
+    ${pbcopper_IncludeDir}/pbcopper/data/internal/ReadNameBase-inl.h
+    ${pbcopper_IncludeDir}/pbcopper/data/internal/RSMovieName-inl.h
 
     # -------
     # JSON
@@ -122,7 +127,7 @@ set(pbcopper_CPP
     # -------
 
     ${pbcopper_SourceDir}/data/MovieName.cpp
-    ${pbcopper_SourceDir}/data/ReadName.cpp
+    ${pbcopper_SourceDir}/data/RSMovieName.cpp
 
     # ---------
     # logging

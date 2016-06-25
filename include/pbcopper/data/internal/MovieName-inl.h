@@ -13,11 +13,8 @@ namespace Data {
 
 struct MovieName::PartsCache
 {
+    boost::string_ref instrumentName_;
     boost::string_ref runStartTime_;
-    boost::string_ref serialNumber_;
-    boost::string_ref smrtCellBarcode_;
-    boost::string_ref setNumber_;
-    boost::string_ref partNumber_;
 };
 
 // NOTE: We're not going to re-calculate cache in copies until actually needed.
@@ -66,26 +63,12 @@ inline MovieName::MovieName(std::string&& name)
 
 inline MovieName::~MovieName(void) { }
 
-inline boost::string_ref MovieName::InstrumentSerialNumber(void) const
+inline boost::string_ref MovieName::InstrumentName(void) const
 {
     if (!partsCache_)
         UpdatePartsCache();
     assert(partsCache_);
-    return partsCache_->serialNumber_;
-}
-
-inline bool MovieName::IsReagentExpired(void) const
-{
-    const auto expiredStatus = PartNumber().at(0);
-    return expiredStatus == 'X' || expiredStatus == 'x';
-}
-
-inline boost::string_ref MovieName::PartNumber(void) const
-{
-    if (!partsCache_)
-        UpdatePartsCache();
-    assert(partsCache_);
-    return partsCache_->partNumber_;
+    return partsCache_->instrumentName_;
 }
 
 inline boost::string_ref  MovieName::RunStartTime(void) const
@@ -94,22 +77,6 @@ inline boost::string_ref  MovieName::RunStartTime(void) const
         UpdatePartsCache();
     assert(partsCache_);
     return partsCache_->runStartTime_;
-}
-
-inline boost::string_ref MovieName::SetNumber(void) const
-{
-    if (!partsCache_)
-        UpdatePartsCache();
-    assert(partsCache_);
-    return partsCache_->setNumber_;
-}
-
-inline boost::string_ref MovieName::SMRTCellBarcode(void) const
-{
-    if (!partsCache_)
-        UpdatePartsCache();
-    assert(partsCache_);
-    return partsCache_->smrtCellBarcode_;
 }
 
 inline std::string MovieName::ToStdString(void)const
