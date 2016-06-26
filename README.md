@@ -7,13 +7,13 @@ for C++ applications.
 
 Download repo & compile library:
 
-```git clone https://github.com/PacificBiosciences/pbcopper.git```
-
-```cd pbcopper && mkdir build && cd build```
-
- `cmake ..`
-
- `make`
+```sh
+git clone https://github.com/PacificBiosciences/pbcopper.git && cd pbcopper
+git submodule update --init
+mkdir build && cd build
+cmake ..
+make
+```
  
 To build & run tests:
 

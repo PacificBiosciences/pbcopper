@@ -7,6 +7,7 @@
 - Initial sequence-related data structures
 
 ### Added
+- Add gtest as submodule
 - RSMovieName & RSReadName: Sequel and RSII movie names are composed of
 different data, and thus need to be handled separately. MovieName & ReadName
 handle Sequel-style data as the default.
