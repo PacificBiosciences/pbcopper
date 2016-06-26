@@ -32,6 +32,14 @@ include(pbcopper-ccache)
 include(pbcopper-dependencies)
 include(pbcopper-libtype)
 
+# config generation
+include(pbcopper-gitsha1)
+find_git_sha1(COPPER_GIT_SHA1)
+configure_file(
+    ${pbcopper_IncludeDir}/pbcopper/utility/Version.h.in
+    ${CMAKE_BINARY_DIR}/generated/pbcopper/utility/Version.h
+)
+
 # project components
 add_subdirectory(src)
 add_subdirectory(docs)      # build with 'make doc' or 'make docs'

@@ -37,11 +37,12 @@ target_include_directories(pbcopper
     PUBLIC
     ${pbcopper_IncludeDir}
     ${pbcopper_DependencyIncludes}
+    ${CMAKE_BINARY_DIR}/generated
 )
 
 # export variables for projects that use pbcopper
 set(pbcopper_INCLUDE_DIRS
-    ${pbcopper_IncludeDir} ${pbcopper_DependencyIncludes}
+    ${pbcopper_IncludeDir} ${pbcopper_DependencyIncludes} ${CMAKE_BINARY_DIR}/generated
     CACHE INTERNAL
     "${PROJECT_NAME}: Include Directories"
     FORCE
