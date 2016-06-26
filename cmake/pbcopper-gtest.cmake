@@ -7,7 +7,7 @@ if (NOT GTEST_SRC_DIR)
     if(EXISTS ${PREBUILT_GTEST_SRC})
         set(GTEST_SRC_DIR ${PREBUILT_GTEST_SRC})
     else()
-        set(GTEST_SRC_DIR ${pbcopper_RootDir}/../gtest) # keep old fallback behavior for external builds, for now at least
+        set(GTEST_SRC_DIR ${pbcopper_ThirdParty}/gtest/googletest) # keep old fallback behavior for external builds, for now at least
     endif()
 endif()
 

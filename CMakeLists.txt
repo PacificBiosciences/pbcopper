@@ -17,6 +17,7 @@ set(pbcopper_DocsDir     ${pbcopper_RootDir}/docs)
 set(pbcopper_IncludeDir  ${pbcopper_RootDir}/include)
 set(pbcopper_SourceDir   ${pbcopper_RootDir}/src)
 set(pbcopper_TestsDir    ${pbcopper_RootDir}/tests)
+set(pbcopper_ThirdParty  ${pbcopper_RootDir}/third-party)
 
 if(NOT pbcopper_OutputDir)
     set(pbcopper_OutputDir ${pbcopper_RootDir})
