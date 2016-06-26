@@ -1,4 +1,4 @@
-# pbcopper
+# pbcopper [![CircleCI](https://circleci.com/gh/PacificBiosciences/pbcopper.svg?style=svg&circle-token=4fe4468113a44b8b76019c901f1b6930ef26944b)](https://circleci.com/gh/PacificBiosciences/pbcopper)
 
 The **pbcopper** library provides a suite of data structures, algorithms, and utilities 
 for C++ applications. 
