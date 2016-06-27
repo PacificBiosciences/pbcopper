@@ -2,6 +2,7 @@
 #include "pbcopper/cli/Interface.h"
 #include "pbcopper/json/JSON.h"
 #include "pbcopper/utility/EnumClassHash.h"
+#include "pbcopper/utility/Version.h"
 #include <stdexcept>
 #include <unordered_map>
 
@@ -12,14 +13,6 @@ using namespace PacBio::JSON;
 using namespace std;
 
 namespace PacBio {
-namespace Utility {
-
-// TODO: auto-generate this later and put somewhere public,
-//       but just getting this rocking for now
-//
-static const string LibraryVersion = "0.0.1";
-
-} // namespace Utility
 
 namespace CLI {
 
@@ -204,7 +197,7 @@ static Json makeTaskJson(const Interface& interface)
     const auto& task = interface.ToolContract().Task();
 
     Json tcJson;
-    tcJson["_comment"]    = "Created by v" + Utility::LibraryVersion;
+    tcJson["_comment"]    = "Created by v" + Utility::LibraryVersionString();
     tcJson["description"] = interface.ApplicationDescription();
     tcJson["name"]        = interface.ApplicationName();
 

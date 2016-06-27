@@ -7,6 +7,7 @@
 - Initial sequence-related data structures
 
 ### Added
+- Encapsulate project version and git sha1
 - RSMovieName & RSReadName: Sequel and RSII movie names are composed of
 different data, and thus need to be handled separately. MovieName & ReadName
 handle Sequel-style data as the default.
