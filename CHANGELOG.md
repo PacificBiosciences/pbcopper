@@ -11,7 +11,7 @@
 - RSMovieName & RSReadName: Sequel and RSII movie names are composed of
 different data, and thus need to be handled separately. MovieName & ReadName
 handle Sequel-style data as the default.
-
+- GoogleTest/GoogleMock in third-party/googletest
 
 ## [0.0.1] - 2016-06-22
 
@@ -47,3 +47,4 @@ handle Sequel-style data as the default.
   - cli_demo - playground for testing the command line interface
 - Tests
   - Unit tests for all classes/modules added
+

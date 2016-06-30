@@ -1,13 +1,12 @@
 
-# set up GoogleTest
-include(pbcopper-gtest)
+# GTest dependency
+find_package(Threads REQUIRED)
 
-# add pbcopper & GoogleTest include dirs
+# add pbcopper, pbcopper test, & GoogleTest include dirs
 include_directories(
     ${pbcopper_INCLUDE_DIRS}
     ${pbcopper_TestsDir}/include
-    ${gtest_SOURCE_DIR}/include
-    ${gtest_SOURCE_DIR}
+    ${pbcopper_ThirdPartyDir}/googletest
 )
 
 # grab unit test source files
@@ -27,9 +26,7 @@ set_target_properties(test_pbcopper
 )
 target_link_libraries(test_pbcopper
     ${pbcopper_LIBRARIES}
-    ${CMAKE_THREAD_LIBS_INIT} # quirky pthreads 
-    gtest
-    gtest_main
+    ${CMAKE_THREAD_LIBS_INIT}
 )
 
 # add unit tests exe to CTest framework
@@ -56,12 +53,12 @@ add_dependencies(check-quiet
     pbcopper
 )
 
-# add 'make check-quiet' for 'make check' w/ simple pass/fail summary
-add_custom_target(check-xunit
+# add 'make check-circleci' for 'make check' w/ XUnit output (on CircleCI)
+add_custom_target(check-circleci
     COMMAND "test_pbcopper" "--gtest_output=xml:$ENV{CIRCLE_TEST_REPORTS}/"
     WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/bin
 )
-add_dependencies(check-xunit
+add_dependencies(check-circleci
     # list all explicitly to get re-compile on any changes to lib or tests
     test_pbcopper
     pbcopper
