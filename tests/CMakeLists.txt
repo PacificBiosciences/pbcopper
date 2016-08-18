@@ -53,12 +53,11 @@ add_dependencies(check-quiet
     pbcopper
 )
 
-# add 'make check-circleci' for 'make check' w/ XUnit output (on CircleCI)
-add_custom_target(check-circleci
-    COMMAND "test_pbcopper" "--gtest_output=xml:$ENV{CIRCLE_TEST_REPORTS}/"
-    WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/bin
+# add 'make check-xunit' for 'make check' w/ XUnit output (on Bamboo)
+add_custom_target(check-xunit
+    COMMAND test_pbcopper --gtest_output=xml:${CMAKE_BINARY_DIR}/pbcopper-unit.xml
 )
-add_dependencies(check-circleci
+add_dependencies(check-xunit
     # list all explicitly to get re-compile on any changes to lib or tests
     test_pbcopper
     pbcopper
