@@ -5,18 +5,19 @@ cmake_policy(SET CMP0048 NEW)  # lets us set version in project()
 cmake_minimum_required(VERSION 3.0)
 
 project(pbcopper VERSION 0.0.1 LANGUAGES CXX C)
+enable_testing()
 
 # project options
 option(pbcopper_build_shared    "Build pbcopper as a shared library."         OFF)
-option(pbcopper_build_tests     "Build pbcopper's unit tests."                ON)
 option(pbcopper_use_ccache      "Build pbcopper using ccache, if available."  ON)
 
 # project paths
-set(pbcopper_RootDir     ${pbcopper_SOURCE_DIR})
-set(pbcopper_DocsDir     ${pbcopper_RootDir}/docs)
-set(pbcopper_IncludeDir  ${pbcopper_RootDir}/include)
-set(pbcopper_SourceDir   ${pbcopper_RootDir}/src)
-set(pbcopper_TestsDir    ${pbcopper_RootDir}/tests)
+set(pbcopper_RootDir       ${CMAKE_CURRENT_LIST_DIR})
+set(pbcopper_DocsDir       ${pbcopper_RootDir}/docs)
+set(pbcopper_IncludeDir    ${pbcopper_RootDir}/include)
+set(pbcopper_SourceDir     ${pbcopper_RootDir}/src)
+set(pbcopper_TestsDir      ${pbcopper_RootDir}/tests)
+set(pbcopper_ThirdPartyDir ${pbcopper_RootDir}/third-party)
 
 if(NOT pbcopper_OutputDir)
     set(pbcopper_OutputDir ${pbcopper_RootDir})
@@ -40,12 +41,11 @@ configure_file(
     ${CMAKE_BINARY_DIR}/generated/pbcopper/utility/Version.h
 )
 
-# project components
+# main library
 add_subdirectory(src)
+
+# project extras - only build on demand
+#
 add_subdirectory(docs)      # build with 'make doc' or 'make docs'
 add_subdirectory(examples)  # build with 'make examples'
-
-if(pbcopper_build_tests)
-    enable_testing()
-    add_subdirectory(tests)
-endif()
+add_subdirectory(tests)

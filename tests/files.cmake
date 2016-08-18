@@ -7,6 +7,10 @@ set( pbcopperTest_H
 # test case source files
 set( pbcopperTest_CPP
 
+    # GoogleTest
+    ${pbcopper_ThirdPartyDir}/googletest/gmock-gtest-all.cc
+    ${pbcopper_ThirdPartyDir}/googletest/gmock-gtest-main.cc
+
     # cli
     ${pbcopper_TestsDir}/src/cli/test_CLI.cpp
     ${pbcopper_TestsDir}/src/cli/test_HelpPrinter.cpp

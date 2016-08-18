@@ -7,25 +7,30 @@ for C++ applications.
 
 Download repo & compile library:
 
-```git clone https://github.com/PacificBiosciences/pbcopper.git```
-
-```cd pbcopper && mkdir build && cd build```
-
- `cmake ..`
-
- `make`
+```sh
+git clone https://github.com/PacificBiosciences/pbcopper.git && cd pbcopper
+mkdir build && cd build
+cmake ..
+make
+```
  
 To build & run tests:
 
- `make check`       
+```sh
+make check
+```
 
 To build examples:
 
- `make examples` 
+```sh
+make examples
+```
 
 To build Doxygen API documentation: (**not yet available**)
 
- `make docs` 
+```sh
+make docs
+```
 
 ## API Overview - main modules 
 
