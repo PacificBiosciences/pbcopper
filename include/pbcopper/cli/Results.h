@@ -32,7 +32,12 @@ public:
     ///
     Results(const Interface& interface);
 
+    Results(const Interface& interface,
+            const std::vector<std::string>& inputCommandLine);
+
     Results(const Results& other);
+    Results& operator=(const Results& other);
+
     ~Results(void);
 
     /// \}
@@ -46,6 +51,12 @@ public:
     /// \return
     ///
     const Interface& ApplicationInterface(void) const;
+
+    ///
+    /// \brief InputCommandLine
+    /// \return
+    ///
+    std::string InputCommandLine(void) const;
 
     ///
     /// \brief PositionalArguments

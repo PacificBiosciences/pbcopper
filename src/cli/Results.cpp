@@ -1,6 +1,7 @@
 #include "pbcopper/cli/Results.h"
 
 #include "pbcopper/json/JSON.h"
+#include "pbcopper/utility/StringUtils.h"
 
 #include <unordered_map>
 #include <set>
@@ -21,12 +22,15 @@ class ResultsPrivate
 {
 public:
     PacBio::CLI::Interface interface_;
+    vector<string> inputCommandLine_;
     Json options_;
     vector<string> positionalArgs_;
 
 public:
-    ResultsPrivate(const Interface& interface)
+    ResultsPrivate(const Interface& interface,
+                   const vector<string>& inputCommandLine)
         : interface_(interface)
+        , inputCommandLine_(inputCommandLine)
     {
         // init with default values
         const auto& registeredOptions = interface_.RegisteredOptions();
@@ -47,14 +51,30 @@ public:
 // ------------------------
 
 Results::Results(const Interface& interface)
-    : d_(new internal::ResultsPrivate{ interface })
+    : d_(new internal::ResultsPrivate{ interface, vector<string>() })
+{ }
+
+Results::Results(const Interface& interface,
+                 const vector<string>& inputCommandLine)
+    : d_(new internal::ResultsPrivate{ interface, inputCommandLine })
 { }
 
 Results::Results(const Results& other)
     : d_(new internal::ResultsPrivate{*other.d_.get()})
 { }
 
+Results& Results::operator=(const Results& other)
+{
+    d_.reset(new internal::ResultsPrivate{*other.d_.get()});
+    return *this;
+}
+
 Results::~Results(void) { }
+
+string Results::InputCommandLine(void) const
+{
+    return Utility::Join(d_->inputCommandLine_, " ");
+}
 
 Results& Results::RegisterOptionValue(const string& optionId,
                                       const Json& optionValue)

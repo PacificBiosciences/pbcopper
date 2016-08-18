@@ -41,6 +41,8 @@ public:
 
 void ParserPrivate::Parse(const vector<string>& args)
 {
+    results_ = Results{ interface_, args };
+
     const auto doubleDash = "--";
     const auto dash  = '-';
     const auto equal = '=';

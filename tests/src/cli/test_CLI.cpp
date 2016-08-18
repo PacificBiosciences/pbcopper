@@ -139,6 +139,16 @@ static int appRunner(const PacBio::CLI::Results& args)
     return mainAppEntry(s);
 }
 
+static int inputCommandLineChecker(const PacBio::CLI::Results& results)
+{
+    const string expectedCommandLine =
+    {
+        "frobber -f --timeout=42 --target-dir /path/to/dir/ requiredIn requiredOut"
+    };
+    EXPECT_EQ(expectedCommandLine, results.InputCommandLine());
+    return EXIT_SUCCESS;
+}
+
 struct RtcGenerator
 {
 public:
@@ -330,6 +340,23 @@ TEST(CLI_Runner, runs_application_from_C_style_args)
     PacBio::CLI::Run(argc, argv,
                      PacBio::CLI::tests::makeInterface(),
                      &PacBio::CLI::tests::appRunner);
+}
+
+TEST(CLI_Runner, can_retrieve_input_commandline)
+{
+    SCOPED_TRACE("checking input command line");
+    const vector<string> args =
+    {
+        PacBio::CLI::tests::appName(),
+        "-f",
+        "--timeout=42",
+        "--target-dir", "/path/to/dir/",
+        "requiredIn",
+        "requiredOut"
+    };
+    PacBio::CLI::Run(args,
+                     PacBio::CLI::tests::makeInterface(),
+                     &PacBio::CLI::tests::inputCommandLineChecker);
 }
 
 TEST(CLI_Runner, runs_application_from_resolved_tool_contract)
