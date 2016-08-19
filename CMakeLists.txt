@@ -10,6 +10,9 @@ enable_testing()
 # project options
 option(pbcopper_build_shared    "Build pbcopper as a shared library."         OFF)
 option(pbcopper_use_ccache      "Build pbcopper using ccache, if available."  ON)
+option(pbcopper_build_tests     "Build pbcopper tests."                       ON)
+option(pbcopper_build_docs      "Build pbcopper docs."                        ON)
+option(pbcopper_build_examples  "Build pbcopper examples."                    ON)
 
 # project paths
 set(pbcopper_RootDir       ${CMAKE_CURRENT_LIST_DIR})
@@ -46,6 +49,14 @@ add_subdirectory(src)
 
 # project extras - only build on demand
 #
-add_subdirectory(docs)      # build with 'make doc' or 'make docs'
-add_subdirectory(examples)  # build with 'make examples'
-add_subdirectory(tests)
+if (pbcopper_build_docs)
+    add_subdirectory(docs)      # build with 'make doc' or 'make docs'
+endif()
+
+if (pbcopper_build_examples)
+    add_subdirectory(examples)  # build with 'make examples'
+endif()
+
+if (pbcopper_build_tests)
+    add_subdirectory(tests)
+endif()
