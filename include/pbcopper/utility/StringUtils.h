@@ -7,6 +7,12 @@
 namespace PacBio {
 namespace Utility {
 
+std::string Join(const std::vector<std::string>& input,
+                 const std::string& delim);
+
+std::string Join(const std::vector<std::string>& input,
+                 const char delim);
+
 std::vector<std::string> Split(const std::string& line,
                                const char delim = '\t');
 
