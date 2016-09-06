@@ -41,6 +41,9 @@ inline std::map<std::string, std::string> Task::Options(void) const
 inline Task& Task::Options(const std::map<std::string, std::string>& optionDisplayNames)
 { optionDisplayNames_ = optionDisplayNames; return *this; }
 
+inline Task& Task::AddOption(const std::pair<std::string, std::string>& optionConfig)
+{ optionDisplayNames_.insert(optionConfig); return *this; }
+
 inline std::vector<OutputFileType> Task::OutputFileTypes(void) const
 { return outputFileTypes_; }
 

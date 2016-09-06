@@ -148,6 +148,13 @@ public:
     ///
     Task& Options(const std::map<std::string, std::string>& optionConfigs);
 
+    ///
+    /// \brief Add single option
+    /// \param OptionConfig 
+    /// \return
+    ///
+    Task& AddOption(const std::pair<std::string, std::string>& optionConfig);
+
     /// \}
 
 public:
