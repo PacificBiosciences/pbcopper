@@ -1,6 +1,8 @@
 #include "pbcopper/cli/HelpPrinter.h"
 #include "pbcopper/cli/Interface.h"
 #include "pbcopper/json/JSON.h"
+#include <sys/ioctl.h>
+#include <unistd.h>
 #include <algorithm>
 #include <sstream>
 #include <string>
@@ -20,6 +22,10 @@ string formatOption(string optionOutput,
                     string description,
                     Json defaultValue)
 {
+    struct winsize ws;
+    ioctl(STDOUT_FILENO, TIOCGWINSZ, &ws);
+    const size_t ncol = (ws.ws_col < 2) ? 79 : ws.ws_col - 1;
+
     stringstream result("");
     auto fullDescription = description;
     // if opt is not a switch & a default value is available, add to description
@@ -37,7 +43,7 @@ string formatOption(string optionOutput,
     const auto indent = result.str().length();
     auto lineStart     = size_t{ 0 };
     auto lastBreakable = string::npos;
-    const auto max     = size_t{ 79 - indent };
+    const auto max     = size_t{ ncol - indent };
     auto x             = size_t{ 0 };
     const auto len = fullDescription.length();
 
