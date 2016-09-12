@@ -67,6 +67,12 @@ public:
     ///
     std::string ApplicationVersion(void) const;
 
+    ///
+    /// \brief AlternativeToolContractName
+    /// \return
+    ///
+    std::string AlternativeToolContractName(void) const;
+
     /// \}
 
 public:
@@ -136,6 +142,16 @@ public:
     /// \return
     ///
     Interface& ApplicationVersion(const std::string& version);
+
+    ///
+    /// \brief AlternativeToolContractName
+    /// This name, if set, will be used as the alternative prefix of the
+    /// tool contract option prefix and replace the actual ApplicationName.
+    ///
+    /// \param name
+    /// \return
+    ///
+    Interface& AlternativeToolContractName(const std::string& name);
 
     /// \}
 
