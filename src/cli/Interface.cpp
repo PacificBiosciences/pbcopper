@@ -23,6 +23,7 @@ public:
     string appName_;
     string appDescription_;
     string appVersion_;
+    string alternativeToolContractName_;
 
     // parsing mode/status
     SingleDashMode singleDashMode_;
@@ -185,6 +186,12 @@ string Interface::ApplicationVersion(void) const
 
 Interface& Interface::ApplicationVersion(const string& version)
 { d_->appVersion_ = version; return *this; }
+
+string Interface::AlternativeToolContractName(void) const
+{ return d_->alternativeToolContractName_; }
+
+Interface& Interface::AlternativeToolContractName(const string& version)
+{ d_->alternativeToolContractName_ = version; return *this; }
 
 Interface& Interface::EnableToolContract(const ToolContract::Config& tcConfig)
 {

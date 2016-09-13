@@ -127,12 +127,15 @@ static Json makeSchemaOptionsJson(const Interface& interface)
     const auto& task = interface.ToolContract().Task();
     const auto& taskOptions = task.Options();
 
+    const auto optionPrefix = interface.AlternativeToolContractName().empty()
+                                ? interface.ApplicationName()
+                                : interface.AlternativeToolContractName();
+
     for (const auto& taskOption : taskOptions) {
 
         const std::string& optionId = taskOption.first;
         const std::string& optionDisplayName = taskOption.second;
-        const std::string fullOptionId = interface.ApplicationName() +
-                ".task_options." + optionId;
+        const std::string fullOptionId = optionPrefix + ".task_options." + optionId;
 
         const Option registeredOption = RegisteredOption(interface, optionId);
         const std::string optionDescription = registeredOption.Description();
