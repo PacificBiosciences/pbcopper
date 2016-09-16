@@ -205,7 +205,7 @@ static Json makeTaskJson(const Interface& interface)
     tcJson["name"]        = interface.ApplicationName();
 
     const auto numProcessors = task.NumProcessors();
-    if (numProcessors == 0)
+    if (numProcessors == Task::MAX_NPROC)
         tcJson["nproc"] = "$max_nproc";
     else
         tcJson["nproc"] = numProcessors;

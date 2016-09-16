@@ -20,6 +20,17 @@ namespace ToolContract {
 class Task
 {
 public:
+
+    /// Used to indicate that the maximum number of available processors, as
+    /// determined by the tool contract resolving system, should be used for
+    /// this task.
+    ///
+    /// The actual integer value (zero) is not used; instead this should be
+    /// considered more of a "sentinel" value.
+    ///
+    static const uint16_t MAX_NPROC = 0;
+
+public:
     /// \name Constructors & Related Methods
     /// \{
 
@@ -52,6 +63,9 @@ public:
 
     ///
     /// \brief NumProcessors
+    ///
+    /// Default is 1.
+    ///
     /// \return
     ///
     uint16_t NumProcessors(void) const;
@@ -116,6 +130,13 @@ public:
 
     ///
     /// \brief NumProcessors
+    ///
+    /// Set an explicit number of processors for this task (default is 1).
+    ///
+    /// Task::MAX_NPROC can be used here to let the tool contract resolving
+    /// system determine the actual processor count. Using \p nProc of 0 yields
+    /// the same effect.
+    ///
     /// \param nProc
     /// \return
     ///
