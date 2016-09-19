@@ -204,7 +204,12 @@ static Json makeTaskJson(const Interface& interface)
     tcJson["description"] = interface.ApplicationDescription();
     tcJson["name"]        = interface.ApplicationName();
 
-    tcJson["nproc"]            = task.NumProcessors();
+    const auto numProcessors = task.NumProcessors();
+    if (numProcessors == Task::MAX_NPROC)
+        tcJson["nproc"] = "$max_nproc";
+    else
+        tcJson["nproc"] = numProcessors;
+
     tcJson["is_distributed"]   = task.IsDistributed();
     tcJson["tool_contract_id"] = task.TaskId();
 
