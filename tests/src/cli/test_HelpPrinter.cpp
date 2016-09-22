@@ -22,8 +22,9 @@ TEST(CLI_HelpPrinter, prints_expected_help_output)
     i.AddOptions({
         {"progress",   {"p"},               "Show progress during copy."},
         {"force",      {"f", "force"},      "Overwrite things." },
-        {"target_dir", {"t", "target-dir"}, "Copy all source files into <DIR>.",         Option::StringType("my/default/dir")},//,          "DIR",    "my/default/dir"},
-        {"timeout",    {"timeout"},         "Abort execution after <INT> milliseconds.", Option::IntType(5000)}//,  "INT",    "5000"}
+        {"target_dir", {"t", "target-dir"}, "Copy all source files into <DIR>.",         Option::StringType("my/default/dir")},
+        {"timeout",    {"timeout"},         "Abort execution after <INT> milliseconds.", Option::IntType(5000)},
+        {"modelPath",  {"M", "modelPath"},  "Path to a model file.",                     Option::StringType("")}  // empty default string should be omitted from help
     });
     i.AddPositionalArguments({
         {"source", "Source file to copy."},
@@ -43,6 +44,7 @@ TEST(CLI_HelpPrinter, prints_expected_help_output)
         "  -f,--force       Overwrite things.\n"
         "  -t,--target-dir  Copy all source files into <DIR>. [\"my/default/dir\"]\n"
         "  --timeout        Abort execution after <INT> milliseconds. [5000]\n"
+        "  -M,--modelPath   Path to a model file.\n"
         "\n"
         "Arguments: \n"
         "  source           Source file to copy.\n"

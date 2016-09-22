@@ -53,10 +53,11 @@ PacBio::CLI::Interface createParser(void)
     cl.AddVerboseOption();
     cl.AddVersionOption();
     cl.AddOptions({
-        {"progress", {"p"},              "Show progress while doing the things."},
-        {"force",    {"f", "force"},     "Overwrite the things ruthlessly." },
-        {"temp_dir", {"t", "temp-dir"},  "Do the temp things in this directory.",       Option::StringType("my/default/tmp/dir")},
-        {"timeout",  {"timeout"},        "Abort execution after so many milliseconds.", Option::IntType(5000)}
+        {"progress",   {"p"},              "Show progress while doing the things."},
+        {"force",      {"f", "force"},     "Overwrite the things ruthlessly." },
+        {"temp_dir",   {"t", "temp-dir"},  "Do the temp things in this directory.",       Option::StringType("my/default/tmp/dir")},
+        {"timeout",    {"timeout"},        "Abort execution after so many milliseconds.", Option::IntType(5000)},
+        {"modelPath",  {"M", "modelPath"}, "Path to a model file.",                       Option::StringType("")}
     });
     cl.AddPositionalArguments({
         {"source", "Source file for getting the things.", "<source>"},
