@@ -10,7 +10,7 @@ namespace ToolContract {
 inline Task::Task(const std::string& taskId)
     : id_(taskId)
     , nProc_(1)
-    , isDistributed_(false)
+    , isDistributed_(true)
     , type_(TaskType::STANDARD)
 { }
 

@@ -32,7 +32,7 @@ static string MakeToolContractText(const string nProc)
                         "\"title\":\"Txt file\""
                     "}"
                 "],"
-                "\"is_distributed\":false,"
+                "\"is_distributed\":true,"
                 "\"name\":\"frobber\","
                 "\"nproc\":"
     };
