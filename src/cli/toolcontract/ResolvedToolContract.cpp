@@ -60,6 +60,11 @@ Results ResolvedToolContract::Parse(istream& in)
         results.RegisterOptionValue(optionId, value);
     }
 
+    // log_level
+    const Json log_level = rtc["log_level"];
+    const string logLevelString = log_level;
+    results.LogLevel(PacBio::Logging::LogLevel{logLevelString});
+
     // input file (array)
     const Json inputFiles = rtc["input_files"];
     for (const auto& inputFile : inputFiles)

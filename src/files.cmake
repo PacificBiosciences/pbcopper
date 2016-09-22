@@ -12,7 +12,6 @@ set(pbcopper_H
     # cli
     # -------
 
-    ${pbcopper_IncludeDir}/pbcopper/cli/BuiltInOption.h
     ${pbcopper_IncludeDir}/pbcopper/cli/CLI.h
     ${pbcopper_IncludeDir}/pbcopper/cli/HelpPrinter.h
     ${pbcopper_IncludeDir}/pbcopper/cli/Interface.h
@@ -111,6 +110,7 @@ set(pbcopper_CPP
     ${pbcopper_SourceDir}/cli/CLI.cpp
     ${pbcopper_SourceDir}/cli/HelpPrinter.cpp
     ${pbcopper_SourceDir}/cli/Interface.cpp
+    ${pbcopper_SourceDir}/cli/Option.cpp
     ${pbcopper_SourceDir}/cli/Parser.cpp
     ${pbcopper_SourceDir}/cli/Results.cpp
     ${pbcopper_SourceDir}/cli/VersionPrinter.cpp

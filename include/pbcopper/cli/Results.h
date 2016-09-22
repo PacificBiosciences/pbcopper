@@ -4,6 +4,7 @@
 #include "pbcopper/Config.h"
 #include "pbcopper/cli/Interface.h"
 #include "pbcopper/cli/Option.h"
+#include "pbcopper/logging/Logging.h"
 #include "pbcopper/json/JSON.h"
 #include <string>
 #include <unordered_map>
@@ -59,6 +60,18 @@ public:
     std::string InputCommandLine(void) const;
 
     ///
+    /// \brief LogLevel
+    ///
+    /// Default level
+    ///
+    /// \note Currently only set by resolved tool contract. Setting from
+    ///       command-line will follow shortly.
+    ///
+    /// \return
+    ///
+    PacBio::Logging::LogLevel LogLevel(void) const;
+
+    ///
     /// \brief PositionalArguments
     /// \return
     ///
@@ -85,6 +98,8 @@ public:
 public:
     /// \name Results Construction
     /// \{
+
+    Results& LogLevel(const PacBio::Logging::LogLevel logLevel);
 
     ///
     /// \brief Registers observed positional arg.

@@ -30,6 +30,36 @@ public:
     using StringType = JSON::Json::string_t;
 
 public:
+    /// \name Default Options
+    /// \{
+
+    ///
+    /// \brief DefaultHelpOption
+    /// \return
+    ///
+    static const Option& DefaultHelpOption(void);
+
+    ///
+    /// \brief DefaultLogLevelOption
+    /// \return
+    ///
+    static const Option& DefaultLogLevelOption(void);
+
+    ///
+    /// \brief DefaultVerboseOption
+    /// \return
+    ///
+    static const Option& DefaultVerboseOption(void);
+
+    ///
+    /// \brief DefaultVersionOption
+    /// \return
+    ///
+    static const Option& DefaultVersionOption(void);
+
+    /// \}
+
+public:
     /// \name Constructors & Related Methods
     /// \{
 

@@ -34,10 +34,12 @@ LogLevel LogLevelFromString(const std::string& level)
     if (level == "DEBUG")    return LogLevel::DEBUG;
     if (level == "INFO")     return LogLevel::INFO;
     if (level == "NOTICE")   return LogLevel::NOTICE;
-    if (level == "WARN")     return LogLevel::WARN;
     if (level == "ERROR")    return LogLevel::ERROR;
     if (level == "CRITICAL") return LogLevel::CRITICAL;
     if (level == "FATAL")    return LogLevel::FATAL;
+    if (level == "WARN" || level == "WARNING")
+        return LogLevel::WARN;
+
     throw std::invalid_argument("invalid log level");
 }
 

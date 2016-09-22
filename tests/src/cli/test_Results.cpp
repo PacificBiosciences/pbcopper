@@ -72,4 +72,3 @@ TEST(CLI_Results, adding_positional_args)
 //    EXPECT_EQ(string("dest_file"),   r.PositionalArgument("dest"));
 //    EXPECT_EQ(string("source_file"), r.PositionalArgument("source"));
 }
-

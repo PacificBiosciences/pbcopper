@@ -1,5 +1,4 @@
 #include "pbcopper/cli/Interface.h"
-#include "pbcopper/utility/EnumClassHash.h"
 #include <boost/optional.hpp>
 #include <unordered_map>
 #include <cassert>
@@ -14,9 +13,6 @@ namespace internal {
 class InterfacePrivate
 {
     typedef unordered_map<string, size_t>  NameLookup;
-    typedef unordered_map<BuiltInOption,
-                          bool,
-                          Utility::EnumClassHash> BuiltInLookup;
 
 public:
     // application info
@@ -34,9 +30,13 @@ public:
     vector<Option>        options_;
     vector<PositionalArg> positionalArgs_;
     NameLookup    optionNameLookup_;
-    BuiltInLookup usingBuiltInOptions_;
 
     boost::optional<ToolContract::Config> tcConfig_;
+
+    boost::optional<Option> helpOption_;
+    boost::optional<Option> logLevelOption_;
+    boost::optional<Option> verboseOption_;
+    boost::optional<Option> versionOption_;
 
 public:
     InterfacePrivate(const string& appName,
@@ -48,38 +48,21 @@ public:
         , singleDashMode_(SingleDashMode::ParseAsShortOptions)
         , isParsed_(false)
         , tcConfig_(boost::none)
+        , helpOption_(boost::none)
+        , logLevelOption_(boost::none)
+        , verboseOption_(boost::none)
+        , versionOption_(boost::none)
     {
         if (appName_.empty())
-            throw runtime_error("CLI::Interface: application name must not be empty");
-
-        // initialize defaults - only turn on those requested
-        usingBuiltInOptions_[BuiltInOption::Help]    = false;
-        usingBuiltInOptions_[BuiltInOption::Version] = false;
-        usingBuiltInOptions_[BuiltInOption::Verbose] = false;
-        usingBuiltInOptions_[BuiltInOption::EmitToolContract]     = false;
-        usingBuiltInOptions_[BuiltInOption::ResolvedToolContract] = false;
+            throw runtime_error("CLI::Interface - application name must not be empty");
     }
 
     InterfacePrivate(const InterfacePrivate& other) = default;
 
 public:
-    void AddBuiltInOption(const BuiltInOption& type, const Option& option);
     void AddOption(const Option& option);
     void AddPositionalArgument(PositionalArg posArg);
 };
-
-void InterfacePrivate::AddBuiltInOption(const BuiltInOption& type,
-                                        const Option& option)
-{
-    // register built-in
-    auto found = usingBuiltInOptions_.find(type);
-    if (found == usingBuiltInOptions_.end())
-        throw std::runtime_error("CLI::Interface - unsupported built-in option requested");
-    found->second = true;
-
-    // add option
-    AddOption(option);
-}
 
 void InterfacePrivate::AddOption(const Option& option)
 {
@@ -89,7 +72,7 @@ void InterfacePrivate::AddOption(const Option& option)
     // ensure unique
     for (const auto& name : optionNames) {
         if (optionNameLookup_.find(name) != optionNameLookup_.cend())
-            throw std::runtime_error("CLI::Interface: duplicate option name (" + name +")");
+            throw std::runtime_error("CLI::Interface - duplicate option name:"+name);
     }
 
     // store option
@@ -128,10 +111,17 @@ Interface::Interface(const Interface& other)
 
 Interface::~Interface(void) { }
 
-Interface& Interface::AddHelpOption(void)
+Interface& Interface::AddHelpOption(const Option& option)
 {
-    d_->AddBuiltInOption(BuiltInOption::Help,
-                         Option{"help", {"h", "help"}, "Output this help."});
+    d_->helpOption_ = option;
+    d_->AddOption(option);
+    return *this;
+}
+
+Interface& Interface::AddLogLevelOption(const Option& option)
+{
+    d_->logLevelOption_ = option;
+    d_->AddOption(option);
     return *this;
 }
 
@@ -155,17 +145,17 @@ Interface& Interface::AddPositionalArguments(const vector<PositionalArg>& posArg
     return *this;
 }
 
-Interface& Interface::AddVerboseOption(void)
+Interface& Interface::AddVerboseOption(const Option& option)
 {
-    d_->AddBuiltInOption(BuiltInOption::Verbose,
-                         {"verbose", {"v", "verbose"}, "Use verbose output."});
+    d_->verboseOption_ = option;
+    d_->AddOption(option);
     return *this;
 }
 
-Interface& Interface::AddVersionOption(void)
+Interface& Interface::AddVersionOption(const Option& option)
 {
-    d_->AddBuiltInOption(BuiltInOption::Version,
-                         {"version", "version", "Output version info."});
+    d_->versionOption_ = option;
+    d_->AddOption(option);
     return *this;
 }
 
@@ -195,11 +185,8 @@ Interface& Interface::AlternativeToolContractName(const string& version)
 
 Interface& Interface::EnableToolContract(const ToolContract::Config& tcConfig)
 {
-    d_->AddBuiltInOption(BuiltInOption::EmitToolContract,
-                         {"emit_tc", "emit-tool-contract", "Emit tool contract."});
-    d_->AddBuiltInOption(BuiltInOption::ResolvedToolContract,
-                         {"rtc_provided", "resolved-tool-contract", "Use args from resolved tool contract.", Option::StringType("")});
-
+    d_->AddOption(Option{"emit_tc", "emit-tool-contract", "Emit tool contract."});
+    d_->AddOption(Option{"rtc_provided", "resolved-tool-contract", "Use args from resolved tool contract.", Option::StringType("")});
     d_->tcConfig_ = tcConfig;
     return *this;
 }
@@ -208,11 +195,23 @@ bool Interface::ExpectsValue(const std::string& optionName) const
 {
     const auto nameLookupIter = d_->optionNameLookup_.find(optionName);
     if (nameLookupIter == d_->optionNameLookup_.cend())
-        throw std::runtime_error("unknown option name: "+optionName);
+        throw std::runtime_error("CLI::Interface - unknown option name: "+optionName);
     const auto offset = nameLookupIter->second;
     const JSON::Json& defaultValue = d_->options_.at(offset).DefaultValue();
     return !defaultValue.is_boolean();
 }
+
+bool Interface::HasHelpOptionRegistered(void) const
+{ return d_->helpOption_.is_initialized(); }
+
+bool Interface::HasLogLevelOptionRegistered(void) const
+{ return d_->logLevelOption_.is_initialized(); }
+
+bool Interface::HasVerboseOptionRegistered(void) const
+{ return d_->verboseOption_.is_initialized(); }
+
+bool Interface::HasVersionOptionRegistered(void) const
+{ return d_->versionOption_.is_initialized(); }
 
 bool Interface::HasOptionRegistered(const std::string& optionName) const
 {
@@ -220,21 +219,30 @@ bool Interface::HasOptionRegistered(const std::string& optionName) const
            d_->optionNameLookup_.cend();
 }
 
+const Option& Interface::HelpOption(void) const
+{
+    if (!HasHelpOptionRegistered())
+        throw std::runtime_error("CLI::Interface - help option requested, but not registered");
+    return d_->helpOption_.get();
+}
+
 std::string Interface::IdForOptionName(const std::string& optionName) const
 {
     const auto nameLookupIter = d_->optionNameLookup_.find(optionName);
     if (nameLookupIter == d_->optionNameLookup_.cend())
-        throw std::runtime_error("unknown option name: "+optionName);
+        throw std::runtime_error("CLI::Interface - unknown option name: "+optionName);
     const auto offset = nameLookupIter->second;
     return d_->options_.at(offset).Id();
 }
 
-bool Interface::IsBuiltInOptionEnabled(const BuiltInOption& type) const
+bool Interface::IsToolContractEnabled(void) const
+{ return d_->tcConfig_.is_initialized(); }
+
+const Option& Interface::LogLevelOption(void) const
 {
-    const auto iter = d_->usingBuiltInOptions_.find(type);
-    if (iter == d_->usingBuiltInOptions_.cend())
-        throw std::runtime_error("CLI::Interface - unsupported built-in option requested");
-    return iter->second;
+    if (!HasLogLevelOptionRegistered())
+        throw std::runtime_error("CLI::Interface - log level option requested, but not registered");
+    return d_->logLevelOption_.get();
 }
 
 vector<Option> Interface::RegisteredOptions(void) const
@@ -248,4 +256,18 @@ const ToolContract::Config& Interface::ToolContract(void) const
     if (!d_->tcConfig_)
         throw std::runtime_error("CLI::Interface - requesting tool contract config for an interface that has not enabled this feature.");
     return d_->tcConfig_.get();
+}
+
+const Option& Interface::VerboseOption(void) const
+{
+    if (!HasVerboseOptionRegistered())
+        throw std::runtime_error("CLI::Interface - verbose option requested, but not registered");
+    return d_->verboseOption_.get();
+}
+
+const Option& Interface::VersionOption(void) const
+{
+    if (!HasVersionOptionRegistered())
+        throw std::runtime_error("CLI::Interface - version option requested, but not registered");
+    return d_->versionOption_.get();
 }

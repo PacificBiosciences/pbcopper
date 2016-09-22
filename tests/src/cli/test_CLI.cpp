@@ -31,8 +31,9 @@ static PacBio::CLI::Interface makeInterface(void)
         "Frobb your files in a most delightful, nobbly way",
         "3.14"
     };
-    i.AddHelpOption();    // use built-in help output
-    i.AddVersionOption(); // use built-in version output
+    i.AddHelpOption();     // use built-in help option
+    i.AddLogLevelOption(); // use built-in logLevel option
+    i.AddVersionOption();  // use built-in version option
 
     i.AddOptions({
         {"target_dir", {"t", "target-dir"}, "Copy all source files into <DIR>.", Option::StringType("my/default/dir")},
@@ -132,6 +133,8 @@ static int appRunner(const PacBio::CLI::Results& args)
     s.targetDir_    = args["target_dir"];
     s.timeout_      = args["timeout"];
 
+    EXPECT_EQ(PacBio::Logging::LogLevel::DEBUG, args.LogLevel());
+
     const vector<string> positionalArgs = args.PositionalArguments();
     EXPECT_EQ(2, positionalArgs.size());
     s.source_ = positionalArgs.at(0);
@@ -143,7 +146,7 @@ static int inputCommandLineChecker(const PacBio::CLI::Results& results)
 {
     const string expectedCommandLine =
     {
-        "frobber -f --timeout=42 --target-dir /path/to/dir/ requiredIn requiredOut"
+        "frobber -f --timeout=42 --target-dir /path/to/dir/ --logLevel=DEBUG requiredIn requiredOut"
     };
     EXPECT_EQ(expectedCommandLine, results.InputCommandLine());
     return EXIT_SUCCESS;
@@ -315,6 +318,7 @@ TEST(CLI_Runner, runs_application_from_vector_of_args)
         "-f",
         "--timeout=42",
         "--target-dir", "/path/to/dir/",
+        "--logLevel=DEBUG",
         "requiredIn",
         "requiredOut"
     };
@@ -327,15 +331,16 @@ TEST(CLI_Runner, runs_application_from_C_style_args)
 {
     SCOPED_TRACE("run from normal args - raw C char*, a la application main()");
 
-    static const int argc = 6;
+    static const int argc = 7;
     char* argv[argc+1];
     argv[0] = const_cast<char*>("frobber");
     argv[1] = const_cast<char*>("-f");
     argv[2] = const_cast<char*>("--timeout=42");
     argv[3] = const_cast<char*>("--target-dir=/path/to/dir/");
-    argv[4] = const_cast<char*>("requiredIn");
-    argv[5] = const_cast<char*>("requiredOut");
-    argv[6] = nullptr;
+    argv[4] = const_cast<char*>("--logLevel=DEBUG");
+    argv[5] = const_cast<char*>("requiredIn");
+    argv[6] = const_cast<char*>("requiredOut");
+    argv[7] = nullptr;
 
     PacBio::CLI::Run(argc, argv,
                      PacBio::CLI::tests::makeInterface(),
@@ -351,6 +356,7 @@ TEST(CLI_Runner, can_retrieve_input_commandline)
         "-f",
         "--timeout=42",
         "--target-dir", "/path/to/dir/",
+        "--logLevel=DEBUG",
         "requiredIn",
         "requiredOut"
     };
@@ -409,7 +415,7 @@ RtcGenerator::RtcGenerator(const std::string& fn)
         "is_distributed": false,
         "task_type": "pbsmrtpipe.task_types.standard",
         "tool_contract_id": "frobber_task",
-        "log_level": "INFO"
+        "log_level": "DEBUG"
     }
 })";
 

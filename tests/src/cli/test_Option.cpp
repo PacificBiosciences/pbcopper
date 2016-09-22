@@ -129,3 +129,34 @@ TEST(CLI_Option, can_be_move_assigned)
 //    EXPECT_EQ(string{"file"}, destination.ValueName());
 //    EXPECT_FALSE(destination.IsHidden());
 }
+
+TEST(CLI_Option, expected_defaults)
+{
+    // help
+    const auto help = Option::DefaultHelpOption();
+    EXPECT_EQ("help", help.Id());
+    EXPECT_EQ(vector<string>({"h", "help"}), help.Names());
+    EXPECT_EQ("Output this help.", help.Description());
+    EXPECT_FALSE(help.DefaultValue());
+
+    // log level
+    const auto logLevel = Option::DefaultLogLevelOption();
+    EXPECT_EQ("log_level", logLevel.Id());
+    EXPECT_EQ(vector<string>({"log-level", "logLevel"}), logLevel.Names());
+    EXPECT_EQ("Set log level.", logLevel.Description());
+    EXPECT_EQ("INFO", logLevel.DefaultValue());
+
+    // verbose
+    const auto verbose = Option::DefaultVerboseOption();
+    EXPECT_EQ("verbose", verbose.Id());
+    EXPECT_EQ(vector<string>({"v", "verbose"}), verbose.Names());
+    EXPECT_EQ("Use verbose output.", verbose.Description());
+    EXPECT_FALSE(verbose.DefaultValue());
+
+    // version
+    const auto version = Option::DefaultVersionOption();
+    EXPECT_EQ("version", version.Id());
+    EXPECT_EQ(vector<string>({"version"}), version.Names());
+    EXPECT_EQ("Output version info.", version.Description());
+    EXPECT_FALSE(version.DefaultValue());
+}
