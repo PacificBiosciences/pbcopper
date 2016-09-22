@@ -33,35 +33,37 @@ int Run(const vector<string>& args,
     Parser parser(interface);
     const auto results = parser.Parse(args);
 
-    // check for built-in help (enabled by app & requested from cmdline)
-    if (interface.IsBuiltInOptionEnabled(BuiltInOption::Help)) {
-        const bool helpRequested = results["help"];
+    // check for help option (enabled & requested)
+    if (interface.HasHelpOptionRegistered()) {
+        const auto helpOptionId = interface.HelpOption().Id();
+        const bool helpRequested = results[helpOptionId];
         if (helpRequested) {
             HelpPrinter::Print(interface, std::cout);
             return EXIT_SUCCESS;
         }
     }
 
-    // check for built-in version (enabled by app & requested from cmdline)
-    if (interface.IsBuiltInOptionEnabled(BuiltInOption::Version)) {
-        const bool versionRequested = results["version"];
+    // check for version option (enabled & requested)
+    if (interface.HasVersionOptionRegistered()) {
+        const auto versionOptionId = interface.VersionOption().Id();
+        const bool versionRequested = results[versionOptionId];
         if (versionRequested) {
             VersionPrinter::Print(interface, std::cout);
             return EXIT_SUCCESS;
         }
     }
 
-    // check for built-in tool contract emission (enabled by app & requested from cmdline)
-    if (interface.IsBuiltInOptionEnabled(BuiltInOption::EmitToolContract)) {
+    // tool contract support
+    if (interface.IsToolContractEnabled()) {
+
+        // check for emit-tool-contract requested
         const bool emitTcRequested = results["emit_tc"];
         if (emitTcRequested) {
             ToolContract::JsonPrinter::Print(interface, std::cout);
             return EXIT_SUCCESS;
         }
-    }
 
-    // check for resolved tool contract (enabled by app & provided from cmdline)
-    if (interface.IsBuiltInOptionEnabled(BuiltInOption::ResolvedToolContract)) {
+        // check for resolved tool contract cmdline input
         const string& rtcFn = results["rtc_provided"];
         if (!rtcFn.empty()) {
 

@@ -28,7 +28,7 @@ TEST(CLI_ResolvedToolContract, read_basic_RTC)
     "is_distributed": false,
     "task_type": "pbsmrtpipe.task_types.standard",
     "tool_contract_id": "frobber.tools.dev_app",
-    "log_level": "INFO"
+    "log_level": "WARN"
   }
 }
     )";
@@ -54,12 +54,10 @@ TEST(CLI_ResolvedToolContract, read_basic_RTC)
     ToolContract::Config tcConfig(tcTask);
     interface.EnableToolContract(tcConfig);
 
-
     ToolContract::ResolvedToolContract rtc(interface);
     const Results results = rtc.Parse(input);
 
     const int maxNLines = results["max_nlines"];
     EXPECT_EQ(27, maxNLines);
-
-
+    EXPECT_EQ(PacBio::Logging::LogLevel::WARN, results.LogLevel());
 }

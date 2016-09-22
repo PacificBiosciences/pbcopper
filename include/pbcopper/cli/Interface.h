@@ -2,7 +2,6 @@
 #define PBCOPPER_CLI_INTERFACE_H
 
 #include "pbcopper/Config.h"
-#include "pbcopper/cli/BuiltInOption.h"
 #include "pbcopper/cli/Option.h"
 #include "pbcopper/cli/PositionalArg.h"
 #include "pbcopper/cli/SingleDashMode.h"
@@ -94,11 +93,54 @@ public:
     bool HasOptionRegistered(const std::string& optionName) const;
 
     ///
-    /// \brief IsBuiltInOptionEnabled
-    /// \param type
+    /// \brief HasHelpOptionRegistered
     /// \return
     ///
-    bool IsBuiltInOptionEnabled(const BuiltInOption& type) const;
+    bool HasHelpOptionRegistered(void) const;
+
+    ///
+    /// \brief HasLogLevelOptionRegistered
+    /// \return
+    ///
+    bool HasLogLevelOptionRegistered(void) const;
+
+    ///
+    /// \brief HasVerboseOptionRegistered
+    /// \return
+    ///
+    bool HasVerboseOptionRegistered(void) const;
+
+    ///
+    /// \brief HasVersionOptionRegistered
+    /// \return
+    ///
+    bool HasVersionOptionRegistered(void) const;
+
+
+    ///
+    /// \brief HelpOption
+    /// \return
+    ///
+    const Option& HelpOption(void) const;
+
+    ///
+    /// \brief IdForOptionName
+    /// \param optionName
+    /// \return
+    ///
+    std::string IdForOptionName(const std::string& optionName) const;
+
+    ///
+    /// \brief IsToolContractEnabled
+    /// \return
+    ///
+    bool IsToolContractEnabled(void) const;
+
+    ///
+    /// \brief LogLevelOption
+    /// \return
+    ///
+    const Option& LogLevelOption(void) const;
 
     ///
     /// \brief RegisteredOptions
@@ -112,9 +154,23 @@ public:
     ///
     std::vector<PositionalArg> RegisteredPositionalArgs(void) const;
 
+    ///
+    /// \brief ToolContract
+    /// \return
+    ///
     const ToolContract::Config& ToolContract(void) const;
 
-    std::string IdForOptionName(const std::string& optionName) const;
+    ///
+    /// \brief VerboseOption
+    /// \return
+    ///
+    const Option& VerboseOption(void) const;
+
+    ///
+    /// \brief VersionOption
+    /// \return
+    ///
+    const Option& VersionOption(void) const;
 
     /// \}
 
@@ -185,10 +241,39 @@ public:
     ///
     Interface& AddPositionalArguments(const std::vector<PositionalArg>& posArgs);
 
-    Interface& AddHelpOption(void);
-    Interface& AddVerboseOption(void);
-    Interface& AddVersionOption(void);
+    ///
+    /// \brief AddHelpOption
+    /// \param option
+    /// \return
+    ///
+    Interface& AddHelpOption(const Option& option = Option::DefaultHelpOption());
 
+    ///
+    /// \brief AddLogLevelOption
+    /// \param option
+    /// \return
+    ///
+    Interface& AddLogLevelOption(const Option& option = Option::DefaultLogLevelOption());
+
+    ///
+    /// \brief AddVerboseOption
+    /// \param option
+    /// \return
+    ///
+    Interface& AddVerboseOption(const Option& option = Option::DefaultVerboseOption());
+
+    ///
+    /// \brief AddVersionOption
+    /// \param option
+    /// \return
+    ///
+    Interface& AddVersionOption(const Option& option = Option::DefaultVersionOption());
+
+    ///
+    /// \brief EnableToolContract
+    /// \param tcConfig
+    /// \return
+    ///
     Interface& EnableToolContract(const ToolContract::Config& tcConfig);
 
     /// \}

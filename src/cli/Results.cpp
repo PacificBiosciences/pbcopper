@@ -1,8 +1,6 @@
 #include "pbcopper/cli/Results.h"
-
 #include "pbcopper/json/JSON.h"
 #include "pbcopper/utility/StringUtils.h"
-
 #include <unordered_map>
 #include <set>
 #include <vector>
@@ -11,7 +9,6 @@
 using namespace PacBio;
 using namespace PacBio::CLI;
 using namespace PacBio::JSON;
-
 using namespace std;
 
 namespace PacBio {
@@ -25,12 +22,14 @@ public:
     vector<string> inputCommandLine_;
     Json options_;
     vector<string> positionalArgs_;
+    PacBio::Logging::LogLevel logLevel_;
 
 public:
     ResultsPrivate(const Interface& interface,
                    const vector<string>& inputCommandLine)
         : interface_(interface)
         , inputCommandLine_(inputCommandLine)
+        , logLevel_(PacBio::Logging::LogLevel::INFO)
     {
         // init with default values
         const auto& registeredOptions = interface_.RegisteredOptions();
@@ -76,11 +75,30 @@ string Results::InputCommandLine(void) const
     return Utility::Join(d_->inputCommandLine_, " ");
 }
 
+Results& Results::LogLevel(const PacBio::Logging::LogLevel logLevel)
+{
+    d_->logLevel_ = logLevel;
+    return *this;
+}
+
+PacBio::Logging::LogLevel Results::LogLevel(void) const
+{ return d_->logLevel_; }
+
 Results& Results::RegisterOptionValue(const string& optionId,
                                       const Json& optionValue)
 {
     // TODO: make safe access
     d_->options_[optionId] = optionValue;
+
+    // check user-supplied log level
+    if (d_->interface_.HasLogLevelOptionRegistered()) {
+        const auto logLevelOptionId = d_->interface_.LogLevelOption().Id();
+        if (logLevelOptionId == optionId) {
+            const string logLevelString = optionValue;
+            d_->logLevel_ = PacBio::Logging::LogLevel(logLevelString);
+        }
+    }
+
     return *this;
 }
 
@@ -98,6 +116,15 @@ Results& Results::RegisterOptionValueString(const string& optionId,
         case Json::value_t::boolean : opt = (optionValue == "true"); break;
         default:
             throw std::runtime_error("PacBio::CLI::Results - unknown type for option: "+optionId);
+    }
+
+    // check user-supplied log level
+    if (d_->interface_.HasLogLevelOptionRegistered()) {
+        const auto logLevelOptionId = d_->interface_.LogLevelOption().Id();
+        if (logLevelOptionId == optionId) {
+            const string logLevelString = optionValue;
+            d_->logLevel_ = PacBio::Logging::LogLevel(logLevelString);
+        }
     }
 
     return *this;
