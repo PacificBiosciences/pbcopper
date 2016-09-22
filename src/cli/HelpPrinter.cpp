@@ -17,6 +17,24 @@ namespace CLI {
 namespace internal {
 
 static
+bool shouldIncludeDefaultValue(const Json& defaultValue)
+{
+    // omit if switch OR null
+    if (defaultValue.is_boolean() || defaultValue.is_null())
+        return false;
+
+    // omit if empty string default on string-type option
+    if (defaultValue.is_string()) {
+        const string val = defaultValue;
+        if (val.empty())
+            return false;
+    }
+
+    // otherwise include default value
+    return true;
+}
+
+static
 string formatOption(string optionOutput,
                     size_t longestOptionLength,
                     string description,
@@ -28,8 +46,9 @@ string formatOption(string optionOutput,
 
     stringstream result("");
     auto fullDescription = description;
-    // if opt is not a switch & a default value is available, add to description
-    if ( !defaultValue.is_boolean() && !defaultValue.empty()) {
+
+    // maybe add default value to description
+    if (shouldIncludeDefaultValue(defaultValue)) {
         fullDescription += " [";
         fullDescription += defaultValue.dump();
         fullDescription += "]";
