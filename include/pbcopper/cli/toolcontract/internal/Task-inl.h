@@ -26,6 +26,12 @@ inline std::vector<InputFileType> Task::InputFileTypes(void) const
 inline Task& Task::InputFileTypes(const std::vector<InputFileType>& inputFileTypes)
 { inputFileTypes_ = inputFileTypes; return *this; }
 
+inline std::map<size_t, std::string> Task::InputFilesToOptions(void) const
+{ return inputFilesToOptions_; }
+
+inline Task& Task::InputFilesToOptions(const std::map<size_t, std::string>& mapping)
+{ inputFilesToOptions_ = mapping; return *this; }
+
 inline bool Task::IsDistributed(void) const
 { return isDistributed_; }
 
@@ -46,6 +52,12 @@ inline Task& Task::AddOption(const std::pair<std::string, std::string>& optionCo
 
 inline std::vector<OutputFileType> Task::OutputFileTypes(void) const
 { return outputFileTypes_; }
+
+inline std::map<size_t, std::string> Task::OutputFilesToOptions(void) const
+{ return outputFilesToOptions_; }
+
+inline Task& Task::OutputFilesToOptions(const std::map<size_t, std::string>& mapping)
+{ outputFilesToOptions_ = mapping; return *this; }
 
 inline Task& Task::OutputFileTypes(const std::vector<OutputFileType>& outputFileTypes)
 { outputFileTypes_ = outputFileTypes; return *this; }

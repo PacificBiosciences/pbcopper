@@ -104,10 +104,22 @@ public:
     std::vector<InputFileType> InputFileTypes(void) const;
 
     ///
+    /// \brief InputFilesToOptions
+    /// \return
+    ///
+    std::map<size_t, std::string> InputFilesToOptions(void) const;
+
+    ///
     /// \brief OutputFileTypes
     /// \return
     ///
     std::vector<OutputFileType> OutputFileTypes(void) const;
+
+    ///
+    /// \brief OutputFilesToOptions
+    /// \return
+    ///
+    std::map<size_t, std::string> OutputFilesToOptions(void) const;
 
     ///
     /// \brief ResourceTypes
@@ -189,12 +201,34 @@ public:
     ///
     Task& InputFileTypes(const std::vector<InputFileType>& inputFileTypes);
 
+    ///
+    /// \brief OutputFilesToOptions
+    ///
+    /// Set a mapping for RTC's input_files[] JSON array to named command-line
+    /// options. Key is the position in the array, and value is the option's ID.
+    ///
+    /// \param mapping
+    /// \return
+    ///
+    Task& InputFilesToOptions(const std::map<size_t, std::string>& mapping);
+
     /// \brief Sets the task's output files list to provided list.
     ///
     /// \param   outputFileTypes
     /// \returns reference to this taskn
     ///
     Task& OutputFileTypes(const std::vector<OutputFileType>& outputFileTypes);
+
+    ///
+    /// \brief OutputFilesToOptions
+    ///
+    /// Set a mapping for RTC's output_files[] JSON array to named command-line
+    /// options. Key is the position in the array, and value is the option's ID.
+    ///
+    /// \param mapping
+    /// \return
+    ///
+    Task& OutputFilesToOptions(const std::map<size_t, std::string>& mapping);
 
     /// \brief Sets the task's resource list to provided list.
     ///
@@ -221,6 +255,10 @@ private:
     std::vector<InputFileType>  inputFileTypes_;
     std::vector<OutputFileType> outputFileTypes_;
     std::vector<ResourceType>   resourceTypes_;
+
+    // file -> option mappings
+    std::map<size_t, std::string> inputFilesToOptions_;
+    std::map<size_t, std::string> outputFilesToOptions_;
 };
 
 } // namespace ToolContract
