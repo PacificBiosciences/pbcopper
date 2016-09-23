@@ -40,6 +40,9 @@ ResolvedToolContract::~ResolvedToolContract(void) { }
 
 Results ResolvedToolContract::Parse(istream& in)
 {
+    const auto& interface = d_->interface_;
+    const auto& task = interface.ToolContract().Task();
+
     Results results{ d_->interface_ };
 
     Json root(in);
@@ -67,13 +70,33 @@ Results ResolvedToolContract::Parse(istream& in)
 
     // input file (array)
     const Json inputFiles = rtc["input_files"];
-    for (const auto& inputFile : inputFiles)
-        results.RegisterPositionalArg(inputFile);
+    const auto inputFilesToOptions = task.InputFilesToOptions();
+    const auto inputFilesToOptionsEnd = inputFilesToOptions.cend();
+    for (size_t i = 0; i < inputFiles.size(); ++i) {
+        const auto inputFile = inputFiles.at(i);
+        const auto inputFilesToOptionsIter = inputFilesToOptions.find(i);
+        if (inputFilesToOptionsIter == inputFilesToOptionsEnd)
+            results.RegisterPositionalArg(inputFile);
+        else {
+            const auto optionId = inputFilesToOptionsIter->second;
+            results.RegisterOptionValue(optionId, inputFile);
+        }
+    }
 
     // output file (array)
     const Json outputFiles = rtc["output_files"];
-    for (const auto& outputFile : outputFiles)
-        results.RegisterPositionalArg(outputFile);
+    const auto outputFilesToOptions = task.OutputFilesToOptions();
+    const auto outputFilesToOptionsEnd = outputFilesToOptions.cend();
+    for (size_t i = 0; i < outputFiles.size(); ++i) {
+        const auto outputFile = outputFiles.at(i);
+        const auto outputFilesToOptionsIter = outputFilesToOptions.find(i);
+        if (outputFilesToOptionsIter == outputFilesToOptionsEnd)
+            results.RegisterPositionalArg(outputFile);
+        else {
+            const auto optionId = outputFilesToOptionsIter->second;
+            results.RegisterOptionValue(optionId, outputFile);
+        }
+    }
 
     return results;
 }
