@@ -60,6 +60,13 @@ public:
     std::string InputCommandLine(void) const;
 
     ///
+    /// \brief IsFromRTC
+    /// \return true if this Results object generated from a resolved tool
+    ///         contract (as opposed to command-line args)
+    ///
+    bool IsFromRTC(void) const;
+
+    ///
     /// \brief LogLevel
     ///
     /// Default level
@@ -70,6 +77,18 @@ public:
     /// \return
     ///
     PacBio::Logging::LogLevel LogLevel(void) const;
+
+    ///
+    /// \brief NumProcessors
+    ///
+    /// \note Currently, this field is \b only populated when the Results
+    ///       object was created from a resolved tool contract.
+    ///
+    /// \sa IsFromRTC to check if this will be available
+    ///
+    /// \return number of processors specified by resolved tool contract.
+    ///
+    uint16_t NumProcessors(void) const;
 
     ///
     /// \brief PositionalArguments
@@ -99,7 +118,27 @@ public:
     /// \name Results Construction
     /// \{
 
+    ///
+    /// \brief LogLevel
+    ///
+    /// \note Intended for internal use only. This method will likely disappear
+    ///       in a future version.
+    ///
+    /// \param logLevel
+    /// \return
+    ///
     Results& LogLevel(const PacBio::Logging::LogLevel logLevel);
+
+    ///
+    /// \brief NumProcessors
+    ///
+    /// \note Intended for internal use only. This method will likely disappear
+    ///       in a future version.
+    ///
+    /// \param nproc
+    /// \return
+    ///
+    Results& NumProcessors(const uint16_t nproc);
 
     ///
     /// \brief Registers observed positional arg.
@@ -148,6 +187,17 @@ public:
     ///
     Results& RegisterOptionValueString(const std::string& optionId,
                                        const std::string& optionValue);
+
+    ///
+    /// \brief SetFromRTC
+    ///
+    /// \note Intended for internal use only. This method will likely disappear
+    ///       in a future version.
+    ///
+    /// \param ok
+    /// \return
+    ///
+    Results& SetFromRTC(const bool ok = true);
 
     /// \}
 

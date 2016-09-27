@@ -19,7 +19,7 @@ TEST(CLI_ResolvedToolContract, read_basic_RTC)
   },
   "resolved_tool_contract": {
     "input_files": [],
-    "nproc": 1,
+    "nproc": 4,
     "options": {
       "pbcommand.task_options.max_nlines": 27
     },
@@ -60,6 +60,7 @@ TEST(CLI_ResolvedToolContract, read_basic_RTC)
     const int maxNLines = results["max_nlines"];
     EXPECT_EQ(27, maxNLines);
     EXPECT_EQ(PacBio::Logging::LogLevel::WARN, results.LogLevel());
+    EXPECT_EQ(4, results.NumProcessors());
 }
 
 TEST(CLI_ResolvedToolContract, map_files_to_options)
@@ -74,7 +75,7 @@ TEST(CLI_ResolvedToolContract, map_files_to_options)
     "input_files": [
       "/path/to/subreads_file.txt"
     ],
-    "nproc": 1,
+    "nproc": 2,
     "options": {
       "pbcommand.task_options.min_length": 25,
       "pbcommand.task_options.max_length": 500
@@ -158,4 +159,6 @@ TEST(CLI_ResolvedToolContract, map_files_to_options)
     EXPECT_EQ("/path/to/junk_file.txt", junkFile);
     EXPECT_EQ("/path/to/json_file.txt", jsonFile);
     EXPECT_EQ("/path/to/subreads_file.txt", inputFile);
+
+    EXPECT_EQ(2, results.NumProcessors());
 }
