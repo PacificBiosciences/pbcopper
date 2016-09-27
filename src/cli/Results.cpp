@@ -23,6 +23,8 @@ public:
     Json options_;
     vector<string> positionalArgs_;
     PacBio::Logging::LogLevel logLevel_;
+    bool isFromRtc_;
+    uint16_t nproc_;
 
 public:
     ResultsPrivate(const Interface& interface,
@@ -30,6 +32,8 @@ public:
         : interface_(interface)
         , inputCommandLine_(inputCommandLine)
         , logLevel_(PacBio::Logging::LogLevel::INFO)
+        , isFromRtc_(false)
+        , nproc_(1)
     {
         // init with default values
         const auto& registeredOptions = interface_.RegisteredOptions();
@@ -75,6 +79,9 @@ string Results::InputCommandLine(void) const
     return Utility::Join(d_->inputCommandLine_, " ");
 }
 
+bool Results::IsFromRTC(void) const
+{ return d_->isFromRtc_; }
+
 Results& Results::LogLevel(const PacBio::Logging::LogLevel logLevel)
 {
     d_->logLevel_ = logLevel;
@@ -83,6 +90,20 @@ Results& Results::LogLevel(const PacBio::Logging::LogLevel logLevel)
 
 PacBio::Logging::LogLevel Results::LogLevel(void) const
 { return d_->logLevel_; }
+
+uint16_t Results::NumProcessors(void) const
+{
+    if (!IsFromRTC()) {
+        throw std::runtime_error("PacBio::CLI::Results - NumProcessors() "
+                                 "available from resolved tool contract only. "
+                                 "Use IsFromRTC() to check before calling this "
+                                 "method.");
+    }
+    return d_->nproc_;
+}
+
+Results& Results::NumProcessors(const uint16_t nproc)
+{ d_->nproc_ = nproc; return *this; }
 
 Results& Results::RegisterOptionValue(const string& optionId,
                                       const Json& optionValue)
@@ -132,6 +153,9 @@ Results& Results::RegisterOptionValueString(const string& optionId,
 
 Results& Results::RegisterPositionalArg(const string& posArg)
 { d_->positionalArgs_.push_back(posArg); return *this; }
+
+Results& Results::SetFromRTC(const bool ok)
+{ d_->isFromRtc_ = ok; return *this; }
 
 const Interface& Results::ApplicationInterface(void) const
 { return d_->interface_; }

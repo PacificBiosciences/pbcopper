@@ -44,6 +44,7 @@ Results ResolvedToolContract::Parse(istream& in)
     const auto& task = interface.ToolContract().Task();
 
     Results results{ d_->interface_ };
+    results.SetFromRTC(true);
 
     Json root(in);
     Json rtc = root["resolved_tool_contract"];
@@ -67,6 +68,10 @@ Results ResolvedToolContract::Parse(istream& in)
     const Json log_level = rtc["log_level"];
     const string logLevelString = log_level;
     results.LogLevel(PacBio::Logging::LogLevel{logLevelString});
+
+    // nproc
+    const Json nproc = rtc["nproc"];
+    results.NumProcessors(nproc);
 
     // input file (array)
     const Json inputFiles = rtc["input_files"];
