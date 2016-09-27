@@ -61,7 +61,7 @@ public:
 
     ///
     /// \brief IsFromRTC
-    /// \return true if this Results object generated from a resoled tool
+    /// \return true if this Results object generated from a resolved tool
     ///         contract (as opposed to command-line args)
     ///
     bool IsFromRTC(void) const;
