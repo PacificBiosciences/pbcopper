@@ -2,10 +2,8 @@
 # define pbcopper library dependencies
 set(pbcopper_DependencyIncludes
     ${Boost_INCLUDE_DIRS}
-    ${ZLIB_INCLUDE_DIRS}
 )
 set(pbcopper_DependencyLibraries
-    ${ZLIB_LIBRARIES}
     ${CMAKE_THREAD_LIBS_INIT}
 )
 
