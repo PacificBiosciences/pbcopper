@@ -47,7 +47,7 @@ set(pbcopper_INCLUDE_DIRS
 )
 
 set(pbcopper_LIBRARIES
-    ${pbcopper_LibDir}/libpbcopper${PBCOPPER_LIB_SUFFIX} ${pbcopper_DependencyLibraries}
+    pbcopper ${pbcopper_DependencyLibraries}
     CACHE INTERNAL
     "${PROJECT_NAME}: Libraries"
     FORCE
