@@ -19,4 +19,6 @@ test:
         - pushd _build ; $(readlink -f ../_deps/cmake-3.3.0-Linux-x86_64/bin/cmake) -DBoost_INCLUDE_DIRS=$(readlink -f ../_deps/boost_1_55_0) ..
     override:
         - pushd _build ; make -j 2
-        - pushd _build ; make check-circleci
+        - pushd _build ; make check-xunit
+    post:
+        - pushd _build ; cp *-unit.xml ${CIRCLE_TEST_REPORTS}/
