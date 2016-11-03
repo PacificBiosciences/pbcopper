@@ -23,7 +23,7 @@ set(pbcopper_TestsDir      ${pbcopper_RootDir}/tests)
 set(pbcopper_ThirdPartyDir ${pbcopper_RootDir}/third-party)
 
 if(NOT pbcopper_OutputDir)
-    set(pbcopper_OutputDir ${pbcopper_RootDir})
+    set(pbcopper_OutputDir ${CMAKE_CURRENT_BINARY_DIR})
 endif()
 
 set(pbcopper_LibDir  ${pbcopper_OutputDir}/lib)
