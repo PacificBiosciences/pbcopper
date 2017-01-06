@@ -29,7 +29,7 @@ public:
     /// \param[in] id   index number of input sequence
     /// \param[in] pos  position in input sequence
     ///
-    IndexHit(const uint32_t id, const uint32_t pos)
+    IndexHit(const uint32_t id, const uint64_t pos)
         : id_(id)
         , position_(pos)
     { }
@@ -51,11 +51,11 @@ public:
     /// \brief Position
     /// \return position of hit
     ///
-    uint32_t Position(void) const { return position_; }
+    uint64_t Position(void) const { return position_; }
 
 private:
     uint32_t id_;
-    uint32_t position_;
+    uint64_t position_;
 };
 
 ///

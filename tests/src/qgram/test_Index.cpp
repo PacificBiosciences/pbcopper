@@ -250,7 +250,7 @@ TEST(QGram_Index, index_hits_INTERNAL_from_shape_short_seq)
 
 TEST(QGram_Index, index_hits_INTERNAL_from_shape_longer_seq)
 {
-    const std::vector<size_t> expected = {
+    const std::vector<uint64_t> expected = {
         118,119,120,121,122,123,124,125,126,127,
         128,129,130,131,51,132,133,134,135,266,
         136,137,138,139,140,141,142,143,144,145,
@@ -269,7 +269,7 @@ TEST(QGram_Index, index_hits_INTERNAL_from_shape_longer_seq)
 
     const std::string seq = "GATTGGTGGCACATAAGTAATACCATGGTCCCTGAAATTCGG";
 
-    std::vector<size_t> observed;
+    std::vector<uint64_t> observed;
 
     const auto q = idx.Size();
     auto shape = internal::Shape{ q, seq };
@@ -286,7 +286,7 @@ TEST(QGram_Index, index_hits_INTERNAL_from_shape_longer_seq)
 
 TEST(QGram_Index, index_hits_PUBLIC_API_from_seq)
 {
-    const std::vector<size_t> expected = {
+    const std::vector<uint64_t> expected = {
         118,119,120,121,122,123,124,125,126,127,
         128,129,130,131,51,132,133,134,135,266,
         136,137,138,139,140,141,142,143,144,145,
@@ -305,7 +305,7 @@ TEST(QGram_Index, index_hits_PUBLIC_API_from_seq)
 
     const std::string seq{ "GATTGGTGGCACATAAGTAATACCATGGTCCCTGAAATTCGG" };
 
-    std::vector<size_t> observed;
+    std::vector<uint64_t> observed;
     for (const auto& hits : idx.Hits(seq)) {
         for (const auto& hit : hits) {
             EXPECT_EQ(0, hit.Id());
