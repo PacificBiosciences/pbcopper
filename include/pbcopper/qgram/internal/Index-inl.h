@@ -61,8 +61,8 @@ inline const IndexImpl::HashLookup_t& IndexImpl::HashLookup(void) const
 
 inline void IndexImpl::Init(void)
 {
-    if (q_ == 0)
-        throw std::runtime_error("QGram::Index: q must be greater than zero");
+    if (q_ == 0 || q_ > 16)
+        throw std::runtime_error("QGram::Index: q must be in the range from [1-16]");
 
     // init hash lookup (and calculate totalNumQGrams for later suffixArray)
     const auto lookupSize = static_cast<size_t>(std::pow(4, q_) + 1);
