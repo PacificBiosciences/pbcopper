@@ -20,13 +20,6 @@ public:
 
     ///
     /// \brief IndexHits
-    ///
-    IndexHits(void)
-        : IndexHits(nullptr, 0, 0)
-    { }
-
-    ///
-    /// \brief IndexHits
     /// \param source
     ///
     IndexHits(const std::vector<IndexHit>* source)
@@ -83,8 +76,8 @@ public:
 
 private:
     const std::vector<IndexHit>* source_;
-    size_t begin_;
-    size_t end_;
+    const size_t begin_;
+    const size_t end_;
 };
 
 } // namespace QGram
