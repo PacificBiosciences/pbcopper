@@ -4,6 +4,7 @@
 #include "pbcopper/qgram/IndexHit.h"
 #include <vector>
 #include <cassert>
+#include <cstddef>
 
 namespace PacBio {
 namespace QGram {
