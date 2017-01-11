@@ -80,6 +80,16 @@ set(pbcopper_H
     ${pbcopper_IncludeDir}/pbcopper/logging/internal/Logging-inl.h
 
     # -------
+    # qgram
+    # -------
+
+    ${pbcopper_IncludeDir}/pbcopper/qgram/Index.h
+    ${pbcopper_IncludeDir}/pbcopper/qgram/IndexHit.h
+    ${pbcopper_IncludeDir}/pbcopper/qgram/IndexHits.h
+    ${pbcopper_IncludeDir}/pbcopper/qgram/internal/Hashing-inl.h
+    ${pbcopper_IncludeDir}/pbcopper/qgram/internal/Index-inl.h
+
+    # -------
     # stream
     # -------
 
@@ -91,6 +101,8 @@ set(pbcopper_H
 
     ${pbcopper_IncludeDir}/pbcopper/utility/CallbackTimer.h
     ${pbcopper_IncludeDir}/pbcopper/utility/EnumClassHash.h
+    ${pbcopper_IncludeDir}/pbcopper/utility/MoveAppend.h
+    ${pbcopper_IncludeDir}/pbcopper/utility/SafeSubtract.h
     ${pbcopper_IncludeDir}/pbcopper/utility/Stopwatch.h
     ${pbcopper_IncludeDir}/pbcopper/utility/StringUtils.h
     ${pbcopper_IncludeDir}/pbcopper/utility/SystemInfo.h

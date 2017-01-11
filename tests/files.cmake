@@ -34,6 +34,9 @@ set( pbcopperTest_CPP
     # logging
     ${pbcopper_TestsDir}/src/logging/test_Logging.cpp
 
+    # qgram
+    ${pbcopper_TestsDir}/src/qgram/test_Index.cpp
+
     # stream
     ${pbcopper_TestsDir}/src/stream/test_Stream.cpp
 
