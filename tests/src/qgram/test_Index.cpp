@@ -14,10 +14,17 @@ TEST(QGram_Index, shape_hashing)
     auto check = [](const size_t q, std::vector<uint64_t> expected)
     {
         ASSERT_EQ(4, expected.size());
-        internal::Shape shapeA { q, std::string(q, 'A') };
-        internal::Shape shapeC { q, std::string(q, 'C') };
-        internal::Shape shapeG { q, std::string(q, 'G') };
-        internal::Shape shapeT { q, std::string(q, 'T') };
+
+        const std::string seqA(q, 'A');
+        const std::string seqC(q, 'C');
+        const std::string seqG(q, 'G');
+        const std::string seqT(q, 'T');
+
+        internal::Shape shapeA { q, seqA };
+        internal::Shape shapeC { q, seqC };
+        internal::Shape shapeG { q, seqG };
+        internal::Shape shapeT { q, seqT };
+
         EXPECT_EQ(expected.at(0), shapeA.HashNext());
         EXPECT_EQ(expected.at(1), shapeC.HashNext());
         EXPECT_EQ(expected.at(2), shapeG.HashNext());
