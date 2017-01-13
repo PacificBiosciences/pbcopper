@@ -48,10 +48,10 @@ constexpr size_t LibraryMajor    = @pbcopper_VERSION_MAJOR@;
 constexpr size_t LibraryMinor    = @pbcopper_VERSION_MINOR@;
 constexpr size_t LibraryPatch    = @pbcopper_VERSION_PATCH@;
 
-std::string LibraryVersionString()
+inline std::string LibraryVersionString()
 { return LibraryVersion; }
 
-std::string LibraryGitSha1String()
+inline std::string LibraryGitSha1String()
 { return LibraryGitSha1; }
 
 }} // ::PacBio::Utility

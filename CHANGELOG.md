@@ -6,6 +6,8 @@
 - Interface groups
 - Initial sequence-related data structures
 
+## [0.1.0] - 2017-01-13
+
 ### Added
 - Encapsulate project version and git sha1
 - RSMovieName & RSReadName: Sequel and RSII movie names are composed of
@@ -14,6 +16,8 @@ handle Sequel-style data as the default.
 - GoogleTest/GoogleMock in third-party/googletest
 - Access to input command line from PacBio::CLI::Results
 - QGramIndex
+- Added support for new tool contract data model: option choices & modified JSON
+format.
 
 ## [0.0.1] - 2016-06-22
 

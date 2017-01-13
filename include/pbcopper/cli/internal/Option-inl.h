@@ -16,7 +16,8 @@ public:
     explicit OptionPrivate(const std::string& id,
                            const std::vector<std::string>& names,
                            const std::string& description,
-                           const PacBio::JSON::Json& defaultValue)
+                           const PacBio::JSON::Json& defaultValue,
+                           const PacBio::JSON::Json& choices)
         : option_(PacBio::JSON::Json::object_t())
     {
         // validate ID & name(s)
@@ -46,6 +47,12 @@ public:
             option_["defaultValue"] = PacBio::JSON::Json::boolean_t(false);
         else
             option_["defaultValue"] = defaultValue;
+
+        // choices
+        if (choices.is_array() && !choices.empty())
+            option_["choices"] = choices;
+        else
+            option_["choices"] = JSON::Json(nullptr);
     }
 
     OptionPrivate(const OptionPrivate& other)
@@ -62,12 +69,14 @@ public:
 inline Option::Option(const std::string& id,
                const std::string& name,
                const std::string& description,
-               const PacBio::JSON::Json& defaultValue)
+               const PacBio::JSON::Json& defaultValue,
+               const JSON::Json& choices)
     : d_(new internal::OptionPrivate{
             id,
             std::vector<std::string>{1, name},
             description,
-            defaultValue
+            defaultValue,
+            choices
          })
 { }
 
@@ -89,7 +98,8 @@ inline Option::Option(const std::string& id,
             id,
             names,
             description,
-            defaultValue
+            defaultValue,
+            PacBio::JSON::Json(nullptr)
          })
 { }
 
@@ -115,11 +125,20 @@ inline Option& Option::operator=(Option&& other)
 
 inline Option::~Option(void) { }
 
+inline PacBio::JSON::Json Option::Choices(void) const
+{ return d_->option_["choices"]; }
+
 inline PacBio::JSON::Json Option::DefaultValue(void) const
 { return d_->option_["defaultValue"]; }
 
 inline std::string Option::Description(void) const
 { return d_->option_["description"]; }
+
+inline bool Option::HasChoices(void) const
+{
+    const auto& choices = Choices();
+    return choices.is_array() && !choices.empty();
+}
 
 inline std::string Option::Id(void) const
 { return d_->option_["id"]; }

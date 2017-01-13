@@ -79,7 +79,6 @@ void ParserPrivate::Parse(const vector<string>& args)
                 const auto& optionId = interface_.IdForOptionName(optionName);
                 results_.RegisterObservedOption(optionId);
                 ParseOptionValue(optionName, arg, &argIter, argEnd);
-
             }
             else forcePositional = true;
         }
@@ -110,7 +109,7 @@ void ParserPrivate::Parse(const vector<string>& args)
                             if (i+1 < arg.size()) {
                                 if (arg.at(i+1) == equal)
                                     ++i;
-                                results_.RegisterOptionValue(optionName,  arg.substr(i+1));
+                                results_.RegisterOptionValue(optionId, arg.substr(i+1));
                                 valueFound = true;
                             }
                             break;
@@ -159,13 +158,18 @@ void ParserPrivate::ParseOptionValue(const string& optionName,
     const auto expectsValue = interface_.ExpectsValue(optionName);
     if (expectsValue) {
         const auto& optionId = interface_.IdForOptionName(optionName);
+        std::string value;
         if (equalPos == string::npos) {
             ++(*argumentIterator);
             if (*argumentIterator == argsEnd)
                 throw std::runtime_error("CLI::Parser - missing value after " + argument);
-            results_.RegisterOptionValueString(optionId, *(*argumentIterator));
+            value = *(*argumentIterator);
         } else
-            results_.RegisterOptionValueString(optionId, argument.substr(equalPos+1));
+            value = argument.substr(equalPos+1);
+
+        // register value for option
+        results_.RegisterOptionValueString(optionId, value);
+
     } else {
         if (equalPos != string::npos)
             throw std::runtime_error("CLI::Parser - unexpected value after "+argument.substr(0, equalPos));
