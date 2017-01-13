@@ -116,7 +116,6 @@ public:
     ///
     bool HasVersionOptionRegistered(void) const;
 
-
     ///
     /// \brief HelpOption
     /// \return
@@ -141,6 +140,13 @@ public:
     /// \return
     ///
     const Option& LogLevelOption(void) const;
+
+    ///
+    /// \brief OptionChoices
+    /// \param optionId
+    /// \return
+    ///
+    PacBio::JSON::Json OptionChoices(const std::string& optionId) const;
 
     ///
     /// \brief RegisteredOptions

@@ -14,6 +14,8 @@ handle Sequel-style data as the default.
 - GoogleTest/GoogleMock in third-party/googletest
 - Access to input command line from PacBio::CLI::Results
 - QGramIndex
+- Added support for new tool contract data model: option choices & modified JSON
+format.
 
 ## [0.0.1] - 2016-06-22
 

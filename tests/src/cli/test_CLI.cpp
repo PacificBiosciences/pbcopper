@@ -40,7 +40,9 @@ static PacBio::CLI::Interface makeInterface(void)
         {"force",      {"f", "force"},      "Overwrite things."},
         {"progress",   {"p"},               "Show progress during copy."},
         {"dry_run",    {"n", "no-op"},      "Dry run. Report actions that would be taken but do not perform them"},
-        {"timeout",    {"timeout"},         "Abort execution after <INT> milliseconds.", Option::IntType(5000)}
+        {"timeout",    {"timeout"},         "Abort execution after <INT> milliseconds.", Option::IntType(5000)},
+        {"delta",      "delta",             "Some delta for things", Option::IntType(1), { 1, 2, 3 }},
+        {"ploidy",     "ploidy",            "Genome ploidy", Option::StringType("haploid"), {"haploid", "diploid"}}
     });
 
     i.AddPositionalArguments({
@@ -71,7 +73,9 @@ static PacBio::CLI::Interface makeToolContractEnabledInterface(void)
         //
         {"progress", "Show Progress"},
         {"force",    "Force Overwrite"},
-        {"timeout",  "Timeout"}
+        {"timeout",  "Timeout"},
+        {"delta",    "Frobbing delta" },
+        {"ploidy",   "Ploidy" }
     });
     tcTask.InputFileTypes({
         { "ID", "title", "description", "type" },
@@ -100,7 +104,9 @@ struct MyAppSettings
     bool force_;
     bool showProgress_;
     string targetDir_;
+    string ploidy_;
     int timeout_;
+    int delta_;
     string source_;
     string dest_;
     vector<string> extras_;
@@ -115,7 +121,9 @@ static int mainAppEntry(const MyAppSettings& settings)
     EXPECT_TRUE(settings.force_);
     EXPECT_FALSE(settings.showProgress_);
     EXPECT_EQ(string("/path/to/dir/"), settings.targetDir_);
+    EXPECT_EQ(string("diploid"), settings.ploidy_);
     EXPECT_EQ(42, settings.timeout_);
+    EXPECT_EQ(2, settings.delta_);
     EXPECT_EQ(string("requiredIn"),  settings.source_);
     EXPECT_EQ(string("requiredOut"), settings.dest_);
     return EXIT_SUCCESS;
@@ -131,7 +139,9 @@ static int appRunner(const PacBio::CLI::Results& args)
     s.force_        = args["force"];
     s.showProgress_ = args["progress"];
     s.targetDir_    = args["target_dir"];
+    s.ploidy_       = args["ploidy"];
     s.timeout_      = args["timeout"];
+    s.delta_        = args["delta"];
 
     EXPECT_EQ(PacBio::Logging::LogLevel::DEBUG, args.LogLevel());
 
@@ -146,7 +156,7 @@ static int inputCommandLineChecker(const PacBio::CLI::Results& results)
 {
     const string expectedCommandLine =
     {
-        "frobber -f --timeout=42 --target-dir /path/to/dir/ --logLevel=DEBUG requiredIn requiredOut"
+        "frobber -f --timeout=42 --delta=2 --ploidy=diploid --target-dir /path/to/dir/ --logLevel=DEBUG requiredIn requiredOut"
     };
     EXPECT_EQ(expectedCommandLine, results.InputCommandLine());
     return EXIT_SUCCESS;
@@ -174,6 +184,7 @@ TEST(CLI_Runner, emits_tool_contract_when_requested_from_command_line)
         "exe": "frobber --resolved-tool-contract",
         "serialization": "json"
     },
+    "schema_version": "2.0.0",
     "tool_contract": {
         "_comment": "Created by v0.0.1",
         "description": "Frobb your files in a most delightful, nobbly way",
@@ -217,73 +228,48 @@ TEST(CLI_Runner, emits_tool_contract_when_requested_from_command_line)
         ],
         "schema_options": [
             {
-                "$schema": "http://json-schema.org/draft-04/schema#",
-                "pb_option": {
-                    "default": false,
-                    "description": "Overwrite things.",
-                    "name": "Force Overwrite",
-                    "option_id": "frobber.task_options.force",
-                    "type": "boolean"
-                },
-                "properties": {
-                    "frobber.task_options.force": {
-                        "default": false,
-                        "description": "Overwrite things.",
-                        "title": "Force Overwrite",
-                        "type": "boolean"
-                    }
-                },
-                "required": [
-                    "frobber.task_options.force"
+                "choices": [
+                    1,
+                    2,
+                    3
                 ],
-                "title": "JSON Schema for frobber.task_options.force",
-                "type": "object"
+                "default": 1,
+                "description": "Some delta for things",
+                "id": "frobber.task_options.delta",
+                "name": "Frobbing delta",
+                "optionTypeId": "choice_integer"
             },
             {
-                "$schema": "http://json-schema.org/draft-04/schema#",
-                "pb_option": {
-                    "default": false,
-                    "description": "Show progress during copy.",
-                    "name": "Show Progress",
-                    "option_id": "frobber.task_options.progress",
-                    "type": "boolean"
-                },
-                "properties": {
-                    "frobber.task_options.progress": {
-                        "default": false,
-                        "description": "Show progress during copy.",
-                        "title": "Show Progress",
-                        "type": "boolean"
-                    }
-                },
-                "required": [
-                    "frobber.task_options.progress"
-                ],
-                "title": "JSON Schema for frobber.task_options.progress",
-                "type": "object"
+                "default": false,
+                "description": "Overwrite things.",
+                "id": "frobber.task_options.force",
+                "name": "Force Overwrite",
+                "optionTypeId": "boolean"
             },
             {
-                "$schema": "http://json-schema.org/draft-04/schema#",
-                "pb_option": {
-                    "default": 5000,
-                    "description": "Abort execution after <INT> milliseconds.",
-                    "name": "Timeout",
-                    "option_id": "frobber.task_options.timeout",
-                    "type": "integer"
-                },
-                "properties": {
-                    "frobber.task_options.timeout": {
-                        "default": 5000,
-                        "description": "Abort execution after <INT> milliseconds.",
-                        "title": "Timeout",
-                        "type": "integer"
-                    }
-                },
-                "required": [
-                    "frobber.task_options.timeout"
+                "choices": [
+                    "haploid",
+                    "diploid"
                 ],
-                "title": "JSON Schema for frobber.task_options.timeout",
-                "type": "object"
+                "default": "haploid",
+                "description": "Genome ploidy",
+                "id": "frobber.task_options.ploidy",
+                "name": "Ploidy",
+                "optionTypeId": "choice_string"
+            },
+            {
+                "default": false,
+                "description": "Show progress during copy.",
+                "id": "frobber.task_options.progress",
+                "name": "Show Progress",
+                "optionTypeId": "boolean"
+            },
+            {
+                "default": 5000,
+                "description": "Abort execution after <INT> milliseconds.",
+                "id": "frobber.task_options.timeout",
+                "name": "Timeout",
+                "optionTypeId": "integer"
             }
         ],
         "task_type": "pbsmrtpipe.task_types.standard",
@@ -317,6 +303,8 @@ TEST(CLI_Runner, runs_application_from_vector_of_args)
         PacBio::CLI::tests::appName(),
         "-f",
         "--timeout=42",
+        "--delta=2",
+        "--ploidy=diploid",
         "--target-dir", "/path/to/dir/",
         "--logLevel=DEBUG",
         "requiredIn",
@@ -331,16 +319,18 @@ TEST(CLI_Runner, runs_application_from_C_style_args)
 {
     SCOPED_TRACE("run from normal args - raw C char*, a la application main()");
 
-    static const int argc = 7;
+    static const int argc = 9;
     char* argv[argc+1];
     argv[0] = const_cast<char*>("frobber");
     argv[1] = const_cast<char*>("-f");
     argv[2] = const_cast<char*>("--timeout=42");
-    argv[3] = const_cast<char*>("--target-dir=/path/to/dir/");
-    argv[4] = const_cast<char*>("--logLevel=DEBUG");
-    argv[5] = const_cast<char*>("requiredIn");
-    argv[6] = const_cast<char*>("requiredOut");
-    argv[7] = nullptr;
+    argv[3] = const_cast<char*>("--delta=2");
+    argv[4] = const_cast<char*>("--ploidy=diploid");
+    argv[5] = const_cast<char*>("--target-dir=/path/to/dir/");
+    argv[6] = const_cast<char*>("--logLevel=DEBUG");
+    argv[7] = const_cast<char*>("requiredIn");
+    argv[8] = const_cast<char*>("requiredOut");
+    argv[9] = nullptr;
 
     PacBio::CLI::Run(argc, argv,
                      PacBio::CLI::tests::makeInterface(),
@@ -355,6 +345,8 @@ TEST(CLI_Runner, can_retrieve_input_commandline)
         PacBio::CLI::tests::appName(),
         "-f",
         "--timeout=42",
+        "--delta=2",
+        "--ploidy=diploid",
         "--target-dir", "/path/to/dir/",
         "--logLevel=DEBUG",
         "requiredIn",
@@ -384,6 +376,42 @@ TEST(CLI_Runner, runs_application_from_resolved_tool_contract)
                      &PacBio::CLI::tests::appRunner);
 }
 
+TEST(CLI_Runner, throws_on_invalid_choices)
+{
+    {
+        SCOPED_TRACE("use invalid int choice on command line");
+        const vector<string> args =
+        {
+            PacBio::CLI::tests::appName(),
+            "--delta=4",                    // <-- invalid input (must be one of [1,2,3])
+            "requiredIn",
+            "requiredOut"
+        };
+
+        EXPECT_THROW(
+            PacBio::CLI::Run(args,
+                             PacBio::CLI::tests::makeInterface(),
+                             &PacBio::CLI::tests::appRunner),
+            std::runtime_error);
+    }
+    {
+        SCOPED_TRACE("use invalid string choice on command line");
+        const vector<string> args =
+        {
+            PacBio::CLI::tests::appName(),
+            "--ploidy=triploid",            // <-- invalid input (must be one of["haploid","diploid"])
+            "requiredIn",
+            "requiredOut"
+        };
+
+        EXPECT_THROW(
+            PacBio::CLI::Run(args,
+                             PacBio::CLI::tests::makeInterface(),
+                             &PacBio::CLI::tests::appRunner),
+            std::runtime_error);
+    }
+}
+
 namespace PacBio {
 namespace CLI {
 namespace tests {
@@ -404,7 +432,9 @@ RtcGenerator::RtcGenerator(const std::string& fn)
         ],
         "nproc": 1,
         "options": {
+            "frobber.task_options.delta": 2,
             "frobber.task_options.force": true,
+            "frobber.task_options.ploidy": "diploid",
             "frobber.task_options.timeout": 42,
             "frobber.task_options.target_dir": "/path/to/dir/"
         },
@@ -430,4 +460,3 @@ RtcGenerator::~RtcGenerator(void)
 } // namespace tests
 } // namespace CLI
 } // namespace PacBio
-

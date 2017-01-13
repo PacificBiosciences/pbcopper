@@ -70,12 +70,14 @@ public:
     /// short name. %Option names must not be empty, must not start with a dash
     /// or a slash character, must not contain a '=' and cannot be repeated.
     ///
-    /// The description is set to \p description. In addition, the \p valueName
-    /// can be set if the option expects a value. The default value for the
+    /// The description is set to \p description. The default value for the
     /// option is set to \p defaultValue.
     ///
     /// If \p defaultValue is not provided, the option is considered to be a
     /// switch.
+    ///
+    /// If a \p choices array is provided, the input from the command line must
+    /// be a member of the array.
     ///
     /// This class can participate in C++11-style uniform initialization:
     ///
@@ -84,15 +86,17 @@ public:
     /// cl.addOption({"verbose_arg", "verbose", "Verbose mode."});
     /// \endcode
     ///
+    /// \param[in]  id              option ID (must be unique, used later to fetch results)
     /// \param[in]  name            option name
     /// \param[in]  description     option description
-    /// \param[in]  valueName       value name (used in help display)
-    /// \param[in]  defaultValue    default value for option if not specified
+    /// \param[in]  defaultValue    default value, if not user-specified
+    /// \param[in]  choices
     ///
     Option(const std::string& id,
            const std::string& name,
            const std::string& description,
-           const JSON::Json& defaultValue = JSON::Json(nullptr));
+           const JSON::Json& defaultValue = JSON::Json(nullptr),
+           const JSON::Json& choices = JSON::Json(nullptr));
 
     /// \brief Constructs a command line option object with the given arguments.
     ///
@@ -175,6 +179,12 @@ public:
     /// \{
 
     ///
+    /// \brief Choices
+    /// \return
+    ///
+    JSON::Json Choices(void) const;
+
+    ///
     /// \brief DefaultValue
     /// \return
     ///
@@ -185,6 +195,12 @@ public:
     /// \return
     ///
     std::string Description(void) const;
+
+    ///
+    /// \brief HasChoices
+    /// \return
+    ///
+    bool HasChoices(void) const;
 
     ///
     /// \brief Id
@@ -203,6 +219,12 @@ public:
     /// \return
     ///
     std::vector<std::string> Names(void) const;
+
+    ///
+    /// \brief TypeId
+    /// \return
+    ///
+    std::string TypeId(void) const;
 
     ///
     /// \brief ValueName

@@ -245,6 +245,15 @@ const Option& Interface::LogLevelOption(void) const
     return d_->logLevelOption_.get();
 }
 
+PacBio::JSON::Json Interface::OptionChoices(const std::string& optionId) const
+{
+    for (const auto& opt : d_->options_) {
+        if (opt.Id() == optionId)
+            return opt.Choices();
+    }
+    return PacBio::JSON::Json(nullptr);
+}
+
 vector<Option> Interface::RegisteredOptions(void) const
 { return d_->options_; }
 

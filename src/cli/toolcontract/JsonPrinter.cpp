@@ -13,10 +13,9 @@ using namespace PacBio::JSON;
 using namespace std;
 
 namespace PacBio {
-
 namespace CLI {
 
-Option RegisteredOption(const Interface& interface, const string& optionId)
+static Option RegisteredOption(const Interface& interface, const string& optionId)
 {
     const auto registeredOptions = interface.RegisteredOptions();
     for (const Option& opt : registeredOptions) {
@@ -28,6 +27,11 @@ Option RegisteredOption(const Interface& interface, const string& optionId)
 
 namespace ToolContract {
 namespace internal {
+
+static Json currentSchemaVersion(void)
+{
+    return Json("2.0.0");
+}
 
 static Json makeDriverJson(const Interface& interface)
 {
@@ -77,6 +81,15 @@ static Json makeInputTypesJson(const Interface& interface)
     return inputTypesJson;
 }
 
+static Json makeNproc(const ToolContract::Task& task)
+{
+    const auto numProcessors = task.NumProcessors();
+    if (numProcessors == ToolContract::Task::MAX_NPROC)
+        return Json("$max_nproc" );
+    else
+        return Json( numProcessors );
+}
+
 static Json makeOutputTypesJson(const Interface& interface)
 {
     Json outputTypesJson = Json::array();
@@ -120,66 +133,46 @@ static Json makeResourceTypesJson(const ToolContract::Task& task)
     return resourceTypesJson;
 }
 
+static Json makeSchemaOptionJson(const Interface& interface,
+                                 const std::string& optionPrefix,
+                                 const std::pair<std::string, std::string>& taskOption)
+{
+    // format ID/display name
+    const std::string& optionId = taskOption.first;
+    const std::string& optionDisplayName = taskOption.second;
+    const std::string fullOptionId = optionPrefix + ".task_options." + optionId;
+
+    // get option info
+    const Option registeredOption = RegisteredOption(interface, optionId);
+    const JSON::Json& defaultValue = registeredOption.DefaultValue();
+    const std::string& description = registeredOption.Description();
+    const std::string& optionType  = registeredOption.TypeId();
+
+    // populate JSON
+    Json schemaOption = Json::object();
+    schemaOption["default"]      = defaultValue;
+    schemaOption["description"]  = description;
+    schemaOption["id"]           = fullOptionId;
+    schemaOption["name"]         = optionDisplayName;
+    schemaOption["optionTypeId"] = optionType;
+
+    if (registeredOption.HasChoices())
+        schemaOption["choices"] = registeredOption.Choices();
+
+    return schemaOption;
+}
+
 static Json makeSchemaOptionsJson(const Interface& interface)
 {
     Json schemaOptions = Json::array();
-
-    const auto& task = interface.ToolContract().Task();
-    const auto& taskOptions = task.Options();
 
     const auto optionPrefix = interface.AlternativeToolContractName().empty()
                                 ? interface.ApplicationName()
                                 : interface.AlternativeToolContractName();
 
-    for (const auto& taskOption : taskOptions) {
-
-        const std::string& optionId = taskOption.first;
-        const std::string& optionDisplayName = taskOption.second;
-        const std::string fullOptionId = optionPrefix + ".task_options." + optionId;
-
-        const Option registeredOption = RegisteredOption(interface, optionId);
-        const std::string optionDescription = registeredOption.Description();
-        const JSON::Json optionDefaultValue = registeredOption.DefaultValue();
-
-        string optionType;
-        switch(optionDefaultValue.type())
-        {
-            case Json::value_t::number_integer  : // fall through
-            case Json::value_t::number_unsigned : optionType = "integer"; break;
-            case Json::value_t::number_float    : optionType = "number"; break;
-            case Json::value_t::string          : optionType = "string"; break;
-            case Json::value_t::boolean         : optionType = "boolean"; break;
-            default:
-                throw std::runtime_error("PacBio::CLI::ToolContract::JsonPrinter - unknown type for option: "+optionId);
-        }
-
-        Json pbOption;
-        pbOption["default"]     = optionDefaultValue;
-        pbOption["option_id"]   = fullOptionId;
-        pbOption["name"]        = optionDisplayName;
-        pbOption["description"] = optionDescription;
-        pbOption["type"]        = optionType;
-
-        Json schemaOption = Json::object();
-        schemaOption["$schema"] = "http://json-schema.org/draft-04/schema#";
-        schemaOption["type"]    = "object";
-        schemaOption["title"] = "JSON Schema for " + fullOptionId;
-
-        schemaOption["pb_option"] = pbOption;
-
-        schemaOption["required"] = Json::array();
-        schemaOption["required"].push_back(fullOptionId);
-
-        schemaOption["properties"] = Json::object();
-        schemaOption["properties"][fullOptionId] = Json::object();
-        schemaOption["properties"][fullOptionId]["default"]     = optionDefaultValue;
-        schemaOption["properties"][fullOptionId]["type"]        = optionType;
-        schemaOption["properties"][fullOptionId]["description"] = optionDescription;
-        schemaOption["properties"][fullOptionId]["title"]       = optionDisplayName;
-
-        schemaOptions.push_back(schemaOption);
-    }
-
+    const auto& task = interface.ToolContract().Task();
+    for (const auto& taskOption : task.Options())
+        schemaOptions.push_back(makeSchemaOptionJson(interface, optionPrefix, taskOption));
     return schemaOptions;
 }
 
@@ -197,22 +190,16 @@ static std::string makeTaskType(const TaskType& type)
 
 static Json makeTaskJson(const Interface& interface)
 {
+    Json tcJson;
     const auto& task = interface.ToolContract().Task();
 
-    Json tcJson;
-    tcJson["_comment"]    = "Created by v" + Utility::LibraryVersionString();
-    tcJson["description"] = interface.ApplicationDescription();
-    tcJson["name"]        = interface.ApplicationName();
-
-    const auto numProcessors = task.NumProcessors();
-    if (numProcessors == Task::MAX_NPROC)
-        tcJson["nproc"] = "$max_nproc";
-    else
-        tcJson["nproc"] = numProcessors;
-
+    tcJson["_comment"]         = "Created by v" + Utility::LibraryVersionString();
+    tcJson["description"]      = interface.ApplicationDescription();
+    tcJson["name"]             = interface.ApplicationName();
     tcJson["is_distributed"]   = task.IsDistributed();
     tcJson["tool_contract_id"] = task.TaskId();
 
+    tcJson["nproc"]          = internal::makeNproc(task);
     tcJson["task_type"]      = internal::makeTaskType(task.Type());
     tcJson["input_types"]    = internal::makeInputTypesJson(interface);
     tcJson["output_types"]   = internal::makeOutputTypesJson(interface);
@@ -234,6 +221,7 @@ void JsonPrinter::Print(const Interface& interface,
     // build up JSON object from @interface
     Json result;
     result["driver"]           = internal::makeDriverJson(interface);
+    result["schema_version"]   = internal::currentSchemaVersion();
     result["tool_contract"]    = internal::makeTaskJson(interface);
     result["tool_contract_id"] = interface.ToolContract().Task().TaskId();
     result["version"]          = interface.ApplicationVersion();

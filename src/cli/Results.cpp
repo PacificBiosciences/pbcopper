@@ -120,6 +120,24 @@ Results& Results::RegisterOptionValue(const string& optionId,
         }
     }
 
+    // check choices
+    const auto& choices = d_->interface_.OptionChoices(optionId);
+    if (choices.is_array() && !choices.empty()) {
+        bool match = false;
+        for (const auto& e : choices) {
+            if (e == optionValue) {
+                match = true;
+                break;
+            }
+        }
+        if (!match) {
+            std::string msg = string{ "PacBio::CLI::Results - encountered unsupported value: " };
+            msg += optionValue.dump() + string{ " for " } + optionId;
+            msg += string{ "\n  Valid choices are: " } + choices.dump();
+            throw std::runtime_error(msg);
+        }
+    }
+
     return *this;
 }
 
@@ -139,16 +157,7 @@ Results& Results::RegisterOptionValueString(const string& optionId,
             throw std::runtime_error("PacBio::CLI::Results - unknown type for option: "+optionId);
     }
 
-    // check user-supplied log level
-    if (d_->interface_.HasLogLevelOptionRegistered()) {
-        const auto logLevelOptionId = d_->interface_.LogLevelOption().Id();
-        if (logLevelOptionId == optionId) {
-            const string logLevelString = optionValue;
-            d_->logLevel_ = PacBio::Logging::LogLevel(logLevelString);
-        }
-    }
-
-    return *this;
+    return RegisterOptionValue(optionId, opt);
 }
 
 Results& Results::RegisterPositionalArg(const string& posArg)
@@ -159,18 +168,6 @@ Results& Results::SetFromRTC(const bool ok)
 
 const Interface& Results::ApplicationInterface(void) const
 { return d_->interface_; }
-
-//std::string Results::PositionalArgument(const std::string& posArgName) const
-//{
-//    const auto& registeredPosArgs = d_->interface_.RegisteredPositionalArgs();
-//    size_t index = 0;
-//    for (const PositionalArg& registeredArg : registeredPosArgs) {
-//        if (posArgName == registeredArg.name_)
-//            return d_->positionalArgs_.at(index);
-//        ++index;
-//    }
-//    throw std::runtime_error("PacBio::CLI::Results - unknown positional arg name: "+posArgName);
-//}
 
 vector<string> Results::PositionalArguments(void) const
 { return d_->positionalArgs_; }
