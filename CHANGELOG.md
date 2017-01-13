@@ -6,6 +6,8 @@
 - Interface groups
 - Initial sequence-related data structures
 
+## [0.1.0] - 2017-01-13
+
 ### Added
 - Encapsulate project version and git sha1
 - RSMovieName & RSReadName: Sequel and RSII movie names are composed of
