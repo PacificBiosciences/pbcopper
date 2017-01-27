@@ -245,7 +245,7 @@ TEST(QGram_Index, index_hits_INTERNAL_from_shape_short_seq)
     for (uint32_t i = 0; i < end; ++i) {
         if (isHomopolymer(shape.HashNext()))
             continue;
-        const auto hits = idx.Hits(shape);
+        const auto hits = idx.Hits(shape, i);
         ASSERT_EQ(expected.size(), hits.size());
         for (size_t i = 0; i < hits.size(); ++i) {
             const auto& hit = hits.at(i);
@@ -283,7 +283,7 @@ TEST(QGram_Index, index_hits_INTERNAL_from_shape_longer_seq)
     const auto end = PacBio::Utility::SafeSubtract(seq.size()+1, q);
     for (uint32_t j = 0; j < end; ++j) {
         shape.HashNext();
-        const auto hits = idx.Hits(shape);
+        const auto hits = idx.Hits(shape, j);
         for (size_t i = 0; i < hits.size(); ++i)
             observed.push_back(hits.at(i).Position());
     }
