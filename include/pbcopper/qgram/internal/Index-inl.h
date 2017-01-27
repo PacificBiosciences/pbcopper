@@ -25,7 +25,8 @@ public:
     // index lookup API
     IndexHit Hit(const Shape& shape) const;
     IndexHits Hits(const Shape& shape, const size_t queryPos) const;
-    std::vector<IndexHits> Hits(const std::string& seq) const;
+    std::vector<IndexHits> Hits(const std::string& seq,
+                                const bool filterHomopolymers) const;
 
     // "private" method(s) - index construction
     void Init(void);
@@ -122,15 +123,26 @@ inline IndexHits IndexImpl::Hits(const Shape& shape, const size_t queryPos) cons
     return IndexHits { &suffixArray_, iter, end, queryPos };
 }
 
-inline std::vector<IndexHits> IndexImpl::Hits(const std::string& seq) const
+inline std::vector<IndexHits> IndexImpl::Hits(const std::string& seq,
+                                              const bool filterHomopolymers) const
 {
     std::vector<IndexHits> result;
     const auto end = ::PacBio::Utility::SafeSubtract(seq.size()+1, q_);
     result.reserve(end);
     Shape shape{ q_, seq };
-    for (size_t i = 0; i < end; ++i) {
-        shape.HashNext();
-        result.emplace_back(Hits(shape, i));
+
+    if (filterHomopolymers) {
+        for (size_t i = 0; i < end; ++i) {
+            shape.HashNext();
+            result.emplace_back(Hits(shape, i));
+        }
+    }
+    else {
+        HpHasher isHomopolymer(q_);
+        for (size_t i = 0; i < end; ++i) {
+            if (!isHomopolymer(shape.HashNext()))
+                result.emplace_back(Hits(shape, i));
+        }
     }
     return result;
 }
@@ -159,10 +171,11 @@ inline Index::Index(const size_t q, std::vector<std::string>&& seqs)
     : d_(new internal::IndexImpl(q, std::move(seqs)))
 { }
 
-inline std::vector<IndexHits> Index::Hits(const std::string& seq) const
+inline std::vector<IndexHits> Index::Hits(const std::string& seq,
+                                          const bool filterHomopolymers) const
 {
     assert(d_);
-    return d_->Hits(seq);
+    return d_->Hits(seq, filterHomopolymers);
 }
 
 inline size_t Index::Size(void) const
