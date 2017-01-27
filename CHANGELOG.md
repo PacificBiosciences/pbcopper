@@ -15,7 +15,7 @@ different data, and thus need to be handled separately. MovieName & ReadName
 handle Sequel-style data as the default.
 - GoogleTest/GoogleMock in third-party/googletest
 - Access to input command line from PacBio::CLI::Results
-- QGramIndex
+- QGramIndex & seed results
 - Added support for new tool contract data model: option choices & modified JSON
 format.
 

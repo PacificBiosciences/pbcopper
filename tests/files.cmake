@@ -11,6 +11,9 @@ set( pbcopperTest_CPP
     ${pbcopper_ThirdPartyDir}/googletest/gmock-gtest-all.cc
     ${pbcopper_ThirdPartyDir}/googletest/gmock-gtest-main.cc
 
+    # align
+    ${pbcopper_TestsDir}/src/align/test_Seeds.cpp
+
     # cli
     ${pbcopper_TestsDir}/src/cli/test_CLI.cpp
     ${pbcopper_TestsDir}/src/cli/test_HelpPrinter.cpp

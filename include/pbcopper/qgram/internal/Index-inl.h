@@ -24,7 +24,7 @@ public:
 
     // index lookup API
     IndexHit Hit(const Shape& shape) const;
-    IndexHits Hits(const Shape& shape) const;
+    IndexHits Hits(const Shape& shape, const size_t queryPos) const;
     std::vector<IndexHits> Hits(const std::string& seq) const;
 
     // "private" method(s) - index construction
@@ -114,12 +114,12 @@ inline IndexHit IndexImpl::Hit(const Shape& shape) const
     return suffixArray_[i];
 }
 
-inline IndexHits IndexImpl::Hits(const Shape& shape) const
+inline IndexHits IndexImpl::Hits(const Shape& shape, const size_t queryPos) const
 {
     const auto b = shape.currentHash_;
     const auto iter = hashLookup_[b];
     const auto end = hashLookup_[b+1];
-    return IndexHits { &suffixArray_, iter, end };
+    return IndexHits { &suffixArray_, iter, end, queryPos };
 }
 
 inline std::vector<IndexHits> IndexImpl::Hits(const std::string& seq) const
@@ -130,7 +130,7 @@ inline std::vector<IndexHits> IndexImpl::Hits(const std::string& seq) const
     Shape shape{ q_, seq };
     for (size_t i = 0; i < end; ++i) {
         shape.HashNext();
-        result.emplace_back(Hits(shape));
+        result.emplace_back(Hits(shape, i));
     }
     return result;
 }

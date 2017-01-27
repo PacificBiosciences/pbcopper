@@ -9,6 +9,16 @@ set(pbcopper_H
     ${CMAKE_BINARY_DIR}/generated/pbcopper/utility/Version.h
 
     # -------
+    # align
+    # -------
+
+    ${pbcopper_IncludeDir}/pbcopper/align/Seed.h
+    ${pbcopper_IncludeDir}/pbcopper/align/Seeds.h
+
+    ${pbcopper_IncludeDir}/pbcopper/align/internal/Seed-inl.h
+    ${pbcopper_IncludeDir}/pbcopper/align/internal/Seeds-inl.h
+
+    # -------
     # cli
     # -------
 
@@ -86,8 +96,10 @@ set(pbcopper_H
     ${pbcopper_IncludeDir}/pbcopper/qgram/Index.h
     ${pbcopper_IncludeDir}/pbcopper/qgram/IndexHit.h
     ${pbcopper_IncludeDir}/pbcopper/qgram/IndexHits.h
+
     ${pbcopper_IncludeDir}/pbcopper/qgram/internal/Hashing-inl.h
     ${pbcopper_IncludeDir}/pbcopper/qgram/internal/Index-inl.h
+
 
     # -------
     # stream

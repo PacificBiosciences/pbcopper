@@ -22,9 +22,10 @@ public:
     ///
     /// \brief IndexHits
     /// \param source
+    /// \param seqPos
     ///
-    IndexHits(const std::vector<IndexHit>* source)
-        : IndexHits(source, 0, source->size())
+    IndexHits(const std::vector<IndexHit>* source, const size_t queryPos)
+        : IndexHits(source, 0, source->size(), queryPos)
     { }
 
     ///
@@ -33,10 +34,14 @@ public:
     /// \param begin
     /// \param end
     ///
-    IndexHits(const std::vector<IndexHit>* source, size_t begin, size_t end)
+    IndexHits(const std::vector<IndexHit>* source,
+              const size_t begin,
+              const size_t end,
+              const size_t queryPos)
         : source_(source)
         , begin_(begin)
         , end_(end)
+        , queryPos_(queryPos)
     {
         assert(source);
         assert(begin <= end);
@@ -45,6 +50,9 @@ public:
     IndexHits(const IndexHits&) = default;
     IndexHits(IndexHits&&) = default;
     ~IndexHits(void) = default;
+
+public:
+    size_t QueryPosition(void) const { return queryPos_; }
 
 public:
     /// \name STL compatibility
@@ -79,6 +87,7 @@ private:
     const std::vector<IndexHit>* source_;
     const size_t begin_;
     const size_t end_;
+    const size_t queryPos_;
 };
 
 } // namespace QGram
