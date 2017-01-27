@@ -131,7 +131,7 @@ inline std::vector<IndexHits> IndexImpl::Hits(const std::string& seq,
     result.reserve(end);
     Shape shape{ q_, seq };
 
-    if (filterHomopolymers) {
+    if (!filterHomopolymers) {
         for (size_t i = 0; i < end; ++i) {
             shape.HashNext();
             result.emplace_back(Hits(shape, i));
