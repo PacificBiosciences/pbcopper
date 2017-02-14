@@ -45,6 +45,7 @@ set( pbcopperTest_CPP
 
     # utility
     ${pbcopper_TestsDir}/src/utility/test_CallbackTimer.cpp
+    ${pbcopper_TestsDir}/src/utility/test_FileUtils.cpp
     ${pbcopper_TestsDir}/src/utility/test_Stopwatch.cpp
     ${pbcopper_TestsDir}/src/utility/test_SystemInfo.cpp
 )
