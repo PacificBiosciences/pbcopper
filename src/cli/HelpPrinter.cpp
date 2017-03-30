@@ -49,8 +49,35 @@ string formatOption(string optionOutput,
 
     // maybe add default value to description
     if (shouldIncludeDefaultValue(defaultValue)) {
+
         fullDescription += " [";
-        fullDescription += defaultValue.dump();
+
+        // We need to bypass nlohmann::json's dump() method for floating point
+        // values. It ends up trying to output _far_ too many digits. Without
+        // special handling, we would get:
+        //
+        //  --foo  Description of foo. [0.0900000035762787]
+        //  --bar  Description of bar. [0.100000001490116]
+        //
+        // when we are expecting:
+        //
+        //  --foo  Description of foo. [0.09]
+        //  --bar  Description of bar. [0.1]
+        //
+        // std::ostream APIs do the right thing in this case.
+        //
+        // NOTE: For future reference, std::to_string sounds right here, but
+        //       isn't. It uses a fixed precision of 6 for floats.
+        //
+        if (defaultValue.is_number_float()) {
+            const float f = defaultValue;
+            stringstream s;
+            s << f;
+            fullDescription += s.str();
+        } else {
+            fullDescription += defaultValue.dump();
+        }
+
         fullDescription += "]";
     }
 
