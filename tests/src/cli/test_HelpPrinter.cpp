@@ -24,7 +24,9 @@ TEST(CLI_HelpPrinter, prints_expected_help_output)
         {"force",      {"f", "force"},      "Overwrite things." },
         {"target_dir", {"t", "target-dir"}, "Copy all source files into <DIR>.",         Option::StringType("my/default/dir")},
         {"timeout",    {"timeout"},         "Abort execution after <INT> milliseconds.", Option::IntType(5000)},
-        {"modelPath",  {"M", "modelPath"},  "Path to a model file.",                     Option::StringType("")}  // empty default string should be omitted from help
+        {"modelPath",  {"M", "modelPath"},  "Path to a model file.",                     Option::StringType("")},  // empty default string should be omitted from help
+        {"min_prevalence", {"minPrev"},     "Minimum prevalence to require things.",     Option::FloatType(0.09)},
+        {"min_split_frac", {"minSplit"},    "Minimum fraction of reads.",                Option::FloatType(0.1)}
     });
     i.AddPositionalArguments({
         {"source", "Source file to copy."},
@@ -45,6 +47,8 @@ TEST(CLI_HelpPrinter, prints_expected_help_output)
         "  -t,--target-dir  Copy all source files into <DIR>. [\"my/default/dir\"]\n"
         "  --timeout        Abort execution after <INT> milliseconds. [5000]\n"
         "  -M,--modelPath   Path to a model file.\n"
+        "  --minPrev        Minimum prevalence to require things. [0.09]\n"
+        "  --minSplit       Minimum fraction of reads. [0.1]\n"
         "\n"
         "Arguments: \n"
         "  source           Source file to copy.\n"
