@@ -3,7 +3,6 @@
 ## Active
 
 ### TODO
-- Interface groups
 - Initial sequence-related data structures
 
 ## [0.1.0] - 2017-01-13
@@ -18,6 +17,7 @@ handle Sequel-style data as the default.
 - QGramIndex & seed results
 - Added support for new tool contract data model: option choices & modified JSON
 format.
+- Added basic option groups to CLI::Interface.
 
 ## [0.0.1] - 2016-06-22
 

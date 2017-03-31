@@ -182,16 +182,13 @@ string makeHelpText(const Interface& interface)
     result << endl;
 
     // options
-    if (!options.empty())
-        result << "Options: " << endl;
-
-    auto optionOutputList = vector<string>{ };
+    auto formattedOptions = map<string, string>{ }; // id -> formatted output
     auto longestOptionOutputLength = size_t{ 0 };
 
-    // registered options
+    // determine longest option names & store formatting for use later
     for(const auto& option : options) {
         const auto optionOutputString = formatOptionNames(option);
-        optionOutputList.push_back(optionOutputString);
+        formattedOptions[option.Id()] = optionOutputString;
         longestOptionOutputLength = std::max(longestOptionOutputLength,
                                              optionOutputString.size());
     }
@@ -199,22 +196,49 @@ string makeHelpText(const Interface& interface)
     // spacer
     ++longestOptionOutputLength;
 
-    // registered options
-    for (size_t i = 0; i < options.size(); ++i) {
-        const auto& option = options.at(i);
-        if (option.IsHidden())
-            continue;
-        result << formatOption(optionOutputList.at(i),
-                               longestOptionOutputLength,
-                               option.Description(),
-                               option.DefaultValue());
+    if (!options.empty())
+    {
+        auto printGroup = [](const Interface& interface,
+                             const std::string& group,
+                             const map<string, string>& formattedOptions,
+                             const size_t longestOptionOutputLength,
+                             std::stringstream& result)
+        {
+            const auto& opts = interface.GroupOptions(group);
+            if (opts.empty())
+                return;
+            result << group << ":\n";
+            for (const auto& opt : opts) {
+                if (opt.IsHidden())
+                    continue;
+                result << formatOption(formattedOptions.at(opt.Id()),
+                                       longestOptionOutputLength,
+                                       opt.Description(),
+                                       opt.DefaultValue());
+            }
+
+            result << '\n';
+        };
+
+        // print all non-default groups in the order they were added
+        const auto& groups = interface.Groups();
+        for (const auto& group : groups) {
+            if (group != "Options") {
+                printGroup(interface, group, formattedOptions,
+                           longestOptionOutputLength, result);
+            }
+        }
+
+        // print default group last (help, version, etc) or options added
+        // to interface directly (no group)
+        printGroup(interface, "Options", formattedOptions,
+                   longestOptionOutputLength,result);
     }
+
 
     // positional args
     if (!posArgs.empty()) {
-        if (!options.empty())
-            result << endl;
-        result << "Arguments: " << endl;
+        result << "Arguments:\n";
         for (const auto& posArg : posArgs) {
             result << formatOption(posArg.name_,
                                    longestOptionOutputLength,

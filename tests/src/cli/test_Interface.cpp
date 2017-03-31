@@ -193,3 +193,33 @@ TEST(CLI_Interface, has_version_option_if_requested)
     cl.AddVersionOption();
     EXPECT_TRUE(tests::HasOption(cl, "version"));
 }
+
+TEST(CLI_Interface, add_group)
+{
+    PacBio::CLI::Interface cl{ tests::AppName() };
+
+    cl.AddGroup("group1",
+    {
+        {"opt_id",  {"o", "output"}, "write output"},
+        {"opt_id2", {"i", "input"},  "write input"}
+    });
+
+    cl.AddGroup("group2",
+    {
+        {"opt_id3", {"p"}, "progress"}
+    });
+
+    const auto& groups = cl.Groups();
+    EXPECT_EQ(2, groups.size());
+    EXPECT_EQ("group1", groups.at(0));
+    EXPECT_EQ("group2", groups.at(1));
+
+    const auto& group1 = cl.GroupOptions("group1");
+    EXPECT_EQ(2, group1.size());
+    EXPECT_EQ(string{"opt_id"},  group1.at(0).Id());
+    EXPECT_EQ(string{"opt_id2"}, group1.at(1).Id());
+
+    const auto& group2 = cl.GroupOptions("group2");
+    EXPECT_EQ(1, group2.size());
+    EXPECT_EQ(string{"opt_id3"}, group2.at(0).Id());
+}
