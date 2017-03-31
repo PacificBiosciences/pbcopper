@@ -86,6 +86,19 @@ public:
     bool ExpectsValue(const std::string& optionName) const;
 
     ///
+    /// \brief Groups
+    /// \return
+    ///
+    std::vector<std::string> Groups(void) const;
+
+    ///
+    /// \brief GroupOptions
+    /// \param name
+    /// \return
+    ///
+    std::vector<Option> GroupOptions(const std::string& group) const;
+
+    ///
     /// \brief HasOptionRegistered
     /// \param optionName
     /// \return
@@ -220,6 +233,17 @@ public:
 public:
     /// \name Interface Setup
     /// \{
+
+    ///
+    /// \brief AddGroup
+    /// \param name
+    /// \param option
+    /// \return
+    ///
+    Interface& AddGroup(const std::string& name,
+                        const std::vector<Option>& option);
+
+    ///
     /// \brief AddOption
     /// \param option
     /// \return

@@ -31,8 +31,14 @@ public:
     vector<PositionalArg> positionalArgs_;
     NameLookup    optionNameLookup_;
 
+    // option groups
+    std::vector<std::string> optionGroupNames_;
+    std::map<std::string, std::vector<size_t>> optionGroups_; // name -> options_[idx]
+
+    // tool contract config
     boost::optional<ToolContract::Config> tcConfig_;
 
+    // standard options
     boost::optional<Option> helpOption_;
     boost::optional<Option> logLevelOption_;
     boost::optional<Option> verboseOption_;
@@ -60,11 +66,11 @@ public:
     InterfacePrivate(const InterfacePrivate& other) = default;
 
 public:
-    void AddOption(const Option& option);
+    void AddOption(const Option& option, const std::string& group = "Options");
     void AddPositionalArgument(PositionalArg posArg);
 };
 
-void InterfacePrivate::AddOption(const Option& option)
+void InterfacePrivate::AddOption(const Option& option, const std::string& group)
 {
     auto optionNames = option.Names();
     assert(!optionNames.empty());
@@ -82,6 +88,12 @@ void InterfacePrivate::AddOption(const Option& option)
     const auto optionIndex = options_.size() - 1;
     for (const auto& name : optionNames)
         optionNameLookup_.insert(std::make_pair(name, optionIndex));
+
+    // add option to group
+    const auto nameIter = optionGroups_.find(group);
+    if (nameIter == optionGroups_.cend())
+        optionGroupNames_.push_back(group); // add new group
+    optionGroups_[group].push_back(optionIndex);
 }
 
 void InterfacePrivate::AddPositionalArgument(PositionalArg posArg)
@@ -110,6 +122,14 @@ Interface::Interface(const Interface& other)
 { }
 
 Interface::~Interface(void) { }
+
+Interface& Interface::AddGroup(const std::string& name,
+                               const std::vector<Option>& options)
+{
+    for (const auto& opt : options)
+        d_->AddOption(opt, name);
+    return *this;
+}
 
 Interface& Interface::AddHelpOption(const Option& option)
 {
@@ -199,6 +219,19 @@ bool Interface::ExpectsValue(const std::string& optionName) const
     const auto offset = nameLookupIter->second;
     const JSON::Json& defaultValue = d_->options_.at(offset).DefaultValue();
     return !defaultValue.is_boolean();
+}
+
+std::vector<std::string> Interface::Groups(void) const
+{ return d_->optionGroupNames_; }
+
+std::vector<Option> Interface::GroupOptions(const std::string& group) const
+{
+    std::vector<Option> result;
+    const auto indices = d_->optionGroups_.at(group);
+    result.reserve(indices.size());
+    for (const auto& idx : indices)
+        result.push_back(d_->options_.at(idx));
+    return result;
 }
 
 bool Interface::HasHelpOptionRegistered(void) const
