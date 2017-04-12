@@ -42,7 +42,8 @@ static PacBio::CLI::Interface makeInterface(void)
         {"dry_run",    {"n", "no-op"},      "Dry run. Report actions that would be taken but do not perform them"},
         {"timeout",    {"timeout"},         "Abort execution after <INT> milliseconds.", Option::IntType(5000)},
         {"delta",      "delta",             "Some delta for things", Option::IntType(1), { 1, 2, 3 }},
-        {"ploidy",     "ploidy",            "Genome ploidy", Option::StringType("haploid"), {"haploid", "diploid"}}
+        {"ploidy",     "ploidy",            "Genome ploidy", Option::StringType("haploid"), {"haploid", "diploid"}},
+        {"element",    {"e", "element"},    "Choice of element indicates mood. Science.", Option::StringType("fire"), {"earth", "wind", "fire", "water"}} 
     });
 
     i.AddPositionalArguments({
@@ -75,7 +76,8 @@ static PacBio::CLI::Interface makeToolContractEnabledInterface(void)
         {"force",    "Force Overwrite"},
         {"timeout",  "Timeout"},
         {"delta",    "Frobbing delta" },
-        {"ploidy",   "Ploidy" }
+        {"ploidy",   "Ploidy" },
+        {"element", "Element"}
     });
     tcTask.InputFileTypes({
         { "ID", "title", "description", "type" },
@@ -105,6 +107,7 @@ struct MyAppSettings
     bool showProgress_;
     string targetDir_;
     string ploidy_;
+    string element_;
     int timeout_;
     int delta_;
     string source_;
@@ -122,6 +125,7 @@ static int mainAppEntry(const MyAppSettings& settings)
     EXPECT_FALSE(settings.showProgress_);
     EXPECT_EQ(string("/path/to/dir/"), settings.targetDir_);
     EXPECT_EQ(string("diploid"), settings.ploidy_);
+    EXPECT_EQ(string("water"), settings.element_);
     EXPECT_EQ(42, settings.timeout_);
     EXPECT_EQ(2, settings.delta_);
     EXPECT_EQ(string("requiredIn"),  settings.source_);
@@ -140,6 +144,7 @@ static int appRunner(const PacBio::CLI::Results& args)
     s.showProgress_ = args["progress"];
     s.targetDir_    = args["target_dir"];
     s.ploidy_       = args["ploidy"];
+    s.element_      = args["element"];
     s.timeout_      = args["timeout"];
     s.delta_        = args["delta"];
 
@@ -156,7 +161,7 @@ static int inputCommandLineChecker(const PacBio::CLI::Results& results)
 {
     const string expectedCommandLine =
     {
-        "frobber -f --timeout=42 --delta=2 --ploidy=diploid --target-dir /path/to/dir/ --logLevel=DEBUG requiredIn requiredOut"
+        "frobber -f --timeout=42 --delta=2 --ploidy=diploid --element=water --target-dir /path/to/dir/ --logLevel=DEBUG requiredIn requiredOut"
     };
     EXPECT_EQ(expectedCommandLine, results.InputCommandLine());
     return EXIT_SUCCESS;
@@ -240,6 +245,19 @@ TEST(CLI_Runner, emits_tool_contract_when_requested_from_command_line)
                 "optionTypeId": "choice_integer"
             },
             {
+                "choices": [
+                    "earth",
+                    "wind",
+                    "fire",
+                    "water"
+                ],
+                "default": "fire",
+                "description": "Choice of element indicates mood. Science.",
+                "id": "frobber.task_options.element",
+                "name": "Element",
+                "optionTypeId": "choice_string"
+            },
+            {
                 "default": false,
                 "description": "Overwrite things.",
                 "id": "frobber.task_options.force",
@@ -305,6 +323,7 @@ TEST(CLI_Runner, runs_application_from_vector_of_args)
         "--timeout=42",
         "--delta=2",
         "--ploidy=diploid",
+        "-e", "water",
         "--target-dir", "/path/to/dir/",
         "--logLevel=DEBUG",
         "requiredIn",
@@ -319,18 +338,19 @@ TEST(CLI_Runner, runs_application_from_C_style_args)
 {
     SCOPED_TRACE("run from normal args - raw C char*, a la application main()");
 
-    static const int argc = 9;
+    static const int argc = 10;
     char* argv[argc+1];
     argv[0] = const_cast<char*>("frobber");
     argv[1] = const_cast<char*>("-f");
     argv[2] = const_cast<char*>("--timeout=42");
     argv[3] = const_cast<char*>("--delta=2");
     argv[4] = const_cast<char*>("--ploidy=diploid");
-    argv[5] = const_cast<char*>("--target-dir=/path/to/dir/");
-    argv[6] = const_cast<char*>("--logLevel=DEBUG");
-    argv[7] = const_cast<char*>("requiredIn");
-    argv[8] = const_cast<char*>("requiredOut");
-    argv[9] = nullptr;
+    argv[5] = const_cast<char*>("--element=water");
+    argv[6] = const_cast<char*>("--target-dir=/path/to/dir/");
+    argv[7] = const_cast<char*>("--logLevel=DEBUG");
+    argv[8] = const_cast<char*>("requiredIn");
+    argv[9] = const_cast<char*>("requiredOut");
+    argv[10] = nullptr;
 
     PacBio::CLI::Run(argc, argv,
                      PacBio::CLI::tests::makeInterface(),
@@ -347,6 +367,7 @@ TEST(CLI_Runner, can_retrieve_input_commandline)
         "--timeout=42",
         "--delta=2",
         "--ploidy=diploid",
+        "--element=water",
         "--target-dir", "/path/to/dir/",
         "--logLevel=DEBUG",
         "requiredIn",
@@ -435,6 +456,7 @@ RtcGenerator::RtcGenerator(const std::string& fn)
             "frobber.task_options.delta": 2,
             "frobber.task_options.force": true,
             "frobber.task_options.ploidy": "diploid",
+            "frobber.task_options.element": "water",
             "frobber.task_options.timeout": 42,
             "frobber.task_options.target_dir": "/path/to/dir/"
         },
