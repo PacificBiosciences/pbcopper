@@ -83,23 +83,26 @@ inline Option::Option(const std::string& id,
 inline Option::Option(const std::string& id,
                const std::initializer_list<std::string>& init,
                const std::string& description,
-               const PacBio::JSON::Json& defaultValue)
+               const PacBio::JSON::Json& defaultValue,
+               const PacBio::JSON::Json& choices)
     : Option(id,
              std::vector<std::string>{init},
              description,
-             defaultValue)
+             defaultValue,
+             choices)
 { }
 
 inline Option::Option(const std::string& id,
-               const std::vector<std::string>& names,
-               const std::string& description,
-               const PacBio::JSON::Json& defaultValue)
+                      const std::vector<std::string>& names,
+                      const std::string& description,
+                      const PacBio::JSON::Json& defaultValue,
+                      const PacBio::JSON::Json& choices)
     : d_(new internal::OptionPrivate{
             id,
             names,
             description,
             defaultValue,
-            PacBio::JSON::Json(nullptr)
+            choices
          })
 { }
 

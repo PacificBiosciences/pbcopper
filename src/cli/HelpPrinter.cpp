@@ -49,8 +49,35 @@ string formatOption(string optionOutput,
 
     // maybe add default value to description
     if (shouldIncludeDefaultValue(defaultValue)) {
+
         fullDescription += " [";
-        fullDescription += defaultValue.dump();
+
+        // We need to bypass nlohmann::json's dump() method for floating point
+        // values. It ends up trying to output _far_ too many digits. Without
+        // special handling, we would get:
+        //
+        //  --foo  Description of foo. [0.0900000035762787]
+        //  --bar  Description of bar. [0.100000001490116]
+        //
+        // when we are expecting:
+        //
+        //  --foo  Description of foo. [0.09]
+        //  --bar  Description of bar. [0.1]
+        //
+        // std::ostream APIs do the right thing in this case.
+        //
+        // NOTE: For future reference, std::to_string sounds right here, but
+        //       isn't. It uses a fixed precision of 6 for floats.
+        //
+        if (defaultValue.is_number_float()) {
+            const float f = defaultValue;
+            stringstream s;
+            s << f;
+            fullDescription += s.str();
+        } else {
+            fullDescription += defaultValue.dump();
+        }
+
         fullDescription += "]";
     }
 
@@ -155,16 +182,13 @@ string makeHelpText(const Interface& interface)
     result << endl;
 
     // options
-    if (!options.empty())
-        result << "Options: " << endl;
-
-    auto optionOutputList = vector<string>{ };
+    auto formattedOptions = map<string, string>{ }; // id -> formatted output
     auto longestOptionOutputLength = size_t{ 0 };
 
-    // registered options
+    // determine longest option names & store formatting for use later
     for(const auto& option : options) {
         const auto optionOutputString = formatOptionNames(option);
-        optionOutputList.push_back(optionOutputString);
+        formattedOptions[option.Id()] = optionOutputString;
         longestOptionOutputLength = std::max(longestOptionOutputLength,
                                              optionOutputString.size());
     }
@@ -172,22 +196,49 @@ string makeHelpText(const Interface& interface)
     // spacer
     ++longestOptionOutputLength;
 
-    // registered options
-    for (size_t i = 0; i < options.size(); ++i) {
-        const auto& option = options.at(i);
-        if (option.IsHidden())
-            continue;
-        result << formatOption(optionOutputList.at(i),
-                               longestOptionOutputLength,
-                               option.Description(),
-                               option.DefaultValue());
+    if (!options.empty())
+    {
+        auto printGroup = [](const Interface& interface,
+                             const std::string& group,
+                             const map<string, string>& formattedOptions,
+                             const size_t longestOptionOutputLength,
+                             std::stringstream& result)
+        {
+            const auto& opts = interface.GroupOptions(group);
+            if (opts.empty())
+                return;
+            result << group << ":\n";
+            for (const auto& opt : opts) {
+                if (opt.IsHidden())
+                    continue;
+                result << formatOption(formattedOptions.at(opt.Id()),
+                                       longestOptionOutputLength,
+                                       opt.Description(),
+                                       opt.DefaultValue());
+            }
+
+            result << '\n';
+        };
+
+        // print all non-default groups in the order they were added
+        const auto& groups = interface.Groups();
+        for (const auto& group : groups) {
+            if (group != "Options") {
+                printGroup(interface, group, formattedOptions,
+                           longestOptionOutputLength, result);
+            }
+        }
+
+        // print default group last (help, version, etc) or options added
+        // to interface directly (no group)
+        printGroup(interface, "Options", formattedOptions,
+                   longestOptionOutputLength,result);
     }
+
 
     // positional args
     if (!posArgs.empty()) {
-        if (!options.empty())
-            result << endl;
-        result << "Arguments: " << endl;
+        result << "Arguments:\n";
         for (const auto& posArg : posArgs) {
             result << formatOption(posArg.name_,
                                    longestOptionOutputLength,

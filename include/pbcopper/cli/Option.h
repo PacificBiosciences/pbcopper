@@ -90,7 +90,7 @@ public:
     /// \param[in]  name            option name
     /// \param[in]  description     option description
     /// \param[in]  defaultValue    default value, if not user-specified
-    /// \param[in]  choices
+    /// \param[in]  choices         list of accepted inputs
     ///
     Option(const std::string& id,
            const std::string& name,
@@ -115,6 +115,9 @@ public:
     /// If \p defaultValue is not provided, the option is considered to be a
     /// switch.
     ///
+    /// If a \p choices array is provided, the input from the command line must
+    /// be a member of the array.
+    /// 
     /// This class can participate in C++11-style uniform initialization:
     ///
     /// \code
@@ -126,11 +129,13 @@ public:
     /// \param[in]  description     option description
     /// \param[in]  valueName       value name (used in help display)
     /// \param[in]  defaultValue    default value for option if not specified
+    /// \param[in]  choices         list of accepted inputs
     ///
     Option(const std::string& id,
            const std::vector<std::string>& names,
            const std::string& description,
-           const JSON::Json& defaultValue = JSON::Json(nullptr));
+           const JSON::Json& defaultValue = JSON::Json(nullptr),
+           const JSON::Json& choices = JSON::Json(nullptr));
 
     /// \brief Constructs a command line option object with the given arguments.
     ///
@@ -148,6 +153,9 @@ public:
     ///
     /// If \p defaultValue is not provided, the option is considered to be a
     /// switch.
+    /// 
+    /// If a \p choices array is provided, the input from the command line must
+    /// be a member of the array.
     ///
     /// This class can participate in C++11-style uniform initialization:
     ///
@@ -160,11 +168,13 @@ public:
     /// \param[in]  description     option description
     /// \param[in]  valueName       value name (used in help display)
     /// \param[in]  defaultValue    default value for option if not specified
+    /// \param[in]  choices         list of accepted inputs
     ///
     Option(const std::string& id,
            const std::initializer_list<std::string>& names,
            const std::string& description,
-           const JSON::Json& defaultValue = JSON::Json(nullptr));
+           const JSON::Json& defaultValue = JSON::Json(nullptr),
+           const JSON::Json& chocies = JSON::Json(nullptr));
 
     Option(const Option& other);
     Option(Option&& other);
