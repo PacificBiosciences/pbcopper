@@ -15,6 +15,8 @@ echo "## Build source"
   rm -rf * &&\
   CMAKE_BUILD_TYPE=ReleaseWithAssert cmake -GNinja .. )
 
+( cd build && ninja )
+
 rm -rf staging
 mkdir staging
 find include/pbcopper \( -name '*.h' -o -name '*.hpp' \) \
