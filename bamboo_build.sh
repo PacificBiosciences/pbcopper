@@ -3,7 +3,7 @@
 echo "# DEPENDENCIES"
 echo "## Load modules"
 source /mnt/software/Modules/current/init/bash
-module load gcc/5.3.0 cmake ccache ninja boost doxygen
+module load gcc/4.9.2 cmake ccache ninja boost doxygen
 export CC=gcc CXX=g++
 
 echo "# BUILD"
@@ -28,7 +28,7 @@ tar cf - lib/libpbcopper.a \
 ( cd staging && tar cf ../pbcopper-SNAPSHOT.tgz lib include )
 md5sum  pbcopper-SNAPSHOT.tgz | awk -e '{print $1}' >| pbcopper-SNAPSHOT.tgz.md5
 sha1sum pbcopper-SNAPSHOT.tgz | awk -e '{print $1}' >| pbcopper-SNAPSHOT.tgz.sha1
-exit $?
+
 UNSUPPORTED_URL=http://ossnexus.pacificbiosciences.com/repository/unsupported
 curl -vn --upload-file pbcopper-SNAPSHOT.tgz      $UNSUPPORTED_URL/gcc-4.9.2/pbcopper-SNAPSHOT.tgz
 curl -vn --upload-file pbcopper-SNAPSHOT.tgz.md5  $UNSUPPORTED_URL/gcc-4.9.2/pbcopper-SNAPSHOT.tgz.md5
