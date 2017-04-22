@@ -25,7 +25,7 @@ find include/pbcopper \( -name '*.h' -o -name '*.hpp' \) \
 ( cd build && \
 tar cf - lib/libpbcopper.a \
   | tar xvf - -C ../staging )
-( cd staging && tar cf ../pbcopper-SNAPSHOT.tgz lib include )
+( cd staging && tar zcf ../pbcopper-SNAPSHOT.tgz lib include )
 md5sum  pbcopper-SNAPSHOT.tgz | awk -e '{print $1}' >| pbcopper-SNAPSHOT.tgz.md5
 sha1sum pbcopper-SNAPSHOT.tgz | awk -e '{print $1}' >| pbcopper-SNAPSHOT.tgz.sha1
 
