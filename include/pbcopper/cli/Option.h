@@ -3,6 +3,7 @@
 
 #include "pbcopper/Config.h"
 #include "pbcopper/json/JSON.h"
+#include "pbcopper/cli/OptionFlags.h"
 #include <initializer_list>
 #include <string>
 #include <memory>
@@ -91,12 +92,14 @@ public:
     /// \param[in]  description     option description
     /// \param[in]  defaultValue    default value, if not user-specified
     /// \param[in]  choices         list of accepted inputs
+    /// \param[in]  flags           extra configuration
     ///
     Option(const std::string& id,
            const std::string& name,
            const std::string& description,
            const JSON::Json& defaultValue = JSON::Json(nullptr),
-           const JSON::Json& choices = JSON::Json(nullptr));
+           const JSON::Json& choices = JSON::Json(nullptr),
+           const OptionFlags& flags = OptionFlags::DEFAULT);
 
     /// \brief Constructs a command line option object with the given arguments.
     ///
@@ -130,12 +133,14 @@ public:
     /// \param[in]  valueName       value name (used in help display)
     /// \param[in]  defaultValue    default value for option if not specified
     /// \param[in]  choices         list of accepted inputs
+    /// \param[in]  flags           extra configuration
     ///
     Option(const std::string& id,
            const std::vector<std::string>& names,
            const std::string& description,
            const JSON::Json& defaultValue = JSON::Json(nullptr),
-           const JSON::Json& choices = JSON::Json(nullptr));
+           const JSON::Json& choices = JSON::Json(nullptr),
+           const OptionFlags& flags = OptionFlags::DEFAULT);
 
     /// \brief Constructs a command line option object with the given arguments.
     ///
@@ -169,12 +174,14 @@ public:
     /// \param[in]  valueName       value name (used in help display)
     /// \param[in]  defaultValue    default value for option if not specified
     /// \param[in]  choices         list of accepted inputs
+    /// \param[in]  flags           extra configuration
     ///
     Option(const std::string& id,
            const std::initializer_list<std::string>& names,
            const std::string& description,
            const JSON::Json& defaultValue = JSON::Json(nullptr),
-           const JSON::Json& chocies = JSON::Json(nullptr));
+           const JSON::Json& choices = JSON::Json(nullptr),
+           const OptionFlags& flags = OptionFlags::DEFAULT);
 
     Option(const Option& other);
     Option(Option&& other);

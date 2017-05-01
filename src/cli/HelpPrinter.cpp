@@ -187,6 +187,8 @@ string makeHelpText(const Interface& interface)
 
     // determine longest option names & store formatting for use later
     for(const auto& option : options) {
+        if (option.IsHidden())
+            continue;
         const auto optionOutputString = formatOptionNames(option);
         formattedOptions[option.Id()] = optionOutputString;
         longestOptionOutputLength = std::max(longestOptionOutputLength,

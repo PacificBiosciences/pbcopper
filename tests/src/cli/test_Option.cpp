@@ -13,7 +13,7 @@ TEST(CLI_Option, minimal_ctor_single_alias)
     EXPECT_FALSE(opt.DefaultValue());
     EXPECT_TRUE(opt.Description().empty());
 //    EXPECT_TRUE(opt.ValueName().empty());
-//    EXPECT_FALSE(opt.IsHidden());
+    EXPECT_FALSE(opt.IsHidden());
 }
 
 TEST(CLI_Option, can_be_constructed_from_name_list_only)
@@ -25,17 +25,17 @@ TEST(CLI_Option, can_be_constructed_from_name_list_only)
     EXPECT_FALSE(opt.DefaultValue());
     EXPECT_TRUE(opt.Description().empty());
 //    EXPECT_TRUE(opt.ValueName().empty());
-//    EXPECT_FALSE(opt.IsHidden());
+    EXPECT_FALSE(opt.IsHidden());
 }
 
 TEST(CLI_Option, can_be_constructed_from_name_and_extra_info)
 {
-    Option opt{"opt_id", "o", "write data to <file>", Option::StringType("default.txt") };
+    Option opt{"opt_id", "o", "write data to <file>", Option::StringType("default.txt"), OptionFlags::HIDE_FROM_HELP};
     EXPECT_EQ(string("opt_id"), opt.Id());
     EXPECT_EQ(vector<string>{"o"},   opt.Names());
     EXPECT_EQ(string{"default.txt"}, opt.DefaultValue());
     EXPECT_EQ(string{ "write data to <file>"}, opt.Description());
-//    EXPECT_FALSE(opt.IsHidden());
+    EXPECT_FALSE(opt.IsHidden());
 }
 
 TEST(CLI_Option, can_be_constructed_from_name_list_and_extra_info)
@@ -87,7 +87,7 @@ TEST(CLI_Option, can_be_copy_constructed)
     EXPECT_EQ(original.DefaultValue(), copy.DefaultValue());
     EXPECT_EQ(original.Description(),  copy.Description());
 //    EXPECT_EQ(original.ValueName(),    copy.ValueName());
-//    EXPECT_EQ(original.IsHidden(),     copy.IsHidden());
+    EXPECT_EQ(original.IsHidden(),     copy.IsHidden());
 }
 
 TEST(CLI_Option, can_be_copy_assigned)
@@ -100,7 +100,7 @@ TEST(CLI_Option, can_be_copy_assigned)
     EXPECT_EQ(original.DefaultValue(), copy.DefaultValue());
     EXPECT_EQ(original.Description(),  copy.Description());
 //    EXPECT_EQ(original.ValueName(),    copy.ValueName());
-//    EXPECT_EQ(original.IsHidden(),     copy.IsHidden());
+    EXPECT_EQ(original.IsHidden(),     copy.IsHidden());
 }
 
 TEST(CLI_Option, can_be_move_constructed)
@@ -113,7 +113,7 @@ TEST(CLI_Option, can_be_move_constructed)
     EXPECT_EQ(string{"default.txt"}, destination.DefaultValue());
     EXPECT_EQ(string{ "write data to <file>"}, destination.Description());
 //    EXPECT_EQ(string{"file"}, destination.ValueName());
-//    EXPECT_FALSE(destination.IsHidden());
+    EXPECT_FALSE(destination.IsHidden());
 }
 
 TEST(CLI_Option, can_be_move_assigned)
@@ -127,7 +127,7 @@ TEST(CLI_Option, can_be_move_assigned)
     EXPECT_EQ(string{"default.txt"}, destination.DefaultValue());
     EXPECT_EQ(string{ "write data to <file>"}, destination.Description());
 //    EXPECT_EQ(string{"file"}, destination.ValueName());
-//    EXPECT_FALSE(destination.IsHidden());
+    EXPECT_FALSE(destination.IsHidden());
 }
 
 TEST(CLI_Option, expected_defaults)
