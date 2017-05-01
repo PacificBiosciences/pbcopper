@@ -27,7 +27,8 @@ TEST(CLI_HelpPrinter, prints_expected_help_output)
         {"timeout",    {"timeout"},         "Abort execution after <INT> milliseconds.", Option::IntType(5000)},
         {"modelPath",  {"M", "modelPath"},  "Path to a model file.",                     Option::StringType("")},  // empty default string should be omitted from help
         {"min_prevalence", {"minPrev"},     "Minimum prevalence to require things.",     Option::FloatType(0.09)},
-        {"min_split_frac", {"minSplit"},    "Minimum fraction of reads.",                Option::FloatType(0.1)}
+        {"min_split_frac", {"minSplit"},    "Minimum fraction of reads.",                Option::FloatType(0.1)},
+        {"secret_mode",    {"secret"},      "Secret mode, hidden from help.",            Option::BoolType(false), { }, OptionFlags::HIDE_FROM_HELP}
     });
     i.AddPositionalArguments({
         {"source", "Source file to copy."},

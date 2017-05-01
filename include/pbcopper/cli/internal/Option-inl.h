@@ -17,7 +17,8 @@ public:
                            const std::vector<std::string>& names,
                            const std::string& description,
                            const PacBio::JSON::Json& defaultValue,
-                           const PacBio::JSON::Json& choices)
+                           const PacBio::JSON::Json& choices,
+                           const OptionFlags& flags)
         : option_(PacBio::JSON::Json::object_t())
     {
         // validate ID & name(s)
@@ -40,7 +41,6 @@ public:
         option_["id"]           = id;
         option_["names"]        = names;
         option_["description"]  = description;
-        option_["hidden"]       = false;
 
         // if none provided, treat as a switch-type option (init w/ false)
         if (defaultValue.is_null())
@@ -53,6 +53,10 @@ public:
             option_["choices"] = choices;
         else
             option_["choices"] = JSON::Json(nullptr);
+
+        // flags
+        const bool isHidden = (flags & OptionFlags::HIDE_FROM_HELP) != 0;
+        option_["hidden"] = isHidden;
     }
 
     OptionPrivate(const OptionPrivate& other)
@@ -67,42 +71,48 @@ public:
 // ------------------------
 
 inline Option::Option(const std::string& id,
-               const std::string& name,
-               const std::string& description,
-               const PacBio::JSON::Json& defaultValue,
-               const JSON::Json& choices)
+                      const std::string& name,
+                      const std::string& description,
+                      const PacBio::JSON::Json& defaultValue,
+                      const JSON::Json& choices,
+                      const OptionFlags& flags)
     : d_(new internal::OptionPrivate{
             id,
             std::vector<std::string>{1, name},
             description,
             defaultValue,
-            choices
+            choices,
+            flags
          })
 { }
 
 inline Option::Option(const std::string& id,
-               const std::initializer_list<std::string>& init,
-               const std::string& description,
-               const PacBio::JSON::Json& defaultValue,
-               const PacBio::JSON::Json& choices)
+                      const std::initializer_list<std::string>& init,
+                      const std::string& description,
+                      const PacBio::JSON::Json& defaultValue,
+                      const PacBio::JSON::Json& choices,
+                      const OptionFlags& flags)
     : Option(id,
              std::vector<std::string>{init},
              description,
              defaultValue,
-             choices)
+             choices,
+             flags)
 { }
 
 inline Option::Option(const std::string& id,
                       const std::vector<std::string>& names,
                       const std::string& description,
                       const PacBio::JSON::Json& defaultValue,
-                      const PacBio::JSON::Json& choices)
+                      const PacBio::JSON::Json& choices,
+                      const OptionFlags& flags)
     : d_(new internal::OptionPrivate{
             id,
             names,
             description,
             defaultValue,
-            choices
+            choices,
+            flags
          })
 { }
 

@@ -26,6 +26,7 @@ set(pbcopper_H
     ${pbcopper_IncludeDir}/pbcopper/cli/HelpPrinter.h
     ${pbcopper_IncludeDir}/pbcopper/cli/Interface.h
     ${pbcopper_IncludeDir}/pbcopper/cli/Option.h
+    ${pbcopper_IncludeDir}/pbcopper/cli/OptionFlags.h
     ${pbcopper_IncludeDir}/pbcopper/cli/Parser.h
     ${pbcopper_IncludeDir}/pbcopper/cli/PositionalArg.h
     ${pbcopper_IncludeDir}/pbcopper/cli/Results.h
