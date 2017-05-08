@@ -2,9 +2,6 @@
 #include <boost/optional.hpp>
 #include <unordered_map>
 #include <cassert>
-using namespace PacBio;
-using namespace PacBio::CLI;
-using namespace std;
 
 namespace PacBio {
 namespace CLI {
@@ -12,23 +9,23 @@ namespace internal {
 
 class InterfacePrivate
 {
-    typedef unordered_map<string, size_t>  NameLookup;
+    typedef std::unordered_map<std::string, size_t>  NameLookup;
 
 public:
     // application info
-    string appName_;
-    string appDescription_;
-    string appVersion_;
-    string alternativeToolContractName_;
+    std::string appName_;
+    std::string appDescription_;
+    std::string appVersion_;
+    std::string alternativeToolContractName_;
 
     // parsing mode/status
     SingleDashMode singleDashMode_;
     bool isParsed_;
-    string errorString_;
+    std::string errorString_;
 
     // registered options
-    vector<Option>        options_;
-    vector<PositionalArg> positionalArgs_;
+    std::vector<Option>        options_;
+    std::vector<PositionalArg> positionalArgs_;
     NameLookup    optionNameLookup_;
 
     // option groups
@@ -45,9 +42,9 @@ public:
     boost::optional<Option> versionOption_;
 
 public:
-    InterfacePrivate(const string& appName,
-                     const string& appDescription,
-                     const string& appVersion)
+    InterfacePrivate(const std::string& appName,
+                     const std::string& appDescription,
+                     const std::string& appVersion)
         : appName_(appName)
         , appDescription_(appDescription)
         , appVersion_(appVersion)
@@ -60,7 +57,7 @@ public:
         , versionOption_(boost::none)
     {
         if (appName_.empty())
-            throw runtime_error("CLI::Interface - application name must not be empty");
+            throw std::runtime_error("CLI::Interface - application name must not be empty");
     }
 
     InterfacePrivate(const InterfacePrivate& other) = default;
@@ -104,16 +101,14 @@ void InterfacePrivate::AddPositionalArgument(PositionalArg posArg)
 }
 
 } // namespace internal
-} // namespace CLI
-} // namespace PacBio
 
 // ------------------------
 // PacBio::CLI::Interface
 // ------------------------
 
-Interface::Interface(const string& appName,
-                     const string& appDescription,
-                     const string& appVersion)
+Interface::Interface(const std::string& appName,
+                     const std::string& appDescription,
+                     const std::string& appVersion)
     : d_(new internal::InterfacePrivate{appName, appDescription, appVersion})
 { }
 
@@ -146,9 +141,9 @@ Interface& Interface::AddLogLevelOption(const Option& option)
 }
 
 Interface& Interface::AddOption(const Option& option)
-{  return AddOptions( vector<Option>{ option }); }
+{  return AddOptions( std::vector<Option>{ option }); }
 
-Interface& Interface::AddOptions(const vector<Option>& options)
+Interface& Interface::AddOptions(const std::vector<Option>& options)
 {
     for (const auto& opt : options)
         d_->AddOption(opt);
@@ -156,9 +151,9 @@ Interface& Interface::AddOptions(const vector<Option>& options)
 }
 
 Interface& Interface::AddPositionalArgument(const PositionalArg& posArg)
-{ return AddPositionalArguments(vector<PositionalArg>{ posArg }); }
+{ return AddPositionalArguments(std::vector<PositionalArg>{ posArg }); }
 
-Interface& Interface::AddPositionalArguments(const vector<PositionalArg>& posArgs)
+Interface& Interface::AddPositionalArguments(const std::vector<PositionalArg>& posArgs)
 {
     for (const auto& posArg : posArgs)
         d_->AddPositionalArgument(posArg);
@@ -179,28 +174,28 @@ Interface& Interface::AddVersionOption(const Option& option)
     return *this;
 }
 
-string Interface::ApplicationDescription(void) const
+std::string Interface::ApplicationDescription(void) const
 { return d_->appDescription_; }
 
-Interface& Interface::ApplicationDescription(const string& description)
+Interface& Interface::ApplicationDescription(const std::string& description)
 { d_->appDescription_ = description; return *this; }
 
-string Interface::ApplicationName(void) const
+std::string Interface::ApplicationName(void) const
 { return d_->appName_; }
 
-Interface& Interface::ApplicationName(const string& name)
+Interface& Interface::ApplicationName(const std::string& name)
 { d_->appName_ = name; return *this; }
 
-string Interface::ApplicationVersion(void) const
+std::string Interface::ApplicationVersion(void) const
 { return d_->appVersion_; }
 
-Interface& Interface::ApplicationVersion(const string& version)
+Interface& Interface::ApplicationVersion(const std::string& version)
 { d_->appVersion_ = version; return *this; }
 
-string Interface::AlternativeToolContractName(void) const
+std::string Interface::AlternativeToolContractName(void) const
 { return d_->alternativeToolContractName_; }
 
-Interface& Interface::AlternativeToolContractName(const string& version)
+Interface& Interface::AlternativeToolContractName(const std::string& version)
 { d_->alternativeToolContractName_ = version; return *this; }
 
 Interface& Interface::EnableToolContract(const ToolContract::Config& tcConfig)
@@ -287,10 +282,10 @@ PacBio::JSON::Json Interface::OptionChoices(const std::string& optionId) const
     return PacBio::JSON::Json(nullptr);
 }
 
-vector<Option> Interface::RegisteredOptions(void) const
+std::vector<Option> Interface::RegisteredOptions(void) const
 { return d_->options_; }
 
-vector<PositionalArg> Interface::RegisteredPositionalArgs(void) const
+std::vector<PositionalArg> Interface::RegisteredPositionalArgs(void) const
 { return d_->positionalArgs_; }
 
 const ToolContract::Config& Interface::ToolContract(void) const
@@ -313,3 +308,6 @@ const Option& Interface::VersionOption(void) const
         throw std::runtime_error("CLI::Interface - version option requested, but not registered");
     return d_->versionOption_.get();
 }
+
+} // namespace CLI
+} // namespace PacBio

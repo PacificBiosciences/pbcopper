@@ -1,14 +1,14 @@
 #include "pbcopper/data/MovieName.h"
-using namespace PacBio;
-using namespace PacBio::Data;
-using namespace std;
+
+namespace PacBio {
+namespace Data {
 
 MovieName::MovieName(const std::string& instrumentName,
                      const std::string& runStartTime)
     : partsCache_(nullptr)
 {
     // construct name from parts
-    auto result = string{ };
+    auto result = std::string{ };
     result.reserve(128);
     result += "m";
     result += instrumentName;
@@ -44,8 +44,10 @@ void MovieName::UpdatePartsCache(void) const
 
     // checks - here? or elsewhere?
     if (partsCache_->instrumentName_.empty())
-        throw runtime_error("MovieName: instrument name must not be empty");
+        throw std::runtime_error("MovieName: instrument name must not be empty");
     if (partsCache_->runStartTime_.empty())
-        throw runtime_error("MovieName: run start time must not be empty");
-
+        throw std::runtime_error("MovieName: run start time must not be empty");
 }
+
+} // namespace Data
+} // namespace PacBio
