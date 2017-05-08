@@ -61,12 +61,16 @@ void ParserPrivate::Parse(const vector<string>& args)
     for (; argIter != argEnd; ++argIter) {
         const auto& arg = *argIter;
 
-        // definitely positional
-        if (forcePositional)
+        const auto foundDoubleDash = (arg.find(doubleDash) == 0);
+        const auto foundSingleDash = (arg.find(dash) == 0);
+        const auto isPositional = !(foundDoubleDash || foundSingleDash);
+
+        // positional arg
+        if (isPositional || forcePositional)
             results_.RegisterPositionalArg(arg);
 
         // long option
-        else if (arg.find(doubleDash) == 0) {
+        else if (foundDoubleDash) {
             if (arg.length() > 2) {
 
                 // pull option name from arg
@@ -84,7 +88,8 @@ void ParserPrivate::Parse(const vector<string>& args)
         }
 
         // short option
-        else if (arg.find(dash) == 0) {
+        else {
+            assert(foundSingleDash);
 
             // single dash only (probably indicating 'stdin')
             if (arg.length() == 1) {
@@ -133,10 +138,6 @@ void ParserPrivate::Parse(const vector<string>& args)
                 }
             }
         }
-
-        // positional argument
-        else
-            results_.RegisterPositionalArg(arg);
 
         // make sure we get out at end
         if (argIter == argEnd)
