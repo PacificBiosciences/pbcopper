@@ -66,9 +66,23 @@ Results::Results(const Results& other)
     : d_(new internal::ResultsPrivate{*other.d_.get()})
 { }
 
+Results::Results(Results&& other)
+    : d_(std::move(other.d_))
+{ }
+
 Results& Results::operator=(const Results& other)
 {
-    d_.reset(new internal::ResultsPrivate{*other.d_.get()});
+    if (this != &other) {
+        d_.reset(new internal::ResultsPrivate{*other.d_.get()});
+    }
+    return *this;
+}
+
+Results& Results::operator=(Results&& other)
+{
+    if (this != &other) {
+        d_ = std::move(other.d_);
+    }
     return *this;
 }
 
