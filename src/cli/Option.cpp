@@ -1,10 +1,6 @@
 
 #include "pbcopper/cli/Option.h"
 #include <stdexcept>
-using namespace PacBio;
-using namespace PacBio::CLI;
-using namespace PacBio::JSON;
-using namespace std;
 
 namespace PacBio {
 namespace CLI {
@@ -36,8 +32,6 @@ static const Option defaultVersionOption {
 };
 
 } // namespace internal
-} // namespace CLI
-} // namespace PacBio
 
 const Option& Option::DefaultHelpOption(void)
 { return internal::defaultHelpOption; }
@@ -53,6 +47,8 @@ const Option& Option::DefaultVersionOption(void)
 
 std::string Option::TypeId(void) const
 {
+    using Json = PacBio::JSON::Json;
+
     const bool hasChoices = HasChoices();
     const auto& type = DefaultValue().type();
     switch (type)
@@ -85,3 +81,6 @@ std::string Option::TypeId(void) const
             throw std::runtime_error{ "PacBio::CLI::ToolContract::JsonPrinter - unknown type for option: "+ Id() };
     }
 }
+
+} // namespace CLI
+} // namespace PacBio

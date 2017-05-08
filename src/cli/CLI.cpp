@@ -9,10 +9,6 @@
 #include <iostream>
 #include <cstdlib>
 
-using namespace PacBio;
-using namespace PacBio::CLI;
-using namespace std;
-
 namespace PacBio {
 namespace CLI {
 
@@ -20,12 +16,12 @@ int Run(int argc, char *argv[],
         const Interface& interface,
         const ResultsHandler& handler)
 {
-    return Run(vector<string>{argv, argv + argc},
+    return Run(std::vector<std::string>{argv, argv + argc},
                interface,
                handler);
 }
 
-int Run(const vector<string>& args,
+int Run(const std::vector<std::string>& args,
         const Interface& interface,
         const ResultsHandler& handler)
 {
@@ -64,12 +60,12 @@ int Run(const vector<string>& args,
         }
 
         // check for resolved tool contract cmdline input
-        const string& rtcFn = results["rtc_provided"];
+        const std::string& rtcFn = results["rtc_provided"];
         if (!rtcFn.empty()) {
 
             // invoke app callback with results parsed from RTC
             ToolContract::ResolvedToolContract rtc(interface);
-            ifstream in(rtcFn);
+            std::ifstream in(rtcFn);
             if (in) {
                 const auto rtcResults = rtc.Parse(in);
                 return handler(rtcResults);
@@ -81,12 +77,12 @@ int Run(const vector<string>& args,
     return handler(results);
 }
 
-void PrintHelp(const Interface& interface, ostream& out)
+void PrintHelp(const Interface& interface, std::ostream& out)
 {
     HelpPrinter::Print(interface, out);
 }
 
-void PrintVersion(const Interface& interface, ostream& out)
+void PrintVersion(const Interface& interface, std::ostream& out)
 {
     VersionPrinter::Print(interface, out);
 }

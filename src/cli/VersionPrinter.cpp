@@ -1,12 +1,15 @@
 #include "pbcopper/cli/VersionPrinter.h"
 #include "pbcopper/cli/Interface.h"
 #include <ostream>
-using namespace PacBio;
-using namespace PacBio::CLI;
-using namespace std;
 
-void VersionPrinter::Print(const Interface& interface, ostream& out)
+namespace PacBio {
+namespace CLI {
+
+void VersionPrinter::Print(const Interface& interface, std::ostream& out)
 {
     out << interface.ApplicationName() << " "
-        << interface.ApplicationVersion() << endl;
+        << interface.ApplicationVersion() << std::endl;
 }
+
+} // namespace CLI
+} // namespace PacBio

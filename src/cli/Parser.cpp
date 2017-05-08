@@ -2,9 +2,6 @@
 #include "pbcopper/cli/Interface.h"
 #include <unordered_map>
 #include <cassert>
-using namespace PacBio;
-using namespace PacBio::CLI;
-using namespace std;
 
 namespace PacBio {
 namespace CLI {
@@ -13,16 +10,16 @@ namespace internal {
 class ParserPrivate
 {
 public:
-    typedef unordered_map<string, size_t>           NameLookup;
-    typedef unordered_map<size_t, vector<string> >  ValueLookup;
+    typedef std::unordered_map<std::string, size_t>                NameLookup;
+    typedef std::unordered_map<size_t, std::vector<std::string> >  ValueLookup;
 
 public:
     // registered interface
     PacBio::CLI::Interface interface_;
     PacBio::CLI::Results   results_;
 
-    vector<string> observedOptions_;              // consider a set
-    ValueLookup    observedOptionValues_;
+    std::vector<std::string> observedOptions_;  // consider a set
+    ValueLookup observedOptionValues_;
 
 public:
     ParserPrivate(const Interface& interface)
@@ -32,14 +29,14 @@ public:
 
     ParserPrivate(const ParserPrivate& other) = default;
 
-    void Parse(const vector<string>& args);
-    void ParseOptionValue(const string& optionName,
-                          const string& argument,
-                          vector<string>::const_iterator* argumentIterator,
-                          vector<string>::const_iterator argsEnd);
+    void Parse(const std::vector<std::string>& args);
+    void ParseOptionValue(const std::string& optionName,
+                          const std::string& argument,
+                          std::vector<std::string>::const_iterator* argumentIterator,
+                          std::vector<std::string>::const_iterator argsEnd);
 };
 
-void ParserPrivate::Parse(const vector<string>& args)
+void ParserPrivate::Parse(const std::vector<std::string>& args)
 {
     results_ = Results{ interface_, args };
 
@@ -76,7 +73,7 @@ void ParserPrivate::Parse(const vector<string>& args)
                 // pull option name from arg
                 auto optionName = arg.substr(2); // strip '--'
                 const auto equalOffset = optionName.find(equal);
-                if (equalOffset != string::npos)
+                if (equalOffset != std::string::npos)
                     optionName = optionName.substr(0, equalOffset);
 
                 // register found & parse value
@@ -101,7 +98,7 @@ void ParserPrivate::Parse(const vector<string>& args)
             {
                 case SingleDashMode::ParseAsShortOptions :
                 {
-                    auto optionName = string{ };
+                    auto optionName = std::string{ };
                     auto valueFound = false;
 
                     for (size_t i = 1; i < arg.size(); ++i) {
@@ -130,7 +127,7 @@ void ParserPrivate::Parse(const vector<string>& args)
 
                 case SingleDashMode::ParseAsLongOptions :
                 {
-                    auto optionName = string{ "" }; // strip -, get up to "="
+                    auto optionName = std::string{ "" }; // strip -, get up to "="
                     const auto& optionId = interface_.IdForOptionName(optionName);
                     results_.RegisterObservedOption(optionId);
                     ParseOptionValue(optionName, arg, &argIter, argEnd);
@@ -145,10 +142,10 @@ void ParserPrivate::Parse(const vector<string>& args)
     }
 }
 
-void ParserPrivate::ParseOptionValue(const string& optionName,
-                                     const string& argument,
-                                     vector<string>::const_iterator* argumentIterator,
-                                     vector<string>::const_iterator argsEnd)
+void ParserPrivate::ParseOptionValue(const std::string& optionName,
+                                     const std::string& argument,
+                                     std::vector<std::string>::const_iterator* argumentIterator,
+                                     std::vector<std::string>::const_iterator argsEnd)
 {
     if (!interface_.HasOptionRegistered(optionName))
         throw std::runtime_error("CLI::Parser - unexpected argument " + argument);
@@ -160,7 +157,7 @@ void ParserPrivate::ParseOptionValue(const string& optionName,
     if (expectsValue) {
         const auto& optionId = interface_.IdForOptionName(optionName);
         std::string value;
-        if (equalPos == string::npos) {
+        if (equalPos == std::string::npos) {
             ++(*argumentIterator);
             if (*argumentIterator == argsEnd)
                 throw std::runtime_error("CLI::Parser - missing value after " + argument);
@@ -172,14 +169,12 @@ void ParserPrivate::ParseOptionValue(const string& optionName,
         results_.RegisterOptionValueString(optionId, value);
 
     } else {
-        if (equalPos != string::npos)
+        if (equalPos != std::string::npos)
             throw std::runtime_error("CLI::Parser - unexpected value after "+argument.substr(0, equalPos));
     }
 }
 
 } // namespace internal
-} // namespace CLI
-} // namespace PacBio
 
 // ------------------------
 // PacBio::CLI::Parser
@@ -195,11 +190,14 @@ Parser::Parser(const Parser& other)
 
 Parser::~Parser(void) { }
 
-Results Parser::Parse(const vector<string>& args)
+Results Parser::Parse(const std::vector<std::string>& args)
 {
     d_->Parse(args);
     return d_->results_;
 }
 
 Results Parser::Parse(int argc, char *argv[])
-{ return Parse(vector<string>{argv, argv + argc}); }
+{ return Parse(std::vector<std::string>{argv, argv + argc}); }
+
+} // namespace CLI
+} // namespace PacBio

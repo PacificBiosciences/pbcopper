@@ -6,16 +6,12 @@
 #include <stdexcept>
 #include <unordered_map>
 
-using namespace PacBio;
-using namespace PacBio::CLI;
-using namespace PacBio::CLI::ToolContract;
-using namespace PacBio::JSON;
-using namespace std;
+using Json = PacBio::JSON::Json;
 
 namespace PacBio {
 namespace CLI {
 
-static Option RegisteredOption(const Interface& interface, const string& optionId)
+static Option RegisteredOption(const Interface& interface, const std::string& optionId)
 {
     const auto registeredOptions = interface.RegisteredOptions();
     for (const Option& opt : registeredOptions) {
@@ -111,7 +107,7 @@ static Json makeOutputTypesJson(const Interface& interface)
 
 static Json makeResourceTypesJson(const ToolContract::Task& task)
 {
-    const unordered_map<ResourceType, string, Utility::EnumClassHash> lookup =
+    const std::unordered_map<ResourceType, std::string, Utility::EnumClassHash> lookup =
     {
         { ResourceType::LOG_FILE,   "$logfile" },
         { ResourceType::TMP_FILE,   "$tmpfile" },
@@ -210,12 +206,10 @@ static Json makeTaskJson(const Interface& interface)
 }
 
 } // namespace internal
-} // namespace ToolContract
-} // namespace CLI
-} // namespace PacBio
+
 
 void JsonPrinter::Print(const Interface& interface,
-                        ostream& out,
+                        std::ostream& out,
                         const int indent)
 {
     // build up JSON object from @interface
@@ -228,3 +222,7 @@ void JsonPrinter::Print(const Interface& interface,
 
     out << result.dump(indent);
 }
+
+} // namespace ToolContract
+} // namespace CLI
+} // namespace PacBio

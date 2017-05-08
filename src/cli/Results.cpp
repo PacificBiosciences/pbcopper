@@ -6,10 +6,8 @@
 #include <vector>
 #include <cassert>
 #include <cstdlib>
-using namespace PacBio;
-using namespace PacBio::CLI;
-using namespace PacBio::JSON;
-using namespace std;
+
+using Json = PacBio::JSON::Json;
 
 namespace PacBio {
 namespace CLI {
@@ -19,16 +17,16 @@ class ResultsPrivate
 {
 public:
     PacBio::CLI::Interface interface_;
-    vector<string> inputCommandLine_;
+    std::vector<std::string> inputCommandLine_;
     Json options_;
-    vector<string> positionalArgs_;
+    std::vector<std::string> positionalArgs_;
     PacBio::Logging::LogLevel logLevel_;
     bool isFromRtc_;
     uint16_t nproc_;
 
 public:
     ResultsPrivate(const Interface& interface,
-                   const vector<string>& inputCommandLine)
+                   const std::vector<std::string>& inputCommandLine)
         : interface_(interface)
         , inputCommandLine_(inputCommandLine)
         , logLevel_(PacBio::Logging::LogLevel::INFO)
@@ -46,19 +44,17 @@ public:
 };
 
 } // namespace internal
-} // namespace CLI
-} // namespace PacBio
 
 // ------------------------
 // PacBio::CLI::Results
 // ------------------------
 
 Results::Results(const Interface& interface)
-    : d_(new internal::ResultsPrivate{ interface, vector<string>() })
+    : d_(new internal::ResultsPrivate{ interface, std::vector<std::string>() })
 { }
 
 Results::Results(const Interface& interface,
-                 const vector<string>& inputCommandLine)
+                 const std::vector<std::string>& inputCommandLine)
     : d_(new internal::ResultsPrivate{ interface, inputCommandLine })
 { }
 
@@ -88,7 +84,7 @@ Results& Results::operator=(Results&& other)
 
 Results::~Results(void) { }
 
-string Results::InputCommandLine(void) const
+std::string Results::InputCommandLine(void) const
 {
     return Utility::Join(d_->inputCommandLine_, " ");
 }
@@ -119,7 +115,7 @@ uint16_t Results::NumProcessors(void) const
 Results& Results::NumProcessors(const uint16_t nproc)
 { d_->nproc_ = nproc; return *this; }
 
-Results& Results::RegisterOptionValue(const string& optionId,
+Results& Results::RegisterOptionValue(const std::string& optionId,
                                       const Json& optionValue)
 {
     // TODO: make safe access
@@ -129,7 +125,7 @@ Results& Results::RegisterOptionValue(const string& optionId,
     if (d_->interface_.HasLogLevelOptionRegistered()) {
         const auto logLevelOptionId = d_->interface_.LogLevelOption().Id();
         if (logLevelOptionId == optionId) {
-            const string logLevelString = optionValue;
+            const std::string logLevelString = optionValue;
             d_->logLevel_ = PacBio::Logging::LogLevel(logLevelString);
         }
     }
@@ -145,9 +141,9 @@ Results& Results::RegisterOptionValue(const string& optionId,
             }
         }
         if (!match) {
-            std::string msg = string{ "PacBio::CLI::Results - encountered unsupported value: " };
-            msg += optionValue.dump() + string{ " for " } + optionId;
-            msg += string{ "\n  Valid choices are: " } + choices.dump();
+            std::string msg = std::string{ "PacBio::CLI::Results - encountered unsupported value: " };
+            msg += optionValue.dump() + std::string{ " for " } + optionId;
+            msg += std::string{ "\n  Valid choices are: " } + choices.dump();
             throw std::runtime_error(msg);
         }
     }
@@ -155,8 +151,8 @@ Results& Results::RegisterOptionValue(const string& optionId,
     return *this;
 }
 
-Results& Results::RegisterOptionValueString(const string& optionId,
-                                            const string& optionValue)
+Results& Results::RegisterOptionValueString(const std::string& optionId,
+                                            const std::string& optionValue)
 {
     // TODO: make safe access
     Json& opt = d_->options_[optionId];
@@ -174,7 +170,7 @@ Results& Results::RegisterOptionValueString(const string& optionId,
     return RegisterOptionValue(optionId, opt);
 }
 
-Results& Results::RegisterPositionalArg(const string& posArg)
+Results& Results::RegisterPositionalArg(const std::string& posArg)
 { d_->positionalArgs_.push_back(posArg); return *this; }
 
 Results& Results::SetFromRTC(const bool ok)
@@ -183,7 +179,7 @@ Results& Results::SetFromRTC(const bool ok)
 const Interface& Results::ApplicationInterface(void) const
 { return d_->interface_; }
 
-vector<string> Results::PositionalArguments(void) const
+std::vector<std::string> Results::PositionalArguments(void) const
 { return d_->positionalArgs_; }
 
 Results& Results::RegisterObservedOption(const std::string& optionId)
@@ -206,3 +202,6 @@ Results::Result& Results::operator[](const std::string& optionId)
     // TODO: make safe access
     return d_->options_[optionId];
 }
+
+} // namespace CLI
+} // namespace PacBio

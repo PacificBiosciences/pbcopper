@@ -5,8 +5,6 @@
 #include <iostream>
 #include <csignal>
 #include <ctime>
-using namespace PacBio;
-using namespace PacBio::Logging;
 
 namespace PacBio {
 namespace Logging {
@@ -102,9 +100,6 @@ void InstallSignalHandlers(Logger& logger)
         raise(SIGTERM);
     });
 }
-
-} // namespace Logging
-} // namespace PacBio
 
 LogLevel::LogLevel(const std::string& value)
     : value_{ internal::LogLevelFromString(value) }
@@ -233,3 +228,6 @@ LogMessage::LogMessage(const char* file,
     UNUSED(line);
 #endif
 }
+
+} // namespace Logging
+} // namespace PacBio
