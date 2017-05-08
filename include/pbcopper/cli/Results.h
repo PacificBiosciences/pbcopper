@@ -37,8 +37,9 @@ public:
             const std::vector<std::string>& inputCommandLine);
 
     Results(const Results& other);
+    Results(Results&& other);
     Results& operator=(const Results& other);
-
+    Results& operator=(Results&& other);
     ~Results(void);
 
     /// \}
