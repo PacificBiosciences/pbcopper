@@ -25,6 +25,8 @@ set( pbcopperTest_CPP
     ${pbcopper_TestsDir}/src/cli/test_VersionPrinter.cpp
 
     # data
+    ${pbcopper_TestsDir}/src/data/test_Cigar.cpp
+    ${pbcopper_TestsDir}/src/data/test_CigarOperation.cpp
     ${pbcopper_TestsDir}/src/data/test_Interval.cpp
     ${pbcopper_TestsDir}/src/data/test_MovieName.cpp
     ${pbcopper_TestsDir}/src/data/test_ReadName.cpp

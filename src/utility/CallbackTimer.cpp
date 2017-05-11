@@ -1,9 +1,6 @@
 
 #include "pbcopper/utility/CallbackTimer.h"
 
-using namespace PacBio;
-using namespace PacBio::Utility;
-
 namespace PacBio {
 namespace Utility {
 
@@ -118,8 +115,6 @@ static std::unique_ptr<CallbackTimer> singleShotTimer = nullptr;
 static std::mutex singleShotSync;
 
 } // namespace internal
-} // namespace Utility
-} // namespace PacBio
 
 void CallbackTimer::SingleShot(uint64_t when, const HandlerFn &handler)
 {
@@ -136,3 +131,6 @@ void CallbackTimer::SingleShot(uint64_t when, HandlerFn &&handler)
         internal::singleShotTimer.reset(new CallbackTimer);
     internal::singleShotTimer->Schedule(when, 0, std::move(handler));
 }
+
+} // namespace Utility
+} // namespace PacBio

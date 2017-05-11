@@ -5,8 +5,6 @@
 #include <iostream>
 #include <csignal>
 #include <ctime>
-using namespace PacBio;
-using namespace PacBio::Logging;
 
 namespace PacBio {
 namespace Logging {
@@ -102,9 +100,6 @@ void InstallSignalHandlers(Logger& logger)
         raise(SIGTERM);
     });
 }
-
-} // namespace Logging
-} // namespace PacBio
 
 LogLevel::LogLevel(const std::string& value)
     : value_{ internal::LogLevelFromString(value) }
@@ -217,7 +212,8 @@ LogMessage::LogMessage(const char* file,
     // format the time and print out the log header to the ostringstream
     // TODO(lhepler) make this std::put_time when we move to gcc-5
     char buf[20];
-    std::strftime(buf, 20, "%Y%m%d %T.", std::gmtime(&time));
+    struct tm gmTime;
+    std::strftime(buf, 20, "%Y%m%d %T.", gmtime_r(&time, &gmTime));
 
     std::get<1>(*ptr_) << ">|> " << buf << std::setfill('0') << std::setw(3)
                        << std::to_string(msec) << delim << internal::LogLevelRepr(level) << delim
@@ -233,3 +229,6 @@ LogMessage::LogMessage(const char* file,
     UNUSED(line);
 #endif
 }
+
+} // namespace Logging
+} // namespace PacBio

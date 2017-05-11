@@ -26,6 +26,7 @@ set(pbcopper_H
     ${pbcopper_IncludeDir}/pbcopper/cli/HelpPrinter.h
     ${pbcopper_IncludeDir}/pbcopper/cli/Interface.h
     ${pbcopper_IncludeDir}/pbcopper/cli/Option.h
+    ${pbcopper_IncludeDir}/pbcopper/cli/OptionFlags.h
     ${pbcopper_IncludeDir}/pbcopper/cli/Parser.h
     ${pbcopper_IncludeDir}/pbcopper/cli/PositionalArg.h
     ${pbcopper_IncludeDir}/pbcopper/cli/Results.h
@@ -60,6 +61,8 @@ set(pbcopper_H
     # -------
 
     ${pbcopper_IncludeDir}/pbcopper/data/CCSTag.h
+    ${pbcopper_IncludeDir}/pbcopper/data/Cigar.h
+    ${pbcopper_IncludeDir}/pbcopper/data/CigarOperation.h
     ${pbcopper_IncludeDir}/pbcopper/data/Interval.h
     ${pbcopper_IncludeDir}/pbcopper/data/MovieName.h
     ${pbcopper_IncludeDir}/pbcopper/data/Position.h
@@ -68,6 +71,7 @@ set(pbcopper_H
     ${pbcopper_IncludeDir}/pbcopper/data/RSReadName.h
     ${pbcopper_IncludeDir}/pbcopper/data/Zmw.h
 
+    ${pbcopper_IncludeDir}/pbcopper/data/internal/CigarOperation-inl.h
     ${pbcopper_IncludeDir}/pbcopper/data/internal/Interval-inl.h
     ${pbcopper_IncludeDir}/pbcopper/data/internal/MovieName-inl.h
     ${pbcopper_IncludeDir}/pbcopper/data/internal/ReadNameBase.h
@@ -150,6 +154,8 @@ set(pbcopper_CPP
     # data
     # -------
 
+    ${pbcopper_SourceDir}/data/Cigar.cpp
+    ${pbcopper_SourceDir}/data/CigarOperation.cpp
     ${pbcopper_SourceDir}/data/MovieName.cpp
     ${pbcopper_SourceDir}/data/RSMovieName.cpp
 

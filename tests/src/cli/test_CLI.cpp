@@ -43,7 +43,8 @@ static PacBio::CLI::Interface makeInterface(void)
         {"timeout",    {"timeout"},         "Abort execution after <INT> milliseconds.", Option::IntType(5000)},
         {"delta",      "delta",             "Some delta for things", Option::IntType(1), { 1, 2, 3 }},
         {"ploidy",     "ploidy",            "Genome ploidy", Option::StringType("haploid"), {"haploid", "diploid"}},
-        {"element",    {"e", "element"},    "Choice of element indicates mood. Science.", Option::StringType("fire"), {"earth", "wind", "fire", "water"}} 
+        {"element",    {"e", "element"},    "Choice of element indicates mood. Science.", Option::StringType("fire"), {"earth", "wind", "fire", "water"}},
+        {"tc_only",    {"tc-only"},         "Hidden from cmdline help, but still available from TC.", Option::BoolType(false), {}, OptionFlags::HIDE_FROM_HELP}
     });
 
     i.AddPositionalArguments({
@@ -77,7 +78,8 @@ static PacBio::CLI::Interface makeToolContractEnabledInterface(void)
         {"timeout",  "Timeout"},
         {"delta",    "Frobbing delta" },
         {"ploidy",   "Ploidy" },
-        {"element", "Element"}
+        {"element", "Element"},
+        {"tc_only",  "Tool contract-only option"}
     });
     tcTask.InputFileTypes({
         { "ID", "title", "description", "type" },
@@ -283,6 +285,13 @@ TEST(CLI_Runner, emits_tool_contract_when_requested_from_command_line)
                 "optionTypeId": "boolean"
             },
             {
+                "default": false,
+                "description": "Hidden from cmdline help, but still available from TC.",
+                "id": "frobber.task_options.tc_only",
+                "name": "Tool contract-only option",
+                "optionTypeId": "boolean"
+            },
+            {
                 "default": 5000,
                 "description": "Abort execution after <INT> milliseconds.",
                 "id": "frobber.task_options.timeout",
@@ -458,7 +467,8 @@ RtcGenerator::RtcGenerator(const std::string& fn)
             "frobber.task_options.ploidy": "diploid",
             "frobber.task_options.element": "water",
             "frobber.task_options.timeout": 42,
-            "frobber.task_options.target_dir": "/path/to/dir/"
+            "frobber.task_options.target_dir": "/path/to/dir/",
+            "frobber.task_options.tc_only": false
         },
         "output_files": [
             "requiredOut"

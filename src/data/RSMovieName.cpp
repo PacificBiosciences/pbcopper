@@ -1,7 +1,7 @@
 #include "pbcopper/data/RSMovieName.h"
-using namespace PacBio;
-using namespace PacBio::Data;
-using namespace std;
+
+namespace PacBio {
+namespace Data {
 
 RSMovieName::RSMovieName(const std::string& runStartTime,
                          const std::string& instrumentSerialNumber,
@@ -11,7 +11,7 @@ RSMovieName::RSMovieName(const std::string& runStartTime,
     : partsCache_(nullptr)
 {
     // construct name from parts
-    auto result = string{ };
+    auto result = std::string{ };
     result.reserve(128);
     result += "m";
     result += runStartTime;
@@ -67,13 +67,16 @@ void RSMovieName::UpdatePartsCache(void) const
 
     // checks - here? or elsewhere?
     if (partsCache_->runStartTime_.empty())
-        throw runtime_error("RSMovieName: run start time must not be empty");
+        throw std::runtime_error("RSMovieName: run start time must not be empty");
     if (partsCache_->serialNumber_.empty())
-        throw runtime_error("RSMovieName: instrument serial number must not be empty");
+        throw std::runtime_error("RSMovieName: instrument serial number must not be empty");
     if (partsCache_->smrtCellBarcode_.empty())
-        throw runtime_error("RSMovieName: SMRT cell barcode must not be empty");
+        throw std::runtime_error("RSMovieName: SMRT cell barcode must not be empty");
     if (partsCache_->setNumber_.empty())
-        throw runtime_error("RSMovieName: set number must not be empty");
+        throw std::runtime_error("RSMovieName: set number must not be empty");
     if (partsCache_->partNumber_.empty())
-        throw runtime_error("RSMovieName: part number must not be empty");
- }
+        throw std::runtime_error("RSMovieName: part number must not be empty");
+}
+
+} // namespace Data
+} // namespace PacBio

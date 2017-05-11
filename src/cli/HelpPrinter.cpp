@@ -7,10 +7,8 @@
 #include <sstream>
 #include <string>
 #include <vector>
-using namespace PacBio;
-using namespace PacBio::CLI;
-using namespace PacBio::JSON;
-using namespace std;
+
+using Json = PacBio::JSON::Json;
 
 namespace PacBio {
 namespace CLI {
@@ -25,7 +23,7 @@ bool shouldIncludeDefaultValue(const Json& defaultValue)
 
     // omit if empty string default on string-type option
     if (defaultValue.is_string()) {
-        const string val = defaultValue;
+        const std::string val = defaultValue;
         if (val.empty())
             return false;
     }
@@ -35,16 +33,16 @@ bool shouldIncludeDefaultValue(const Json& defaultValue)
 }
 
 static
-string formatOption(string optionOutput,
-                    size_t longestOptionLength,
-                    string description,
-                    Json defaultValue)
+std::string formatOption(std::string optionOutput,
+                         size_t longestOptionLength,
+                         std::string description,
+                         Json defaultValue)
 {
     struct winsize ws;
     ioctl(STDOUT_FILENO, TIOCGWINSZ, &ws);
     const size_t ncol = (ws.ws_col < 2) ? 79 : ws.ws_col - 1;
 
-    stringstream result("");
+    std::stringstream result("");
     auto fullDescription = description;
 
     // maybe add default value to description
@@ -71,7 +69,7 @@ string formatOption(string optionOutput,
         //
         if (defaultValue.is_number_float()) {
             const float f = defaultValue;
-            stringstream s;
+            std::stringstream s;
             s << f;
             fullDescription += s.str();
         } else {
@@ -88,7 +86,7 @@ string formatOption(string optionOutput,
     // maybe wrap description
     const auto indent = result.str().length();
     auto lineStart     = size_t{ 0 };
-    auto lastBreakable = string::npos;
+    auto lastBreakable = std::string::npos;
     const auto max     = size_t{ ncol - indent };
     auto x             = size_t{ 0 };
     const auto len = fullDescription.length();
@@ -99,13 +97,13 @@ string formatOption(string optionOutput,
         if (isspace(c))
             lastBreakable = i;
 
-        auto breakAt = string::npos;
-        auto nextLineStart = string::npos;
+        auto breakAt = std::string::npos;
+        auto nextLineStart = std::string::npos;
 
-        if (x > max && lastBreakable != string::npos) {
+        if (x > max && lastBreakable != std::string::npos) {
             breakAt = lastBreakable;
             nextLineStart = lastBreakable + 1;
-        } else if ( (x > max-1 && lastBreakable == string::npos) || i == len-1) {
+        } else if ( (x > max-1 && lastBreakable == std::string::npos) || i == len-1) {
             breakAt = i + 1;
             nextLineStart = breakAt;
         } else if (c == '\n') {
@@ -113,13 +111,13 @@ string formatOption(string optionOutput,
             nextLineStart = i+1;
         }
 
-        if (breakAt != string::npos) {
+        if (breakAt != std::string::npos) {
             const auto numChars = breakAt - lineStart;
             if (lineStart > 0)
-                result << string(indent, ' ');
-            result << fullDescription.substr(lineStart, numChars) << endl;
+                result << std::string(indent, ' ');
+            result << fullDescription.substr(lineStart, numChars) << std::endl;
             x = 0;
-            lastBreakable = string::npos;
+            lastBreakable = std::string::npos;
             lineStart = nextLineStart;
             if (lineStart < len && isspace(fullDescription.at(lineStart)))
                 ++lineStart;
@@ -130,9 +128,9 @@ string formatOption(string optionOutput,
 }
 
 static
-string formatOptionNames(const Option& option)
+std::string formatOptionNames(const Option& option)
 {
-    stringstream optionOutput("");
+    std::stringstream optionOutput("");
     auto first = true;
     for(const auto& name : option.Names()) {
         if (first)
@@ -155,38 +153,40 @@ string formatOptionNames(const Option& option)
 }
 
 static
-string makeHelpText(const Interface& interface)
+std::string makeHelpText(const Interface& interface)
 {
-    stringstream result("");
+    std::stringstream result("");
 
     const auto options = interface.RegisteredOptions();
     const auto posArgs = interface.RegisteredPositionalArgs();
 
     // setup usage output
     {
-        stringstream usage("");
+        std::stringstream usage("");
         usage << interface.ApplicationName();
         if (!options.empty())
             usage << " [options]";
         for (const auto& posArg : posArgs)
             usage << " " << posArg.syntax_;
-        result << "Usage: " << usage.str() << endl;
+        result << "Usage: " << usage.str() << std::endl;
     }
 
     // description
     const auto appDescription = interface.ApplicationDescription();
     if (!appDescription.empty())
-        result << appDescription << endl;
+        result << appDescription << std::endl;
 
     // empty line
-    result << endl;
+    result << std::endl;
 
     // options
-    auto formattedOptions = map<string, string>{ }; // id -> formatted output
+    auto formattedOptions = std::map<std::string, std::string>{ }; // id -> formatted output
     auto longestOptionOutputLength = size_t{ 0 };
 
     // determine longest option names & store formatting for use later
     for(const auto& option : options) {
+        if (option.IsHidden())
+            continue;
         const auto optionOutputString = formatOptionNames(option);
         formattedOptions[option.Id()] = optionOutputString;
         longestOptionOutputLength = std::max(longestOptionOutputLength,
@@ -200,7 +200,7 @@ string makeHelpText(const Interface& interface)
     {
         auto printGroup = [](const Interface& interface,
                              const std::string& group,
-                             const map<string, string>& formattedOptions,
+                             const std::map<std::string, std::string>& formattedOptions,
                              const size_t longestOptionOutputLength,
                              std::stringstream& result)
         {
@@ -251,10 +251,11 @@ string makeHelpText(const Interface& interface)
 }
 
 } // namespace internal
+
+void HelpPrinter::Print(const Interface& interface, std::ostream& out)
+{
+    out << internal::makeHelpText(interface) << std::endl;
+}
+
 } // namespace CLI
 } // namespace PacBio
-
-void HelpPrinter::Print(const Interface& interface, ostream& out)
-{
-    out << internal::makeHelpText(interface) << endl;
-}

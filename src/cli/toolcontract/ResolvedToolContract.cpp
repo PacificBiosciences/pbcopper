@@ -3,12 +3,6 @@
 #include "pbcopper/json/JSON.h"
 #include "pbcopper/utility/StringUtils.h"
 
-using namespace PacBio;
-using namespace PacBio::CLI;
-using namespace PacBio::CLI::ToolContract;
-using namespace PacBio::JSON;
-using namespace std;
-
 namespace PacBio {
 namespace CLI {
 namespace ToolContract {
@@ -26,11 +20,7 @@ public:
     { }
 };
 
-
 } // namespace internal
-} // namespace ToolContract
-} // namespace CLI
-} // namespace PacBio
 
 ResolvedToolContract::ResolvedToolContract(const Interface& interface)
     : d_(new internal::RtcPrivate{ interface })
@@ -38,8 +28,10 @@ ResolvedToolContract::ResolvedToolContract(const Interface& interface)
 
 ResolvedToolContract::~ResolvedToolContract(void) { }
 
-Results ResolvedToolContract::Parse(istream& in)
+Results ResolvedToolContract::Parse(std::istream& in)
 {
+    using Json = PacBio::JSON::Json;
+
     const auto& interface = d_->interface_;
     const auto& task = interface.ToolContract().Task();
 
@@ -66,7 +58,7 @@ Results ResolvedToolContract::Parse(istream& in)
 
     // log_level
     const Json log_level = rtc["log_level"];
-    const string logLevelString = log_level;
+    const std::string logLevelString = log_level;
     results.LogLevel(PacBio::Logging::LogLevel{logLevelString});
 
     // nproc
@@ -105,3 +97,7 @@ Results ResolvedToolContract::Parse(istream& in)
 
     return results;
 }
+
+} // namespace ToolContract
+} // namespace CLI
+} // namespace PacBio
