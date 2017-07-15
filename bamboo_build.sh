@@ -1,9 +1,10 @@
 #!/bin/bash
+set -e
 
 echo "# DEPENDENCIES"
 echo "## Load modules"
 source /mnt/software/Modules/current/init/bash
-module load gcc/4.9.2 cmake ccache ninja boost doxygen
+module load gcc/4.9.2 cmake ccache_base ninja boost doxygen
 export CC=gcc CXX=g++
 
 echo "# BUILD"
@@ -16,6 +17,9 @@ echo "## Build source"
   CMAKE_BUILD_TYPE=ReleaseWithAssert cmake -GNinja .. )
 
 ( cd build && ninja )
+if [ ! "$bamboo_repository_branch_name" = "develop" ]; then
+  exit 0
+fi
 
 rm -rf staging
 mkdir staging
