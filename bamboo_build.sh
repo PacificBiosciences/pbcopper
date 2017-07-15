@@ -5,6 +5,7 @@ echo "# DEPENDENCIES"
 echo "## Load modules"
 source /mnt/software/Modules/current/init/bash
 module load gcc/4.9.2 cmake ccache_base ninja boost doxygen
+export CCACHE_BASEDIR=$PWD
 export CC=gcc CXX=g++
 
 echo "# BUILD"
