@@ -1,0 +1,1 @@
+subdir('cli_demo')
