@@ -1,7 +1,7 @@
 # pbcopper [![CircleCI](https://circleci.com/gh/PacificBiosciences/pbcopper.svg?style=svg&circle-token=4fe4468113a44b8b76019c901f1b6930ef26944b)](https://circleci.com/gh/PacificBiosciences/pbcopper)
 
-The **pbcopper** library provides a suite of data structures, algorithms, and utilities 
-for C++ applications. 
+The **pbcopper** library provides a suite of data structures, algorithms, and utilities
+for C++ applications.
 
 ## Getting Started
 
@@ -13,7 +13,7 @@ mkdir build && cd build
 cmake ..
 make
 ```
- 
+
 To build & run tests:
 
 ```sh
@@ -32,7 +32,7 @@ To build Doxygen API documentation: (**not yet available**)
 make docs
 ```
 
-## API Overview - main modules 
+## API Overview - main modules
 
 - **PacBio::CLI** : command-line parsing & tool-contract integration
   - CLI - entry-point methods for parsing args & invoking application callback
@@ -44,19 +44,19 @@ make docs
   - MovieName - query parts of a PacBio movie name
   - ReadName - query parts of a PacBio read name
 - **PacBio::JSON** : JSON support
-  - Json - wrapper around [nlohmann::json](https://github.com/nlohmann/json) 
+  - Json - wrapper around [nlohmann::json](https://github.com/nlohmann/json)
 - **PacBio::Logging** : logging utilities
   - Logger, LogMessage, etc - basic logging (same as pbccs)
 - **PacBio::Stream** : functional-programming-like data streaming
   - data Source, Sink, & Transform typedefs
   - instantiated with client-defined 'callables' (lambdas, free functions, static public member functions)
-  - connected via operator >> 
+  - connected via operator >>
 - **PacBio::Utility** : miscellaneous utilities
   - CallbackTimer - schedule periodic callback invokation (or delayed single-shot)
   - EnumClassHash - allows enums/enum classes to be used as STL hash keys
   - Stopwatch - timer for benchmarking, logging, etc
   - StringUtils - string dicing & splicing utilities
-  - SystemInfo - currently provides endianness 
+  - SystemInfo - currently provides endianness
 
 ##  Documentation
 
