@@ -39,17 +39,12 @@
 
 #include <string>
 
-#include "GitHash.h"
-
 namespace PacBio {
 namespace Utility {
 
-constexpr auto   LibraryVersion = "@pbcopper_VERSION@";
-constexpr size_t LibraryMajor    = @pbcopper_VERSION_MAJOR@;
-constexpr size_t LibraryMinor    = @pbcopper_VERSION_MINOR@;
-constexpr size_t LibraryPatch    = @pbcopper_VERSION_PATCH@;
+constexpr auto LibraryGitSha1 = "@COPPER_GIT_SHA1@";
 
-inline std::string LibraryVersionString()
-{ return LibraryVersion; }
+inline std::string LibraryGitSha1String()
+{ return LibraryGitSha1; }
 
 }} // ::PacBio::Utility

@@ -1,0 +1,3 @@
+option('enable-pbcopper-build-examples', type : 'boolean', value : true,  description : 'Build pbcopper examples')
+option('enable-pbcopper-build-docs',     type : 'boolean', value : false, description : 'Build pbcopper docs')
+option('enable-pbcopper-tests',          type : 'boolean', value : true,  description : 'Build pbcopper tests')

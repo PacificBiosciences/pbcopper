@@ -120,7 +120,7 @@ public:
     ///
     /// If a \p choices array is provided, the input from the command line must
     /// be a member of the array.
-    /// 
+    ///
     /// This class can participate in C++11-style uniform initialization:
     ///
     /// \code
@@ -158,7 +158,7 @@ public:
     ///
     /// If \p defaultValue is not provided, the option is considered to be a
     /// switch.
-    /// 
+    ///
     /// If a \p choices array is provided, the input from the command line must
     /// be a member of the array.
     ///
