@@ -2,7 +2,7 @@
 # sources #
 ###########
 
-pbcopper_cpp_sources = [
+pbcopper_cpp_sources = files([
   # -------
   # cli
   # -------
@@ -36,30 +36,14 @@ pbcopper_cpp_sources = [
   # ---------
   # utility
   # ---------
-  'utility/CallbackTimer.cpp']
+  'utility/CallbackTimer.cpp'])
 
 pbcopper_lib = library(
   'pbcopper',
   pbcopper_cpp_sources,
   soversion : 0,
+  version : meson.project_version(),
   install : true,
   dependencies : [pbcopper_thread_dep, pbcopper_boost_dep],
   include_directories : pbcopper_include_directories,
   cpp_args : ['-DPBCOPPER_LIBRARY', pbcopper_warning_flags])
-
-###################
-# dependency info #
-###################
-
-import('pkgconfig').generate(
-  libraries : pbcopper_lib,
-  version : meson.project_version(),
-  name : 'pbcopper',
-  filebase : 'pbcopper',
-  description : 'C++ library providing a suite of data structures, algorithms, and utilities')
-
-declare_dependency(
-  include_directories : pbcopper_include_directories,
-  link_with : pbcopper_lib,
-  version : meson.project_version(),
-  sources : pbcopper_cpp_sources)

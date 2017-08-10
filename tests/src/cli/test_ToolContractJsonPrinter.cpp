@@ -1,6 +1,6 @@
 #include <pbcopper/cli/toolcontract/JsonPrinter.h>
 #include <pbcopper/cli/Interface.h>
-#include <pbcopper/utility/Version.h>
+#include <pbcopper/utility/PbcopperVersion.h>
 #include <gtest/gtest.h>
 
 using namespace PacBio;

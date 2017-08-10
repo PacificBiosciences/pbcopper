@@ -6,7 +6,7 @@ set(pbcopper_H
     # -------
 
     ${pbcopper_IncludeDir}/pbcopper/Config.h
-    ${CMAKE_BINARY_DIR}/generated/pbcopper/utility/Version.h
+    ${CMAKE_BINARY_DIR}/generated/pbcopper/utility/PbcopperVersion.h
 
     # -------
     # align

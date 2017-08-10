@@ -9,16 +9,6 @@ project(
   license : 'BSD-3',
   meson_version : '>= 0.41.1')
 
-################
-# dependencies #
-################
-
-# threads
-pbcopper_thread_dep = dependency('threads', required : true)
-
-# boost
-pbcopper_boost_dep = dependency('boost', required : true)
-
 ############
 # CXXFLAGS #
 ############
@@ -33,6 +23,16 @@ foreach cflag: [
       pbcopper_warning_flags += cflag
     endif
 endforeach
+
+################
+# dependencies #
+################
+
+# threads
+pbcopper_thread_dep = dependency('threads', required : true)
+
+# boost
+pbcopper_boost_dep = dependency('boost', required : true)
 
 ###########
 # headers #
@@ -69,3 +69,22 @@ endif
 if get_option('enable-pbcopper-tests')
   subdir('tests')
 endif
+
+###################
+# dependency info #
+###################
+
+import('pkgconfig').generate(
+  libraries : pbcopper_lib,
+  version : meson.project_version(),
+  name : 'pbcopper',
+  filebase : 'pbcopper',
+  description : 'C++ library providing a suite of data structures, algorithms, and utilities')
+
+pbcopper_dep = declare_dependency(
+  include_directories : pbcopper_include_directories,
+  link_with : pbcopper_lib,
+  dependencies : [pbcopper_thread_dep, pbcopper_boost_dep],
+  version : meson.project_version(),
+  sources : pbcopper_cpp_sources,
+  compile_args : pbcopper_warning_flags)
