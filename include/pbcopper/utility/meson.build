@@ -11,13 +11,13 @@ pbcopper_config.set('pbcopper_VERSION_MINOR', pbcopper_minor_version)
 pbcopper_config.set('pbcopper_VERSION_PATCH', pbcopper_patch_version)
 
 configure_file(
-  input : 'Version.h.in',
-  output : 'Version.h',
+  input : 'PbcopperVersion.h.in',
+  output : 'PbcopperVersion.h',
   configuration : pbcopper_config)
 
 # replace git commit id
 vcs_tag(
-  input : 'GitHash.h.in',
-  output : 'GitHash.h',
+  input : 'PbcopperGitHash.h.in',
+  output : 'PbcopperGitHash.h',
   command : ['git', 'describe', '--always', '--dirty=*'],
   replace_string : '@COPPER_GIT_SHA1@')

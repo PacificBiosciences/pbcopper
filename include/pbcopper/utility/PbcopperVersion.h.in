@@ -39,7 +39,7 @@
 
 #include <string>
 
-#include "GitHash.h"
+#include "PbcopperGitHash.h"
 
 namespace PacBio {
 namespace Utility {
