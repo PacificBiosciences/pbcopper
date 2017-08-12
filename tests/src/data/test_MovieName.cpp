@@ -6,18 +6,14 @@ using namespace PacBio;
 using namespace PacBio::Data;
 using namespace std;
 
-namespace PacBio {
-namespace Data {
-namespace tests {
+namespace MovieNameTests {
 
 auto makeMovieName = [](void)
 {
     return MovieName{ "m54001_160623_195125" };
 };
 
-} // namespace tests
-} // namespace Data
-} // namespace PacBio
+} // namespace MovieNameTests
 
 TEST(Data_MovieName, construct_from_lvalue_string)
 {
@@ -76,7 +72,7 @@ TEST(Data_MovieName, copy_assign)
 
 TEST(Data_MovieName, move_constructor)
 {
-    const MovieName m(tests::makeMovieName());
+    const MovieName m(MovieNameTests::makeMovieName());
     EXPECT_EQ("160623_195125", m.RunStartTime());
     EXPECT_EQ("54001", m.InstrumentName());
 }
@@ -84,7 +80,7 @@ TEST(Data_MovieName, move_constructor)
 TEST(Data_MovieName, move_assign)
 {
     MovieName m2("mDummy_Dummy_Dummy");
-    m2 = tests::makeMovieName();
+    m2 = MovieNameTests::makeMovieName();
 
     EXPECT_EQ("160623_195125", m2.RunStartTime());
     EXPECT_EQ("54001", m2.InstrumentName());
