@@ -8,6 +8,8 @@ using namespace PacBio::CLI;
 using namespace PacBio::CLI::ToolContract;
 using namespace std;
 
+namespace ToolContractJsonPrinterTests {
+
 static string MakeHeader(void)
 {
     const auto preVersion = R"({
@@ -97,9 +99,11 @@ static string MakeToolContractText(const string nProc)
     return MakeHeader() + nProc + footer;
 }
 
+} // namespace ToolContractJsonPrinterTests
+
 TEST(CLI_ToolContractJsonPrinter, prints_expected_output)
 {
-    const string expectedText = MakeToolContractText("1");
+    const string expectedText = ToolContractJsonPrinterTests::MakeToolContractText("1");
 
     // --------------------------------------------
     // setup interface & tool contract config
@@ -149,7 +153,7 @@ TEST(CLI_ToolContractJsonPrinter, prints_expected_output)
 
 TEST(CLI_ToolContractJsonPrinter, prints_expected_output_with_explicit_nproc)
 {
-    const string expectedText = MakeToolContractText("4");
+    const string expectedText = ToolContractJsonPrinterTests::MakeToolContractText("4");
 
     // --------------------------------------------
     // setup interface & tool contract config
@@ -200,7 +204,7 @@ TEST(CLI_ToolContractJsonPrinter, prints_expected_output_with_explicit_nproc)
 
 TEST(CLI_ToolContractJsonPrinter, prints_expected_output_with_max_nproc)
 {
-    const string expectedText = MakeToolContractText("\"$max_nproc\"");
+    const string expectedText = ToolContractJsonPrinterTests::MakeToolContractText("\"$max_nproc\"");
 
     // --------------------------------------------
     // setup interface & tool contract config

@@ -39,8 +39,10 @@ pbcopper_cpp_sources = files([
   'utility/CallbackTimer.cpp'])
 
 pbcopper_lib = library(
-  'pbcopper',
-  pbcopper_cpp_sources,
+  'pbcopper', [
+    pbcopper_PbcopperVersion_h,
+    pbcopper_PbcopperGitHash_h,
+    pbcopper_cpp_sources],
   soversion : 0,
   version : meson.project_version(),
   install : true,

@@ -6,18 +6,14 @@ using namespace PacBio;
 using namespace PacBio::Data;
 using namespace std;
 
-namespace PacBio {
-namespace Data {
-namespace tests {
+namespace RSMovieNameTests {
 
 auto makeRSMovieName = [](void)
 {
     return RSMovieName{ "m140415_143853_42175_c100635972550000001823121909121417_s1_p0" };
 };
 
-} // namespace tests
-} // namespace Data
-} // namespace PacBio
+} // namespace RSMovieNameTests
 
 TEST(Data_RSMovieName, construct_from_lvalue_string)
 {
@@ -108,7 +104,7 @@ TEST(Data_RSMovieName, copy_assign)
 
 TEST(Data_RSMovieName, move_constructor)
 {
-    const RSMovieName m(tests::makeRSMovieName());
+    const RSMovieName m(RSMovieNameTests::makeRSMovieName());
     EXPECT_EQ("140415_143853", m.RunStartTime());
     EXPECT_EQ("42175", m.InstrumentSerialNumber());
     EXPECT_EQ("c100635972550000001823121909121417", m.SMRTCellBarcode());
@@ -120,7 +116,7 @@ TEST(Data_RSMovieName, move_constructor)
 TEST(Data_RSMovieName, move_assign)
 {
     RSMovieName m2("mDummy_Dummy_Dummy_Dummy_Dummy_Dummy");
-    m2 = tests::makeRSMovieName();
+    m2 = RSMovieNameTests::makeRSMovieName();
 
     EXPECT_EQ("140415_143853", m2.RunStartTime());
     EXPECT_EQ("42175", m2.InstrumentSerialNumber());

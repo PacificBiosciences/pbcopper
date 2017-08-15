@@ -5,9 +5,7 @@ using namespace PacBio;
 using namespace PacBio::CLI;
 using namespace std;
 
-namespace PacBio {
-namespace CLI {
-namespace tests {
+namespace ResultsTests {
 
 static PacBio::CLI::Interface makeInterface(void)
 {
@@ -37,13 +35,11 @@ static PacBio::CLI::Interface makeInterface(void)
     return i;
 }
 
-} // namespace tests
-} // namespace CLI
-} // namespace PacBio
+} // namespace ResultsTests
 
 TEST(CLI_Results, option_default_values_respected)
 {
-    Results r{ tests::makeInterface() };
+    Results r{ ResultsTests::makeInterface() };
     EXPECT_FALSE(r["force"]);
     EXPECT_FALSE(r["timeout"].empty());     // has a default
     EXPECT_TRUE(r.PositionalArguments().empty());
@@ -51,14 +47,14 @@ TEST(CLI_Results, option_default_values_respected)
 
 TEST(CLI_Results, add_observed_option_value)
 {
-    Results r{ tests::makeInterface() };
+    Results r{ ResultsTests::makeInterface() };
     r.RegisterOptionValue("timeout", "42");
     EXPECT_EQ(string("42"), r["timeout"]);
 }
 
 TEST(CLI_Results, adding_positional_args)
 {
-    Results r{ tests::makeInterface() };
+    Results r{ ResultsTests::makeInterface() };
     r.RegisterPositionalArg("source_file")
      .RegisterPositionalArg("dest_file");
 

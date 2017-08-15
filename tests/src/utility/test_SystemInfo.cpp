@@ -4,9 +4,7 @@
 using namespace PacBio;
 using namespace PacBio::Utility;
 
-namespace PacBio {
-namespace Utility {
-namespace tests {
+namespace SystemInfoTests {
 
 // one sort of 'manual' endianness check - not used by the library
 static inline bool isLittleEndian(void)
@@ -16,13 +14,11 @@ static inline bool isLittleEndian(void)
     return (*c == 1);
 }
 
-} // namespace tests
-} // namespace Utility
-} // namespace PacBio
+} // namespace SystemInfoTests
 
 TEST(Utility_SystemInfo, proper_byte_order_detected)
 {
-    if (tests::isLittleEndian()) {
+    if (SystemInfoTests::isLittleEndian()) {
         EXPECT_EQ(SystemInfo::LittleEndian, SystemInfo::ByteOrder());
         EXPECT_TRUE(SystemInfo::IsLittleEndian());
         EXPECT_FALSE(SystemInfo::IsBigEndian());

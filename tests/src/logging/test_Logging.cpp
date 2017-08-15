@@ -17,19 +17,22 @@ using namespace std;
 //       but we need finer control for testing here.
 //
 
+namespace LoggingTests {
+
 static const string infoMsg   = "*** Application INFO ***";
 static const string noticeMsg = "*** Application NOTE ***";
 static const string warnMsg   = "*** Application WARNING ***";
 
+} // namespace LoggingTests
 
 TEST(Logging_Logger, info_message_logged_to_stream)
 {
     stringstream s;
     {
         Logger logger(s, LogLevel::INFO);
-        PBLOGGER_INFO(logger) << infoMsg;
+        PBLOGGER_INFO(logger) << LoggingTests::infoMsg;
     }
-    EXPECT_TRUE(s.str().find(infoMsg) != string::npos);
+    EXPECT_TRUE(s.str().find(LoggingTests::infoMsg) != string::npos);
 }
 
 TEST(Logging_Logger, custom_logging_sinks_receive_expected_messages)
@@ -49,12 +52,12 @@ TEST(Logging_Logger, custom_logging_sinks_receive_expected_messages)
 
     {
         Logger logger(logConfig);
-        PBLOGGER_INFO(logger)   << infoMsg;
-        PBLOGGER_NOTICE(logger) << noticeMsg;
-        PBLOGGER_WARN(logger)   << warnMsg;
+        PBLOGGER_INFO(logger)   << LoggingTests::infoMsg;
+        PBLOGGER_NOTICE(logger) << LoggingTests::noticeMsg;
+        PBLOGGER_WARN(logger)   << LoggingTests::warnMsg;
     }
-    EXPECT_TRUE(info.str().find(infoMsg)     != string::npos);
-    EXPECT_TRUE(notice.str().find(noticeMsg) != string::npos);
-    EXPECT_TRUE(warn.str().find(warnMsg)     != string::npos);
-    EXPECT_TRUE(warn2.str().find(warnMsg)    != string::npos);
+    EXPECT_TRUE(info.str().find(LoggingTests::infoMsg)     != string::npos);
+    EXPECT_TRUE(notice.str().find(LoggingTests::noticeMsg) != string::npos);
+    EXPECT_TRUE(warn.str().find(LoggingTests::warnMsg)     != string::npos);
+    EXPECT_TRUE(warn2.str().find(LoggingTests::warnMsg)    != string::npos);
 }

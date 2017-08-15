@@ -6,7 +6,7 @@
 using namespace PacBio;
 using namespace PacBio::Utility;
 
-namespace tests {
+namespace CallbackTimerTests {
 
 class CallbackCounter
 {
@@ -24,12 +24,12 @@ CallbackCounter freeFunctionCounter;
 void tst_callback(void)
 { freeFunctionCounter.Ping(); }
 
-auto ping = [](tests::CallbackCounter& counter)
+auto ping = [](CallbackCounter& counter)
 {
     counter.Ping();
 };
 
-} // namespace tests
+} // namespace CallbackTimerTests
 
 TEST(Utility_CallbackTimer, scheduled_callbacks_fired_as_expected)
 {
@@ -40,29 +40,29 @@ TEST(Utility_CallbackTimer, scheduled_callbacks_fired_as_expected)
     //
 
     CallbackTimer t;
-    tests::CallbackCounter counterA;
-    tests::CallbackCounter counterB;
-    tests::CallbackCounter counterC;
-    tests::CallbackCounter counterSS;
+    CallbackTimerTests::CallbackCounter counterA;
+    CallbackTimerTests::CallbackCounter counterB;
+    CallbackTimerTests::CallbackCounter counterC;
+    CallbackTimerTests::CallbackCounter counterSS;
 
     // Timer fires once on lambda, 2ms from now
-    const auto a = t.Schedule(2, 0, [&](){ tests::ping(counterA); });
+    const auto a = t.Schedule(2, 0, [&](){ CallbackTimerTests::ping(counterA); });
     EXPECT_TRUE(t.IsActive(a));
 
     // Timer fires every 1ms on lambda, starting 2ms from now
-    const auto b = t.Schedule(2, 1, [&]() { tests::ping(counterB); });
+    const auto b = t.Schedule(2, 1, [&]() { CallbackTimerTests::ping(counterB); });
     EXPECT_TRUE(t.IsActive(b));
 
     // Timer fires every 1ms on lambda, starting now
-    const auto c = t.Schedule(0, 1, [&]() { tests::ping(counterC); });
+    const auto c = t.Schedule(0, 1, [&]() { CallbackTimerTests::ping(counterC); });
     EXPECT_TRUE(t.IsActive(c));
 
     // Timer firest once on free function, 2ms from now
-    auto ff = t.Schedule(2, 0, &tests::tst_callback);
+    auto ff = t.Schedule(2, 0, &CallbackTimerTests::tst_callback);
     EXPECT_TRUE(t.IsActive(ff));
 
     // explicit "single shot" lambda, 2ms from now
-    CallbackTimer::SingleShot(2, [&]() { tests::ping(counterSS); });
+    CallbackTimer::SingleShot(2, [&]() { CallbackTimerTests::ping(counterSS); });
 
     // sleep a bit to let periodic timers fire
     std::this_thread::sleep_for(std::chrono::milliseconds(10));
@@ -70,19 +70,19 @@ TEST(Utility_CallbackTimer, scheduled_callbacks_fired_as_expected)
     EXPECT_LE(7, counterB.Count());     // >= 7 triggers since scheduling
     EXPECT_LE(9, counterC.Count());     // >= 9 triggers since schedling
     EXPECT_EQ(1, counterSS.Count());    // explicit single-shot
-    EXPECT_EQ(1, tests::freeFunctionCounter.Count()); // effectively single-shot
+    EXPECT_EQ(1, CallbackTimerTests::freeFunctionCounter.Count()); // effectively single-shot
 
     // single-shot callbacks only called once
     EXPECT_EQ(1, counterA.Count());
     EXPECT_EQ(1, counterSS.Count());
-    EXPECT_EQ(1, tests::freeFunctionCounter.Count());
+    EXPECT_EQ(1, CallbackTimerTests::freeFunctionCounter.Count());
 }
 
 TEST(Utility_CallbackTimer, canceled_callbacks_not_called)
 {
     CallbackTimer t;
-    tests::CallbackCounter counterC;
-    const auto c = t.Schedule(0, 1, [&]() { tests::ping(counterC); });
+    CallbackTimerTests::CallbackCounter counterC;
+    const auto c = t.Schedule(0, 1, [&]() { CallbackTimerTests::ping(counterC); });
     EXPECT_TRUE(t.IsActive(c));
     t.Cancel(c);
     EXPECT_FALSE(t.IsActive(c));
