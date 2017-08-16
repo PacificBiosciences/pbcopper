@@ -48,4 +48,4 @@ pbcopper_lib = library(
   install : true,
   dependencies : [pbcopper_thread_dep, pbcopper_boost_dep],
   include_directories : pbcopper_include_directories,
-  cpp_args : ['-DPBCOPPER_LIBRARY', pbcopper_warning_flags])
+  cpp_args : pbcopper_warning_flags)
