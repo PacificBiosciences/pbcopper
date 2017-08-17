@@ -38,6 +38,7 @@ pbcopper_boost_dep = dependency('boost', required : true)
 # headers #
 ###########
 
+pbcopper_cpp_sources = []
 subdir('include')
 
 #####################
@@ -86,5 +87,4 @@ pbcopper_dep = declare_dependency(
   link_with : pbcopper_lib,
   dependencies : [pbcopper_thread_dep, pbcopper_boost_dep],
   version : meson.project_version(),
-  sources : pbcopper_cpp_sources,
   compile_args : pbcopper_warning_flags)
