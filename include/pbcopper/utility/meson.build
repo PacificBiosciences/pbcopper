@@ -14,6 +14,7 @@ pbcopper_PbcopperVersion_h = configure_file(
   input : 'PbcopperVersion.h.in',
   output : 'PbcopperVersion.h',
   configuration : pbcopper_config)
+pbcopper_cpp_sources += pbcopper_PbcopperVersion_h
 
 # replace git commit id
 pbcopper_PbcopperGitHash_h = vcs_tag(
@@ -21,3 +22,4 @@ pbcopper_PbcopperGitHash_h = vcs_tag(
   output : 'PbcopperGitHash.h',
   command : ['git', 'describe', '--always', '--dirty=*'],
   replace_string : '@COPPER_GIT_SHA1@')
+pbcopper_cpp_sources += pbcopper_PbcopperGitHash_h

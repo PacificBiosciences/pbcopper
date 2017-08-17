@@ -38,6 +38,7 @@ pbcopper_boost_dep = dependency('boost', required : true)
 # headers #
 ###########
 
+pbcopper_cpp_sources = []
 subdir('include')
 
 #####################
@@ -50,7 +51,7 @@ subdir('src')
 # examples #
 ############
 
-if get_option('enable-pbcopper-build-examples')
+if get_option('enable-build-examples')
   subdir('examples')
 endif
 
@@ -58,7 +59,7 @@ endif
 # documentation #
 #################
 
-if get_option('enable-pbcopper-build-docs')
+if get_option('enable-build-docs')
   subdir('docs')
 endif
 
@@ -66,7 +67,7 @@ endif
 # tests #
 #########
 
-if get_option('enable-pbcopper-tests')
+if get_option('enable-tests')
   subdir('tests')
 endif
 
@@ -86,5 +87,4 @@ pbcopper_dep = declare_dependency(
   link_with : pbcopper_lib,
   dependencies : [pbcopper_thread_dep, pbcopper_boost_dep],
   version : meson.project_version(),
-  sources : pbcopper_cpp_sources,
   compile_args : pbcopper_warning_flags)

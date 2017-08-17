@@ -1,4 +1,4 @@
-pbcopper_test_cpp_sources = [
+pbcopper_test_cpp_sources = files([
   # align
   'src/align/test_Seeds.cpp',
 
@@ -38,10 +38,10 @@ pbcopper_test_cpp_sources = [
   'src/utility/test_FileUtils.cpp',
   'src/utility/test_Stopwatch.cpp',
   'src/utility/test_SystemInfo.cpp'
-]
+])
 
 # find GoogleTest
-pbcopper_gtest_dep = dependency('gtest', fallback : ['gtest', 'gtest_with_main_dep'])
+pbcopper_gtest_dep = dependency('gtest_main', fallback : ['gtest', 'gtest_main_dep'])
 
 pbcopper_test = executable(
   'pbcopper_test',
