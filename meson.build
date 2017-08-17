@@ -50,7 +50,7 @@ subdir('src')
 # examples #
 ############
 
-if get_option('enable-pbcopper-build-examples')
+if get_option('enable-build-examples')
   subdir('examples')
 endif
 
@@ -58,7 +58,7 @@ endif
 # documentation #
 #################
 
-if get_option('enable-pbcopper-build-docs')
+if get_option('enable-build-docs')
   subdir('docs')
 endif
 
@@ -66,7 +66,7 @@ endif
 # tests #
 #########
 
-if get_option('enable-pbcopper-tests')
+if get_option('enable-tests')
   subdir('tests')
 endif
 
