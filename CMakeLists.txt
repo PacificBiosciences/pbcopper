@@ -40,12 +40,12 @@ include(pbcopper-libtype)
 include(pbcopper-gitsha1)
 find_git_sha1(COPPER_GIT_SHA1)
 configure_file(
-    ${pbcopper_IncludeDir}/pbcopper/utility/PbcopperGitHash.h.in
-    ${CMAKE_BINARY_DIR}/generated/pbcopper/utility/PbcopperGitHash.h
+    ${pbcopper_SourceDir}/utility/PbcopperGitHash.cpp.in
+    ${CMAKE_BINARY_DIR}/generated/utility/PbcopperGitHash.cpp
 )
 configure_file(
-    ${pbcopper_IncludeDir}/pbcopper/utility/PbcopperVersion.h.in
-    ${CMAKE_BINARY_DIR}/generated/pbcopper/utility/PbcopperVersion.h
+    ${pbcopper_SourceDir}/utility/PbcopperVersion.cpp.in
+    ${CMAKE_BINARY_DIR}/generated/utility/PbcopperVersion.cpp
 )
 
 # main library

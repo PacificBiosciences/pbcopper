@@ -1,4 +1,4 @@
-// Copyright (c) 2016, Pacific Biosciences of California, Inc.
+// Copyright (c) 2016-2017, Pacific Biosciences of California, Inc.
 //
 // All rights reserved.
 //
@@ -35,16 +35,16 @@
 
 // Author: Armin Töpfer
 
-#pragma once
-
+#include "pbcopper/utility/PbcopperVersion.h"
 #include <string>
 
 namespace PacBio {
 namespace Utility {
-
+namespace {
 constexpr auto LibraryGitSha1 = "@COPPER_GIT_SHA1@";
+}
 
-inline std::string LibraryGitSha1String()
+std::string LibraryGitSha1String()
 { return LibraryGitSha1; }
 
-}} // ::PacBio::Utility
+}}  // ::PacBio::Utility

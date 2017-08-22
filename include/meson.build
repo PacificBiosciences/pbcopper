@@ -163,5 +163,3 @@ install_headers(
   subdir : 'pbcopper/utility/internal')
 
 pbcopper_include_directories = include_directories('.')
-
-subdir('pbcopper')

@@ -38,7 +38,6 @@ pbcopper_boost_dep = dependency('boost', required : true)
 # headers #
 ###########
 
-pbcopper_cpp_sources = []
 subdir('include')
 
 #####################

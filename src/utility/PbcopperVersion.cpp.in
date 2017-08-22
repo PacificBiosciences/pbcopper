@@ -1,4 +1,4 @@
-// Copyright (c) 2016, Pacific Biosciences of California, Inc.
+// Copyright (c) 2016-2017, Pacific Biosciences of California, Inc.
 //
 // All rights reserved.
 //
@@ -35,21 +35,23 @@
 
 // Author: Armin Töpfer
 
-#pragma once
-
+#include "pbcopper/utility/PbcopperVersion.h"
 #include <string>
-
-#include "PbcopperGitHash.h"
+#include <tuple>
 
 namespace PacBio {
 namespace Utility {
+namespace {
+constexpr auto LibraryVersion = "@pbcopper_VERSION@";
+constexpr int LibraryMajor    = @pbcopper_VERSION_MAJOR@;
+constexpr int LibraryMinor    = @pbcopper_VERSION_MINOR@;
+constexpr int LibraryPatch    = @pbcopper_VERSION_PATCH@;
+}
 
-constexpr auto   LibraryVersion = "@pbcopper_VERSION@";
-constexpr size_t LibraryMajor    = @pbcopper_VERSION_MAJOR@;
-constexpr size_t LibraryMinor    = @pbcopper_VERSION_MINOR@;
-constexpr size_t LibraryPatch    = @pbcopper_VERSION_PATCH@;
-
-inline std::string LibraryVersionString()
+std::string LibraryVersionString()
 { return LibraryVersion; }
 
-}} // ::PacBio::Utility
+std::tuple<int, int, int> LibraryVersionTriple()
+{ return std::make_tuple(LibraryMajor, LibraryMinor, LibraryPatch); }
+
+}}  // ::PacBio::Utility

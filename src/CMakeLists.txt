@@ -34,7 +34,6 @@ target_include_directories(pbcopper
     PUBLIC
     ${pbcopper_IncludeDir}
     ${pbcopper_DependencyIncludes}
-    ${CMAKE_BINARY_DIR}/generated
 )
 
 # export variables for projects that use pbcopper

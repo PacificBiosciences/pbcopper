@@ -6,7 +6,6 @@ set(pbcopper_H
     # -------
 
     ${pbcopper_IncludeDir}/pbcopper/Config.h
-    ${CMAKE_BINARY_DIR}/generated/pbcopper/utility/PbcopperVersion.h
 
     # -------
     # align
@@ -170,4 +169,6 @@ set(pbcopper_CPP
     # ---------
 
     ${pbcopper_SourceDir}/utility/CallbackTimer.cpp
+    ${CMAKE_BINARY_DIR}/generated/utility/PbcopperVersion.cpp
+    ${CMAKE_BINARY_DIR}/generated/utility/PbcopperGitHash.cpp
 )
