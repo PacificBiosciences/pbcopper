@@ -3,7 +3,7 @@
 echo "# DEPENDENCIES"
 echo "## Load modules"
 source /mnt/software/Modules/current/init/bash
-module load gcc/4.9.2 cmake ccache_base ninja
+module load gcc/6.4.0 cmake ccache_base ninja
 
 echo "# TEST"
 echo "## Unit tests"
