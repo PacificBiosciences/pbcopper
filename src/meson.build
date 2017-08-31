@@ -2,7 +2,7 @@
 # sources #
 ###########
 
-pbcopper_cpp_sources += files([
+pbcopper_cpp_sources = files([
   # -------
   # cli
   # -------
@@ -37,6 +37,8 @@ pbcopper_cpp_sources += files([
   # utility
   # ---------
   'utility/CallbackTimer.cpp'])
+
+subdir('utility')
 
 pbcopper_lib = library(
   'pbcopper',
