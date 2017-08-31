@@ -67,8 +67,10 @@ endif
 # tests #
 #########
 
-if get_option('enable-tests')
-  subdir('tests')
+if not meson.is_subproject()
+  if get_option('enable-tests')
+    subdir('tests')
+  endif
 endif
 
 ###################
