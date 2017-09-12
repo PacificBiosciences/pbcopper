@@ -2,10 +2,27 @@
 #include <pbcopper/qgram/Index.h>
 #include <gtest/gtest.h>
 
+TEST(QGram_Index, shape_throws_on_invalid_qgram_sizes)
+{
+    EXPECT_THROW(
+        PacBio::QGram::internal::Shape(0, "ACGTACGT"),
+        std::invalid_argument
+    );
+    EXPECT_THROW(
+        PacBio::QGram::internal::Shape(20, "ACGTACGT"),
+        std::invalid_argument
+    );
+}
+
 TEST(QGram_Index, shape_hash_factors)
 {
-    PacBio::QGram::internal::Shape shape{ 3, "" };
-    EXPECT_EQ(16, shape.hashFactor_);
+    //4^(q-1)
+
+    PacBio::QGram::internal::Shape shape_3{ 3, "ACGTACGT" };
+    EXPECT_EQ(16, shape_3.hashFactor_);
+
+    PacBio::QGram::internal::Shape shape_6{ 6, "ACGTACGT" };
+    EXPECT_EQ(1024, shape_6.hashFactor_);
 }
 
 TEST(QGram_Index, shape_hashing)
@@ -320,4 +337,24 @@ TEST(QGram_Index, index_hits_PUBLIC_API_from_seq)
         }
     }
     EXPECT_EQ(expected, observed);
+}
+
+TEST(QGram_Index, index_hits_PUBLIC_API_empty_hits_result_when_query_seq_is_too_short)
+{
+    const PacBio::QGram::Index idx(6,
+                       "TCCAACTTAGGCATAAACCTGCATGCTACCTTGTCAGACCCACTCTGCACGAAGTAA"
+                       "ATATGGGATGCGTCCGACCTGGCTCCTGGCGTTCCACGCCGCCACGTGTTCGTTAAC"
+                       "TGTTGATTGGTGGCACATAAGTAATACCATGGTCCCTGAAATTCGGCTCAGTTACTT"
+                       "CGAGCGTAATGTCTCAAATGGCGTAGAACGGCAATGACTGTTTGACACTAGGTGGTG"
+                       "TTCAGTTCGGTAACGGAGAGTCTGTGCGGCATTCTTATTAATACATTTGAAACGCGC"
+                       "CCAACTGACGCTAGGCAAGTCAGTGCAGGCTCCCGTGTTAGGATAAGGGTAAACATA"
+                       "CAAGTCGATAGAAGATGGGTAGGGGCCTTCAATTCATCCAGCACTCTACGGTTCCTC"
+                       "CGAGAGCAAGTAGGGCACCCTGTAGTTCGAAGGGGAACTATTTCGTGGGGCGAGCCC"
+                       "ACACCGTCTCTTCTGCGGAAGACTTAACACGTTAGGGAGGTGGA");
+
+    auto hits = idx.Hits("");
+    EXPECT_TRUE(hits.empty());
+
+    hits = idx.Hits("ACG");
+    EXPECT_TRUE(hits.empty());
 }
