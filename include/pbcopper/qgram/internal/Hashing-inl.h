@@ -2,6 +2,7 @@
 #define PBCOPPER_QGRAM_HASHING_INL_H
 
 #include <array>
+#include <stdexcept>
 #include <string>
 #include <cassert>
 #include <cmath>
@@ -11,7 +12,7 @@ namespace PacBio {
 namespace QGram {
 namespace internal {
 
-const uint8_t ALPHABET_SIZE = 4; // {A,C,G,T}
+constexpr uint8_t ALPHABET_SIZE = 4; // {A,C,G,T}
 
 inline uint8_t BaseCode(const char c)
 {
@@ -63,8 +64,29 @@ public:
         , currentHash_{0}
         , leftChar_{'\0'}
     {
-        assert(q_ >= 1 && q_ <= 16);
-        currentHash_ = HashImpl(BaseCode(*iter_), iter_, q-1);
+        // We check for q & sequence size in the main QGram::Index entry points,
+        // but want to still enforce this requirement here (in case of clients 
+        // 'sneaking' into internal implementation or, more likely, in case later 
+        // refactoring upstream removes the check).
+
+        if (seq.size() < q_)
+        {
+            std::string msg {
+                "sequence size (" + std::to_string(seq.size()) +
+                ") must be >= q (" + std::to_string(q_)
+            };
+            throw std::invalid_argument{msg};
+        }
+
+        if (q_ == 0 || q > 16)
+        {
+            std::string msg {
+                "qgram size (" + std::to_string(q_) + ") must be in the range [1,16]"
+            };
+            throw std::invalid_argument{msg};
+        }
+
+        currentHash_ = HashImpl(BaseCode(*iter_), iter_, q - 1);
     }
 
     uint64_t HashNext(void)
