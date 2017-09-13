@@ -76,12 +76,14 @@ endif
 # dependency info #
 ###################
 
-import('pkgconfig').generate(
-  libraries : pbcopper_lib,
-  version : meson.project_version(),
-  name : 'pbcopper',
-  filebase : 'pbcopper',
-  description : 'C++ library providing a suite of data structures, algorithms, and utilities')
+if not meson.is_subproject()
+  import('pkgconfig').generate(
+    libraries : pbcopper_lib,
+    version : meson.project_version(),
+    name : 'pbcopper',
+    filebase : 'pbcopper',
+    description : 'C++ library providing a suite of data structures, algorithms, and utilities')
+endif
 
 pbcopper_dep = declare_dependency(
   include_directories : pbcopper_include_directories,
