@@ -40,12 +40,17 @@ pbcopper_cpp_sources = files([
 
 subdir('utility')
 
+# install library if
+# - either running as a proper project
+# - or using shared libraries
+pbcopper_lib_install = (not meson.is_subproject()) or (get_option('default_library') == 'shared')
+
 pbcopper_lib = library(
   'pbcopper',
   pbcopper_cpp_sources,
   soversion : 0,
   version : meson.project_version(),
-  install : true,
+  install : pbcopper_lib_install,
   dependencies : [pbcopper_thread_dep, pbcopper_boost_dep],
   include_directories : pbcopper_include_directories,
   cpp_args : pbcopper_warning_flags)
