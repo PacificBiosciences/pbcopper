@@ -5296,7 +5296,7 @@ class basic_json
     */
     friend bool operator<(const value_t lhs, const value_t rhs) noexcept
     {
-        static constexpr std::array<uint8_t, 8> order = {{
+        static constexpr const std::array<uint8_t, 8> order = {{
                 0, // null
                 3, // object
                 4, // array

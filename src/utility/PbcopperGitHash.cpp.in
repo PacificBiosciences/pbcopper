@@ -41,7 +41,7 @@
 namespace PacBio {
 namespace Utility {
 namespace {
-constexpr auto LibraryGitSha1 = "@COPPER_GIT_SHA1@";
+static constexpr const char LibraryGitSha1[] = "@COPPER_GIT_SHA1@";
 }
 
 std::string LibraryGitSha1String()

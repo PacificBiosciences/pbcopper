@@ -42,10 +42,10 @@
 namespace PacBio {
 namespace Utility {
 namespace {
-constexpr auto LibraryVersion = "@pbcopper_VERSION@";
-constexpr int LibraryMajor    = @pbcopper_VERSION_MAJOR@;
-constexpr int LibraryMinor    = @pbcopper_VERSION_MINOR@;
-constexpr int LibraryPatch    = @pbcopper_VERSION_PATCH@;
+static constexpr const char LibraryVersion[] = "@pbcopper_VERSION@";
+static constexpr const int LibraryMajor      = @pbcopper_VERSION_MAJOR@;
+static constexpr const int LibraryMinor      = @pbcopper_VERSION_MINOR@;
+static constexpr const int LibraryPatch      = @pbcopper_VERSION_PATCH@;
 }
 
 std::string LibraryVersionString()

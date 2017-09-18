@@ -12,11 +12,11 @@ namespace PacBio {
 namespace QGram {
 namespace internal {
 
-constexpr uint8_t ALPHABET_SIZE = 4; // {A,C,G,T}
+static constexpr const uint8_t ALPHABET_SIZE = 4; // {A,C,G,T}
 
 inline uint8_t BaseCode(const char c)
 {
-    static const std::array<uint8_t, 128> baseCode =
+    static constexpr const std::array<uint8_t, 128> baseCode =
     {
         // C->1, G->2, T->3, else 0
        {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
