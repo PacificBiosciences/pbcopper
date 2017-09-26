@@ -150,7 +150,8 @@ if not meson.is_subproject()
       'pbcopper/utility/SafeSubtract.h',
       'pbcopper/utility/Stopwatch.h',
       'pbcopper/utility/StringUtils.h',
-      'pbcopper/utility/SystemInfo.h']),
+      'pbcopper/utility/SystemInfo.h',
+      'pbcopper/utility/Unused.h']),
     subdir : 'pbcopper/utility')
 
   # pbcopper/utility/internal

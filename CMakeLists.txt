@@ -4,7 +4,7 @@
 cmake_policy(SET CMP0048 NEW)  # lets us set version in project()
 cmake_minimum_required(VERSION 3.0)
 
-project(pbcopper VERSION 0.1.0 LANGUAGES CXX C)
+project(pbcopper VERSION 0.1.1 LANGUAGES CXX C)
 enable_testing()
 
 # project options
