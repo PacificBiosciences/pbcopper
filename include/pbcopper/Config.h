@@ -4,7 +4,7 @@
 #include <cstddef>
 #include <cstdint>
 
-#define UNUSED(x) (void)x
+//#define UNUSED(x) (void)x
 
 namespace PacBio {
 

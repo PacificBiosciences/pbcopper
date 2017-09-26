@@ -121,6 +121,7 @@ set(pbcopper_H
     ${pbcopper_IncludeDir}/pbcopper/utility/Stopwatch.h
     ${pbcopper_IncludeDir}/pbcopper/utility/StringUtils.h
     ${pbcopper_IncludeDir}/pbcopper/utility/SystemInfo.h
+    ${pbcopper_IncludeDir}/pbcopper/utility/Unused.h
 
     ${pbcopper_IncludeDir}/pbcopper/utility/internal/CallbackTimer-inl.h
     ${pbcopper_IncludeDir}/pbcopper/utility/internal/Stopwatch-inl.h

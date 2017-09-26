@@ -5,6 +5,11 @@
 ### TODO
 - Initial sequence-related data structures
 
+## [0.1.1] - 2017-09-26
+
+### Changed
+- UNUSED macro to no-op method 
+
 ## [0.1.0] - 2017-01-13
 
 ### Added

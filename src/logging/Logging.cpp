@@ -1,5 +1,7 @@
 #include "pbcopper/logging/Logging.h"
 
+#include "pbcopper/utility/Unused.h"
+
 #include <chrono>
 #include <iomanip>
 #include <iostream>
@@ -225,6 +227,7 @@ LogMessage::LogMessage(const char* file,
                        << std::noshowbase << std::dec << "||" << delim;
 
 #ifdef NDEBUG
+    using UNUSED = PacBio::Utility::UNUSED;
     UNUSED(file);
     UNUSED(line);
 #endif

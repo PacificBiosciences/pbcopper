@@ -189,7 +189,7 @@ TEST(CLI_Runner, emits_tool_contract_when_requested_from_command_line)
     },
     "schema_version": "2.0.0",
     "tool_contract": {
-        "_comment": "Created by v0.1.0",
+        "_comment": "Created by v0.1.1",
         "description": "Frobb your files in a most delightful, nobbly way",
         "input_types": [
             {
