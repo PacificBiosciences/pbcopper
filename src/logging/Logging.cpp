@@ -227,7 +227,6 @@ LogMessage::LogMessage(const char* file,
                        << std::noshowbase << std::dec << "||" << delim;
 
 #ifdef NDEBUG
-    using UNUSED = PacBio::Utility::UNUSED;
     UNUSED(file);
     UNUSED(line);
 #endif
