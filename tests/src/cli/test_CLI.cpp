@@ -14,9 +14,7 @@ using namespace PacBio::CLI;
 using namespace PacBio::JSON;
 using namespace std;
 
-namespace PacBio {
-namespace CLI {
-namespace tests {
+namespace CLITests {
 
 static string appName(void)
 {
@@ -178,9 +176,7 @@ private:
     std::string fn_;
 };
 
-} // namespace tests
-} // namespace CLI
-} // namespace PacBio
+} // namespace CLITests
 
 TEST(CLI_Runner, emits_tool_contract_when_requested_from_command_line)
 {
@@ -193,7 +189,7 @@ TEST(CLI_Runner, emits_tool_contract_when_requested_from_command_line)
     },
     "schema_version": "2.0.0",
     "tool_contract": {
-        "_comment": "Created by v0.1.0",
+        "_comment": "Created by v0.1.1",
         "description": "Frobb your files in a most delightful, nobbly way",
         "input_types": [
             {
@@ -314,12 +310,12 @@ TEST(CLI_Runner, emits_tool_contract_when_requested_from_command_line)
     // set up tool contract emitted from main CLI entry
     const vector<string> args =
     {
-        PacBio::CLI::tests::appName(),
+        CLITests::appName(),
         "--emit-tool-contract"
     };
     PacBio::CLI::Run(args,
-                     PacBio::CLI::tests::makeToolContractEnabledInterface(),
-                     &PacBio::CLI::tests::appRunner);
+                     CLITests::makeToolContractEnabledInterface(),
+                     &CLITests::appRunner);
     EXPECT_EQ(expectedText, s.str());
 }
 
@@ -327,7 +323,7 @@ TEST(CLI_Runner, runs_application_from_vector_of_args)
 {
     const vector<string> args =
     {
-        PacBio::CLI::tests::appName(),
+        CLITests::appName(),
         "-f",
         "--timeout=42",
         "--delta=2",
@@ -339,8 +335,8 @@ TEST(CLI_Runner, runs_application_from_vector_of_args)
         "requiredOut"
     };
     PacBio::CLI::Run(args,
-                     PacBio::CLI::tests::makeInterface(),
-                     &PacBio::CLI::tests::appRunner);
+                     CLITests::makeInterface(),
+                     &CLITests::appRunner);
 }
 
 TEST(CLI_Runner, runs_application_from_C_style_args)
@@ -362,8 +358,8 @@ TEST(CLI_Runner, runs_application_from_C_style_args)
     argv[10] = nullptr;
 
     PacBio::CLI::Run(argc, argv,
-                     PacBio::CLI::tests::makeInterface(),
-                     &PacBio::CLI::tests::appRunner);
+                     CLITests::makeInterface(),
+                     &CLITests::appRunner);
 }
 
 TEST(CLI_Runner, can_retrieve_input_commandline)
@@ -371,7 +367,7 @@ TEST(CLI_Runner, can_retrieve_input_commandline)
     SCOPED_TRACE("checking input command line");
     const vector<string> args =
     {
-        PacBio::CLI::tests::appName(),
+        CLITests::appName(),
         "-f",
         "--timeout=42",
         "--delta=2",
@@ -383,8 +379,8 @@ TEST(CLI_Runner, can_retrieve_input_commandline)
         "requiredOut"
     };
     PacBio::CLI::Run(args,
-                     PacBio::CLI::tests::makeInterface(),
-                     &PacBio::CLI::tests::inputCommandLineChecker);
+                     CLITests::makeInterface(),
+                     &CLITests::inputCommandLineChecker);
 }
 
 TEST(CLI_Runner, runs_application_from_resolved_tool_contract)
@@ -392,18 +388,18 @@ TEST(CLI_Runner, runs_application_from_resolved_tool_contract)
     SCOPED_TRACE("run from RTC args");
 
     const string& rtcFn = "/tmp/pbcopper.cli.runner.resolved-tool-contract.json";
-    PacBio::CLI::tests::RtcGenerator rtc(rtcFn);
+    CLITests::RtcGenerator rtc(rtcFn);
     (void)rtc;
 
     const vector<string> args =
     {
-        PacBio::CLI::tests::appName(),
+        CLITests::appName(),
         "--resolved-tool-contract",
         rtcFn
     };
     PacBio::CLI::Run(args,
-                     PacBio::CLI::tests::makeToolContractEnabledInterface(),
-                     &PacBio::CLI::tests::appRunner);
+                     CLITests::makeToolContractEnabledInterface(),
+                     &CLITests::appRunner);
 }
 
 TEST(CLI_Runner, throws_on_invalid_choices)
@@ -412,7 +408,7 @@ TEST(CLI_Runner, throws_on_invalid_choices)
         SCOPED_TRACE("use invalid int choice on command line");
         const vector<string> args =
         {
-            PacBio::CLI::tests::appName(),
+            CLITests::appName(),
             "--delta=4",                    // <-- invalid input (must be one of [1,2,3])
             "requiredIn",
             "requiredOut"
@@ -420,15 +416,15 @@ TEST(CLI_Runner, throws_on_invalid_choices)
 
         EXPECT_THROW(
             PacBio::CLI::Run(args,
-                             PacBio::CLI::tests::makeInterface(),
-                             &PacBio::CLI::tests::appRunner),
+                             CLITests::makeInterface(),
+                             &CLITests::appRunner),
             std::runtime_error);
     }
     {
         SCOPED_TRACE("use invalid string choice on command line");
         const vector<string> args =
         {
-            PacBio::CLI::tests::appName(),
+            CLITests::appName(),
             "--ploidy=triploid",            // <-- invalid input (must be one of["haploid","diploid"])
             "requiredIn",
             "requiredOut"
@@ -436,15 +432,13 @@ TEST(CLI_Runner, throws_on_invalid_choices)
 
         EXPECT_THROW(
             PacBio::CLI::Run(args,
-                             PacBio::CLI::tests::makeInterface(),
-                             &PacBio::CLI::tests::appRunner),
+                             CLITests::makeInterface(),
+                             &CLITests::appRunner),
             std::runtime_error);
     }
 }
 
-namespace PacBio {
-namespace CLI {
-namespace tests {
+namespace CLITests {
 
 RtcGenerator::RtcGenerator(const std::string& fn)
     : fn_(fn)
@@ -489,6 +483,4 @@ RtcGenerator::RtcGenerator(const std::string& fn)
 RtcGenerator::~RtcGenerator(void)
 { ::remove(fn_.c_str()); }
 
-} // namespace tests
-} // namespace CLI
-} // namespace PacBio
+} // namespace CLITests

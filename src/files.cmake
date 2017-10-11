@@ -6,7 +6,6 @@ set(pbcopper_H
     # -------
 
     ${pbcopper_IncludeDir}/pbcopper/Config.h
-    ${CMAKE_BINARY_DIR}/generated/pbcopper/utility/Version.h
 
     # -------
     # align
@@ -122,6 +121,7 @@ set(pbcopper_H
     ${pbcopper_IncludeDir}/pbcopper/utility/Stopwatch.h
     ${pbcopper_IncludeDir}/pbcopper/utility/StringUtils.h
     ${pbcopper_IncludeDir}/pbcopper/utility/SystemInfo.h
+    ${pbcopper_IncludeDir}/pbcopper/utility/Unused.h
 
     ${pbcopper_IncludeDir}/pbcopper/utility/internal/CallbackTimer-inl.h
     ${pbcopper_IncludeDir}/pbcopper/utility/internal/Stopwatch-inl.h
@@ -170,4 +170,6 @@ set(pbcopper_CPP
     # ---------
 
     ${pbcopper_SourceDir}/utility/CallbackTimer.cpp
+    ${CMAKE_BINARY_DIR}/generated/utility/PbcopperVersion.cpp
+    ${CMAKE_BINARY_DIR}/generated/utility/PbcopperGitHash.cpp
 )

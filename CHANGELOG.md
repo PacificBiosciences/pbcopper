@@ -5,6 +5,11 @@
 ### TODO
 - Initial sequence-related data structures
 
+## [0.1.1] - 2017-09-26
+
+### Changed
+- UNUSED macro to no-op method 
+
 ## [0.1.0] - 2017-01-13
 
 ### Added
@@ -34,21 +39,21 @@ format.
   - MovieName - query parts of a PacBio movie name
   - ReadName - query parts of a PacBio read name
 - **PacBio::JSON** : JSON support
-  - Json - wrapper around nlohmann::json 
+  - Json - wrapper around nlohmann::json
 - **PacBio::Logging** : logging utilities
   - Logger, LogMessage, etc - basic logging (same as pbccs)
 - **PacBio::Stream** : functional-programming-like data streaming
   - data Source, Sink, & Transform typedefs
   - instantiated with client-defined 'callables' (lambdas, free functions,
   static public member functions)
-  - connected via operator >> 
+  - connected via operator >>
 - **PacBio::Utility** : miscellaneous utilities
   - CallbackTimer - schedule periodic callback invokation (or delayed
   single-shot)
   - EnumClassHash - allows enums/enum classes to be used as STL hash keys
   - Stopwatch - timer for benchmarking, logging, etc
   - StringUtils - string dicing & splicing utilities
-  - SystemInfo - currently provides endianness 
+  - SystemInfo - currently provides endianness
 - Examples
   - cli_demo - playground for testing the command line interface
 - Tests

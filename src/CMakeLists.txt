@@ -20,7 +20,6 @@ set(SOURCES
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${pbcopper_CXX_FLAGS}")
 
 # define pbcopper library
-add_definitions(-DPBCOPPER_LIBRARY)
 add_library(pbcopper ${SOURCES})
 set_target_properties(pbcopper
     PROPERTIES
@@ -35,7 +34,6 @@ target_include_directories(pbcopper
     PUBLIC
     ${pbcopper_IncludeDir}
     ${pbcopper_DependencyIncludes}
-    ${CMAKE_BINARY_DIR}/generated
 )
 
 # export variables for projects that use pbcopper

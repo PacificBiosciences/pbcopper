@@ -4,7 +4,7 @@
 cmake_policy(SET CMP0048 NEW)  # lets us set version in project()
 cmake_minimum_required(VERSION 3.0)
 
-project(pbcopper VERSION 0.1.0 LANGUAGES CXX C)
+project(pbcopper VERSION 0.1.1 LANGUAGES CXX C)
 enable_testing()
 
 # project options
@@ -40,8 +40,12 @@ include(pbcopper-libtype)
 include(pbcopper-gitsha1)
 find_git_sha1(COPPER_GIT_SHA1)
 configure_file(
-    ${pbcopper_IncludeDir}/pbcopper/utility/Version.h.in
-    ${CMAKE_BINARY_DIR}/generated/pbcopper/utility/Version.h
+    ${pbcopper_SourceDir}/utility/PbcopperGitHash.cpp.in
+    ${CMAKE_BINARY_DIR}/generated/utility/PbcopperGitHash.cpp
+)
+configure_file(
+    ${pbcopper_SourceDir}/utility/PbcopperVersion.cpp.in
+    ${CMAKE_BINARY_DIR}/generated/utility/PbcopperVersion.cpp
 )
 
 # main library

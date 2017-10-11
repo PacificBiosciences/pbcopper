@@ -183,7 +183,7 @@ public:
 
     ///
     /// \brief Add single option
-    /// \param OptionConfig 
+    /// \param OptionConfig
     /// \return
     ///
     Task& AddOption(const std::pair<std::string, std::string>& optionConfig);

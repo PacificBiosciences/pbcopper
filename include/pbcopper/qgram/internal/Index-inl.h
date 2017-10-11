@@ -62,17 +62,30 @@ inline const IndexImpl::HashLookup_t& IndexImpl::HashLookup(void) const
 
 inline void IndexImpl::Init(void)
 {
-    if (q_ == 0 || q_ > 16)
-        throw std::runtime_error("QGram::Index: q must be in the range from [1-16]");
+    if (q_ == 0 || q_ > 16) 
+    {
+        std::string msg {
+            "qgram size (" + std::to_string(q_) + ") must be in the range [1,16]"
+        };
+        throw std::invalid_argument{msg};
+    }
 
     // init hash lookup (and calculate totalNumQGrams for later suffixArray)
     const auto lookupSize = static_cast<size_t>(std::pow(4, q_) + 1);
     hashLookup_.resize(lookupSize, 0);
     uint32_t totalNumQGrams = 0;
     for (const auto& seq : seqs_) {
+
         const auto seqLength = seq.size();
         if (seqLength < q_)
-            continue;
+        {
+            std::string msg {
+                "sequence size (" + std::to_string(seqLength) +
+                ") must be >= q (" + std::to_string(q_)
+            };
+            throw std::invalid_argument{msg};
+        }
+
         const auto numQGrams = seqLength - q_ + 1;
         Shape shape{ q_, seq };
         for (size_t i = 0; i < numQGrams; ++i)
@@ -96,8 +109,6 @@ inline void IndexImpl::Init(void)
     uint32_t seqNo = 0;
     for (const auto& seq : seqs_) {
         const auto seqLength = seq.size();
-        if (seqLength < q_)
-            continue;
 
         Shape shape{ q_, seq };
         const auto numQGrams = seqLength - q_ + 1;
@@ -127,6 +138,9 @@ inline std::vector<IndexHits> IndexImpl::Hits(const std::string& seq,
                                               const bool filterHomopolymers) const
 {
     std::vector<IndexHits> result;
+    if (seq.size() < q_)
+        return result;
+
     const auto end = ::PacBio::Utility::SafeSubtract(seq.size()+1, q_);
     result.reserve(end);
     Shape shape{ q_, seq };

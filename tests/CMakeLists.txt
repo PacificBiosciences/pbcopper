@@ -18,7 +18,6 @@ set(SOURCES
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${pbcopper_CXX_FLAGS}")
 
 # define unit test exe
-add_definitions(-DPBCOPPER_TESTING)
 add_executable(test_pbcopper EXCLUDE_FROM_ALL ${SOURCES})
 set_target_properties(test_pbcopper
     PROPERTIES

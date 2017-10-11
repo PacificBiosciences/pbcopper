@@ -2,7 +2,7 @@
 #include "pbcopper/cli/Interface.h"
 #include "pbcopper/json/JSON.h"
 #include "pbcopper/utility/EnumClassHash.h"
-#include "pbcopper/utility/Version.h"
+#include "pbcopper/utility/PbcopperVersion.h"
 #include <stdexcept>
 #include <unordered_map>
 

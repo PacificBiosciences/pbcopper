@@ -1,12 +1,28 @@
 
 #include <pbcopper/qgram/Index.h>
 #include <gtest/gtest.h>
-using namespace PacBio::QGram;
+
+TEST(QGram_Index, shape_throws_on_invalid_qgram_sizes)
+{
+    EXPECT_THROW(
+        PacBio::QGram::internal::Shape(0, "ACGTACGT"),
+        std::invalid_argument
+    );
+    EXPECT_THROW(
+        PacBio::QGram::internal::Shape(20, "ACGTACGT"),
+        std::invalid_argument
+    );
+}
 
 TEST(QGram_Index, shape_hash_factors)
 {
-    internal::Shape shape{ 3, "" };
-    EXPECT_EQ(16, shape.hashFactor_);
+    //4^(q-1)
+
+    PacBio::QGram::internal::Shape shape_3{ 3, "ACGTACGT" };
+    EXPECT_EQ(16, shape_3.hashFactor_);
+
+    PacBio::QGram::internal::Shape shape_6{ 6, "ACGTACGT" };
+    EXPECT_EQ(1024, shape_6.hashFactor_);
 }
 
 TEST(QGram_Index, shape_hashing)
@@ -20,10 +36,10 @@ TEST(QGram_Index, shape_hashing)
         const std::string seqG(q, 'G');
         const std::string seqT(q, 'T');
 
-        internal::Shape shapeA { q, seqA };
-        internal::Shape shapeC { q, seqC };
-        internal::Shape shapeG { q, seqG };
-        internal::Shape shapeT { q, seqT };
+        PacBio::QGram::internal::Shape shapeA { q, seqA };
+        PacBio::QGram::internal::Shape shapeC { q, seqC };
+        PacBio::QGram::internal::Shape shapeG { q, seqG };
+        PacBio::QGram::internal::Shape shapeT { q, seqT };
 
         EXPECT_EQ(expected.at(0), shapeA.HashNext());
         EXPECT_EQ(expected.at(1), shapeC.HashNext());
@@ -56,7 +72,7 @@ TEST(QGram_Index, homopolymer_hasher)
         { 56, false }
     };
 
-    const auto isHomopolymer = internal::HpHasher{ 3 };
+    const auto isHomopolymer = PacBio::QGram::internal::HpHasher{ 3 };
     for (const auto& hit : input)
         EXPECT_EQ(hit.second, isHomopolymer(hit.first));
 }
@@ -82,9 +98,9 @@ TEST(QGram_Index, shape_hash_iteration)
 
     const std::string text = "AAAACACAGTTTGA";
 
-    internal::Shape shape{ 3, text };
+    PacBio::QGram::internal::Shape shape{ 3, text };
     ASSERT_TRUE(input.size() <= text.size());
-    const auto isHomopolymer = internal::HpHasher{ 3 };
+    const auto isHomopolymer = PacBio::QGram::internal::HpHasher{ 3 };
     for (unsigned i = 0; i < text.size()-3+1; ++i) {
         const auto h = shape.HashNext();
         const auto b = isHomopolymer(h);
@@ -95,11 +111,11 @@ TEST(QGram_Index, shape_hash_iteration)
 
 TEST(QGram_Index, index_construct)
 {
-    auto check = [](const internal::IndexImpl& index,
+    auto check = [](const PacBio::QGram::internal::IndexImpl& index,
                     const uint32_t expectedQGramCount,
                     const size_t expectedDirLength,
-                    const internal::IndexImpl::HashLookup_t expectedHL,
-                    const internal::IndexImpl::SuffixArray_t expectedSA)
+                    const PacBio::QGram::internal::IndexImpl::HashLookup_t expectedHL,
+                    const PacBio::QGram::internal::IndexImpl::SuffixArray_t expectedSA)
     {
         const auto& sa  = index.SuffixArray();
         const auto& dir = index.HashLookup();
@@ -115,30 +131,30 @@ TEST(QGram_Index, index_construct)
 
     {
         SCOPED_TRACE("single (short)");
-        internal::IndexImpl index { 3, {"CATGATTACATA"} };
+        PacBio::QGram::internal::IndexImpl index { 3, {"CATGATTACATA"} };
         check(index, 10, 65,
-              internal::IndexImpl::HashLookup_t {
+              PacBio::QGram::internal::IndexImpl::HashLookup_t {
                   0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 3, 4, 4, 4, 4,
                   6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 7, 7, 7, 7,
                   7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 8, 8, 8, 8, 8, 8, 8, 9, 9, 9,
                   9, 10, 10, 10, 10
               },
-              internal::IndexImpl::SuffixArray_t {
+              PacBio::QGram::internal::IndexImpl::SuffixArray_t {
                   {0,7},{0,9},{0,1},{0,4},{0,0},
                   {0,8},{0,3},{0,6},{0,2},{0,5}
               });
     }
     {
         SCOPED_TRACE("single (longer)");
-        internal::IndexImpl index { 3, {"CATGATTACATACATGATTACATA"} };
+        PacBio::QGram::internal::IndexImpl index { 3, {"CATGATTACATACATGATTACATA"} };
         check(index, 22, 65,
-              internal::IndexImpl::HashLookup_t {
+              PacBio::QGram::internal::IndexImpl::HashLookup_t {
                    0, 0, 0, 0, 0, 3, 3, 3, 3, 3, 3, 3, 3, 5, 5, 7, 9, 9, 9, 9,
                   13,13,13,13,13,13,13,13,13,13,13,13,13,13,13,13,15,15,15,15,
                   15,15,15,15,15,15,15,15,15,15,18,18,18,18,18,18,18,20,20,20,
                   20,22,22,22,22
               },
-              internal::IndexImpl::SuffixArray_t {
+              PacBio::QGram::internal::IndexImpl::SuffixArray_t {
                   {0,7},{0,11},{0,19},{0,9},{0,21},{0,1},{0,13},{0, 4},{0,16},{0, 0},
                   {0,8},{0,12},{0,20},{0,3},{0,15},{0,6},{0,10},{0,18},{0, 2},{0,14},
                   {0,5},{0,17}
@@ -150,15 +166,15 @@ TEST(QGram_Index, index_construct)
             "CATGATTACATA",
             "CATGATTACATA"
         };
-        internal::IndexImpl index { 3, seqs };
+        PacBio::QGram::internal::IndexImpl index { 3, seqs };
         check(index, 20, 65,
-              internal::IndexImpl::HashLookup_t {
+              PacBio::QGram::internal::IndexImpl::HashLookup_t {
                    0, 0, 0, 0, 0, 2, 2, 2, 2, 2, 2, 2, 2, 4, 4, 6, 8, 8, 8, 8,
                   12,12,12,12,12,12,12,12,12,12,12,12,12,12,12,12,14,14,14,14,
                   14,14,14,14,14,14,14,14,14,14,16,16,16,16,16,16,16,18,18,18,
                   18,20,20,20,20
               },
-              internal::IndexImpl::SuffixArray_t {
+              PacBio::QGram::internal::IndexImpl::SuffixArray_t {
                   {0,7},{1,7},{0,9},{1,9},{0,1},{1,1},{0,4},{1,4},{0,0},{0,8},
                   {1,0},{1,8},{0,3},{1,3},{0,6},{1,6},{0,2},{1,2},{0,5},{1,5},
               });
@@ -169,15 +185,15 @@ TEST(QGram_Index, index_construct)
             "CATGATTACATACATGATTACATA",
             "CATGATTACATACATGATTACATA"
         };
-        internal::IndexImpl index { 3, seqs };
+        PacBio::QGram::internal::IndexImpl index { 3, seqs };
         check(index, 44, 65,
-              internal::IndexImpl::HashLookup_t {
+              PacBio::QGram::internal::IndexImpl::HashLookup_t {
                    0, 0, 0, 0, 0, 6, 6, 6, 6, 6, 6, 6, 6,10,10,14,18,18,18,18,
                   26,26,26,26,26,26,26,26,26,26,26,26,26,26,26,26,30,30,30,30,
                   30,30,30,30,30,30,30,30,30,30,36,36,36,36,36,36,36,40,40,40,
                   40,44,44,44,44
               },
-              internal::IndexImpl::SuffixArray_t {
+              PacBio::QGram::internal::IndexImpl::SuffixArray_t {
                   {0, 7},{0,11},{0,19},{1, 7},{1,11},{1,19},{0,9},{0,21},{1,9},{1,21},
                   {0, 1},{0,13},{1, 1},{1,13},{0, 4},{0,16},{1,4},{1,16},{0,0},{0, 8},
                   {0,12},{0,20},{1, 0},{1, 8},{1,12},{1,20},{0,3},{0,15},{1,3},{1,15},
@@ -191,15 +207,15 @@ TEST(QGram_Index, index_construct)
             "CATGATTACATA",
             "TTAGATAACTTC"
         };
-        internal::IndexImpl index { 3, seqs };
+        PacBio::QGram::internal::IndexImpl index { 3, seqs };
         check(index, 20, 65,
-              internal::IndexImpl::HashLookup_t {
+              PacBio::QGram::internal::IndexImpl::HashLookup_t {
                    0, 0, 1, 1, 1, 2, 2, 2, 3, 4, 4, 4, 4, 6, 6, 7, 8, 8, 8, 8,
                   10,10,10,10,10,10,10,10,10,10,10,10,11,11,11,11,13,13,13,13,
                   13,13,13,13,13,13,13,13,13,14,15,16,16,16,16,16,16,17,17,17,
                   17,19,20,20,20
               },
-              internal::IndexImpl::SuffixArray_t {
+              PacBio::QGram::internal::IndexImpl::SuffixArray_t {
                   {1,6},{0,7},{1,7},{1,2},{0,9},{1,4},{0,1},{0,4},{0,0},{0,8},
                   {1,8},{0,3},{1,3},{1,5},{0,6},{1,1},{0,2},{0,5},{1,0},{1,9}
               });
@@ -210,15 +226,15 @@ TEST(QGram_Index, index_construct)
             "CATGATTACATACATGATTACATA",
             "TTAGATAACTTCTTAGATAACTTC"
         };
-        internal::IndexImpl index { 3, seqs };
+        PacBio::QGram::internal::IndexImpl index { 3, seqs };
         check(index, 44, 65,
-              internal::IndexImpl::HashLookup_t {
+              PacBio::QGram::internal::IndexImpl::HashLookup_t {
                    0, 0, 2, 2, 2, 5, 5, 5, 7, 9, 9, 9, 9,13,13,15,17,17,17,17,
                   21,21,21,21,21,21,21,21,21,21,21,21,24,24,24,24,28,28,28,28,
                   28,28,28,28,28,28,28,28,28,30,33,35,35,35,35,35,36,38,38,38,
                   38,42,44,44,44
               },
-              internal::IndexImpl::SuffixArray_t {
+              PacBio::QGram::internal::IndexImpl::SuffixArray_t {
                   {1, 6},{1,18},{0, 7},{0,11},{0,19},{1, 7},{1,19},{1, 2},{1,14},{0, 9},
                   {0,21},{1, 4},{1,16},{0, 1},{0,13},{0, 4},{0,16},{0, 0},{0, 8},{0,12},
                   {0,20},{1, 8},{1,11},{1,20},{0, 3},{0,15},{1, 3},{1,15},{1, 5},{1,17},
@@ -230,16 +246,16 @@ TEST(QGram_Index, index_construct)
 
 TEST(QGram_Index, index_hits_INTERNAL_from_shape_short_seq)
 {
-    const std::vector<IndexHit> expected {
+    const std::vector<PacBio::QGram::IndexHit> expected {
         {0, 0},
         {0, 8}
     };
 
-    const internal::IndexImpl idx(3, {"CATGATTACATA"});
+    const PacBio::QGram::internal::IndexImpl idx(3, {"CATGATTACATA"});
     const std::string seq = "CAT";
     const auto q = idx.Size();
-    auto shape = internal::Shape{ q, seq };
-    const auto isHomopolymer = internal::HpHasher{ q };
+    auto shape = PacBio::QGram::internal::Shape{ q, seq };
+    const auto isHomopolymer = PacBio::QGram::internal::HpHasher{ q };
     const auto end = PacBio::Utility::SafeSubtract(seq.size()+1, q);
 
     for (uint32_t i = 0; i < end; ++i) {
@@ -263,7 +279,7 @@ TEST(QGram_Index, index_hits_INTERNAL_from_shape_longer_seq)
         136,137,138,139,140,141,142,143,144,145,
         146,147,148,149,150,151,152,153,154
     };
-    const internal::IndexImpl idx(6,
+    const PacBio::QGram::internal::IndexImpl idx(6,
                         {"TCCAACTTAGGCATAAACCTGCATGCTACCTTGTCAGACCCACTCTGCACGAAGTAA"
                        "ATATGGGATGCGTCCGACCTGGCTCCTGGCGTTCCACGCCGCCACGTGTTCGTTAAC"
                        "TGTTGATTGGTGGCACATAAGTAATACCATGGTCCCTGAAATTCGGCTCAGTTACTT"
@@ -279,7 +295,7 @@ TEST(QGram_Index, index_hits_INTERNAL_from_shape_longer_seq)
     std::vector<uint64_t> observed;
 
     const auto q = idx.Size();
-    auto shape = internal::Shape{ q, seq };
+    auto shape = PacBio::QGram::internal::Shape{ q, seq };
     const auto end = PacBio::Utility::SafeSubtract(seq.size()+1, q);
     for (uint32_t j = 0; j < end; ++j) {
         shape.HashNext();
@@ -300,7 +316,8 @@ TEST(QGram_Index, index_hits_PUBLIC_API_from_seq)
         146,147,148,149,150,151,152,153,154
     };
 
-    const Index idx(6, "TCCAACTTAGGCATAAACCTGCATGCTACCTTGTCAGACCCACTCTGCACGAAGTAA"
+    const PacBio::QGram::Index idx(6,
+                       "TCCAACTTAGGCATAAACCTGCATGCTACCTTGTCAGACCCACTCTGCACGAAGTAA"
                        "ATATGGGATGCGTCCGACCTGGCTCCTGGCGTTCCACGCCGCCACGTGTTCGTTAAC"
                        "TGTTGATTGGTGGCACATAAGTAATACCATGGTCCCTGAAATTCGGCTCAGTTACTT"
                        "CGAGCGTAATGTCTCAAATGGCGTAGAACGGCAATGACTGTTTGACACTAGGTGGTG"
@@ -320,4 +337,24 @@ TEST(QGram_Index, index_hits_PUBLIC_API_from_seq)
         }
     }
     EXPECT_EQ(expected, observed);
+}
+
+TEST(QGram_Index, index_hits_PUBLIC_API_empty_hits_result_when_query_seq_is_too_short)
+{
+    const PacBio::QGram::Index idx(6,
+                       "TCCAACTTAGGCATAAACCTGCATGCTACCTTGTCAGACCCACTCTGCACGAAGTAA"
+                       "ATATGGGATGCGTCCGACCTGGCTCCTGGCGTTCCACGCCGCCACGTGTTCGTTAAC"
+                       "TGTTGATTGGTGGCACATAAGTAATACCATGGTCCCTGAAATTCGGCTCAGTTACTT"
+                       "CGAGCGTAATGTCTCAAATGGCGTAGAACGGCAATGACTGTTTGACACTAGGTGGTG"
+                       "TTCAGTTCGGTAACGGAGAGTCTGTGCGGCATTCTTATTAATACATTTGAAACGCGC"
+                       "CCAACTGACGCTAGGCAAGTCAGTGCAGGCTCCCGTGTTAGGATAAGGGTAAACATA"
+                       "CAAGTCGATAGAAGATGGGTAGGGGCCTTCAATTCATCCAGCACTCTACGGTTCCTC"
+                       "CGAGAGCAAGTAGGGCACCCTGTAGTTCGAAGGGGAACTATTTCGTGGGGCGAGCCC"
+                       "ACACCGTCTCTTCTGCGGAAGACTTAACACGTTAGGGAGGTGGA");
+
+    auto hits = idx.Hits("");
+    EXPECT_TRUE(hits.empty());
+
+    hits = idx.Hits("ACG");
+    EXPECT_TRUE(hits.empty());
 }
