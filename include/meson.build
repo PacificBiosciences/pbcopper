@@ -119,6 +119,12 @@ if not meson.is_subproject()
       'pbcopper/logging/internal/Logging-inl.h']),
     subdir : 'pbcopper/logging/internal')
 
+  # pbcopper/parallel
+  install_headers(
+    files([
+      'pbcopper/parallel/WorkQueue.h']),
+    subdir : 'pbcopper/parallel')
+
   # pbcopper/qgram
   install_headers(
     files([
