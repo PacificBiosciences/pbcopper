@@ -5,10 +5,15 @@
 ### TODO
 - Initial sequence-related data structures
 
+## [0.2.0] - 2017-12-03
+
+### Added
+- WorkQueue for parallel execution
+
 ## [0.1.1] - 2017-09-26
 
 ### Changed
-- UNUSED macro to no-op method 
+- UNUSED macro to no-op method
 
 ## [0.1.0] - 2017-01-13
 

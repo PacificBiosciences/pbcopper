@@ -27,6 +27,9 @@ pbcopper_test_cpp_sources = files([
   # logging
   'src/logging/test_Logging.cpp',
 
+  # parallel
+  'src/parallel/test_WorkQueue.cpp',
+
   # qgram
   'src/qgram/test_Index.cpp',
 
