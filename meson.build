@@ -47,27 +47,22 @@ subdir('include')
 
 subdir('src')
 
-############
-# examples #
-############
-
-if get_option('enable-build-examples')
-  subdir('examples')
-endif
-
-#################
-# documentation #
-#################
-
-if get_option('enable-build-docs')
-  subdir('docs')
-endif
-
-#########
-# tests #
-#########
+##########
+# extras #
+##########
 
 if not meson.is_subproject()
+  # examples
+  if get_option('enable-build-examples')
+    subdir('examples')
+  endif
+
+  # documentation
+  if get_option('enable-build-docs')
+    subdir('docs')
+  endif
+
+  # tests
   if get_option('enable-tests')
     subdir('tests')
   endif
