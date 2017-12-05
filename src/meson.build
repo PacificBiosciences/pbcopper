@@ -48,7 +48,11 @@ pbcopper_lib_install = (not meson.is_subproject()) or (get_option('default_libra
 pbcopper_lib = library(
   'pbcopper',
   pbcopper_cpp_sources,
-  soversion : 0,
+  # use boost SONAME practice:
+  #   cause ld startup issues before
+  #   you even have the chance of running
+  #   into ABI issues.
+  soversion : meson.project_version(),
   version : meson.project_version(),
   install : pbcopper_lib_install,
   dependencies : [pbcopper_thread_dep, pbcopper_boost_dep],

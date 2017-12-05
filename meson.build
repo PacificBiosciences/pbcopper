@@ -4,6 +4,7 @@ project(
   version : '0.2.0',
   default_options : [
     'buildtype=release',
+    'default_library=static',
     'warning_level=3',
     'cpp_std=c++14'],
   license : 'BSD-3',
