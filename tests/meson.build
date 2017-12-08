@@ -29,6 +29,7 @@ pbcopper_test_cpp_sources = files([
 
   # parallel
   'src/parallel/test_WorkQueue.cpp',
+  'src/parallel/test_FireAndForget.cpp',
 
   # qgram
   'src/qgram/test_Index.cpp',
