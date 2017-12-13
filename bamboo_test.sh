@@ -3,7 +3,7 @@
 echo "# DEPENDENCIES"
 echo "## Load modules"
 source /mnt/software/Modules/current/init/bash
-module load gcc/6.4.0 cmake ccache_base ninja
+module load gcc cmake ccache ninja
 if [[ $USER == "bamboo" ]]; then
   export CCACHE_DIR=/mnt/secondary/Share/tmp/bamboo.mobs.ccachedir
   export CCACHE_TEMPDIR=/scratch/bamboo.ccache_tempdir
