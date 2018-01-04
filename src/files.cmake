@@ -33,7 +33,6 @@ set(pbcopper_H
     ${pbcopper_IncludeDir}/pbcopper/cli/VersionPrinter.h
 
     ${pbcopper_IncludeDir}/pbcopper/cli/internal/Option-inl.h
-    ${pbcopper_IncludeDir}/pbcopper/cli/internal/Results-inl.h
 
     # ------------------
     # cli/toolcontract
