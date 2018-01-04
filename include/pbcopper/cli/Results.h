@@ -209,6 +209,4 @@ private:
 } // namespace CLI
 } // namespace PacBio
 
-#include "internal/Results-inl.h"
-
 #endif // PBCOPPER_CLI_RESULTS_H
