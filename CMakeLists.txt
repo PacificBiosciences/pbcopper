@@ -2,7 +2,7 @@
 # CMake build script for PacBio pbcopper library.
 ########################################################################
 cmake_policy(SET CMP0048 NEW)  # lets us set version in project()
-cmake_minimum_required(VERSION 3.0)
+cmake_minimum_required(VERSION 3.2)
 
 project(pbcopper VERSION 0.2.0 LANGUAGES CXX C)
 enable_testing()
