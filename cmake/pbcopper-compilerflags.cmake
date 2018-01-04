@@ -1,12 +1,9 @@
 
 include(CheckCXXCompilerFlag)
 
-# shared CXX flags for all source code & tests
-if (MSVC)
-    set(pbcopper_CXX_FLAGS "/Wall")
-else()
-    set(pbcopper_CXX_FLAGS "-std=c++11 -Wall")
-endif()
+set(CMAKE_CXX_STANDARD 14)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_CXX_EXTENSIONS OFF)
 
 # NOTE: quash clang warnings w/ Boost
 check_cxx_compiler_flag("-Wno-unused-local-typedefs" HAS_NO_UNUSED_LOCAL_TYPEDEFS)
