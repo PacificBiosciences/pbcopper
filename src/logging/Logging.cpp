@@ -110,7 +110,7 @@ LogLevel::LogLevel(const std::string& value)
 Logger::~Logger(void)
 {
     if (!writer_.joinable())
-        throw std::runtime_error("this logger is already dead!");
+        return;
 
     // place a terminal sentinel for MessageWriter to know it's done
     {
