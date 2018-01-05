@@ -97,6 +97,6 @@ inline std::istream& operator>>(std::istream& is,
 } // namespace Data
 } // namespace PacBio
 
-#include "ReadNameBase-inl.h"
+#include "pbcopper/data/internal/ReadNameBase-inl.h"
 
 #endif // PBCOPPER_DATA_READNAMEBASE_H

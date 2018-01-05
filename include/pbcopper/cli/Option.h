@@ -258,6 +258,6 @@ private:
 } // namespace CLI
 } // namespace PacBio
 
-#include "internal/Option-inl.h"
+#include "pbcopper/cli/internal/Option-inl.h"
 
 #endif // PBCOPPER_CLI_OPTION_H

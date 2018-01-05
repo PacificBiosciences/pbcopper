@@ -19,6 +19,6 @@ std::vector<std::string> Split(const std::string& line,
 } // namespace Utility
 } // namespace PacBio
 
-#include "internal/StringUtils-inl.h"
+#include "pbcopper/utility/internal/StringUtils-inl.h"
 
 #endif // PBCOPPER_UTILITY_STRINGUTILS_H

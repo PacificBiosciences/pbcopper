@@ -78,6 +78,6 @@ private:
 } // namespace QGram
 } // namespace PacBio
 
-#include "internal/Index-inl.h"
+#include "pbcopper/qgram/internal/Index-inl.h"
 
 #endif // PBCOPPER_QGRAM_INDEX_H

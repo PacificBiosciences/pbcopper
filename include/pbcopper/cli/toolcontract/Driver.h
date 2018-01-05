@@ -110,6 +110,6 @@ private:
 } // namespace CLI
 } // namespace PacBio
 
-#include "internal/Driver-inl.h"
+#include "pbcopper/cli/toolcontract/internal/Driver-inl.h"
 
 #endif // PBCOPPER_CLI_TOOLCONTRACT_DRIVER_H

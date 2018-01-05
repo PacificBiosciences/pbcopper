@@ -266,6 +266,6 @@ private:
 } // namespace CLI
 } // namespace PacBio
 
-#include "internal/Task-inl.h"
+#include "pbcopper/cli/toolcontract/internal/Task-inl.h"
 
 #endif // PBCOPPER_CLI_TOOLCONTRACT_TASK_H

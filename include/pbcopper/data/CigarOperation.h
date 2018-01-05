@@ -206,6 +206,6 @@ std::ostream& operator<<(std::ostream& out, const CigarOperation& op);
 } // namespace Data
 } // namespace PacBio
 
-#include "internal/CigarOperation-inl.h"
+#include "pbcopper/data/internal/CigarOperation-inl.h"
 
 #endif // PBCOPPER_DATA_CIGAROPERATION_H

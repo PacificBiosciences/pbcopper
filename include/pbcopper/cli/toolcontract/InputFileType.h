@@ -35,6 +35,6 @@ private:
 } // namespace CLI
 } // namespace PacBio
 
-#include "internal/InputFileType-inl.h"
+#include "pbcopper/cli/toolcontract/internal/InputFileType-inl.h"
 
 #endif // PBCOPPER_CLI_TOOLCONTRACT_INPUTFILETYPE_H

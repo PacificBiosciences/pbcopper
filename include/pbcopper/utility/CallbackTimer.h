@@ -57,6 +57,6 @@ private:
 } // namespace Utility
 } // namespace PacBio
 
-#include "internal/CallbackTimer-inl.h"
+#include "pbcopper/utility/internal/CallbackTimer-inl.h"
 
 #endif // PBCOPPER_UTILITY_CALLBACKTIMER_H

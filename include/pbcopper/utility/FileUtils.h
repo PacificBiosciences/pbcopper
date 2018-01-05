@@ -17,6 +17,6 @@ std::string FilePrefix(const std::string& path);
 } // namespace Utility
 } // namespace PacBio
 
-#include "internal/FileUtils-inl.h"
+#include "pbcopper/utility/internal/FileUtils-inl.h"
 
 #endif // PBCOPPER_UTILITY_FILEUTILS_H

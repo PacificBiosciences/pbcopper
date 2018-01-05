@@ -82,6 +82,6 @@ private:
 } // namespace CLI
 } // namespace PacBio
 
-#include "internal/Config-inl.h"
+#include "pbcopper/cli/toolcontract/internal/Config-inl.h"
 
 #endif // PBCOPPER_CLI_TOOLCONTRACT_CONFIG_H

@@ -78,6 +78,6 @@ private:
 } // namespace Align
 } // namespace PacBio
 
-#include "internal/Seeds-inl.h"
+#include "pbcopper/align/internal/Seeds-inl.h"
 
 #endif // PBCOPPER_ALIGN_SEEDS_H

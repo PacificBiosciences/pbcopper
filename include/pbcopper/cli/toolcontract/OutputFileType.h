@@ -38,6 +38,6 @@ private:
 } // namespace CLI
 } // namespace PacBio
 
-#include "internal/OutputFileType-inl.h"
+#include "pbcopper/cli/toolcontract/internal/OutputFileType-inl.h"
 
 #endif // PBCOPPER_CLI_TOOLCONTRACT_OUTPUTFILETYPE_H
