@@ -1,10 +1,11 @@
 #ifndef PBCOPPER_CLI_TOOLCONTRACT_CONFIG_H
 #define PBCOPPER_CLI_TOOLCONTRACT_CONFIG_H
 
+#include <string>
+
 #include "pbcopper/Config.h"
 #include "pbcopper/cli/toolcontract/Task.h"
 #include "pbcopper/cli/toolcontract/Driver.h"
-#include <string>
 
 namespace PacBio {
 namespace CLI {

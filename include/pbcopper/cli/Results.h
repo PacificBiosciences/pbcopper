@@ -1,14 +1,15 @@
 #ifndef PBCOPPER_CLI_RESULTS_H
 #define PBCOPPER_CLI_RESULTS_H
 
+#include <string>
+#include <unordered_map>
+#include <vector>
+
 #include "pbcopper/Config.h"
 #include "pbcopper/cli/Interface.h"
 #include "pbcopper/cli/Option.h"
 #include "pbcopper/logging/Logging.h"
 #include "pbcopper/json/JSON.h"
-#include <string>
-#include <unordered_map>
-#include <vector>
 
 namespace PacBio {
 namespace CLI {

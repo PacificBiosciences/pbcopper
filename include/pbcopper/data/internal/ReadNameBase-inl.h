@@ -1,9 +1,10 @@
 #ifndef PBCOPPER_DATA_READNAMEBASE_INL_H
 #define PBCOPPER_DATA_READNAMEBASE_INL_H
 
+#include <stdexcept>
+
 #include "pbcopper/data/internal/ReadNameBase.h"
 #include "pbcopper/utility/StringUtils.h"
-#include <stdexcept>
 
 namespace PacBio {
 namespace Data {

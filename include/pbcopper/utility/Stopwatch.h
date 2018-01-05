@@ -1,8 +1,9 @@
 #ifndef PBCOPPER_UTILITY_STOPWATCH_H
 #define PBCOPPER_UTILITY_STOPWATCH_H
 
-#include "pbcopper/Config.h"
 #include <chrono>
+
+#include "pbcopper/Config.h"
 
 namespace PacBio {
 namespace Utility {

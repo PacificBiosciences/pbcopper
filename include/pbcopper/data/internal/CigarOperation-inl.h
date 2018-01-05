@@ -1,8 +1,9 @@
 #ifndef PBCOPPER_DATA_CIGAROPERATION_INL_H
 #define PBCOPPER_DATA_CIGAROPERATION_INL_H
 
-#include "pbcopper/data/CigarOperation.h"
 #include <stdexcept>
+
+#include "pbcopper/data/CigarOperation.h"
 
 namespace PacBio {
 namespace Data {

@@ -1,11 +1,12 @@
 #ifndef PBCOPPER_QGRAM_INDEX_INL_H
 #define PBCOPPER_QGRAM_INDEX_INL_H
 
+#include <stdexcept>
+
 #include "pbcopper/qgram/Index.h"
 #include "pbcopper/qgram/internal/Hashing-inl.h"
 #include "pbcopper/utility/MoveAppend.h"
 #include "pbcopper/utility/SafeSubtract.h"
-#include <stdexcept>
 
 namespace PacBio {
 namespace QGram {

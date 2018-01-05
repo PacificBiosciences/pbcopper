@@ -1,13 +1,14 @@
 #ifndef PBCOPPER_CLI_OPTION_H
 #define PBCOPPER_CLI_OPTION_H
 
+#include <initializer_list>
+#include <memory>
+#include <string>
+#include <vector>
+
 #include "pbcopper/Config.h"
 #include "pbcopper/json/JSON.h"
 #include "pbcopper/cli/OptionFlags.h"
-#include <initializer_list>
-#include <string>
-#include <memory>
-#include <vector>
 
 namespace PacBio {
 namespace CLI {

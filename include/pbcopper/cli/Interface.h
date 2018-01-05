@@ -1,14 +1,15 @@
 #ifndef PBCOPPER_CLI_INTERFACE_H
 #define PBCOPPER_CLI_INTERFACE_H
 
+#include <memory>
+#include <string>
+#include <vector>
+
 #include "pbcopper/Config.h"
 #include "pbcopper/cli/Option.h"
 #include "pbcopper/cli/PositionalArg.h"
 #include "pbcopper/cli/SingleDashMode.h"
 #include "pbcopper/cli/toolcontract/Config.h"
-#include <memory>
-#include <string>
-#include <vector>
 
 namespace PacBio {
 namespace CLI {

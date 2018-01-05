@@ -42,8 +42,9 @@
 #ifndef PBCOPPER_DATA_CIGAROPERATION_H
 #define PBCOPPER_DATA_CIGAROPERATION_H
 
-#include "pbcopper/Config.h"
 #include <iostream>
+
+#include "pbcopper/Config.h"
 
 namespace PacBio {
 namespace Data {

@@ -1,10 +1,11 @@
 #ifndef PBCOPPER_QGRAM_INDEX_H
 #define PBCOPPER_QGRAM_INDEX_H
 
-#include "pbcopper/qgram/IndexHits.h"
 #include <memory>
 #include <string>
 #include <vector>
+
+#include "pbcopper/qgram/IndexHits.h"
 
 namespace PacBio {
 namespace QGram {

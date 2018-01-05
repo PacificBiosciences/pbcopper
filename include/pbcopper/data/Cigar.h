@@ -42,11 +42,11 @@
 #ifndef PBCOPPER_DATA_CIGAR_H
 #define PBCOPPER_DATA_CIGAR_H
 
-#include "pbcopper/Config.h"
-#include "pbcopper/data/CigarOperation.h"
-
 #include <string>
 #include <vector>
+
+#include "pbcopper/Config.h"
+#include "pbcopper/data/CigarOperation.h"
 
 namespace PacBio {
 namespace Data {

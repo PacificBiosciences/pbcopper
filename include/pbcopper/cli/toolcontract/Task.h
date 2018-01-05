@@ -1,14 +1,15 @@
 #ifndef PBCOPPER_CLI_TOOLCONTRACT_TASK_H
 #define PBCOPPER_CLI_TOOLCONTRACT_TASK_H
 
+#include <map>
+#include <string>
+#include <vector>
+
 #include "pbcopper/Config.h"
 #include "pbcopper/cli/toolcontract/InputFileType.h"
 #include "pbcopper/cli/toolcontract/OutputFileType.h"
 #include "pbcopper/cli/toolcontract/ResourceType.h"
 #include "pbcopper/cli/toolcontract/TaskType.h"
-#include <map>
-#include <string>
-#include <vector>
 
 namespace PacBio {
 namespace CLI {

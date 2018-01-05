@@ -1,8 +1,9 @@
 #ifndef PBCOPPER_CLI_TOOLCONTRACT_RESOLVEDTOOLCONTRACT_H
 #define PBCOPPER_CLI_TOOLCONTRACT_RESOLVEDTOOLCONTRACT_H
 
-#include "pbcopper/cli/Results.h"
 #include <iosfwd>
+
+#include "pbcopper/cli/Results.h"
 
 namespace PacBio {
 namespace CLI {

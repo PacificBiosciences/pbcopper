@@ -1,9 +1,10 @@
 #ifndef PBCOPPER_CLI_TOOLCONTRACT_DRIVER_H
 #define PBCOPPER_CLI_TOOLCONTRACT_DRIVER_H
 
-#include "pbcopper/Config.h"
-#include <unordered_map>
 #include <string>
+#include <unordered_map>
+
+#include "pbcopper/Config.h"
 
 namespace PacBio {
 namespace CLI {

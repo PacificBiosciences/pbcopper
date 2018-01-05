@@ -1,9 +1,10 @@
 #ifndef PBCOPPER_LOGGING_LOGGING_INL_H
 #define PBCOPPER_LOGGING_LOGGING_INL_H
 
-#include "pbcopper/logging/Logging.h"
-#include <stdexcept>
 #include <sstream>
+#include <stdexcept>
+
+#include "pbcopper/logging/Logging.h"
 
 namespace PacBio {
 namespace Logging {

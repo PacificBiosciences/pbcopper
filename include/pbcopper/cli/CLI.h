@@ -1,13 +1,14 @@
 #ifndef PBCOPPER_CLI_CLI_H
 #define PBCOPPER_CLI_CLI_H
 
-#include "pbcopper/Config.h"
-#include "pbcopper/cli/Interface.h"
-#include "pbcopper/cli/Results.h"
 #include <functional>
 #include <iosfwd>
 #include <string>
 #include <vector>
+
+#include "pbcopper/Config.h"
+#include "pbcopper/cli/Interface.h"
+#include "pbcopper/cli/Results.h"
 
 /// So applications's main.cpp contains something like:
 ///

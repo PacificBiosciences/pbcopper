@@ -1,11 +1,13 @@
 #ifndef PBCOPPER_DATA_RSMOVIENAME_H
 #define PBCOPPER_DATA_RSMOVIENAME_H
 
-#include "pbcopper/Config.h"
-#include <boost/utility/string_ref.hpp>
 #include <iosfwd>
 #include <memory>
 #include <string>
+
+#include <boost/utility/string_ref.hpp>
+
+#include "pbcopper/Config.h"
 
 namespace PacBio {
 namespace Data {

@@ -1,11 +1,12 @@
 #ifndef PBCOPPER_CLI_PARSER_H
 #define PBCOPPER_CLI_PARSER_H
 
-#include "pbcopper/Config.h"
-#include "pbcopper/cli/Results.h"
 #include <memory>
 #include <string>
 #include <vector>
+
+#include "pbcopper/Config.h"
+#include "pbcopper/cli/Results.h"
 
 namespace PacBio {
 namespace CLI {

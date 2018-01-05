@@ -1,8 +1,9 @@
 #ifndef PBCOPPER_STREAM_STREAM_H
 #define PBCOPPER_STREAM_STREAM_H
 
-#include "pbcopper/Config.h"
 #include <functional>
+
+#include "pbcopper/Config.h"
 
 namespace PacBio {
 namespace Stream {

@@ -1,15 +1,14 @@
 #ifndef PBCOPPER_UTILITY_FILEUTILS_INL_H
 #define PBCOPPER_UTILITY_FILEUTILS_INL_H
 
-#include "pbcopper/utility/FileUtils.h"
-
 #include <climits>
 #include <cstdlib>
 #include <fstream>
 
+#include <boost/algorithm/string.hpp>
 #include <sys/stat.h>
 
-#include <boost/algorithm/string.hpp>
+#include "pbcopper/utility/FileUtils.h"
 
 namespace PacBio {
 namespace Utility {

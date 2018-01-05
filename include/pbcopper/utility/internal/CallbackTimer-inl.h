@@ -1,8 +1,6 @@
 #ifndef PBCOPPER_UTILITY_CALLBACKTIMER_INL_H
 #define PBCOPPER_UTILITY_CALLBACKTIMER_INL_H
 
-#include "pbcopper/utility/CallbackTimer.h"
-
 #include <algorithm>
 #include <chrono>
 #include <condition_variable>
@@ -10,6 +8,8 @@
 #include <set>
 #include <thread>
 #include <unordered_map>
+
+#include "pbcopper/utility/CallbackTimer.h"
 
 namespace PacBio {
 namespace Utility {

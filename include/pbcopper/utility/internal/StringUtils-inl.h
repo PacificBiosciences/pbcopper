@@ -1,8 +1,9 @@
 #ifndef PBCOPPER_UTILITY_STRINGUTILS_INL_H
 #define PBCOPPER_UTILITY_STRINGUTILS_INL_H
 
-#include "pbcopper/utility/StringUtils.h"
 #include <sstream>
+
+#include "pbcopper/utility/StringUtils.h"
 
 namespace PacBio {
 namespace Utility {

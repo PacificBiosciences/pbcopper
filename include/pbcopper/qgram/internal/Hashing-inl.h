@@ -1,12 +1,12 @@
 #ifndef PBCOPPER_QGRAM_HASHING_INL_H
 #define PBCOPPER_QGRAM_HASHING_INL_H
 
-#include <array>
-#include <stdexcept>
-#include <string>
 #include <cassert>
 #include <cmath>
 #include <cstdint>
+#include <array>
+#include <stdexcept>
+#include <string>
 
 namespace PacBio {
 namespace QGram {

@@ -1,10 +1,11 @@
 #ifndef PBCOPPER_ALIGN_SEED_INL_H
 #define PBCOPPER_ALIGN_SEED_INL_H
 
-#include "pbcopper/align/Seed.h"
-#include <algorithm>
 #include <cassert>
 #include <cmath>
+#include <algorithm>
+
+#include "pbcopper/align/Seed.h"
 
 namespace PacBio {
 namespace Align {

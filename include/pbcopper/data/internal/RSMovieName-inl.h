@@ -2,11 +2,12 @@
 #ifndef PBCOPPER_DATA_RSMOVIENAME_INL_H
 #define PBCOPPER_DATA_RSMOVIENAME_INL_H
 
-#include "pbcopper/data/RSMovieName.h"
-#include "pbcopper/utility/StringUtils.h"
+#include <cassert>
 #include <iostream>
 #include <stdexcept>
-#include <cassert>
+
+#include "pbcopper/data/RSMovieName.h"
+#include "pbcopper/utility/StringUtils.h"
 
 namespace PacBio {
 namespace Data {

@@ -1,9 +1,10 @@
 #ifndef PBCOPPER_UTILITY_CALLBACKTIMER_H
 #define PBCOPPER_UTILITY_CALLBACKTIMER_H
 
-#include "pbcopper/Config.h"
 #include <functional>
 #include <memory>
+
+#include "pbcopper/Config.h"
 
 namespace PacBio {
 namespace Utility {
