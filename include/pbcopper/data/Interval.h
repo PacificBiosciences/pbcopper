@@ -1,6 +1,8 @@
 #ifndef PBCOPPER_DATA_INTERVAL_H
 #define PBCOPPER_DATA_INTERVAL_H
 
+#include <cstddef>
+
 #define BOOST_ICL_USE_STATIC_BOUNDED_INTERVALS
 #include <boost/icl/discrete_interval.hpp>
 #include <boost/icl/interval_traits.hpp>

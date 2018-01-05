@@ -1,6 +1,7 @@
 #ifndef PBCOPPER_LOGGING_LOGGING_INL_H
 #define PBCOPPER_LOGGING_LOGGING_INL_H
 
+#include <cstddef>
 #include <sstream>
 #include <stdexcept>
 

@@ -1,6 +1,7 @@
 #ifndef PBCOPPER_LOGGING_LOGGING_H
 #define PBCOPPER_LOGGING_LOGGING_H
 
+
 #include <condition_variable>
 #include <functional>
 #include <iosfwd>

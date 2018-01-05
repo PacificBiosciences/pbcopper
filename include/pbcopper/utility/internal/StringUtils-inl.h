@@ -1,6 +1,7 @@
 #ifndef PBCOPPER_UTILITY_STRINGUTILS_INL_H
 #define PBCOPPER_UTILITY_STRINGUTILS_INL_H
 
+#include <cstddef>
 #include <sstream>
 
 #include "pbcopper/utility/StringUtils.h"

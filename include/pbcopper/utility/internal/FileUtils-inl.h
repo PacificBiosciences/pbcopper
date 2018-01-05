@@ -2,6 +2,7 @@
 #define PBCOPPER_UTILITY_FILEUTILS_INL_H
 
 #include <climits>
+#include <cstddef>
 #include <cstdlib>
 #include <fstream>
 

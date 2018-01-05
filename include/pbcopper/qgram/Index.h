@@ -1,6 +1,7 @@
 #ifndef PBCOPPER_QGRAM_INDEX_H
 #define PBCOPPER_QGRAM_INDEX_H
 
+#include <cstddef>
 #include <memory>
 #include <string>
 #include <vector>

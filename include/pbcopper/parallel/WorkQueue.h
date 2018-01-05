@@ -37,6 +37,7 @@
 
 #pragma once
 
+#include <cstddef>
 #include <condition_variable>
 #include <deque>
 #include <exception>
