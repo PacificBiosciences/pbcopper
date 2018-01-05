@@ -36,8 +36,7 @@ if not meson.is_subproject()
   # pbcopper/cli/internal
   install_headers(
     files([
-      'pbcopper/cli/internal/Option-inl.h',
-      'pbcopper/cli/internal/Results-inl.h']),
+      'pbcopper/cli/internal/Option-inl.h']),
     subdir : 'pbcopper/cli/internal')
 
   # pbcopper/cli/toolcontract
@@ -117,6 +116,7 @@ if not meson.is_subproject()
   # pbcopper/parallel
   install_headers(
     files([
+      'pbcopper/parallel/FireAndForget.h',
       'pbcopper/parallel/WorkQueue.h']),
     subdir : 'pbcopper/parallel')
 
@@ -148,6 +148,7 @@ if not meson.is_subproject()
       'pbcopper/utility/EnumClassHash.h',
       'pbcopper/utility/FileUtils.h',
       'pbcopper/utility/MoveAppend.h',
+      'pbcopper/utility/PbcopperVersion.h',
       'pbcopper/utility/SafeSubtract.h',
       'pbcopper/utility/Stopwatch.h',
       'pbcopper/utility/StringUtils.h',
