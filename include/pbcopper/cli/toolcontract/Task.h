@@ -5,7 +5,6 @@
 #include <string>
 #include <vector>
 
-#include "pbcopper/Config.h"
 #include "pbcopper/cli/toolcontract/InputFileType.h"
 #include "pbcopper/cli/toolcontract/OutputFileType.h"
 #include "pbcopper/cli/toolcontract/ResourceType.h"

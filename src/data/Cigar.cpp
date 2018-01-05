@@ -40,8 +40,9 @@
 // Author: Derek Barnett
 
 #include "pbcopper/data/Cigar.h"
-#include <sstream>
 #include <cctype>
+#include <cstddef>
+#include <sstream>
 
 namespace PacBio {
 namespace Data {

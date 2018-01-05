@@ -1,8 +1,6 @@
 #ifndef PBCOPPER_DATA_ZMW_H
 #define PBCOPPER_DATA_ZMW_H
 
-#include "pbcopper/Config.h"
-
 namespace PacBio {
 namespace Data {
 

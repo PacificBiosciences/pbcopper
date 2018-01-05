@@ -1,7 +1,6 @@
 #ifndef PBCOPPER_DATA_READNAMEBASE_H
 #define PBCOPPER_DATA_READNAMEBASE_H
 
-#include "pbcopper/Config.h"
 #include "pbcopper/data/CCSTag.h"
 #include "pbcopper/data/Interval.h"
 #include "pbcopper/data/MovieName.h"

@@ -5,7 +5,6 @@
 #include <string>
 #include <vector>
 
-#include "pbcopper/Config.h"
 #include "pbcopper/cli/Option.h"
 #include "pbcopper/cli/PositionalArg.h"
 #include "pbcopper/cli/SingleDashMode.h"

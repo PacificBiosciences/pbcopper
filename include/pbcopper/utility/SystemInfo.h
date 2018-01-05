@@ -1,8 +1,6 @@
 #ifndef PBCOPPER_UTILITY_SYSTEMINFO_H
 #define PBCOPPER_UTILITY_SYSTEMINFO_H
 
-#include "pbcopper/Config.h"
-
 namespace PacBio {
 namespace Utility {
 

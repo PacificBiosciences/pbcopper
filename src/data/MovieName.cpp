@@ -1,5 +1,7 @@
 #include "pbcopper/data/MovieName.h"
 
+#include <cstddef>
+
 namespace PacBio {
 namespace Data {
 

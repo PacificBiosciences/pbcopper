@@ -3,7 +3,6 @@
 
 #include <string>
 
-#include "pbcopper/Config.h"
 #include "pbcopper/cli/toolcontract/Task.h"
 #include "pbcopper/cli/toolcontract/Driver.h"
 

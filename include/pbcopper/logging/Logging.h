@@ -13,8 +13,6 @@
 #include <utility>
 #include <vector>
 
-#include "pbcopper/Config.h"
-
 namespace PacBio {
 namespace Logging {
 

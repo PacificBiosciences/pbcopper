@@ -1,8 +1,6 @@
 #ifndef PBCOPPER_DATA_POSITION_H
 #define PBCOPPER_DATA_POSITION_H
 
-#include "pbcopper/Config.h"
-
 namespace PacBio {
 namespace Data {
 

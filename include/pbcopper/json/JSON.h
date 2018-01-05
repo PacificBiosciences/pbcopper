@@ -1,7 +1,6 @@
 #ifndef PBCOPPER_JSON_JSON_H
 #define PBCOPPER_JSON_JSON_H
 
-#include "pbcopper/Config.h"
 #include "pbcopper/json/internal/json.hpp"
 
 //

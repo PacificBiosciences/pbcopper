@@ -3,8 +3,6 @@
 
 #include <functional>
 
-#include "pbcopper/Config.h"
-
 namespace PacBio {
 namespace Stream {
 
