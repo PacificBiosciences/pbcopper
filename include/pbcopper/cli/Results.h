@@ -1,6 +1,7 @@
 #ifndef PBCOPPER_CLI_RESULTS_H
 #define PBCOPPER_CLI_RESULTS_H
 
+#include <cstdint>
 #include <string>
 #include <unordered_map>
 #include <vector>

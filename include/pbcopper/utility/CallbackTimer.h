@@ -1,6 +1,7 @@
 #ifndef PBCOPPER_UTILITY_CALLBACKTIMER_H
 #define PBCOPPER_UTILITY_CALLBACKTIMER_H
 
+#include <cstdint>
 #include <functional>
 #include <memory>
 

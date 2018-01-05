@@ -1,6 +1,8 @@
 #ifndef PBCOPPER_DATA_POSITION_H
 #define PBCOPPER_DATA_POSITION_H
 
+#include <cstdint>
+
 namespace PacBio {
 namespace Data {
 

@@ -1,6 +1,7 @@
 #ifndef PBCOPPER_CLI_TOOLCONTRACT_TASK_H
 #define PBCOPPER_CLI_TOOLCONTRACT_TASK_H
 
+#include <cstdint>
 #include <map>
 #include <string>
 #include <vector>

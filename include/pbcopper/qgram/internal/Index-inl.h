@@ -1,6 +1,7 @@
 #ifndef PBCOPPER_QGRAM_INDEX_INL_H
 #define PBCOPPER_QGRAM_INDEX_INL_H
 
+#include <cstdint>
 #include <stdexcept>
 
 #include "pbcopper/qgram/Index.h"

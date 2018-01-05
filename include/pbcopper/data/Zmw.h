@@ -1,6 +1,8 @@
 #ifndef PBCOPPER_DATA_ZMW_H
 #define PBCOPPER_DATA_ZMW_H
 
+#include <cstdint>
+
 namespace PacBio {
 namespace Data {
 

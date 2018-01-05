@@ -1,6 +1,7 @@
 #ifndef PBCOPPER_UTILITY_SYSTEMINFO_INL_H
 #define PBCOPPER_UTILITY_SYSTEMINFO_INL_H
 
+#include <cstdint>
 #include <boost/detail/endian.hpp>
 
 #include "pbcopper/utility/SystemInfo.h"

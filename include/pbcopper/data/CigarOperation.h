@@ -42,6 +42,7 @@
 #ifndef PBCOPPER_DATA_CIGAROPERATION_H
 #define PBCOPPER_DATA_CIGAROPERATION_H
 
+#include <cstdint>
 #include <iostream>
 
 namespace PacBio {
