@@ -4,6 +4,12 @@
 
 if not meson.is_subproject()
 
+  # pbcopper
+  install_headers(
+    files([
+      'pbcopper/PbcopperConfig.h']),
+    subdir : 'pbcopper')
+
   # pbcopper/align
   install_headers(
     files([

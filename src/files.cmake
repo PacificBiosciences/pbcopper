@@ -1,6 +1,12 @@
 
 set(pbcopper_H
 
+    # ------
+    # global
+    # ------
+
+    ${pbcopper_IncludeDir}/pbcopper/PbcopperConfig.h
+
     # -------
     # align
     # -------
