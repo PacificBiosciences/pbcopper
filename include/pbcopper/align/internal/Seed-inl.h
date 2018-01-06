@@ -5,7 +5,7 @@
 #include <cmath>
 #include <algorithm>
 
-#include "pbcopper/align/Seed.h"
+#include <pbcopper/align/Seed.h>
 
 namespace PacBio {
 namespace Align {

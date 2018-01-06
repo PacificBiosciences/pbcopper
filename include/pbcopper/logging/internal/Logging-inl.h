@@ -5,7 +5,7 @@
 #include <sstream>
 #include <stdexcept>
 
-#include "pbcopper/logging/Logging.h"
+#include <pbcopper/logging/Logging.h>
 
 namespace PacBio {
 namespace Logging {

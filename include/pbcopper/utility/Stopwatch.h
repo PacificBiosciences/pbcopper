@@ -47,6 +47,6 @@ private:
 } // namespace Utility
 } // namespace PacBio
 
-#include "pbcopper/utility/internal/Stopwatch-inl.h"
+#include <pbcopper/utility/internal/Stopwatch-inl.h>
 
 #endif // PBCOPPER_UTILITY_STOPWATCH_H

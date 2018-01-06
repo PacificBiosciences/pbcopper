@@ -3,7 +3,7 @@
 
 #include <stdexcept>
 
-#include "pbcopper/data/CigarOperation.h"
+#include <pbcopper/data/CigarOperation.h>
 
 namespace PacBio {
 namespace Data {

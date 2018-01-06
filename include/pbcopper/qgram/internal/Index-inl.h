@@ -4,10 +4,10 @@
 #include <cstdint>
 #include <stdexcept>
 
-#include "pbcopper/qgram/Index.h"
-#include "pbcopper/qgram/internal/Hashing-inl.h"
-#include "pbcopper/utility/MoveAppend.h"
-#include "pbcopper/utility/SafeSubtract.h"
+#include <pbcopper/qgram/Index.h>
+#include <pbcopper/qgram/internal/Hashing-inl.h>
+#include <pbcopper/utility/MoveAppend.h>
+#include <pbcopper/utility/SafeSubtract.h>
 
 namespace PacBio {
 namespace QGram {

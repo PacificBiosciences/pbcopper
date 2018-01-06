@@ -1,7 +1,7 @@
 #ifndef PBCOPPER_CLI_TOOLCONTRACT_OUTPUTFILETYPE_INL_H
 #define PBCOPPER_CLI_TOOLCONTRACT_OUTPUTFILETYPE_INL_H
 
-#include "pbcopper/cli/toolcontract/OutputFileType.h"
+#include <pbcopper/cli/toolcontract/OutputFileType.h>
 
 namespace PacBio {
 namespace CLI {

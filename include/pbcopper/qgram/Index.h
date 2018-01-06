@@ -7,7 +7,7 @@
 #include <vector>
 
 #include <pbcopper/PbcopperConfig.h>
-#include "pbcopper/qgram/IndexHits.h"
+#include <pbcopper/qgram/IndexHits.h>
 
 namespace PacBio {
 namespace QGram {
@@ -80,6 +80,6 @@ private:
 } // namespace QGram
 } // namespace PacBio
 
-#include "pbcopper/qgram/internal/Index-inl.h"
+#include <pbcopper/qgram/internal/Index-inl.h>
 
 #endif // PBCOPPER_QGRAM_INDEX_H

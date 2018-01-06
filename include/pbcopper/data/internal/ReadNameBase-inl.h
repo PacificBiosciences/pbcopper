@@ -3,8 +3,8 @@
 
 #include <stdexcept>
 
-#include "pbcopper/data/internal/ReadNameBase.h"
-#include "pbcopper/utility/StringUtils.h"
+#include <pbcopper/data/internal/ReadNameBase.h>
+#include <pbcopper/utility/StringUtils.h>
 
 namespace PacBio {
 namespace Data {

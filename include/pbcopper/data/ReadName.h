@@ -2,8 +2,8 @@
 #define PBCOPPER_DATA_READNAME_H
 
 #include <pbcopper/PbcopperConfig.h>
-#include "pbcopper/data/MovieName.h"
-#include "pbcopper/data/internal/ReadNameBase.h"
+#include <pbcopper/data/MovieName.h>
+#include <pbcopper/data/internal/ReadNameBase.h>
 
 namespace PacBio {
 namespace Data {

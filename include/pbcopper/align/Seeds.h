@@ -6,7 +6,7 @@
 #include <vector>
 
 #include <pbcopper/PbcopperConfig.h>
-#include "pbcopper/align/Seed.h"
+#include <pbcopper/align/Seed.h>
 
 namespace PacBio {
 namespace Align {
@@ -79,6 +79,6 @@ private:
 } // namespace Align
 } // namespace PacBio
 
-#include "pbcopper/align/internal/Seeds-inl.h"
+#include <pbcopper/align/internal/Seeds-inl.h>
 
 #endif // PBCOPPER_ALIGN_SEEDS_H

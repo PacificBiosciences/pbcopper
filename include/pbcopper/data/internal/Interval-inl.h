@@ -1,7 +1,7 @@
 #ifndef PBCOPPER_DATA_INTERVAL_INL_H
 #define PBCOPPER_DATA_INTERVAL_INL_H
 
-#include "pbcopper/data/Interval.h"
+#include <pbcopper/data/Interval.h>
 
 namespace PacBio {
 namespace Data {

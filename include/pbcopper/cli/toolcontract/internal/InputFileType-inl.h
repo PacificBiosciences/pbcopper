@@ -1,7 +1,7 @@
 #ifndef PBCOPPER_CLI_TOOLCONTRACT_INPUTFILETYPE_INL_H
 #define PBCOPPER_CLI_TOOLCONTRACT_INPUTFILETYPE_INL_H
 
-#include "pbcopper/cli/toolcontract/InputFileType.h"
+#include <pbcopper/cli/toolcontract/InputFileType.h>
 
 namespace PacBio {
 namespace CLI {

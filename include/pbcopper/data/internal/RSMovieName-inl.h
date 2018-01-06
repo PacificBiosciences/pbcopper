@@ -6,8 +6,8 @@
 #include <iostream>
 #include <stdexcept>
 
-#include "pbcopper/data/RSMovieName.h"
-#include "pbcopper/utility/StringUtils.h"
+#include <pbcopper/data/RSMovieName.h>
+#include <pbcopper/utility/StringUtils.h>
 
 namespace PacBio {
 namespace Data {

@@ -4,7 +4,6 @@
 #include <string>
 
 #include <pbcopper/PbcopperConfig.h>
-
 namespace PacBio {
 namespace CLI {
 namespace ToolContract {
@@ -37,6 +36,6 @@ private:
 } // namespace CLI
 } // namespace PacBio
 
-#include "pbcopper/cli/toolcontract/internal/InputFileType-inl.h"
+#include <pbcopper/cli/toolcontract/internal/InputFileType-inl.h>
 
 #endif // PBCOPPER_CLI_TOOLCONTRACT_INPUTFILETYPE_H

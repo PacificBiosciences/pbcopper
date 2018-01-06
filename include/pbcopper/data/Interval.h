@@ -112,6 +112,6 @@ private:
 } // namespace Data
 } // namespace PacBio
 
-#include "pbcopper/data/internal/Interval-inl.h"
+#include <pbcopper/data/internal/Interval-inl.h>
 
 #endif // PBCOPPER_DATA_INTERVAL_H

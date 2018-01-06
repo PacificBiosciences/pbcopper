@@ -151,6 +151,6 @@ extern void InstallSignalHandlers(Logger& logger = Logger::Default());
 } // namespace Logging
 } // namespace PacBio
 
-#include "pbcopper/logging/internal/Logging-inl.h"
+#include <pbcopper/logging/internal/Logging-inl.h>
 
 #endif // PBCOPPER_LOGGING_LOGGING_H

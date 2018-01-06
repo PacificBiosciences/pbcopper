@@ -1,5 +1,5 @@
 
-#include "pbcopper/cli/Option.h"
+#include <pbcopper/cli/Option.h>
 #include <stdexcept>
 
 namespace PacBio {

@@ -9,7 +9,7 @@
 #include <thread>
 #include <unordered_map>
 
-#include "pbcopper/utility/CallbackTimer.h"
+#include <pbcopper/utility/CallbackTimer.h>
 
 namespace PacBio {
 namespace Utility {

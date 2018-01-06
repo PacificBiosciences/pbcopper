@@ -2,7 +2,7 @@
 #define PBCOPPER_JSON_JSON_H
 
 #include <pbcopper/PbcopperConfig.h>
-#include "pbcopper/json/internal/json.hpp"
+#include <pbcopper/json/internal/json.hpp>
 
 //
 // Simple wrapper around nlohmann's JSON implementation:

@@ -1,7 +1,7 @@
 #ifndef PBCOPPER_UTILITY_STOPWATCH_INL_H
 #define PBCOPPER_UTILITY_STOPWATCH_INL_H
 
-#include "pbcopper/utility/Stopwatch.h"
+#include <pbcopper/utility/Stopwatch.h>
 
 namespace PacBio {
 namespace Utility {

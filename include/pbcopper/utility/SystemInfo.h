@@ -24,6 +24,6 @@ public:
 } // namespace Utility
 } // namespace PacBio
 
-#include "pbcopper/utility/internal/SystemInfo-inl.h"
+#include <pbcopper/utility/internal/SystemInfo-inl.h>
 
 #endif // PBCOPPER_UTILITY_SYSTEMINFO_H

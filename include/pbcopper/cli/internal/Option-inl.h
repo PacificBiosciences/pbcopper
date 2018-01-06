@@ -1,7 +1,7 @@
 #ifndef PBCOPPER_CLI_OPTION_INL_H
 #define PBCOPPER_CLI_OPTION_INL_H
 
-#include "pbcopper/cli/Option.h"
+#include <pbcopper/cli/Option.h>
 
 namespace PacBio {
 namespace CLI {

@@ -4,7 +4,7 @@
 #include <iosfwd>
 
 #include <pbcopper/PbcopperConfig.h>
-#include "pbcopper/cli/Results.h"
+#include <pbcopper/cli/Results.h>
 
 namespace PacBio {
 namespace CLI {

@@ -6,10 +6,10 @@
 #include <vector>
 
 #include <pbcopper/PbcopperConfig.h>
-#include "pbcopper/cli/Option.h"
-#include "pbcopper/cli/PositionalArg.h"
-#include "pbcopper/cli/SingleDashMode.h"
-#include "pbcopper/cli/toolcontract/Config.h"
+#include <pbcopper/cli/Option.h>
+#include <pbcopper/cli/PositionalArg.h>
+#include <pbcopper/cli/SingleDashMode.h>
+#include <pbcopper/cli/toolcontract/Config.h>
 
 namespace PacBio {
 namespace CLI {

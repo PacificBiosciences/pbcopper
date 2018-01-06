@@ -231,6 +231,6 @@ bool operator==(const Seed& lhs, const Seed& rhs);
 } // namespace Align
 } // namespace PacBio
 
-#include "pbcopper/align/internal/Seed-inl.h"
+#include <pbcopper/align/internal/Seed-inl.h>
 
 #endif // PBCOPPER_ALIGN_SEED_H

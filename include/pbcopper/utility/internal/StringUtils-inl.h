@@ -4,7 +4,7 @@
 #include <cstddef>
 #include <sstream>
 
-#include "pbcopper/utility/StringUtils.h"
+#include <pbcopper/utility/StringUtils.h>
 
 namespace PacBio {
 namespace Utility {

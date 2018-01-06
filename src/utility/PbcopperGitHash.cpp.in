@@ -35,7 +35,7 @@
 
 // Author: Armin Töpfer
 
-#include "pbcopper/utility/PbcopperVersion.h"
+#include <pbcopper/utility/PbcopperVersion.h>
 #include <string>
 
 namespace PacBio {

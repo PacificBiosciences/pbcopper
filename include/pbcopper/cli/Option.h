@@ -7,8 +7,8 @@
 #include <vector>
 
 #include <pbcopper/PbcopperConfig.h>
-#include "pbcopper/json/JSON.h"
-#include "pbcopper/cli/OptionFlags.h"
+#include <pbcopper/json/JSON.h>
+#include <pbcopper/cli/OptionFlags.h>
 
 namespace PacBio {
 namespace CLI {
@@ -259,6 +259,6 @@ private:
 } // namespace CLI
 } // namespace PacBio
 
-#include "pbcopper/cli/internal/Option-inl.h"
+#include <pbcopper/cli/internal/Option-inl.h>
 
 #endif // PBCOPPER_CLI_OPTION_H

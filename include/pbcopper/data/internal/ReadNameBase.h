@@ -1,11 +1,11 @@
 #ifndef PBCOPPER_DATA_READNAMEBASE_H
 #define PBCOPPER_DATA_READNAMEBASE_H
 
-#include "pbcopper/data/CCSTag.h"
-#include "pbcopper/data/Interval.h"
-#include "pbcopper/data/MovieName.h"
-#include "pbcopper/data/Position.h"
-#include "pbcopper/data/Zmw.h"
+#include <pbcopper/data/CCSTag.h>
+#include <pbcopper/data/Interval.h>
+#include <pbcopper/data/MovieName.h>
+#include <pbcopper/data/Position.h>
+#include <pbcopper/data/Zmw.h>
 
 namespace PacBio {
 namespace Data {
@@ -97,6 +97,6 @@ inline std::istream& operator>>(std::istream& is,
 } // namespace Data
 } // namespace PacBio
 
-#include "pbcopper/data/internal/ReadNameBase-inl.h"
+#include <pbcopper/data/internal/ReadNameBase-inl.h>
 
 #endif // PBCOPPER_DATA_READNAMEBASE_H

@@ -39,8 +39,8 @@
 //
 // Author: Derek Barnett
 
-#include "pbcopper/data/CigarOperation.h"
-#include "pbcopper/utility/EnumClassHash.h"
+#include <pbcopper/data/CigarOperation.h>
+#include <pbcopper/utility/EnumClassHash.h>
 
 #include <sstream>
 #include <stdexcept>

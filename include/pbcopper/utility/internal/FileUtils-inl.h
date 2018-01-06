@@ -9,7 +9,7 @@
 #include <boost/algorithm/string.hpp>
 #include <sys/stat.h>
 
-#include "pbcopper/utility/FileUtils.h"
+#include <pbcopper/utility/FileUtils.h>
 
 namespace PacBio {
 namespace Utility {

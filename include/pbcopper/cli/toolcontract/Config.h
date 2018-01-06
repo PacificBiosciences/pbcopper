@@ -4,8 +4,8 @@
 #include <string>
 
 #include <pbcopper/PbcopperConfig.h>
-#include "pbcopper/cli/toolcontract/Task.h"
-#include "pbcopper/cli/toolcontract/Driver.h"
+#include <pbcopper/cli/toolcontract/Task.h>
+#include <pbcopper/cli/toolcontract/Driver.h>
 
 namespace PacBio {
 namespace CLI {
@@ -83,6 +83,6 @@ private:
 } // namespace CLI
 } // namespace PacBio
 
-#include "pbcopper/cli/toolcontract/internal/Config-inl.h"
+#include <pbcopper/cli/toolcontract/internal/Config-inl.h>
 
 #endif // PBCOPPER_CLI_TOOLCONTRACT_CONFIG_H

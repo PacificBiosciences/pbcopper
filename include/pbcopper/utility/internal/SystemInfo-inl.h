@@ -4,7 +4,7 @@
 #include <cstdint>
 #include <boost/detail/endian.hpp>
 
-#include "pbcopper/utility/SystemInfo.h"
+#include <pbcopper/utility/SystemInfo.h>
 
 namespace PacBio {
 namespace Utility {

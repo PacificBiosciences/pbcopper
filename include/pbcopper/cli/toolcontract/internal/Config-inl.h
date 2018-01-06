@@ -1,7 +1,7 @@
 #ifndef PBCOPPER_CLI_TOOLCONTRACT_CONFIG_INL_H
 #define PBCOPPER_CLI_TOOLCONTRACT_CONFIG_INL_H
 
-#include "pbcopper/cli/toolcontract/Config.h"
+#include <pbcopper/cli/toolcontract/Config.h>
 
 namespace PacBio {
 namespace CLI {

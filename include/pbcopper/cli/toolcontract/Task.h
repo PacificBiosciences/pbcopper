@@ -8,10 +8,10 @@
 #include <vector>
 
 #include <pbcopper/PbcopperConfig.h>
-#include "pbcopper/cli/toolcontract/InputFileType.h"
-#include "pbcopper/cli/toolcontract/OutputFileType.h"
-#include "pbcopper/cli/toolcontract/ResourceType.h"
-#include "pbcopper/cli/toolcontract/TaskType.h"
+#include <pbcopper/cli/toolcontract/InputFileType.h>
+#include <pbcopper/cli/toolcontract/OutputFileType.h>
+#include <pbcopper/cli/toolcontract/ResourceType.h>
+#include <pbcopper/cli/toolcontract/TaskType.h>
 
 namespace PacBio {
 namespace CLI {
@@ -268,6 +268,6 @@ private:
 } // namespace CLI
 } // namespace PacBio
 
-#include "pbcopper/cli/toolcontract/internal/Task-inl.h"
+#include <pbcopper/cli/toolcontract/internal/Task-inl.h>
 
 #endif // PBCOPPER_CLI_TOOLCONTRACT_TASK_H

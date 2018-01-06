@@ -1,7 +1,7 @@
 #ifndef PBCOPPER_CLI_TOOLCONTRACT_DRIVER_INL_H
 #define PBCOPPER_CLI_TOOLCONTRACT_DRIVER_INL_H
 
-#include "pbcopper/cli/toolcontract/Driver.h"
+#include <pbcopper/cli/toolcontract/Driver.h>
 
 namespace PacBio {
 namespace CLI {

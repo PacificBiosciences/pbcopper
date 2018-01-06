@@ -82,6 +82,6 @@ inline std::istream& operator>>(std::istream& is, MovieName& movieName);
 } // namespace Data
 } // namespace PacBio
 
-#include "pbcopper/data/internal/MovieName-inl.h"
+#include <pbcopper/data/internal/MovieName-inl.h>
 
 #endif // PBCOPPER_DATA_MOVIENAME_H

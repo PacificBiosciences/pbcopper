@@ -7,10 +7,10 @@
 #include <vector>
 
 #include <pbcopper/PbcopperConfig.h>
-#include "pbcopper/cli/Interface.h"
-#include "pbcopper/cli/Option.h"
-#include "pbcopper/logging/Logging.h"
-#include "pbcopper/json/JSON.h"
+#include <pbcopper/cli/Interface.h>
+#include <pbcopper/cli/Option.h>
+#include <pbcopper/logging/Logging.h>
+#include <pbcopper/json/JSON.h>
 
 namespace PacBio {
 namespace CLI {
