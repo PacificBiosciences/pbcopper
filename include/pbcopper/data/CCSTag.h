@@ -2,6 +2,8 @@
 #ifndef PBCOPPER_DATA_CCSTAG_H
 #define PBCOPPER_DATA_CCSTAG_H
 
+#include <pbcopper/PbcopperConfig.h>
+
 namespace PacBio {
 namespace Data {
 

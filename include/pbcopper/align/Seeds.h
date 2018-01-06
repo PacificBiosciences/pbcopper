@@ -5,6 +5,7 @@
 #include <set>
 #include <vector>
 
+#include <pbcopper/PbcopperConfig.h>
 #include "pbcopper/align/Seed.h"
 
 namespace PacBio {

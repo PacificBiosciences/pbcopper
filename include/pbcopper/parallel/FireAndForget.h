@@ -46,6 +46,8 @@
 
 #include <boost/optional.hpp>
 
+#include <pbcopper/PbcopperConfig.h>
+
 namespace PacBio {
 namespace Parallel {
 

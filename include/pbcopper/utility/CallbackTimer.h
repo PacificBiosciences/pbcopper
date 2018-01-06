@@ -5,6 +5,8 @@
 #include <functional>
 #include <memory>
 
+#include <pbcopper/PbcopperConfig.h>
+
 namespace PacBio {
 namespace Utility {
 

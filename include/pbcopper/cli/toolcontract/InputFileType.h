@@ -3,6 +3,8 @@
 
 #include <string>
 
+#include <pbcopper/PbcopperConfig.h>
+
 namespace PacBio {
 namespace CLI {
 namespace ToolContract {

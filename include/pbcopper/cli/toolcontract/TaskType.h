@@ -1,6 +1,8 @@
 #ifndef PBCOPPER_CLI_TOOLCONTRACT_TASKTYPE_H
 #define PBCOPPER_CLI_TOOLCONTRACT_TASKTYPE_H
 
+#include <pbcopper/PbcopperConfig.h>
+
 namespace PacBio {
 namespace CLI {
 namespace ToolContract {

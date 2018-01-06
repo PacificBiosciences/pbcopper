@@ -7,6 +7,8 @@
 
 #include <boost/utility/string_ref.hpp>
 
+#include <pbcopper/PbcopperConfig.h>
+
 namespace PacBio {
 namespace Data {
 

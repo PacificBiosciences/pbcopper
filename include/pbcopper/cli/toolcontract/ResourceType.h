@@ -1,6 +1,8 @@
 #ifndef PBCOPPER_CLI_TOOLCONTRACT_RESOURCETYPE_H
 #define PBCOPPER_CLI_TOOLCONTRACT_RESOURCETYPE_H
 
+#include <pbcopper/PbcopperConfig.h>
+
 namespace PacBio {
 namespace CLI {
 namespace ToolContract {

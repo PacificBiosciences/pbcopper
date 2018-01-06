@@ -40,6 +40,8 @@
 #include <string>
 #include <tuple>
 
+#include <pbcopper/PbcopperConfig.h>
+
 namespace PacBio {
 namespace Utility {
 

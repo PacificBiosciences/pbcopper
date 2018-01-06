@@ -6,6 +6,7 @@
 #include <string>
 #include <vector>
 
+#include <pbcopper/PbcopperConfig.h>
 #include "pbcopper/json/JSON.h"
 #include "pbcopper/cli/OptionFlags.h"
 

@@ -6,6 +6,7 @@
 #include <string>
 #include <vector>
 
+#include <pbcopper/PbcopperConfig.h>
 #include "pbcopper/qgram/IndexHits.h"
 
 namespace PacBio {

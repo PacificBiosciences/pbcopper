@@ -3,6 +3,8 @@
 
 #include <cstdint>
 
+#include <pbcopper/PbcopperConfig.h>
+
 namespace PacBio {
 namespace Data {
 

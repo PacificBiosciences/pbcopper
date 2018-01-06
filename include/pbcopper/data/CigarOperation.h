@@ -45,6 +45,8 @@
 #include <cstdint>
 #include <iostream>
 
+#include <pbcopper/PbcopperConfig.h>
+
 namespace PacBio {
 namespace Data {
 

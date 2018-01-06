@@ -1,6 +1,8 @@
 #ifndef PBCOPPER_CLI_SINGLEDASHMODE_H
 #define PBCOPPER_CLI_SINGLEDASHMODE_H
 
+#include <pbcopper/PbcopperConfig.h>
+
 namespace PacBio {
 namespace CLI {
 

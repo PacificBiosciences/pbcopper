@@ -45,6 +45,7 @@
 #include <string>
 #include <vector>
 
+#include <pbcopper/PbcopperConfig.h>
 #include "pbcopper/data/CigarOperation.h"
 
 namespace PacBio {

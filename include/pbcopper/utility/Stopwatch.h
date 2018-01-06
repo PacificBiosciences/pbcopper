@@ -3,6 +3,8 @@
 
 #include <chrono>
 
+#include <pbcopper/PbcopperConfig.h>
+
 namespace PacBio {
 namespace Utility {
 

@@ -4,6 +4,8 @@
 #include <string>
 #include <vector>
 
+#include <pbcopper/PbcopperConfig.h>
+
 namespace PacBio {
 namespace Utility {
 

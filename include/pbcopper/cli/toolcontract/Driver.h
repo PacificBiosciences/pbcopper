@@ -4,6 +4,8 @@
 #include <string>
 #include <unordered_map>
 
+#include <pbcopper/PbcopperConfig.h>
+
 namespace PacBio {
 namespace CLI {
 namespace ToolContract {
