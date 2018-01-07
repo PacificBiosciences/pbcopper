@@ -35,7 +35,8 @@
 
 // Author: Lance Hepler
 
-#pragma once
+#ifndef PBCOPPER_PARALLEL_WORKQUEUE_H
+#define PBCOPPER_PARALLEL_WORKQUEUE_H
 
 #include <cstddef>
 #include <condition_variable>
@@ -191,3 +192,5 @@ private:
 };
 }  // namespace Parallel
 }  // namespace PacBio
+
+#endif // PBCOPPER_PARALLEL_WORKQUEUE_H

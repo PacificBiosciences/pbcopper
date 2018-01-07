@@ -35,7 +35,8 @@
 
 // Author: Lance Hepler & Armin Töpfer
 
-#pragma once
+#ifndef PBCOPPER_PARALLEL_FIREANDFORGET_H
+#define PBCOPPER_PARALLEL_FIREANDFORGET_H
 
 #include <cstddef>
 #include <condition_variable>
@@ -154,3 +155,5 @@ private:
 
 }  // namespace Parallel
 }  // namespace PacBio
+
+#endif // PBCOPPER_PARALLEL_FIREANDFORGET_H

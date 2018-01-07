@@ -39,7 +39,8 @@
 // DSO load times
 // https://gcc.gnu.org/wiki/Visibility
 
-#pragma once
+#ifndef PBCOPPER_PBCOPPERCONFIG_H
+#define PBCOPPER_PBCOPPERCONFIG_H
 
 #if defined _WIN32 || defined __CYGWIN__
 #  ifdef PBCOPPER_BUILDING_LIBRARY
@@ -66,3 +67,4 @@
 #  endif
 #endif
 
+#endif // PBCOPPER_PBCOPPERCONFIG_H
