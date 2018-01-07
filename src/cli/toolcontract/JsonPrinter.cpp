@@ -1,10 +1,12 @@
 #include <pbcopper/cli/toolcontract/JsonPrinter.h>
+
+#include <stdexcept>
+#include <unordered_map>
+
 #include <pbcopper/cli/Interface.h>
 #include <pbcopper/json/JSON.h>
 #include <pbcopper/utility/EnumClassHash.h>
 #include <pbcopper/utility/PbcopperVersion.h>
-#include <stdexcept>
-#include <unordered_map>
 
 using Json = PacBio::JSON::Json;
 
