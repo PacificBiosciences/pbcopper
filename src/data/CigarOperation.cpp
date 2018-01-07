@@ -1,4 +1,4 @@
-// Copyright (c) 2016, Pacific Biosciences of California, Inc.
+// Copyright (c) 2016-2018, Pacific Biosciences of California, Inc.
 //
 // All rights reserved.
 //
@@ -32,11 +32,7 @@
 // OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT
 // OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
 // SUCH DAMAGE.
-//
-// File Description
-/// \file CigarOperation.cpp
-/// \brief Implements the CigarOperation class.
-//
+
 // Author: Derek Barnett
 
 #include <pbcopper/data/CigarOperation.h>
