@@ -36,6 +36,7 @@
 // Author: Derek Barnett
 
 #include <pbcopper/data/Cigar.h>
+
 #include <cctype>
 #include <cstddef>
 #include <sstream>

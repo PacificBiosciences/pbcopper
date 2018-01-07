@@ -36,6 +36,7 @@
 // Author: Derek Barnett
 
 #include <pbcopper/cli/Option.h>
+
 #include <stdexcept>
 
 namespace PacBio {

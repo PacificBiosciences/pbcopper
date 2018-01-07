@@ -36,8 +36,10 @@
 // Author: Derek Barnett
 
 #include <pbcopper/cli/VersionPrinter.h>
-#include <pbcopper/cli/Interface.h>
+
 #include <ostream>
+
+#include <pbcopper/cli/Interface.h>
 
 namespace PacBio {
 namespace CLI {

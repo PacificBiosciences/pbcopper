@@ -36,13 +36,15 @@
 // Author: Derek Barnett
 
 #include <pbcopper/cli/Results.h>
-#include <pbcopper/json/JSON.h>
-#include <pbcopper/utility/StringUtils.h>
-#include <unordered_map>
-#include <set>
-#include <vector>
+
 #include <cassert>
 #include <cstdlib>
+#include <set>
+#include <unordered_map>
+#include <vector>
+
+#include <pbcopper/json/JSON.h>
+#include <pbcopper/utility/StringUtils.h>
 
 using Json = PacBio::JSON::Json;
 

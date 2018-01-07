@@ -36,9 +36,11 @@
 // Author: Derek Barnett
 
 #include <pbcopper/cli/Interface.h>
-#include <boost/optional.hpp>
-#include <unordered_map>
+
 #include <cassert>
+#include <unordered_map>
+
+#include <boost/optional.hpp>
 
 namespace PacBio {
 namespace CLI {

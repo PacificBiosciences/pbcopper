@@ -36,8 +36,6 @@
 // Author: Derek Barnett
 
 #include <pbcopper/cli/HelpPrinter.h>
-#include <pbcopper/cli/Interface.h>
-#include <pbcopper/json/JSON.h>
 
 #include <cstddef>
 #include <sys/ioctl.h>
@@ -46,6 +44,9 @@
 #include <sstream>
 #include <string>
 #include <vector>
+
+#include <pbcopper/cli/Interface.h>
+#include <pbcopper/json/JSON.h>
 
 using Json = PacBio::JSON::Json;
 

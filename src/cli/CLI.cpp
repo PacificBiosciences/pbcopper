@@ -37,14 +37,15 @@
 
 #include <pbcopper/cli/CLI.h>
 
+#include <cstdlib>
+#include <fstream>
+#include <iostream>
+
 #include <pbcopper/cli/HelpPrinter.h>
 #include <pbcopper/cli/Parser.h>
 #include <pbcopper/cli/VersionPrinter.h>
 #include <pbcopper/cli/toolcontract/JsonPrinter.h>
 #include <pbcopper/cli/toolcontract/ResolvedToolContract.h>
-#include <fstream>
-#include <iostream>
-#include <cstdlib>
 
 namespace PacBio {
 namespace CLI {

@@ -36,13 +36,14 @@
 // Author: Lance Hepler, Derek Barnett
 
 #include <pbcopper/logging/Logging.h>
-#include <pbcopper/utility/Unused.h>
 
 #include <chrono>
-#include <iomanip>
-#include <iostream>
 #include <csignal>
 #include <ctime>
+#include <iomanip>
+#include <iostream>
+
+#include <pbcopper/utility/Unused.h>
 
 namespace PacBio {
 namespace Logging {

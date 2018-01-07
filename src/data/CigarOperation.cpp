@@ -36,11 +36,12 @@
 // Author: Derek Barnett
 
 #include <pbcopper/data/CigarOperation.h>
-#include <pbcopper/utility/EnumClassHash.h>
 
 #include <sstream>
 #include <stdexcept>
 #include <unordered_map>
+
+#include <pbcopper/utility/EnumClassHash.h>
 
 namespace PacBio {
 namespace Data {

@@ -36,9 +36,11 @@
 // Author: Derek Barnett
 
 #include <pbcopper/cli/Parser.h>
-#include <pbcopper/cli/Interface.h>
-#include <unordered_map>
+
 #include <cassert>
+#include <unordered_map>
+
+#include <pbcopper/cli/Interface.h>
 
 namespace PacBio {
 namespace CLI {
