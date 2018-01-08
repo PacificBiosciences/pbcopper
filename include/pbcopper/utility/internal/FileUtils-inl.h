@@ -42,9 +42,9 @@
 #include <cstddef>
 #include <cstdlib>
 #include <fstream>
+#include <sys/stat.h>
 
 #include <boost/algorithm/string.hpp>
-#include <sys/stat.h>
 
 #include <pbcopper/utility/FileUtils.h>
 
