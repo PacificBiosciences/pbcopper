@@ -1,4 +1,4 @@
-// Copyright (c) 2014-2017, Pacific Biosciences of California, Inc.
+// Copyright (c) 2016-2018, Pacific Biosciences of California, Inc.
 //
 // All rights reserved.
 //
@@ -35,8 +35,10 @@
 
 // Author: Lance Hepler
 
-#pragma once
+#ifndef PBCOPPER_PARALLEL_WORKQUEUE_H
+#define PBCOPPER_PARALLEL_WORKQUEUE_H
 
+#include <cstddef>
 #include <condition_variable>
 #include <deque>
 #include <exception>
@@ -45,6 +47,8 @@
 #include <vector>
 
 #include <boost/optional.hpp>
+
+#include <pbcopper/PbcopperConfig.h>
 
 namespace PacBio {
 namespace Parallel {
@@ -188,3 +192,5 @@ private:
 };
 }  // namespace Parallel
 }  // namespace PacBio
+
+#endif // PBCOPPER_PARALLEL_WORKQUEUE_H

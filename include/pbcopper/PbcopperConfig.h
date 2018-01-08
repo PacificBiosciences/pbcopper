@@ -33,60 +33,38 @@
 // OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
 // SUCH DAMAGE.
 
-// Author: Derek Barnett
+// Author: David Seifert, Derek Barnett
 
-#include <pbcopper/data/Cigar.h>
+// Reduce the number of exposed symbols in order to speed up
+// DSO load times
+// https://gcc.gnu.org/wiki/Visibility
 
-#include <cctype>
-#include <cstddef>
-#include <sstream>
+#ifndef PBCOPPER_PBCOPPERCONFIG_H
+#define PBCOPPER_PBCOPPERCONFIG_H
 
-namespace PacBio {
-namespace Data {
+#if defined _WIN32 || defined __CYGWIN__
+#  ifdef PBCOPPER_BUILDING_LIBRARY
+#    ifdef __GNUC__
+#      define PBCOPPER_PUBLIC_API __attribute__((dllexport))
+#    else
+#      define PBCOPPER_PUBLIC_API __declspec(dllexport)  // Note: gcc seems to also supports this syntax
+#    endif
+#  else
+#    ifdef __GNUC__
+#      define PBCOPPER_PUBLIC_API __attribute__((dllimport))
+#    else
+#      define PBCOPPER_PUBLIC_API __declspec(dllimport)  // Note: gcc seems to also supports this syntax
+#    endif
+#  endif
+#  define PBCOPPER_PRIVATE_API
+#else
+#  if __GNUC__ >= 4
+#    define PBCOPPER_PUBLIC_API __attribute__((visibility("default")))
+#    define PBCOPPER_PRIVATE_API __attribute__((visibility("hidden")))
+#  else
+#    define PBCOPPER_PUBLIC_API
+#    define PBCOPPER_PRIVATE_API
+#  endif
+#endif
 
-Cigar::Cigar(void) { }
-
-Cigar::Cigar(const std::string& cigarString)
-    : std::vector<CigarOperation>()
-{
-    size_t numberStart = 0;
-    const auto numChars = cigarString.size();
-    for (size_t i = 0; i < numChars; ++i)
-    {
-        const char c = cigarString.at(i);
-        if (!isdigit(c))
-        {
-            const auto distance = i - numberStart;
-            const auto length = std::stoul(cigarString.substr(numberStart, distance));
-            emplace_back(c, length);
-            numberStart = i+1;
-        }
-    }
-}
-
-std::string Cigar::ToStdString(void) const
-{
-    std::stringstream s;
-    for (const auto& op : *this) {
-        s << op.Length()
-          << op.Char();
-    }
-    return s.str();
-}
-
-std::istream& operator>>(std::istream& in, Cigar& cigar)
-{
-    std::string s;
-    in >> s;
-    cigar = Cigar{ s };
-    return in;
-}
-
-std::ostream& operator<<(std::ostream& out, const Cigar& cigar)
-{
-    out << cigar.ToStdString();
-    return out;
-}
-
-} // namespace Data
-} // namespace PacBio
+#endif // PBCOPPER_PBCOPPERCONFIG_H

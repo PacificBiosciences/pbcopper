@@ -1,11 +1,11 @@
 
 set(pbcopper_H
 
-    # -------
+    # ------
     # global
-    # -------
+    # ------
 
-    ${pbcopper_IncludeDir}/pbcopper/Config.h
+    ${pbcopper_IncludeDir}/pbcopper/PbcopperConfig.h
 
     # -------
     # align
@@ -91,6 +91,13 @@ set(pbcopper_H
     ${pbcopper_IncludeDir}/pbcopper/logging/Logging.h
     ${pbcopper_IncludeDir}/pbcopper/logging/internal/Logging-inl.h
 
+    # --------
+    # parallel
+    # --------
+
+    ${pbcopper_IncludeDir}/pbcopper/parallel/FireAndForget.h
+    ${pbcopper_IncludeDir}/pbcopper/parallel/WorkQueue.h
+
     # -------
     # qgram
     # -------
@@ -101,7 +108,6 @@ set(pbcopper_H
 
     ${pbcopper_IncludeDir}/pbcopper/qgram/internal/Hashing-inl.h
     ${pbcopper_IncludeDir}/pbcopper/qgram/internal/Index-inl.h
-
 
     # -------
     # stream
@@ -115,7 +121,9 @@ set(pbcopper_H
 
     ${pbcopper_IncludeDir}/pbcopper/utility/CallbackTimer.h
     ${pbcopper_IncludeDir}/pbcopper/utility/EnumClassHash.h
+    ${pbcopper_IncludeDir}/pbcopper/utility/FileUtils.h
     ${pbcopper_IncludeDir}/pbcopper/utility/MoveAppend.h
+    ${pbcopper_IncludeDir}/pbcopper/utility/PbcopperVersion.h
     ${pbcopper_IncludeDir}/pbcopper/utility/SafeSubtract.h
     ${pbcopper_IncludeDir}/pbcopper/utility/Stopwatch.h
     ${pbcopper_IncludeDir}/pbcopper/utility/StringUtils.h
@@ -123,6 +131,7 @@ set(pbcopper_H
     ${pbcopper_IncludeDir}/pbcopper/utility/Unused.h
 
     ${pbcopper_IncludeDir}/pbcopper/utility/internal/CallbackTimer-inl.h
+    ${pbcopper_IncludeDir}/pbcopper/utility/internal/FileUtils-inl.h
     ${pbcopper_IncludeDir}/pbcopper/utility/internal/Stopwatch-inl.h
     ${pbcopper_IncludeDir}/pbcopper/utility/internal/StringUtils-inl.h
     ${pbcopper_IncludeDir}/pbcopper/utility/internal/SystemInfo-inl.h

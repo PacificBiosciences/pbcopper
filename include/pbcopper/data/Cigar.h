@@ -1,4 +1,4 @@
-// Copyright (c) 2016, Pacific Biosciences of California, Inc.
+// Copyright (c) 2016-2018, Pacific Biosciences of California, Inc.
 //
 // All rights reserved.
 //
@@ -32,21 +32,17 @@
 // OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT
 // OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
 // SUCH DAMAGE.
-//
-// File Description
-/// \file Cigar.h
-/// \brief Defines the Cigar class.
-//
+
 // Author: Derek Barnett
 
 #ifndef PBCOPPER_DATA_CIGAR_H
 #define PBCOPPER_DATA_CIGAR_H
 
-#include "pbcopper/Config.h"
-#include "pbcopper/data/CigarOperation.h"
-
 #include <string>
 #include <vector>
+
+#include <pbcopper/PbcopperConfig.h>
+#include <pbcopper/data/CigarOperation.h>
 
 namespace PacBio {
 namespace Data {
