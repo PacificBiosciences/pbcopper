@@ -56,4 +56,10 @@ pbcopper_test = executable(
   cpp_args : pbcopper_warning_flags,
   install : false)
 
+#########
+# tests #
+#########
+
+test('pbcopper formatting check', pbcopper_clang_formatter, args : ['--all'], workdir : meson.source_root())
+
 test('pbcopper test', pbcopper_test)
