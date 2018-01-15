@@ -51,7 +51,6 @@ namespace Align {
 class Seed
 {
 public:
-
     ///
     /// \brief Seed
     ///
@@ -63,9 +62,7 @@ public:
     /// \param beginPosV
     /// \param seedLength
     ///
-    Seed(const uint64_t beginPosH,
-         const uint64_t beginPosV,
-         const uint64_t seedLength);
+    Seed(const uint64_t beginPosH, const uint64_t beginPosV, const uint64_t seedLength);
 
     ///
     /// \brief Seed
@@ -74,9 +71,7 @@ public:
     /// \param endPosH
     /// \param endPosV
     ///
-    Seed(const uint64_t beginPosH,
-         const uint64_t beginPosV,
-         const uint64_t endPosH,
+    Seed(const uint64_t beginPosH, const uint64_t beginPosV, const uint64_t endPosH,
          const uint64_t endPosV);
 
     Seed(const Seed&) = default;
@@ -86,7 +81,6 @@ public:
     ~Seed(void) = default;
 
 public:
-
     ///
     /// \brief BeginDiagonal
     /// \return
@@ -162,7 +156,6 @@ public:
     uint64_t Size(void) const;
 
 public:
-
     ///
     /// \brief BeginPositionH
     /// \param beginPosH
@@ -265,9 +258,9 @@ bool operator<(const Seed& lhs, const Seed& rhs);
 ///
 bool operator==(const Seed& lhs, const Seed& rhs);
 
-} // namespace Align
-} // namespace PacBio
+}  // namespace Align
+}  // namespace PacBio
 
 #include <pbcopper/align/internal/Seed-inl.h>
 
-#endif // PBCOPPER_ALIGN_SEED_H
+#endif  // PBCOPPER_ALIGN_SEED_H

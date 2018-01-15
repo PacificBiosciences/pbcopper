@@ -1,7 +1,7 @@
-#include <pbcopper/cli/toolcontract/JsonPrinter.h>
-#include <pbcopper/cli/Interface.h>
-#include <pbcopper/utility/PbcopperVersion.h>
 #include <gtest/gtest.h>
+#include <pbcopper/cli/Interface.h>
+#include <pbcopper/cli/toolcontract/JsonPrinter.h>
+#include <pbcopper/utility/PbcopperVersion.h>
 
 using namespace PacBio;
 using namespace PacBio::CLI;
@@ -99,7 +99,7 @@ static string MakeToolContractText(const string nProc)
     return MakeHeader() + nProc + footer;
 }
 
-} // namespace ToolContractJsonPrinterTests
+}  // namespace ToolContractJsonPrinterTests
 
 TEST(CLI_ToolContractJsonPrinter, prints_expected_output)
 {
@@ -109,6 +109,7 @@ TEST(CLI_ToolContractJsonPrinter, prints_expected_output)
     // setup interface & tool contract config
     // --------------------------------------------
 
+    // clang-format off
     Interface i {
         "frobber",
         "Frobb your files in a most delightful, nobbly way",
@@ -138,6 +139,7 @@ TEST(CLI_ToolContractJsonPrinter, prints_expected_output)
         { "mode", "Frobbing mode" },
         { "delta", "Frobbing delta" }
     });
+    // clang-format on
 
     ToolContract::Config tcConfig(tcTask);
     i.EnableToolContract(tcConfig);
@@ -159,6 +161,7 @@ TEST(CLI_ToolContractJsonPrinter, prints_expected_output_with_explicit_nproc)
     // setup interface & tool contract config
     // --------------------------------------------
 
+    // clang-format off
     Interface i {
         "frobber",
         "Frobb your files in a most delightful, nobbly way",
@@ -189,6 +192,7 @@ TEST(CLI_ToolContractJsonPrinter, prints_expected_output_with_explicit_nproc)
         { "delta", "Frobbing delta" }
     });
     tcTask.NumProcessors(4);
+    // clang-format on
 
     ToolContract::Config tcConfig(tcTask);
     i.EnableToolContract(tcConfig);
@@ -204,12 +208,14 @@ TEST(CLI_ToolContractJsonPrinter, prints_expected_output_with_explicit_nproc)
 
 TEST(CLI_ToolContractJsonPrinter, prints_expected_output_with_max_nproc)
 {
-    const string expectedText = ToolContractJsonPrinterTests::MakeToolContractText("\"$max_nproc\"");
+    const string expectedText =
+        ToolContractJsonPrinterTests::MakeToolContractText("\"$max_nproc\"");
 
     // --------------------------------------------
     // setup interface & tool contract config
     // --------------------------------------------
 
+    // clang-format off
     Interface i {
         "frobber",
         "Frobb your files in a most delightful, nobbly way",
@@ -240,6 +246,7 @@ TEST(CLI_ToolContractJsonPrinter, prints_expected_output_with_max_nproc)
         { "delta", "Frobbing delta" }
     });
     tcTask.NumProcessors(Task::MAX_NPROC);
+    // clang-format on
 
     ToolContract::Config tcConfig(tcTask);
     i.EnableToolContract(tcConfig);

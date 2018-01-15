@@ -1,7 +1,7 @@
 
 
-#include <pbcopper/utility/Stopwatch.h>
 #include <gtest/gtest.h>
+#include <pbcopper/utility/Stopwatch.h>
 #include <thread>
 
 using namespace PacBio;
@@ -26,7 +26,7 @@ TEST(Utility_Stopwatch, determines_elapsed_time_in_seconds)
     Stopwatch s;
     std::this_thread::sleep_for(std::chrono::milliseconds(3));
     auto elapsed = s.ElapsedSeconds();
-    ASSERT_FLOAT_EQ(3/1000, elapsed);
+    ASSERT_FLOAT_EQ(3 / 1000, elapsed);
 }
 
 TEST(Utility_Stopwatch, determines_elapsed_time_in_user_precision)

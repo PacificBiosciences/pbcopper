@@ -60,7 +60,6 @@ namespace ToolContract {
 class Task
 {
 public:
-
     /// Used to indicate that the maximum number of available processors, as
     /// determined by the tool contract resolving system, should be used for
     /// this task.
@@ -109,7 +108,6 @@ public:
     /// \return
     ///
     uint16_t NumProcessors(void) const;
-
 
     ///
     /// \brief TaskId
@@ -280,7 +278,6 @@ public:
     /// \}
 
 private:
-
     // attributes
     std::string id_;
     std::string description_;
@@ -292,19 +289,19 @@ private:
     std::map<std::string, std::string> optionDisplayNames_;
 
     // files & resources
-    std::vector<InputFileType>  inputFileTypes_;
+    std::vector<InputFileType> inputFileTypes_;
     std::vector<OutputFileType> outputFileTypes_;
-    std::vector<ResourceType>   resourceTypes_;
+    std::vector<ResourceType> resourceTypes_;
 
     // file -> option mappings
     std::map<size_t, std::string> inputFilesToOptions_;
     std::map<size_t, std::string> outputFilesToOptions_;
 };
 
-} // namespace ToolContract
-} // namespace CLI
-} // namespace PacBio
+}  // namespace ToolContract
+}  // namespace CLI
+}  // namespace PacBio
 
 #include <pbcopper/cli/toolcontract/internal/Task-inl.h>
 
-#endif // PBCOPPER_CLI_TOOLCONTRACT_TASK_H
+#endif  // PBCOPPER_CLI_TOOLCONTRACT_TASK_H

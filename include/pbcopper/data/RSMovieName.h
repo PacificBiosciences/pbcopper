@@ -63,10 +63,8 @@ public:
     explicit RSMovieName(std::string&& name);
 
     // create MovieName from name parts
-    RSMovieName(const std::string& runStartTime,
-                const std::string& instrumentSerialNumber,
-                const std::string& smrtCellBarcode,
-                const std::string& setNumber,
+    RSMovieName(const std::string& runStartTime, const std::string& instrumentSerialNumber,
+                const std::string& smrtCellBarcode, const std::string& setNumber,
                 const std::string& partNumber);
 
     RSMovieName(void);
@@ -112,7 +110,6 @@ private:
 /// \name Related Non-members
 /// \{
 
-
 // comparison operators
 inline bool operator==(const RSMovieName& lhs, const RSMovieName& rhs);
 inline bool operator!=(const RSMovieName& lhs, const RSMovieName& rhs);
@@ -124,9 +121,9 @@ inline std::istream& operator>>(std::istream& is, RSMovieName& movieName);
 
 /// \}
 
-} // namespace Data
-} // namespace PacBio
+}  // namespace Data
+}  // namespace PacBio
 
 #include <pbcopper/data/internal/RSMovieName-inl.h>
 
-#endif // PBCOPPER_DATA_RSMOVIENAME_H
+#endif  // PBCOPPER_DATA_RSMOVIENAME_H

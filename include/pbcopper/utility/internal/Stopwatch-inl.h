@@ -43,12 +43,9 @@
 namespace PacBio {
 namespace Utility {
 
-inline Stopwatch::Stopwatch(void)
-{
-    Reset();
-}
+inline Stopwatch::Stopwatch(void) { Reset(); }
 
-template<typename TimeUnit>
+template <typename TimeUnit>
 float Stopwatch::Elapsed(void) const
 {
     const auto now = std::chrono::steady_clock::now();
@@ -60,17 +57,11 @@ inline float Stopwatch::ElapsedMilliseconds(void) const
     return Elapsed<std::chrono::milliseconds>();
 }
 
-inline float Stopwatch::ElapsedSeconds(void) const
-{
-    return Elapsed<std::chrono::seconds>();
-}
+inline float Stopwatch::ElapsedSeconds(void) const { return Elapsed<std::chrono::seconds>(); }
 
-void Stopwatch::Reset(void)
-{
-    start_ = std::chrono::steady_clock::now();
-}
+void Stopwatch::Reset(void) { start_ = std::chrono::steady_clock::now(); }
 
-} // namespace Utility
-} // namespace PacBio
+}  // namespace Utility
+}  // namespace PacBio
 
-#endif // PBCOPPER_UTILITY_STOPWATCH_INL_H
+#endif  // PBCOPPER_UTILITY_STOPWATCH_INL_H

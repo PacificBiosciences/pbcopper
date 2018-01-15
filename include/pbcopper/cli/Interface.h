@@ -51,7 +51,9 @@
 namespace PacBio {
 namespace CLI {
 
-namespace internal { class InterfacePrivate; }
+namespace internal {
+class InterfacePrivate;
+}
 
 ///
 /// \brief The Interface class
@@ -68,8 +70,7 @@ public:
     /// \param appDescription
     /// \param appVersion
     ///
-    Interface(const std::string& appName,
-              const std::string& appDescription = std::string(),
+    Interface(const std::string& appName, const std::string& appDescription = std::string(),
               const std::string& appVersion = std::string());
 
     ///
@@ -278,8 +279,7 @@ public:
     /// \param option
     /// \return
     ///
-    Interface& AddGroup(const std::string& name,
-                        const std::vector<Option>& option);
+    Interface& AddGroup(const std::string& name, const std::vector<Option>& option);
 
     ///
     /// \brief AddOption
@@ -350,7 +350,7 @@ private:
     std::unique_ptr<internal::InterfacePrivate> d_;
 };
 
-} // namespace CLI
-} // namespace PacBio
+}  // namespace CLI
+}  // namespace PacBio
 
-#endif // PBCOPPER_CLI_INTERFACE_H
+#endif  // PBCOPPER_CLI_INTERFACE_H

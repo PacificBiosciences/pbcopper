@@ -1,7 +1,7 @@
 #include <pbcopper/cli/HelpPrinter.h>
 
-#include <pbcopper/cli/Interface.h>
 #include <gtest/gtest.h>
+#include <pbcopper/cli/Interface.h>
 #include <vector>
 using namespace PacBio;
 using namespace PacBio::CLI;
@@ -9,6 +9,7 @@ using namespace std;
 
 TEST(CLI_HelpPrinter, prints_expected_help_output)
 {
+    // clang-format off
     Interface i {
         "frobber",
         "Frobb your files in a most delightful, nobbly way",
@@ -58,6 +59,7 @@ TEST(CLI_HelpPrinter, prints_expected_help_output)
         "  extras           Extra stuff to pass in here, optionally.\n"
         "\n"
     };
+    // clang-format on
 
     stringstream s;
     HelpPrinter::Print(i, s);
@@ -66,6 +68,7 @@ TEST(CLI_HelpPrinter, prints_expected_help_output)
 
 TEST(CLI_HelpPrinter, prints_expected_option_groups)
 {
+    // clang-format off
     Interface i {
         "frobber",
         "Frobb your files in a most delightful, nobbly way",
@@ -119,9 +122,9 @@ TEST(CLI_HelpPrinter, prints_expected_option_groups)
         "  extras           Extra stuff to pass in here, optionally.\n"
         "\n"
     };
+    // clang-format on
 
     stringstream s;
     HelpPrinter::Print(i, s);
     EXPECT_EQ(expectedText, s.str());
 }
-

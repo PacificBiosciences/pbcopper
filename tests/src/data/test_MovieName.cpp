@@ -1,6 +1,6 @@
 
-#include <pbcopper/data/MovieName.h>
 #include <gtest/gtest.h>
+#include <pbcopper/data/MovieName.h>
 #include <sstream>
 using namespace PacBio;
 using namespace PacBio::Data;
@@ -8,17 +8,13 @@ using namespace std;
 
 namespace MovieNameTests {
 
-auto makeMovieName = [](void)
-{
-    return MovieName{ "m54001_160623_195125" };
-};
+auto makeMovieName = [](void) { return MovieName{"m54001_160623_195125"}; };
 
-} // namespace MovieNameTests
+}  // namespace MovieNameTests
 
 TEST(Data_MovieName, construct_from_lvalue_string)
 {
-    EXPECT_NO_THROW(
-    {
+    EXPECT_NO_THROW({
         const string input = "m54001_160623_195125";
         const MovieName m(input);
         EXPECT_EQ("160623_195125", m.RunStartTime());
@@ -28,8 +24,7 @@ TEST(Data_MovieName, construct_from_lvalue_string)
 
 TEST(Data_MovieName, construct_from_rvalue_string)
 {
-    EXPECT_NO_THROW(
-    {
+    EXPECT_NO_THROW({
         const MovieName m("m54001_160623_195125");
         EXPECT_EQ("160623_195125", m.RunStartTime());
         EXPECT_EQ("54001", m.InstrumentName());
@@ -38,8 +33,7 @@ TEST(Data_MovieName, construct_from_rvalue_string)
 
 TEST(Data_MovieName, construct_from_name_parts)
 {
-    EXPECT_NO_THROW(
-    {
+    EXPECT_NO_THROW({
         const MovieName m("54001", "160623_195125");
         EXPECT_EQ("160623_195125", m.RunStartTime());
         EXPECT_EQ("54001", m.InstrumentName());

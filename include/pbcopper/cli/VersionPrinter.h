@@ -58,7 +58,7 @@ public:
     static void Print(const Interface& interface, std::ostream& out);
 };
 
-} // namespace CLI
-} // namespace PacBio
+}  // namespace CLI
+}  // namespace PacBio
 
-#endif // PBCOPPER_CLI_VERSIONPRINTER_H
+#endif  // PBCOPPER_CLI_VERSIONPRINTER_H

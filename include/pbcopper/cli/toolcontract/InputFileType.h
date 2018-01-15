@@ -49,9 +49,7 @@ namespace ToolContract {
 class InputFileType
 {
 public:
-    InputFileType(const std::string& id,
-                  const std::string& title,
-                  const std::string& description,
+    InputFileType(const std::string& id, const std::string& title, const std::string& description,
                   const std::string& type);
 
     InputFileType(const InputFileType& other) = default;
@@ -70,10 +68,10 @@ private:
     std::string type_;
 };
 
-} // namespace ToolContract
-} // namespace CLI
-} // namespace PacBio
+}  // namespace ToolContract
+}  // namespace CLI
+}  // namespace PacBio
 
 #include <pbcopper/cli/toolcontract/internal/InputFileType-inl.h>
 
-#endif // PBCOPPER_CLI_TOOLCONTRACT_INPUTFILETYPE_H
+#endif  // PBCOPPER_CLI_TOOLCONTRACT_INPUTFILETYPE_H

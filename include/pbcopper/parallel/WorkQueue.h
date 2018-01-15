@@ -38,8 +38,8 @@
 #ifndef PBCOPPER_PARALLEL_WORKQUEUE_H
 #define PBCOPPER_PARALLEL_WORKQUEUE_H
 
-#include <cstddef>
 #include <condition_variable>
+#include <cstddef>
 #include <deque>
 #include <exception>
 #include <future>
@@ -193,4 +193,4 @@ private:
 }  // namespace Parallel
 }  // namespace PacBio
 
-#endif // PBCOPPER_PARALLEL_WORKQUEUE_H
+#endif  // PBCOPPER_PARALLEL_WORKQUEUE_H

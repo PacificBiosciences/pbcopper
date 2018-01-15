@@ -38,8 +38,8 @@
 #ifndef PBCOPPER_PARALLEL_FIREANDFORGET_H
 #define PBCOPPER_PARALLEL_FIREANDFORGET_H
 
-#include <cstddef>
 #include <condition_variable>
+#include <cstddef>
 #include <exception>
 #include <future>
 #include <mutex>
@@ -156,4 +156,4 @@ private:
 }  // namespace Parallel
 }  // namespace PacBio
 
-#endif // PBCOPPER_PARALLEL_FIREANDFORGET_H
+#endif  // PBCOPPER_PARALLEL_FIREANDFORGET_H

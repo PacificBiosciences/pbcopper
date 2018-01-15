@@ -50,17 +50,12 @@
 namespace PacBio {
 namespace CLI {
 
-int Run(int argc, char *argv[],
-        const Interface& interface,
-        const ResultsHandler& handler)
+int Run(int argc, char* argv[], const Interface& interface, const ResultsHandler& handler)
 {
-    return Run(std::vector<std::string>{argv, argv + argc},
-               interface,
-               handler);
+    return Run(std::vector<std::string>{argv, argv + argc}, interface, handler);
 }
 
-int Run(const std::vector<std::string>& args,
-        const Interface& interface,
+int Run(const std::vector<std::string>& args, const Interface& interface,
         const ResultsHandler& handler)
 {
     // parse command line args
@@ -125,5 +120,5 @@ void PrintVersion(const Interface& interface, std::ostream& out)
     VersionPrinter::Print(interface, out);
 }
 
-} // namespace CLI
-} // namespace PacBio
+}  // namespace CLI
+}  // namespace PacBio

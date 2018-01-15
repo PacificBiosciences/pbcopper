@@ -1,5 +1,5 @@
-#include <pbcopper/cli/toolcontract/ResolvedToolContract.h>
 #include <gtest/gtest.h>
+#include <pbcopper/cli/toolcontract/ResolvedToolContract.h>
 
 #include <sstream>
 #include <string>
@@ -36,6 +36,8 @@ TEST(CLI_ResolvedToolContract, read_basic_RTC)
     stringstream input;
     input << text;
 
+    // clang-format off
+
     Interface interface {
         "frobber",
         "Frobb your files in a most delightful, nobbly way",
@@ -50,6 +52,8 @@ TEST(CLI_ResolvedToolContract, read_basic_RTC)
     tcTask.Options({
         { "max_nlines", "Max Lines" }
     });
+
+    // clang-format off
 
     ToolContract::Config tcConfig(tcTask);
     interface.EnableToolContract(tcConfig);
@@ -99,6 +103,7 @@ TEST(CLI_ResolvedToolContract, map_files_to_options)
     stringstream input;
     input << text;
 
+    // clang-format off
     Interface interface {
         "frobber",
         "Frobb your files in a most delightful, nobbly way",
@@ -134,6 +139,7 @@ TEST(CLI_ResolvedToolContract, map_files_to_options)
         { 2, "report_file" },
         { 3, "json_file" },
     });
+    // clang-format on
 
     ToolContract::Config tcConfig(tcTask);
     interface.EnableToolContract(tcConfig);
@@ -141,18 +147,18 @@ TEST(CLI_ResolvedToolContract, map_files_to_options)
     ToolContract::ResolvedToolContract rtc(interface);
     const Results results = rtc.Parse(input);
 
-    const int minLength     = results["min_length"];
-    const int maxLength     = results["max_length"];
+    const int minLength = results["min_length"];
+    const int maxLength = results["max_length"];
     const string outputFile = results["output_file"];
     const string reportFile = results["report_file"];
-    const string junkFile   = results["junk_file"];
-    const string jsonFile   = results["json_file"];
+    const string junkFile = results["junk_file"];
+    const string jsonFile = results["json_file"];
 
     const auto positionalArgs = results.PositionalArguments();
     EXPECT_EQ(1, positionalArgs.size());
     const string inputFile = positionalArgs.at(0);
 
-    EXPECT_EQ(25,  minLength);
+    EXPECT_EQ(25, minLength);
     EXPECT_EQ(500, maxLength);
     EXPECT_EQ("/path/to/output_file.txt", outputFile);
     EXPECT_EQ("/path/to/report_file.txt", reportFile);

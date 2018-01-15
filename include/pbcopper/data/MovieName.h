@@ -62,8 +62,7 @@ public:
     explicit MovieName(std::string&& name);
 
     // create MovieName from name parts
-    MovieName(const std::string& instrumentName,
-              const std::string& runStartTime);
+    MovieName(const std::string& instrumentName, const std::string& runStartTime);
 
     MovieName(void);
     MovieName(const MovieName& other);
@@ -104,7 +103,6 @@ private:
 /// \name Related Non-members
 /// \{
 
-
 // comparison operators
 inline bool operator==(const MovieName& lhs, const MovieName& rhs);
 inline bool operator!=(const MovieName& lhs, const MovieName& rhs);
@@ -116,9 +114,9 @@ inline std::istream& operator>>(std::istream& is, MovieName& movieName);
 
 /// \}
 
-} // namespace Data
-} // namespace PacBio
+}  // namespace Data
+}  // namespace PacBio
 
 #include <pbcopper/data/internal/MovieName-inl.h>
 
-#endif // PBCOPPER_DATA_MOVIENAME_H
+#endif  // PBCOPPER_DATA_MOVIENAME_H

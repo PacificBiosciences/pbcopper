@@ -42,6 +42,7 @@
 #ifndef PBCOPPER_PBCOPPERCONFIG_H
 #define PBCOPPER_PBCOPPERCONFIG_H
 
+// clang-format off
 #if defined _WIN32 || defined __CYGWIN__
 #  ifdef PBCOPPER_BUILDING_LIBRARY
 #    ifdef __GNUC__
@@ -66,5 +67,6 @@
 #    define PBCOPPER_PRIVATE_API
 #  endif
 #endif
+// clang-format on
 
-#endif // PBCOPPER_PBCOPPERCONFIG_H
+#endif  // PBCOPPER_PBCOPPERCONFIG_H

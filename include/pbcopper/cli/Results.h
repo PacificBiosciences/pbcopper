@@ -46,13 +46,15 @@
 #include <pbcopper/PbcopperConfig.h>
 #include <pbcopper/cli/Interface.h>
 #include <pbcopper/cli/Option.h>
-#include <pbcopper/logging/Logging.h>
 #include <pbcopper/json/JSON.h>
+#include <pbcopper/logging/Logging.h>
 
 namespace PacBio {
 namespace CLI {
 
-namespace internal { class ResultsPrivate; }
+namespace internal {
+class ResultsPrivate;
+}
 
 ///
 /// \brief The Results class
@@ -72,8 +74,7 @@ public:
     ///
     Results(const Interface& interface);
 
-    Results(const Interface& interface,
-            const std::vector<std::string>& inputCommandLine);
+    Results(const Interface& interface, const std::vector<std::string>& inputCommandLine);
 
     Results(const Results& other);
     Results(Results&& other);
@@ -136,7 +137,7 @@ public:
     ///
     std::vector<std::string> PositionalArguments(void) const;
 
-//    std::string PositionalArgument(const std::string& posArgName) const;
+    //    std::string PositionalArgument(const std::string& posArgName) const;
 
     ///
     /// \brief operator []
@@ -212,8 +213,7 @@ public:
     /// \param optionValue
     /// \return
     ///
-    Results& RegisterOptionValue(const std::string& optionId,
-                                 const JSON::Json& optionValue);
+    Results& RegisterOptionValue(const std::string& optionId, const JSON::Json& optionValue);
 
     ///
     /// \brief RegisterOptionValueString
@@ -225,8 +225,7 @@ public:
     /// \param optionValue
     /// \return
     ///
-    Results& RegisterOptionValueString(const std::string& optionId,
-                                       const std::string& optionValue);
+    Results& RegisterOptionValueString(const std::string& optionId, const std::string& optionValue);
 
     ///
     /// \brief SetFromRTC
@@ -245,7 +244,7 @@ private:
     std::unique_ptr<internal::ResultsPrivate> d_;
 };
 
-} // namespace CLI
-} // namespace PacBio
+}  // namespace CLI
+}  // namespace PacBio
 
-#endif // PBCOPPER_CLI_RESULTS_H
+#endif  // PBCOPPER_CLI_RESULTS_H

@@ -38,11 +38,11 @@
 #ifndef PBCOPPER_UTILITY_FILEUTILS_INL_H
 #define PBCOPPER_UTILITY_FILEUTILS_INL_H
 
+#include <sys/stat.h>
 #include <climits>
 #include <cstddef>
 #include <cstdlib>
 #include <fstream>
-#include <sys/stat.h>
 
 #include <boost/algorithm/string.hpp>
 
@@ -95,8 +95,7 @@ inline std::string FilePrefix(const std::string& path)
     return suffix;
 }
 
-} // namespace Utility
-} // namespace PacBio
+}  // namespace Utility
+}  // namespace PacBio
 
-
-#endif // PBCOPPER_UTILITY_FILEUTILS_INL_H
+#endif  // PBCOPPER_UTILITY_FILEUTILS_INL_H

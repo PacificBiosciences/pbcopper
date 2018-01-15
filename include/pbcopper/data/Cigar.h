@@ -106,7 +106,7 @@ std::istream& operator>>(std::istream& in, Cigar& cigar);
 ///
 std::ostream& operator<<(std::ostream& out, const Cigar& cigar);
 
-} // namespace Data
-} // namespace PacBio
+}  // namespace Data
+}  // namespace PacBio
 
-#endif // PBCOPPER_DATA_CIGAR_H
+#endif  // PBCOPPER_DATA_CIGAR_H

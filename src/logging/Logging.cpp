@@ -53,34 +53,42 @@ const char* LogLevelRepr(LogLevel level)
 {
     // by specification these are all of length 10
     switch (level) {
-        case LogLevel::TRACE:    return "TRACE     ";
-        case LogLevel::DEBUG:    return "DEBUG     ";
-        case LogLevel::INFO:     return "INFO      ";
-        case LogLevel::NOTICE:   return "NOTICE    ";
-        case LogLevel::WARN:     return "WARN      ";
-        case LogLevel::ERROR:    return "ERROR     ";
-        case LogLevel::CRITICAL: return "CRITICAL  ";
-        case LogLevel::FATAL:    return "FATAL     ";
-        default:                 return "OTHER     ";
+        case LogLevel::TRACE:
+            return "TRACE     ";
+        case LogLevel::DEBUG:
+            return "DEBUG     ";
+        case LogLevel::INFO:
+            return "INFO      ";
+        case LogLevel::NOTICE:
+            return "NOTICE    ";
+        case LogLevel::WARN:
+            return "WARN      ";
+        case LogLevel::ERROR:
+            return "ERROR     ";
+        case LogLevel::CRITICAL:
+            return "CRITICAL  ";
+        case LogLevel::FATAL:
+            return "FATAL     ";
+        default:
+            return "OTHER     ";
     }
 }
 
 LogLevel LogLevelFromString(const std::string& level)
 {
-    if (level == "TRACE")    return LogLevel::TRACE;
-    if (level == "DEBUG")    return LogLevel::DEBUG;
-    if (level == "INFO")     return LogLevel::INFO;
-    if (level == "NOTICE")   return LogLevel::NOTICE;
-    if (level == "ERROR")    return LogLevel::ERROR;
+    if (level == "TRACE") return LogLevel::TRACE;
+    if (level == "DEBUG") return LogLevel::DEBUG;
+    if (level == "INFO") return LogLevel::INFO;
+    if (level == "NOTICE") return LogLevel::NOTICE;
+    if (level == "ERROR") return LogLevel::ERROR;
     if (level == "CRITICAL") return LogLevel::CRITICAL;
-    if (level == "FATAL")    return LogLevel::FATAL;
-    if (level == "WARN" || level == "WARNING")
-        return LogLevel::WARN;
+    if (level == "FATAL") return LogLevel::FATAL;
+    if (level == "WARN" || level == "WARNING") return LogLevel::WARN;
 
     throw std::invalid_argument("invalid log level");
 }
 
-} // namespace internal
+}  // namespace internal
 
 void InstallSignalHandlers(Logger& logger)
 {
@@ -140,14 +148,11 @@ void InstallSignalHandlers(Logger& logger)
     });
 }
 
-LogLevel::LogLevel(const std::string& value)
-    : value_{ internal::LogLevelFromString(value) }
-{ }
+LogLevel::LogLevel(const std::string& value) : value_{internal::LogLevelFromString(value)} {}
 
 Logger::~Logger(void)
 {
-    if (!writer_.joinable())
-        return;
+    if (!writer_.joinable()) return;
 
     // place a terminal sentinel for MessageWriter to know it's done
     {
@@ -169,8 +174,7 @@ Logger::~Logger(void)
 
 Logger& Logger::operator<<(std::unique_ptr<LogLevelStream>&& ptr)
 {
-    if (!writer_.joinable())
-        throw std::runtime_error("this logger is dead!");
+    if (!writer_.joinable()) throw std::runtime_error("this logger is dead!");
     {
         std::lock_guard<std::mutex> g(m_);
         queue_.emplace(std::forward<std::unique_ptr<LogLevelStream>>(ptr));
@@ -195,8 +199,7 @@ void Logger::MessageWriter(void)
         {
             std::unique_lock<std::mutex> lk(m_);
             pushed_.wait(lk, [&ptr, this]() {
-                if (queue_.empty())
-                    return false;
+                if (queue_.empty()) return false;
                 ptr = std::move(queue_.front());
                 queue_.pop();
                 return true;
@@ -221,11 +224,8 @@ void Logger::MessageWriter(void)
     }
 }
 
-LogMessage::LogMessage(const char* file,
-                              const char* function,
-                              unsigned int line,
-                              const LogLevel level,
-                              Logger& logger)
+LogMessage::LogMessage(const char* file, const char* function, unsigned int line,
+                       const LogLevel level, Logger& logger)
     : logger_(logger)
 {
     using std::chrono::duration_cast;
@@ -233,17 +233,15 @@ LogMessage::LogMessage(const char* file,
     using std::chrono::seconds;
     using std::chrono::system_clock;
 
-    if (!logger_.Handles(level))
-        return;
+    if (!logger_.Handles(level)) return;
 
-    ptr_.reset(new Logger::LogLevelStream(std::piecewise_construct,
-                                          std::forward_as_tuple(level),
+    ptr_.reset(new Logger::LogLevelStream(std::piecewise_construct, std::forward_as_tuple(level),
                                           std::forward_as_tuple()));
 
     static const char* delim = " -|- ";
 
     // get the time, separated into seconds and milliseconds
-    const auto now  = system_clock::now();
+    const auto now = system_clock::now();
     const auto secs = duration_cast<seconds>(now.time_since_epoch());
     const auto time = system_clock::to_time_t(system_clock::time_point(secs));
     const auto msec = duration_cast<milliseconds>(now.time_since_epoch() - secs).count();
@@ -254,9 +252,8 @@ LogMessage::LogMessage(const char* file,
     struct tm gmTime;
     std::strftime(buf, 20, "%Y%m%d %T.", gmtime_r(&time, &gmTime));
 
-    std::get<1>(*ptr_) << ">|> " << buf << std::setfill('0') << std::setw(3)
-                       << std::to_string(msec) << delim << internal::LogLevelRepr(level) << delim
-                       << function
+    std::get<1>(*ptr_) << ">|> " << buf << std::setfill('0') << std::setw(3) << std::to_string(msec)
+                       << delim << internal::LogLevelRepr(level) << delim << function
 #ifndef NDEBUG
                        << " at " << file << ':' << line
 #endif
@@ -269,5 +266,5 @@ LogMessage::LogMessage(const char* file,
 #endif
 }
 
-} // namespace Logging
-} // namespace PacBio
+}  // namespace Logging
+}  // namespace PacBio

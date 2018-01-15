@@ -55,7 +55,7 @@ struct PositionalArg
     std::string syntax_;
 };
 
-} // namespace CLI
-} // namespace PacBio
+}  // namespace CLI
+}  // namespace PacBio
 
-#endif // PBCOPPER_CLI_POSITIONALARG_H
+#endif  // PBCOPPER_CLI_POSITIONALARG_H

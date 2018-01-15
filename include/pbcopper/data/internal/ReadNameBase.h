@@ -48,7 +48,7 @@ namespace PacBio {
 namespace Data {
 namespace internal {
 
-template<typename MovieNameType>
+template <typename MovieNameType>
 class ReadNameBase
 {
 public:
@@ -60,18 +60,13 @@ public:
     explicit ReadNameBase(std::string&& name);
 
     // create ReadName from name parts
-    ReadNameBase(const MovieNameType& movieName,
-                 const PacBio::Data::Zmw& zmw,
+    ReadNameBase(const MovieNameType& movieName, const PacBio::Data::Zmw& zmw,
                  const Interval<Position>& queryInterval);
 
-    ReadNameBase(const MovieNameType& movieName,
-                 const PacBio::Data::Zmw& zmw,
-                 const Position& queryStart,
-                 const Position& queryEnd);
+    ReadNameBase(const MovieNameType& movieName, const PacBio::Data::Zmw& zmw,
+                 const Position& queryStart, const Position& queryEnd);
 
-    ReadNameBase(const MovieNameType& movieName,
-                 const PacBio::Data::Zmw& zmw,
-                 const CCSTag ccs);
+    ReadNameBase(const MovieNameType& movieName, const PacBio::Data::Zmw& zmw, const CCSTag ccs);
 
     ReadNameBase(void);
     ReadNameBase(const ReadNameBase<MovieNameType>& other) = default;
@@ -117,23 +112,21 @@ private:
 };
 
 // add'l comparison operators
-template<typename MovieNameType>
+template <typename MovieNameType>
 inline bool operator!=(const ReadNameBase<MovieNameType>& lhs,
                        const ReadNameBase<MovieNameType>& rhs);
 
 // I/O
-template<typename MovieNameType>
-inline std::ostream& operator<<(std::ostream& os,
-                                const ReadNameBase<MovieNameType>& readName);
+template <typename MovieNameType>
+inline std::ostream& operator<<(std::ostream& os, const ReadNameBase<MovieNameType>& readName);
 
-template<typename MovieNameType>
-inline std::istream& operator>>(std::istream& is,
-                                ReadNameBase<MovieNameType>& readName);
+template <typename MovieNameType>
+inline std::istream& operator>>(std::istream& is, ReadNameBase<MovieNameType>& readName);
 
-} // namespace internal
-} // namespace Data
-} // namespace PacBio
+}  // namespace internal
+}  // namespace Data
+}  // namespace PacBio
 
 #include <pbcopper/data/internal/ReadNameBase-inl.h>
 
-#endif // PBCOPPER_DATA_READNAMEBASE_H
+#endif  // PBCOPPER_DATA_READNAMEBASE_H

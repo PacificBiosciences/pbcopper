@@ -52,18 +52,17 @@ public:
     const Interface interface_;
 
 public:
-    RtcPrivate(const Interface& interface)
-        : interface_(interface)
-    { }
+    RtcPrivate(const Interface& interface) : interface_(interface) {}
 };
 
-} // namespace internal
+}  // namespace internal
 
 ResolvedToolContract::ResolvedToolContract(const Interface& interface)
-    : d_(new internal::RtcPrivate{ interface })
-{ }
+    : d_(new internal::RtcPrivate{interface})
+{
+}
 
-ResolvedToolContract::~ResolvedToolContract(void) { }
+ResolvedToolContract::~ResolvedToolContract(void) {}
 
 Results ResolvedToolContract::Parse(std::istream& in)
 {
@@ -72,7 +71,7 @@ Results ResolvedToolContract::Parse(std::istream& in)
     const auto& interface = d_->interface_;
     const auto& task = interface.ToolContract().Task();
 
-    Results results{ d_->interface_ };
+    Results results{d_->interface_};
     results.SetFromRTC(true);
 
     Json root(in);
@@ -87,7 +86,7 @@ Results ResolvedToolContract::Parse(std::istream& in)
 
         const auto idFields = PacBio::Utility::Split(fullId, '.');
         if (idFields.size() != 3)
-            throw std::runtime_error("PacBio::CLI - unexpected option ID format: "+fullId);
+            throw std::runtime_error("PacBio::CLI - unexpected option ID format: " + fullId);
         const auto optionId = idFields.at(2);
 
         results.RegisterOptionValue(optionId, value);
@@ -135,6 +134,6 @@ Results ResolvedToolContract::Parse(std::istream& in)
     return results;
 }
 
-} // namespace ToolContract
-} // namespace CLI
-} // namespace PacBio
+}  // namespace ToolContract
+}  // namespace CLI
+}  // namespace PacBio

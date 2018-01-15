@@ -54,8 +54,7 @@ static Option RegisteredOption(const Interface& interface, const std::string& op
 {
     const auto registeredOptions = interface.RegisteredOptions();
     for (const Option& opt : registeredOptions) {
-        if (opt.Id() == optionId)
-            return opt;
+        if (opt.Id() == optionId) return opt;
     }
     throw std::runtime_error("PacBio::CLI - could not find option with id: " + optionId);
 }
@@ -63,10 +62,7 @@ static Option RegisteredOption(const Interface& interface, const std::string& op
 namespace ToolContract {
 namespace internal {
 
-static Json currentSchemaVersion(void)
-{
-    return Json("2.0.0");
-}
+static Json currentSchemaVersion(void) { return Json("2.0.0"); }
 
 static Json makeDriverJson(const Interface& interface)
 {
@@ -78,7 +74,7 @@ static Json makeDriverJson(const Interface& interface)
     const auto env = driver.Env();
     auto envIter = env.cbegin();
     const auto envEnd = env.cend();
-    for ( ; envIter != envEnd; ++envIter) {
+    for (; envIter != envEnd; ++envIter) {
         const auto& key = envIter->first;
         const auto& value = envIter->second;
         envJson[key] = value;
@@ -86,13 +82,11 @@ static Json makeDriverJson(const Interface& interface)
     driverJson["env"] = envJson;
 
     auto exe = driver.Exe();
-    if (exe.empty())
-        exe = interface.ApplicationName() + " --resolved-tool-contract";
+    if (exe.empty()) exe = interface.ApplicationName() + " --resolved-tool-contract";
     driverJson["exe"] = exe;
 
     auto serialization = driver.Serialization();
-    if (serialization.empty())
-        serialization = "json";
+    if (serialization.empty()) serialization = "json";
     driverJson["serialization"] = serialization;
 
     return driverJson;
@@ -106,10 +100,10 @@ static Json makeInputTypesJson(const Interface& interface)
     const auto& inputFileTypes = task.InputFileTypes();
     for (const InputFileType& file : inputFileTypes) {
         Json entry = Json::object();
-        entry["title"]        = file.Title();
-        entry["id"]           = file.Id();
+        entry["title"] = file.Title();
+        entry["id"] = file.Id();
         entry["file_type_id"] = file.Type();
-        entry["description"]  = file.Description();
+        entry["description"] = file.Description();
         inputTypesJson.push_back(entry);
     }
 
@@ -120,9 +114,9 @@ static Json makeNproc(const ToolContract::Task& task)
 {
     const auto numProcessors = task.NumProcessors();
     if (numProcessors == ToolContract::Task::MAX_NPROC)
-        return Json("$max_nproc" );
+        return Json("$max_nproc");
     else
-        return Json( numProcessors );
+        return Json(numProcessors);
 }
 
 static Json makeOutputTypesJson(const Interface& interface)
@@ -133,11 +127,11 @@ static Json makeOutputTypesJson(const Interface& interface)
     const auto& outputFileTypes = task.OutputFileTypes();
     for (const OutputFileType& file : outputFileTypes) {
         Json entry = Json::object();
-        entry["title"]        = file.Title();
-        entry["id"]           = file.Id();
+        entry["title"] = file.Title();
+        entry["id"] = file.Id();
         entry["file_type_id"] = file.Type();
         entry["default_name"] = file.DefaultName();
-        entry["description"]  = file.Description();
+        entry["description"] = file.Description();
         outputTypesJson.push_back(entry);
     }
 
@@ -146,19 +140,16 @@ static Json makeOutputTypesJson(const Interface& interface)
 
 static Json makeResourceTypesJson(const ToolContract::Task& task)
 {
-    const std::unordered_map<ResourceType, std::string, Utility::EnumClassHash> lookup =
-    {
-        { ResourceType::LOG_FILE,   "$logfile" },
-        { ResourceType::TMP_FILE,   "$tmpfile" },
-        { ResourceType::TMP_DIR,    "$tmpdir" },
-        { ResourceType::OUTPUT_DIR, "$outputdir" }
-    };
+    const std::unordered_map<ResourceType, std::string, Utility::EnumClassHash> lookup = {
+        {ResourceType::LOG_FILE, "$logfile"},
+        {ResourceType::TMP_FILE, "$tmpfile"},
+        {ResourceType::TMP_DIR, "$tmpdir"},
+        {ResourceType::OUTPUT_DIR, "$outputdir"}};
 
     Json resourceTypesJson = Json::array();
 
     const auto& taskResourceTypes = task.ResourceTypes();
-    for (const auto& t : taskResourceTypes)
-    {
+    for (const auto& t : taskResourceTypes) {
         const auto found = lookup.find(t);
         if (found == lookup.cend())
             throw std::runtime_error("CLI::ToolContract::JsonPrinter - unknown resource type");
@@ -168,8 +159,7 @@ static Json makeResourceTypesJson(const ToolContract::Task& task)
     return resourceTypesJson;
 }
 
-static Json makeSchemaOptionJson(const Interface& interface,
-                                 const std::string& optionPrefix,
+static Json makeSchemaOptionJson(const Interface& interface, const std::string& optionPrefix,
                                  const std::pair<std::string, std::string>& taskOption)
 {
     // format ID/display name
@@ -181,18 +171,17 @@ static Json makeSchemaOptionJson(const Interface& interface,
     const Option registeredOption = RegisteredOption(interface, optionId);
     const JSON::Json& defaultValue = registeredOption.DefaultValue();
     const std::string& description = registeredOption.Description();
-    const std::string& optionType  = registeredOption.TypeId();
+    const std::string& optionType = registeredOption.TypeId();
 
     // populate JSON
     Json schemaOption = Json::object();
-    schemaOption["default"]      = defaultValue;
-    schemaOption["description"]  = description;
-    schemaOption["id"]           = fullOptionId;
-    schemaOption["name"]         = optionDisplayName;
+    schemaOption["default"] = defaultValue;
+    schemaOption["description"] = description;
+    schemaOption["id"] = fullOptionId;
+    schemaOption["name"] = optionDisplayName;
     schemaOption["optionTypeId"] = optionType;
 
-    if (registeredOption.HasChoices())
-        schemaOption["choices"] = registeredOption.Choices();
+    if (registeredOption.HasChoices()) schemaOption["choices"] = registeredOption.Choices();
 
     return schemaOption;
 }
@@ -202,8 +191,8 @@ static Json makeSchemaOptionsJson(const Interface& interface)
     Json schemaOptions = Json::array();
 
     const auto optionPrefix = interface.AlternativeToolContractName().empty()
-                                ? interface.ApplicationName()
-                                : interface.AlternativeToolContractName();
+                                  ? interface.ApplicationName()
+                                  : interface.AlternativeToolContractName();
 
     const auto& task = interface.ToolContract().Task();
     for (const auto& taskOption : task.Options())
@@ -213,11 +202,13 @@ static Json makeSchemaOptionsJson(const Interface& interface)
 
 static std::string makeTaskType(const TaskType& type)
 {
-    switch(type)
-    {
-        case TaskType::STANDARD  : return "pbsmrtpipe.task_types.standard";
-        case TaskType::GATHERED  : return "pbsmrtpipe.task_types.gathered";
-        case TaskType::SCATTERED : return "pbsmrtpipe.task_types.scattered";
+    switch (type) {
+        case TaskType::STANDARD:
+            return "pbsmrtpipe.task_types.standard";
+        case TaskType::GATHERED:
+            return "pbsmrtpipe.task_types.gathered";
+        case TaskType::SCATTERED:
+            return "pbsmrtpipe.task_types.scattered";
         default:
             throw std::runtime_error("CLI::ToolContract::JsonPrinter - unknown task type");
     }
@@ -228,40 +219,37 @@ static Json makeTaskJson(const Interface& interface)
     Json tcJson;
     const auto& task = interface.ToolContract().Task();
 
-    tcJson["_comment"]         = "Created by v" + Utility::LibraryVersionString();
-    tcJson["description"]      = interface.ApplicationDescription();
-    tcJson["name"]             = interface.ApplicationName();
-    tcJson["is_distributed"]   = task.IsDistributed();
+    tcJson["_comment"] = "Created by v" + Utility::LibraryVersionString();
+    tcJson["description"] = interface.ApplicationDescription();
+    tcJson["name"] = interface.ApplicationName();
+    tcJson["is_distributed"] = task.IsDistributed();
     tcJson["tool_contract_id"] = task.TaskId();
 
-    tcJson["nproc"]          = internal::makeNproc(task);
-    tcJson["task_type"]      = internal::makeTaskType(task.Type());
-    tcJson["input_types"]    = internal::makeInputTypesJson(interface);
-    tcJson["output_types"]   = internal::makeOutputTypesJson(interface);
+    tcJson["nproc"] = internal::makeNproc(task);
+    tcJson["task_type"] = internal::makeTaskType(task.Type());
+    tcJson["input_types"] = internal::makeInputTypesJson(interface);
+    tcJson["output_types"] = internal::makeOutputTypesJson(interface);
     tcJson["resource_types"] = internal::makeResourceTypesJson(task);
     tcJson["schema_options"] = internal::makeSchemaOptionsJson(interface);
 
     return tcJson;
 }
 
-} // namespace internal
+}  // namespace internal
 
-
-void JsonPrinter::Print(const Interface& interface,
-                        std::ostream& out,
-                        const int indent)
+void JsonPrinter::Print(const Interface& interface, std::ostream& out, const int indent)
 {
     // build up JSON object from @interface
     Json result;
-    result["driver"]           = internal::makeDriverJson(interface);
-    result["schema_version"]   = internal::currentSchemaVersion();
-    result["tool_contract"]    = internal::makeTaskJson(interface);
+    result["driver"] = internal::makeDriverJson(interface);
+    result["schema_version"] = internal::currentSchemaVersion();
+    result["tool_contract"] = internal::makeTaskJson(interface);
     result["tool_contract_id"] = interface.ToolContract().Task().TaskId();
-    result["version"]          = interface.ApplicationVersion();
+    result["version"] = interface.ApplicationVersion();
 
     out << result.dump(indent);
 }
 
-} // namespace ToolContract
-} // namespace CLI
-} // namespace PacBio
+}  // namespace ToolContract
+}  // namespace CLI
+}  // namespace PacBio

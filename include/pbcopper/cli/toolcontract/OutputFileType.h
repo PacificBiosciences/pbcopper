@@ -49,11 +49,8 @@ namespace ToolContract {
 class OutputFileType
 {
 public:
-    OutputFileType(const std::string& id,
-                   const std::string& title,
-                   const std::string& description,
-                   const std::string& type,
-                   const std::string& defaultName);
+    OutputFileType(const std::string& id, const std::string& title, const std::string& description,
+                   const std::string& type, const std::string& defaultName);
 
     OutputFileType(const OutputFileType& other) = default;
     ~OutputFileType(void) = default;
@@ -73,10 +70,10 @@ private:
     std::string defaultName_;
 };
 
-} // namespace ToolContract
-} // namespace CLI
-} // namespace PacBio
+}  // namespace ToolContract
+}  // namespace CLI
+}  // namespace PacBio
 
 #include <pbcopper/cli/toolcontract/internal/OutputFileType-inl.h>
 
-#endif // PBCOPPER_CLI_TOOLCONTRACT_OUTPUTFILETYPE_H
+#endif  // PBCOPPER_CLI_TOOLCONTRACT_OUTPUTFILETYPE_H

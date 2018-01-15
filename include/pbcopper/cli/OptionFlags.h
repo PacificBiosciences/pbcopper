@@ -48,8 +48,9 @@ namespace CLI {
 ///
 enum OptionFlags
 {
-    DEFAULT        = 0x00  ///< No special configuration desired. Use defaults.
-  , HIDE_FROM_HELP = 0x01  ///< Exclude option from command-line help display.
+    DEFAULT = 0x00  ///< No special configuration desired. Use defaults.
+    ,
+    HIDE_FROM_HELP = 0x01  ///< Exclude option from command-line help display.
 };
 
 ///
@@ -58,11 +59,10 @@ enum OptionFlags
 ///
 constexpr OptionFlags operator|(const OptionFlags lhs, const OptionFlags rhs)
 {
-    return static_cast<OptionFlags>(static_cast<int>(lhs) |
-                                    static_cast<int>(rhs));
+    return static_cast<OptionFlags>(static_cast<int>(lhs) | static_cast<int>(rhs));
 }
 
-} // namespace CLI
-} // namespace PacBio
+}  // namespace CLI
+}  // namespace PacBio
 
-# endif // PBCOPPER_CLI_OPTIONFLAGS_H
+#endif  // PBCOPPER_CLI_OPTIONFLAGS_H

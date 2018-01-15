@@ -45,10 +45,10 @@ namespace Utility {
 
 namespace internal {
 
-typedef std::chrono::steady_clock      CallbackTimerClock;
+typedef std::chrono::steady_clock CallbackTimerClock;
 typedef std::chrono::time_point<CallbackTimerClock> CallbackTimerTimePoint;
-typedef std::chrono::milliseconds      CallbackTimerDuration;
-typedef std::unique_lock<std::mutex>   CallbackTimerMutexLocker;
+typedef std::chrono::milliseconds CallbackTimerDuration;
+typedef std::unique_lock<std::mutex> CallbackTimerMutexLocker;
 
 CallbackTimer::JobId CallbackTimerPrivate::ScheduleImpl(CallbackTimerJob&& item)
 {
@@ -66,14 +66,11 @@ bool CallbackTimerPrivate::Cancel(const CallbackTimer::JobId id)
     auto i = activeJobs.find(id);
     if (i == activeJobs.end())
         return false;
-    else if (i->second.running)
-    {
+    else if (i->second.running) {
         // A callback is in progress for this Instance,
         // so flag it for deletion in the worker
         i->second.running = false;
-    }
-    else
-    {
+    } else {
         queue.erase(std::ref(i->second));
         activeJobs.erase(i);
     }
@@ -88,20 +85,15 @@ bool CallbackTimerPrivate::Cancel(const CallbackTimer::JobId id)
 void CallbackTimerPrivate::Run(void)
 {
     CallbackTimerMutexLocker lock(sync);
-    while (!done)
-    {
-        if (queue.empty())
-        {
+    while (!done) {
+        if (queue.empty()) {
             // Wait (forever) for work
             wakeUp.wait(lock);
-        }
-        else
-        {
+        } else {
             auto firstJob = queue.begin();
             CallbackTimerJob& instance = *firstJob;
             auto now = CallbackTimerClock::now();
-            if (now >= instance.next)
-            {
+            if (now >= instance.next) {
                 queue.erase(firstJob);
 
                 // Mark it as running to handle racing destroy
@@ -112,24 +104,18 @@ void CallbackTimerPrivate::Run(void)
                 instance.handler();
                 lock.lock();
 
-                if (done)
-                {
+                if (done) {
                     break;
-                }
-                else if (!instance.running)
-                {
+                } else if (!instance.running) {
                     // Running was set to false, destroy was called
                     // for this Instance while the callback was in progress
                     // (this thread was not holding the lock during the callback)
                     activeJobs.erase(instance.id);
-                }
-                else
-                {
+                } else {
                     instance.running = false;
 
                     // If it is periodic, schedule a new one
-                    if (instance.period.count() > 0)
-                    {
+                    if (instance.period.count() > 0) {
                         instance.next = instance.next + instance.period;
                         queue.insert(instance);
                     } else {
@@ -150,23 +136,21 @@ static std::unique_ptr<CallbackTimer> singleShotTimer = nullptr;
 // mutex for protecting its initialization
 static std::mutex singleShotSync;
 
-} // namespace internal
+}  // namespace internal
 
-void CallbackTimer::SingleShot(uint64_t when, const HandlerFn &handler)
+void CallbackTimer::SingleShot(uint64_t when, const HandlerFn& handler)
 {
     internal::CallbackTimerMutexLocker lock(internal::singleShotSync);
-    if (!internal::singleShotTimer)
-        internal::singleShotTimer.reset(new CallbackTimer);
+    if (!internal::singleShotTimer) internal::singleShotTimer.reset(new CallbackTimer);
     internal::singleShotTimer->Schedule(when, 0, handler);
 }
 
-void CallbackTimer::SingleShot(uint64_t when, HandlerFn &&handler)
+void CallbackTimer::SingleShot(uint64_t when, HandlerFn&& handler)
 {
     internal::CallbackTimerMutexLocker lock(internal::singleShotSync);
-    if (!internal::singleShotTimer)
-        internal::singleShotTimer.reset(new CallbackTimer);
+    if (!internal::singleShotTimer) internal::singleShotTimer.reset(new CallbackTimer);
     internal::singleShotTimer->Schedule(when, 0, std::move(handler));
 }
 
-} // namespace Utility
-} // namespace PacBio
+}  // namespace Utility
+}  // namespace PacBio

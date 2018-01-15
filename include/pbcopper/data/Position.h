@@ -47,9 +47,9 @@ namespace Data {
 
 typedef int32_t Position;
 
-static const Position UnmappedPosition = Position{ -1 };
+static const Position UnmappedPosition = Position{-1};
 
-} // namespace Data
-} // namespace PacBio
+}  // namespace Data
+}  // namespace PacBio
 
-#endif // PBCOPPER_DATA_POSITION_H
+#endif  // PBCOPPER_DATA_POSITION_H

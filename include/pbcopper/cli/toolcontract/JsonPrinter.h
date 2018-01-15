@@ -52,7 +52,6 @@ namespace ToolContract {
 class JsonPrinter
 {
 public:
-
     /// \brief Prints a JSON-formatted tool contract.
     ///
     /// \param interface    Interface object to generate tool contract from
@@ -65,13 +64,11 @@ public:
     ///
     /// \throws std::runtime_error if failed to print
     ///
-    static void Print(const Interface& interface,
-                      std::ostream& out,
-                      const int indent = 4);
+    static void Print(const Interface& interface, std::ostream& out, const int indent = 4);
 };
 
-} // namespace ToolContract
-} // namespace CLI
-} // namespace PacBio
+}  // namespace ToolContract
+}  // namespace CLI
+}  // namespace PacBio
 
-#endif // PBCOPPER_TOOLCONTRACT_JSONPRINTER_H
+#endif  // PBCOPPER_TOOLCONTRACT_JSONPRINTER_H

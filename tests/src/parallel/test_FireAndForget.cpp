@@ -35,10 +35,10 @@
 
 // Author: Armin Töpfer
 
-#include <vector>
 #include <iostream>
 #include <memory>
 #include <string>
+#include <vector>
 
 #include <gtest/gtest.h>
 #include <pbcopper/parallel/FireAndForget.h>
@@ -51,9 +51,7 @@ TEST(Parallel_FireAndForget, strings)
     static const size_t numElements = 10000;
     PacBio::Parallel::FireAndForget faf(numThreads);
 
-    auto Submit = [](std::string& input) {
-        input = "done-" + input;
-    };
+    auto Submit = [](std::string& input) { input = "done-" + input; };
 
     std::vector<std::string> vec;
 

@@ -41,8 +41,8 @@
 #include <string>
 
 #include <pbcopper/PbcopperConfig.h>
-#include <pbcopper/cli/toolcontract/Task.h>
 #include <pbcopper/cli/toolcontract/Driver.h>
+#include <pbcopper/cli/toolcontract/Task.h>
 
 namespace PacBio {
 namespace CLI {
@@ -70,8 +70,7 @@ public:
     /// \param task
     /// \param driver
     ///
-    Config(const ToolContract::Task& task,
-           const ToolContract::Driver& driver);
+    Config(const ToolContract::Task& task, const ToolContract::Driver& driver);
 
     Config(const Config& other) = default;
     Config(Config&& other) = default;
@@ -116,10 +115,10 @@ private:
     std::string version_;
 };
 
-} // namespace ToolContract
-} // namespace CLI
-} // namespace PacBio
+}  // namespace ToolContract
+}  // namespace CLI
+}  // namespace PacBio
 
 #include <pbcopper/cli/toolcontract/internal/Config-inl.h>
 
-#endif // PBCOPPER_CLI_TOOLCONTRACT_CONFIG_H
+#endif  // PBCOPPER_CLI_TOOLCONTRACT_CONFIG_H
