@@ -49,7 +49,9 @@
 namespace PacBio {
 namespace QGram {
 
-namespace internal { class IndexImpl; }
+namespace internal {
+class IndexImpl;
+}
 
 ///
 /// \brief The Index class provides efficient retrieval of all occurrences of
@@ -94,7 +96,6 @@ public:
     Index(const size_t q, std::vector<std::string>&& seqs);
 
 public:
-
     ///
     /// \brief Hits
     /// \param[in] seq                  query sequence
@@ -114,9 +115,9 @@ private:
     std::unique_ptr<internal::IndexImpl> d_;
 };
 
-} // namespace QGram
-} // namespace PacBio
+}  // namespace QGram
+}  // namespace PacBio
 
 #include <pbcopper/qgram/internal/Index-inl.h>
 
-#endif // PBCOPPER_QGRAM_INDEX_H
+#endif  // PBCOPPER_QGRAM_INDEX_H

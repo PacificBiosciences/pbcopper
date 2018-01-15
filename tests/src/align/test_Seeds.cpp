@@ -1,11 +1,11 @@
 
-#include <pbcopper/align/Seeds.h>
 #include <gtest/gtest.h>
+#include <pbcopper/align/Seeds.h>
 using namespace PacBio::Align;
 
 TEST(Align_Seed, construct_from_begin_positions_and_length)
 {
-    Seed s{ 1, 2, 3 };
+    Seed s{1, 2, 3};
 
     EXPECT_EQ(1, s.BeginPositionH());
     EXPECT_EQ(4, s.EndPositionH());
@@ -25,7 +25,7 @@ TEST(Align_Seed, construct_from_begin_positions_and_length)
 
 TEST(Align_Seed, construct_from_begin_and_end_positions)
 {
-    const Seed s{ 1, 2, 3, 5 };
+    const Seed s{1, 2, 3, 5};
 
     EXPECT_EQ(1, s.BeginPositionH());
     EXPECT_EQ(3, s.EndPositionH());
@@ -39,34 +39,34 @@ TEST(Align_Seed, construct_from_begin_and_end_positions)
 
 TEST(Align_Seed, check_combineable)
 {
-    {   // partial overlap
-        const Seed s1{ 0,0,3 };
-        const Seed s2{ 2,2,3 };
+    {  // partial overlap
+        const Seed s1{0, 0, 3};
+        const Seed s2{2, 2, 3};
         EXPECT_TRUE(internal::CanMergeSeeds(s1, s2));
     }
-    {   // complete overlap
-        const Seed s1{ 0,0,3 };
-        const Seed s2{ 0,0,3 };
+    {  // complete overlap
+        const Seed s1{0, 0, 3};
+        const Seed s2{0, 0, 3};
         EXPECT_TRUE(internal::CanMergeSeeds(s1, s2));
     }
-    {   // contained - prefix overlap
-        const Seed s1{ 0,0,3 };
-        const Seed s2{ 0,0,4 };
+    {  // contained - prefix overlap
+        const Seed s1{0, 0, 3};
+        const Seed s2{0, 0, 4};
         EXPECT_TRUE(internal::CanMergeSeeds(s1, s2));
     }
-    {   // contained - suffix overlap
-        const Seed s1{ 0,0,3 };
-        const Seed s2{ 1,1,3 };
+    {  // contained - suffix overlap
+        const Seed s1{0, 0, 3};
+        const Seed s2{1, 1, 3};
         EXPECT_TRUE(internal::CanMergeSeeds(s1, s2));
     }
-    {   // no overlap
-        const Seed s1{ 0,0,4 };
-        const Seed s2{ 5,5,3 };
+    {  // no overlap
+        const Seed s1{0, 0, 4};
+        const Seed s2{5, 5, 3};
         EXPECT_FALSE(internal::CanMergeSeeds(s1, s2));
     }
-    {   // improper order
-        const Seed s1{ 2,2,3 };
-        const Seed s2{ 0,0,3 };
+    {  // improper order
+        const Seed s1{2, 2, 3};
+        const Seed s2{0, 0, 3};
         EXPECT_FALSE(internal::CanMergeSeeds(s1, s2));
     }
 }
@@ -88,23 +88,23 @@ TEST(Align_Seeds, default_construct)
 TEST(Align_Seeds, add_seed)
 {
     Seeds seeds;
-    seeds.AddSeed(Seed{1,2,3});
+    seeds.AddSeed(Seed{1, 2, 3});
 
     EXPECT_EQ(1, seeds.size());
     auto iter = seeds.begin();
     ++iter;
     EXPECT_EQ(iter, seeds.end());
 
-    EXPECT_EQ(Seed(1,2,3), *seeds.begin());
+    EXPECT_EQ(Seed(1, 2, 3), *seeds.begin());
 }
 
 TEST(Align_Seeds, merge_seed_from_left)
 {
     Seeds seeds;
-    seeds.AddSeed(Seed{3,3,3});
+    seeds.AddSeed(Seed{3, 3, 3});
     EXPECT_EQ(1, seeds.size());
 
-    const auto mergedOk = seeds.TryMergeSeed(Seed{2,2,3});
+    const auto mergedOk = seeds.TryMergeSeed(Seed{2, 2, 3});
     EXPECT_TRUE(mergedOk);
     EXPECT_EQ(1, seeds.size());
 
@@ -119,10 +119,10 @@ TEST(Align_Seeds, merge_seed_from_left)
 TEST(Align_Seeds, merge_seed_from_right)
 {
     Seeds seeds;
-    seeds.AddSeed(Seed{2,2,3});
+    seeds.AddSeed(Seed{2, 2, 3});
     EXPECT_EQ(1, seeds.size());
 
-    const auto mergedOk = seeds.TryMergeSeed(Seed{3,3,3});
+    const auto mergedOk = seeds.TryMergeSeed(Seed{3, 3, 3});
     EXPECT_TRUE(mergedOk);
     EXPECT_EQ(1, seeds.size());
 
@@ -137,10 +137,10 @@ TEST(Align_Seeds, merge_seed_from_right)
 TEST(Align_Seeds, merge_not_possible_but_fallback_to_add_is_ok)
 {
     Seeds seeds;
-    seeds.AddSeed(Seed{0,0,4});
+    seeds.AddSeed(Seed{0, 0, 4});
     EXPECT_EQ(1, seeds.size());
 
-    const Seed s{5,5,3};
+    const Seed s{5, 5, 3};
     const auto mergedOk = seeds.TryMergeSeed(s);
     EXPECT_FALSE(mergedOk);
     EXPECT_EQ(1, seeds.size());

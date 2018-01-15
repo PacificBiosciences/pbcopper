@@ -49,17 +49,20 @@ inline bool CanMergeSeeds(const Seed& lhs, const Seed& rhs)
     // rhs must be to right of lhs AND seeds must overlap
     const auto ok = rhs.BeginPositionH() >= lhs.BeginPositionH() &&
                     rhs.BeginPositionV() >= lhs.BeginPositionV() &&
-                    rhs.BeginPositionH() <= lhs.EndPositionH()   &&
+                    rhs.BeginPositionH() <= lhs.EndPositionH() &&
                     rhs.BeginPositionV() <= lhs.EndPositionV();
     return ok;
 }
 
-} // namespace internal
+}  // namespace internal
 
-inline Seeds::Seeds(void) { }
+inline Seeds::Seeds(void) {}
 
 inline bool Seeds::AddSeed(const Seed& s)
-{ data_.insert(s); return true; }
+{
+    data_.insert(s);
+    return true;
+}
 
 inline bool Seeds::TryMergeSeed(const Seed& s)
 {
@@ -71,8 +74,7 @@ inline bool Seeds::TryMergeSeed(const Seed& s)
             data_.erase(it);
             data_.insert(left);
             return true;
-        }
-        else if (internal::CanMergeSeeds(s, *it)) {
+        } else if (internal::CanMergeSeeds(s, *it)) {
             left = s;
             left += *it;
             data_.erase(it);
@@ -83,7 +85,7 @@ inline bool Seeds::TryMergeSeed(const Seed& s)
     return false;
 }
 
-} // namespace Align
-} // namespace PacBio
+}  // namespace Align
+}  // namespace PacBio
 
-#endif // PBCOPPER_ALIGN_SEEDS_INL_H
+#endif  // PBCOPPER_ALIGN_SEEDS_INL_H

@@ -51,12 +51,9 @@ namespace Logging {
 // LogLevel
 // ----------
 
-inline LogLevel::LogLevel(const unsigned char value)
-    : value_{ value }
-{ }
+inline LogLevel::LogLevel(const unsigned char value) : value_{value} {}
 
-inline LogLevel::operator unsigned char(void) const
-{ return value_; }
+inline LogLevel::operator unsigned char(void) const { return value_; }
 
 // --------------
 // LoggerConfig
@@ -64,7 +61,8 @@ inline LogLevel::operator unsigned char(void) const
 
 inline LoggerConfig::LoggerConfig(const std::map<LogLevel, OStreams>& cfg)
     : std::map<LogLevel, OStreams>(cfg)
-{ }
+{
+}
 
 inline LoggerConfig::LoggerConfig(const std::map<std::string, OStreams>& cfg)
     : std::map<LogLevel, OStreams>()
@@ -79,19 +77,18 @@ inline LoggerConfig::LoggerConfig(std::ostream& os, const LogLevel level)
         (*this)[static_cast<LogLevel>(i)].push_back(os);
 }
 
-inline LoggerConfig::LoggerConfig(std::ostream& os,
-                                  const std::string& level)
+inline LoggerConfig::LoggerConfig(std::ostream& os, const std::string& level)
     : LoggerConfig(os, LogLevel(level))
-{ }
+{
+}
 
 // ---------
 // Logger
 // ---------
 
-template<typename... Args>
+template <typename... Args>
 Logger::Logger(Args&&... args)
-    : cfg_(std::forward<Args>(args)...)
-    , writer_(&Logger::MessageWriter, this)
+    : cfg_(std::forward<Args>(args)...), writer_(&Logger::MessageWriter, this)
 {
 #ifdef NDEBUG
     if (Handles(LogLevel::TRACE))
@@ -100,7 +97,9 @@ Logger::Logger(Args&&... args)
 }
 
 inline bool Logger::Handles(const LogLevel level) const
-{ return cfg_.find(level) != cfg_.end() && !cfg_.at(level).empty(); }
+{
+    return cfg_.find(level) != cfg_.end() && !cfg_.at(level).empty();
+}
 
 // ------------
 // LogMessage
@@ -108,8 +107,7 @@ inline bool Logger::Handles(const LogLevel level) const
 
 inline LogMessage::~LogMessage(void)
 {
-    if (ptr_)
-        logger_ << std::move(ptr_);
+    if (ptr_) logger_ << std::move(ptr_);
 }
 
 template <typename T>
@@ -119,7 +117,7 @@ inline LogMessage& LogMessage::operator<<(const T& t)
     return *this;
 }
 
-} // namespace Logging
-} // namespace PacBio
+}  // namespace Logging
+}  // namespace PacBio
 
-#endif // PBCOPPER_LOGGING_LOGGING_INL_H
+#endif  // PBCOPPER_LOGGING_LOGGING_INL_H

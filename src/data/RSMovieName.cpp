@@ -42,15 +42,13 @@
 namespace PacBio {
 namespace Data {
 
-RSMovieName::RSMovieName(const std::string& runStartTime,
-                         const std::string& instrumentSerialNumber,
-                         const std::string& smrtCellBarcode,
-                         const std::string& setNumber,
+RSMovieName::RSMovieName(const std::string& runStartTime, const std::string& instrumentSerialNumber,
+                         const std::string& smrtCellBarcode, const std::string& setNumber,
                          const std::string& partNumber)
     : partsCache_(nullptr)
 {
     // construct name from parts
-    auto result = std::string{ };
+    auto result = std::string{};
     result.reserve(128);
     result += "m";
     result += runStartTime;
@@ -71,37 +69,35 @@ void RSMovieName::UpdatePartsCache(void) const
 {
     // sanity checks
     assert(partsCache_ == nullptr);
-    if (movieName_.empty())
-        return;
+    if (movieName_.empty()) return;
 
     // calculate name parts
     const char underscore = '_';
-    const size_t firstUnderscore  = movieName_.find(underscore);
-    const size_t secondUnderscore = movieName_.find(underscore, firstUnderscore+1);
-    const size_t thirdUnderscore  = movieName_.find(underscore, secondUnderscore+1);
-    const size_t fourthUnderscore = movieName_.find(underscore, thirdUnderscore+1);
-    const size_t fifthUnderscore  = movieName_.find(underscore, fourthUnderscore+1);
+    const size_t firstUnderscore = movieName_.find(underscore);
+    const size_t secondUnderscore = movieName_.find(underscore, firstUnderscore + 1);
+    const size_t thirdUnderscore = movieName_.find(underscore, secondUnderscore + 1);
+    const size_t fourthUnderscore = movieName_.find(underscore, thirdUnderscore + 1);
+    const size_t fifthUnderscore = movieName_.find(underscore, fourthUnderscore + 1);
 
-    const char* movieCStr      = movieName_.c_str();
-    const char* rstStart       = movieCStr + 1; // skip 'm' and include first '_'
-    const char* serialNumStart = movieCStr + secondUnderscore + 1; // skip '_'
-    const char* scbStart       = movieCStr + thirdUnderscore  + 1; // skip '_'
-    const char* setNumStart    = movieCStr + fourthUnderscore + 1; // skip '_'
-    const char* partNumStart   = movieCStr + fifthUnderscore  + 1; // skip '_'
-    const size_t rstSize       = (secondUnderscore - 1);
+    const char* movieCStr = movieName_.c_str();
+    const char* rstStart = movieCStr + 1;  // skip 'm' and include first '_'
+    const char* serialNumStart = movieCStr + secondUnderscore + 1;  // skip '_'
+    const char* scbStart = movieCStr + thirdUnderscore + 1;         // skip '_'
+    const char* setNumStart = movieCStr + fourthUnderscore + 1;     // skip '_'
+    const char* partNumStart = movieCStr + fifthUnderscore + 1;     // skip '_'
+    const size_t rstSize = (secondUnderscore - 1);
     const size_t serialNumSize = (thirdUnderscore - secondUnderscore) - 1;  // skip '_'
-    const size_t scbSize       = (fourthUnderscore - thirdUnderscore) - 1;  // skip '_'
-    const size_t setNumSize    = (fifthUnderscore - fourthUnderscore) - 1;  // skip '_'
-    const size_t partNumSize   = (movieName_.size() - fifthUnderscore) - 1; // skip '\0 '
+    const size_t scbSize = (fourthUnderscore - thirdUnderscore) - 1;        // skip '_'
+    const size_t setNumSize = (fifthUnderscore - fourthUnderscore) - 1;     // skip '_'
+    const size_t partNumSize = (movieName_.size() - fifthUnderscore) - 1;   // skip '\0 '
 
     // cache name parts
-    partsCache_.reset(new RSMovieName::PartsCache
-    {
-        boost::string_ref{ rstStart,       rstSize },       // runStartTime
-        boost::string_ref{ serialNumStart, serialNumSize }, // serialNumber
-        boost::string_ref{ scbStart,       scbSize },       // smrtCellBarcode
-        boost::string_ref{ setNumStart,    setNumSize },    // setNumber
-        boost::string_ref{ partNumStart,   partNumSize },   // partNumber
+    partsCache_.reset(new RSMovieName::PartsCache{
+        boost::string_ref{rstStart, rstSize},              // runStartTime
+        boost::string_ref{serialNumStart, serialNumSize},  // serialNumber
+        boost::string_ref{scbStart, scbSize},              // smrtCellBarcode
+        boost::string_ref{setNumStart, setNumSize},        // setNumber
+        boost::string_ref{partNumStart, partNumSize},      // partNumber
     });
 
     // checks - here? or elsewhere?
@@ -117,5 +113,5 @@ void RSMovieName::UpdatePartsCache(void) const
         throw std::runtime_error("RSMovieName: part number must not be empty");
 }
 
-} // namespace Data
-} // namespace PacBio
+}  // namespace Data
+}  // namespace PacBio

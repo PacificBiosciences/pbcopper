@@ -87,35 +87,35 @@ public:
 
 public:
     // STL compatibility
-    using container_t     = std::multiset<Seed>;
+    using container_t = std::multiset<Seed>;
 
-    using iterator        = container_t::iterator;
-    using const_iterator  = container_t::const_iterator;
-    using reference       = container_t::reference;
+    using iterator = container_t::iterator;
+    using const_iterator = container_t::const_iterator;
+    using reference = container_t::reference;
     using const_reference = container_t::const_reference;
-    using size_type       = container_t::size_type;
+    using size_type = container_t::size_type;
 
-    iterator       begin(void)        { return data_.begin(); }
-    const_iterator begin(void) const  { return data_.begin(); }
+    iterator begin(void) { return data_.begin(); }
+    const_iterator begin(void) const { return data_.begin(); }
     const_iterator cbegin(void) const { return data_.cbegin(); }
 
-    iterator       end(void)          { return data_.end(); }
-    const_iterator end(void) const    { return data_.end(); }
-    const_iterator cend(void) const   { return data_.cend(); }
+    iterator end(void) { return data_.end(); }
+    const_iterator end(void) const { return data_.end(); }
+    const_iterator cend(void) const { return data_.cend(); }
 
-    const_reference back(void) const  { return *data_.crbegin(); }
+    const_reference back(void) const { return *data_.crbegin(); }
     const_reference front(void) const { return *data_.cbegin(); }
 
-    bool      empty(void) const { return data_.empty(); }
-    size_type size(void) const  { return data_.size(); }
+    bool empty(void) const { return data_.empty(); }
+    size_type size(void) const { return data_.size(); }
 
 private:
     container_t data_;
 };
 
-} // namespace Align
-} // namespace PacBio
+}  // namespace Align
+}  // namespace PacBio
 
 #include <pbcopper/align/internal/Seeds-inl.h>
 
-#endif // PBCOPPER_ALIGN_SEEDS_H
+#endif  // PBCOPPER_ALIGN_SEEDS_H

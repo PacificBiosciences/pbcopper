@@ -76,9 +76,7 @@ public:
     /// \param env
     /// \param serialization
     ///
-    Driver(const std::string& exe,
-               const Environment& env,
-               const std::string& serialization);
+    Driver(const std::string& exe, const Environment& env, const std::string& serialization);
 
     Driver(const Driver& other) = default;
     Driver(Driver&& other) = default;
@@ -145,10 +143,10 @@ private:
     std::unordered_map<std::string, std::string> env_;
 };
 
-} // namespace ToolContract
-} // namespace CLI
-} // namespace PacBio
+}  // namespace ToolContract
+}  // namespace CLI
+}  // namespace PacBio
 
 #include <pbcopper/cli/toolcontract/internal/Driver-inl.h>
 
-#endif // PBCOPPER_CLI_TOOLCONTRACT_DRIVER_H
+#endif  // PBCOPPER_CLI_TOOLCONTRACT_DRIVER_H

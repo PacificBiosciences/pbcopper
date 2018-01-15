@@ -58,9 +58,9 @@ public:
     static constexpr bool IsLittleEndian(void);
 };
 
-} // namespace Utility
-} // namespace PacBio
+}  // namespace Utility
+}  // namespace PacBio
 
 #include <pbcopper/utility/internal/SystemInfo-inl.h>
 
-#endif // PBCOPPER_UTILITY_SYSTEMINFO_H
+#endif  // PBCOPPER_UTILITY_SYSTEMINFO_H

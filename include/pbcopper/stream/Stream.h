@@ -55,8 +55,8 @@ namespace Stream {
 ///     auto printToConsole = [](const int x) { std::cout << x; };
 /// \endcode
 ///
-template<typename T>
-using Sink = std::function<void (const T&)>;
+template <typename T>
+using Sink = std::function<void(const T&)>;
 
 /// \brief Source function type for data streams.
 ///
@@ -72,8 +72,8 @@ using Sink = std::function<void (const T&)>;
 ///     };
 /// \endcode
 ///
-template<typename T>
-using Source = std::function<void (Sink<T>)>;
+template <typename T>
+using Source = std::function<void(Sink<T>)>;
 
 /// \brief Source function type for data streams.
 ///
@@ -96,15 +96,15 @@ using Source = std::function<void (Sink<T>)>;
 ///     };
 /// \endcode
 ///
-template<typename T, typename U>
-using Transform = std::function<void (Sink<U>, T)>;
+template <typename T, typename U>
+using Transform = std::function<void(Sink<U>, T)>;
 
 /// \brief This method connects a Source to a Sink, in that order.
 ///
 /// \param source   data source
 /// \param sink     data sink
 ///
-template<typename T>
+template <typename T>
 void sourceToSink(Source<T> source, Sink<T> sink)
 {
     source(sink);
@@ -117,12 +117,10 @@ void sourceToSink(Source<T> source, Sink<T> sink)
 ///
 /// \returns a Sink function, which can transform data before the final action
 ///
-template<typename T, typename U>
-Sink<T> transformToSink (Transform<T,U> transform, Sink<U> sink)
+template <typename T, typename U>
+Sink<T> transformToSink(Transform<T, U> transform, Sink<U> sink)
 {
-    return [transform, sink](const T& value) {
-        transform(sink, value);
-    };
+    return [transform, sink](const T& value) { transform(sink, value); };
 }
 
 /// \brief This method connects a Source to a Transform, in that order.
@@ -132,15 +130,11 @@ Sink<T> transformToSink (Transform<T,U> transform, Sink<U> sink)
 ///
 /// \returns a Source function, which provides transformed data
 ///
-template<typename T, typename U>
-Source<U> sourceToTransform (Transform<T,U> transform, Source<T> source)
+template <typename T, typename U>
+Source<U> sourceToTransform(Transform<T, U> transform, Source<T> source)
 {
-    return [transform, source](Sink<U> sink)
-    {
-        auto intermediateSink = [transform, sink](const T& value)
-        {
-            transform(sink, value);
-        };
+    return [transform, source](Sink<U> sink) {
+        auto intermediateSink = [transform, sink](const T& value) { transform(sink, value); };
         source(intermediateSink);
     };
 }
@@ -152,14 +146,11 @@ Source<U> sourceToTransform (Transform<T,U> transform, Source<T> source)
 ///
 /// \returns a Transform function representing the composite operation
 ///
-template<typename T, typename Intermediate, typename U>
-Transform<T,U> transformToTransform(Transform<T, Intermediate> t1,
-                                    Transform<Intermediate, U> t2)
+template <typename T, typename Intermediate, typename U>
+Transform<T, U> transformToTransform(Transform<T, Intermediate> t1, Transform<Intermediate, U> t2)
 {
-    return [t1, t2](Sink<U> finalSink, T originalValue)
-    {
-        auto intermediateSink = [t2,finalSink](const Intermediate& value)
-        {
+    return [t1, t2](Sink<U> finalSink, T originalValue) {
+        auto intermediateSink = [t2, finalSink](const Intermediate& value) {
             t2(finalSink, value);
         };
         t1(intermediateSink, originalValue);
@@ -173,7 +164,7 @@ Transform<T,U> transformToTransform(Transform<T, Intermediate> t1,
 ///
 /// \sa sourceToSink
 ///
-template<typename T, typename U>
+template <typename T, typename U>
 void operator>>(Source<T> source, Sink<U> sink)
 {
     sourceToSink(source, sink);
@@ -187,8 +178,8 @@ void operator>>(Source<T> source, Sink<U> sink)
 /// \returns a Source function, which provides transformed data
 /// \sa sourceToTransform
 ///
-template<typename T, typename U>
-Source<U> operator>>(Source<T> source, Transform<T,U> transform)
+template <typename T, typename U>
+Source<U> operator>>(Source<T> source, Transform<T, U> transform)
 {
     return sourceToTransform(transform, source);
 }
@@ -201,8 +192,8 @@ Source<U> operator>>(Source<T> source, Transform<T,U> transform)
 /// \returns a Sink function, which can transform data before the final action
 /// \sa transformToSink
 ///
-template<typename T, typename U>
-Sink<T> operator>>(Transform<T,U> transform, Sink<U> sink)
+template <typename T, typename U>
+Sink<T> operator>>(Transform<T, U> transform, Sink<U> sink)
 {
     return transformToSink(transform, sink);
 }
@@ -215,14 +206,13 @@ Sink<T> operator>>(Transform<T,U> transform, Sink<U> sink)
 /// \returns a Transform function representing the composite operation
 /// \sa transformToTransform
 ///
-template<typename T, typename Intermediate, typename U>
-Transform<T,U> operator>>(Transform<T, Intermediate> t1,
-                          Transform<Intermediate, U> t2)
+template <typename T, typename Intermediate, typename U>
+Transform<T, U> operator>>(Transform<T, Intermediate> t1, Transform<Intermediate, U> t2)
 {
     return transformToTransform(t1, t2);
 }
 
-} // namespace Stream
-} // namespace PacBio
+}  // namespace Stream
+}  // namespace PacBio
 
-#endif // PBCOPPER_CLI_FXNCLI_H
+#endif  // PBCOPPER_CLI_FXNCLI_H

@@ -114,9 +114,7 @@ void PrintVersion(const Interface& interface, std::ostream& out);
 /// \param handler
 /// \return
 ///
-int Run(int argc, char* argv[],
-        const Interface& interface,
-        const ResultsHandler& handler);
+int Run(int argc, char* argv[], const Interface& interface, const ResultsHandler& handler);
 
 ///
 /// \brief Run
@@ -125,11 +123,10 @@ int Run(int argc, char* argv[],
 /// \param handler
 /// \return
 ///
-int Run(const std::vector<std::string>& args,
-        const Interface& interface,
+int Run(const std::vector<std::string>& args, const Interface& interface,
         const ResultsHandler& handler);
 
-} // namespace CLI
-} // namespace PacBio
+}  // namespace CLI
+}  // namespace PacBio
 
-#endif // PBCOPPER_CLI_CLI_H
+#endif  // PBCOPPER_CLI_CLI_H

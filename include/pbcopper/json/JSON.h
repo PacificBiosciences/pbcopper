@@ -53,7 +53,7 @@ namespace JSON {
 
 typedef nlohmann::json Json;
 
-} // namespace JSON
-} // namespace PacBio
+}  // namespace JSON
+}  // namespace PacBio
 
-#endif // PBCOPPER_JSON_JSON_H
+#endif  // PBCOPPER_JSON_JSON_H

@@ -65,11 +65,14 @@ namespace Utility {
 ///
 struct EnumClassHash
 {
-    template<typename T> size_t operator()(const T t) const
-    { return static_cast<size_t>(t); }
+    template <typename T>
+    size_t operator()(const T t) const
+    {
+        return static_cast<size_t>(t);
+    }
 };
 
-} // namespace Utility
-} // namespace PacBio
+}  // namespace Utility
+}  // namespace PacBio
 
-#endif // PBCOPPER_UTILITY_ENUMCLASSHASH_H
+#endif  // PBCOPPER_UTILITY_ENUMCLASSHASH_H

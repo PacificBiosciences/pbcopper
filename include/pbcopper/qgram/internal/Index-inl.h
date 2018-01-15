@@ -54,7 +54,7 @@ class IndexImpl
 {
 public:
     using SuffixArray_t = std::vector<IndexHit>;
-    using HashLookup_t  = std::vector<uint64_t>;
+    using HashLookup_t = std::vector<uint64_t>;
 
 public:
     // ctor
@@ -64,8 +64,7 @@ public:
     // index lookup API
     IndexHit Hit(const Shape& shape) const;
     IndexHits Hits(const Shape& shape, const size_t queryPos) const;
-    std::vector<IndexHits> Hits(const std::string& seq,
-                                const bool filterHomopolymers) const;
+    std::vector<IndexHits> Hits(const std::string& seq, const bool filterHomopolymers) const;
 
     // "private" method(s) - index construction
     void Init(void);
@@ -76,36 +75,30 @@ public:
     const SuffixArray_t& SuffixArray(void) const;
 
 private:
-    const size_t q_;                        // qGramSize
-    const std::vector<std::string> seqs_;   // underlying text
-    SuffixArray_t suffixArray_;             // suffix array sorted by the first q chars
-    HashLookup_t hashLookup_;               // hash value -> SA index
+    const size_t q_;                       // qGramSize
+    const std::vector<std::string> seqs_;  // underlying text
+    SuffixArray_t suffixArray_;            // suffix array sorted by the first q chars
+    HashLookup_t hashLookup_;              // hash value -> SA index
 };
 
 inline IndexImpl::IndexImpl(const size_t q, const std::vector<std::string>& seqs)
-    : q_{q}
-    , seqs_{seqs}
+    : q_{q}, seqs_{seqs}
 {
     Init();
 }
 
 inline IndexImpl::IndexImpl(const size_t q, std::vector<std::string>&& seqs)
-    : q_{q}
-    , seqs_{std::move(seqs)}
+    : q_{q}, seqs_{std::move(seqs)}
 {
     Init();
 }
 
-inline const IndexImpl::HashLookup_t& IndexImpl::HashLookup(void) const
-{ return hashLookup_; }
+inline const IndexImpl::HashLookup_t& IndexImpl::HashLookup(void) const { return hashLookup_; }
 
 inline void IndexImpl::Init(void)
 {
-    if (q_ == 0 || q_ > 16) 
-    {
-        std::string msg {
-            "qgram size (" + std::to_string(q_) + ") must be in the range [1,16]"
-        };
+    if (q_ == 0 || q_ > 16) {
+        std::string msg{"qgram size (" + std::to_string(q_) + ") must be in the range [1,16]"};
         throw std::invalid_argument{msg};
     }
 
@@ -116,26 +109,23 @@ inline void IndexImpl::Init(void)
     for (const auto& seq : seqs_) {
 
         const auto seqLength = seq.size();
-        if (seqLength < q_)
-        {
-            std::string msg {
-                "sequence size (" + std::to_string(seqLength) +
-                ") must be >= q (" + std::to_string(q_)
-            };
+        if (seqLength < q_) {
+            std::string msg{"sequence size (" + std::to_string(seqLength) + ") must be >= q (" +
+                            std::to_string(q_)};
             throw std::invalid_argument{msg};
         }
 
         const auto numQGrams = seqLength - q_ + 1;
-        Shape shape{ q_, seq };
+        Shape shape{q_, seq};
         for (size_t i = 0; i < numQGrams; ++i)
             ++hashLookup_[shape.HashNext()];
         totalNumQGrams += numQGrams;
     }
 
     // update hash lookup values (cumulative sum along the table)
-    uint64_t prevDiff  = 0;
+    uint64_t prevDiff = 0;
     uint64_t prevDiff2 = 0;
-    uint64_t sum       = 0;
+    uint64_t sum = 0;
     for (auto& hash : hashLookup_) {
         sum += prevDiff2;
         prevDiff2 = prevDiff;
@@ -149,10 +139,10 @@ inline void IndexImpl::Init(void)
     for (const auto& seq : seqs_) {
         const auto seqLength = seq.size();
 
-        Shape shape{ q_, seq };
+        Shape shape{q_, seq};
         const auto numQGrams = seqLength - q_ + 1;
         for (uint32_t i = 0; i < numQGrams; ++i)
-            suffixArray_[hashLookup_[shape.HashNext()+1]++] = IndexHit{seqNo, i};
+            suffixArray_[hashLookup_[shape.HashNext() + 1]++] = IndexHit{seqNo, i};
 
         ++seqNo;
     }
@@ -169,60 +159,53 @@ inline IndexHits IndexImpl::Hits(const Shape& shape, const size_t queryPos) cons
 {
     const auto b = shape.currentHash_;
     const auto iter = hashLookup_[b];
-    const auto end = hashLookup_[b+1];
-    return IndexHits { &suffixArray_, iter, end, queryPos };
+    const auto end = hashLookup_[b + 1];
+    return IndexHits{&suffixArray_, iter, end, queryPos};
 }
 
 inline std::vector<IndexHits> IndexImpl::Hits(const std::string& seq,
                                               const bool filterHomopolymers) const
 {
     std::vector<IndexHits> result;
-    if (seq.size() < q_)
-        return result;
+    if (seq.size() < q_) return result;
 
-    const auto end = ::PacBio::Utility::SafeSubtract(seq.size()+1, q_);
+    const auto end = ::PacBio::Utility::SafeSubtract(seq.size() + 1, q_);
     result.reserve(end);
-    Shape shape{ q_, seq };
+    Shape shape{q_, seq};
 
     if (!filterHomopolymers) {
         for (size_t i = 0; i < end; ++i) {
             shape.HashNext();
             result.emplace_back(Hits(shape, i));
         }
-    }
-    else {
+    } else {
         HpHasher isHomopolymer(q_);
         for (size_t i = 0; i < end; ++i) {
-            if (!isHomopolymer(shape.HashNext()))
-                result.emplace_back(Hits(shape, i));
+            if (!isHomopolymer(shape.HashNext())) result.emplace_back(Hits(shape, i));
         }
     }
     return result;
 }
 
-inline const size_t& IndexImpl::Size(void) const
-{ return q_; }
+inline const size_t& IndexImpl::Size(void) const { return q_; }
 
-inline const IndexImpl::SuffixArray_t& IndexImpl::SuffixArray(void) const
-{ return suffixArray_; }
+inline const IndexImpl::SuffixArray_t& IndexImpl::SuffixArray(void) const { return suffixArray_; }
 
-} // namespace internal
+}  // namespace internal
 
-inline Index::Index(const size_t q, const std::string& seq)
-    : Index{ q, {1, seq} }
-{ }
+inline Index::Index(const size_t q, const std::string& seq) : Index{q, {1, seq}} {}
 
-inline Index::Index(const size_t q, std::string&& seq)
-    : Index{ q, {1, std::move(seq)} }
-{ }
+inline Index::Index(const size_t q, std::string&& seq) : Index{q, {1, std::move(seq)}} {}
 
 inline Index::Index(const size_t q, const std::vector<std::string>& seqs)
     : d_(new internal::IndexImpl(q, seqs))
-{ }
+{
+}
 
 inline Index::Index(const size_t q, std::vector<std::string>&& seqs)
     : d_(new internal::IndexImpl(q, std::move(seqs)))
-{ }
+{
+}
 
 inline std::vector<IndexHits> Index::Hits(const std::string& seq,
                                           const bool filterHomopolymers) const
@@ -237,7 +220,7 @@ inline size_t Index::Size(void) const
     return d_->Size();
 }
 
-} // namespace QGram
-} // namespace PacBio
+}  // namespace QGram
+}  // namespace PacBio
 
-#endif // PBCOPPER_QGRAM_INDEX_INL_H
+#endif  // PBCOPPER_QGRAM_INDEX_INL_H

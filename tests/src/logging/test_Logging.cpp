@@ -1,7 +1,7 @@
 
+#include <gtest/gtest.h>
 #include <pbcopper/logging/Logging.h>
 #include <boost/algorithm/string/predicate.hpp>
-#include <gtest/gtest.h>
 #include <sstream>
 #include <string>
 using namespace PacBio;
@@ -19,11 +19,11 @@ using namespace std;
 
 namespace LoggingTests {
 
-static const string infoMsg   = "*** Application INFO ***";
+static const string infoMsg = "*** Application INFO ***";
 static const string noticeMsg = "*** Application NOTE ***";
-static const string warnMsg   = "*** Application WARNING ***";
+static const string warnMsg = "*** Application WARNING ***";
 
-} // namespace LoggingTests
+}  // namespace LoggingTests
 
 TEST(Logging_Logger, info_message_logged_to_stream)
 {
@@ -43,21 +43,17 @@ TEST(Logging_Logger, custom_logging_sinks_receive_expected_messages)
     stringstream info;
     stringstream notice;
     stringstream warn, warn2;
-    map<LogLevel, OStreams> logConfig =
-    {
-        {LogLevel::INFO,   {info}},
-        {LogLevel::NOTICE, {notice}},
-        {LogLevel::WARN,   {warn, warn2}}
-    };
+    map<LogLevel, OStreams> logConfig = {
+        {LogLevel::INFO, {info}}, {LogLevel::NOTICE, {notice}}, {LogLevel::WARN, {warn, warn2}}};
 
     {
         Logger logger(logConfig);
-        PBLOGGER_INFO(logger)   << LoggingTests::infoMsg;
+        PBLOGGER_INFO(logger) << LoggingTests::infoMsg;
         PBLOGGER_NOTICE(logger) << LoggingTests::noticeMsg;
-        PBLOGGER_WARN(logger)   << LoggingTests::warnMsg;
+        PBLOGGER_WARN(logger) << LoggingTests::warnMsg;
     }
-    EXPECT_TRUE(info.str().find(LoggingTests::infoMsg)     != string::npos);
+    EXPECT_TRUE(info.str().find(LoggingTests::infoMsg) != string::npos);
     EXPECT_TRUE(notice.str().find(LoggingTests::noticeMsg) != string::npos);
-    EXPECT_TRUE(warn.str().find(LoggingTests::warnMsg)     != string::npos);
-    EXPECT_TRUE(warn2.str().find(LoggingTests::warnMsg)    != string::npos);
+    EXPECT_TRUE(warn.str().find(LoggingTests::warnMsg) != string::npos);
+    EXPECT_TRUE(warn2.str().find(LoggingTests::warnMsg) != string::npos);
 }

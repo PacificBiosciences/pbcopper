@@ -48,6 +48,7 @@ namespace Data {
 
 CigarOperationType CigarOperation::CharToType(const char c)
 {
+    // clang-format off
     static const auto lookup = std::unordered_map<char, CigarOperationType>
     {
         { 'S', CigarOperationType::SOFT_CLIP },
@@ -60,21 +61,23 @@ CigarOperationType CigarOperation::CharToType(const char c)
         { 'P', CigarOperationType::PADDING },
         { 'M', CigarOperationType::ALIGNMENT_MATCH }
     };
+    // clang-format on
 
     const auto found = lookup.find(c);
-    if (found == lookup.cend())
-    {
+    if (found == lookup.cend()) {
         std::stringstream s;
-        s << "pbcopper: unrecognized CIGAR char code " << c
-          << " (int: " << static_cast<int>(c) << ")";
+        s << "pbcopper: unrecognized CIGAR char code " << c << " (int: " << static_cast<int>(c)
+          << ")";
         throw std::runtime_error(s.str());
-    }
-    else return found->second;
+    } else
+        return found->second;
 }
 
 char CigarOperation::TypeToChar(const CigarOperationType type)
 {
     using Hash = PacBio::Utility::EnumClassHash;
+
+    // clang-format off
     static const auto lookup = std::unordered_map<CigarOperationType, char, Hash>
     {
         { CigarOperationType::SOFT_CLIP,         'S' },
@@ -87,15 +90,15 @@ char CigarOperation::TypeToChar(const CigarOperationType type)
         { CigarOperationType::PADDING,           'P' },
         { CigarOperationType::ALIGNMENT_MATCH,   'M' }
     };
+    // clang-format on
 
     const auto found = lookup.find(type);
-    if (found == lookup.cend())
-    {
+    if (found == lookup.cend()) {
         std::stringstream s;
         s << "pbcopper: unrecognized CIGAR operation value " << static_cast<int>(type);
         throw std::runtime_error(s.str());
-    }
-    else return found->second;
+    } else
+        return found->second;
 }
 
 std::istream& operator>>(std::istream& in, CigarOperation& op)
@@ -116,5 +119,5 @@ std::ostream& operator<<(std::ostream& out, const CigarOperation& op)
     return out;
 }
 
-} // namespace Data
-} // namespace PacBio
+}  // namespace Data
+}  // namespace PacBio

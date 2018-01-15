@@ -1,6 +1,6 @@
 
-#include <pbcopper/data/RSMovieName.h>
 #include <gtest/gtest.h>
+#include <pbcopper/data/RSMovieName.h>
 #include <sstream>
 using namespace PacBio;
 using namespace PacBio::Data;
@@ -8,17 +8,15 @@ using namespace std;
 
 namespace RSMovieNameTests {
 
-auto makeRSMovieName = [](void)
-{
-    return RSMovieName{ "m140415_143853_42175_c100635972550000001823121909121417_s1_p0" };
+auto makeRSMovieName = [](void) {
+    return RSMovieName{"m140415_143853_42175_c100635972550000001823121909121417_s1_p0"};
 };
 
-} // namespace RSMovieNameTests
+}  // namespace RSMovieNameTests
 
 TEST(Data_RSMovieName, construct_from_lvalue_string)
 {
-    EXPECT_NO_THROW(
-    {
+    EXPECT_NO_THROW({
         const string input = "m140415_143853_42175_c100635972550000001823121909121417_s1_p0";
         const RSMovieName m(input);
         EXPECT_EQ("140415_143853", m.RunStartTime());
@@ -32,8 +30,7 @@ TEST(Data_RSMovieName, construct_from_lvalue_string)
 
 TEST(Data_RSMovieName, construct_from_rvalue_string)
 {
-    EXPECT_NO_THROW(
-    {
+    EXPECT_NO_THROW({
         const RSMovieName m("m140415_143853_42175_c100635972550000001823121909121417_s1_p0");
         EXPECT_EQ("140415_143853", m.RunStartTime());
         EXPECT_EQ("42175", m.InstrumentSerialNumber());
@@ -46,13 +43,9 @@ TEST(Data_RSMovieName, construct_from_rvalue_string)
 
 TEST(Data_RSMovieName, construct_from_name_parts)
 {
-    EXPECT_NO_THROW(
-    {
-        const RSMovieName m("140415_143853",
-                         "42175",
-                         "c100635972550000001823121909121417",
-                         "s1",
-                         "p0");
+    EXPECT_NO_THROW({
+        const RSMovieName m("140415_143853", "42175", "c100635972550000001823121909121417", "s1",
+                            "p0");
         EXPECT_EQ("140415_143853", m.RunStartTime());
         EXPECT_EQ("42175", m.InstrumentSerialNumber());
         EXPECT_EQ("c100635972550000001823121909121417", m.SMRTCellBarcode());
@@ -128,11 +121,11 @@ TEST(Data_RSMovieName, move_assign)
 
 TEST(Data_RSMovieName, expired_reagent_character_recognized)
 {
-    {   // not expired
+    {  // not expired
         const RSMovieName m("m140415_143853_42175_c100635972550000001823121909121417_s1_p0");
         EXPECT_FALSE(m.IsReagentExpired());
     }
-    {   // expired
+    {  // expired
         const RSMovieName m("m140415_143853_42175_c100635972550000001823121909121417_s1_X0");
         EXPECT_TRUE(m.IsReagentExpired());
     }
@@ -150,11 +143,7 @@ TEST(Data_RSMovieName, constructed_from_name_parts_prints_expected_combination)
 {
     const string expected = "m140415_143853_42175_c100635972550000001823121909121417_s1_p0";
 
-    const RSMovieName m("140415_143853",
-                     "42175",
-                     "c100635972550000001823121909121417",
-                     "s1",
-                     "p0");
+    const RSMovieName m("140415_143853", "42175", "c100635972550000001823121909121417", "s1", "p0");
     EXPECT_EQ(expected, m.ToStdString());
 }
 
@@ -186,11 +175,7 @@ TEST(Data_RSMovieName, constructed_from_name_parts_prints_expected_value_to_outp
 {
     const string expected = "m140415_143853_42175_c100635972550000001823121909121417_s1_p0";
 
-    const RSMovieName m("140415_143853",
-                      "42175",
-                      "c100635972550000001823121909121417",
-                      "s1",
-                      "p0");
+    const RSMovieName m("140415_143853", "42175", "c100635972550000001823121909121417", "s1", "p0");
     stringstream s;
     s << m;
 

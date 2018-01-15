@@ -44,13 +44,15 @@
 #include <vector>
 
 #include <pbcopper/PbcopperConfig.h>
-#include <pbcopper/json/JSON.h>
 #include <pbcopper/cli/OptionFlags.h>
+#include <pbcopper/json/JSON.h>
 
 namespace PacBio {
 namespace CLI {
 
-namespace internal { class OptionPrivate; }
+namespace internal {
+class OptionPrivate;
+}
 
 /// \brief The Option class defines a possible command-line option.
 ///
@@ -62,10 +64,10 @@ namespace internal { class OptionPrivate; }
 class Option
 {
 public:
-    using BoolType   = JSON::Json::boolean_t;
-    using IntType    = JSON::Json::number_integer_t;
-    using UIntType   = JSON::Json::number_unsigned_t;
-    using FloatType  = JSON::Json::number_float_t;
+    using BoolType = JSON::Json::boolean_t;
+    using IntType = JSON::Json::number_integer_t;
+    using UIntType = JSON::Json::number_unsigned_t;
+    using FloatType = JSON::Json::number_float_t;
     using StringType = JSON::Json::string_t;
 
 public:
@@ -132,9 +134,7 @@ public:
     /// \param[in]  choices         list of accepted inputs
     /// \param[in]  flags           extra configuration
     ///
-    Option(const std::string& id,
-           const std::string& name,
-           const std::string& description,
+    Option(const std::string& id, const std::string& name, const std::string& description,
            const JSON::Json& defaultValue = JSON::Json(nullptr),
            const JSON::Json& choices = JSON::Json(nullptr),
            const OptionFlags& flags = OptionFlags::DEFAULT);
@@ -173,10 +173,8 @@ public:
     /// \param[in]  choices         list of accepted inputs
     /// \param[in]  flags           extra configuration
     ///
-    Option(const std::string& id,
-           const std::vector<std::string>& names,
-           const std::string& description,
-           const JSON::Json& defaultValue = JSON::Json(nullptr),
+    Option(const std::string& id, const std::vector<std::string>& names,
+           const std::string& description, const JSON::Json& defaultValue = JSON::Json(nullptr),
            const JSON::Json& choices = JSON::Json(nullptr),
            const OptionFlags& flags = OptionFlags::DEFAULT);
 
@@ -214,10 +212,8 @@ public:
     /// \param[in]  choices         list of accepted inputs
     /// \param[in]  flags           extra configuration
     ///
-    Option(const std::string& id,
-           const std::initializer_list<std::string>& names,
-           const std::string& description,
-           const JSON::Json& defaultValue = JSON::Json(nullptr),
+    Option(const std::string& id, const std::initializer_list<std::string>& names,
+           const std::string& description, const JSON::Json& defaultValue = JSON::Json(nullptr),
            const JSON::Json& choices = JSON::Json(nullptr),
            const OptionFlags& flags = OptionFlags::DEFAULT);
 
@@ -293,9 +289,9 @@ private:
     std::shared_ptr<internal::OptionPrivate> d_;
 };
 
-} // namespace CLI
-} // namespace PacBio
+}  // namespace CLI
+}  // namespace PacBio
 
 #include <pbcopper/cli/internal/Option-inl.h>
 
-#endif // PBCOPPER_CLI_OPTION_H
+#endif  // PBCOPPER_CLI_OPTION_H

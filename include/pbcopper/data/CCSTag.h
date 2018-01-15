@@ -44,9 +44,11 @@ namespace PacBio {
 namespace Data {
 
 // used as a 'tag' for overloading methods
-struct CCSTag { };
+struct CCSTag
+{
+};
 
-} // namespace Data
-} // namespace PacBio
+}  // namespace Data
+}  // namespace PacBio
 
-#endif // PBCOPPER_DATA_CCSTAG_H
+#endif  // PBCOPPER_DATA_CCSTAG_H

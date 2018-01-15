@@ -47,7 +47,7 @@ namespace Data {
 
 typedef int32_t Zmw;
 
-} // namespace Data
-} // namespace PacBio
+}  // namespace Data
+}  // namespace PacBio
 
-#endif // PBCOPPER_DATA_ZMW_H
+#endif  // PBCOPPER_DATA_ZMW_H

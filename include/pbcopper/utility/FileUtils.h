@@ -53,9 +53,9 @@ std::string FileExtension(const std::string& path);
 
 std::string FilePrefix(const std::string& path);
 
-} // namespace Utility
-} // namespace PacBio
+}  // namespace Utility
+}  // namespace PacBio
 
 #include <pbcopper/utility/internal/FileUtils-inl.h>
 
-#endif // PBCOPPER_UTILITY_FILEUTILS_H
+#endif  // PBCOPPER_UTILITY_FILEUTILS_H

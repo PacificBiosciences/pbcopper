@@ -53,7 +53,7 @@ namespace Data {
 ///
 /// \note This class is agnostic whether the values are 0-based or 1-based.
 ///
-template<typename T>
+template <typename T>
 class Interval
 {
 public:
@@ -146,9 +146,9 @@ private:
     interval_type data_;
 };
 
-} // namespace Data
-} // namespace PacBio
+}  // namespace Data
+}  // namespace PacBio
 
 #include <pbcopper/data/internal/Interval-inl.h>
 
-#endif // PBCOPPER_DATA_INTERVAL_H
+#endif  // PBCOPPER_DATA_INTERVAL_H

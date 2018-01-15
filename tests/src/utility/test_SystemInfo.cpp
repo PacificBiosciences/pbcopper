@@ -1,6 +1,6 @@
 
-#include <pbcopper/utility/SystemInfo.h>
 #include <gtest/gtest.h>
+#include <pbcopper/utility/SystemInfo.h>
 using namespace PacBio;
 using namespace PacBio::Utility;
 
@@ -14,7 +14,7 @@ static inline bool isLittleEndian(void)
     return (*c == 1);
 }
 
-} // namespace SystemInfoTests
+}  // namespace SystemInfoTests
 
 TEST(Utility_SystemInfo, proper_byte_order_detected)
 {

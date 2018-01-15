@@ -47,7 +47,9 @@ namespace PacBio {
 namespace CLI {
 namespace ToolContract {
 
-namespace internal { class RtcPrivate; }
+namespace internal {
+class RtcPrivate;
+}
 
 class ResolvedToolContract
 {
@@ -62,9 +64,8 @@ private:
     std::unique_ptr<internal::RtcPrivate> d_;
 };
 
-} // namespace ToolContract
-} // namespace CLI
-} // namespace PacBio
+}  // namespace ToolContract
+}  // namespace CLI
+}  // namespace PacBio
 
-#endif // PBCOPPER_CLI_TOOLCONTRACT_RESOLVEDTOOLCONTRACT_H
-
+#endif  // PBCOPPER_CLI_TOOLCONTRACT_RESOLVEDTOOLCONTRACT_H

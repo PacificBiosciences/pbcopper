@@ -54,12 +54,9 @@ namespace Utility {
 template <typename T>
 inline void MoveAppend(std::vector<T>& src, std::vector<T>& dst) noexcept
 {
-    if (dst.empty())
-    {
+    if (dst.empty()) {
         dst = std::move(src);
-    }
-    else
-    {
+    } else {
         dst.reserve(dst.size() + src.size());
         std::move(src.begin(), src.end(), std::back_inserter(dst));
         src.clear();
@@ -74,19 +71,16 @@ inline void MoveAppend(std::vector<T>& src, std::vector<T>& dst) noexcept
 template <typename T>
 inline void MoveAppend(std::vector<T>&& src, std::vector<T>& dst) noexcept
 {
-    if (dst.empty())
-    {
+    if (dst.empty()) {
         dst = std::move(src);
-    }
-    else
-    {
+    } else {
         dst.reserve(dst.size() + src.size());
         std::move(src.begin(), src.end(), std::back_inserter(dst));
         src.clear();
     }
 }
 
-} // namespace Utility
-} // namespace PacBio
+}  // namespace Utility
+}  // namespace PacBio
 
-#endif // PBCOPPER_UTILITY_MOVEAPPEND_H
+#endif  // PBCOPPER_UTILITY_MOVEAPPEND_H

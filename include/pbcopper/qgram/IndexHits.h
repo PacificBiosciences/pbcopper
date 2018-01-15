@@ -57,7 +57,6 @@ namespace QGram {
 class IndexHits
 {
 public:
-
     ///
     /// \brief IndexHits
     /// \param source
@@ -65,7 +64,8 @@ public:
     ///
     IndexHits(const std::vector<IndexHit>* source, const size_t queryPos)
         : IndexHits(source, 0, source->size(), queryPos)
-    { }
+    {
+    }
 
     ///
     /// \brief IndexHits
@@ -73,14 +73,9 @@ public:
     /// \param begin
     /// \param end
     ///
-    IndexHits(const std::vector<IndexHit>* source,
-              const size_t begin,
-              const size_t end,
+    IndexHits(const std::vector<IndexHit>* source, const size_t begin, const size_t end,
               const size_t queryPos)
-        : source_(source)
-        , begin_(begin)
-        , end_(end)
-        , queryPos_(queryPos)
+        : source_(source), begin_(begin), end_(end), queryPos_(queryPos)
     {
         assert(source);
         assert(begin <= end);
@@ -97,27 +92,24 @@ public:
     /// \name STL compatibility
     /// \{
 
-    using iterator        = std::vector<IndexHit>::iterator;
-    using const_iterator  = std::vector<IndexHit>::const_iterator;
-    using reference       = std::vector<IndexHit>::reference;
+    using iterator = std::vector<IndexHit>::iterator;
+    using const_iterator = std::vector<IndexHit>::const_iterator;
+    using reference = std::vector<IndexHit>::reference;
     using const_reference = std::vector<IndexHit>::const_reference;
-    using size_type       = std::vector<IndexHit>::size_type;
+    using size_type = std::vector<IndexHit>::size_type;
 
-    const_iterator begin(void) const  { return source_->begin() + begin_; }
+    const_iterator begin(void) const { return source_->begin() + begin_; }
     const_iterator cbegin(void) const { return source_->cbegin() + begin_; }
-    const_iterator end(void) const    { return begin() + size(); }
-    const_iterator cend(void) const   { return cbegin() + size(); }
-    size_type size(void) const        { return end_ - begin_; }
+    const_iterator end(void) const { return begin() + size(); }
+    const_iterator cend(void) const { return cbegin() + size(); }
+    size_type size(void) const { return end_ - begin_; }
 
-    const_reference operator[]( size_type pos ) const
-    {
-        return *(source_->begin()+begin_+pos);
-    }
+    const_reference operator[](size_type pos) const { return *(source_->begin() + begin_ + pos); }
 
-    const_reference at( size_type pos ) const
+    const_reference at(size_type pos) const
     {
         assert(pos < size());
-        return *(source_->begin()+begin_+pos);
+        return *(source_->begin() + begin_ + pos);
     }
 
     /// \}
@@ -129,7 +121,7 @@ private:
     const size_t queryPos_;
 };
 
-} // namespace QGram
-} // namespace PacBio
+}  // namespace QGram
+}  // namespace PacBio
 
-#endif // PBCOPPER_QGRAM_INDEXHITS_H
+#endif  // PBCOPPER_QGRAM_INDEXHITS_H

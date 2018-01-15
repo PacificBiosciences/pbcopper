@@ -35,21 +35,17 @@
 
 // Author: Armin Töpfer
 
-#include <vector>
 #include <string>
+#include <vector>
 
 #include <gtest/gtest.h>
 #include <pbcopper/parallel/WorkQueue.h>
 
 using PacBio::Parallel::WorkQueue;
 
-
-void WorkerThread(PacBio::Parallel::WorkQueue<std::string>& queue,
-std::vector<std::string>* output)
+void WorkerThread(PacBio::Parallel::WorkQueue<std::string>& queue, std::vector<std::string>* output)
 {
-    auto LambdaWorker = [&](std::string&& ps) {
-        output->emplace_back(std::move(ps));
-    };
+    auto LambdaWorker = [&](std::string&& ps) { output->emplace_back(std::move(ps)); };
 
     while (queue.ConsumeWith(LambdaWorker)) {
     }
@@ -63,8 +59,8 @@ TEST(Parallel_WorkQueue, strings)
 
     std::vector<std::string> output;
     output.reserve(numElements);
-    std::future<void> workerThread = std::async(
-        std::launch::async, WorkerThread, std::ref(workQueue), &output);
+    std::future<void> workerThread =
+        std::async(std::launch::async, WorkerThread, std::ref(workQueue), &output);
 
     auto Submit = [](std::string& input) {
         input += "-done";

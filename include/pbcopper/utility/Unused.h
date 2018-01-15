@@ -43,10 +43,13 @@
 namespace PacBio {
 namespace Utility {
 
-template<typename T> void UNUSED(const T&) { }
+template <typename T>
+void UNUSED(const T&)
+{
+}
 
-} // namespace Utility
-} // namespace PacBio
+}  // namespace Utility
+}  // namespace PacBio
 
 // Convenience using-declaration
 //
@@ -63,4 +66,4 @@ template<typename T> void UNUSED(const T&) { }
 //
 using PacBio::Utility::UNUSED;
 
-#endif // PBCOPPER_UTILITY_UNUSED_H
+#endif  // PBCOPPER_UTILITY_UNUSED_H

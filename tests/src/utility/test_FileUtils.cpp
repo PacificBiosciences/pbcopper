@@ -1,15 +1,12 @@
 
 
-#include <pbcopper/utility/FileUtils.h>
 #include <gtest/gtest.h>
+#include <pbcopper/utility/FileUtils.h>
 
 using namespace PacBio;
 using namespace PacBio::Utility;
 
-TEST(Utility_FileUtils, FileExists)
-{
-    ASSERT_FALSE(FileExists("/dev/pacbio/doesnt/exist"));
-}
+TEST(Utility_FileUtils, FileExists) { ASSERT_FALSE(FileExists("/dev/pacbio/doesnt/exist")); }
 
 TEST(Utility_FileUtils, FilePrefix)
 {

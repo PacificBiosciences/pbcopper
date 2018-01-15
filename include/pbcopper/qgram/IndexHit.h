@@ -58,20 +58,14 @@ public:
     ///
     /// \brief IndexHit
     ///
-    IndexHit(void)
-        : id_(0)
-        , position_(0)
-    { }
+    IndexHit(void) : id_(0), position_(0) {}
 
     ///
     /// \brief IndexHit
     /// \param[in] id   index number of input sequence
     /// \param[in] pos  position in input sequence
     ///
-    IndexHit(const uint32_t id, const uint64_t pos)
-        : id_(id)
-        , position_(pos)
-    { }
+    IndexHit(const uint32_t id, const uint64_t pos) : id_(id), position_(pos) {}
 
     IndexHit(const IndexHit&) = default;
     IndexHit(IndexHit&&) = default;
@@ -79,7 +73,6 @@ public:
     IndexHit& operator=(IndexHit&&) = default;
 
 public:
-
     ///
     /// \brief Id
     /// \return id (index number) of Index input sequence containing this hit
@@ -105,11 +98,10 @@ private:
 ///
 inline bool operator==(const IndexHit& lhs, const IndexHit& rhs)
 {
-    return lhs.Id() == rhs.Id() &&
-           lhs.Position() == rhs.Position();
+    return lhs.Id() == rhs.Id() && lhs.Position() == rhs.Position();
 }
 
-} // namespace QGram
-} // namespace PacBio
+}  // namespace QGram
+}  // namespace PacBio
 
-#endif // PBCOPPER_QGRAM_INDEXHIT_H
+#endif  // PBCOPPER_QGRAM_INDEXHIT_H

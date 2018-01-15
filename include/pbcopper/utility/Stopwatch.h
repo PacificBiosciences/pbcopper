@@ -63,7 +63,6 @@ public:
     /// \}
 
 public:
-
     /// \returns the elapsed time (in milliseconds) since timing began.
     float ElapsedMilliseconds(void) const;
 
@@ -71,7 +70,7 @@ public:
     float ElapsedSeconds(void) const;
 
     /// \returns the elapsed time (in user-provided units) since timing began.
-    template<typename TimeUnit>
+    template <typename TimeUnit>
     float Elapsed(void) const;
 
     // resets internal values
@@ -81,9 +80,9 @@ private:
     std::chrono::steady_clock::time_point start_;
 };
 
-} // namespace Utility
-} // namespace PacBio
+}  // namespace Utility
+}  // namespace PacBio
 
 #include <pbcopper/utility/internal/Stopwatch-inl.h>
 
-#endif // PBCOPPER_UTILITY_STOPWATCH_H
+#endif  // PBCOPPER_UTILITY_STOPWATCH_H

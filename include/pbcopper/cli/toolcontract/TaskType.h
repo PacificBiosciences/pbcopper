@@ -46,13 +46,13 @@ namespace ToolContract {
 
 enum class TaskType
 {
-    STANDARD
-  , SCATTERED
-  , GATHERED
+    STANDARD,
+    SCATTERED,
+    GATHERED
 };
 
-} // namespace ToolContract
-} // namespace CLI
-} // namespace PacBio
+}  // namespace ToolContract
+}  // namespace CLI
+}  // namespace PacBio
 
-#endif // PBCOPPER_CLI_TOOLCONTRACT_TASKTYPE_H
+#endif  // PBCOPPER_CLI_TOOLCONTRACT_TASKTYPE_H

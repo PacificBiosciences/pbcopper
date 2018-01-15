@@ -1,6 +1,6 @@
 
-#include <pbcopper/cli/Results.h>
 #include <gtest/gtest.h>
+#include <pbcopper/cli/Results.h>
 using namespace PacBio;
 using namespace PacBio::CLI;
 using namespace std;
@@ -9,6 +9,7 @@ namespace ResultsTests {
 
 static PacBio::CLI::Interface makeInterface(void)
 {
+    // clang-format off
     Interface i {
         "frobber",
         "Frobb your files in a most delightful, nobbly way",
@@ -31,40 +32,40 @@ static PacBio::CLI::Interface makeInterface(void)
         {"dest",   "Destination directory."},
         {"extras", "Extra stuff to pass in here, optionally.", "[extras...]"}
     });
+    // clang-format on
 
     return i;
 }
 
-} // namespace ResultsTests
+}  // namespace ResultsTests
 
 TEST(CLI_Results, option_default_values_respected)
 {
-    Results r{ ResultsTests::makeInterface() };
+    Results r{ResultsTests::makeInterface()};
     EXPECT_FALSE(r["force"]);
-    EXPECT_FALSE(r["timeout"].empty());     // has a default
+    EXPECT_FALSE(r["timeout"].empty());  // has a default
     EXPECT_TRUE(r.PositionalArguments().empty());
 }
 
 TEST(CLI_Results, add_observed_option_value)
 {
-    Results r{ ResultsTests::makeInterface() };
+    Results r{ResultsTests::makeInterface()};
     r.RegisterOptionValue("timeout", "42");
     EXPECT_EQ(string("42"), r["timeout"]);
 }
 
 TEST(CLI_Results, adding_positional_args)
 {
-    Results r{ ResultsTests::makeInterface() };
-    r.RegisterPositionalArg("source_file")
-     .RegisterPositionalArg("dest_file");
+    Results r{ResultsTests::makeInterface()};
+    r.RegisterPositionalArg("source_file").RegisterPositionalArg("dest_file");
 
     // lookup by index
     const auto& resultPositionalArgs = r.PositionalArguments();
     EXPECT_EQ(2, resultPositionalArgs.size());
-    EXPECT_EQ(string("source_file"),   resultPositionalArgs.at(0));
+    EXPECT_EQ(string("source_file"), resultPositionalArgs.at(0));
     EXPECT_EQ(string("dest_file"), resultPositionalArgs.at(1));
 
-//    // lookup by name (order-independent at this point)
-//    EXPECT_EQ(string("dest_file"),   r.PositionalArgument("dest"));
-//    EXPECT_EQ(string("source_file"), r.PositionalArgument("source"));
+    //    // lookup by name (order-independent at this point)
+    //    EXPECT_EQ(string("dest_file"),   r.PositionalArgument("dest"));
+    //    EXPECT_EQ(string("source_file"), r.PositionalArgument("source"));
 }

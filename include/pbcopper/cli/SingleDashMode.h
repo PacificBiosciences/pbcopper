@@ -48,11 +48,11 @@ namespace CLI {
 ///
 enum class SingleDashMode
 {
-    ParseAsShortOptions, // "-abc" equivalent to "-a -b -c" (default & recommended)
-    ParseAsLongOptions   // "-abc" equivalent to "--abc"
+    ParseAsShortOptions,  // "-abc" equivalent to "-a -b -c" (default & recommended)
+    ParseAsLongOptions    // "-abc" equivalent to "--abc"
 };
 
-} // namespace CLI
-} // namespace PacBio
+}  // namespace CLI
+}  // namespace PacBio
 
-#endif // PBCOPPER_CLI_SINGLEDASHMODE_H
+#endif  // PBCOPPER_CLI_SINGLEDASHMODE_H

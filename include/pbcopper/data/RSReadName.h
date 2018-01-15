@@ -47,7 +47,7 @@ namespace Data {
 
 typedef internal::ReadNameBase<RSMovieName> RSReadName;
 
-} // namespace Data
-} // namespace PacBio
+}  // namespace Data
+}  // namespace PacBio
 
-#endif // PBCOPPER_DATA_RSREADNAME_H
+#endif  // PBCOPPER_DATA_RSREADNAME_H

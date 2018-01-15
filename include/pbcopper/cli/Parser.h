@@ -50,7 +50,9 @@ namespace CLI {
 
 class Interface;
 
-namespace internal { class ParserPrivate; }
+namespace internal {
+class ParserPrivate;
+}
 
 ///
 /// \brief The Parser class
@@ -97,7 +99,7 @@ private:
     std::unique_ptr<internal::ParserPrivate> d_;
 };
 
-} // namespace CLI
-} // namespace PacBio
+}  // namespace CLI
+}  // namespace PacBio
 
-#endif // PBCOPPER_CLI_PARSER_H
+#endif  // PBCOPPER_CLI_PARSER_H

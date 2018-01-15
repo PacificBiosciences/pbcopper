@@ -56,6 +56,7 @@ namespace Data {
 ///          trigger a std::runtime_error. SEQUENCE_MATCH('=) or
 ///          SEQUENCE_MISMATCH('X') should be used instead.
 ///
+// clang-format off
 enum class CigarOperationType
 {
     UNKNOWN_OP        = -1 ///< unknown/invalid CIGAR operator
@@ -69,6 +70,7 @@ enum class CigarOperationType
   , SEQUENCE_MATCH         ///< sequence match [=]
   , SEQUENCE_MISMATCH      ///< sequence mismatch [X]
 };
+// clang-format on
 
 /// \brief The CigarOperation class represents a single CIGAR operation
 ///        (consisting of a type & length).
@@ -76,7 +78,6 @@ enum class CigarOperationType
 class CigarOperation
 {
 public:
-
     /// \name Operation Type Conversion Methods
     /// \{
 
@@ -200,9 +201,9 @@ std::istream& operator>>(std::istream& in, CigarOperation& op);
 ///
 std::ostream& operator<<(std::ostream& out, const CigarOperation& op);
 
-} // namespace Data
-} // namespace PacBio
+}  // namespace Data
+}  // namespace PacBio
 
 #include <pbcopper/data/internal/CigarOperation-inl.h>
 
-#endif // PBCOPPER_DATA_CIGAROPERATION_H
+#endif  // PBCOPPER_DATA_CIGAROPERATION_H

@@ -60,14 +60,14 @@ class LogLevel
 public:
     enum : unsigned char
     {
-        TRACE    = 0,
-        DEBUG    = 1,
-        INFO     = 2,
-        NOTICE   = 3,
-        WARN     = 4,
-        ERROR    = 5,
+        TRACE = 0,
+        DEBUG = 1,
+        INFO = 2,
+        NOTICE = 3,
+        WARN = 4,
+        ERROR = 5,
         CRITICAL = 6,
-        FATAL    = 7,
+        FATAL = 7,
 
         MAX_LOG_LEVEL = 8
     };
@@ -84,7 +84,7 @@ private:
 };
 
 typedef std::reference_wrapper<std::ostream> OStreamWrapper;
-typedef std::vector<OStreamWrapper>          OStreams;
+typedef std::vector<OStreamWrapper> OStreams;
 
 class LoggerConfig : public std::map<LogLevel, OStreams>
 {
@@ -106,7 +106,7 @@ public:
     static Logger& Default(Logger* logger = nullptr);
 
 public:
-    template<typename... Args>
+    template <typename... Args>
     Logger(Args&&... args);
 
     Logger(const Logger& other) = delete;
@@ -130,10 +130,7 @@ private:
 class LogMessage
 {
 public:
-    LogMessage(const char* file,
-               const char* function,
-               unsigned int line,
-               const LogLevel level,
+    LogMessage(const char* file, const char* function, unsigned int line, const LogLevel level,
                Logger& logger);
     LogMessage(const LogMessage& msg) = delete;
     ~LogMessage(void);
@@ -149,7 +146,7 @@ private:
 
 // trace is disabled under Release builds (-DNDEBUG)
 #ifdef NDEBUG
-#define PBLOGGER_LEVEL(lg, lvl)                                             \
+#define PBLOGGER_LEVEL(lg, lvl)                                   \
     if (PacBio::Logging::lvl != PacBio::Logging::LogLevel::TRACE) \
     PacBio::Logging::LogMessage(__FILE__, __func__, __LINE__, PacBio::Logging::lvl, (lg))
 #else
@@ -160,34 +157,34 @@ private:
 //
 // Log message with desired log level & provided logger
 //
-#define PBLOGGER_TRACE(lg)    PBLOGGER_LEVEL(lg, LogLevel::TRACE)
-#define PBLOGGER_DEBUG(lg)    PBLOGGER_LEVEL(lg, LogLevel::DEBUG)
-#define PBLOGGER_INFO(lg)     PBLOGGER_LEVEL(lg, LogLevel::INFO)
-#define PBLOGGER_NOTICE(lg)   PBLOGGER_LEVEL(lg, LogLevel::NOTICE)
-#define PBLOGGER_WARN(lg)     PBLOGGER_LEVEL(lg, LogLevel::WARN)
-#define PBLOGGER_ERROR(lg)    PBLOGGER_LEVEL(lg, LogLevel::ERROR)
+#define PBLOGGER_TRACE(lg) PBLOGGER_LEVEL(lg, LogLevel::TRACE)
+#define PBLOGGER_DEBUG(lg) PBLOGGER_LEVEL(lg, LogLevel::DEBUG)
+#define PBLOGGER_INFO(lg) PBLOGGER_LEVEL(lg, LogLevel::INFO)
+#define PBLOGGER_NOTICE(lg) PBLOGGER_LEVEL(lg, LogLevel::NOTICE)
+#define PBLOGGER_WARN(lg) PBLOGGER_LEVEL(lg, LogLevel::WARN)
+#define PBLOGGER_ERROR(lg) PBLOGGER_LEVEL(lg, LogLevel::ERROR)
 #define PBLOGGER_CRITICAL(lg) PBLOGGER_LEVEL(lg, LogLevel::CRITICAL)
-#define PBLOGGER_FATAL(lg)    PBLOGGER_LEVEL(lg, LogLevel::FATAL)
+#define PBLOGGER_FATAL(lg) PBLOGGER_LEVEL(lg, LogLevel::FATAL)
 
 //
 // Log message with desired log level & default logger
 //
 #define PBLOG_LEVEL(lvl) PBLOGGER_LEVEL(PacBio::Logging::Logger::Default(), lvl)
 
-#define PBLOG_TRACE    PBLOG_LEVEL(LogLevel::TRACE)
-#define PBLOG_DEBUG    PBLOG_LEVEL(LogLevel::DEBUG)
-#define PBLOG_INFO     PBLOG_LEVEL(LogLevel::INFO)
-#define PBLOG_NOTICE   PBLOG_LEVEL(LogLevel::NOTICE)
-#define PBLOG_WARN     PBLOG_LEVEL(LogLevel::WARN)
-#define PBLOG_ERROR    PBLOG_LEVEL(LogLevel::ERROR)
+#define PBLOG_TRACE PBLOG_LEVEL(LogLevel::TRACE)
+#define PBLOG_DEBUG PBLOG_LEVEL(LogLevel::DEBUG)
+#define PBLOG_INFO PBLOG_LEVEL(LogLevel::INFO)
+#define PBLOG_NOTICE PBLOG_LEVEL(LogLevel::NOTICE)
+#define PBLOG_WARN PBLOG_LEVEL(LogLevel::WARN)
+#define PBLOG_ERROR PBLOG_LEVEL(LogLevel::ERROR)
 #define PBLOG_CRITICAL PBLOG_LEVEL(LogLevel::CRITICAL)
-#define PBLOG_FATAL    PBLOG_LEVEL(LogLevel::FATAL)
+#define PBLOG_FATAL PBLOG_LEVEL(LogLevel::FATAL)
 
 extern void InstallSignalHandlers(Logger& logger = Logger::Default());
 
-} // namespace Logging
-} // namespace PacBio
+}  // namespace Logging
+}  // namespace PacBio
 
 #include <pbcopper/logging/internal/Logging-inl.h>
 
-#endif // PBCOPPER_LOGGING_LOGGING_H
+#endif  // PBCOPPER_LOGGING_LOGGING_H
