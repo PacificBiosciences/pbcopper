@@ -15,7 +15,7 @@ export CC=gcc CXX=g++
 
 echo "# BUILD"
 echo "## Create build directory "
-if [ ! -d build ] ; then mkdir build ; fi
+mkdir -p build
 
 echo "## Build source"
 ( cd build &&\
@@ -43,3 +43,6 @@ UNSUPPORTED_URL=http://ossnexus.pacificbiosciences.com/repository/unsupported
 curl -vn --upload-file pbcopper-SNAPSHOT.tgz      $UNSUPPORTED_URL/gcc-6.4.0/pbcopper-SNAPSHOT.tgz
 curl -vn --upload-file pbcopper-SNAPSHOT.tgz.md5  $UNSUPPORTED_URL/gcc-6.4.0/pbcopper-SNAPSHOT.tgz.md5
 curl -vn --upload-file pbcopper-SNAPSHOT.tgz.sha1 $UNSUPPORTED_URL/gcc-6.4.0/pbcopper-SNAPSHOT.tgz.sha1
+rm -rf /mnt/software/p/pbcopper/snapshot/lib
+rm -rf /mnt/software/p/pbcopper/snapshot/include
+tar zxvf pbcopper-SNAPSHOT.tgz -C /mnt/software/p/pbcopper/snapshot/
