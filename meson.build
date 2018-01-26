@@ -4,7 +4,6 @@ project(
   version : '0.2.0',
   default_options : [
     'buildtype=release',
-    'default_library=static',
     'warning_level=3',
     'cpp_std=c++14'],
   license : 'BSD-3',
@@ -53,17 +52,17 @@ subdir('src')
 
 if not meson.is_subproject()
   # examples
-  if get_option('enable-build-examples')
+  if get_option('build-examples')
     subdir('examples')
   endif
 
   # documentation
-  if get_option('enable-build-docs')
+  if get_option('build-docs')
     subdir('docs')
   endif
 
   # tests
-  if get_option('enable-tests')
+  if get_option('tests')
     pbcopper_clang_formatter = find_program('tools/check-formatting')
     subdir('tests')
   endif
