@@ -218,6 +218,47 @@ TEST(QGram_Index, index_construct)
     }
 }
 
+TEST(QGram_Index, index_copy)
+{
+    const std::vector<uint64_t> expected{118, 119, 120, 121, 122, 123, 124, 125, 126, 127,
+                                         128, 129, 130, 131, 51,  132, 133, 134, 135, 266,
+                                         136, 137, 138, 139, 140, 141, 142, 143, 144, 145,
+                                         146, 147, 148, 149, 150, 151, 152, 153, 154};
+
+    const std::string inputSeq{
+        "TCCAACTTAGGCATAAACCTGCATGCTACCTTGTCAGACCCACTCTGCACGAAGTAA"
+        "ATATGGGATGCGTCCGACCTGGCTCCTGGCGTTCCACGCCGCCACGTGTTCGTTAAC"
+        "TGTTGATTGGTGGCACATAAGTAATACCATGGTCCCTGAAATTCGGCTCAGTTACTT"
+        "CGAGCGTAATGTCTCAAATGGCGTAGAACGGCAATGACTGTTTGACACTAGGTGGTG"
+        "TTCAGTTCGGTAACGGAGAGTCTGTGCGGCATTCTTATTAATACATTTGAAACGCGC"
+        "CCAACTGACGCTAGGCAAGTCAGTGCAGGCTCCCGTGTTAGGATAAGGGTAAACATA"
+        "CAAGTCGATAGAAGATGGGTAGGGGCCTTCAATTCATCCAGCACTCTACGGTTCCTC"
+        "CGAGAGCAAGTAGGGCACCCTGTAGTTCGAAGGGGAACTATTTCGTGGGGCGAGCCC"
+        "ACACCGTCTCTTCTGCGGAAGACTTAACACGTTAGGGAGGTGGA"};
+
+    const std::string query{"GATTGGTGGCACATAAGTAATACCATGGTCCCTGAAATTCGG"};
+
+    auto checkIndexHits = [](const PacBio::QGram::Index& index, const std::string& query,
+                             const std::vector<uint64_t>& expected) {
+        std::vector<uint64_t> observed;
+        for (const auto& hits : index.Hits(query)) {
+            for (const auto& hit : hits) {
+                EXPECT_EQ(0, hit.Id());
+                observed.push_back(hit.Position());
+            }
+        }
+        EXPECT_EQ(expected, observed);
+    };
+
+    const PacBio::QGram::Index idx{6, inputSeq};
+    const PacBio::QGram::Index idxCopy{idx};
+    const PacBio::QGram::Index idxAssign = idx;
+
+    checkIndexHits(idx, query, expected);
+    checkIndexHits(idxCopy, query, expected);
+    checkIndexHits(idxAssign, query, expected);
+}
+
 TEST(QGram_Index, index_hits_INTERNAL_from_shape_short_seq)
 {
     const std::vector<PacBio::QGram::IndexHit> expected{{0, 0}, {0, 8}};

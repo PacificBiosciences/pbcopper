@@ -58,8 +58,7 @@ public:
 
 public:
     // ctor
-    IndexImpl(const size_t q, const std::vector<std::string>& seqs);
-    IndexImpl(const size_t q, std::vector<std::string>&& seqs);
+    IndexImpl(size_t q, std::vector<std::string> seqs);
 
     // index lookup API
     IndexHit Hit(const Shape& shape) const;
@@ -71,24 +70,17 @@ public:
 
     // "private" method(s) - purely for testing access
     const HashLookup_t& HashLookup(void) const;
-    const size_t& Size(void) const;
+    size_t Size(void) const;
     const SuffixArray_t& SuffixArray(void) const;
 
 private:
-    const size_t q_;                       // qGramSize
-    const std::vector<std::string> seqs_;  // underlying text
-    SuffixArray_t suffixArray_;            // suffix array sorted by the first q chars
-    HashLookup_t hashLookup_;              // hash value -> SA index
+    size_t q_;                       // qGramSize
+    std::vector<std::string> seqs_;  // underlying text
+    SuffixArray_t suffixArray_;      // suffix array sorted by the first q chars
+    HashLookup_t hashLookup_;        // hash value -> SA index
 };
 
-inline IndexImpl::IndexImpl(const size_t q, const std::vector<std::string>& seqs)
-    : q_{q}, seqs_{seqs}
-{
-    Init();
-}
-
-inline IndexImpl::IndexImpl(const size_t q, std::vector<std::string>&& seqs)
-    : q_{q}, seqs_{std::move(seqs)}
+inline IndexImpl::IndexImpl(size_t q, std::vector<std::string> seqs) : q_{q}, seqs_{std::move(seqs)}
 {
     Init();
 }
@@ -187,24 +179,26 @@ inline std::vector<IndexHits> IndexImpl::Hits(const std::string& seq,
     return result;
 }
 
-inline const size_t& IndexImpl::Size(void) const { return q_; }
+inline size_t IndexImpl::Size(void) const { return q_; }
 
 inline const IndexImpl::SuffixArray_t& IndexImpl::SuffixArray(void) const { return suffixArray_; }
 
 }  // namespace internal
 
-inline Index::Index(const size_t q, const std::string& seq) : Index{q, {1, seq}} {}
+inline Index::Index(size_t q, std::string seq) : Index{q, {1, std::move(seq)}} {}
 
-inline Index::Index(const size_t q, std::string&& seq) : Index{q, {1, std::move(seq)}} {}
-
-inline Index::Index(const size_t q, const std::vector<std::string>& seqs)
-    : d_(new internal::IndexImpl(q, seqs))
+inline Index::Index(size_t q, std::vector<std::string> seqs)
+    //    : d_(new internal::IndexImpl(q, std::move(seqs)))
+    : d_{std::make_unique<internal::IndexImpl>(q, std::move(seqs))}
 {
 }
 
-inline Index::Index(const size_t q, std::vector<std::string>&& seqs)
-    : d_(new internal::IndexImpl(q, std::move(seqs)))
+inline Index::Index(const Index& other) : d_{std::make_unique<internal::IndexImpl>(*other.d_)} {}
+
+inline Index& Index::operator=(const Index& other)
 {
+    d_ = std::make_unique<internal::IndexImpl>(*other.d_);
+    return *this;
 }
 
 inline std::vector<IndexHits> Index::Hits(const std::string& seq,
