@@ -188,7 +188,6 @@ inline const IndexImpl::SuffixArray_t& IndexImpl::SuffixArray(void) const { retu
 inline Index::Index(size_t q, std::string seq) : Index{q, {1, std::move(seq)}} {}
 
 inline Index::Index(size_t q, std::vector<std::string> seqs)
-    //    : d_(new internal::IndexImpl(q, std::move(seqs)))
     : d_{std::make_unique<internal::IndexImpl>(q, std::move(seqs))}
 {
 }
