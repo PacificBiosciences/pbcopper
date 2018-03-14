@@ -1,6 +1,6 @@
 
-#include <pbcopper/cli/Interface.h>
 #include <gtest/gtest.h>
+#include <pbcopper/cli/Interface.h>
 using namespace PacBio;
 using namespace PacBio::CLI;
 using namespace std;
@@ -31,18 +31,17 @@ static bool HasOption(const Interface& i, const string& name)
     for (auto&& option : options) {
         const auto aliases = option.Names();
         for (auto&& alias : aliases) {
-            if (alias == name)
-                return true;
+            if (alias == name) return true;
         }
     }
     return false;
 }
 
-} // namespace InterfaceTests
+}  // namespace InterfaceTests
 
 TEST(CLI_Interface, can_be_constructed_from_name_only)
 {
-    PacBio::CLI::Interface cl{ InterfaceTests::AppName() };
+    PacBio::CLI::Interface cl{InterfaceTests::AppName()};
     EXPECT_EQ(InterfaceTests::AppName(), cl.ApplicationName());
     EXPECT_TRUE(cl.ApplicationDescription().empty());
     EXPECT_TRUE(cl.ApplicationVersion().empty());
@@ -50,18 +49,19 @@ TEST(CLI_Interface, can_be_constructed_from_name_only)
 
 TEST(CLI_Interface, can_be_constructed_from_name_and_description)
 {
-    PacBio::CLI::Interface cl{ InterfaceTests::AppName(), InterfaceTests::AppDescription() };
-    EXPECT_EQ(InterfaceTests::AppName(),        cl.ApplicationName());
+    PacBio::CLI::Interface cl{InterfaceTests::AppName(), InterfaceTests::AppDescription()};
+    EXPECT_EQ(InterfaceTests::AppName(), cl.ApplicationName());
     EXPECT_EQ(InterfaceTests::AppDescription(), cl.ApplicationDescription());
     EXPECT_TRUE(cl.ApplicationVersion().empty());
 }
 
 TEST(CLI_Interface, can_be_constructed_from_name_description_and_version)
 {
-    PacBio::CLI::Interface cl{ InterfaceTests::AppName(), InterfaceTests::AppDescription(), InterfaceTests::AppVersion() };
-    EXPECT_EQ(InterfaceTests::AppName(),        cl.ApplicationName());
+    PacBio::CLI::Interface cl{InterfaceTests::AppName(), InterfaceTests::AppDescription(),
+                              InterfaceTests::AppVersion()};
+    EXPECT_EQ(InterfaceTests::AppName(), cl.ApplicationName());
     EXPECT_EQ(InterfaceTests::AppDescription(), cl.ApplicationDescription());
-    EXPECT_EQ(InterfaceTests::AppVersion(),     cl.ApplicationVersion());
+    EXPECT_EQ(InterfaceTests::AppVersion(), cl.ApplicationVersion());
 }
 
 TEST(CLI_Interface, construction_with_empty_name_throws)
@@ -71,8 +71,8 @@ TEST(CLI_Interface, construction_with_empty_name_throws)
 
 TEST(CLI_Interface, add_single_option_with_a_single_alias)
 {
-    PacBio::CLI::Interface cl{ InterfaceTests::AppName() };
-    cl.AddOption({"opt_id","o", "write output"});//, "outFile", "default"});
+    PacBio::CLI::Interface cl{InterfaceTests::AppName()};
+    cl.AddOption({"opt_id", "o", "write output"});  //, "outFile", "default"});
 
     const auto registered = cl.RegisteredOptions();
     EXPECT_EQ(1, registered.size());
@@ -81,8 +81,8 @@ TEST(CLI_Interface, add_single_option_with_a_single_alias)
 
 TEST(CLI_Interface, add_single_option_with_multiple_aliases)
 {
-    PacBio::CLI::Interface cl{ InterfaceTests::AppName() };
-    cl.AddOption({"opt_id", {"o", "output"}, "write output"});//, "outFile", "default"});
+    PacBio::CLI::Interface cl{InterfaceTests::AppName()};
+    cl.AddOption({"opt_id", {"o", "output"}, "write output"});  //, "outFile", "default"});
 
     const auto registered = cl.RegisteredOptions();
     EXPECT_EQ(1, registered.size());
@@ -91,9 +91,9 @@ TEST(CLI_Interface, add_single_option_with_multiple_aliases)
 
 TEST(CLI_Interface, add_multiple_options_one_at_a_time)
 {
-    PacBio::CLI::Interface cl{ InterfaceTests::AppName() };
-    cl.AddOption({"opt_id", {"o", "output"}, "write output"});//, "outFile", "defaultOut"});
-    cl.AddOption({"opt_id2", {"i", "input"}, "write input"});//, "inFile", "defaultIn"});
+    PacBio::CLI::Interface cl{InterfaceTests::AppName()};
+    cl.AddOption({"opt_id", {"o", "output"}, "write output"});  //, "outFile", "defaultOut"});
+    cl.AddOption({"opt_id2", {"i", "input"}, "write input"});   //, "inFile", "defaultIn"});
 
     const auto registered = cl.RegisteredOptions();
     EXPECT_EQ(2, registered.size());
@@ -103,10 +103,10 @@ TEST(CLI_Interface, add_multiple_options_one_at_a_time)
 
 TEST(CLI_Interface, add_multple_options_as_batch)
 {
-    PacBio::CLI::Interface cl{ InterfaceTests::AppName() };
+    PacBio::CLI::Interface cl{InterfaceTests::AppName()};
     cl.AddOptions({
-        {"opt_id", {"o", "output"}, "write output"},//, "outFile", "defaultOut"},
-        {"opt_id2", {"i", "input"}, "write input"}  //, "inFile", "defaultIn"}
+        {"opt_id", {"o", "output"}, "write output"},  //, "outFile", "defaultOut"},
+        {"opt_id2", {"i", "input"}, "write input"}    //, "inFile", "defaultIn"}
     });
 
     const auto registered = cl.RegisteredOptions();
@@ -117,7 +117,7 @@ TEST(CLI_Interface, add_multple_options_as_batch)
 
 TEST(CLI_Interface, add_single_positional_arg)
 {
-    PacBio::CLI::Interface cl{ InterfaceTests::AppName() };
+    PacBio::CLI::Interface cl{InterfaceTests::AppName()};
     cl.AddPositionalArgument({"source", "Source file to copy."});
 
     const auto registered = cl.RegisteredPositionalArgs();
@@ -127,7 +127,7 @@ TEST(CLI_Interface, add_single_positional_arg)
 
 TEST(CLI_Interface, add_multiple_positional_args_one_at_a_time)
 {
-    PacBio::CLI::Interface cl{ InterfaceTests::AppName() };
+    PacBio::CLI::Interface cl{InterfaceTests::AppName()};
     cl.AddPositionalArgument({"source", "Source file to copy."});
     cl.AddPositionalArgument({"dest", "Target destination"});
 
@@ -139,11 +139,8 @@ TEST(CLI_Interface, add_multiple_positional_args_one_at_a_time)
 
 TEST(CLI_Interface, add_multiple_positional_args_as_batch)
 {
-    PacBio::CLI::Interface cl{ InterfaceTests::AppName() };
-    cl.AddPositionalArguments({
-        {"source", "Source file to copy."},
-        {"dest", "Target destination"}
-    });
+    PacBio::CLI::Interface cl{InterfaceTests::AppName()};
+    cl.AddPositionalArguments({{"source", "Source file to copy."}, {"dest", "Target destination"}});
 
     const auto registered = cl.RegisteredPositionalArgs();
     EXPECT_EQ(2, registered.size());
@@ -153,57 +150,51 @@ TEST(CLI_Interface, add_multiple_positional_args_as_batch)
 
 TEST(CLI_Interface, does_not_have_help_option_by_default)
 {
-    PacBio::CLI::Interface cl{ InterfaceTests::AppName() };
+    PacBio::CLI::Interface cl{InterfaceTests::AppName()};
     EXPECT_FALSE(InterfaceTests::HasOption(cl, "help"));
 }
 
 TEST(CLI_Interface, has_help_option_if_requested)
 {
-    PacBio::CLI::Interface cl{ InterfaceTests::AppName() };
+    PacBio::CLI::Interface cl{InterfaceTests::AppName()};
     cl.AddHelpOption();
     EXPECT_TRUE(InterfaceTests::HasOption(cl, "help"));
 }
 
 TEST(CLI_Interface, does_not_have_verbose_option_by_default)
 {
-    PacBio::CLI::Interface cl{ InterfaceTests::AppName() };
+    PacBio::CLI::Interface cl{InterfaceTests::AppName()};
     EXPECT_FALSE(InterfaceTests::HasOption(cl, "verbose"));
 }
 
 TEST(CLI_Interface, has_verbose_option_if_requested)
 {
-    PacBio::CLI::Interface cl{ InterfaceTests::AppName() };
+    PacBio::CLI::Interface cl{InterfaceTests::AppName()};
     cl.AddVerboseOption();
     EXPECT_TRUE(InterfaceTests::HasOption(cl, "verbose"));
 }
 
 TEST(CLI_Interface, does_not_have_version_option_by_default)
 {
-    PacBio::CLI::Interface cl{ InterfaceTests::AppName() };
+    PacBio::CLI::Interface cl{InterfaceTests::AppName()};
     EXPECT_FALSE(InterfaceTests::HasOption(cl, "version"));
 }
 
 TEST(CLI_Interface, has_version_option_if_requested)
 {
-    PacBio::CLI::Interface cl{ InterfaceTests::AppName() };
+    PacBio::CLI::Interface cl{InterfaceTests::AppName()};
     cl.AddVersionOption();
     EXPECT_TRUE(InterfaceTests::HasOption(cl, "version"));
 }
 
 TEST(CLI_Interface, add_group)
 {
-    PacBio::CLI::Interface cl{ InterfaceTests::AppName() };
+    PacBio::CLI::Interface cl{InterfaceTests::AppName()};
 
-    cl.AddGroup("group1",
-    {
-        {"opt_id",  {"o", "output"}, "write output"},
-        {"opt_id2", {"i", "input"},  "write input"}
-    });
+    cl.AddGroup("group1", {{"opt_id", {"o", "output"}, "write output"},
+                           {"opt_id2", {"i", "input"}, "write input"}});
 
-    cl.AddGroup("group2",
-    {
-        {"opt_id3", {"p"}, "progress"}
-    });
+    cl.AddGroup("group2", {{"opt_id3", {"p"}, "progress"}});
 
     const auto& groups = cl.Groups();
     EXPECT_EQ(2, groups.size());
@@ -212,7 +203,7 @@ TEST(CLI_Interface, add_group)
 
     const auto& group1 = cl.GroupOptions("group1");
     EXPECT_EQ(2, group1.size());
-    EXPECT_EQ(string{"opt_id"},  group1.at(0).Id());
+    EXPECT_EQ(string{"opt_id"}, group1.at(0).Id());
     EXPECT_EQ(string{"opt_id2"}, group1.at(1).Id());
 
     const auto& group2 = cl.GroupOptions("group2");

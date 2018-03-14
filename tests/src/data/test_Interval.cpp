@@ -1,7 +1,7 @@
 
+#include <gtest/gtest.h>
 #include <pbcopper/data/Interval.h>
 #include <pbcopper/data/Position.h>
-#include <gtest/gtest.h>
 using namespace PacBio;
 using namespace PacBio::Data;
 using namespace std;
@@ -33,9 +33,9 @@ TEST(Data_Interval, self_equals_self)
     Interval<Position> singleton(4);
     Interval<Position> normal(5, 8);
 
-    EXPECT_TRUE(empty     == empty);
+    EXPECT_TRUE(empty == empty);
     EXPECT_TRUE(singleton == singleton);
-    EXPECT_TRUE(normal    == normal);
+    EXPECT_TRUE(normal == normal);
 }
 
 TEST(Data_Interval, intervals_with_same_endpoints_are_equal)
@@ -43,13 +43,13 @@ TEST(Data_Interval, intervals_with_same_endpoints_are_equal)
     Interval<Position> empty;
     Interval<Position> sameAsEmpty;
     Interval<Position> singleton(4);
-    Interval<Position> sameAsSingleton(4,5);
+    Interval<Position> sameAsSingleton(4, 5);
     Interval<Position> normal(5, 8);
     Interval<Position> sameAsNormal(5, 8);
 
-    EXPECT_TRUE(empty     == sameAsEmpty);
+    EXPECT_TRUE(empty == sameAsEmpty);
     EXPECT_TRUE(singleton == sameAsSingleton);
-    EXPECT_TRUE(normal    == sameAsNormal);
+    EXPECT_TRUE(normal == sameAsNormal);
 }
 
 TEST(Data_Interval, intervals_with_different_endpoints_are_not_equal)
@@ -104,11 +104,11 @@ TEST(Data_Interval, covers_and_coveredby_are_reciprocal)
     Interval<Position> inner(3, 5);
     Interval<Position> outer(1, 7);
 
-    EXPECT_TRUE(inner.CoveredBy(outer)); // a.coveredBy(b)
-    EXPECT_TRUE(outer.Covers(inner));    // thus b.covers(a)
+    EXPECT_TRUE(inner.CoveredBy(outer));  // a.coveredBy(b)
+    EXPECT_TRUE(outer.Covers(inner));     // thus b.covers(a)
 
-    EXPECT_FALSE(inner == outer);        // if a != b
-    EXPECT_FALSE(inner.Covers(outer));   // then !a.covers(b)
+    EXPECT_FALSE(inner == outer);       // if a != b
+    EXPECT_FALSE(inner.Covers(outer));  // then !a.covers(b)
 }
 
 TEST(Data_Interval, completely_disjoint_intervals_do_not_cover_each_other)
@@ -148,23 +148,24 @@ TEST(Data_Interval, calculates_proper_intersection)
     Interval<Position> interval4(1, 7);
     Interval<Position> interval5(5, 8);
 
-    EXPECT_TRUE(interval1.Intersects(interval1)); // self-intersection: a.intersects(a)
+    EXPECT_TRUE(interval1.Intersects(interval1));  // self-intersection: a.intersects(a)
 
-    EXPECT_TRUE(interval1.Intersects(interval2)); // if a.intersects(b)
-    EXPECT_TRUE(interval2.Intersects(interval1)); // then b.intersects(a)
+    EXPECT_TRUE(interval1.Intersects(interval2));  // if a.intersects(b)
+    EXPECT_TRUE(interval2.Intersects(interval1));  // then b.intersects(a)
 
     EXPECT_TRUE(interval4.Covers(interval1));      // if b.covers(a),
     EXPECT_TRUE(interval1.Intersects(interval4));  // then a.intersects(b)
     EXPECT_TRUE(interval4.Intersects(interval1));  // and b.intersects(a)
 
-    EXPECT_FALSE(interval2.Intersects(interval3)); // b.start > a.stop (obvious disjoint)
-    EXPECT_FALSE(interval2.Intersects(interval5)); // b.start == a.stop (intervals are right open, so disjoint)
+    EXPECT_FALSE(interval2.Intersects(interval3));  // b.start > a.stop (obvious disjoint)
+    EXPECT_FALSE(interval2.Intersects(
+        interval5));  // b.start == a.stop (intervals are right open, so disjoint)
 }
 
 TEST(Data_Interval, acceptable_endpoints_are_valid)
 {
-    Interval<Position> zeroStartInterval(0,1);
-    Interval<Position> nonZeroStartInterval(4,5);
+    Interval<Position> zeroStartInterval(0, 1);
+    Interval<Position> nonZeroStartInterval(4, 5);
 
     EXPECT_TRUE(zeroStartInterval.IsValid());
     EXPECT_TRUE(nonZeroStartInterval.IsValid());
@@ -173,9 +174,9 @@ TEST(Data_Interval, acceptable_endpoints_are_valid)
 TEST(Data_Interval, nonsensical_endpoints_are_invalid)
 {
     Interval<Position> defaultConstructedInterval;
-    Interval<Position> zeroEmptyValue(0,0);
-    Interval<Position> nonZeroEmptyInterval(4,4);
-    Interval<Position> badOrderingInterval(5,4);
+    Interval<Position> zeroEmptyValue(0, 0);
+    Interval<Position> nonZeroEmptyInterval(4, 4);
+    Interval<Position> badOrderingInterval(5, 4);
 
     EXPECT_FALSE(defaultConstructedInterval.IsValid());
     EXPECT_FALSE(zeroEmptyValue.IsValid());

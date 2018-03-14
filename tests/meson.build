@@ -27,6 +27,10 @@ pbcopper_test_cpp_sources = files([
   # logging
   'src/logging/test_Logging.cpp',
 
+  # parallel
+  'src/parallel/test_WorkQueue.cpp',
+  'src/parallel/test_FireAndForget.cpp',
+
   # qgram
   'src/qgram/test_Index.cpp',
 
@@ -51,5 +55,11 @@ pbcopper_test = executable(
   link_with : [pbcopper_lib],
   cpp_args : pbcopper_warning_flags,
   install : false)
+
+#########
+# tests #
+#########
+
+test('pbcopper formatting check', pbcopper_clang_formatter, args : ['--all'], workdir : meson.source_root())
 
 test('pbcopper test', pbcopper_test)

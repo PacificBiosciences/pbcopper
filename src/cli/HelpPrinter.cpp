@@ -1,12 +1,52 @@
-#include "pbcopper/cli/HelpPrinter.h"
-#include "pbcopper/cli/Interface.h"
-#include "pbcopper/json/JSON.h"
+// Copyright (c) 2016-2018, Pacific Biosciences of California, Inc.
+//
+// All rights reserved.
+//
+// Redistribution and use in source and binary forms, with or without
+// modification, are permitted (subject to the limitations in the
+// disclaimer below) provided that the following conditions are met:
+//
+//  * Redistributions of source code must retain the above copyright
+//    notice, this list of conditions and the following disclaimer.
+//
+//  * Redistributions in binary form must reproduce the above
+//    copyright notice, this list of conditions and the following
+//    disclaimer in the documentation and/or other materials provided
+//    with the distribution.
+//
+//  * Neither the name of Pacific Biosciences nor the names of its
+//    contributors may be used to endorse or promote products derived
+//    from this software without specific prior written permission.
+//
+// NO EXPRESS OR IMPLIED LICENSES TO ANY PARTY'S PATENT RIGHTS ARE
+// GRANTED BY THIS LICENSE. THIS SOFTWARE IS PROVIDED BY PACIFIC
+// BIOSCIENCES AND ITS CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED
+// WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+// OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+// DISCLAIMED. IN NO EVENT SHALL PACIFIC BIOSCIENCES OR ITS
+// CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+// SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+// LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF
+// USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+// ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+// OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT
+// OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
+// SUCH DAMAGE.
+
+// Author: Derek Barnett
+
+#include <pbcopper/cli/HelpPrinter.h>
+
 #include <sys/ioctl.h>
 #include <unistd.h>
 #include <algorithm>
+#include <cstddef>
 #include <sstream>
 #include <string>
 #include <vector>
+
+#include <pbcopper/cli/Interface.h>
+#include <pbcopper/json/JSON.h>
 
 using Json = PacBio::JSON::Json;
 
@@ -14,29 +54,23 @@ namespace PacBio {
 namespace CLI {
 namespace internal {
 
-static
-bool shouldIncludeDefaultValue(const Json& defaultValue)
+static bool shouldIncludeDefaultValue(const Json& defaultValue)
 {
     // omit if switch OR null
-    if (defaultValue.is_boolean() || defaultValue.is_null())
-        return false;
+    if (defaultValue.is_boolean() || defaultValue.is_null()) return false;
 
     // omit if empty string default on string-type option
     if (defaultValue.is_string()) {
         const std::string val = defaultValue;
-        if (val.empty())
-            return false;
+        if (val.empty()) return false;
     }
 
     // otherwise include default value
     return true;
 }
 
-static
-std::string formatOption(std::string optionOutput,
-                         size_t longestOptionLength,
-                         std::string description,
-                         Json defaultValue)
+static std::string formatOption(std::string optionOutput, size_t longestOptionLength,
+                                std::string description, Json defaultValue)
 {
     struct winsize ws;
     ioctl(STDOUT_FILENO, TIOCGWINSZ, &ws);
@@ -85,17 +119,16 @@ std::string formatOption(std::string optionOutput,
 
     // maybe wrap description
     const auto indent = result.str().length();
-    auto lineStart     = size_t{ 0 };
+    auto lineStart = size_t{0};
     auto lastBreakable = std::string::npos;
-    const auto max     = size_t{ ncol - indent };
-    auto x             = size_t{ 0 };
+    const auto max = size_t{ncol - indent};
+    auto x = size_t{0};
     const auto len = fullDescription.length();
 
     for (size_t i = 0; i < len; ++i) {
         ++x;
         const auto c = fullDescription.at(i);
-        if (isspace(c))
-            lastBreakable = i;
+        if (isspace(c)) lastBreakable = i;
 
         auto breakAt = std::string::npos;
         auto nextLineStart = std::string::npos;
@@ -103,36 +136,33 @@ std::string formatOption(std::string optionOutput,
         if (x > max && lastBreakable != std::string::npos) {
             breakAt = lastBreakable;
             nextLineStart = lastBreakable + 1;
-        } else if ( (x > max-1 && lastBreakable == std::string::npos) || i == len-1) {
+        } else if ((x > max - 1 && lastBreakable == std::string::npos) || i == len - 1) {
             breakAt = i + 1;
             nextLineStart = breakAt;
         } else if (c == '\n') {
             breakAt = i;
-            nextLineStart = i+1;
+            nextLineStart = i + 1;
         }
 
         if (breakAt != std::string::npos) {
             const auto numChars = breakAt - lineStart;
-            if (lineStart > 0)
-                result << std::string(indent, ' ');
+            if (lineStart > 0) result << std::string(indent, ' ');
             result << fullDescription.substr(lineStart, numChars) << std::endl;
             x = 0;
             lastBreakable = std::string::npos;
             lineStart = nextLineStart;
-            if (lineStart < len && isspace(fullDescription.at(lineStart)))
-                ++lineStart;
+            if (lineStart < len && isspace(fullDescription.at(lineStart))) ++lineStart;
             i = lineStart;
         }
     }
     return result.str();
 }
 
-static
-std::string formatOptionNames(const Option& option)
+static std::string formatOptionNames(const Option& option)
 {
     std::stringstream optionOutput("");
     auto first = true;
-    for(const auto& name : option.Names()) {
+    for (const auto& name : option.Names()) {
         if (first)
             first = false;
         else
@@ -146,14 +176,12 @@ std::string formatOptionNames(const Option& option)
         optionOutput << name;
     }
 
-    if (!option.ValueName().empty())
-        optionOutput << " <" << option.ValueName() << ">";
+    if (!option.ValueName().empty()) optionOutput << " <" << option.ValueName() << ">";
 
     return optionOutput.str();
 }
 
-static
-std::string makeHelpText(const Interface& interface)
+static std::string makeHelpText(const Interface& interface)
 {
     std::stringstream result("");
 
@@ -164,8 +192,7 @@ std::string makeHelpText(const Interface& interface)
     {
         std::stringstream usage("");
         usage << interface.ApplicationName();
-        if (!options.empty())
-            usage << " [options]";
+        if (!options.empty()) usage << " [options]";
         for (const auto& posArg : posArgs)
             usage << " " << posArg.syntax_;
         result << "Usage: " << usage.str() << std::endl;
@@ -173,48 +200,37 @@ std::string makeHelpText(const Interface& interface)
 
     // description
     const auto appDescription = interface.ApplicationDescription();
-    if (!appDescription.empty())
-        result << appDescription << std::endl;
+    if (!appDescription.empty()) result << appDescription << std::endl;
 
     // empty line
     result << std::endl;
 
     // options
-    auto formattedOptions = std::map<std::string, std::string>{ }; // id -> formatted output
-    auto longestOptionOutputLength = size_t{ 0 };
+    auto formattedOptions = std::map<std::string, std::string>{};  // id -> formatted output
+    auto longestOptionOutputLength = size_t{0};
 
     // determine longest option names & store formatting for use later
-    for(const auto& option : options) {
-        if (option.IsHidden())
-            continue;
+    for (const auto& option : options) {
+        if (option.IsHidden()) continue;
         const auto optionOutputString = formatOptionNames(option);
         formattedOptions[option.Id()] = optionOutputString;
-        longestOptionOutputLength = std::max(longestOptionOutputLength,
-                                             optionOutputString.size());
+        longestOptionOutputLength = std::max(longestOptionOutputLength, optionOutputString.size());
     }
 
     // spacer
     ++longestOptionOutputLength;
 
-    if (!options.empty())
-    {
-        auto printGroup = [](const Interface& interface,
-                             const std::string& group,
+    if (!options.empty()) {
+        auto printGroup = [](const Interface& interface, const std::string& group,
                              const std::map<std::string, std::string>& formattedOptions,
-                             const size_t longestOptionOutputLength,
-                             std::stringstream& result)
-        {
+                             const size_t longestOptionOutputLength, std::stringstream& result) {
             const auto& opts = interface.GroupOptions(group);
-            if (opts.empty())
-                return;
+            if (opts.empty()) return;
             result << group << ":\n";
             for (const auto& opt : opts) {
-                if (opt.IsHidden())
-                    continue;
-                result << formatOption(formattedOptions.at(opt.Id()),
-                                       longestOptionOutputLength,
-                                       opt.Description(),
-                                       opt.DefaultValue());
+                if (opt.IsHidden()) continue;
+                result << formatOption(formattedOptions.at(opt.Id()), longestOptionOutputLength,
+                                       opt.Description(), opt.DefaultValue());
             }
 
             result << '\n';
@@ -224,25 +240,20 @@ std::string makeHelpText(const Interface& interface)
         const auto& groups = interface.Groups();
         for (const auto& group : groups) {
             if (group != "Options") {
-                printGroup(interface, group, formattedOptions,
-                           longestOptionOutputLength, result);
+                printGroup(interface, group, formattedOptions, longestOptionOutputLength, result);
             }
         }
 
         // print default group last (help, version, etc) or options added
         // to interface directly (no group)
-        printGroup(interface, "Options", formattedOptions,
-                   longestOptionOutputLength,result);
+        printGroup(interface, "Options", formattedOptions, longestOptionOutputLength, result);
     }
-
 
     // positional args
     if (!posArgs.empty()) {
         result << "Arguments:\n";
         for (const auto& posArg : posArgs) {
-            result << formatOption(posArg.name_,
-                                   longestOptionOutputLength,
-                                   posArg.description_,
+            result << formatOption(posArg.name_, longestOptionOutputLength, posArg.description_,
                                    Json());
         }
     }
@@ -250,12 +261,12 @@ std::string makeHelpText(const Interface& interface)
     return result.str();
 }
 
-} // namespace internal
+}  // namespace internal
 
 void HelpPrinter::Print(const Interface& interface, std::ostream& out)
 {
     out << internal::makeHelpText(interface) << std::endl;
 }
 
-} // namespace CLI
-} // namespace PacBio
+}  // namespace CLI
+}  // namespace PacBio

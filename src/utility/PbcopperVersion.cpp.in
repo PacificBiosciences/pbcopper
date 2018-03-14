@@ -1,4 +1,4 @@
-// Copyright (c) 2016-2017, Pacific Biosciences of California, Inc.
+// Copyright (c) 2016-2018, Pacific Biosciences of California, Inc.
 //
 // All rights reserved.
 //
@@ -35,7 +35,7 @@
 
 // Author: Armin Töpfer
 
-#include "pbcopper/utility/PbcopperVersion.h"
+#include <pbcopper/utility/PbcopperVersion.h>
 #include <string>
 #include <tuple>
 

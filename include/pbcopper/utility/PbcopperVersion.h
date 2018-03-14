@@ -1,4 +1,4 @@
-// Copyright (c) 2016-2017, Pacific Biosciences of California, Inc.
+// Copyright (c) 2016-2018, Pacific Biosciences of California, Inc.
 //
 // All rights reserved.
 //
@@ -35,10 +35,13 @@
 
 // Author: Armin Töpfer
 
-#pragma once
+#ifndef PBCOPPER_UTILITY_PBCOPPERVERSION_H
+#define PBCOPPER_UTILITY_PBCOPPERVERSION_H
 
 #include <string>
 #include <tuple>
+
+#include <pbcopper/PbcopperConfig.h>
 
 namespace PacBio {
 namespace Utility {
@@ -46,5 +49,7 @@ namespace Utility {
 std::string LibraryGitSha1String();
 std::string LibraryVersionString();
 std::tuple<int, int, int> LibraryVersionTriple();
+}
+}  // ::PacBio::Utility
 
-}}  // ::PacBio::Utility
+#endif  // PBCOPPER_UTILITY_PBCOPPERVERSION_H

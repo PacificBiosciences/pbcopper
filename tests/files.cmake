@@ -39,6 +39,9 @@ set( pbcopperTest_CPP
     # logging
     ${pbcopper_TestsDir}/src/logging/test_Logging.cpp
 
+    # parallel
+    ${pbcopper_TestsDir}/src/parallel/test_WorkQueue.cpp
+
     # qgram
     ${pbcopper_TestsDir}/src/qgram/test_Index.cpp
 

@@ -1,18 +1,58 @@
+// Copyright (c) 2016-2018, Pacific Biosciences of California, Inc.
+//
+// All rights reserved.
+//
+// Redistribution and use in source and binary forms, with or without
+// modification, are permitted (subject to the limitations in the
+// disclaimer below) provided that the following conditions are met:
+//
+//  * Redistributions of source code must retain the above copyright
+//    notice, this list of conditions and the following disclaimer.
+//
+//  * Redistributions in binary form must reproduce the above
+//    copyright notice, this list of conditions and the following
+//    disclaimer in the documentation and/or other materials provided
+//    with the distribution.
+//
+//  * Neither the name of Pacific Biosciences nor the names of its
+//    contributors may be used to endorse or promote products derived
+//    from this software without specific prior written permission.
+//
+// NO EXPRESS OR IMPLIED LICENSES TO ANY PARTY'S PATENT RIGHTS ARE
+// GRANTED BY THIS LICENSE. THIS SOFTWARE IS PROVIDED BY PACIFIC
+// BIOSCIENCES AND ITS CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED
+// WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+// OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+// DISCLAIMED. IN NO EVENT SHALL PACIFIC BIOSCIENCES OR ITS
+// CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+// SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+// LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF
+// USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+// ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+// OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT
+// OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
+// SUCH DAMAGE.
+
+// Author: Derek Barnett
+
 #ifndef PBCOPPER_CLI_OPTION_H
 #define PBCOPPER_CLI_OPTION_H
 
-#include "pbcopper/Config.h"
-#include "pbcopper/json/JSON.h"
-#include "pbcopper/cli/OptionFlags.h"
 #include <initializer_list>
-#include <string>
 #include <memory>
+#include <string>
 #include <vector>
+
+#include <pbcopper/PbcopperConfig.h>
+#include <pbcopper/cli/OptionFlags.h>
+#include <pbcopper/json/JSON.h>
 
 namespace PacBio {
 namespace CLI {
 
-namespace internal { class OptionPrivate; }
+namespace internal {
+class OptionPrivate;
+}
 
 /// \brief The Option class defines a possible command-line option.
 ///
@@ -24,10 +64,10 @@ namespace internal { class OptionPrivate; }
 class Option
 {
 public:
-    using BoolType   = JSON::Json::boolean_t;
-    using IntType    = JSON::Json::number_integer_t;
-    using UIntType   = JSON::Json::number_unsigned_t;
-    using FloatType  = JSON::Json::number_float_t;
+    using BoolType = JSON::Json::boolean_t;
+    using IntType = JSON::Json::number_integer_t;
+    using UIntType = JSON::Json::number_unsigned_t;
+    using FloatType = JSON::Json::number_float_t;
     using StringType = JSON::Json::string_t;
 
 public:
@@ -94,9 +134,7 @@ public:
     /// \param[in]  choices         list of accepted inputs
     /// \param[in]  flags           extra configuration
     ///
-    Option(const std::string& id,
-           const std::string& name,
-           const std::string& description,
+    Option(const std::string& id, const std::string& name, const std::string& description,
            const JSON::Json& defaultValue = JSON::Json(nullptr),
            const JSON::Json& choices = JSON::Json(nullptr),
            const OptionFlags& flags = OptionFlags::DEFAULT);
@@ -135,10 +173,8 @@ public:
     /// \param[in]  choices         list of accepted inputs
     /// \param[in]  flags           extra configuration
     ///
-    Option(const std::string& id,
-           const std::vector<std::string>& names,
-           const std::string& description,
-           const JSON::Json& defaultValue = JSON::Json(nullptr),
+    Option(const std::string& id, const std::vector<std::string>& names,
+           const std::string& description, const JSON::Json& defaultValue = JSON::Json(nullptr),
            const JSON::Json& choices = JSON::Json(nullptr),
            const OptionFlags& flags = OptionFlags::DEFAULT);
 
@@ -176,10 +212,8 @@ public:
     /// \param[in]  choices         list of accepted inputs
     /// \param[in]  flags           extra configuration
     ///
-    Option(const std::string& id,
-           const std::initializer_list<std::string>& names,
-           const std::string& description,
-           const JSON::Json& defaultValue = JSON::Json(nullptr),
+    Option(const std::string& id, const std::initializer_list<std::string>& names,
+           const std::string& description, const JSON::Json& defaultValue = JSON::Json(nullptr),
            const JSON::Json& choices = JSON::Json(nullptr),
            const OptionFlags& flags = OptionFlags::DEFAULT);
 
@@ -255,9 +289,9 @@ private:
     std::shared_ptr<internal::OptionPrivate> d_;
 };
 
-} // namespace CLI
-} // namespace PacBio
+}  // namespace CLI
+}  // namespace PacBio
 
-#include "internal/Option-inl.h"
+#include <pbcopper/cli/internal/Option-inl.h>
 
-#endif // PBCOPPER_CLI_OPTION_H
+#endif  // PBCOPPER_CLI_OPTION_H

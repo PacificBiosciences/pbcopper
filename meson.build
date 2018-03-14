@@ -1,7 +1,7 @@
 project(
   'pbcopper',
   'cpp',
-  version : '0.1.1',
+  version : '0.2.0',
   default_options : [
     'buildtype=release',
     'warning_level=3',
@@ -46,28 +46,24 @@ subdir('include')
 
 subdir('src')
 
-############
-# examples #
-############
-
-if get_option('enable-build-examples')
-  subdir('examples')
-endif
-
-#################
-# documentation #
-#################
-
-if get_option('enable-build-docs')
-  subdir('docs')
-endif
-
-#########
-# tests #
-#########
+##########
+# extras #
+##########
 
 if not meson.is_subproject()
-  if get_option('enable-tests')
+  # examples
+  if get_option('build-examples')
+    subdir('examples')
+  endif
+
+  # documentation
+  if get_option('build-docs')
+    subdir('docs')
+  endif
+
+  # tests
+  if get_option('tests')
+    pbcopper_clang_formatter = find_program('tools/check-formatting')
     subdir('tests')
   endif
 endif

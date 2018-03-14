@@ -1,13 +1,13 @@
 
 #include "OStreamRedirector.h"
 
+#include <gtest/gtest.h>
 #include <pbcopper/cli/CLI.h>
 #include <pbcopper/json/JSON.h>
-#include <gtest/gtest.h>
+#include <cstdio>
 #include <fstream>
 #include <iostream>
 #include <vector>
-#include <cstdio>
 
 using namespace PacBio;
 using namespace PacBio::CLI;
@@ -24,6 +24,7 @@ static string appName(void)
 
 static PacBio::CLI::Interface makeInterface(void)
 {
+    // clang-format off
     Interface i {
         "frobber",
         "Frobb your files in a most delightful, nobbly way",
@@ -49,6 +50,7 @@ static PacBio::CLI::Interface makeInterface(void)
         {"source", "Source file to copy.",   "FILE" },
         {"dest",   "Destination directory.", "FILE" }
     });
+    // clang-format on
 
     return i;
 }
@@ -60,12 +62,13 @@ static PacBio::CLI::Interface makeToolContractEnabledInterface(void)
     // yields <PREFIX>.pbsmrtpipe_task_options.<ID>
     // if not set, PREFIX=ApplicationName from Interface
     //
-    ToolContract::Task tcTask("frobber_task");       // if empty, pulss ApplicationName
-    tcTask.Description("task-specific description"); // if empty, pulls ApplicationDescription
-    tcTask.NumProcessors(4); // max_nproc if not provided
+    ToolContract::Task tcTask("frobber_task");        // if empty, pulss ApplicationName
+    tcTask.Description("task-specific description");  // if empty, pulls ApplicationDescription
+    tcTask.NumProcessors(4);                          // max_nproc if not provided
     tcTask.SetDistributed(true);
     tcTask.Type(TaskType::STANDARD);
 
+    // clang-format off
     tcTask.Options({
 
         //
@@ -92,9 +95,10 @@ static PacBio::CLI::Interface makeToolContractEnabledInterface(void)
         ResourceType::TMP_FILE,
         ResourceType::TMP_FILE
     });
+    // clang-format on
 
     ToolContract::Config config{tcTask};
-    config.Version("0.1");                // if empty, pulls ApplicationVersion
+    config.Version("0.1");  // if empty, pulls ApplicationVersion
 
     auto interface = makeInterface();
     interface.EnableToolContract(config);
@@ -128,7 +132,7 @@ static int mainAppEntry(const MyAppSettings& settings)
     EXPECT_EQ(string("water"), settings.element_);
     EXPECT_EQ(42, settings.timeout_);
     EXPECT_EQ(2, settings.delta_);
-    EXPECT_EQ(string("requiredIn"),  settings.source_);
+    EXPECT_EQ(string("requiredIn"), settings.source_);
     EXPECT_EQ(string("requiredOut"), settings.dest_);
     return EXIT_SUCCESS;
 }
@@ -140,29 +144,28 @@ static int appRunner(const PacBio::CLI::Results& args)
     // kind of thing
     //
     MyAppSettings s;
-    s.force_        = args["force"];
+    s.force_ = args["force"];
     s.showProgress_ = args["progress"];
-    s.targetDir_    = args["target_dir"];
-    s.ploidy_       = args["ploidy"];
-    s.element_      = args["element"];
-    s.timeout_      = args["timeout"];
-    s.delta_        = args["delta"];
+    s.targetDir_ = args["target_dir"];
+    s.ploidy_ = args["ploidy"];
+    s.element_ = args["element"];
+    s.timeout_ = args["timeout"];
+    s.delta_ = args["delta"];
 
     EXPECT_EQ(PacBio::Logging::LogLevel::DEBUG, args.LogLevel());
 
     const vector<string> positionalArgs = args.PositionalArguments();
     EXPECT_EQ(2, positionalArgs.size());
     s.source_ = positionalArgs.at(0);
-    s.dest_   = positionalArgs.at(1);
+    s.dest_ = positionalArgs.at(1);
     return mainAppEntry(s);
 }
 
 static int inputCommandLineChecker(const PacBio::CLI::Results& results)
 {
-    const string expectedCommandLine =
-    {
-        "frobber -f --timeout=42 --delta=2 --ploidy=diploid --element=water --target-dir /path/to/dir/ --logLevel=DEBUG requiredIn requiredOut"
-    };
+    const string expectedCommandLine = {
+        "frobber -f --timeout=42 --delta=2 --ploidy=diploid --element=water --target-dir "
+        "/path/to/dir/ --logLevel=DEBUG requiredIn requiredOut"};
     EXPECT_EQ(expectedCommandLine, results.InputCommandLine());
     return EXIT_SUCCESS;
 }
@@ -172,11 +175,12 @@ struct RtcGenerator
 public:
     RtcGenerator(const std::string& fn);
     ~RtcGenerator(void);
+
 private:
     std::string fn_;
 };
 
-} // namespace CLITests
+}  // namespace CLITests
 
 TEST(CLI_Runner, emits_tool_contract_when_requested_from_command_line)
 {
@@ -189,7 +193,7 @@ TEST(CLI_Runner, emits_tool_contract_when_requested_from_command_line)
     },
     "schema_version": "2.0.0",
     "tool_contract": {
-        "_comment": "Created by v0.1.1",
+        "_comment": "Created by v0.2.0",
         "description": "Frobb your files in a most delightful, nobbly way",
         "input_types": [
             {
@@ -308,35 +312,26 @@ TEST(CLI_Runner, emits_tool_contract_when_requested_from_command_line)
     (void)redirect;
 
     // set up tool contract emitted from main CLI entry
-    const vector<string> args =
-    {
-        CLITests::appName(),
-        "--emit-tool-contract"
-    };
-    PacBio::CLI::Run(args,
-                     CLITests::makeToolContractEnabledInterface(),
-                     &CLITests::appRunner);
+    const vector<string> args = {CLITests::appName(), "--emit-tool-contract"};
+    PacBio::CLI::Run(args, CLITests::makeToolContractEnabledInterface(), &CLITests::appRunner);
     EXPECT_EQ(expectedText, s.str());
 }
 
 TEST(CLI_Runner, runs_application_from_vector_of_args)
 {
-    const vector<string> args =
-    {
-        CLITests::appName(),
-        "-f",
-        "--timeout=42",
-        "--delta=2",
-        "--ploidy=diploid",
-        "-e", "water",
-        "--target-dir", "/path/to/dir/",
-        "--logLevel=DEBUG",
-        "requiredIn",
-        "requiredOut"
-    };
-    PacBio::CLI::Run(args,
-                     CLITests::makeInterface(),
-                     &CLITests::appRunner);
+    const vector<string> args = {CLITests::appName(),
+                                 "-f",
+                                 "--timeout=42",
+                                 "--delta=2",
+                                 "--ploidy=diploid",
+                                 "-e",
+                                 "water",
+                                 "--target-dir",
+                                 "/path/to/dir/",
+                                 "--logLevel=DEBUG",
+                                 "requiredIn",
+                                 "requiredOut"};
+    PacBio::CLI::Run(args, CLITests::makeInterface(), &CLITests::appRunner);
 }
 
 TEST(CLI_Runner, runs_application_from_C_style_args)
@@ -344,7 +339,7 @@ TEST(CLI_Runner, runs_application_from_C_style_args)
     SCOPED_TRACE("run from normal args - raw C char*, a la application main()");
 
     static const int argc = 10;
-    char* argv[argc+1];
+    char* argv[argc + 1];
     argv[0] = const_cast<char*>("frobber");
     argv[1] = const_cast<char*>("-f");
     argv[2] = const_cast<char*>("--timeout=42");
@@ -357,30 +352,19 @@ TEST(CLI_Runner, runs_application_from_C_style_args)
     argv[9] = const_cast<char*>("requiredOut");
     argv[10] = nullptr;
 
-    PacBio::CLI::Run(argc, argv,
-                     CLITests::makeInterface(),
-                     &CLITests::appRunner);
+    PacBio::CLI::Run(argc, argv, CLITests::makeInterface(), &CLITests::appRunner);
 }
 
 TEST(CLI_Runner, can_retrieve_input_commandline)
 {
     SCOPED_TRACE("checking input command line");
-    const vector<string> args =
-    {
-        CLITests::appName(),
-        "-f",
-        "--timeout=42",
-        "--delta=2",
-        "--ploidy=diploid",
-        "--element=water",
-        "--target-dir", "/path/to/dir/",
-        "--logLevel=DEBUG",
-        "requiredIn",
-        "requiredOut"
-    };
-    PacBio::CLI::Run(args,
-                     CLITests::makeInterface(),
-                     &CLITests::inputCommandLineChecker);
+    const vector<string> args = {CLITests::appName(), "-f",
+                                 "--timeout=42",      "--delta=2",
+                                 "--ploidy=diploid",  "--element=water",
+                                 "--target-dir",      "/path/to/dir/",
+                                 "--logLevel=DEBUG",  "requiredIn",
+                                 "requiredOut"};
+    PacBio::CLI::Run(args, CLITests::makeInterface(), &CLITests::inputCommandLineChecker);
 }
 
 TEST(CLI_Runner, runs_application_from_resolved_tool_contract)
@@ -391,57 +375,36 @@ TEST(CLI_Runner, runs_application_from_resolved_tool_contract)
     CLITests::RtcGenerator rtc(rtcFn);
     (void)rtc;
 
-    const vector<string> args =
-    {
-        CLITests::appName(),
-        "--resolved-tool-contract",
-        rtcFn
-    };
-    PacBio::CLI::Run(args,
-                     CLITests::makeToolContractEnabledInterface(),
-                     &CLITests::appRunner);
+    const vector<string> args = {CLITests::appName(), "--resolved-tool-contract", rtcFn};
+    PacBio::CLI::Run(args, CLITests::makeToolContractEnabledInterface(), &CLITests::appRunner);
 }
 
 TEST(CLI_Runner, throws_on_invalid_choices)
 {
     {
         SCOPED_TRACE("use invalid int choice on command line");
-        const vector<string> args =
-        {
-            CLITests::appName(),
-            "--delta=4",                    // <-- invalid input (must be one of [1,2,3])
-            "requiredIn",
-            "requiredOut"
-        };
+        const vector<string> args = {CLITests::appName(),
+                                     "--delta=4",  // <-- invalid input (must be one of [1,2,3])
+                                     "requiredIn", "requiredOut"};
 
-        EXPECT_THROW(
-            PacBio::CLI::Run(args,
-                             CLITests::makeInterface(),
-                             &CLITests::appRunner),
-            std::runtime_error);
+        EXPECT_THROW(PacBio::CLI::Run(args, CLITests::makeInterface(), &CLITests::appRunner),
+                     std::runtime_error);
     }
     {
         SCOPED_TRACE("use invalid string choice on command line");
-        const vector<string> args =
-        {
+        const vector<string> args = {
             CLITests::appName(),
-            "--ploidy=triploid",            // <-- invalid input (must be one of["haploid","diploid"])
-            "requiredIn",
-            "requiredOut"
-        };
+            "--ploidy=triploid",  // <-- invalid input (must be one of["haploid","diploid"])
+            "requiredIn", "requiredOut"};
 
-        EXPECT_THROW(
-            PacBio::CLI::Run(args,
-                             CLITests::makeInterface(),
-                             &CLITests::appRunner),
-            std::runtime_error);
+        EXPECT_THROW(PacBio::CLI::Run(args, CLITests::makeInterface(), &CLITests::appRunner),
+                     std::runtime_error);
     }
 }
 
 namespace CLITests {
 
-RtcGenerator::RtcGenerator(const std::string& fn)
-    : fn_(fn)
+RtcGenerator::RtcGenerator(const std::string& fn) : fn_(fn)
 {
     auto text = R"(
 {
@@ -480,7 +443,6 @@ RtcGenerator::RtcGenerator(const std::string& fn)
     out << text;
 }
 
-RtcGenerator::~RtcGenerator(void)
-{ ::remove(fn_.c_str()); }
+RtcGenerator::~RtcGenerator(void) { ::remove(fn_.c_str()); }
 
-} // namespace CLITests
+}  // namespace CLITests

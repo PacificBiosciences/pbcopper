@@ -1,4 +1,4 @@
-// Copyright (c) 2016, Pacific Biosciences of California, Inc.
+// Copyright (c) 2016-2018, Pacific Biosciences of California, Inc.
 //
 // All rights reserved.
 //
@@ -32,18 +32,15 @@
 // OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT
 // OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
 // SUCH DAMAGE.
-//
-// File Description
-/// \file CigarOperation.h
-/// \brief Defines the CigarOperationType enum & CigarOperation class.
-//
-// Author: Derek Barnett
 
+// Author: Derek Barnett
 #ifndef PBCOPPER_DATA_CIGAROPERATION_H
 #define PBCOPPER_DATA_CIGAROPERATION_H
 
-#include "pbcopper/Config.h"
+#include <cstdint>
 #include <iostream>
+
+#include <pbcopper/PbcopperConfig.h>
 
 namespace PacBio {
 namespace Data {
@@ -59,6 +56,7 @@ namespace Data {
 ///          trigger a std::runtime_error. SEQUENCE_MATCH('=) or
 ///          SEQUENCE_MISMATCH('X') should be used instead.
 ///
+// clang-format off
 enum class CigarOperationType
 {
     UNKNOWN_OP        = -1 ///< unknown/invalid CIGAR operator
@@ -72,6 +70,7 @@ enum class CigarOperationType
   , SEQUENCE_MATCH         ///< sequence match [=]
   , SEQUENCE_MISMATCH      ///< sequence mismatch [X]
 };
+// clang-format on
 
 /// \brief The CigarOperation class represents a single CIGAR operation
 ///        (consisting of a type & length).
@@ -79,7 +78,6 @@ enum class CigarOperationType
 class CigarOperation
 {
 public:
-
     /// \name Operation Type Conversion Methods
     /// \{
 
@@ -203,9 +201,9 @@ std::istream& operator>>(std::istream& in, CigarOperation& op);
 ///
 std::ostream& operator<<(std::ostream& out, const CigarOperation& op);
 
-} // namespace Data
-} // namespace PacBio
+}  // namespace Data
+}  // namespace PacBio
 
-#include "internal/CigarOperation-inl.h"
+#include <pbcopper/data/internal/CigarOperation-inl.h>
 
-#endif // PBCOPPER_DATA_CIGAROPERATION_H
+#endif  // PBCOPPER_DATA_CIGAROPERATION_H
