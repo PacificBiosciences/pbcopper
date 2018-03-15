@@ -62,4 +62,4 @@ pbcopper_test = executable(
 
 test('pbcopper formatting check', pbcopper_clang_formatter, args : ['--all'], workdir : meson.source_root())
 
-test('pbcopper test', pbcopper_test)
+test('pbcopper test', pbcopper_test, args : ['--gtest_output=xml:pbcopper-unit.xml'])
