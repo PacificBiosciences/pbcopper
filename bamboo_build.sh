@@ -24,13 +24,17 @@ echo "#########"
 
 case "${bamboo_planRepository_branchName}" in
   develop|master)
-    PREFIX_ARG="--prefix /mnt/software/p/pbcopper/${bamboo_planRepository_branchName}"
+    PREFIX_ARG="/mnt/software/p/pbcopper/${bamboo_planRepository_branchName}"
     ;;
   *)
     ;;
 esac
 
 echo "## Configure source"
+# in order to make shared libraries consumable
+# by conda and other package managers
+export LDFLAGS="-static-libstdc++ -static-libgcc"
+
 meson \
   --backend ninja \
   --buildtype release \
@@ -38,7 +42,7 @@ meson \
   --default-library shared \
   --warnlevel 3 \
   --wrap-mode nofallback \
-  "${PREFIX_ARG}" \
+  --prefix "${PREFIX_ARG:-/usr/local}" \
   build .
 
 echo "## Build source"
@@ -53,17 +57,20 @@ echo "###########"
 echo "# INSTALL #"
 echo "###########"
 
+echo "## Cleaning out old installation from /mnt/software"
+rm -rf "${PREFIX_ARG}"/*
+
 echo "## Installing to /mnt/software"
 ninja -C build -v install
 
 echo "## Creating artifact"
-# install into staging dir with --prefix /usr
+# install into staging dir with --prefix /usr/local
 # in order to sidestep all the artifact policy
 rm -rf staging
-meson configure -Dprefix=/usr build
+meson configure -Dprefix=/usr/local build
 DESTDIR="${PWD}/staging" ninja -C build -v install
 
-tar -cvfz pbcopper-SNAPSHOT.tgz staging/
+( cd staging && tar zcf ../pbcopper-SNAPSHOT.tgz . )
 md5sum  pbcopper-SNAPSHOT.tgz | awk -e '{print $1}' >| pbcopper-SNAPSHOT.tgz.md5
 sha1sum pbcopper-SNAPSHOT.tgz | awk -e '{print $1}' >| pbcopper-SNAPSHOT.tgz.sha1
 
