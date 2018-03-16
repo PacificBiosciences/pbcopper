@@ -41,6 +41,7 @@ meson \
   --strip \
   --default-library shared \
   --warnlevel 3 \
+  --libdir lib \
   --wrap-mode nofallback \
   --prefix "${PREFIX_ARG:-/usr/local}" \
   build .
