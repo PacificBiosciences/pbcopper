@@ -38,10 +38,8 @@ export LDFLAGS="-static-libstdc++ -static-libgcc"
 meson \
   --backend ninja \
   --buildtype release \
-  -Db_ndebug=true \
   --strip \
   --default-library shared \
-  --warnlevel 3 \
   --libdir lib \
   --wrap-mode nofallback \
   --prefix "${PREFIX_ARG:-/usr/local}" \
