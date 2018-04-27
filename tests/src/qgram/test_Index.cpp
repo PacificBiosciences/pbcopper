@@ -238,16 +238,16 @@ TEST(QGram_Index, index_copy)
 
     const std::string query{"GATTGGTGGCACATAAGTAATACCATGGTCCCTGAAATTCGG"};
 
-    auto checkIndexHits = [](const PacBio::QGram::Index& index, const std::string& query,
-                             const std::vector<uint64_t>& expected) {
+    auto checkIndexHits = [](const PacBio::QGram::Index& index, const std::string& querySeq,
+                             const std::vector<uint64_t>& expectedVec) {
         std::vector<uint64_t> observed;
-        for (const auto& hits : index.Hits(query)) {
+        for (const auto& hits : index.Hits(querySeq)) {
             for (const auto& hit : hits) {
                 EXPECT_EQ(0, hit.Id());
                 observed.push_back(hit.Position());
             }
         }
-        EXPECT_EQ(expected, observed);
+        EXPECT_EQ(expectedVec, observed);
     };
 
     const PacBio::QGram::Index idx{6, inputSeq};
@@ -274,10 +274,10 @@ TEST(QGram_Index, index_hits_INTERNAL_from_shape_short_seq)
         if (isHomopolymer(shape.HashNext())) continue;
         const auto hits = idx.Hits(shape, i);
         ASSERT_EQ(expected.size(), hits.size());
-        for (size_t i = 0; i < hits.size(); ++i) {
-            const auto& hit = hits.at(i);
-            EXPECT_EQ(expected.at(i).Id(), hit.Id());
-            EXPECT_EQ(expected.at(i).Position(), hit.Position());
+        for (size_t j = 0; j < hits.size(); ++j) {
+            const auto& hit = hits.at(j);
+            EXPECT_EQ(expected.at(j).Id(), hit.Id());
+            EXPECT_EQ(expected.at(j).Position(), hit.Position());
         }
     }
 }
