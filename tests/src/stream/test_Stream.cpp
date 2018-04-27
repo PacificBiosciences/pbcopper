@@ -43,7 +43,7 @@ Transform<char, char> toAllCaps = [](Sink<char> si, char c) { si(toupper(c)); };
 
 Transform<char, std::string> getLines = [](Sink<std::string> si, char c) {
     static std::string current;
-    Sink<char> collectChar = [&](char c) { current.push_back(c); };
+    Sink<char> collectChar = [&](char d) { current.push_back(d); };
 
     if (c == '\n') {
         si(current);
@@ -54,7 +54,7 @@ Transform<char, std::string> getLines = [](Sink<std::string> si, char c) {
 
 Transform<char, std::string> getWords = [](Sink<std::string> si, char c) {
     static std::string current;
-    Sink<char> collectChar = [&](char c) { current.push_back(c); };
+    Sink<char> collectChar = [&](char d) { current.push_back(d); };
 
     if (c == ' ') {
         si(current);
