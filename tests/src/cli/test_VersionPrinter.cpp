@@ -11,7 +11,7 @@ using namespace std;
 TEST(CLI_VersionPrinter, prints_expected_version_output)
 {
     const Interface interface{"myApp", "does the things", "3.14"};
-    const string expectedText = "myApp 3.14\n";
+    const string expectedText{"myApp 3.14\n"};
 
     stringstream s;
     VersionPrinter::Print(interface, s);

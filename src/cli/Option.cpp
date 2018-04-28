@@ -50,7 +50,7 @@ std::string Option::TypeId(void) const
     using Json = PacBio::JSON::Json;
 
     const bool hasChoices = HasChoices();
-    const auto& type = DefaultValue().type();
+    const auto type = DefaultValue().type();
     switch (type) {
         case Json::value_t::number_integer:  // fall through
         case Json::value_t::number_unsigned: {

@@ -228,7 +228,7 @@ bool Interface::ExpectsValue(const std::string& optionName) const
     if (nameLookupIter == d_->optionNameLookup_.cend())
         throw std::runtime_error("CLI::Interface - unknown option name: " + optionName);
     const auto offset = nameLookupIter->second;
-    const JSON::Json& defaultValue = d_->options_.at(offset).DefaultValue();
+    const JSON::Json defaultValue = d_->options_.at(offset).DefaultValue();
     return !defaultValue.is_boolean();
 }
 

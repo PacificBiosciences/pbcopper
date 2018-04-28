@@ -78,7 +78,7 @@ void ParserPrivate::Parse(const std::vector<std::string>& args)
                     optionName = optionName.substr(0, equalOffset);
 
                 // register found & parse value
-                const auto& optionId = interface_.IdForOptionName(optionName);
+                const auto optionId = interface_.IdForOptionName(optionName);
                 results_.RegisterObservedOption(optionId);
                 ParseOptionValue(optionName, arg, &argIter, argEnd);
             } else
@@ -103,7 +103,7 @@ void ParserPrivate::Parse(const std::vector<std::string>& args)
                     for (size_t i = 1; i < arg.size(); ++i) {
                         optionName = arg.substr(i, 1);
 
-                        const auto& optionId = interface_.IdForOptionName(optionName);
+                        const auto optionId = interface_.IdForOptionName(optionName);
                         results_.RegisterObservedOption(optionId);
                         const auto expectsValue = interface_.ExpectsValue(optionName);
                         if (expectsValue) {
@@ -123,7 +123,7 @@ void ParserPrivate::Parse(const std::vector<std::string>& args)
 
                 case SingleDashMode::ParseAsLongOptions: {
                     auto optionName = std::string{""};  // strip -, get up to "="
-                    const auto& optionId = interface_.IdForOptionName(optionName);
+                    const auto optionId = interface_.IdForOptionName(optionName);
                     results_.RegisterObservedOption(optionId);
                     ParseOptionValue(optionName, arg, &argIter, argEnd);
                     break;
@@ -148,7 +148,7 @@ void ParserPrivate::ParseOptionValue(const std::string& optionName, const std::s
 
     const auto expectsValue = interface_.ExpectsValue(optionName);
     if (expectsValue) {
-        const auto& optionId = interface_.IdForOptionName(optionName);
+        const auto optionId = interface_.IdForOptionName(optionName);
         std::string value;
         if (equalPos == std::string::npos) {
             ++(*argumentIterator);

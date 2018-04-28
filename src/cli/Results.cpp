@@ -37,7 +37,7 @@ public:
         , nproc_(1)
     {
         // init with default values
-        const auto& registeredOptions = interface_.RegisteredOptions();
+        const auto registeredOptions = interface_.RegisteredOptions();
         for (const Option& opt : registeredOptions)
             options_[opt.Id()] = opt.DefaultValue();
     }
@@ -132,7 +132,7 @@ Results& Results::RegisterOptionValue(const std::string& optionId, const Json& o
     }
 
     // check choices
-    const auto& choices = d_->interface_.OptionChoices(optionId);
+    const auto choices = d_->interface_.OptionChoices(optionId);
     if (choices.is_array() && !choices.empty()) {
         bool match = false;
         for (const auto& e : choices) {
