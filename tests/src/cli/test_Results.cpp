@@ -28,8 +28,8 @@ static PacBio::CLI::Interface makeInterface(void)
         {"timeout",    "timeout",            "Abort execution after <INT> milliseconds.", Option::IntType(5000)}
     });
     i.AddPositionalArguments({
-        {"source", "Source file to copy."},
-        {"dest",   "Destination directory."},
+        {"source", "Source file to copy.", {}},
+        {"dest",   "Destination directory.", {}},
         {"extras", "Extra stuff to pass in here, optionally.", "[extras...]"}
     });
     // clang-format on

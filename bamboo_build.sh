@@ -36,6 +36,7 @@ echo "## Configure source"
 export LDFLAGS="-static-libstdc++ -static-libgcc"
 
 meson \
+  --werror \
   --backend ninja \
   --buildtype release \
   --strip \

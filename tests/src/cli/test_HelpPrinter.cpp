@@ -32,8 +32,8 @@ TEST(CLI_HelpPrinter, prints_expected_help_output)
         {"secret_mode",    {"secret"},      "Secret mode, hidden from help.",            Option::BoolType(false), { }, OptionFlags::HIDE_FROM_HELP}
     });
     i.AddPositionalArguments({
-        {"source", "Source file to copy."},
-        {"dest",   "Destination directory."},
+        {"source", "Source file to copy.", {}},
+        {"dest",   "Destination directory.", {}},
         {"extras", "Extra stuff to pass in here, optionally.", "[extras...]"}
     });
 
@@ -93,8 +93,8 @@ TEST(CLI_HelpPrinter, prints_expected_option_groups)
     });
 
     i.AddPositionalArguments({
-        {"source", "Source file to copy."},
-        {"dest",   "Destination directory."},
+        {"source", "Source file to copy.", {}},
+        {"dest",   "Destination directory.", {}},
         {"extras", "Extra stuff to pass in here, optionally.", "[extras...]"}
     });
 
