@@ -162,10 +162,10 @@ TEST(Data_RSMovieName, compares_equal_if_printed_names_equal)
 
 TEST(Data_RSMovieName, constructed_from_name_prints_expected_value_to_output_operator)
 {
-    const string expected = "m140415_143853_42175_c100635972550000001823121909121417_s1_p0";
+    const string expected{"m140415_143853_42175_c100635972550000001823121909121417_s1_p0"};
 
     const RSMovieName m(expected);
-    stringstream s;
+    ostringstream s;
     s << m;
 
     EXPECT_EQ(expected, s.str());
@@ -176,7 +176,7 @@ TEST(Data_RSMovieName, constructed_from_name_parts_prints_expected_value_to_outp
     const string expected = "m140415_143853_42175_c100635972550000001823121909121417_s1_p0";
 
     const RSMovieName m("140415_143853", "42175", "c100635972550000001823121909121417", "s1", "p0");
-    stringstream s;
+    ostringstream s;
     s << m;
 
     EXPECT_EQ(expected, s.str());
@@ -184,8 +184,8 @@ TEST(Data_RSMovieName, constructed_from_name_parts_prints_expected_value_to_outp
 
 TEST(Data_RSMovieName, constructed_properly_from_input_operator)
 {
-    const string name = "m140415_143853_42175_c100635972550000001823121909121417_s1_p0";
-    stringstream s(name);
+    const string name{"m140415_143853_42175_c100635972550000001823121909121417_s1_p0"};
+    istringstream s{name};
     RSMovieName m;
     s >> m;
 

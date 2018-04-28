@@ -114,7 +114,7 @@ TEST(Data_MovieName, constructed_from_name_prints_expected_value_to_output_opera
     const string expected = "m54001_160623_195125";
 
     const MovieName m(expected);
-    stringstream s;
+    ostringstream s;
     s << m;
 
     EXPECT_EQ(expected, s.str());
@@ -125,7 +125,7 @@ TEST(Data_MovieName, constructed_from_name_parts_prints_expected_value_to_output
     const string expected = "m54001_160623_195125";
 
     const MovieName m("54001", "160623_195125");
-    stringstream s;
+    ostringstream s;
     s << m;
 
     EXPECT_EQ(expected, s.str());
@@ -133,8 +133,8 @@ TEST(Data_MovieName, constructed_from_name_parts_prints_expected_value_to_output
 
 TEST(Data_MovieName, constructed_properly_from_input_operator)
 {
-    const string name = "m54001_160623_195125";
-    stringstream s(name);
+    const string name{"m54001_160623_195125"};
+    istringstream s{name};
     MovieName m;
     s >> m;
 

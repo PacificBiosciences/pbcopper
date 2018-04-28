@@ -148,7 +148,7 @@ TEST(CLI_ToolContractJsonPrinter, prints_expected_output)
     // test tool contract output
     // --------------------------------------------
 
-    stringstream s;
+    ostringstream s;
     ToolContract::JsonPrinter::Print(i, s, 4);
     EXPECT_EQ(expectedText, s.str());
 }
@@ -201,7 +201,7 @@ TEST(CLI_ToolContractJsonPrinter, prints_expected_output_with_explicit_nproc)
     // test tool contract output
     // --------------------------------------------
 
-    stringstream s;
+    ostringstream s;
     ToolContract::JsonPrinter::Print(i, s, 4);
     EXPECT_EQ(expectedText, s.str());
 }
@@ -255,7 +255,7 @@ TEST(CLI_ToolContractJsonPrinter, prints_expected_output_with_max_nproc)
     // test tool contract output
     // --------------------------------------------
 
-    stringstream s;
+    ostringstream s;
     ToolContract::JsonPrinter::Print(i, s, 4);
     EXPECT_EQ(expectedText, s.str());
 }

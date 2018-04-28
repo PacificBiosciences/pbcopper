@@ -80,7 +80,7 @@ Transform<std::string, char> wordToChars = [](Sink<char> si, std::string s) {
 
 TEST(Stream_Stream, input_to_console)
 {
-    std::stringstream s;
+    std::ostringstream s;
     tests::CerrRedirect redirect(s.rdbuf());
 
     StreamTests::stringInput >> StreamTests::consoleOutput;
@@ -90,7 +90,7 @@ TEST(Stream_Stream, input_to_console)
 
 TEST(Stream_Stream, char_input_to_all_caps)
 {
-    std::stringstream s;
+    std::ostringstream s;
     tests::CerrRedirect redirect(s.rdbuf());
 
     StreamTests::stringInput >> StreamTests::toAllCaps >> StreamTests::consoleOutput;
@@ -100,7 +100,7 @@ TEST(Stream_Stream, char_input_to_all_caps)
 
 TEST(Stream_Stream, stringlist_to_chars)
 {
-    std::stringstream s;
+    std::ostringstream s;
     tests::CerrRedirect redirect(s.rdbuf());
 
     StreamTests::stringListInput >> StreamTests::wordToChars >> StreamTests::consoleOutput;
@@ -110,7 +110,7 @@ TEST(Stream_Stream, stringlist_to_chars)
 
 TEST(Stream_Stream, char_input_split_into_words_and_printed_to_console)
 {
-    std::stringstream s;
+    std::ostringstream s;
     tests::CerrRedirect redirect(s.rdbuf());
 
     StreamTests::stringInput >> StreamTests::getWords >> StreamTests::newlinedStringOutput;
@@ -120,7 +120,7 @@ TEST(Stream_Stream, char_input_split_into_words_and_printed_to_console)
 
 TEST(Stream_Stream, newlined_input_printed_to_console)
 {
-    std::stringstream s;
+    std::ostringstream s;
     tests::CerrRedirect redirect(s.rdbuf());
 
     StreamTests::newlinedStringInput >> StreamTests::getLines >> StreamTests::newlinedStringOutput;
@@ -130,7 +130,7 @@ TEST(Stream_Stream, newlined_input_printed_to_console)
 
 TEST(Stream_Stream, composing_transform_chains)
 {
-    std::stringstream s;
+    std::ostringstream s;
     tests::CerrRedirect redirect(s.rdbuf());
 
     StreamTests::newlinedStringInput >> StreamTests::getLines >> StreamTests::wordToChars >>
@@ -141,7 +141,7 @@ TEST(Stream_Stream, composing_transform_chains)
 
 TEST(Stream_Stream, composing_named_transform_chains)
 {
-    std::stringstream s;
+    std::ostringstream s;
     tests::CerrRedirect redirect(s.rdbuf());
 
     Source<std::string> inputLines = StreamTests::newlinedStringInput >> StreamTests::getLines;
@@ -191,7 +191,7 @@ struct MyClass
 
 TEST(Stream_Stream, arithmetic_stream_to_console)
 {
-    std::stringstream s;
+    std::ostringstream s;
     tests::CerrRedirect redirect(s.rdbuf());
 
     StreamTests::intList >> StreamTests::spacedIntConsoleOutput;
@@ -201,7 +201,7 @@ TEST(Stream_Stream, arithmetic_stream_to_console)
 
 TEST(Stream_Stream, arithmetic_transformed_stream_to_console)
 {
-    std::stringstream s;
+    std::ostringstream s;
     tests::CerrRedirect redirect(s.rdbuf());
 
     StreamTests::intList >> StreamTests::tripled >> StreamTests::spacedIntConsoleOutput;
@@ -211,7 +211,7 @@ TEST(Stream_Stream, arithmetic_transformed_stream_to_console)
 
 TEST(Stream_Stream, arithmetic_transformed_to_different_type_stream_to_console)
 {
-    std::stringstream s;
+    std::ostringstream s;
     tests::CerrRedirect redirect(s.rdbuf());
 
     StreamTests::intList >> StreamTests::tripled >> StreamTests::squareRoot >>
@@ -222,7 +222,7 @@ TEST(Stream_Stream, arithmetic_transformed_to_different_type_stream_to_console)
 
 TEST(Stream_Stream, append_text_to_arithmetic_stream)
 {
-    std::stringstream s;
+    std::ostringstream s;
     tests::CerrRedirect redirect(s.rdbuf());
 
     StreamTests::intList >> StreamTests::tripled >> StreamTests::squareRoot >>
@@ -239,7 +239,7 @@ TEST(Stream_Stream, append_text_to_arithmetic_stream)
 
 TEST(Stream_Stream, append_text_to_arithmetic_stream_then_modify)
 {
-    std::stringstream s;
+    std::ostringstream s;
     tests::CerrRedirect redirect(s.rdbuf());
 
     StreamTests::intList >> StreamTests::tripled  // x * 3
@@ -261,7 +261,7 @@ TEST(Stream_Stream, append_text_to_arithmetic_stream_then_modify)
 
 TEST(Stream_Stream, stream_works_with_static_public_member_function)
 {
-    std::stringstream s;
+    std::ostringstream s;
     tests::CerrRedirect redirect(s.rdbuf());
 
     StreamTests::intList >> Transform<int, int>(&StreamTests::MyClass::Increment) >>

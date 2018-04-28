@@ -142,8 +142,8 @@ TEST(Data_CigarOperation, throws_on_invalid_op)
 
 TEST(Data_CigarOperation, input_operator)
 {
-    const std::string s = "42=";
-    std::stringstream in(s);
+    const std::string s{"42="};
+    std::istringstream in{s};
 
     CigarOperation op;
     in >> op;
@@ -157,7 +157,7 @@ TEST(Data_CigarOperation, output_operator)
 {
     const CigarOperation op{'=', 42};
 
-    std::stringstream out;
+    std::ostringstream out;
     out << op;
 
     EXPECT_EQ("42=", out.str());

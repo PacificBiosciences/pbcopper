@@ -27,7 +27,7 @@ static const string warnMsg = "*** Application WARNING ***";
 
 TEST(Logging_Logger, info_message_logged_to_stream)
 {
-    stringstream s;
+    ostringstream s;
     {
         Logger logger(s, LogLevel::INFO);
         PBLOGGER_INFO(logger) << LoggingTests::infoMsg;
@@ -40,9 +40,9 @@ TEST(Logging_Logger, custom_logging_sinks_receive_expected_messages)
     // specify custom output destinations by log level... and also 'tee' one
     // log level stream (warning) into separate ostreams
 
-    stringstream info;
-    stringstream notice;
-    stringstream warn, warn2;
+    ostringstream info;
+    ostringstream notice;
+    ostringstream warn, warn2;
     map<LogLevel, OStreams> logConfig = {
         {LogLevel::INFO, {info}}, {LogLevel::NOTICE, {notice}}, {LogLevel::WARN, {warn, warn2}}};
 
