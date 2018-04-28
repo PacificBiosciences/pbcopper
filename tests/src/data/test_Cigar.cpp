@@ -96,8 +96,8 @@ TEST(Data_Cigar, multi_op_cigar_to_string)
 
 TEST(Data_Cigar, input_operator)
 {
-    const std::string s = "100=2D34I6=6X6=";
-    std::stringstream in(s);
+    const std::string s{"100=2D34I6=6X6="};
+    std::istringstream in{s};
 
     Cigar cigar;
     in >> cigar;
@@ -107,10 +107,10 @@ TEST(Data_Cigar, input_operator)
 
 TEST(Data_Cigar, output_operator)
 {
-    const std::string s = "100=2D34I6=6X6=";
+    const std::string s{"100=2D34I6=6X6="};
     const Cigar cigar{s};
 
-    std::stringstream out;
+    std::ostringstream out;
     out << cigar;
 
     EXPECT_EQ(s, out.str());

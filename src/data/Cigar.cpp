@@ -28,7 +28,7 @@ Cigar::Cigar(const std::string& cigarString) : std::vector<CigarOperation>()
 
 std::string Cigar::ToStdString(void) const
 {
-    std::stringstream s;
+    std::ostringstream s;
     for (const auto& op : *this) {
         s << op.Length() << op.Char();
     }

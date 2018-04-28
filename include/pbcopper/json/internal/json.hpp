@@ -2163,7 +2163,7 @@ class basic_json
     */
     string_t dump(const int indent = -1) const
     {
-        std::stringstream ss;
+        std::ostringstream ss;
 
         if (indent >= 0)
         {
@@ -6228,7 +6228,7 @@ class basic_json
                     else
                     {
                         // no exponent - output as a decimal
-                        std::stringstream ss;
+                        std::ostringstream ss;
                         ss.imbue(std::locale(std::locale(), new DecimalSeparator));  // fix locale problems
                         ss << std::setprecision(m_type.bits.precision)
                            << std::fixed << m_value.number_float;
@@ -6249,7 +6249,7 @@ class basic_json
                         // string->double->string or string->long
                         // double->string; to be safe, we read this value from
                         // std::numeric_limits<number_float_t>::digits10
-                        std::stringstream ss;
+                        std::ostringstream ss;
                         ss.imbue(std::locale(std::locale(), new DecimalSeparator));  // fix locale problems
                         ss << std::setprecision(std::numeric_limits<double>::digits10)
                            << m_value.number_float;

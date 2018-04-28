@@ -61,7 +61,7 @@ TEST(CLI_HelpPrinter, prints_expected_help_output)
     };
     // clang-format on
 
-    stringstream s;
+    ostringstream s;
     HelpPrinter::Print(i, s);
     EXPECT_EQ(expectedText, s.str());
 }
@@ -124,7 +124,7 @@ TEST(CLI_HelpPrinter, prints_expected_option_groups)
     };
     // clang-format on
 
-    stringstream s;
+    ostringstream s;
     HelpPrinter::Print(i, s);
     EXPECT_EQ(expectedText, s.str());
 }

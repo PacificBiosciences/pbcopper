@@ -132,7 +132,7 @@ TEST(Data_RSReadName, constructed_from_name_prints_expected_value_to_output_oper
         "m140415_143853_42175_c100635972550000001823121909121417_s1_p0/553/3100_11230";
 
     const RSReadName r(name);
-    stringstream s;
+    ostringstream s;
     s << r;
     EXPECT_EQ(name, s.str());
 }
@@ -145,7 +145,7 @@ TEST(Data_RSReadName, constructed_from_name_parts_prints_expected_value_to_outpu
     const RSReadName r{RSMovieName{"m140415_143853_42175_c100635972550000001823121909121417_s1_p0"},
                        553, Interval<Position>{3100, 11230}};
 
-    stringstream s;
+    ostringstream s;
     s << r;
     EXPECT_EQ(name, s.str());
 }
@@ -157,17 +157,17 @@ TEST(Data_RSReadName, constructed_from_ccs_name_parts_prints_expected_value_to_o
     const RSReadName r{RSMovieName{"m140415_143853_42175_c100635972550000001823121909121417_s1_p0"},
                        553, CCSTag()};
 
-    stringstream s;
+    ostringstream s;
     s << r;
     EXPECT_EQ(ccs, s.str());
 }
 
 TEST(Data_RSReadName, constructed_properly_from_input_operator)
 {
-    const string name =
-        "m140415_143853_42175_c100635972550000001823121909121417_s1_p0/553/3100_11230";
+    const string name{
+        "m140415_143853_42175_c100635972550000001823121909121417_s1_p0/553/3100_11230"};
 
-    stringstream s(name);
+    istringstream s{name};
     RSReadName r;
     s >> r;
 
@@ -181,9 +181,9 @@ TEST(Data_RSReadName, constructed_properly_from_input_operator)
 
 TEST(Data_RSReadName, ccs_constructed_properly_from_input_operator)
 {
-    const string ccs = "m140415_143853_42175_c100635972550000001823121909121417_s1_p0/553/ccs";
+    const string ccs{"m140415_143853_42175_c100635972550000001823121909121417_s1_p0/553/ccs"};
 
-    stringstream s(ccs);
+    istringstream s{ccs};
     RSReadName r;
     s >> r;
 

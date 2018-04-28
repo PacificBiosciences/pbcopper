@@ -126,7 +126,7 @@ TEST(Data_ReadName, constructed_from_name_prints_expected_value_to_output_operat
     const string name = "m54001_160623_195125/553/3100_11230";
 
     const ReadName r(name);
-    stringstream s;
+    ostringstream s;
     s << r;
     EXPECT_EQ(name, s.str());
 }
@@ -137,7 +137,7 @@ TEST(Data_ReadName, constructed_from_name_parts_prints_expected_value_to_output_
 
     const ReadName r{MovieName{"m54001_160623_195125"}, 553, Interval<Position>{3100, 11230}};
 
-    stringstream s;
+    ostringstream s;
     s << r;
     EXPECT_EQ(name, s.str());
 }
@@ -148,16 +148,16 @@ TEST(Data_ReadName, constructed_from_ccs_name_parts_prints_expected_value_to_out
 
     const ReadName r{MovieName{"m54001_160623_195125"}, 553, CCSTag()};
 
-    stringstream s;
+    ostringstream s;
     s << r;
     EXPECT_EQ(ccs, s.str());
 }
 
 TEST(Data_ReadName, constructed_properly_from_input_operator)
 {
-    const string name = "m54001_160623_195125/553/3100_11230";
+    const string name{"m54001_160623_195125/553/3100_11230"};
 
-    stringstream s(name);
+    istringstream s{name};
     ReadName r;
     s >> r;
 
@@ -170,9 +170,9 @@ TEST(Data_ReadName, constructed_properly_from_input_operator)
 
 TEST(Data_ReadName, ccs_constructed_properly_from_input_operator)
 {
-    const string ccs = "m54001_160623_195125/553/ccs";
+    const string ccs{"m54001_160623_195125/553/ccs"};
 
-    stringstream s(ccs);
+    istringstream s{ccs};
     ReadName r;
     s >> r;
 

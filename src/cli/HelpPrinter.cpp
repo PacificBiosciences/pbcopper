@@ -41,7 +41,7 @@ static std::string formatOption(std::string optionOutput, size_t longestOptionLe
     ioctl(STDOUT_FILENO, TIOCGWINSZ, &ws);
     const size_t ncol = (ws.ws_col < 2) ? 79 : ws.ws_col - 1;
 
-    std::stringstream result("");
+    std::ostringstream result;
     auto fullDescription = description;
 
     // maybe add default value to description
@@ -68,7 +68,7 @@ static std::string formatOption(std::string optionOutput, size_t longestOptionLe
         //
         if (defaultValue.is_number_float()) {
             const float f = defaultValue;
-            std::stringstream s;
+            std::ostringstream s;
             s << f;
             fullDescription += s.str();
         } else {
@@ -125,7 +125,7 @@ static std::string formatOption(std::string optionOutput, size_t longestOptionLe
 
 static std::string formatOptionNames(const Option& option)
 {
-    std::stringstream optionOutput("");
+    std::ostringstream optionOutput;
     auto first = true;
     for (const auto& name : option.Names()) {
         if (first)
@@ -155,7 +155,7 @@ static std::string makeHelpText(const Interface& interface)
 
     // setup usage output
     {
-        std::stringstream usage("");
+        std::ostringstream usage;
         usage << interface.ApplicationName();
         if (!options.empty()) usage << " [options]";
         for (const auto& posArg : posArgs)

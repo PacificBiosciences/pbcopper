@@ -307,7 +307,7 @@ TEST(CLI_Runner, emits_tool_contract_when_requested_from_command_line)
 })";
 
     // redirect cout to our catcher
-    std::stringstream s;
+    std::ostringstream s;
     ::tests::CoutRedirect redirect(s.rdbuf());
     (void)redirect;
 

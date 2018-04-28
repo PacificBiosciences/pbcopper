@@ -49,7 +49,7 @@ using Source = std::function<void(Sink<T>)>;
 /// \code{.cpp}
 ///     auto splitLines = [](Sink<std::string> out, std::string s)
 ///     {
-///         auto stream = std::stringstream{ s };
+///         auto stream = std::istringstream{ s };
 ///         auto token  = std::string{ };
 ///         while (std::getline(stream, token)
 ///             out(token);
