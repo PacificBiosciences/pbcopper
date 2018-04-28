@@ -190,7 +190,7 @@ static std::string makeHelpText(const Interface& interface)
                                    const std::map<std::string, std::string>& printFormattedOptions,
                                    const size_t printLongestOptionOutputLength,
                                    std::ostringstream& printResult) {
-            const auto& opts = printInterface.GroupOptions(printGroup);
+            const auto opts = printInterface.GroupOptions(printGroup);
             if (opts.empty()) return;
             printResult << printGroup << ":\n";
             for (const auto& opt : opts) {
@@ -204,7 +204,7 @@ static std::string makeHelpText(const Interface& interface)
         };
 
         // print all non-default groups in the order they were added
-        const auto& groups = interface.Groups();
+        const auto groups = interface.Groups();
         for (const auto& group : groups) {
             if (group != "Options") {
                 printOptionGroup(interface, group, formattedOptions, longestOptionOutputLength,

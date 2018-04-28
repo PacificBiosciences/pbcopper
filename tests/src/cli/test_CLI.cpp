@@ -371,7 +371,7 @@ TEST(CLI_Runner, runs_application_from_resolved_tool_contract)
 {
     SCOPED_TRACE("run from RTC args");
 
-    const string& rtcFn = "/tmp/pbcopper.cli.runner.resolved-tool-contract.json";
+    const string rtcFn{"/tmp/pbcopper.cli.runner.resolved-tool-contract.json"};
     CLITests::RtcGenerator rtc(rtcFn);
     (void)rtc;
 

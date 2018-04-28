@@ -37,7 +37,7 @@ TEST(CLI_HelpPrinter, prints_expected_help_output)
         {"extras", "Extra stuff to pass in here, optionally.", "[extras...]"}
     });
 
-    const string expectedText = {
+    const string expectedText{
         "Usage: frobber [options] source dest [extras...]\n"
         "Frobb your files in a most delightful, nobbly way\n"
         "\n"
@@ -98,7 +98,7 @@ TEST(CLI_HelpPrinter, prints_expected_option_groups)
         {"extras", "Extra stuff to pass in here, optionally.", "[extras...]"}
     });
 
-    const string expectedText = {
+    const string expectedText{
         "Usage: frobber [options] source dest [extras...]\n"
         "Frobb your files in a most delightful, nobbly way\n"
         "\n"

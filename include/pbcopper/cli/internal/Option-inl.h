@@ -113,7 +113,7 @@ inline std::string Option::Description(void) const { return d_->option_["descrip
 
 inline bool Option::HasChoices(void) const
 {
-    const auto& choices = Choices();
+    const auto choices = Choices();
     return choices.is_array() && !choices.empty();
 }
 

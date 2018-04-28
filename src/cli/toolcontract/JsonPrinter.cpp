@@ -62,7 +62,7 @@ static Json makeInputTypesJson(const Interface& interface)
     Json inputTypesJson = Json::array();
 
     const auto& task = interface.ToolContract().Task();
-    const auto& inputFileTypes = task.InputFileTypes();
+    const auto inputFileTypes = task.InputFileTypes();
     for (const InputFileType& file : inputFileTypes) {
         Json entry = Json::object();
         entry["title"] = file.Title();
@@ -89,7 +89,7 @@ static Json makeOutputTypesJson(const Interface& interface)
     Json outputTypesJson = Json::array();
 
     const auto& task = interface.ToolContract().Task();
-    const auto& outputFileTypes = task.OutputFileTypes();
+    const auto outputFileTypes = task.OutputFileTypes();
     for (const OutputFileType& file : outputFileTypes) {
         Json entry = Json::object();
         entry["title"] = file.Title();
@@ -113,7 +113,7 @@ static Json makeResourceTypesJson(const ToolContract::Task& task)
 
     Json resourceTypesJson = Json::array();
 
-    const auto& taskResourceTypes = task.ResourceTypes();
+    const auto taskResourceTypes = task.ResourceTypes();
     for (const auto& t : taskResourceTypes) {
         const auto found = lookup.find(t);
         if (found == lookup.cend())
@@ -134,9 +134,9 @@ static Json makeSchemaOptionJson(const Interface& interface, const std::string& 
 
     // get option info
     const Option registeredOption = RegisteredOption(interface, optionId);
-    const JSON::Json& defaultValue = registeredOption.DefaultValue();
-    const std::string& description = registeredOption.Description();
-    const std::string& optionType = registeredOption.TypeId();
+    const JSON::Json defaultValue = registeredOption.DefaultValue();
+    const std::string description = registeredOption.Description();
+    const std::string optionType = registeredOption.TypeId();
 
     // populate JSON
     Json schemaOption = Json::object();
