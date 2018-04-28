@@ -118,7 +118,7 @@ TEST(CLI_Interface, add_multple_options_as_batch)
 TEST(CLI_Interface, add_single_positional_arg)
 {
     PacBio::CLI::Interface cl{InterfaceTests::AppName()};
-    cl.AddPositionalArgument({"source", "Source file to copy."});
+    cl.AddPositionalArgument({"source", "Source file to copy.", {}});
 
     const auto registered = cl.RegisteredPositionalArgs();
     EXPECT_EQ(1, registered.size());
@@ -128,8 +128,8 @@ TEST(CLI_Interface, add_single_positional_arg)
 TEST(CLI_Interface, add_multiple_positional_args_one_at_a_time)
 {
     PacBio::CLI::Interface cl{InterfaceTests::AppName()};
-    cl.AddPositionalArgument({"source", "Source file to copy."});
-    cl.AddPositionalArgument({"dest", "Target destination"});
+    cl.AddPositionalArgument({"source", "Source file to copy.", {}});
+    cl.AddPositionalArgument({"dest", "Target destination", {}});
 
     const auto registered = cl.RegisteredPositionalArgs();
     EXPECT_EQ(2, registered.size());
@@ -140,7 +140,8 @@ TEST(CLI_Interface, add_multiple_positional_args_one_at_a_time)
 TEST(CLI_Interface, add_multiple_positional_args_as_batch)
 {
     PacBio::CLI::Interface cl{InterfaceTests::AppName()};
-    cl.AddPositionalArguments({{"source", "Source file to copy."}, {"dest", "Target destination"}});
+    cl.AddPositionalArguments(
+        {{"source", "Source file to copy.", {}}, {"dest", "Target destination", {}}});
 
     const auto registered = cl.RegisteredPositionalArgs();
     EXPECT_EQ(2, registered.size());
