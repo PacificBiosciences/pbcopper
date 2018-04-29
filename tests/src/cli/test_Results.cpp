@@ -3,7 +3,6 @@
 #include <pbcopper/cli/Results.h>
 using namespace PacBio;
 using namespace PacBio::CLI;
-using namespace std;
 
 namespace ResultsTests {
 
@@ -51,7 +50,7 @@ TEST(CLI_Results, add_observed_option_value)
 {
     Results r{ResultsTests::makeInterface()};
     r.RegisterOptionValue("timeout", "42");
-    EXPECT_EQ(string("42"), r["timeout"]);
+    EXPECT_EQ(std::string{"42"}, r["timeout"]);
 }
 
 TEST(CLI_Results, adding_positional_args)
@@ -62,8 +61,8 @@ TEST(CLI_Results, adding_positional_args)
     // lookup by index
     const auto& resultPositionalArgs = r.PositionalArguments();
     EXPECT_EQ(2, resultPositionalArgs.size());
-    EXPECT_EQ(string("source_file"), resultPositionalArgs.at(0));
-    EXPECT_EQ(string("dest_file"), resultPositionalArgs.at(1));
+    EXPECT_EQ(std::string{"source_file"}, resultPositionalArgs.at(0));
+    EXPECT_EQ(std::string{"dest_file"}, resultPositionalArgs.at(1));
 
     //    // lookup by name (order-independent at this point)
     //    EXPECT_EQ(string("dest_file"),   r.PositionalArgument("dest"));

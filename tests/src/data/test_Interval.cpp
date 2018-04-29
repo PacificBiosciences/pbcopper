@@ -4,7 +4,6 @@
 #include <pbcopper/data/Position.h>
 using namespace PacBio;
 using namespace PacBio::Data;
-using namespace std;
 
 TEST(Data_Interval, default_interval_contains_zeroes)
 {

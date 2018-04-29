@@ -4,7 +4,6 @@
 #include <sstream>
 using namespace PacBio;
 using namespace PacBio::Data;
-using namespace std;
 
 namespace RSMovieNameTests {
 
@@ -17,7 +16,7 @@ auto makeRSMovieName = [](void) {
 TEST(Data_RSMovieName, construct_from_lvalue_string)
 {
     EXPECT_NO_THROW({
-        const string input = "m140415_143853_42175_c100635972550000001823121909121417_s1_p0";
+        const std::string input{"m140415_143853_42175_c100635972550000001823121909121417_s1_p0"};
         const RSMovieName m(input);
         EXPECT_EQ("140415_143853", m.RunStartTime());
         EXPECT_EQ("42175", m.InstrumentSerialNumber());
@@ -133,7 +132,7 @@ TEST(Data_RSMovieName, expired_reagent_character_recognized)
 
 TEST(Data_RSMovieName, constructed_from_name_prints_same_name)
 {
-    const string expected = "m140415_143853_42175_c100635972550000001823121909121417_s1_p0";
+    const std::string expected{"m140415_143853_42175_c100635972550000001823121909121417_s1_p0"};
 
     const RSMovieName m(expected);
     EXPECT_EQ(expected, m.ToStdString());
@@ -141,7 +140,7 @@ TEST(Data_RSMovieName, constructed_from_name_prints_same_name)
 
 TEST(Data_RSMovieName, constructed_from_name_parts_prints_expected_combination)
 {
-    const string expected = "m140415_143853_42175_c100635972550000001823121909121417_s1_p0";
+    const std::string expected{"m140415_143853_42175_c100635972550000001823121909121417_s1_p0"};
 
     const RSMovieName m("140415_143853", "42175", "c100635972550000001823121909121417", "s1", "p0");
     EXPECT_EQ(expected, m.ToStdString());
@@ -162,10 +161,10 @@ TEST(Data_RSMovieName, compares_equal_if_printed_names_equal)
 
 TEST(Data_RSMovieName, constructed_from_name_prints_expected_value_to_output_operator)
 {
-    const string expected{"m140415_143853_42175_c100635972550000001823121909121417_s1_p0"};
+    const std::string expected{"m140415_143853_42175_c100635972550000001823121909121417_s1_p0"};
 
     const RSMovieName m(expected);
-    ostringstream s;
+    std::ostringstream s;
     s << m;
 
     EXPECT_EQ(expected, s.str());
@@ -173,10 +172,10 @@ TEST(Data_RSMovieName, constructed_from_name_prints_expected_value_to_output_ope
 
 TEST(Data_RSMovieName, constructed_from_name_parts_prints_expected_value_to_output_operator)
 {
-    const string expected = "m140415_143853_42175_c100635972550000001823121909121417_s1_p0";
+    const std::string expected{"m140415_143853_42175_c100635972550000001823121909121417_s1_p0"};
 
     const RSMovieName m("140415_143853", "42175", "c100635972550000001823121909121417", "s1", "p0");
-    ostringstream s;
+    std::ostringstream s;
     s << m;
 
     EXPECT_EQ(expected, s.str());
@@ -184,8 +183,8 @@ TEST(Data_RSMovieName, constructed_from_name_parts_prints_expected_value_to_outp
 
 TEST(Data_RSMovieName, constructed_properly_from_input_operator)
 {
-    const string name{"m140415_143853_42175_c100635972550000001823121909121417_s1_p0"};
-    istringstream s{name};
+    const std::string name{"m140415_143853_42175_c100635972550000001823121909121417_s1_p0"};
+    std::istringstream s{name};
     RSMovieName m;
     s >> m;
 

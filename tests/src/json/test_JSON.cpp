@@ -2,7 +2,6 @@
 #include <pbcopper/json/JSON.h>
 using namespace PacBio;
 using namespace PacBio::JSON;
-using namespace std;
 
 TEST(JSON_Json, default_constructed_object_is_null)
 {

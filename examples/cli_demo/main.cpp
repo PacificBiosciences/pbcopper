@@ -4,17 +4,16 @@
 #include <string>
 using namespace PacBio;
 using namespace PacBio::CLI;
-using namespace std;
 
 struct MyAppSettings {
     bool progress;
     bool force;
     bool verbose;
-    string tempDir;
+    std::string tempDir;
     int timeout;
-    string source;
-    string dest;
-    vector<string> extras;
+    std::string source;
+    std::string dest;
+    std::vector<std::string> extras;
 };
 
 static inline
@@ -23,20 +22,20 @@ int RunMain(const MyAppSettings& s)
     // this is where your normal app would take its settings and start rocking
     // here, we just print out what we received from the CL
 
-    cout << "--------------------" << endl
-         << "App Settings:       " << endl
-         << "--------------------" << endl
-         << "progress?  " << (s.progress ? "on" : "off") << endl
-         << "force?     " << (s.force ? "on" : "off") << endl
-         << "verbose?   " << (s.verbose ? "on" : "off") << endl
-         << "tempDir:   " << s.tempDir << endl
-         << "timeout:   " << s.timeout << endl
-         << "source:    " << s.source << endl
-         << "dest:      " << s.dest << endl
+    std::cout << "--------------------\n"
+         << "App Settings:       \n"
+         << "--------------------\n"
+         << "progress?  " << (s.progress ? "on" : "off") << '\n'
+         << "force?     " << (s.force ? "on" : "off") << '\n'
+         << "verbose?   " << (s.verbose ? "on" : "off") << '\n'
+         << "tempDir:   " << s.tempDir << '\n'
+         << "timeout:   " << s.timeout << '\n'
+         << "source:    " << s.source << '\n'
+         << "dest:      " << s.dest << '\n'
          << "extras:    ";
     for (const auto& extra : s.extras )
-        cout << extra << ", ";
-    cout << endl;
+        std::cout << extra << ", ";
+    std::cout << '\n';
 
     return EXIT_SUCCESS;
 }
@@ -85,7 +84,7 @@ int argRunner(const PacBio::CLI::Results& args)
 
     const auto positionalArgs = args.PositionalArguments();
     if (positionalArgs.size() < 2) {
-        cerr << "ERROR: source & dest args are required" << endl;
+        std::cerr << "ERROR: source & dest args are required\n";
         PacBio::CLI::PrintHelp(args.ApplicationInterface(), std::cout);
         return EXIT_FAILURE;
     }

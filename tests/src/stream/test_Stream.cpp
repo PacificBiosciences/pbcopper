@@ -36,7 +36,7 @@ Sink<std::string> consoleStringOutput = [](std::string s) { std::cerr << s; };
 
 Sink<std::string> newlinedStringOutput = [](std::string s) {
     consoleStringOutput(s);
-    std::cerr << std::endl;
+    std::cerr << '\n';
 };
 
 Transform<char, char> toAllCaps = [](Sink<char> si, char c) { si(toupper(c)); };

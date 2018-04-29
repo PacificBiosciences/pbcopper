@@ -7,7 +7,6 @@
 using namespace PacBio;
 using namespace PacBio::CLI;
 using namespace PacBio::CLI::ToolContract;
-using namespace std;
 
 TEST(CLI_ResolvedToolContract, read_basic_RTC)
 {
@@ -33,7 +32,7 @@ TEST(CLI_ResolvedToolContract, read_basic_RTC)
 }
     )";
 
-    stringstream input;
+    std::stringstream input;
     input << text;
 
     // clang-format off
@@ -47,7 +46,7 @@ TEST(CLI_ResolvedToolContract, read_basic_RTC)
         {"max_nlines", {"n"}, "Max Number of lines to Copy", Option::IntType(10)}
     });
 
-    const string id = "frobber.tasks.dev_txt_app";
+    const std::string id{"frobber.tasks.dev_txt_app"};
     ToolContract::Task tcTask(id);
     tcTask.Options({
         { "max_nlines", "Max Lines" }
@@ -100,7 +99,7 @@ TEST(CLI_ResolvedToolContract, map_files_to_options)
 }
     )";
 
-    stringstream input;
+    std::stringstream input;
     input << text;
 
     // clang-format off
@@ -118,7 +117,7 @@ TEST(CLI_ResolvedToolContract, map_files_to_options)
         {"json_file",   {"jsonFile"},   "JSON file.",   Option::StringType("")},
     });
 
-    const string id = "frobber.tasks.dev_txt_app";
+    const std::string id{"frobber.tasks.dev_txt_app"};
     ToolContract::Task tcTask(id);
     tcTask.Options({
         { "min_length", "Minimum Length" },
@@ -149,14 +148,14 @@ TEST(CLI_ResolvedToolContract, map_files_to_options)
 
     const int minLength = results["min_length"];
     const int maxLength = results["max_length"];
-    const string outputFile = results["output_file"];
-    const string reportFile = results["report_file"];
-    const string junkFile = results["junk_file"];
-    const string jsonFile = results["json_file"];
+    const std::string outputFile = results["output_file"];
+    const std::string reportFile = results["report_file"];
+    const std::string junkFile = results["junk_file"];
+    const std::string jsonFile = results["json_file"];
 
     const auto positionalArgs = results.PositionalArguments();
     EXPECT_EQ(1, positionalArgs.size());
-    const string inputFile = positionalArgs.at(0);
+    const std::string inputFile = positionalArgs.at(0);
 
     EXPECT_EQ(25, minLength);
     EXPECT_EQ(500, maxLength);

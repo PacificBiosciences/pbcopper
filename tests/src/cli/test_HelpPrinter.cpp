@@ -5,7 +5,6 @@
 #include <vector>
 using namespace PacBio;
 using namespace PacBio::CLI;
-using namespace std;
 
 TEST(CLI_HelpPrinter, prints_expected_help_output)
 {
@@ -37,7 +36,7 @@ TEST(CLI_HelpPrinter, prints_expected_help_output)
         {"extras", "Extra stuff to pass in here, optionally.", "[extras...]"}
     });
 
-    const string expectedText{
+    const std::string expectedText{
         "Usage: frobber [options] source dest [extras...]\n"
         "Frobb your files in a most delightful, nobbly way\n"
         "\n"
@@ -61,7 +60,7 @@ TEST(CLI_HelpPrinter, prints_expected_help_output)
     };
     // clang-format on
 
-    ostringstream s;
+    std::ostringstream s;
     HelpPrinter::Print(i, s);
     EXPECT_EQ(expectedText, s.str());
 }
@@ -98,7 +97,7 @@ TEST(CLI_HelpPrinter, prints_expected_option_groups)
         {"extras", "Extra stuff to pass in here, optionally.", "[extras...]"}
     });
 
-    const string expectedText{
+    const std::string expectedText{
         "Usage: frobber [options] source dest [extras...]\n"
         "Frobb your files in a most delightful, nobbly way\n"
         "\n"
@@ -124,7 +123,7 @@ TEST(CLI_HelpPrinter, prints_expected_option_groups)
     };
     // clang-format on
 
-    ostringstream s;
+    std::ostringstream s;
     HelpPrinter::Print(i, s);
     EXPECT_EQ(expectedText, s.str());
 }
