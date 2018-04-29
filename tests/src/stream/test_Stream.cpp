@@ -15,13 +15,13 @@ namespace StreamTests {
 Source<char> stringInput = [](Sink<char> s) {
     const std::string original = {"Test String "};
     for (auto e : original)
-        s(static_cast<char>(e));
+        s(e);
 };
 
 Source<char> newlinedStringInput = [](Sink<char> s) {
     const std::string original = {"Some\nfile\nwith\nnewlines\n"};
     for (auto e : original)
-        s(static_cast<char>(e));
+        s(e);
 };
 
 Source<std::string> stringListInput = [](Sink<std::string> s) {
@@ -65,7 +65,7 @@ Transform<char, std::string> getWords = [](Sink<std::string> si, char c) {
 
 Transform<std::string, char> wordToChars = [](Sink<char> si, std::string s) {
     for (auto e : s)
-        si(static_cast<char>(e));
+        si(e);
     si(' ');
 };
 

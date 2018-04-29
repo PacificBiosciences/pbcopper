@@ -43,7 +43,7 @@ static PacBio::CLI::Interface makeInterface(void)
         {"delta",      "delta",             "Some delta for things", Option::IntType(1), { 1, 2, 3 }},
         {"ploidy",     "ploidy",            "Genome ploidy", Option::StringType("haploid"), {"haploid", "diploid"}},
         {"element",    {"e", "element"},    "Choice of element indicates mood. Science.", Option::StringType("fire"), {"earth", "wind", "fire", "water"}},
-        {"tc_only",    {"tc-only"},         "Hidden from cmdline help, but still available from TC.", Option::BoolType(false), {}, OptionFlags::HIDE_FROM_HELP}
+        {"tc_only",    {"tc-only"},         "Hidden from cmdline help, but still available from TC.", Option::BoolType{false}, {}, OptionFlags::HIDE_FROM_HELP}
     });
 
     i.AddPositionalArguments({
