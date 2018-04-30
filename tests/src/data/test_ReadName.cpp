@@ -3,11 +3,10 @@
 #include <pbcopper/data/ReadName.h>
 using namespace PacBio;
 using namespace PacBio::Data;
-using namespace std;
 
 TEST(Data_ReadName, read_name_from_string)
 {
-    const string movieName = "m54001_160623_195125";
+    const std::string movieName{"m54001_160623_195125"};
     const Zmw zmw = 553;
     const Position queryStart = 3100;
     const Position queryEnd = 11230;
@@ -27,7 +26,7 @@ TEST(Data_ReadName, read_name_from_string)
 
 TEST(Data_ReadName, ccs_read_name_from_string)
 {
-    const string movieName = "m54001_160623_195125";
+    const std::string movieName{"m54001_160623_195125"};
     const Zmw zmw = 553;
     const Position queryStart = 3100;
     const Position queryEnd = 11230;
@@ -47,7 +46,7 @@ TEST(Data_ReadName, ccs_read_name_from_string)
 
 TEST(Data_ReadName, read_name_from_parts_with_query_interval)
 {
-    const string movieName = "m54001_160623_195125";
+    const std::string movieName{"m54001_160623_195125"};
     const Zmw zmw = 553;
     const Position queryStart = 3100;
     const Position queryEnd = 11230;
@@ -67,7 +66,7 @@ TEST(Data_ReadName, read_name_from_parts_with_query_interval)
 
 TEST(Data_ReadName, read_name_from_parts_with_query_positions)
 {
-    const string movieName = "m54001_160623_195125";
+    const std::string movieName{"m54001_160623_195125"};
     const Zmw zmw = 553;
     const Position queryStart = 3100;
     const Position queryEnd = 11230;
@@ -87,7 +86,7 @@ TEST(Data_ReadName, read_name_from_parts_with_query_positions)
 
 TEST(Data_ReadName, ccs_read_name_from_parts)
 {
-    const string movieName = "m54001_160623_195125";
+    const std::string movieName{"m54001_160623_195125"};
     const Zmw zmw = 553;
     const Position queryStart = 3100;
     const Position queryEnd = 11230;
@@ -123,41 +122,41 @@ TEST(Data_ReadName, compares_equal_if_printed_names_equal)
 
 TEST(Data_ReadName, constructed_from_name_prints_expected_value_to_output_operator)
 {
-    const string name = "m54001_160623_195125/553/3100_11230";
+    const std::string name{"m54001_160623_195125/553/3100_11230"};
 
     const ReadName r(name);
-    ostringstream s;
+    std::ostringstream s;
     s << r;
     EXPECT_EQ(name, s.str());
 }
 
 TEST(Data_ReadName, constructed_from_name_parts_prints_expected_value_to_output_operator)
 {
-    const string name = "m54001_160623_195125/553/3100_11230";
+    const std::string name{"m54001_160623_195125/553/3100_11230"};
 
     const ReadName r{MovieName{"m54001_160623_195125"}, 553, Interval<Position>{3100, 11230}};
 
-    ostringstream s;
+    std::ostringstream s;
     s << r;
     EXPECT_EQ(name, s.str());
 }
 
 TEST(Data_ReadName, constructed_from_ccs_name_parts_prints_expected_value_to_output_operator)
 {
-    const string ccs = "m54001_160623_195125/553/ccs";
+    const std::string ccs{"m54001_160623_195125/553/ccs"};
 
     const ReadName r{MovieName{"m54001_160623_195125"}, 553, CCSTag()};
 
-    ostringstream s;
+    std::ostringstream s;
     s << r;
     EXPECT_EQ(ccs, s.str());
 }
 
 TEST(Data_ReadName, constructed_properly_from_input_operator)
 {
-    const string name{"m54001_160623_195125/553/3100_11230"};
+    const std::string name{"m54001_160623_195125/553/3100_11230"};
 
-    istringstream s{name};
+    std::istringstream s{name};
     ReadName r;
     s >> r;
 
@@ -170,9 +169,9 @@ TEST(Data_ReadName, constructed_properly_from_input_operator)
 
 TEST(Data_ReadName, ccs_constructed_properly_from_input_operator)
 {
-    const string ccs{"m54001_160623_195125/553/ccs"};
+    const std::string ccs{"m54001_160623_195125/553/ccs"};
 
-    istringstream s{ccs};
+    std::istringstream s{ccs};
     ReadName r;
     s >> r;
 

@@ -158,9 +158,9 @@ inline Seed& Seed::operator+=(const Seed& other)
     assert(overlap <= initialSize);
 
     // adjust score depending on fraction used from each seed
-    const auto total = static_cast<double>(initialSize + otherSize - overlap);
-    const auto intoFraction = static_cast<double>(initialSize - 0.5 * overlap) / total;
-    const auto fromFraction = static_cast<double>(otherSize - 0.5 * overlap) / total;
+    const double total = initialSize + otherSize - overlap;
+    const double intoFraction = (initialSize - 0.5 * overlap) / total;
+    const double fromFraction = (otherSize - 0.5 * overlap) / total;
     const auto newScore =
         static_cast<int32_t>(std::round(intoFraction * Score() + fromFraction * other.Score()));
     score_ = newScore;

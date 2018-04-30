@@ -181,7 +181,7 @@ void Logger::MessageWriter(void)
         const LogLevel level = std::get<0>(*ptr);
         if (cfg_.find(level) != cfg_.end()) {
             for (const auto& os : cfg_.at(level))
-                os.get() << std::get<1>(*ptr).str() << std::endl;
+                os.get() << std::get<1>(*ptr).str() << '\n';
         }
 
         // and notify flush we delivered a message to os_,

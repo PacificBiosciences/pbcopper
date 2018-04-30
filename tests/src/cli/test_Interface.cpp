@@ -3,29 +3,28 @@
 #include <pbcopper/cli/Interface.h>
 using namespace PacBio;
 using namespace PacBio::CLI;
-using namespace std;
 
 namespace InterfaceTests {
 
-static inline string AppName(void)
+static inline std::string AppName(void)
 {
-    static const string appName = "frobber";
+    static const std::string appName{"frobber"};
     return appName;
 }
 
-static inline string AppDescription(void)
+static inline std::string AppDescription(void)
 {
-    static const string appDesc = "does the frobbing";
+    static const std::string appDesc{"does the frobbing"};
     return appDesc;
 }
 
-static inline string AppVersion(void)
+static inline std::string AppVersion(void)
 {
-    static const string appVersion = "3.14";
+    static const std::string appVersion{"3.14"};
     return appVersion;
 }
 
-static bool HasOption(const Interface& i, const string& name)
+static bool HasOption(const Interface& i, const std::string& name)
 {
     const auto options = i.RegisteredOptions();
     for (auto&& option : options) {
@@ -76,7 +75,7 @@ TEST(CLI_Interface, add_single_option_with_a_single_alias)
 
     const auto registered = cl.RegisteredOptions();
     EXPECT_EQ(1, registered.size());
-    EXPECT_EQ(vector<string>({"o"}), registered.at(0).Names());
+    EXPECT_EQ(std::vector<std::string>({"o"}), registered.at(0).Names());
 }
 
 TEST(CLI_Interface, add_single_option_with_multiple_aliases)
@@ -86,7 +85,7 @@ TEST(CLI_Interface, add_single_option_with_multiple_aliases)
 
     const auto registered = cl.RegisteredOptions();
     EXPECT_EQ(1, registered.size());
-    EXPECT_EQ(vector<string>({"o", "output"}), registered.at(0).Names());
+    EXPECT_EQ(std::vector<std::string>({"o", "output"}), registered.at(0).Names());
 }
 
 TEST(CLI_Interface, add_multiple_options_one_at_a_time)
@@ -97,8 +96,8 @@ TEST(CLI_Interface, add_multiple_options_one_at_a_time)
 
     const auto registered = cl.RegisteredOptions();
     EXPECT_EQ(2, registered.size());
-    EXPECT_EQ(vector<string>({"o", "output"}), registered.at(0).Names());
-    EXPECT_EQ(vector<string>({"i", "input"}), registered.at(1).Names());
+    EXPECT_EQ(std::vector<std::string>({"o", "output"}), registered.at(0).Names());
+    EXPECT_EQ(std::vector<std::string>({"i", "input"}), registered.at(1).Names());
 }
 
 TEST(CLI_Interface, add_multple_options_as_batch)
@@ -111,8 +110,8 @@ TEST(CLI_Interface, add_multple_options_as_batch)
 
     const auto registered = cl.RegisteredOptions();
     EXPECT_EQ(2, registered.size());
-    EXPECT_EQ(vector<string>({"o", "output"}), registered.at(0).Names());
-    EXPECT_EQ(vector<string>({"i", "input"}), registered.at(1).Names());
+    EXPECT_EQ(std::vector<std::string>({"o", "output"}), registered.at(0).Names());
+    EXPECT_EQ(std::vector<std::string>({"i", "input"}), registered.at(1).Names());
 }
 
 TEST(CLI_Interface, add_single_positional_arg)
@@ -122,7 +121,7 @@ TEST(CLI_Interface, add_single_positional_arg)
 
     const auto registered = cl.RegisteredPositionalArgs();
     EXPECT_EQ(1, registered.size());
-    EXPECT_EQ(string{"source"}, registered.at(0).name_);
+    EXPECT_EQ(std::string{"source"}, registered.at(0).name_);
 }
 
 TEST(CLI_Interface, add_multiple_positional_args_one_at_a_time)
@@ -133,8 +132,8 @@ TEST(CLI_Interface, add_multiple_positional_args_one_at_a_time)
 
     const auto registered = cl.RegisteredPositionalArgs();
     EXPECT_EQ(2, registered.size());
-    EXPECT_EQ(string{"source"}, registered.at(0).name_);
-    EXPECT_EQ(string{"dest"}, registered.at(1).name_);
+    EXPECT_EQ(std::string{"source"}, registered.at(0).name_);
+    EXPECT_EQ(std::string{"dest"}, registered.at(1).name_);
 }
 
 TEST(CLI_Interface, add_multiple_positional_args_as_batch)
@@ -145,8 +144,8 @@ TEST(CLI_Interface, add_multiple_positional_args_as_batch)
 
     const auto registered = cl.RegisteredPositionalArgs();
     EXPECT_EQ(2, registered.size());
-    EXPECT_EQ(string{"source"}, registered.at(0).name_);
-    EXPECT_EQ(string{"dest"}, registered.at(1).name_);
+    EXPECT_EQ(std::string{"source"}, registered.at(0).name_);
+    EXPECT_EQ(std::string{"dest"}, registered.at(1).name_);
 }
 
 TEST(CLI_Interface, does_not_have_help_option_by_default)
@@ -204,10 +203,10 @@ TEST(CLI_Interface, add_group)
 
     const auto group1 = cl.GroupOptions("group1");
     EXPECT_EQ(2, group1.size());
-    EXPECT_EQ(string{"opt_id"}, group1.at(0).Id());
-    EXPECT_EQ(string{"opt_id2"}, group1.at(1).Id());
+    EXPECT_EQ(std::string{"opt_id"}, group1.at(0).Id());
+    EXPECT_EQ(std::string{"opt_id2"}, group1.at(1).Id());
 
     const auto group2 = cl.GroupOptions("group2");
     EXPECT_EQ(1, group2.size());
-    EXPECT_EQ(string{"opt_id3"}, group2.at(0).Id());
+    EXPECT_EQ(std::string{"opt_id3"}, group2.at(0).Id());
 }

@@ -57,6 +57,10 @@ SOFTWARE.
 #if defined(__clang__) || defined(__GNUC__) || defined(__GNUG__)
     #pragma GCC diagnostic push
     #pragma GCC diagnostic ignored "-Wfloat-equal"
+
+#if __GNUC__ >= 6
+    #pragma GCC diagnostic ignored "-Wnull-dereference"
+#endif
 #endif
 
 /*!
@@ -10161,7 +10165,7 @@ if no parse error occurred.
 */
 inline nlohmann::json operator "" _json(const char* s, std::size_t)
 {
-    return nlohmann::json::parse(reinterpret_cast<const nlohmann::json::string_t::value_type*>(s));
+    return nlohmann::json::parse(s);
 }
 
 /*!

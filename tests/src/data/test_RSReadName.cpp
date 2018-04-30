@@ -3,11 +3,10 @@
 #include <pbcopper/data/RSReadName.h>
 using namespace PacBio;
 using namespace PacBio::Data;
-using namespace std;
 
 TEST(Data_RSReadName, read_name_from_string)
 {
-    const string movieName = "m140415_143853_42175_c100635972550000001823121909121417_s1_p0";
+    const std::string movieName{"m140415_143853_42175_c100635972550000001823121909121417_s1_p0"};
     const Zmw zmw = 553;
     const Position queryStart = 3100;
     const Position queryEnd = 11230;
@@ -28,7 +27,7 @@ TEST(Data_RSReadName, read_name_from_string)
 
 TEST(Data_RSReadName, ccs_read_name_from_string)
 {
-    const string movieName = "m140415_143853_42175_c100635972550000001823121909121417_s1_p0";
+    const std::string movieName{"m140415_143853_42175_c100635972550000001823121909121417_s1_p0"};
     const Zmw zmw = 553;
     const Position queryStart = 3100;
     const Position queryEnd = 11230;
@@ -49,7 +48,7 @@ TEST(Data_RSReadName, ccs_read_name_from_string)
 
 TEST(Data_RSReadName, read_name_from_parts_with_query_interval)
 {
-    const string movieName = "m140415_143853_42175_c100635972550000001823121909121417_s1_p0";
+    const std::string movieName{"m140415_143853_42175_c100635972550000001823121909121417_s1_p0"};
     const Zmw zmw = 553;
     const Position queryStart = 3100;
     const Position queryEnd = 11230;
@@ -69,7 +68,7 @@ TEST(Data_RSReadName, read_name_from_parts_with_query_interval)
 
 TEST(Data_RSReadName, read_name_from_parts_with_query_positions)
 {
-    const string movieName = "m140415_143853_42175_c100635972550000001823121909121417_s1_p0";
+    const std::string movieName{"m140415_143853_42175_c100635972550000001823121909121417_s1_p0"};
     const Zmw zmw = 553;
     const Position queryStart = 3100;
     const Position queryEnd = 11230;
@@ -89,7 +88,7 @@ TEST(Data_RSReadName, read_name_from_parts_with_query_positions)
 
 TEST(Data_RSReadName, ccs_read_name_from_parts)
 {
-    const string movieName = "m140415_143853_42175_c100635972550000001823121909121417_s1_p0";
+    const std::string movieName{"m140415_143853_42175_c100635972550000001823121909121417_s1_p0"};
     const Zmw zmw = 553;
     const Position queryStart = 3100;
     const Position queryEnd = 11230;
@@ -128,46 +127,46 @@ TEST(Data_RSReadName, compares_equal_if_printed_names_equal)
 
 TEST(Data_RSReadName, constructed_from_name_prints_expected_value_to_output_operator)
 {
-    const string name =
-        "m140415_143853_42175_c100635972550000001823121909121417_s1_p0/553/3100_11230";
+    const std::string name{
+        "m140415_143853_42175_c100635972550000001823121909121417_s1_p0/553/3100_11230"};
 
     const RSReadName r(name);
-    ostringstream s;
+    std::ostringstream s;
     s << r;
     EXPECT_EQ(name, s.str());
 }
 
 TEST(Data_RSReadName, constructed_from_name_parts_prints_expected_value_to_output_operator)
 {
-    const string name =
-        "m140415_143853_42175_c100635972550000001823121909121417_s1_p0/553/3100_11230";
+    const std::string name{
+        "m140415_143853_42175_c100635972550000001823121909121417_s1_p0/553/3100_11230"};
 
     const RSReadName r{RSMovieName{"m140415_143853_42175_c100635972550000001823121909121417_s1_p0"},
                        553, Interval<Position>{3100, 11230}};
 
-    ostringstream s;
+    std::ostringstream s;
     s << r;
     EXPECT_EQ(name, s.str());
 }
 
 TEST(Data_RSReadName, constructed_from_ccs_name_parts_prints_expected_value_to_output_operator)
 {
-    const string ccs = "m140415_143853_42175_c100635972550000001823121909121417_s1_p0/553/ccs";
+    const std::string ccs{"m140415_143853_42175_c100635972550000001823121909121417_s1_p0/553/ccs"};
 
     const RSReadName r{RSMovieName{"m140415_143853_42175_c100635972550000001823121909121417_s1_p0"},
                        553, CCSTag()};
 
-    ostringstream s;
+    std::ostringstream s;
     s << r;
     EXPECT_EQ(ccs, s.str());
 }
 
 TEST(Data_RSReadName, constructed_properly_from_input_operator)
 {
-    const string name{
+    const std::string name{
         "m140415_143853_42175_c100635972550000001823121909121417_s1_p0/553/3100_11230"};
 
-    istringstream s{name};
+    std::istringstream s{name};
     RSReadName r;
     s >> r;
 
@@ -181,9 +180,9 @@ TEST(Data_RSReadName, constructed_properly_from_input_operator)
 
 TEST(Data_RSReadName, ccs_constructed_properly_from_input_operator)
 {
-    const string ccs{"m140415_143853_42175_c100635972550000001823121909121417_s1_p0/553/ccs"};
+    const std::string ccs{"m140415_143853_42175_c100635972550000001823121909121417_s1_p0/553/ccs"};
 
-    istringstream s{ccs};
+    std::istringstream s{ccs};
     RSReadName r;
     s >> r;
 

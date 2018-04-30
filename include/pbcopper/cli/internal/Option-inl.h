@@ -41,7 +41,7 @@ public:
 
         // if none provided, treat as a switch-type option (init w/ false)
         if (defaultValue.is_null())
-            option_["defaultValue"] = PacBio::JSON::Json::boolean_t(false);
+            option_["defaultValue"] = PacBio::JSON::Json::boolean_t{false};
         else
             option_["defaultValue"] = defaultValue;
 
