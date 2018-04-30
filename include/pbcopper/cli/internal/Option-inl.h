@@ -15,10 +15,12 @@ public:
     PacBio::JSON::Json option_;
 
 public:
-    explicit OptionPrivate(const std::string& id, const std::vector<std::string>& names,
-                           const std::string& description, const PacBio::JSON::Json& defaultValue,
-                           const PacBio::JSON::Json& choices, const OptionFlags& flags)
+    explicit OptionPrivate(std::string id, std::vector<std::string> names, std::string description,
+                           PacBio::JSON::Json defaultValue, PacBio::JSON::Json choices,
+                           OptionFlags flags)
         : option_(PacBio::JSON::Json::object_t())
+    // NOTE: ^^ not "uniform initialization." Charing parens to curly brackets gives this error:
+    // "libc++abi.dylib: terminating with uncaught exception of type std::domain_error: cannot use operator[] with array"
     {
         // validate ID & name(s)
         if (id.empty()) throw std::runtime_error("CLI::Option: options must have at non-empty ID");
@@ -35,19 +37,19 @@ public:
         }
 
         // store data
-        option_["id"] = id;
-        option_["names"] = names;
-        option_["description"] = description;
+        option_["id"] = std::move(id);
+        option_["names"] = std::move(names);
+        option_["description"] = std::move(description);
 
         // if none provided, treat as a switch-type option (init w/ false)
         if (defaultValue.is_null())
             option_["defaultValue"] = PacBio::JSON::Json::boolean_t{false};
         else
-            option_["defaultValue"] = defaultValue;
+            option_["defaultValue"] = std::move(defaultValue);
 
         // choices
         if (choices.is_array() && !choices.empty())
-            option_["choices"] = choices;
+            option_["choices"] = std::move(choices);
         else
             option_["choices"] = JSON::Json(nullptr);
 
@@ -65,25 +67,29 @@ public:
 // PacBio::CLI::Option
 // ------------------------
 
-inline Option::Option(const std::string& id, const std::string& name,
-                      const std::string& description, const PacBio::JSON::Json& defaultValue,
-                      const JSON::Json& choices, const OptionFlags& flags)
-    : d_(new internal::OptionPrivate{id, std::vector<std::string>{1, name}, description,
-                                     defaultValue, choices, flags})
+inline Option::Option(std::string id, std::string name, std::string description,
+                      PacBio::JSON::Json defaultValue, JSON::Json choices, OptionFlags flags)
+    : d_{std::make_unique<internal::OptionPrivate>(std::move(id), std::vector<std::string>{1, name},
+                                                   std::move(description), std::move(defaultValue),
+                                                   std::move(choices), flags)}
 {
 }
 
-inline Option::Option(const std::string& id, const std::initializer_list<std::string>& init,
-                      const std::string& description, const PacBio::JSON::Json& defaultValue,
-                      const PacBio::JSON::Json& choices, const OptionFlags& flags)
-    : Option(id, std::vector<std::string>{init}, description, defaultValue, choices, flags)
+inline Option::Option(std::string id, std::initializer_list<std::string> init,
+                      std::string description, PacBio::JSON::Json defaultValue,
+                      PacBio::JSON::Json choices, OptionFlags flags)
+    : Option{std::move(id),          std::vector<std::string>{init},
+             std::move(description), std::move(defaultValue),
+             std::move(choices),     flags}
 {
 }
 
-inline Option::Option(const std::string& id, const std::vector<std::string>& names,
-                      const std::string& description, const PacBio::JSON::Json& defaultValue,
-                      const PacBio::JSON::Json& choices, const OptionFlags& flags)
-    : d_(new internal::OptionPrivate{id, names, description, defaultValue, choices, flags})
+inline Option::Option(std::string id, std::vector<std::string> names, std::string description,
+                      PacBio::JSON::Json defaultValue, PacBio::JSON::Json choices,
+                      OptionFlags flags)
+    : d_{std::make_unique<internal::OptionPrivate>(std::move(id), std::move(names),
+                                                   std::move(description), std::move(defaultValue),
+                                                   std::move(choices), flags)}
 {
 }
 

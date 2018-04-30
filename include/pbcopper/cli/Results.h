@@ -37,9 +37,9 @@ public:
     /// \brief Results
     /// \param interface
     ///
-    Results(const Interface& interface);
+    Results(Interface interface);
 
-    Results(const Interface& interface, const std::vector<std::string>& inputCommandLine);
+    Results(Interface interface, std::vector<std::string> inputCommandLine);
 
     Results(const Results& other);
     Results(Results&& other);

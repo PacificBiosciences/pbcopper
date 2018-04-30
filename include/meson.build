@@ -62,7 +62,6 @@ if not meson.is_subproject()
   # pbcopper/cli/toolcontract/internal
   install_headers(
     files([
-      'pbcopper/cli/toolcontract/internal/Config-inl.h',
       'pbcopper/cli/toolcontract/internal/Driver-inl.h',
       'pbcopper/cli/toolcontract/internal/InputFileType-inl.h',
       'pbcopper/cli/toolcontract/internal/OutputFileType-inl.h',

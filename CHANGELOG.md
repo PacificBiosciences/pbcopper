@@ -5,6 +5,11 @@
 ### TODO
 - Initial sequence-related data structures
 
+## [0.3.0] - 2018-04-30
+
+### Changed
+- Minor ToolContract::Config API change.
+
 ## [0.2.0] - 2017-12-03
 
 ### Added

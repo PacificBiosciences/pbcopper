@@ -14,9 +14,9 @@ namespace CLI {
 namespace ToolContract {
 
 ///
-/// \brief The ToolContractConfig class
+/// \brief The ToolContractConfig struct
 ///
-class Config
+struct Config
 {
 public:
     /// \name Constructors & Related Methods
@@ -27,7 +27,7 @@ public:
     ///
     /// \param task
     ///
-    Config(const ToolContract::Task& task);
+    Config(Task task) : task_{std::move(task)} {}
 
     /// \brief Contructs a tool contract configuration with the provided task &
     ///        driver settings.
@@ -35,7 +35,10 @@ public:
     /// \param task
     /// \param driver
     ///
-    Config(const ToolContract::Task& task, const ToolContract::Driver& driver);
+    Config(ToolContract::Task task, ToolContract::Driver driver)
+        : task_{std::move(task)}, driver_{std::move(driver)}
+    {
+    }
 
     Config(const Config& other) = default;
     Config(Config&& other) = default;
@@ -46,35 +49,6 @@ public:
     /// \}
 
 public:
-    /// \name Main Components
-    /// \{
-
-    ///
-    /// \brief Driver
-    /// \return
-    ///
-    const ToolContract::Driver& Driver(void) const;
-
-    ///
-    /// \brief Task
-    /// \return
-    ///
-    const ToolContract::Task& Task(void) const;
-
-    /// \}
-
-public:
-    /// \name Other Attributes
-    /// \{
-
-    std::string Version(void) const;
-
-    /// \}
-
-public:
-    Config& Version(const std::string& version);
-
-private:
     ToolContract::Task task_;
     ToolContract::Driver driver_;
     std::string version_;
@@ -83,7 +57,5 @@ private:
 }  // namespace ToolContract
 }  // namespace CLI
 }  // namespace PacBio
-
-#include <pbcopper/cli/toolcontract/internal/Config-inl.h>
 
 #endif  // PBCOPPER_CLI_TOOLCONTRACT_CONFIG_H

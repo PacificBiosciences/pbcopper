@@ -35,8 +35,8 @@ public:
     /// \param appDescription
     /// \param appVersion
     ///
-    Interface(const std::string& appName, const std::string& appDescription = std::string(),
-              const std::string& appVersion = std::string());
+    Interface(std::string appName, std::string appDescription = std::string(),
+              std::string appVersion = std::string());
 
     ///
     /// \brief Interface
@@ -56,25 +56,25 @@ public:
     /// \brief ApplicationDescription
     /// \return
     ///
-    std::string ApplicationDescription(void) const;
+    const std::string& ApplicationDescription(void) const;
 
     ///
     /// \brief ApplicationName
     /// \return
     ///
-    std::string ApplicationName(void) const;
+    const std::string& ApplicationName(void) const;
 
     ///
     /// \brief ApplicationVersion
     /// \return
     ///
-    std::string ApplicationVersion(void) const;
+    const std::string& ApplicationVersion(void) const;
 
     ///
     /// \brief AlternativeToolContractName
     /// \return
     ///
-    std::string AlternativeToolContractName(void) const;
+    const std::string& AlternativeToolContractName(void) const;
 
     /// \}
 
@@ -93,7 +93,7 @@ public:
     /// \brief Groups
     /// \return
     ///
-    std::vector<std::string> Groups(void) const;
+    const std::vector<std::string>& Groups(void) const;
 
     ///
     /// \brief GroupOptions
@@ -169,13 +169,13 @@ public:
     /// \brief RegisteredOptions
     /// \return
     ///
-    std::vector<Option> RegisteredOptions(void) const;
+    const std::vector<Option>& RegisteredOptions(void) const;
 
     ///
     /// \brief RegisteredPositionalArgs
     /// \return
     ///
-    std::vector<PositionalArg> RegisteredPositionalArgs(void) const;
+    const std::vector<PositionalArg>& RegisteredPositionalArgs(void) const;
 
     ///
     /// \brief ToolContract
@@ -206,21 +206,21 @@ public:
     /// \param description
     /// \return
     ///
-    Interface& ApplicationDescription(const std::string& description);
+    Interface& ApplicationDescription(std::string description);
 
     ///
     /// \brief ApplicationName
     /// \param name
     /// \return
     ///
-    Interface& ApplicationName(const std::string& name);
+    Interface& ApplicationName(std::string name);
 
     ///
     /// \brief ApplicationVersion
     /// \param version
     /// \return
     ///
-    Interface& ApplicationVersion(const std::string& version);
+    Interface& ApplicationVersion(std::string version);
 
     ///
     /// \brief AlternativeToolContractName
@@ -230,7 +230,7 @@ public:
     /// \param name
     /// \return
     ///
-    Interface& AlternativeToolContractName(const std::string& name);
+    Interface& AlternativeToolContractName(std::string name);
 
     /// \}
 

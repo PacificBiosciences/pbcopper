@@ -29,12 +29,12 @@ public:
     uint16_t nproc_;
 
 public:
-    ResultsPrivate(const Interface& interface, const std::vector<std::string>& inputCommandLine)
-        : interface_(interface)
-        , inputCommandLine_(inputCommandLine)
-        , logLevel_(PacBio::Logging::LogLevel::INFO)
-        , isFromRtc_(false)
-        , nproc_(1)
+    ResultsPrivate(Interface interface, std::vector<std::string> inputCommandLine)
+        : interface_{std::move(interface)}
+        , inputCommandLine_{std::move(inputCommandLine)}
+        , logLevel_{PacBio::Logging::LogLevel::INFO}
+        , isFromRtc_{false}
+        , nproc_{1}
     {
         // init with default values
         const auto registeredOptions = interface_.RegisteredOptions();
@@ -52,13 +52,15 @@ public:
 // PacBio::CLI::Results
 // ------------------------
 
-Results::Results(const Interface& interface)
-    : d_(new internal::ResultsPrivate{interface, std::vector<std::string>()})
+Results::Results(Interface interface)
+    : d_{std::make_unique<internal::ResultsPrivate>(std::move(interface),
+                                                    std::vector<std::string>())}
 {
 }
 
-Results::Results(const Interface& interface, const std::vector<std::string>& inputCommandLine)
-    : d_(new internal::ResultsPrivate{interface, inputCommandLine})
+Results::Results(Interface interface, std::vector<std::string> inputCommandLine)
+    : d_(std::make_unique<internal::ResultsPrivate>(std::move(interface),
+                                                    std::move(inputCommandLine)))
 {
 }
 

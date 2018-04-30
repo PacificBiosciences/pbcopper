@@ -48,7 +48,6 @@ set(pbcopper_H
     ${pbcopper_IncludeDir}/pbcopper/cli/toolcontract/Task.h
     ${pbcopper_IncludeDir}/pbcopper/cli/toolcontract/TaskType.h
 
-    ${pbcopper_IncludeDir}/pbcopper/cli/toolcontract/internal/Config-inl.h
     ${pbcopper_IncludeDir}/pbcopper/cli/toolcontract/internal/Driver-inl.h
     ${pbcopper_IncludeDir}/pbcopper/cli/toolcontract/internal/InputFileType-inl.h
     ${pbcopper_IncludeDir}/pbcopper/cli/toolcontract/internal/OutputFileType-inl.h

@@ -28,15 +28,14 @@ struct RSMovieName::PartsCache
 //       until the components are again requested. That should happen less often
 //       than moving these guys around.
 
-inline RSMovieName::RSMovieName(void) : partsCache_(nullptr) {}
+inline RSMovieName::RSMovieName(void) {}
 
-inline RSMovieName::RSMovieName(const RSMovieName& other)
-    : movieName_(other.movieName_), partsCache_(nullptr)
-{
-}
+inline RSMovieName::RSMovieName(std::string name) : movieName_{std::move(name)} {}
+
+inline RSMovieName::RSMovieName(const RSMovieName& other) : movieName_{other.movieName_} {}
 
 inline RSMovieName::RSMovieName(RSMovieName&& other) noexcept
-    : movieName_(std::move(other.movieName_)), partsCache_(std::move(other.partsCache_))
+    : movieName_{std::move(other.movieName_)}, partsCache_{std::move(other.partsCache_)}
 {
 }
 
@@ -52,13 +51,6 @@ inline RSMovieName& RSMovieName::operator=(RSMovieName&& other) noexcept
     movieName_ = std::move(other.movieName_);
     partsCache_ = std::move(other.partsCache_);
     return *this;
-}
-
-inline RSMovieName::RSMovieName(const std::string& name) : movieName_(name), partsCache_(nullptr) {}
-
-inline RSMovieName::RSMovieName(std::string&& name)
-    : movieName_(std::move(name)), partsCache_(nullptr)
-{
 }
 
 inline RSMovieName::~RSMovieName(void) {}
