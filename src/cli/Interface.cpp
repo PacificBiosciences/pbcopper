@@ -46,18 +46,12 @@ public:
     boost::optional<Option> versionOption_;
 
 public:
-    InterfacePrivate(const std::string& appName, const std::string& appDescription,
-                     const std::string& appVersion)
-        : appName_(appName)
-        , appDescription_(appDescription)
-        , appVersion_(appVersion)
-        , singleDashMode_(SingleDashMode::ParseAsShortOptions)
-        , isParsed_(false)
-        , tcConfig_(boost::none)
-        , helpOption_(boost::none)
-        , logLevelOption_(boost::none)
-        , verboseOption_(boost::none)
-        , versionOption_(boost::none)
+    InterfacePrivate(std::string appName, std::string appDescription, std::string appVersion)
+        : appName_{std::move(appName)}
+        , appDescription_{std::move(appDescription)}
+        , appVersion_{std::move(appVersion)}
+        , singleDashMode_{SingleDashMode::ParseAsShortOptions}
+        , isParsed_{false}
     {
         if (appName_.empty())
             throw std::runtime_error("CLI::Interface - application name must not be empty");
@@ -107,13 +101,13 @@ void InterfacePrivate::AddPositionalArgument(PositionalArg posArg)
 // PacBio::CLI::Interface
 // ------------------------
 
-Interface::Interface(const std::string& appName, const std::string& appDescription,
-                     const std::string& appVersion)
-    : d_(new internal::InterfacePrivate{appName, appDescription, appVersion})
+Interface::Interface(std::string appName, std::string appDescription, std::string appVersion)
+    : d_{std::make_unique<internal::InterfacePrivate>(std::move(appName), std::move(appDescription),
+                                                      std::move(appVersion))}
 {
 }
 
-Interface::Interface(const Interface& other) : d_(new internal::InterfacePrivate{*other.d_.get()})
+Interface::Interface(const Interface& other) : d_{new internal::InterfacePrivate{*other.d_.get()}}
 {
 }
 
@@ -178,38 +172,38 @@ Interface& Interface::AddVersionOption(const Option& option)
     return *this;
 }
 
-std::string Interface::ApplicationDescription(void) const { return d_->appDescription_; }
+const std::string& Interface::ApplicationDescription(void) const { return d_->appDescription_; }
 
-Interface& Interface::ApplicationDescription(const std::string& description)
+Interface& Interface::ApplicationDescription(std::string description)
 {
-    d_->appDescription_ = description;
+    d_->appDescription_ = std::move(description);
     return *this;
 }
 
-std::string Interface::ApplicationName(void) const { return d_->appName_; }
+const std::string& Interface::ApplicationName(void) const { return d_->appName_; }
 
-Interface& Interface::ApplicationName(const std::string& name)
+Interface& Interface::ApplicationName(std::string name)
 {
-    d_->appName_ = name;
+    d_->appName_ = std::move(name);
     return *this;
 }
 
-std::string Interface::ApplicationVersion(void) const { return d_->appVersion_; }
+const std::string& Interface::ApplicationVersion(void) const { return d_->appVersion_; }
 
-Interface& Interface::ApplicationVersion(const std::string& version)
+Interface& Interface::ApplicationVersion(std::string version)
 {
-    d_->appVersion_ = version;
+    d_->appVersion_ = std::move(version);
     return *this;
 }
 
-std::string Interface::AlternativeToolContractName(void) const
+const std::string& Interface::AlternativeToolContractName(void) const
 {
     return d_->alternativeToolContractName_;
 }
 
-Interface& Interface::AlternativeToolContractName(const std::string& version)
+Interface& Interface::AlternativeToolContractName(std::string version)
 {
-    d_->alternativeToolContractName_ = version;
+    d_->alternativeToolContractName_ = std::move(version);
     return *this;
 }
 
@@ -232,7 +226,7 @@ bool Interface::ExpectsValue(const std::string& optionName) const
     return !defaultValue.is_boolean();
 }
 
-std::vector<std::string> Interface::Groups(void) const { return d_->optionGroupNames_; }
+const std::vector<std::string>& Interface::Groups(void) const { return d_->optionGroupNames_; }
 
 std::vector<Option> Interface::GroupOptions(const std::string& group) const
 {
@@ -299,9 +293,9 @@ PacBio::JSON::Json Interface::OptionChoices(const std::string& optionId) const
     return PacBio::JSON::Json(nullptr);
 }
 
-std::vector<Option> Interface::RegisteredOptions(void) const { return d_->options_; }
+const std::vector<Option>& Interface::RegisteredOptions(void) const { return d_->options_; }
 
-std::vector<PositionalArg> Interface::RegisteredPositionalArgs(void) const
+const std::vector<PositionalArg>& Interface::RegisteredPositionalArgs(void) const
 {
     return d_->positionalArgs_;
 }

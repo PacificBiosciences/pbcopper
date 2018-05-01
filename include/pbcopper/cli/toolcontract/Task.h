@@ -42,7 +42,7 @@ public:
     /// \brief ToolContractTask
     /// \param taskId
     ///
-    Task(const std::string& taskId);
+    explicit Task(std::string taskId);
 
     Task(const Task&) = default;
     ~Task(void) = default;
@@ -57,7 +57,7 @@ public:
     /// \brief Description
     /// \return
     ///
-    std::string Description(void) const;
+    const std::string& Description(void) const;
 
     ///
     /// \brief IsDistributed
@@ -104,31 +104,31 @@ public:
     /// \brief InputFileTypes
     /// \return
     ///
-    std::vector<InputFileType> InputFileTypes(void) const;
+    const std::vector<InputFileType>& InputFileTypes(void) const;
 
     ///
     /// \brief InputFilesToOptions
     /// \return
     ///
-    std::map<size_t, std::string> InputFilesToOptions(void) const;
+    const std::map<size_t, std::string>& InputFilesToOptions(void) const;
 
     ///
     /// \brief OutputFileTypes
     /// \return
     ///
-    std::vector<OutputFileType> OutputFileTypes(void) const;
+    const std::vector<OutputFileType>& OutputFileTypes(void) const;
 
     ///
     /// \brief OutputFilesToOptions
     /// \return
     ///
-    std::map<size_t, std::string> OutputFilesToOptions(void) const;
+    const std::map<size_t, std::string>& OutputFilesToOptions(void) const;
 
     ///
     /// \brief ResourceTypes
     /// \return
     ///
-    std::vector<ResourceType> ResourceTypes(void) const;
+    const std::vector<ResourceType>& ResourceTypes(void) const;
 
     /// \}
 
@@ -141,7 +141,7 @@ public:
     /// \param description
     /// \return
     ///
-    Task& Description(const std::string& description);
+    Task& Description(std::string description);
 
     ///
     /// \brief NumProcessors
@@ -182,14 +182,14 @@ public:
     /// \param optionConfigs
     /// \return
     ///
-    Task& Options(const std::map<std::string, std::string>& optionConfigs);
+    Task& Options(std::map<std::string, std::string> optionConfigs);
 
     ///
     /// \brief Add single option
     /// \param OptionConfig
     /// \return
     ///
-    Task& AddOption(const std::pair<std::string, std::string>& optionConfig);
+    Task& AddOption(std::pair<std::string, std::string> optionConfig);
 
     /// \}
 
@@ -202,7 +202,7 @@ public:
     /// \param   inputFileTypes
     /// \returns reference to this task
     ///
-    Task& InputFileTypes(const std::vector<InputFileType>& inputFileTypes);
+    Task& InputFileTypes(std::vector<InputFileType> inputFileTypes);
 
     ///
     /// \brief OutputFilesToOptions
@@ -213,14 +213,14 @@ public:
     /// \param mapping
     /// \return
     ///
-    Task& InputFilesToOptions(const std::map<size_t, std::string>& mapping);
+    Task& InputFilesToOptions(std::map<size_t, std::string> mapping);
 
     /// \brief Sets the task's output files list to provided list.
     ///
     /// \param   outputFileTypes
     /// \returns reference to this taskn
     ///
-    Task& OutputFileTypes(const std::vector<OutputFileType>& outputFileTypes);
+    Task& OutputFileTypes(std::vector<OutputFileType> outputFileTypes);
 
     ///
     /// \brief OutputFilesToOptions
@@ -231,14 +231,14 @@ public:
     /// \param mapping
     /// \return
     ///
-    Task& OutputFilesToOptions(const std::map<size_t, std::string>& mapping);
+    Task& OutputFilesToOptions(std::map<size_t, std::string> mapping);
 
     /// \brief Sets the task's resource list to provided list.
     ///
     /// \param   resourceTypes
     /// \returns reference to this task
     ///
-    Task& ResourceTypes(const std::vector<ResourceType>& resourceTypes);
+    Task& ResourceTypes(std::vector<ResourceType> resourceTypes);
 
     /// \}
 

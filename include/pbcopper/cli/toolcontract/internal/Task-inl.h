@@ -9,35 +9,38 @@ namespace PacBio {
 namespace CLI {
 namespace ToolContract {
 
-inline Task::Task(const std::string& taskId)
-    : id_(taskId), nProc_(1), isDistributed_(true), type_(TaskType::STANDARD)
+inline Task::Task(std::string taskId)
+    : id_{std::move(taskId)}, nProc_{1}, isDistributed_{true}, type_{TaskType::STANDARD}
 {
 }
 
-inline std::string Task::Description(void) const { return description_; }
+inline const std::string& Task::Description(void) const { return description_; }
 
-inline Task& Task::Description(const std::string& description)
+inline Task& Task::Description(std::string description)
 {
-    description_ = description;
+    description_ = std::move(description);
     return *this;
 }
 
-inline std::vector<InputFileType> Task::InputFileTypes(void) const { return inputFileTypes_; }
-
-inline Task& Task::InputFileTypes(const std::vector<InputFileType>& inputFileTypes)
+inline const std::vector<InputFileType>& Task::InputFileTypes(void) const
 {
-    inputFileTypes_ = inputFileTypes;
+    return inputFileTypes_;
+}
+
+inline Task& Task::InputFileTypes(std::vector<InputFileType> inputFileTypes)
+{
+    inputFileTypes_ = std::move(inputFileTypes);
     return *this;
 }
 
-inline std::map<size_t, std::string> Task::InputFilesToOptions(void) const
+inline const std::map<size_t, std::string>& Task::InputFilesToOptions(void) const
 {
     return inputFilesToOptions_;
 }
 
-inline Task& Task::InputFilesToOptions(const std::map<size_t, std::string>& mapping)
+inline Task& Task::InputFilesToOptions(std::map<size_t, std::string> mapping)
 {
-    inputFilesToOptions_ = mapping;
+    inputFilesToOptions_ = std::move(mapping);
     return *this;
 }
 
@@ -53,42 +56,45 @@ inline Task& Task::NumProcessors(const uint16_t nProc)
 
 inline std::map<std::string, std::string> Task::Options(void) const { return optionDisplayNames_; }
 
-inline Task& Task::Options(const std::map<std::string, std::string>& optionDisplayNames)
+inline Task& Task::Options(std::map<std::string, std::string> optionDisplayNames)
 {
-    optionDisplayNames_ = optionDisplayNames;
+    optionDisplayNames_ = std::move(optionDisplayNames);
     return *this;
 }
 
-inline Task& Task::AddOption(const std::pair<std::string, std::string>& optionConfig)
+inline Task& Task::AddOption(std::pair<std::string, std::string> optionConfig)
 {
-    optionDisplayNames_.insert(optionConfig);
+    optionDisplayNames_.insert(std::move(optionConfig));
     return *this;
 }
 
-inline std::vector<OutputFileType> Task::OutputFileTypes(void) const { return outputFileTypes_; }
+inline const std::vector<OutputFileType>& Task::OutputFileTypes(void) const
+{
+    return outputFileTypes_;
+}
 
-inline std::map<size_t, std::string> Task::OutputFilesToOptions(void) const
+inline const std::map<size_t, std::string>& Task::OutputFilesToOptions(void) const
 {
     return outputFilesToOptions_;
 }
 
-inline Task& Task::OutputFilesToOptions(const std::map<size_t, std::string>& mapping)
+inline Task& Task::OutputFilesToOptions(std::map<size_t, std::string> mapping)
 {
-    outputFilesToOptions_ = mapping;
+    outputFilesToOptions_ = std::move(mapping);
     return *this;
 }
 
-inline Task& Task::OutputFileTypes(const std::vector<OutputFileType>& outputFileTypes)
+inline Task& Task::OutputFileTypes(std::vector<OutputFileType> outputFileTypes)
 {
-    outputFileTypes_ = outputFileTypes;
+    outputFileTypes_ = std::move(outputFileTypes);
     return *this;
 }
 
-inline std::vector<ResourceType> Task::ResourceTypes(void) const { return resourceTypes_; }
+inline const std::vector<ResourceType>& Task::ResourceTypes(void) const { return resourceTypes_; }
 
-inline Task& Task::ResourceTypes(const std::vector<ResourceType>& resourceTypes)
+inline Task& Task::ResourceTypes(std::vector<ResourceType> resourceTypes)
 {
-    resourceTypes_ = resourceTypes;
+    resourceTypes_ = std::move(resourceTypes);
     return *this;
 }
 

@@ -14,8 +14,7 @@ namespace ToolContract {
 class InputFileType
 {
 public:
-    InputFileType(const std::string& id, const std::string& title, const std::string& description,
-                  const std::string& type);
+    InputFileType(std::string id, std::string title, std::string description, std::string type);
 
     InputFileType(const InputFileType& other) = default;
     ~InputFileType(void) = default;

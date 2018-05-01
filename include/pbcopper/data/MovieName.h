@@ -23,8 +23,7 @@ public:
     /// \{
 
     // create MovieName from string
-    explicit MovieName(const std::string& name);
-    explicit MovieName(std::string&& name);
+    explicit MovieName(std::string name);
 
     // create MovieName from name parts
     MovieName(const std::string& instrumentName, const std::string& runStartTime);
