@@ -22,7 +22,6 @@ foreach cflag: [
   '-Wlogical-op',
   '-Wrestrict',
   '-Wnull-dereference',
-  '-Wold-style-cast',
   '-Wuseless-cast',
   '-Wdouble-promotion',
   '-Wshadow',
@@ -93,5 +92,4 @@ pbcopper_dep = declare_dependency(
   include_directories : pbcopper_include_directories,
   link_with : pbcopper_lib,
   dependencies : [pbcopper_thread_dep, pbcopper_boost_dep],
-  version : meson.project_version(),
-  compile_args : pbcopper_warning_flags)
+  version : meson.project_version())
