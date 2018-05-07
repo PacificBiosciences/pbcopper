@@ -112,7 +112,7 @@ static std::string formatOption(std::string optionOutput, size_t longestOptionLe
         if (breakAt != std::string::npos) {
             const auto numChars = breakAt - lineStart;
             if (lineStart > 0) result << std::string(indent, ' ');
-            result << fullDescription.substr(lineStart, numChars) << '\n';
+            result << fullDescription.substr(lineStart, numChars) << std::endl;
             x = 0;
             lastBreakable = std::string::npos;
             lineStart = nextLineStart;
@@ -160,15 +160,15 @@ static std::string makeHelpText(const Interface& interface)
         if (!options.empty()) usage << " [options]";
         for (const auto& posArg : posArgs)
             usage << " " << posArg.syntax_;
-        result << "Usage: " << usage.str() << '\n';
+        result << "Usage: " << usage.str() << std::endl;
     }
 
     // description
     const auto appDescription = interface.ApplicationDescription();
-    if (!appDescription.empty()) result << appDescription << '\n';
+    if (!appDescription.empty()) result << appDescription << std::endl;
 
     // empty line
-    result << '\n';
+    result << std::endl;
 
     // options
     auto formattedOptions = std::map<std::string, std::string>{};  // id -> formatted output
@@ -233,7 +233,7 @@ static std::string makeHelpText(const Interface& interface)
 
 void HelpPrinter::Print(const Interface& interface, std::ostream& out)
 {
-    out << internal::makeHelpText(interface) << '\n';
+    out << internal::makeHelpText(interface) << std::endl;
 }
 
 }  // namespace CLI
