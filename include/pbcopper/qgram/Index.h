@@ -9,6 +9,7 @@
 #include <vector>
 
 #include <pbcopper/PbcopperConfig.h>
+#include <pbcopper/PbcopperMakeUnique.h>
 #include <pbcopper/qgram/IndexHits.h>
 
 namespace PacBio {
