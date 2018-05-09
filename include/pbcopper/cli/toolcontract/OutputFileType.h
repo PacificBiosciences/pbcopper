@@ -14,8 +14,8 @@ namespace ToolContract {
 class OutputFileType
 {
 public:
-    OutputFileType(const std::string& id, const std::string& title, const std::string& description,
-                   const std::string& type, const std::string& defaultName);
+    OutputFileType(std::string id, std::string title, std::string description, std::string type,
+                   std::string defaultName);
 
     OutputFileType(const OutputFileType& other) = default;
     ~OutputFileType(void) = default;

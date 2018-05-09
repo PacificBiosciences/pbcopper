@@ -9,37 +9,34 @@ namespace PacBio {
 namespace CLI {
 namespace ToolContract {
 
-inline Driver::Driver(void) {}
+inline Driver::Driver(std::string exe) : exe_{std::move(exe)} {}
 
-inline Driver::Driver(const std::string& exe) : exe_(exe) {}
-
-inline Driver::Driver(const std::string& exe, const Environment& env,
-                      const std::string& serialization)
-    : exe_(exe), serialization_(serialization), env_(env)
+inline Driver::Driver(std::string exe, Environment env, std::string serialization)
+    : exe_{std::move(exe)}, serialization_{std::move(serialization)}, env_{std::move(env)}
 {
 }
 
 inline const Driver::Environment& Driver::Env(void) const { return env_; }
 
-inline Driver& Driver::Env(const Driver::Environment& env)
+inline Driver& Driver::Env(Driver::Environment env)
 {
-    env_ = env;
+    env_ = std::move(env);
     return *this;
 }
 
 inline const std::string& Driver::Exe(void) const { return exe_; }
 
-inline Driver& Driver::Exe(const std::string& exe)
+inline Driver& Driver::Exe(std::string exe)
 {
-    exe_ = exe;
+    exe_ = std::move(exe);
     return *this;
 }
 
 inline const std::string& Driver::Serialization(void) const { return serialization_; }
 
-inline Driver& Driver::Serialization(const std::string& serialization)
+inline Driver& Driver::Serialization(std::string serialization)
 {
-    serialization_ = serialization;
+    serialization_ = std::move(serialization);
     return *this;
 }
 

@@ -4,7 +4,6 @@
 #include <sstream>
 using namespace PacBio;
 using namespace PacBio::Data;
-using namespace std;
 
 namespace MovieNameTests {
 
@@ -15,7 +14,7 @@ auto makeMovieName = [](void) { return MovieName{"m54001_160623_195125"}; };
 TEST(Data_MovieName, construct_from_lvalue_string)
 {
     EXPECT_NO_THROW({
-        const string input = "m54001_160623_195125";
+        const std::string input{"m54001_160623_195125"};
         const MovieName m(input);
         EXPECT_EQ("160623_195125", m.RunStartTime());
         EXPECT_EQ("54001", m.InstrumentName());
@@ -82,7 +81,7 @@ TEST(Data_MovieName, move_assign)
 
 TEST(Data_MovieName, constructed_from_name_prints_same_name)
 {
-    const string expected = "m54001_160623_195125";
+    const std::string expected{"m54001_160623_195125"};
 
     const MovieName m(expected);
     EXPECT_EQ(expected, m.ToStdString());
@@ -90,7 +89,7 @@ TEST(Data_MovieName, constructed_from_name_prints_same_name)
 
 TEST(Data_MovieName, constructed_from_name_parts_prints_expected_combination)
 {
-    const string expected = "m54001_160623_195125";
+    const std::string expected{"m54001_160623_195125"};
 
     const MovieName m("54001", "160623_195125");
     EXPECT_EQ(expected, m.ToStdString());
@@ -111,10 +110,10 @@ TEST(Data_MovieName, compares_equal_if_printed_names_equal)
 
 TEST(Data_MovieName, constructed_from_name_prints_expected_value_to_output_operator)
 {
-    const string expected = "m54001_160623_195125";
+    const std::string expected{"m54001_160623_195125"};
 
     const MovieName m(expected);
-    stringstream s;
+    std::ostringstream s;
     s << m;
 
     EXPECT_EQ(expected, s.str());
@@ -122,10 +121,10 @@ TEST(Data_MovieName, constructed_from_name_prints_expected_value_to_output_opera
 
 TEST(Data_MovieName, constructed_from_name_parts_prints_expected_value_to_output_operator)
 {
-    const string expected = "m54001_160623_195125";
+    const std::string expected{"m54001_160623_195125"};
 
     const MovieName m("54001", "160623_195125");
-    stringstream s;
+    std::ostringstream s;
     s << m;
 
     EXPECT_EQ(expected, s.str());
@@ -133,8 +132,8 @@ TEST(Data_MovieName, constructed_from_name_parts_prints_expected_value_to_output
 
 TEST(Data_MovieName, constructed_properly_from_input_operator)
 {
-    const string name = "m54001_160623_195125";
-    stringstream s(name);
+    const std::string name{"m54001_160623_195125"};
+    std::istringstream s{name};
     MovieName m;
     s >> m;
 

@@ -57,6 +57,10 @@ SOFTWARE.
 #if defined(__clang__) || defined(__GNUC__) || defined(__GNUG__)
     #pragma GCC diagnostic push
     #pragma GCC diagnostic ignored "-Wfloat-equal"
+
+#if __GNUC__ >= 6
+    #pragma GCC diagnostic ignored "-Wnull-dereference"
+#endif
 #endif
 
 /*!
@@ -2163,7 +2167,7 @@ class basic_json
     */
     string_t dump(const int indent = -1) const
     {
-        std::stringstream ss;
+        std::ostringstream ss;
 
         if (indent >= 0)
         {
@@ -6228,7 +6232,7 @@ class basic_json
                     else
                     {
                         // no exponent - output as a decimal
-                        std::stringstream ss;
+                        std::ostringstream ss;
                         ss.imbue(std::locale(std::locale(), new DecimalSeparator));  // fix locale problems
                         ss << std::setprecision(m_type.bits.precision)
                            << std::fixed << m_value.number_float;
@@ -6249,7 +6253,7 @@ class basic_json
                         // string->double->string or string->long
                         // double->string; to be safe, we read this value from
                         // std::numeric_limits<number_float_t>::digits10
-                        std::stringstream ss;
+                        std::ostringstream ss;
                         ss.imbue(std::locale(std::locale(), new DecimalSeparator));  // fix locale problems
                         ss << std::setprecision(std::numeric_limits<double>::digits10)
                            << m_value.number_float;
@@ -10161,7 +10165,7 @@ if no parse error occurred.
 */
 inline nlohmann::json operator "" _json(const char* s, std::size_t)
 {
-    return nlohmann::json::parse(reinterpret_cast<const nlohmann::json::string_t::value_type*>(s));
+    return nlohmann::json::parse(s);
 }
 
 /*!

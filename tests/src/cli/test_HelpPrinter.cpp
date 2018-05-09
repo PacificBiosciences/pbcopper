@@ -5,7 +5,6 @@
 #include <vector>
 using namespace PacBio;
 using namespace PacBio::CLI;
-using namespace std;
 
 TEST(CLI_HelpPrinter, prints_expected_help_output)
 {
@@ -27,17 +26,17 @@ TEST(CLI_HelpPrinter, prints_expected_help_output)
         {"target_dir", {"t", "target-dir"}, "Copy all source files into <DIR>.",         Option::StringType("my/default/dir")},
         {"timeout",    {"timeout"},         "Abort execution after <INT> milliseconds.", Option::IntType(5000)},
         {"modelPath",  {"M", "modelPath"},  "Path to a model file.",                     Option::StringType("")},  // empty default string should be omitted from help
-        {"min_prevalence", {"minPrev"},     "Minimum prevalence to require things.",     Option::FloatType(0.09)},
-        {"min_split_frac", {"minSplit"},    "Minimum fraction of reads.",                Option::FloatType(0.1)},
-        {"secret_mode",    {"secret"},      "Secret mode, hidden from help.",            Option::BoolType(false), { }, OptionFlags::HIDE_FROM_HELP}
+        {"min_prevalence", {"minPrev"},     "Minimum prevalence to require things.",     Option::FloatType{0.09}},
+        {"min_split_frac", {"minSplit"},    "Minimum fraction of reads.",                Option::FloatType{0.1}},
+        {"secret_mode",    {"secret"},      "Secret mode, hidden from help.",            Option::BoolType{false}, { }, OptionFlags::HIDE_FROM_HELP}
     });
     i.AddPositionalArguments({
-        {"source", "Source file to copy."},
-        {"dest",   "Destination directory."},
+        {"source", "Source file to copy.", {}},
+        {"dest",   "Destination directory.", {}},
         {"extras", "Extra stuff to pass in here, optionally.", "[extras...]"}
     });
 
-    const string expectedText = {
+    const std::string expectedText{
         "Usage: frobber [options] source dest [extras...]\n"
         "Frobb your files in a most delightful, nobbly way\n"
         "\n"
@@ -61,7 +60,7 @@ TEST(CLI_HelpPrinter, prints_expected_help_output)
     };
     // clang-format on
 
-    stringstream s;
+    std::ostringstream s;
     HelpPrinter::Print(i, s);
     EXPECT_EQ(expectedText, s.str());
 }
@@ -93,12 +92,12 @@ TEST(CLI_HelpPrinter, prints_expected_option_groups)
     });
 
     i.AddPositionalArguments({
-        {"source", "Source file to copy."},
-        {"dest",   "Destination directory."},
+        {"source", "Source file to copy.", {}},
+        {"dest",   "Destination directory.", {}},
         {"extras", "Extra stuff to pass in here, optionally.", "[extras...]"}
     });
 
-    const string expectedText = {
+    const std::string expectedText{
         "Usage: frobber [options] source dest [extras...]\n"
         "Frobb your files in a most delightful, nobbly way\n"
         "\n"
@@ -124,7 +123,7 @@ TEST(CLI_HelpPrinter, prints_expected_option_groups)
     };
     // clang-format on
 
-    stringstream s;
+    std::ostringstream s;
     HelpPrinter::Print(i, s);
     EXPECT_EQ(expectedText, s.str());
 }

@@ -31,7 +31,7 @@ static Json currentSchemaVersion(void) { return Json("2.0.0"); }
 
 static Json makeDriverJson(const Interface& interface)
 {
-    const auto& driver = interface.ToolContract().Driver();
+    const auto& driver = interface.ToolContract().driver_;
 
     Json driverJson;
 
@@ -61,8 +61,8 @@ static Json makeInputTypesJson(const Interface& interface)
 {
     Json inputTypesJson = Json::array();
 
-    const auto& task = interface.ToolContract().Task();
-    const auto& inputFileTypes = task.InputFileTypes();
+    const auto& task = interface.ToolContract().task_;
+    const auto inputFileTypes = task.InputFileTypes();
     for (const InputFileType& file : inputFileTypes) {
         Json entry = Json::object();
         entry["title"] = file.Title();
@@ -88,8 +88,8 @@ static Json makeOutputTypesJson(const Interface& interface)
 {
     Json outputTypesJson = Json::array();
 
-    const auto& task = interface.ToolContract().Task();
-    const auto& outputFileTypes = task.OutputFileTypes();
+    const auto& task = interface.ToolContract().task_;
+    const auto outputFileTypes = task.OutputFileTypes();
     for (const OutputFileType& file : outputFileTypes) {
         Json entry = Json::object();
         entry["title"] = file.Title();
@@ -113,7 +113,7 @@ static Json makeResourceTypesJson(const ToolContract::Task& task)
 
     Json resourceTypesJson = Json::array();
 
-    const auto& taskResourceTypes = task.ResourceTypes();
+    const auto taskResourceTypes = task.ResourceTypes();
     for (const auto& t : taskResourceTypes) {
         const auto found = lookup.find(t);
         if (found == lookup.cend())
@@ -134,9 +134,9 @@ static Json makeSchemaOptionJson(const Interface& interface, const std::string& 
 
     // get option info
     const Option registeredOption = RegisteredOption(interface, optionId);
-    const JSON::Json& defaultValue = registeredOption.DefaultValue();
-    const std::string& description = registeredOption.Description();
-    const std::string& optionType = registeredOption.TypeId();
+    const JSON::Json defaultValue = registeredOption.DefaultValue();
+    const std::string description = registeredOption.Description();
+    const std::string optionType = registeredOption.TypeId();
 
     // populate JSON
     Json schemaOption = Json::object();
@@ -159,7 +159,7 @@ static Json makeSchemaOptionsJson(const Interface& interface)
                                   ? interface.ApplicationName()
                                   : interface.AlternativeToolContractName();
 
-    const auto& task = interface.ToolContract().Task();
+    const auto& task = interface.ToolContract().task_;
     for (const auto& taskOption : task.Options())
         schemaOptions.push_back(makeSchemaOptionJson(interface, optionPrefix, taskOption));
     return schemaOptions;
@@ -182,7 +182,7 @@ static std::string makeTaskType(const TaskType& type)
 static Json makeTaskJson(const Interface& interface)
 {
     Json tcJson;
-    const auto& task = interface.ToolContract().Task();
+    const auto& task = interface.ToolContract().task_;
 
     tcJson["_comment"] = "Created by v" + Utility::LibraryVersionString();
     tcJson["description"] = interface.ApplicationDescription();
@@ -209,7 +209,7 @@ void JsonPrinter::Print(const Interface& interface, std::ostream& out, const int
     result["driver"] = internal::makeDriverJson(interface);
     result["schema_version"] = internal::currentSchemaVersion();
     result["tool_contract"] = internal::makeTaskJson(interface);
-    result["tool_contract_id"] = interface.ToolContract().Task().TaskId();
+    result["tool_contract_id"] = interface.ToolContract().task_.TaskId();
     result["version"] = interface.ApplicationVersion();
 
     out << result.dump(indent);

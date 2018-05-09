@@ -9,9 +9,12 @@ namespace PacBio {
 namespace CLI {
 namespace ToolContract {
 
-inline InputFileType::InputFileType(const std::string& id, const std::string& title,
-                                    const std::string& description, const std::string& type)
-    : id_(id), title_(title), description_(description), type_(type)
+inline InputFileType::InputFileType(std::string id, std::string title, std::string description,
+                                    std::string type)
+    : id_{std::move(id)}
+    , title_{std::move(title)}
+    , description_{std::move(description)}
+    , type_{std::move(type)}
 {
 }
 

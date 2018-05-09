@@ -26,14 +26,9 @@ public:
 
     ///
     /// \brief ToolDriver
-    ///
-    Driver(void);
-
-    ///
-    /// \brief ToolDriver
     /// \param exe
     ///
-    Driver(const std::string& exe);
+    explicit Driver(std::string exe);
 
     ///
     /// \brief ToolDriver
@@ -41,13 +36,14 @@ public:
     /// \param env
     /// \param serialization
     ///
-    Driver(const std::string& exe, const Environment& env, const std::string& serialization);
+    Driver(std::string exe, Environment env, std::string serialization);
 
-    Driver(const Driver& other) = default;
-    Driver(Driver&& other) = default;
-    Driver& operator=(const Driver& other) = default;
-    Driver& operator=(Driver&& other) = default;
-    ~Driver(void) = default;
+    Driver() = default;
+    Driver(const Driver&) = default;
+    Driver(Driver&&) = default;
+    Driver& operator=(const Driver&) = default;
+    Driver& operator=(Driver&&) = default;
+    ~Driver() = default;
 
     /// \}
 
@@ -84,21 +80,21 @@ public:
     /// \param env
     /// \return
     ///
-    Driver& Env(const Environment& env);
+    Driver& Env(Environment env);
 
     ///
     /// \brief Exe
     /// \param exe
     /// \return
     ///
-    Driver& Exe(const std::string& exe);
+    Driver& Exe(std::string exe);
 
     ///
     /// \brief Serialization
     /// \param serialization
     /// \return
     ///
-    Driver& Serialization(const std::string& serialization);
+    Driver& Serialization(std::string serialization);
 
     /// \}
 

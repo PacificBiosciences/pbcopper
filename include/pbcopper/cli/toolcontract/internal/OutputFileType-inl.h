@@ -9,10 +9,13 @@ namespace PacBio {
 namespace CLI {
 namespace ToolContract {
 
-inline OutputFileType::OutputFileType(const std::string& id, const std::string& title,
-                                      const std::string& description, const std::string& type,
-                                      const std::string& defaultName)
-    : id_(id), title_(title), description_(description), type_(type), defaultName_(defaultName)
+inline OutputFileType::OutputFileType(std::string id, std::string title, std::string description,
+                                      std::string type, std::string defaultName)
+    : id_{std::move(id)}
+    , title_{std::move(title)}
+    , description_{std::move(description)}
+    , type_{std::move(type)}
+    , defaultName_{std::move(defaultName)}
 {
 }
 

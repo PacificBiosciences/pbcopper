@@ -32,15 +32,15 @@ public:
     bool running;
 
 public:
-    CallbackTimerJob(CallbackTimer::JobId id = 0) : id(id), running(false) {}
+    CallbackTimerJob(CallbackTimer::JobId id_ = 0) : id(id_), running(false) {}
 
     template <typename CallbackType>
-    CallbackTimerJob(CallbackTimer::JobId id, CallbackTimerTimePoint next,
-                     CallbackTimerDuration period, CallbackType&& handler) noexcept
-        : id(id)
-        , next(next)
-        , period(period)
-        , handler(std::forward<CallbackType>(handler))
+    CallbackTimerJob(CallbackTimer::JobId id_, CallbackTimerTimePoint next_,
+                     CallbackTimerDuration period_, CallbackType&& handler_) noexcept
+        : id(id_)
+        , next(next_)
+        , period(period_)
+        , handler(std::forward<CallbackType>(handler_))
         , running(false)
     {
     }

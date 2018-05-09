@@ -17,13 +17,13 @@ public:
     const Interface interface_;
 
 public:
-    RtcPrivate(const Interface& interface) : interface_(interface) {}
+    RtcPrivate(Interface interface) : interface_{std::move(interface)} {}
 };
 
 }  // namespace internal
 
-ResolvedToolContract::ResolvedToolContract(const Interface& interface)
-    : d_(new internal::RtcPrivate{interface})
+ResolvedToolContract::ResolvedToolContract(Interface interface)
+    : d_{std::make_unique<internal::RtcPrivate>(std::move(interface))}
 {
 }
 
@@ -34,7 +34,7 @@ Results ResolvedToolContract::Parse(std::istream& in)
     using Json = PacBio::JSON::Json;
 
     const auto& interface = d_->interface_;
-    const auto& task = interface.ToolContract().Task();
+    const auto& task = interface.ToolContract().task_;
 
     Results results{d_->interface_};
     results.SetFromRTC(true);

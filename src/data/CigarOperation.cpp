@@ -30,7 +30,7 @@ CigarOperationType CigarOperation::CharToType(const char c)
 
     const auto found = lookup.find(c);
     if (found == lookup.cend()) {
-        std::stringstream s;
+        std::ostringstream s;
         s << "pbcopper: unrecognized CIGAR char code " << c << " (int: " << static_cast<int>(c)
           << ")";
         throw std::runtime_error(s.str());
@@ -59,7 +59,7 @@ char CigarOperation::TypeToChar(const CigarOperationType type)
 
     const auto found = lookup.find(type);
     if (found == lookup.cend()) {
-        std::stringstream s;
+        std::ostringstream s;
         s << "pbcopper: unrecognized CIGAR operation value " << static_cast<int>(type);
         throw std::runtime_error(s.str());
     } else

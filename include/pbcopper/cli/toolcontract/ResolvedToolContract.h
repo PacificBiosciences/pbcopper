@@ -19,7 +19,7 @@ class RtcPrivate;
 class ResolvedToolContract
 {
 public:
-    ResolvedToolContract(const Interface& interface);
+    ResolvedToolContract(Interface interface);
     ~ResolvedToolContract(void);
 
 public:

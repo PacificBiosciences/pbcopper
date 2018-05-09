@@ -6,7 +6,6 @@
 #include <string>
 using namespace PacBio;
 using namespace PacBio::Logging;
-using namespace std;
 
 //
 // NOTE: We need to scope the Loggers used here and invoke the macros that take
@@ -19,20 +18,20 @@ using namespace std;
 
 namespace LoggingTests {
 
-static const string infoMsg = "*** Application INFO ***";
-static const string noticeMsg = "*** Application NOTE ***";
-static const string warnMsg = "*** Application WARNING ***";
+static const std::string infoMsg = "*** Application INFO ***";
+static const std::string noticeMsg = "*** Application NOTE ***";
+static const std::string warnMsg = "*** Application WARNING ***";
 
 }  // namespace LoggingTests
 
 TEST(Logging_Logger, info_message_logged_to_stream)
 {
-    stringstream s;
+    std::ostringstream s;
     {
         Logger logger(s, LogLevel::INFO);
         PBLOGGER_INFO(logger) << LoggingTests::infoMsg;
     }
-    EXPECT_TRUE(s.str().find(LoggingTests::infoMsg) != string::npos);
+    EXPECT_TRUE(s.str().find(LoggingTests::infoMsg) != std::string::npos);
 }
 
 TEST(Logging_Logger, custom_logging_sinks_receive_expected_messages)
@@ -40,10 +39,10 @@ TEST(Logging_Logger, custom_logging_sinks_receive_expected_messages)
     // specify custom output destinations by log level... and also 'tee' one
     // log level stream (warning) into separate ostreams
 
-    stringstream info;
-    stringstream notice;
-    stringstream warn, warn2;
-    map<LogLevel, OStreams> logConfig = {
+    std::ostringstream info;
+    std::ostringstream notice;
+    std::ostringstream warn, warn2;
+    std::map<LogLevel, OStreams> logConfig = {
         {LogLevel::INFO, {info}}, {LogLevel::NOTICE, {notice}}, {LogLevel::WARN, {warn, warn2}}};
 
     {
@@ -52,8 +51,8 @@ TEST(Logging_Logger, custom_logging_sinks_receive_expected_messages)
         PBLOGGER_NOTICE(logger) << LoggingTests::noticeMsg;
         PBLOGGER_WARN(logger) << LoggingTests::warnMsg;
     }
-    EXPECT_TRUE(info.str().find(LoggingTests::infoMsg) != string::npos);
-    EXPECT_TRUE(notice.str().find(LoggingTests::noticeMsg) != string::npos);
-    EXPECT_TRUE(warn.str().find(LoggingTests::warnMsg) != string::npos);
-    EXPECT_TRUE(warn2.str().find(LoggingTests::warnMsg) != string::npos);
+    EXPECT_TRUE(info.str().find(LoggingTests::infoMsg) != std::string::npos);
+    EXPECT_TRUE(notice.str().find(LoggingTests::noticeMsg) != std::string::npos);
+    EXPECT_TRUE(warn.str().find(LoggingTests::warnMsg) != std::string::npos);
+    EXPECT_TRUE(warn2.str().find(LoggingTests::warnMsg) != std::string::npos);
 }

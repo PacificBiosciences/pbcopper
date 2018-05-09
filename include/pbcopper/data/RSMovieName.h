@@ -24,8 +24,7 @@ public:
     /// \{
 
     // create RSMovieName from string
-    explicit RSMovieName(const std::string& name);
-    explicit RSMovieName(std::string&& name);
+    explicit RSMovieName(std::string name);
 
     // create MovieName from name parts
     RSMovieName(const std::string& runStartTime, const std::string& instrumentSerialNumber,

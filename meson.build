@@ -1,13 +1,14 @@
 project(
   'pbcopper',
   'cpp',
-  version : '0.2.0',
+  version : '0.3.0',
   default_options : [
     'buildtype=release',
     'warning_level=3',
-    'cpp_std=c++14'],
+    'cpp_std=c++14',
+    'b_ndebug=if-release'],
   license : 'BSD-3',
-  meson_version : '>= 0.41.1')
+  meson_version : '>= 0.46.0')
 
 ############
 # CXXFLAGS #
@@ -16,9 +17,15 @@ project(
 pbcopper_warning_flags = []
 cpp = meson.get_compiler('cpp')
 foreach cflag: [
-  '-Wno-terminate',
-  '-Wno-sign-compare',
-  '-Wno-missing-field-initializers']
+  '-Wduplicated-cond',
+  '-Wduplicated-branches',
+  '-Wlogical-op',
+  '-Wrestrict',
+  '-Wnull-dereference',
+  '-Wuseless-cast',
+  '-Wdouble-promotion',
+  '-Wshadow',
+  '-Wformat=1']
     if cpp.has_argument(cflag)
       pbcopper_warning_flags += cflag
     endif
@@ -85,5 +92,4 @@ pbcopper_dep = declare_dependency(
   include_directories : pbcopper_include_directories,
   link_with : pbcopper_lib,
   dependencies : [pbcopper_thread_dep, pbcopper_boost_dep],
-  version : meson.project_version(),
-  compile_args : pbcopper_warning_flags)
+  version : meson.project_version())

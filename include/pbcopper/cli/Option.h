@@ -99,10 +99,9 @@ public:
     /// \param[in]  choices         list of accepted inputs
     /// \param[in]  flags           extra configuration
     ///
-    Option(const std::string& id, const std::string& name, const std::string& description,
-           const JSON::Json& defaultValue = JSON::Json(nullptr),
-           const JSON::Json& choices = JSON::Json(nullptr),
-           const OptionFlags& flags = OptionFlags::DEFAULT);
+    Option(std::string id, std::string name, std::string description,
+           JSON::Json defaultValue = JSON::Json(nullptr), JSON::Json choices = JSON::Json(nullptr),
+           OptionFlags flags = OptionFlags::DEFAULT);
 
     /// \brief Constructs a command line option object with the given arguments.
     ///
@@ -138,10 +137,9 @@ public:
     /// \param[in]  choices         list of accepted inputs
     /// \param[in]  flags           extra configuration
     ///
-    Option(const std::string& id, const std::vector<std::string>& names,
-           const std::string& description, const JSON::Json& defaultValue = JSON::Json(nullptr),
-           const JSON::Json& choices = JSON::Json(nullptr),
-           const OptionFlags& flags = OptionFlags::DEFAULT);
+    Option(std::string id, std::vector<std::string> names, std::string description,
+           JSON::Json defaultValue = JSON::Json(nullptr), JSON::Json choices = JSON::Json(nullptr),
+           OptionFlags flags = OptionFlags::DEFAULT);
 
     /// \brief Constructs a command line option object with the given arguments.
     ///
@@ -177,10 +175,9 @@ public:
     /// \param[in]  choices         list of accepted inputs
     /// \param[in]  flags           extra configuration
     ///
-    Option(const std::string& id, const std::initializer_list<std::string>& names,
-           const std::string& description, const JSON::Json& defaultValue = JSON::Json(nullptr),
-           const JSON::Json& choices = JSON::Json(nullptr),
-           const OptionFlags& flags = OptionFlags::DEFAULT);
+    Option(std::string id, std::initializer_list<std::string> names, std::string description,
+           JSON::Json defaultValue = JSON::Json(nullptr), JSON::Json choices = JSON::Json(nullptr),
+           OptionFlags flags = OptionFlags::DEFAULT);
 
     Option(const Option& other);
     Option(Option&& other);

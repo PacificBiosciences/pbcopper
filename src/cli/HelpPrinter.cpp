@@ -41,7 +41,7 @@ static std::string formatOption(std::string optionOutput, size_t longestOptionLe
     ioctl(STDOUT_FILENO, TIOCGWINSZ, &ws);
     const size_t ncol = (ws.ws_col < 2) ? 79 : ws.ws_col - 1;
 
-    std::stringstream result("");
+    std::ostringstream result;
     auto fullDescription = description;
 
     // maybe add default value to description
@@ -68,7 +68,7 @@ static std::string formatOption(std::string optionOutput, size_t longestOptionLe
         //
         if (defaultValue.is_number_float()) {
             const float f = defaultValue;
-            std::stringstream s;
+            std::ostringstream s;
             s << f;
             fullDescription += s.str();
         } else {
@@ -125,7 +125,7 @@ static std::string formatOption(std::string optionOutput, size_t longestOptionLe
 
 static std::string formatOptionNames(const Option& option)
 {
-    std::stringstream optionOutput("");
+    std::ostringstream optionOutput;
     auto first = true;
     for (const auto& name : option.Names()) {
         if (first)
@@ -148,14 +148,14 @@ static std::string formatOptionNames(const Option& option)
 
 static std::string makeHelpText(const Interface& interface)
 {
-    std::stringstream result("");
+    std::ostringstream result;
 
     const auto options = interface.RegisteredOptions();
     const auto posArgs = interface.RegisteredPositionalArgs();
 
     // setup usage output
     {
-        std::stringstream usage("");
+        std::ostringstream usage;
         usage << interface.ApplicationName();
         if (!options.empty()) usage << " [options]";
         for (const auto& posArg : posArgs)
@@ -186,32 +186,35 @@ static std::string makeHelpText(const Interface& interface)
     ++longestOptionOutputLength;
 
     if (!options.empty()) {
-        auto printGroup = [](const Interface& interface, const std::string& group,
-                             const std::map<std::string, std::string>& formattedOptions,
-                             const size_t longestOptionOutputLength, std::stringstream& result) {
-            const auto& opts = interface.GroupOptions(group);
+        auto printOptionGroup = [](const Interface& printInterface, const std::string& printGroup,
+                                   const std::map<std::string, std::string>& printFormattedOptions,
+                                   const size_t printLongestOptionOutputLength,
+                                   std::ostringstream& printResult) {
+            const auto opts = printInterface.GroupOptions(printGroup);
             if (opts.empty()) return;
-            result << group << ":\n";
+            printResult << printGroup << ":\n";
             for (const auto& opt : opts) {
                 if (opt.IsHidden()) continue;
-                result << formatOption(formattedOptions.at(opt.Id()), longestOptionOutputLength,
-                                       opt.Description(), opt.DefaultValue());
+                printResult << formatOption(printFormattedOptions.at(opt.Id()),
+                                            printLongestOptionOutputLength, opt.Description(),
+                                            opt.DefaultValue());
             }
 
-            result << '\n';
+            printResult << '\n';
         };
 
         // print all non-default groups in the order they were added
-        const auto& groups = interface.Groups();
+        const auto groups = interface.Groups();
         for (const auto& group : groups) {
             if (group != "Options") {
-                printGroup(interface, group, formattedOptions, longestOptionOutputLength, result);
+                printOptionGroup(interface, group, formattedOptions, longestOptionOutputLength,
+                                 result);
             }
         }
 
         // print default group last (help, version, etc) or options added
         // to interface directly (no group)
-        printGroup(interface, "Options", formattedOptions, longestOptionOutputLength, result);
+        printOptionGroup(interface, "Options", formattedOptions, longestOptionOutputLength, result);
     }
 
     // positional args
