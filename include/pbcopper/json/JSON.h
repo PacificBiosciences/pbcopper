@@ -16,7 +16,9 @@
 namespace PacBio {
 namespace JSON {
 
-typedef nlohmann::json Json;
+using Json = nlohmann::json;
+using JsonConstIterator = nlohmann::detail::iter_impl<const nlohmann::json>;
+using JsonIterator = nlohmann::detail::iter_impl<nlohmann::json>;
 
 }  // namespace JSON
 }  // namespace PacBio
