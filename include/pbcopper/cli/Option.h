@@ -9,6 +9,7 @@
 #include <vector>
 
 #include <pbcopper/PbcopperConfig.h>
+#include <pbcopper/PbcopperMakeUnique.h>
 #include <pbcopper/cli/OptionFlags.h>
 #include <pbcopper/json/JSON.h>
 
