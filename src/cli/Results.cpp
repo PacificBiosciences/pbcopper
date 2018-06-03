@@ -42,7 +42,7 @@ public:
             options_[opt.Id()] = opt.DefaultValue();
     }
 
-    ResultsPrivate(const ResultsPrivate& other) = default;
+    ResultsPrivate(const ResultsPrivate&) = default;
     ~ResultsPrivate(void) = default;
 };
 

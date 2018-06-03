@@ -40,10 +40,10 @@ public:
     {
     }
 
-    Config(const Config& other) = default;
-    Config(Config&& other) = default;
-    Config& operator=(const Config& other) = default;
-    Config& operator=(Config&& other) = default;
+    Config(const Config&) = default;
+    Config(Config&&) = default;
+    Config& operator=(const Config&) = default;
+    Config& operator=(Config&&) = default;
     ~Config(void) = default;
 
     /// \}

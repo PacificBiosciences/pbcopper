@@ -28,7 +28,7 @@ public:
 public:
     ParserPrivate(const Interface& interface) : interface_(interface), results_(interface) {}
 
-    ParserPrivate(const ParserPrivate& other) = default;
+    ParserPrivate(const ParserPrivate&) = default;
 
     void Parse(const std::vector<std::string>& args);
     void ParseOptionValue(const std::string& optionName, const std::string& argument,
