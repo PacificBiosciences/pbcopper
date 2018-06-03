@@ -73,6 +73,7 @@ SOFTWARE.
     #pragma GCC diagnostic push
     #pragma GCC diagnostic ignored "-Wfloat-equal"
     #pragma GCC diagnostic ignored "-Wdeprecated-declarations"
+    #pragma GCC diagnostic ignored "-Wshadow"
 #endif
 
 // disable documentation warnings on clang
