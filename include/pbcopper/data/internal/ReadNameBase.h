@@ -34,10 +34,10 @@ public:
     ReadNameBase(const MovieNameType& movieName, const PacBio::Data::Zmw& zmw, const CCSTag ccs);
 
     ReadNameBase(void);
-    ReadNameBase(const ReadNameBase<MovieNameType>& other) = default;
-    ReadNameBase(ReadNameBase<MovieNameType>&& other) = default;
-    ReadNameBase<MovieNameType>& operator=(const ReadNameBase<MovieNameType>& other) = default;
-    ReadNameBase<MovieNameType>& operator=(ReadNameBase<MovieNameType>&& other) = default;
+    ReadNameBase(const ReadNameBase<MovieNameType>&) = default;
+    ReadNameBase(ReadNameBase<MovieNameType>&&) = default;
+    ReadNameBase<MovieNameType>& operator=(const ReadNameBase<MovieNameType>&) = default;
+    ReadNameBase<MovieNameType>& operator=(ReadNameBase<MovieNameType>&&) = default;
     ~ReadNameBase(void) = default;
 
     /// \}

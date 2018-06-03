@@ -57,7 +57,7 @@ public:
             throw std::runtime_error("CLI::Interface - application name must not be empty");
     }
 
-    InterfacePrivate(const InterfacePrivate& other) = default;
+    InterfacePrivate(const InterfacePrivate&) = default;
 
 public:
     void AddOption(const Option& option, const std::string& group = "Options");

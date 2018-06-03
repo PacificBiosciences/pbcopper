@@ -10,7 +10,7 @@ namespace SystemInfoTests {
 static inline bool isLittleEndian(void)
 {
     static const int i = 1;
-    static const char* const c = reinterpret_cast<const char* const>(&i);
+    static const char* c = reinterpret_cast<const char*>(&i);
     return (*c == 1);
 }
 
