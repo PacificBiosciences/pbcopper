@@ -73,6 +73,9 @@ if [[ -z ${PREFIX_ARG+x} ]]; then
   exit 0
 fi
 
+# reload GCC to prevent default `g++` from mis-linking
+module load gcc
+
 bash scripts/ci/install.sh
 
 if [[ ${BUILD_NUMBER} == 0 ]]; then
