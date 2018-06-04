@@ -1,12 +1,25 @@
 #!/usr/bin/env bash
-set -xve
+set -vex
 
-source /mnt/software/Modules/current/init/bash
-module load gcc meson ccache ninja boost gtest gcov
+## Load modules
+type module >& /dev/null || . /mnt/software/Modules/current/init/bash
 
-echo "#####################"
-echo "# BUILD & RUN TESTS #"
-echo "#####################"
+module purge
+
+module load gcc
+module load ccache
+
+module load meson
+module load ninja
+
+module load boost
+module load doxygen
+module load gcov
+module load gtest
+
+#####################
+# BUILD & RUN TESTS #
+#####################
 
 rm -rf build
 mkdir build 
@@ -25,13 +38,12 @@ meson \
 
 ninja test
 
-echo "################"
-echo "# COVERAGE     #"
-echo "################"
+############
+# COVERAGE #
+############
 
 find . -type f -iname '*.o' | xargs gcov -acbrfu {} \; >/dev/null && \
 mkdir coverage && pushd coverage && mv ../*.gcov . && \
 sed -i -e 's@Source:@Source:../@' *.gcov && \
 sed -i -e 's@Graph:@Graph:../@' *.gcov && \
 sed -i -e 's@Data:@Data:../@' *.gcov 
-
