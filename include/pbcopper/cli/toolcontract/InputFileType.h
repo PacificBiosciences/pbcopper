@@ -16,7 +16,7 @@ class InputFileType
 public:
     InputFileType(std::string id, std::string title, std::string description, std::string type);
 
-    InputFileType(const InputFileType& other) = default;
+    InputFileType(const InputFileType&) = default;
     ~InputFileType(void) = default;
 
 public:

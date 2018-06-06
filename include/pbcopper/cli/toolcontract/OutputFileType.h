@@ -17,7 +17,7 @@ public:
     OutputFileType(std::string id, std::string title, std::string description, std::string type,
                    std::string defaultName);
 
-    OutputFileType(const OutputFileType& other) = default;
+    OutputFileType(const OutputFileType&) = default;
     ~OutputFileType(void) = default;
 
 public:

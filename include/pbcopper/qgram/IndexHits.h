@@ -35,15 +35,15 @@ public:
     ///
     /// \brief IndexHits
     /// \param source
-    /// \param begin
-    /// \param end
+    /// \param beginPos
+    /// \param endPos
     ///
-    IndexHits(const std::vector<IndexHit>* source, const size_t begin, const size_t end,
+    IndexHits(const std::vector<IndexHit>* source, const size_t beginPos, const size_t endPos,
               const size_t queryPos)
-        : source_(source), begin_(begin), end_(end), queryPos_(queryPos)
+        : source_(source), begin_(beginPos), end_(endPos), queryPos_(queryPos)
     {
-        assert(source);
-        assert(begin <= end);
+        assert(source_);
+        assert(begin_ <= end_);
     }
 
     IndexHits(const IndexHits&) = default;

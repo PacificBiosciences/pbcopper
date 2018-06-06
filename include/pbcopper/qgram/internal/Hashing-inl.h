@@ -55,7 +55,7 @@ public:
     Shape(const size_t q, const std::string& seq)
         : q_{q}
         , hashFactor_{static_cast<uint32_t>(std::pow(ALPHABET_SIZE, q - 1))}
-        , seq_{seq}
+        , seq_(seq)
         , iter_{seq_.cbegin()}
         , currentHash_{0}
         , leftChar_{'\0'}

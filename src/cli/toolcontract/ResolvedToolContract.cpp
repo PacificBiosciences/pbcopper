@@ -39,7 +39,7 @@ Results ResolvedToolContract::Parse(std::istream& in)
     Results results{d_->interface_};
     results.SetFromRTC(true);
 
-    Json root(in);
+    Json root = Json::parse(in);
     Json rtc = root["resolved_tool_contract"];
 
     // options (object)
