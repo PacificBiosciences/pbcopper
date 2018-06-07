@@ -1,9 +1,16 @@
+pbcopper_test_CLI_cpp_config = configuration_data()
+pbcopper_test_CLI_cpp_config.set('PBCOPPER_VERSION', meson.project_version())
+
+pbcopper_test_CLI_cpp = configure_file(
+  input : files('src/cli/test_CLI.cpp.in'),
+  output : 'test_CLI.cpp',
+  configuration : pbcopper_test_CLI_cpp_config)
+
 pbcopper_test_cpp_sources = files([
   # align
   'src/align/test_Seeds.cpp',
 
   # cli
-  'src/cli/test_CLI.cpp',
   'src/cli/test_HelpPrinter.cpp',
   'src/cli/test_Interface.cpp',
   'src/cli/test_Option.cpp',
@@ -48,8 +55,9 @@ pbcopper_test_cpp_sources = files([
 pbcopper_gtest_dep = dependency('gtest_main', fallback : ['gtest', 'gtest_main_dep'])
 
 pbcopper_test = executable(
-  'pbcopper_test',
-  pbcopper_test_cpp_sources,
+  'pbcopper_test', [
+    pbcopper_test_CLI_cpp,
+    pbcopper_test_cpp_sources],
   dependencies : [pbcopper_gtest_dep, pbcopper_thread_dep, pbcopper_boost_dep],
   include_directories : [pbcopper_include_directories, include_directories('include')],
   link_with : [pbcopper_lib],
