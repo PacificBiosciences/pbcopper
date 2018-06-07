@@ -68,6 +68,20 @@ pbcopper_test = executable(
 # tests #
 #########
 
-test('pbcopper formatting check', pbcopper_clang_formatter, args : ['--all'], workdir : meson.source_root())
+test(
+  'pbcopper formatting check',
+  pbcopper_clang_formatter,
+  args : [
+    '--all'],
+  workdir : meson.source_root())
 
-test('pbcopper test', pbcopper_test, args : ['--gtest_output=xml:pbcopper-unit.xml'])
+test(
+  'pbcopper unit tests',
+  pbcopper_test,
+  args : [
+    '--gtest_output=xml:' + join_paths(meson.build_root(), 'pbcopper-unit-tests.xml')],
+  env : [
+    'ARGS=-V',
+    'VERBOSE=1'],
+  workdir : meson.source_root(),
+  timeout : 3600)
