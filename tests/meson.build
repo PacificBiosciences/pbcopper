@@ -76,12 +76,10 @@ test(
   workdir : meson.source_root())
 
 test(
-  'pbcopper unit tests',
+  'pbcopper gtest unittests',
   pbcopper_test,
   args : [
-    '--gtest_output=xml:' + join_paths(meson.build_root(), 'pbcopper-unit-tests.xml')],
+    '--gtest_output=xml:' + join_paths(meson.build_root(), 'pbcopper-gtest-unittests.xml')],
   env : [
     'ARGS=-V',
-    'VERBOSE=1'],
-  workdir : meson.source_root(),
-  timeout : 3600)
+    'VERBOSE=1'])
