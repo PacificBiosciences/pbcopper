@@ -23,7 +23,7 @@ private:
     typedef boost::optional<std::packaged_task<void(void)>> TTask;
 
 public:
-    FireAndForget(const size_t size) : exc{nullptr}, sz{size}
+    FireAndForget(const size_t size, const size_t mul = 2) : exc{nullptr}, sz{size * mul}
     {
         for (size_t i = 0; i < size; ++i) {
             threads.emplace_back(std::thread([this]() {

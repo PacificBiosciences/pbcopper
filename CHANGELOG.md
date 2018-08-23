@@ -4,6 +4,7 @@
 
 ### TODO
 - Initial sequence-related data structures
+- FireAndForget increase buffer
 
 ## [0.3.0] - 2018-04-30
 
