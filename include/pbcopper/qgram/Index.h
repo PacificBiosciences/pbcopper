@@ -46,9 +46,9 @@ public:
     Index(size_t q, std::vector<std::string> seqs);
 
     Index(const Index& other);
-    Index(Index&& other) = default;
+    Index(Index&& /*unused*/) = default;
     Index& operator=(const Index& other);
-    Index& operator=(Index&& other) = default;
+    Index& operator=(Index&& /*unused*/) = default;
     ~Index() = default;
 
 public:
