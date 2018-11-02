@@ -1,11 +1,12 @@
 // Author: Lance Hepler & Armin Töpfer
 
-#ifndef PBCOPPER_PARALLEL_FIREANDFORGET_H
-#define PBCOPPER_PARALLEL_FIREANDFORGET_H
+#ifndef PBCOPPER_PARALLEL_FIREANDFORGETINDEXED_H
+#define PBCOPPER_PARALLEL_FIREANDFORGETINDEXED_H
 
 #include <condition_variable>
 #include <cstddef>
 #include <exception>
+#include <functional>
 #include <future>
 #include <mutex>
 #include <queue>
@@ -17,20 +18,35 @@
 namespace PacBio {
 namespace Parallel {
 
-class FireAndForget
+/**
+ Differences from normal FireAndForget:
+
+ * ProduceWith expects a function taking Index followed by user-defined Args.
+ * The Index is from 0 to size-1.
+ * Each thread knows its own Index.
+ * As a result, each task can use its Index to look into a predefined vector (user-controlled).
+ * A 'fini' function is called for each thread after Finalize() pushes the sentinel onto the queue.
+ 
+ The 'fini' function is not really needed, but it's helpful for debugging.
+*/
+class FireAndForgetIndexed
 {
-private:
-    typedef boost::optional<std::packaged_task<void(void)>> TTask;
+public:
+    using Index = size_t;
+    using TFunc = std::function<void(Index)>;
+    using TPTask = std::packaged_task<void(Index)>;
 
 public:
-    FireAndForget(const size_t size, const size_t mul = 2) : exc{nullptr}, sz{size * mul}
+    FireAndForgetIndexed(const size_t size, const size_t mul = 2, TFunc fini = TFunc{[](Index) {}})
+        : exc{nullptr}, sz{size * mul}
     {
-        for (size_t i = 0; i < size; ++i) {
-            threads.emplace_back(std::thread([this]() {
+        for (Index index = 0; index < size; ++index) {
+            threads.emplace_back(std::thread([this, fini, index]() {
                 try {
                     while (auto task = PopTask()) {
-                        (*task)();
+                        (*task)(index);
                     }
+                    fini(index);
                 } catch (...) {
                     {
                         std::lock_guard<std::mutex> g(m);
@@ -42,7 +58,7 @@ public:
         }
     }
 
-    ~FireAndForget()
+    ~FireAndForgetIndexed()
     {
         for (auto& thread : threads) {
             thread.join();
@@ -58,8 +74,11 @@ public:
     template <typename F, typename... Args>
     void ProduceWith(F&& f, Args&&... args)
     {
-        std::packaged_task<void(void)> task{
-            std::bind(std::forward<F>(f), std::forward<Args>(args)...)};
+        using namespace std::placeholders;  // for _1, _2, _3...
+
+        // Create a function taking Index, which delegates to
+        // a function taking Index followed by args.
+        TPTask task{std::bind(std::forward<F>(f), _1, std::forward<Args>(args)...)};
 
         {
             std::unique_lock<std::mutex> lk(m);
@@ -87,6 +106,8 @@ public:
     }
 
 private:
+    using TTask = boost::optional<TPTask>;
+
     TTask PopTask()
     {
         TTask task(boost::none);
@@ -121,4 +142,4 @@ private:
 }  // namespace Parallel
 }  // namespace PacBio
 
-#endif  // PBCOPPER_PARALLEL_FIREANDFORGET_H
+#endif  // PBCOPPER_PARALLEL_FIREANDFORGETINDEXED_H

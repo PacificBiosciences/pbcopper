@@ -1,36 +1,57 @@
 // Author: Armin Töpfer
 
+#include <atomic>
+#include <chrono>
 #include <iostream>
 #include <memory>
 #include <string>
+#include <thread>
 #include <vector>
 
 #include <gtest/gtest.h>
-#include <pbcopper/parallel/FireAndForget.h>
+#include <pbcopper/parallel/FireAndForgetIndexed.h>
 
-using PacBio::Parallel::FireAndForget;
+using PacBio::Parallel::FireAndForgetIndexed;
 
-TEST(Parallel_FireAndForget, strings)
+TEST(Parallel_FireAndForgetIndexed, strings)
 {
     static const size_t numThreads = 3;
     static const size_t numElements = 10000;
-    PacBio::Parallel::FireAndForget faf(numThreads);
+    PacBio::Parallel::FireAndForgetIndexed faf(numThreads);
 
-    auto Submit = [](std::string& input) { input = "done-" + input; };
+    std::vector<size_t> vec;
 
-    std::vector<std::string> vec;
+    size_t initial = 0;
+    for (size_t i = 0; i < numThreads; ++i) {
+        vec.emplace_back(i);
+        initial += i;
+    }
+    ASSERT_EQ(vec.size(), numThreads);
 
-    for (size_t i = 0; i < numElements; ++i) {
-        vec.emplace_back(std::to_string(i));
+    std::atomic_int waiting{0};
+
+    auto Submit = [&vec, &waiting](size_t index, size_t data) {
+        vec[index] += data;
+        --waiting;
+    };
+
+    size_t extra = 0;
+    for (size_t data = 0; data < numElements; ++data) {
+        ++waiting;
+        faf.ProduceWith(Submit, data);
+        extra += data;
     }
 
-    for (auto& v : vec)
-        faf.ProduceWith(Submit, std::ref(v));
-
     faf.Finalize();
+    while (waiting) {
+        std::this_thread::sleep_for(std::chrono::milliseconds(100));
+    }
 
+    size_t expected = initial + extra;
+    size_t observed = 0;
     for (auto& v : vec)
-        EXPECT_EQ(v.substr(0, 4), "done");
+        observed += v;
 
-    EXPECT_EQ(vec.size(), numElements);
+    // We do not know the order, but all the work is done.
+    EXPECT_EQ(expected, observed);
 }
