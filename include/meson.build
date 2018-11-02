@@ -123,6 +123,7 @@ if not meson.is_subproject()
   install_headers(
     files([
       'pbcopper/parallel/FireAndForget.h',
+      'pbcopper/parallel/FireAndForgetIndexed.h',
       'pbcopper/parallel/WorkQueue.h']),
     subdir : 'pbcopper/parallel')
 
