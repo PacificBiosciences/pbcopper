@@ -9,27 +9,14 @@ Download repo & compile library:
 
 ```sh
 git clone https://github.com/PacificBiosciences/pbcopper.git && cd pbcopper
-mkdir build && cd build
-cmake ..
-make
+meson build .
+ninja -C build
 ```
 
 To build & run tests:
 
 ```sh
-make check
-```
-
-To build examples:
-
-```sh
-make examples
-```
-
-To build Doxygen API documentation: (**not yet available**)
-
-```sh
-make docs
+ninja -C build test
 ```
 
 ## API Overview - main modules
