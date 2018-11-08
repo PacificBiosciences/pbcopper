@@ -17,34 +17,26 @@ TEST(Parallel_FireAndForgetIndexed, strings)
 {
     static const size_t numThreads = 3;
     static const size_t numElements = 10000;
-    PacBio::Parallel::FireAndForgetIndexed faf(numThreads);
-
-    std::vector<size_t> vec;
-
     size_t initial = 0;
-    for (size_t i = 0; i < numThreads; ++i) {
-        vec.emplace_back(i);
-        initial += i;
-    }
-    ASSERT_EQ(vec.size(), numThreads);
-
-    std::atomic_int waiting{0};
-
-    auto Submit = [&vec, &waiting](size_t index, size_t data) {
-        vec[index] += data;
-        --waiting;
-    };
-
     size_t extra = 0;
-    for (size_t data = 0; data < numElements; ++data) {
-        ++waiting;
-        faf.ProduceWith(Submit, data);
-        extra += data;
-    }
+    std::vector<size_t> vec;
+    {
+        PacBio::Parallel::FireAndForgetIndexed faf(numThreads);
 
-    faf.Finalize();
-    while (waiting) {
-        std::this_thread::sleep_for(std::chrono::milliseconds(100));
+        for (size_t i = 0; i < numThreads; ++i) {
+            vec.emplace_back(i);
+            initial += i;
+        }
+        ASSERT_EQ(vec.size(), numThreads);
+
+        auto Submit = [&vec](size_t index, size_t data) { vec[index] += data; };
+
+        for (size_t data = 0; data < numElements; ++data) {
+            faf.ProduceWith(Submit, data);
+            extra += data;
+        }
+
+        faf.Finalize();
     }
 
     size_t expected = initial + extra;
