@@ -12,10 +12,6 @@ namespace PacBio {
 namespace CLI {
 namespace ToolContract {
 
-namespace internal {
-class RtcPrivate;
-}
-
 class ResolvedToolContract
 {
 public:
@@ -26,7 +22,8 @@ public:
     Results Parse(std::istream& in);
 
 private:
-    std::unique_ptr<internal::RtcPrivate> d_;
+    class ResolvedToolContractPrivate;
+    std::unique_ptr<ResolvedToolContractPrivate> d_;
 };
 
 }  // namespace ToolContract

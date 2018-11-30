@@ -8,22 +8,17 @@
 namespace PacBio {
 namespace CLI {
 namespace ToolContract {
-namespace internal {
 
-class RtcPrivate
+class ResolvedToolContract::ResolvedToolContractPrivate
 {
-
 public:
-    const Interface interface_;
+    Interface interface_;
 
-public:
-    RtcPrivate(Interface interface) : interface_{std::move(interface)} {}
+    explicit ResolvedToolContractPrivate(Interface interface) : interface_{std::move(interface)} {}
 };
 
-}  // namespace internal
-
 ResolvedToolContract::ResolvedToolContract(Interface interface)
-    : d_{std::make_unique<internal::RtcPrivate>(std::move(interface))}
+    : d_{std::make_unique<ResolvedToolContractPrivate>(std::move(interface))}
 {
 }
 
