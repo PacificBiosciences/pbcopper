@@ -15,9 +15,8 @@ using Json = PacBio::JSON::Json;
 
 namespace PacBio {
 namespace CLI {
-namespace internal {
 
-class ResultsPrivate
+class Results::ResultsPrivate
 {
 public:
     PacBio::CLI::Interface interface_;
@@ -28,7 +27,6 @@ public:
     bool isFromRtc_;
     uint16_t nproc_;
 
-public:
     ResultsPrivate(Interface interface, std::vector<std::string> inputCommandLine)
         : interface_{std::move(interface)}
         , inputCommandLine_{std::move(inputCommandLine)}
@@ -46,32 +44,28 @@ public:
     ~ResultsPrivate(void) = default;
 };
 
-}  // namespace internal
-
 // ------------------------
 // PacBio::CLI::Results
 // ------------------------
 
 Results::Results(Interface interface)
-    : d_{std::make_unique<internal::ResultsPrivate>(std::move(interface),
-                                                    std::vector<std::string>())}
+    : d_{std::make_unique<ResultsPrivate>(std::move(interface), std::vector<std::string>())}
 {
 }
 
 Results::Results(Interface interface, std::vector<std::string> inputCommandLine)
-    : d_(std::make_unique<internal::ResultsPrivate>(std::move(interface),
-                                                    std::move(inputCommandLine)))
+    : d_(std::make_unique<ResultsPrivate>(std::move(interface), std::move(inputCommandLine)))
 {
 }
 
-Results::Results(const Results& other) : d_(new internal::ResultsPrivate{*other.d_.get()}) {}
+Results::Results(const Results& other) : d_(new ResultsPrivate{*other.d_.get()}) {}
 
 Results::Results(Results&& other) : d_(std::move(other.d_)) {}
 
 Results& Results::operator=(const Results& other)
 {
     if (this != &other) {
-        d_.reset(new internal::ResultsPrivate{*other.d_.get()});
+        d_.reset(new ResultsPrivate{*other.d_.get()});
     }
     return *this;
 }

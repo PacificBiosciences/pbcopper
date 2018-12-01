@@ -166,7 +166,6 @@ if not meson.is_subproject()
   # pbcopper/utility/internal
   install_headers(
     files([
-      'pbcopper/utility/internal/CallbackTimer-inl.h',
       'pbcopper/utility/internal/FileUtils-inl.h',
       'pbcopper/utility/internal/Stopwatch-inl.h',
       'pbcopper/utility/internal/StringUtils-inl.h',

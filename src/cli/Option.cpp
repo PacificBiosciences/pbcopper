@@ -6,7 +6,7 @@
 
 namespace PacBio {
 namespace CLI {
-namespace internal {
+namespace {
 
 // clang-format off
 static const Option defaultHelpOption {
@@ -35,15 +35,15 @@ static const Option defaultVersionOption {
 };
 // clang-format on
 
-}  // namespace internal
+}  // anonymous
 
-const Option& Option::DefaultHelpOption(void) { return internal::defaultHelpOption; }
+const Option& Option::DefaultHelpOption(void) { return defaultHelpOption; }
 
-const Option& Option::DefaultLogLevelOption(void) { return internal::defaultLogLevelOption; }
+const Option& Option::DefaultLogLevelOption(void) { return defaultLogLevelOption; }
 
-const Option& Option::DefaultVerboseOption(void) { return internal::defaultVerboseOption; }
+const Option& Option::DefaultVerboseOption(void) { return defaultVerboseOption; }
 
-const Option& Option::DefaultVersionOption(void) { return internal::defaultVersionOption; }
+const Option& Option::DefaultVersionOption(void) { return defaultVersionOption; }
 
 std::string Option::TypeId(void) const
 {
@@ -53,28 +53,18 @@ std::string Option::TypeId(void) const
     const auto type = DefaultValue().type();
     switch (type) {
         case Json::value_t::number_integer:  // fall through
-        case Json::value_t::number_unsigned: {
+        case Json::value_t::number_unsigned:
             return (hasChoices ? "choice_integer" : "integer");
-        }
 
-        case Json::value_t::number_float: {
+        case Json::value_t::number_float:
             return (hasChoices ? "choice_float" : "float");
-        }
-        case Json::value_t::string: {
+        case Json::value_t::string:
             return (hasChoices ? "choice_string" : "string");
-        }
-        case Json::value_t::boolean: {
+        case Json::value_t::boolean:
             return "boolean";
-        }
-
-        // unsupported/invalid JSON types
-        case Json::value_t::array:      // fall through
-        case Json::value_t::null:       // .
-        case Json::value_t::object:     // .
-        case Json::value_t::discarded:  // .
         default:
             throw std::runtime_error{
-                "PacBio::CLI::ToolContract::JsonPrinter - unknown type for option: " + Id()};
+                "PacBio::CLI::ToolContract::JsonPrinter - unsupported type for option: " + Id()};
     }
 }
 

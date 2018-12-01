@@ -17,10 +17,6 @@
 namespace PacBio {
 namespace CLI {
 
-namespace internal {
-class ResultsPrivate;
-}
-
 ///
 /// \brief The Results class
 ///
@@ -206,7 +202,8 @@ public:
     /// \}
 
 private:
-    std::unique_ptr<internal::ResultsPrivate> d_;
+    class ResultsPrivate;
+    std::unique_ptr<ResultsPrivate> d_;
 };
 
 }  // namespace CLI

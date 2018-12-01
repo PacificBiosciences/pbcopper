@@ -15,10 +15,6 @@ namespace CLI {
 
 class Interface;
 
-namespace internal {
-class ParserPrivate;
-}
-
 ///
 /// \brief The Parser class
 ///
@@ -61,7 +57,8 @@ public:
     /// \}
 
 private:
-    std::unique_ptr<internal::ParserPrivate> d_;
+    class ParserPrivate;
+    std::unique_ptr<ParserPrivate> d_;
 };
 
 }  // namespace CLI

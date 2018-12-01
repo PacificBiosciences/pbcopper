@@ -16,10 +16,6 @@
 namespace PacBio {
 namespace CLI {
 
-namespace internal {
-class InterfacePrivate;
-}
-
 ///
 /// \brief The Interface class
 ///
@@ -312,7 +308,8 @@ public:
     /// \}
 
 private:
-    std::unique_ptr<internal::InterfacePrivate> d_;
+    class InterfacePrivate;
+    std::unique_ptr<InterfacePrivate> d_;
 };
 
 }  // namespace CLI
