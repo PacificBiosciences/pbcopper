@@ -1,11 +1,10 @@
-
-#include <gtest/gtest.h>
 #include <pbcopper/logging/Logging.h>
-#include <boost/algorithm/string/predicate.hpp>
+
 #include <sstream>
 #include <string>
-using namespace PacBio;
-using namespace PacBio::Logging;
+
+#include <gtest/gtest.h>
+#include <boost/algorithm/string/predicate.hpp>
 
 //
 // NOTE: We need to scope the Loggers used here and invoke the macros that take
@@ -28,7 +27,7 @@ TEST(Logging_Logger, info_message_logged_to_stream)
 {
     std::ostringstream s;
     {
-        Logger logger(s, LogLevel::INFO);
+        PacBio::Logging::Logger logger(s, PacBio::Logging::LogLevel::INFO);
         PBLOGGER_INFO(logger) << LoggingTests::infoMsg;
     }
     EXPECT_TRUE(s.str().find(LoggingTests::infoMsg) != std::string::npos);
@@ -42,11 +41,13 @@ TEST(Logging_Logger, custom_logging_sinks_receive_expected_messages)
     std::ostringstream info;
     std::ostringstream notice;
     std::ostringstream warn, warn2;
-    std::map<LogLevel, OStreams> logConfig = {
-        {LogLevel::INFO, {info}}, {LogLevel::NOTICE, {notice}}, {LogLevel::WARN, {warn, warn2}}};
+    std::map<PacBio::Logging::LogLevel, PacBio::Logging::OStreams> logConfig = {
+        {PacBio::Logging::LogLevel::INFO, {info}},
+        {PacBio::Logging::LogLevel::NOTICE, {notice}},
+        {PacBio::Logging::LogLevel::WARN, {warn, warn2}}};
 
     {
-        Logger logger(logConfig);
+        PacBio::Logging::Logger logger(logConfig);
         PBLOGGER_INFO(logger) << LoggingTests::infoMsg;
         PBLOGGER_NOTICE(logger) << LoggingTests::noticeMsg;
         PBLOGGER_WARN(logger) << LoggingTests::warnMsg;

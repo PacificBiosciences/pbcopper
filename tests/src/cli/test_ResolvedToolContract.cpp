@@ -1,12 +1,9 @@
-#include <gtest/gtest.h>
 #include <pbcopper/cli/toolcontract/ResolvedToolContract.h>
 
 #include <sstream>
 #include <string>
 
-using namespace PacBio;
-using namespace PacBio::CLI;
-using namespace PacBio::CLI::ToolContract;
+#include <gtest/gtest.h>
 
 TEST(CLI_ResolvedToolContract, read_basic_RTC)
 {
@@ -37,28 +34,28 @@ TEST(CLI_ResolvedToolContract, read_basic_RTC)
 
     // clang-format off
 
-    Interface interface {
+    PacBio::CLI::Interface interface {
         "frobber",
         "Frobb your files in a most delightful, nobbly way",
         "3.14"
     };
     interface.AddOptions({
-        {"max_nlines", {"n"}, "Max Number of lines to Copy", Option::IntType(10)}
+        {"max_nlines", {"n"}, "Max Number of lines to Copy", PacBio::CLI::Option::IntType(10)}
     });
 
     const std::string id{"frobber.tasks.dev_txt_app"};
-    ToolContract::Task tcTask(id);
+    PacBio::CLI::ToolContract::Task tcTask(id);
     tcTask.Options({
         { "max_nlines", "Max Lines" }
     });
 
     // clang-format off
 
-    ToolContract::Config tcConfig(tcTask);
+    PacBio::CLI::ToolContract::Config tcConfig(tcTask);
     interface.EnableToolContract(tcConfig);
 
-    ToolContract::ResolvedToolContract rtc(interface);
-    const Results results = rtc.Parse(input);
+    PacBio::CLI::ToolContract::ResolvedToolContract rtc(interface);
+    const PacBio::CLI::Results results = rtc.Parse(input);
 
     const int maxNLines = results["max_nlines"];
     EXPECT_EQ(27, maxNLines);
@@ -103,22 +100,22 @@ TEST(CLI_ResolvedToolContract, map_files_to_options)
     input << text;
 
     // clang-format off
-    Interface interface {
+    PacBio::CLI::Interface interface {
         "frobber",
         "Frobb your files in a most delightful, nobbly way",
         "3.14"
     };
     interface.AddOptions({
-        {"min_length",  {"minLength"},  "Minimum length.", Option::IntType(10)},
-        {"max_length",  {"maxLength"},  "Maximum length.", Option::IntType(1000)},
-        {"output_file", {"resultFile"}, "Output file.", Option::StringType("")},
-        {"junk_file",   {"junkFile"},   "Junk file.",   Option::StringType("")},
-        {"report_file", {"reportFile"}, "Report file.", Option::StringType("")},
-        {"json_file",   {"jsonFile"},   "JSON file.",   Option::StringType("")},
+        {"min_length",  {"minLength"},  "Minimum length.", PacBio::CLI::Option::IntType(10)},
+        {"max_length",  {"maxLength"},  "Maximum length.", PacBio::CLI::Option::IntType(1000)},
+        {"output_file", {"resultFile"}, "Output file.", PacBio::CLI::Option::StringType("")},
+        {"junk_file",   {"junkFile"},   "Junk file.",   PacBio::CLI::Option::StringType("")},
+        {"report_file", {"reportFile"}, "Report file.", PacBio::CLI::Option::StringType("")},
+        {"json_file",   {"jsonFile"},   "JSON file.",   PacBio::CLI::Option::StringType("")},
     });
 
     const std::string id{"frobber.tasks.dev_txt_app"};
-    ToolContract::Task tcTask(id);
+    PacBio::CLI::ToolContract::Task tcTask(id);
     tcTask.Options({
         { "min_length", "Minimum Length" },
         { "max_length", "Maximum Length" },
@@ -140,11 +137,11 @@ TEST(CLI_ResolvedToolContract, map_files_to_options)
     });
     // clang-format on
 
-    ToolContract::Config tcConfig(tcTask);
+    PacBio::CLI::ToolContract::Config tcConfig(tcTask);
     interface.EnableToolContract(tcConfig);
 
-    ToolContract::ResolvedToolContract rtc(interface);
-    const Results results = rtc.Parse(input);
+    PacBio::CLI::ToolContract::ResolvedToolContract rtc(interface);
+    const PacBio::CLI::Results results = rtc.Parse(input);
 
     const int minLength = results["min_length"];
     const int maxLength = results["max_length"];

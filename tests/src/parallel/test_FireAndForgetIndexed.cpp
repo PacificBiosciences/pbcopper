@@ -1,4 +1,5 @@
 // Author: Armin Töpfer
+#include <pbcopper/parallel/FireAndForgetIndexed.h>
 
 #include <atomic>
 #include <chrono>
@@ -9,9 +10,6 @@
 #include <vector>
 
 #include <gtest/gtest.h>
-#include <pbcopper/parallel/FireAndForgetIndexed.h>
-
-using PacBio::Parallel::FireAndForgetIndexed;
 
 TEST(Parallel_FireAndForgetIndexed, strings)
 {

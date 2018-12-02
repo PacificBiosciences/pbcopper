@@ -1,36 +1,35 @@
+#include <pbcopper/data/Interval.h>
 
 #include <gtest/gtest.h>
-#include <pbcopper/data/Interval.h>
+
 #include <pbcopper/data/Position.h>
-using namespace PacBio;
-using namespace PacBio::Data;
 
 TEST(Data_Interval, default_interval_contains_zeroes)
 {
-    Interval<Position> empty;
+    PacBio::Data::Interval<PacBio::Data::Position> empty;
     EXPECT_EQ(0, empty.Start());
     EXPECT_EQ(0, empty.End());
 }
 
 TEST(Data_Interval, construction_with_explicit_start_and_end_retained)
 {
-    Interval<Position> normal(5, 8);
+    PacBio::Data::Interval<PacBio::Data::Position> normal(5, 8);
     EXPECT_EQ(5, normal.Start());
     EXPECT_EQ(8, normal.End());
 }
 
 TEST(Data_Interval, construction_without_explict_endpoint_yields_endpoint_of_start_plus_one)
 {
-    Interval<Position> singleton(4);
+    PacBio::Data::Interval<PacBio::Data::Position> singleton(4);
     EXPECT_EQ(4, singleton.Start());
     EXPECT_EQ(5, singleton.End());
 }
 
 TEST(Data_Interval, self_equals_self)
 {
-    Interval<Position> empty;
-    Interval<Position> singleton(4);
-    Interval<Position> normal(5, 8);
+    PacBio::Data::Interval<PacBio::Data::Position> empty;
+    PacBio::Data::Interval<PacBio::Data::Position> singleton(4);
+    PacBio::Data::Interval<PacBio::Data::Position> normal(5, 8);
 
     EXPECT_TRUE(empty == empty);
     EXPECT_TRUE(singleton == singleton);
@@ -39,12 +38,12 @@ TEST(Data_Interval, self_equals_self)
 
 TEST(Data_Interval, intervals_with_same_endpoints_are_equal)
 {
-    Interval<Position> empty;
-    Interval<Position> sameAsEmpty;
-    Interval<Position> singleton(4);
-    Interval<Position> sameAsSingleton(4, 5);
-    Interval<Position> normal(5, 8);
-    Interval<Position> sameAsNormal(5, 8);
+    PacBio::Data::Interval<PacBio::Data::Position> empty;
+    PacBio::Data::Interval<PacBio::Data::Position> sameAsEmpty;
+    PacBio::Data::Interval<PacBio::Data::Position> singleton(4);
+    PacBio::Data::Interval<PacBio::Data::Position> sameAsSingleton(4, 5);
+    PacBio::Data::Interval<PacBio::Data::Position> normal(5, 8);
+    PacBio::Data::Interval<PacBio::Data::Position> sameAsNormal(5, 8);
 
     EXPECT_TRUE(empty == sameAsEmpty);
     EXPECT_TRUE(singleton == sameAsSingleton);
@@ -53,10 +52,10 @@ TEST(Data_Interval, intervals_with_same_endpoints_are_equal)
 
 TEST(Data_Interval, intervals_with_different_endpoints_are_not_equal)
 {
-    Interval<Position> empty;
-    Interval<Position> singleton(4);
-    Interval<Position> normal(5, 8);
-    Interval<Position> different(20, 40);
+    PacBio::Data::Interval<PacBio::Data::Position> empty;
+    PacBio::Data::Interval<PacBio::Data::Position> singleton(4);
+    PacBio::Data::Interval<PacBio::Data::Position> normal(5, 8);
+    PacBio::Data::Interval<PacBio::Data::Position> different(20, 40);
 
     EXPECT_FALSE(empty == singleton);
     EXPECT_FALSE(empty == normal);
@@ -67,22 +66,22 @@ TEST(Data_Interval, intervals_with_different_endpoints_are_not_equal)
 
 TEST(Data_Interval, can_be_copy_constructed)
 {
-    Interval<Position> original(5, 8);
-    Interval<Position> copy(original);
+    PacBio::Data::Interval<PacBio::Data::Position> original(5, 8);
+    PacBio::Data::Interval<PacBio::Data::Position> copy(original);
     EXPECT_TRUE(original == copy);
 }
 
 TEST(Data_Interval, can_be_copy_assigned)
 {
-    Interval<Position> original(5, 8);
-    Interval<Position> copy = original;
+    PacBio::Data::Interval<PacBio::Data::Position> original(5, 8);
+    PacBio::Data::Interval<PacBio::Data::Position> copy = original;
     EXPECT_TRUE(original == copy);
 }
 
 TEST(Data_Interval, modification_of_copy_does_not_affect_original)
 {
-    Interval<Position> original(5, 8);
-    Interval<Position> copy(original);
+    PacBio::Data::Interval<PacBio::Data::Position> original(5, 8);
+    PacBio::Data::Interval<PacBio::Data::Position> copy(original);
     copy.Start(2);
     copy.End(10);
 
@@ -93,15 +92,15 @@ TEST(Data_Interval, modification_of_copy_does_not_affect_original)
 
 TEST(Data_Interval, self_covers_and_is_covered_by_self)
 {
-    Interval<Position> interval(2, 4);
+    PacBio::Data::Interval<PacBio::Data::Position> interval(2, 4);
     EXPECT_TRUE(interval.Covers(interval));
     EXPECT_TRUE(interval.CoveredBy(interval));
 }
 
 TEST(Data_Interval, covers_and_coveredby_are_reciprocal)
 {
-    Interval<Position> inner(3, 5);
-    Interval<Position> outer(1, 7);
+    PacBio::Data::Interval<PacBio::Data::Position> inner(3, 5);
+    PacBio::Data::Interval<PacBio::Data::Position> outer(1, 7);
 
     EXPECT_TRUE(inner.CoveredBy(outer));  // a.coveredBy(b)
     EXPECT_TRUE(outer.Covers(inner));     // thus b.covers(a)
@@ -112,8 +111,8 @@ TEST(Data_Interval, covers_and_coveredby_are_reciprocal)
 
 TEST(Data_Interval, completely_disjoint_intervals_do_not_cover_each_other)
 {
-    Interval<Position> left(3, 5);
-    Interval<Position> right(6, 8);
+    PacBio::Data::Interval<PacBio::Data::Position> left(3, 5);
+    PacBio::Data::Interval<PacBio::Data::Position> right(6, 8);
 
     EXPECT_FALSE(left.Covers(right));
     EXPECT_FALSE(right.Covers(left));
@@ -123,8 +122,8 @@ TEST(Data_Interval, completely_disjoint_intervals_do_not_cover_each_other)
 
 TEST(Data_Interval, no_coverage_when_left_stop_same_as_right_start)
 {
-    Interval<Position> left(3, 5);
-    Interval<Position> right(5, 8);
+    PacBio::Data::Interval<PacBio::Data::Position> left(3, 5);
+    PacBio::Data::Interval<PacBio::Data::Position> right(5, 8);
 
     EXPECT_FALSE(left.Covers(right));
     EXPECT_FALSE(left.CoveredBy(right));
@@ -132,8 +131,8 @@ TEST(Data_Interval, no_coverage_when_left_stop_same_as_right_start)
 
 TEST(Data_Interval, coverage_when_endpoints_are_same_and_inner_start_contained_by_outer)
 {
-    Interval<Position> inner(6, 8);
-    Interval<Position> outer(5, 8);
+    PacBio::Data::Interval<PacBio::Data::Position> inner(6, 8);
+    PacBio::Data::Interval<PacBio::Data::Position> outer(5, 8);
 
     EXPECT_TRUE(outer.Covers(inner));
     EXPECT_TRUE(inner.CoveredBy(outer));
@@ -141,11 +140,11 @@ TEST(Data_Interval, coverage_when_endpoints_are_same_and_inner_start_contained_b
 
 TEST(Data_Interval, calculates_proper_intersection)
 {
-    Interval<Position> interval1(2, 4);
-    Interval<Position> interval2(3, 5);
-    Interval<Position> interval3(6, 8);
-    Interval<Position> interval4(1, 7);
-    Interval<Position> interval5(5, 8);
+    PacBio::Data::Interval<PacBio::Data::Position> interval1(2, 4);
+    PacBio::Data::Interval<PacBio::Data::Position> interval2(3, 5);
+    PacBio::Data::Interval<PacBio::Data::Position> interval3(6, 8);
+    PacBio::Data::Interval<PacBio::Data::Position> interval4(1, 7);
+    PacBio::Data::Interval<PacBio::Data::Position> interval5(5, 8);
 
     EXPECT_TRUE(interval1.Intersects(interval1));  // self-intersection: a.intersects(a)
 
@@ -163,8 +162,8 @@ TEST(Data_Interval, calculates_proper_intersection)
 
 TEST(Data_Interval, acceptable_endpoints_are_valid)
 {
-    Interval<Position> zeroStartInterval(0, 1);
-    Interval<Position> nonZeroStartInterval(4, 5);
+    PacBio::Data::Interval<PacBio::Data::Position> zeroStartInterval(0, 1);
+    PacBio::Data::Interval<PacBio::Data::Position> nonZeroStartInterval(4, 5);
 
     EXPECT_TRUE(zeroStartInterval.IsValid());
     EXPECT_TRUE(nonZeroStartInterval.IsValid());
@@ -172,10 +171,10 @@ TEST(Data_Interval, acceptable_endpoints_are_valid)
 
 TEST(Data_Interval, nonsensical_endpoints_are_invalid)
 {
-    Interval<Position> defaultConstructedInterval;
-    Interval<Position> zeroEmptyValue(0, 0);
-    Interval<Position> nonZeroEmptyInterval(4, 4);
-    Interval<Position> badOrderingInterval(5, 4);
+    PacBio::Data::Interval<PacBio::Data::Position> defaultConstructedInterval;
+    PacBio::Data::Interval<PacBio::Data::Position> zeroEmptyValue(0, 0);
+    PacBio::Data::Interval<PacBio::Data::Position> nonZeroEmptyInterval(4, 4);
+    PacBio::Data::Interval<PacBio::Data::Position> badOrderingInterval(5, 4);
 
     EXPECT_FALSE(defaultConstructedInterval.IsValid());
     EXPECT_FALSE(zeroEmptyValue.IsValid());
@@ -185,11 +184,11 @@ TEST(Data_Interval, nonsensical_endpoints_are_invalid)
 
 TEST(Data_Interval, calculates_proper_length)
 {
-    Interval<Position> interval1(2, 4);
-    Interval<Position> interval2(3, 5);
-    Interval<Position> interval3(6, 8);
-    Interval<Position> interval4(1, 7);
-    Interval<Position> interval5(5, 8);
+    PacBio::Data::Interval<PacBio::Data::Position> interval1(2, 4);
+    PacBio::Data::Interval<PacBio::Data::Position> interval2(3, 5);
+    PacBio::Data::Interval<PacBio::Data::Position> interval3(6, 8);
+    PacBio::Data::Interval<PacBio::Data::Position> interval4(1, 7);
+    PacBio::Data::Interval<PacBio::Data::Position> interval5(5, 8);
 
     EXPECT_EQ(2, interval1.Length());
     EXPECT_EQ(2, interval2.Length());

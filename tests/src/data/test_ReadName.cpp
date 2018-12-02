@@ -1,18 +1,16 @@
+#include <pbcopper/data/ReadName.h>
 
 #include <gtest/gtest.h>
-#include <pbcopper/data/ReadName.h>
-using namespace PacBio;
-using namespace PacBio::Data;
 
 TEST(Data_ReadName, read_name_from_string)
 {
     const std::string movieName{"m54001_160623_195125"};
-    const Zmw zmw = 553;
-    const Position queryStart = 3100;
-    const Position queryEnd = 11230;
-    const Interval<Position> queryInterval{queryStart, queryEnd};
+    const PacBio::Data::Zmw zmw = 553;
+    const PacBio::Data::Position queryStart = 3100;
+    const PacBio::Data::Position queryEnd = 11230;
+    const PacBio::Data::Interval<PacBio::Data::Position> queryInterval{queryStart, queryEnd};
 
-    const ReadName readName("m54001_160623_195125/553/3100_11230");
+    const PacBio::Data::ReadName readName("m54001_160623_195125/553/3100_11230");
 
     EXPECT_EQ(movieName, readName.MovieName().ToStdString());
     EXPECT_EQ(zmw, readName.Zmw());
@@ -27,12 +25,12 @@ TEST(Data_ReadName, read_name_from_string)
 TEST(Data_ReadName, ccs_read_name_from_string)
 {
     const std::string movieName{"m54001_160623_195125"};
-    const Zmw zmw = 553;
-    const Position queryStart = 3100;
-    const Position queryEnd = 11230;
-    const Interval<Position> queryInterval{queryStart, queryEnd};
+    const PacBio::Data::Zmw zmw = 553;
+    const PacBio::Data::Position queryStart = 3100;
+    const PacBio::Data::Position queryEnd = 11230;
+    const PacBio::Data::Interval<PacBio::Data::Position> queryInterval{queryStart, queryEnd};
 
-    const ReadName readName("m54001_160623_195125/553/ccs");
+    const PacBio::Data::ReadName readName("m54001_160623_195125/553/ccs");
 
     EXPECT_EQ(movieName, readName.MovieName().ToStdString());
     EXPECT_EQ(zmw, readName.Zmw());
@@ -47,12 +45,12 @@ TEST(Data_ReadName, ccs_read_name_from_string)
 TEST(Data_ReadName, read_name_from_parts_with_query_interval)
 {
     const std::string movieName{"m54001_160623_195125"};
-    const Zmw zmw = 553;
-    const Position queryStart = 3100;
-    const Position queryEnd = 11230;
-    const Interval<Position> queryInterval{queryStart, queryEnd};
+    const PacBio::Data::Zmw zmw = 553;
+    const PacBio::Data::Position queryStart = 3100;
+    const PacBio::Data::Position queryEnd = 11230;
+    const PacBio::Data::Interval<PacBio::Data::Position> queryInterval{queryStart, queryEnd};
 
-    const ReadName readName{MovieName{movieName}, zmw, queryInterval};
+    const PacBio::Data::ReadName readName{PacBio::Data::MovieName{movieName}, zmw, queryInterval};
 
     EXPECT_EQ(movieName, readName.MovieName().ToStdString());
     EXPECT_EQ(zmw, readName.Zmw());
@@ -67,12 +65,13 @@ TEST(Data_ReadName, read_name_from_parts_with_query_interval)
 TEST(Data_ReadName, read_name_from_parts_with_query_positions)
 {
     const std::string movieName{"m54001_160623_195125"};
-    const Zmw zmw = 553;
-    const Position queryStart = 3100;
-    const Position queryEnd = 11230;
-    const Interval<Position> queryInterval{queryStart, queryEnd};
+    const PacBio::Data::Zmw zmw = 553;
+    const PacBio::Data::Position queryStart = 3100;
+    const PacBio::Data::Position queryEnd = 11230;
+    const PacBio::Data::Interval<PacBio::Data::Position> queryInterval{queryStart, queryEnd};
 
-    const ReadName readName{MovieName{movieName}, zmw, queryStart, queryEnd};
+    const PacBio::Data::ReadName readName{PacBio::Data::MovieName{movieName}, zmw, queryStart,
+                                          queryEnd};
 
     EXPECT_EQ(movieName, readName.MovieName().ToStdString());
     EXPECT_EQ(zmw, readName.Zmw());
@@ -87,12 +86,13 @@ TEST(Data_ReadName, read_name_from_parts_with_query_positions)
 TEST(Data_ReadName, ccs_read_name_from_parts)
 {
     const std::string movieName{"m54001_160623_195125"};
-    const Zmw zmw = 553;
-    const Position queryStart = 3100;
-    const Position queryEnd = 11230;
-    const Interval<Position> queryInterval{queryStart, queryEnd};
+    const PacBio::Data::Zmw zmw = 553;
+    const PacBio::Data::Position queryStart = 3100;
+    const PacBio::Data::Position queryEnd = 11230;
+    const PacBio::Data::Interval<PacBio::Data::Position> queryInterval{queryStart, queryEnd};
 
-    const ReadName readName{MovieName{movieName}, zmw, CCSTag()};
+    const PacBio::Data::ReadName readName{PacBio::Data::MovieName{movieName}, zmw,
+                                          PacBio::Data::CCSTag()};
 
     EXPECT_EQ(movieName, readName.MovieName().ToStdString());
     EXPECT_EQ(zmw, readName.Zmw());
@@ -106,10 +106,10 @@ TEST(Data_ReadName, ccs_read_name_from_parts)
 
 TEST(Data_ReadName, compares_equal_if_printed_names_equal)
 {
-    const ReadName r("m54001_160623_195125/553/3100_11230");
-    const ReadName r2("m54001_160623_195125/553/3100_11230");
-    const ReadName r3("m54001_160623_195125/553/ccs");
-    const ReadName r4("m54001_160623_195125/222/3100_11230");
+    const PacBio::Data::ReadName r("m54001_160623_195125/553/3100_11230");
+    const PacBio::Data::ReadName r2("m54001_160623_195125/553/3100_11230");
+    const PacBio::Data::ReadName r3("m54001_160623_195125/553/ccs");
+    const PacBio::Data::ReadName r4("m54001_160623_195125/222/3100_11230");
 
     EXPECT_TRUE(r == r2);
     EXPECT_FALSE(r == r3);
@@ -124,7 +124,7 @@ TEST(Data_ReadName, constructed_from_name_prints_expected_value_to_output_operat
 {
     const std::string name{"m54001_160623_195125/553/3100_11230"};
 
-    const ReadName r(name);
+    const PacBio::Data::ReadName r(name);
     std::ostringstream s;
     s << r;
     EXPECT_EQ(name, s.str());
@@ -134,7 +134,8 @@ TEST(Data_ReadName, constructed_from_name_parts_prints_expected_value_to_output_
 {
     const std::string name{"m54001_160623_195125/553/3100_11230"};
 
-    const ReadName r{MovieName{"m54001_160623_195125"}, 553, Interval<Position>{3100, 11230}};
+    const PacBio::Data::ReadName r{PacBio::Data::MovieName{"m54001_160623_195125"}, 553,
+                                   PacBio::Data::Interval<PacBio::Data::Position>{3100, 11230}};
 
     std::ostringstream s;
     s << r;
@@ -145,7 +146,8 @@ TEST(Data_ReadName, constructed_from_ccs_name_parts_prints_expected_value_to_out
 {
     const std::string ccs{"m54001_160623_195125/553/ccs"};
 
-    const ReadName r{MovieName{"m54001_160623_195125"}, 553, CCSTag()};
+    const PacBio::Data::ReadName r{PacBio::Data::MovieName{"m54001_160623_195125"}, 553,
+                                   PacBio::Data::CCSTag()};
 
     std::ostringstream s;
     s << r;
@@ -157,7 +159,7 @@ TEST(Data_ReadName, constructed_properly_from_input_operator)
     const std::string name{"m54001_160623_195125/553/3100_11230"};
 
     std::istringstream s{name};
-    ReadName r;
+    PacBio::Data::ReadName r;
     s >> r;
 
     EXPECT_EQ("m54001_160623_195125", r.MovieName().ToStdString());
@@ -172,7 +174,7 @@ TEST(Data_ReadName, ccs_constructed_properly_from_input_operator)
     const std::string ccs{"m54001_160623_195125/553/ccs"};
 
     std::istringstream s{ccs};
-    ReadName r;
+    PacBio::Data::ReadName r;
     s >> r;
 
     EXPECT_EQ("m54001_160623_195125", r.MovieName().ToStdString());

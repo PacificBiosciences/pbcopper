@@ -1,14 +1,14 @@
+#include <pbcopper/data/RSMovieName.h>
+
+#include <sstream>
 
 #include <gtest/gtest.h>
-#include <pbcopper/data/RSMovieName.h>
-#include <sstream>
-using namespace PacBio;
-using namespace PacBio::Data;
 
 namespace RSMovieNameTests {
 
 auto makeRSMovieName = [](void) {
-    return RSMovieName{"m140415_143853_42175_c100635972550000001823121909121417_s1_p0"};
+    return PacBio::Data::RSMovieName{
+        "m140415_143853_42175_c100635972550000001823121909121417_s1_p0"};
 };
 
 }  // namespace RSMovieNameTests
@@ -17,7 +17,7 @@ TEST(Data_RSMovieName, construct_from_lvalue_string)
 {
     EXPECT_NO_THROW({
         const std::string input{"m140415_143853_42175_c100635972550000001823121909121417_s1_p0"};
-        const RSMovieName m(input);
+        const PacBio::Data::RSMovieName m(input);
         EXPECT_EQ("140415_143853", m.RunStartTime());
         EXPECT_EQ("42175", m.InstrumentSerialNumber());
         EXPECT_EQ("c100635972550000001823121909121417", m.SMRTCellBarcode());
@@ -30,7 +30,8 @@ TEST(Data_RSMovieName, construct_from_lvalue_string)
 TEST(Data_RSMovieName, construct_from_rvalue_string)
 {
     EXPECT_NO_THROW({
-        const RSMovieName m("m140415_143853_42175_c100635972550000001823121909121417_s1_p0");
+        const PacBio::Data::RSMovieName m(
+            "m140415_143853_42175_c100635972550000001823121909121417_s1_p0");
         EXPECT_EQ("140415_143853", m.RunStartTime());
         EXPECT_EQ("42175", m.InstrumentSerialNumber());
         EXPECT_EQ("c100635972550000001823121909121417", m.SMRTCellBarcode());
@@ -43,8 +44,8 @@ TEST(Data_RSMovieName, construct_from_rvalue_string)
 TEST(Data_RSMovieName, construct_from_name_parts)
 {
     EXPECT_NO_THROW({
-        const RSMovieName m("140415_143853", "42175", "c100635972550000001823121909121417", "s1",
-                            "p0");
+        const PacBio::Data::RSMovieName m("140415_143853", "42175",
+                                          "c100635972550000001823121909121417", "s1", "p0");
         EXPECT_EQ("140415_143853", m.RunStartTime());
         EXPECT_EQ("42175", m.InstrumentSerialNumber());
         EXPECT_EQ("c100635972550000001823121909121417", m.SMRTCellBarcode());
@@ -56,7 +57,8 @@ TEST(Data_RSMovieName, construct_from_name_parts)
 
 TEST(Data_RSMovieName, copy_constructor)
 {
-    const RSMovieName m("m140415_143853_42175_c100635972550000001823121909121417_s1_p0");
+    const PacBio::Data::RSMovieName m(
+        "m140415_143853_42175_c100635972550000001823121909121417_s1_p0");
     EXPECT_EQ("140415_143853", m.RunStartTime());
     EXPECT_EQ("42175", m.InstrumentSerialNumber());
     EXPECT_EQ("c100635972550000001823121909121417", m.SMRTCellBarcode());
@@ -64,7 +66,7 @@ TEST(Data_RSMovieName, copy_constructor)
     EXPECT_EQ("p0", m.PartNumber());
     EXPECT_FALSE(m.IsReagentExpired());
 
-    const RSMovieName m2(m);
+    const PacBio::Data::RSMovieName m2(m);
     EXPECT_EQ("140415_143853", m2.RunStartTime());
     EXPECT_EQ("42175", m2.InstrumentSerialNumber());
     EXPECT_EQ("c100635972550000001823121909121417", m2.SMRTCellBarcode());
@@ -75,7 +77,8 @@ TEST(Data_RSMovieName, copy_constructor)
 
 TEST(Data_RSMovieName, copy_assign)
 {
-    const RSMovieName m("m140415_143853_42175_c100635972550000001823121909121417_s1_p0");
+    const PacBio::Data::RSMovieName m(
+        "m140415_143853_42175_c100635972550000001823121909121417_s1_p0");
     EXPECT_EQ("140415_143853", m.RunStartTime());
     EXPECT_EQ("42175", m.InstrumentSerialNumber());
     EXPECT_EQ("c100635972550000001823121909121417", m.SMRTCellBarcode());
@@ -83,7 +86,7 @@ TEST(Data_RSMovieName, copy_assign)
     EXPECT_EQ("p0", m.PartNumber());
     EXPECT_FALSE(m.IsReagentExpired());
 
-    RSMovieName m2("mDummy_Dummy_Dummy_Dummy_Dummy_Dummy");
+    PacBio::Data::RSMovieName m2("mDummy_Dummy_Dummy_Dummy_Dummy_Dummy");
     m2 = m;
 
     EXPECT_EQ("140415_143853", m2.RunStartTime());
@@ -96,7 +99,7 @@ TEST(Data_RSMovieName, copy_assign)
 
 TEST(Data_RSMovieName, move_constructor)
 {
-    const RSMovieName m(RSMovieNameTests::makeRSMovieName());
+    const PacBio::Data::RSMovieName m(RSMovieNameTests::makeRSMovieName());
     EXPECT_EQ("140415_143853", m.RunStartTime());
     EXPECT_EQ("42175", m.InstrumentSerialNumber());
     EXPECT_EQ("c100635972550000001823121909121417", m.SMRTCellBarcode());
@@ -107,7 +110,7 @@ TEST(Data_RSMovieName, move_constructor)
 
 TEST(Data_RSMovieName, move_assign)
 {
-    RSMovieName m2("mDummy_Dummy_Dummy_Dummy_Dummy_Dummy");
+    PacBio::Data::RSMovieName m2("mDummy_Dummy_Dummy_Dummy_Dummy_Dummy");
     m2 = RSMovieNameTests::makeRSMovieName();
 
     EXPECT_EQ("140415_143853", m2.RunStartTime());
@@ -121,11 +124,13 @@ TEST(Data_RSMovieName, move_assign)
 TEST(Data_RSMovieName, expired_reagent_character_recognized)
 {
     {  // not expired
-        const RSMovieName m("m140415_143853_42175_c100635972550000001823121909121417_s1_p0");
+        const PacBio::Data::RSMovieName m(
+            "m140415_143853_42175_c100635972550000001823121909121417_s1_p0");
         EXPECT_FALSE(m.IsReagentExpired());
     }
     {  // expired
-        const RSMovieName m("m140415_143853_42175_c100635972550000001823121909121417_s1_X0");
+        const PacBio::Data::RSMovieName m(
+            "m140415_143853_42175_c100635972550000001823121909121417_s1_X0");
         EXPECT_TRUE(m.IsReagentExpired());
     }
 }
@@ -134,7 +139,7 @@ TEST(Data_RSMovieName, constructed_from_name_prints_same_name)
 {
     const std::string expected{"m140415_143853_42175_c100635972550000001823121909121417_s1_p0"};
 
-    const RSMovieName m(expected);
+    const PacBio::Data::RSMovieName m(expected);
     EXPECT_EQ(expected, m.ToStdString());
 }
 
@@ -142,15 +147,19 @@ TEST(Data_RSMovieName, constructed_from_name_parts_prints_expected_combination)
 {
     const std::string expected{"m140415_143853_42175_c100635972550000001823121909121417_s1_p0"};
 
-    const RSMovieName m("140415_143853", "42175", "c100635972550000001823121909121417", "s1", "p0");
+    const PacBio::Data::RSMovieName m("140415_143853", "42175",
+                                      "c100635972550000001823121909121417", "s1", "p0");
     EXPECT_EQ(expected, m.ToStdString());
 }
 
 TEST(Data_RSMovieName, compares_equal_if_printed_names_equal)
 {
-    const RSMovieName m("m140415_143853_42175_c100635972550000001823121909121417_s1_p0");
-    const RSMovieName m2("m140415_143853_42175_c100635972550000001823121909121417_s1_p0");
-    const RSMovieName m3("m140415_143853_42175_c100635972550000001823121909121417_s1_p1");
+    const PacBio::Data::RSMovieName m(
+        "m140415_143853_42175_c100635972550000001823121909121417_s1_p0");
+    const PacBio::Data::RSMovieName m2(
+        "m140415_143853_42175_c100635972550000001823121909121417_s1_p0");
+    const PacBio::Data::RSMovieName m3(
+        "m140415_143853_42175_c100635972550000001823121909121417_s1_p1");
 
     EXPECT_TRUE(m == m2);
     EXPECT_FALSE(m != m2);
@@ -163,7 +172,7 @@ TEST(Data_RSMovieName, constructed_from_name_prints_expected_value_to_output_ope
 {
     const std::string expected{"m140415_143853_42175_c100635972550000001823121909121417_s1_p0"};
 
-    const RSMovieName m(expected);
+    const PacBio::Data::RSMovieName m(expected);
     std::ostringstream s;
     s << m;
 
@@ -174,7 +183,8 @@ TEST(Data_RSMovieName, constructed_from_name_parts_prints_expected_value_to_outp
 {
     const std::string expected{"m140415_143853_42175_c100635972550000001823121909121417_s1_p0"};
 
-    const RSMovieName m("140415_143853", "42175", "c100635972550000001823121909121417", "s1", "p0");
+    const PacBio::Data::RSMovieName m("140415_143853", "42175",
+                                      "c100635972550000001823121909121417", "s1", "p0");
     std::ostringstream s;
     s << m;
 
@@ -185,7 +195,7 @@ TEST(Data_RSMovieName, constructed_properly_from_input_operator)
 {
     const std::string name{"m140415_143853_42175_c100635972550000001823121909121417_s1_p0"};
     std::istringstream s{name};
-    RSMovieName m;
+    PacBio::Data::RSMovieName m;
     s >> m;
 
     EXPECT_EQ("140415_143853", m.RunStartTime());

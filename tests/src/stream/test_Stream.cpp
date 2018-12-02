@@ -1,49 +1,52 @@
-
-#include <gtest/gtest.h>
 #include <pbcopper/stream/Stream.h>
+
 #include <cctype>
 #include <cmath>
 #include <iostream>
 #include <string>
 #include <vector>
+
+#include <gtest/gtest.h>
+
 #include "OStreamRedirector.h"
-using namespace PacBio;
-using namespace PacBio::Stream;
 
 namespace StreamTests {
 
-Source<char> stringInput = [](Sink<char> s) {
+PacBio::Stream::Source<char> stringInput = [](PacBio::Stream::Sink<char> s) {
     const std::string original = {"Test String "};
     for (auto e : original)
         s(e);
 };
 
-Source<char> newlinedStringInput = [](Sink<char> s) {
+PacBio::Stream::Source<char> newlinedStringInput = [](PacBio::Stream::Sink<char> s) {
     const std::string original = {"Some\nfile\nwith\nnewlines\n"};
     for (auto e : original)
         s(e);
 };
 
-Source<std::string> stringListInput = [](Sink<std::string> s) {
+PacBio::Stream::Source<std::string> stringListInput = [](PacBio::Stream::Sink<std::string> s) {
     const std::vector<std::string> input = {"string1", "string2", "foo", "bar"};
     for (auto e : input)
         s(e);
 };
 
-Sink<char> consoleOutput = [](char c) { std::cerr << c; };
+PacBio::Stream::Sink<char> consoleOutput = [](char c) { std::cerr << c; };
 
-Sink<std::string> consoleStringOutput = [](std::string s) { std::cerr << s; };
+PacBio::Stream::Sink<std::string> consoleStringOutput = [](std::string s) { std::cerr << s; };
 
-Sink<std::string> newlinedStringOutput = [](std::string s) {
+PacBio::Stream::Sink<std::string> newlinedStringOutput = [](std::string s) {
     consoleStringOutput(s);
     std::cerr << '\n';
 };
 
-Transform<char, char> toAllCaps = [](Sink<char> si, char c) { si(toupper(c)); };
+PacBio::Stream::Transform<char, char> toAllCaps = [](PacBio::Stream::Sink<char> si, char c) {
+    si(toupper(c));
+};
 
-Transform<char, std::string> getLines = [](Sink<std::string> si, char c) {
+PacBio::Stream::Transform<char, std::string> getLines = [](PacBio::Stream::Sink<std::string> si,
+                                                           char c) {
     static std::string current;
-    Sink<char> collectChar = [&](char d) { current.push_back(d); };
+    PacBio::Stream::Sink<char> collectChar = [&](char d) { current.push_back(d); };
 
     if (c == '\n') {
         si(current);
@@ -52,9 +55,10 @@ Transform<char, std::string> getLines = [](Sink<std::string> si, char c) {
         collectChar(c);
 };
 
-Transform<char, std::string> getWords = [](Sink<std::string> si, char c) {
+PacBio::Stream::Transform<char, std::string> getWords = [](PacBio::Stream::Sink<std::string> si,
+                                                           char c) {
     static std::string current;
-    Sink<char> collectChar = [&](char d) { current.push_back(d); };
+    PacBio::Stream::Sink<char> collectChar = [&](char d) { current.push_back(d); };
 
     if (c == ' ') {
         si(current);
@@ -63,7 +67,8 @@ Transform<char, std::string> getWords = [](Sink<std::string> si, char c) {
         collectChar(c);
 };
 
-Transform<std::string, char> wordToChars = [](Sink<char> si, std::string s) {
+PacBio::Stream::Transform<std::string, char> wordToChars = [](PacBio::Stream::Sink<char> si,
+                                                              std::string s) {
     for (auto e : s)
         si(e);
     si(' ');
@@ -80,6 +85,8 @@ Transform<std::string, char> wordToChars = [](Sink<char> si, std::string s) {
 
 TEST(Stream_Stream, input_to_console)
 {
+    using namespace PacBio::Stream;
+
     std::ostringstream s;
     tests::CerrRedirect redirect(s.rdbuf());
 
@@ -90,6 +97,8 @@ TEST(Stream_Stream, input_to_console)
 
 TEST(Stream_Stream, char_input_to_all_caps)
 {
+    using namespace PacBio::Stream;
+
     std::ostringstream s;
     tests::CerrRedirect redirect(s.rdbuf());
 
@@ -100,6 +109,8 @@ TEST(Stream_Stream, char_input_to_all_caps)
 
 TEST(Stream_Stream, stringlist_to_chars)
 {
+    using namespace PacBio::Stream;
+
     std::ostringstream s;
     tests::CerrRedirect redirect(s.rdbuf());
 
@@ -110,6 +121,8 @@ TEST(Stream_Stream, stringlist_to_chars)
 
 TEST(Stream_Stream, char_input_split_into_words_and_printed_to_console)
 {
+    using namespace PacBio::Stream;
+
     std::ostringstream s;
     tests::CerrRedirect redirect(s.rdbuf());
 
@@ -120,6 +133,8 @@ TEST(Stream_Stream, char_input_split_into_words_and_printed_to_console)
 
 TEST(Stream_Stream, newlined_input_printed_to_console)
 {
+    using namespace PacBio::Stream;
+
     std::ostringstream s;
     tests::CerrRedirect redirect(s.rdbuf());
 
@@ -130,6 +145,8 @@ TEST(Stream_Stream, newlined_input_printed_to_console)
 
 TEST(Stream_Stream, composing_transform_chains)
 {
+    using namespace PacBio::Stream;
+
     std::ostringstream s;
     tests::CerrRedirect redirect(s.rdbuf());
 
@@ -141,11 +158,15 @@ TEST(Stream_Stream, composing_transform_chains)
 
 TEST(Stream_Stream, composing_named_transform_chains)
 {
+    using namespace PacBio::Stream;
+
     std::ostringstream s;
     tests::CerrRedirect redirect(s.rdbuf());
 
-    Source<std::string> inputLines = StreamTests::newlinedStringInput >> StreamTests::getLines;
-    Sink<std::string> wordOutput = StreamTests::wordToChars >> StreamTests::consoleOutput;
+    PacBio::Stream::Source<std::string> inputLines =
+        StreamTests::newlinedStringInput >> StreamTests::getLines;
+    PacBio::Stream::Sink<std::string> wordOutput =
+        StreamTests::wordToChars >> StreamTests::consoleOutput;
     inputLines >> wordOutput;
 
     EXPECT_EQ("Some file with newlines ", s.str());
@@ -153,44 +174,51 @@ TEST(Stream_Stream, composing_named_transform_chains)
 
 namespace StreamTests {
 
-Source<int> intList = [](Sink<int> out) {
+PacBio::Stream::Source<int> intList = [](PacBio::Stream::Sink<int> out) {
     const std::vector<int> ints = {1, 2, 3, 4, 5};
     for (auto i : ints)
         out(i);
 };
 
-Sink<int> intConsoleOutput = [](int i) { std::cerr << i; };
+PacBio::Stream::Sink<int> intConsoleOutput = [](int i) { std::cerr << i; };
 
-Sink<int> spacedIntConsoleOutput = [](int i) {
+PacBio::Stream::Sink<int> spacedIntConsoleOutput = [](int i) {
     intConsoleOutput(i);
     std::cerr << " ";
 };
 
-Sink<double> doubleConsoleOutput = [](double d) { std::cerr << d; };
+PacBio::Stream::Sink<double> doubleConsoleOutput = [](double d) { std::cerr << d; };
 
-Sink<double> spacedDoubleConsoleOutput = [](double d) {
+PacBio::Stream::Sink<double> spacedDoubleConsoleOutput = [](double d) {
     doubleConsoleOutput(d);
     std::cerr << " ";
 };
 
-Transform<int, int> tripled = [](Sink<int> out, int i) { out(i * 3); };
+PacBio::Stream::Transform<int, int> tripled = [](PacBio::Stream::Sink<int> out, int i) {
+    out(i * 3);
+};
 
-Transform<int, double> squareRoot = [](Sink<double> out, int i) { out(sqrt(i)); };
+PacBio::Stream::Transform<int, double> squareRoot = [](PacBio::Stream::Sink<double> out, int i) {
+    out(sqrt(i));
+};
 
-Transform<double, std::string> addCookies = [](Sink<std::string> out, double d) {
+PacBio::Stream::Transform<double, std::string> addCookies = [](
+    PacBio::Stream::Sink<std::string> out, double d) {
     const std::string result = std::to_string(d) + "cookies";
     out(result);
 };
 
 struct MyClass
 {
-    static void Increment(const Sink<int>& out, const int& i) { out(i + 1); }
+    static void Increment(const PacBio::Stream::Sink<int>& out, const int& i) { out(i + 1); }
 };
 
 }  // namespace StreamTests
 
 TEST(Stream_Stream, arithmetic_stream_to_console)
 {
+    using namespace PacBio::Stream;
+
     std::ostringstream s;
     tests::CerrRedirect redirect(s.rdbuf());
 
@@ -201,6 +229,8 @@ TEST(Stream_Stream, arithmetic_stream_to_console)
 
 TEST(Stream_Stream, arithmetic_transformed_stream_to_console)
 {
+    using namespace PacBio::Stream;
+
     std::ostringstream s;
     tests::CerrRedirect redirect(s.rdbuf());
 
@@ -211,6 +241,8 @@ TEST(Stream_Stream, arithmetic_transformed_stream_to_console)
 
 TEST(Stream_Stream, arithmetic_transformed_to_different_type_stream_to_console)
 {
+    using namespace PacBio::Stream;
+
     std::ostringstream s;
     tests::CerrRedirect redirect(s.rdbuf());
 
@@ -222,6 +254,8 @@ TEST(Stream_Stream, arithmetic_transformed_to_different_type_stream_to_console)
 
 TEST(Stream_Stream, append_text_to_arithmetic_stream)
 {
+    using namespace PacBio::Stream;
+
     std::ostringstream s;
     tests::CerrRedirect redirect(s.rdbuf());
 
@@ -239,6 +273,8 @@ TEST(Stream_Stream, append_text_to_arithmetic_stream)
 
 TEST(Stream_Stream, append_text_to_arithmetic_stream_then_modify)
 {
+    using namespace PacBio::Stream;
+
     std::ostringstream s;
     tests::CerrRedirect redirect(s.rdbuf());
 
@@ -261,10 +297,12 @@ TEST(Stream_Stream, append_text_to_arithmetic_stream_then_modify)
 
 TEST(Stream_Stream, stream_works_with_static_public_member_function)
 {
+    using namespace PacBio::Stream;
+
     std::ostringstream s;
     tests::CerrRedirect redirect(s.rdbuf());
 
-    StreamTests::intList >> Transform<int, int>(&StreamTests::MyClass::Increment) >>
+    StreamTests::intList >> PacBio::Stream::Transform<int, int>(&StreamTests::MyClass::Increment) >>
         StreamTests::tripled                   // x * 3
         >> StreamTests::squareRoot             // sqrt(x)
         >> StreamTests::addCookies             // string result = to_string(x) + "cookies"

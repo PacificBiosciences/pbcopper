@@ -1,8 +1,6 @@
+#include <pbcopper/utility/SystemInfo.h>
 
 #include <gtest/gtest.h>
-#include <pbcopper/utility/SystemInfo.h>
-using namespace PacBio;
-using namespace PacBio::Utility;
 
 namespace SystemInfoTests {
 
@@ -19,12 +17,13 @@ static inline bool isLittleEndian(void)
 TEST(Utility_SystemInfo, proper_byte_order_detected)
 {
     if (SystemInfoTests::isLittleEndian()) {
-        EXPECT_EQ(SystemInfo::LittleEndian, SystemInfo::ByteOrder());
-        EXPECT_TRUE(SystemInfo::IsLittleEndian());
-        EXPECT_FALSE(SystemInfo::IsBigEndian());
+        EXPECT_EQ(PacBio::Utility::SystemInfo::LittleEndian,
+                  PacBio::Utility::SystemInfo::ByteOrder());
+        EXPECT_TRUE(PacBio::Utility::SystemInfo::IsLittleEndian());
+        EXPECT_FALSE(PacBio::Utility::SystemInfo::IsBigEndian());
     } else {
-        EXPECT_EQ(SystemInfo::BigEndian, SystemInfo::ByteOrder());
-        EXPECT_FALSE(SystemInfo::IsLittleEndian());
-        EXPECT_TRUE(SystemInfo::IsBigEndian());
+        EXPECT_EQ(PacBio::Utility::SystemInfo::BigEndian, PacBio::Utility::SystemInfo::ByteOrder());
+        EXPECT_FALSE(PacBio::Utility::SystemInfo::IsLittleEndian());
+        EXPECT_TRUE(PacBio::Utility::SystemInfo::IsBigEndian());
     }
 }

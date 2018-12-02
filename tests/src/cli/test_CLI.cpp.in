@@ -1,17 +1,14 @@
-
-#include "OStreamRedirector.h"
-
-#include <gtest/gtest.h>
 #include <pbcopper/cli/CLI.h>
-#include <pbcopper/json/JSON.h>
+
 #include <cstdio>
 #include <fstream>
 #include <iostream>
 #include <vector>
 
-using namespace PacBio;
-using namespace PacBio::CLI;
-using namespace PacBio::JSON;
+#include <gtest/gtest.h>
+
+#include <pbcopper/json/JSON.h>
+#include "OStreamRedirector.h"
 
 namespace CLITests {
 
@@ -24,7 +21,7 @@ static std::string appName(void)
 static PacBio::CLI::Interface makeInterface(void)
 {
     // clang-format off
-    Interface i {
+    PacBio::CLI::Interface i {
         "frobber",
         "Frobb your files in a most delightful, nobbly way",
         "3.14"
@@ -34,15 +31,15 @@ static PacBio::CLI::Interface makeInterface(void)
     i.AddVersionOption();  // use built-in version option
 
     i.AddOptions({
-        {"target_dir", {"t", "target-dir"}, "Copy all source files into <DIR>.", Option::StringType("my/default/dir")},
+        {"target_dir", {"t", "target-dir"}, "Copy all source files into <DIR>.", PacBio::CLI::Option::StringType("my/default/dir")},
         {"force",      {"f", "force"},      "Overwrite things."},
         {"progress",   {"p"},               "Show progress during copy."},
         {"dry_run",    {"n", "no-op"},      "Dry run. Report actions that would be taken but do not perform them"},
-        {"timeout",    {"timeout"},         "Abort execution after <INT> milliseconds.", Option::IntType(5000)},
-        {"delta",      "delta",             "Some delta for things", Option::IntType(1), { 1, 2, 3 }},
-        {"ploidy",     "ploidy",            "Genome ploidy", Option::StringType("haploid"), {"haploid", "diploid"}},
-        {"element",    {"e", "element"},    "Choice of element indicates mood. Science.", Option::StringType("fire"), {"earth", "wind", "fire", "water"}},
-        {"tc_only",    {"tc-only"},         "Hidden from cmdline help, but still available from TC.", Option::BoolType{false}, {}, OptionFlags::HIDE_FROM_HELP}
+        {"timeout",    {"timeout"},         "Abort execution after <INT> milliseconds.", PacBio::CLI::Option::IntType(5000)},
+        {"delta",      "delta",             "Some delta for things", PacBio::CLI::Option::IntType(1), { 1, 2, 3 }},
+        {"ploidy",     "ploidy",            "Genome ploidy", PacBio::CLI::Option::StringType("haploid"), {"haploid", "diploid"}},
+        {"element",    {"e", "element"},    "Choice of element indicates mood. Science.", PacBio::CLI::Option::StringType("fire"), {"earth", "wind", "fire", "water"}},
+        {"tc_only",    {"tc-only"},         "Hidden from cmdline help, but still available from TC.", PacBio::CLI::Option::BoolType{false}, {}, PacBio::CLI::OptionFlags::HIDE_FROM_HELP}
     });
 
     i.AddPositionalArguments({
@@ -56,16 +53,14 @@ static PacBio::CLI::Interface makeInterface(void)
 
 static PacBio::CLI::Interface makeToolContractEnabledInterface(void)
 {
-    using namespace ToolContract;
-
     // yields <PREFIX>.pbsmrtpipe_task_options.<ID>
     // if not set, PREFIX=ApplicationName from Interface
     //
-    ToolContract::Task tcTask("frobber_task");        // if empty, pulss ApplicationName
+    PacBio::CLI::ToolContract::Task tcTask("frobber_task");  // if empty, pulss ApplicationName
     tcTask.Description("task-specific description");  // if empty, pulls ApplicationDescription
     tcTask.NumProcessors(4);                          // max_nproc if not provided
     tcTask.SetDistributed(true);
-    tcTask.Type(TaskType::STANDARD);
+    tcTask.Type(PacBio::CLI::ToolContract::TaskType::STANDARD);
 
     // clang-format off
     tcTask.Options({
@@ -90,13 +85,13 @@ static PacBio::CLI::Interface makeToolContractEnabledInterface(void)
         { "ID", "title", "description", "type", "defaultName" }
     });
     tcTask.ResourceTypes({
-        ResourceType::TMP_DIR,
-        ResourceType::TMP_FILE,
-        ResourceType::TMP_FILE
+        PacBio::CLI::ToolContract::ResourceType::TMP_DIR,
+        PacBio::CLI::ToolContract::ResourceType::TMP_FILE,
+        PacBio::CLI::ToolContract::ResourceType::TMP_FILE
     });
     // clang-format on
 
-    ToolContract::Config config{tcTask};
+    PacBio::CLI::ToolContract::Config config{tcTask};
     config.version_ = "0.1";  // if empty, pulls ApplicationVersion
 
     auto interface = makeInterface();
