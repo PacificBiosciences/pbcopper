@@ -1,10 +1,8 @@
-
-#include <gtest/gtest.h>
 #include <pbcopper/utility/CallbackTimer.h>
+
 #include <thread>
 
-using namespace PacBio;
-using namespace PacBio::Utility;
+#include <gtest/gtest.h>
 
 namespace CallbackTimerTests {
 
@@ -35,7 +33,7 @@ TEST(Utility_CallbackTimer, scheduled_callbacks_fired_as_expected)
     //       a lot of extra low-level work.
     //
 
-    CallbackTimer t;
+    PacBio::Utility::CallbackTimer t;
     CallbackTimerTests::CallbackCounter counterA;
     CallbackTimerTests::CallbackCounter counterB;
     CallbackTimerTests::CallbackCounter counterC;
@@ -58,7 +56,7 @@ TEST(Utility_CallbackTimer, scheduled_callbacks_fired_as_expected)
     EXPECT_TRUE(t.IsActive(ff));
 
     // explicit "single shot" lambda, 2ms from now
-    CallbackTimer::SingleShot(2, [&]() { CallbackTimerTests::ping(counterSS); });
+    PacBio::Utility::CallbackTimer::SingleShot(2, [&]() { CallbackTimerTests::ping(counterSS); });
 
     // sleep a bit to let periodic timers fire
     std::this_thread::sleep_for(std::chrono::milliseconds(10));
@@ -76,7 +74,7 @@ TEST(Utility_CallbackTimer, scheduled_callbacks_fired_as_expected)
 
 TEST(Utility_CallbackTimer, canceled_callbacks_not_called)
 {
-    CallbackTimer t;
+    PacBio::Utility::CallbackTimer t;
     CallbackTimerTests::CallbackCounter counterC;
     const auto c = t.Schedule(0, 1, [&]() { CallbackTimerTests::ping(counterC); });
     EXPECT_TRUE(t.IsActive(c));

@@ -1,6 +1,6 @@
+#include <pbcopper/qgram/Index.h>
 
 #include <gtest/gtest.h>
-#include <pbcopper/qgram/Index.h>
 
 TEST(QGram_Index, shape_throws_on_invalid_qgram_sizes)
 {

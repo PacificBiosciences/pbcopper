@@ -1,15 +1,13 @@
+#include <pbcopper/cli/Results.h>
 
 #include <gtest/gtest.h>
-#include <pbcopper/cli/Results.h>
-using namespace PacBio;
-using namespace PacBio::CLI;
 
 namespace ResultsTests {
 
 static PacBio::CLI::Interface makeInterface(void)
 {
     // clang-format off
-    Interface i {
+    PacBio::CLI::Interface i {
         "frobber",
         "Frobb your files in a most delightful, nobbly way",
         "3.14"
@@ -23,8 +21,8 @@ static PacBio::CLI::Interface makeInterface(void)
     i.AddOptions({
         {"progress",   "p",                  "Show progress during copy."},
         {"force",      {"f", "force"},       "Overwrite things." },
-        {"target_dir", {"t", "target-dir"},  "Copy all source files into <DIR>.", Option::StringType("my/default/dir")},
-        {"timeout",    "timeout",            "Abort execution after <INT> milliseconds.", Option::IntType(5000)}
+        {"target_dir", {"t", "target-dir"},  "Copy all source files into <DIR>.", PacBio::CLI::Option::StringType("my/default/dir")},
+        {"timeout",    "timeout",            "Abort execution after <INT> milliseconds.", PacBio::CLI::Option::IntType(5000)}
     });
     i.AddPositionalArguments({
         {"source", "Source file to copy.", {}},
@@ -40,7 +38,7 @@ static PacBio::CLI::Interface makeInterface(void)
 
 TEST(CLI_Results, option_default_values_respected)
 {
-    Results r{ResultsTests::makeInterface()};
+    PacBio::CLI::Results r{ResultsTests::makeInterface()};
     EXPECT_FALSE(r["force"]);
     EXPECT_FALSE(r["timeout"].empty());  // has a default
     EXPECT_TRUE(r.PositionalArguments().empty());
@@ -48,14 +46,14 @@ TEST(CLI_Results, option_default_values_respected)
 
 TEST(CLI_Results, add_observed_option_value)
 {
-    Results r{ResultsTests::makeInterface()};
+    PacBio::CLI::Results r{ResultsTests::makeInterface()};
     r.RegisterOptionValue("timeout", "42");
     EXPECT_EQ(std::string{"42"}, r["timeout"]);
 }
 
 TEST(CLI_Results, adding_positional_args)
 {
-    Results r{ResultsTests::makeInterface()};
+    PacBio::CLI::Results r{ResultsTests::makeInterface()};
     r.RegisterPositionalArg("source_file").RegisterPositionalArg("dest_file");
 
     // lookup by index

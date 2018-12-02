@@ -1,15 +1,15 @@
 #include <pbcopper/cli/HelpPrinter.h>
 
-#include <gtest/gtest.h>
-#include <pbcopper/cli/Interface.h>
 #include <vector>
-using namespace PacBio;
-using namespace PacBio::CLI;
+
+#include <gtest/gtest.h>
+
+#include <pbcopper/cli/Interface.h>
 
 TEST(CLI_HelpPrinter, prints_expected_help_output)
 {
     // clang-format off
-    Interface i {
+    PacBio::CLI::Interface i {
         "frobber",
         "Frobb your files in a most delightful, nobbly way",
         "3.14"
@@ -23,12 +23,12 @@ TEST(CLI_HelpPrinter, prints_expected_help_output)
     i.AddOptions({
         {"progress",   {"p"},               "Show progress during copy."},
         {"force",      {"f", "force"},      "Overwrite things." },
-        {"target_dir", {"t", "target-dir"}, "Copy all source files into <DIR>.",         Option::StringType("my/default/dir")},
-        {"timeout",    {"timeout"},         "Abort execution after <INT> milliseconds.", Option::IntType(5000)},
-        {"modelPath",  {"M", "modelPath"},  "Path to a model file.",                     Option::StringType("")},  // empty default string should be omitted from help
-        {"min_prevalence", {"minPrev"},     "Minimum prevalence to require things.",     Option::FloatType{0.09}},
-        {"min_split_frac", {"minSplit"},    "Minimum fraction of reads.",                Option::FloatType{0.1}},
-        {"secret_mode",    {"secret"},      "Secret mode, hidden from help.",            Option::BoolType{false}, { }, OptionFlags::HIDE_FROM_HELP}
+        {"target_dir", {"t", "target-dir"}, "Copy all source files into <DIR>.",         PacBio::CLI::Option::StringType("my/default/dir")},
+        {"timeout",    {"timeout"},         "Abort execution after <INT> milliseconds.", PacBio::CLI::Option::IntType(5000)},
+        {"modelPath",  {"M", "modelPath"},  "Path to a model file.",                     PacBio::CLI::Option::StringType("")},  // empty default string should be omitted from help
+        {"min_prevalence", {"minPrev"},     "Minimum prevalence to require things.",     PacBio::CLI::Option::FloatType{0.09}},
+        {"min_split_frac", {"minSplit"},    "Minimum fraction of reads.",                PacBio::CLI::Option::FloatType{0.1}},
+        {"secret_mode",    {"secret"},      "Secret mode, hidden from help.",            PacBio::CLI::Option::BoolType{false}, { }, PacBio::CLI::OptionFlags::HIDE_FROM_HELP}
     });
     i.AddPositionalArguments({
         {"source", "Source file to copy.", {}},
@@ -61,14 +61,14 @@ TEST(CLI_HelpPrinter, prints_expected_help_output)
     // clang-format on
 
     std::ostringstream s;
-    HelpPrinter::Print(i, s);
+    PacBio::CLI::HelpPrinter::Print(i, s);
     EXPECT_EQ(expectedText, s.str());
 }
 
 TEST(CLI_HelpPrinter, prints_expected_option_groups)
 {
     // clang-format off
-    Interface i {
+    PacBio::CLI::Interface i {
         "frobber",
         "Frobb your files in a most delightful, nobbly way",
         "3.14"
@@ -86,9 +86,9 @@ TEST(CLI_HelpPrinter, prints_expected_option_groups)
     });
     i.AddGroup("Bar Options",
     {
-       {"target_dir", {"t", "target-dir"}, "Copy all source files into <DIR>.",         Option::StringType("my/default/dir")},
-       {"timeout",    {"timeout"},         "Abort execution after <INT> milliseconds.", Option::IntType(5000)},
-       {"modelPath",  {"M", "modelPath"},  "Path to a model file.",                     Option::StringType("")}
+       {"target_dir", {"t", "target-dir"}, "Copy all source files into <DIR>.",         PacBio::CLI::Option::StringType("my/default/dir")},
+       {"timeout",    {"timeout"},         "Abort execution after <INT> milliseconds.", PacBio::CLI::Option::IntType(5000)},
+       {"modelPath",  {"M", "modelPath"},  "Path to a model file.",                     PacBio::CLI::Option::StringType("")}
     });
 
     i.AddPositionalArguments({
@@ -124,6 +124,6 @@ TEST(CLI_HelpPrinter, prints_expected_option_groups)
     // clang-format on
 
     std::ostringstream s;
-    HelpPrinter::Print(i, s);
+    PacBio::CLI::HelpPrinter::Print(i, s);
     EXPECT_EQ(expectedText, s.str());
 }

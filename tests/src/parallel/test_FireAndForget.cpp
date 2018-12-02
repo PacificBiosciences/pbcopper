@@ -1,4 +1,5 @@
 // Author: Armin Töpfer
+#include <pbcopper/parallel/FireAndForget.h>
 
 #include <iostream>
 #include <memory>
@@ -6,9 +7,6 @@
 #include <vector>
 
 #include <gtest/gtest.h>
-#include <pbcopper/parallel/FireAndForget.h>
-
-using PacBio::Parallel::FireAndForget;
 
 TEST(Parallel_FireAndForget, strings)
 {
