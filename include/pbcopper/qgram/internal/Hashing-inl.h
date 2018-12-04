@@ -54,7 +54,13 @@ public:
 public:
     Shape(const size_t q, const std::string& seq)
         : q_{q}
-        , hashFactor_{static_cast<uint32_t>(std::pow(ALPHABET_SIZE, q - 1))}
+        , hashFactor_{
+            // need to perform the range check before initializing,
+            // as this would trigger undefined behavior otherwise
+            ((1 <= q_) && (q_ <= 16))
+                          ? static_cast<uint32_t>(std::pow(ALPHABET_SIZE, q_ - 1))
+                          : throw std::invalid_argument{"qgram size (" + std::to_string(q_) +
+                                                        ") must be in the range [1,16]"}}
         , seq_(seq)
         , iter_{seq_.cbegin()}
         , currentHash_{0}
@@ -71,12 +77,7 @@ public:
             throw std::invalid_argument{msg};
         }
 
-        if (q_ == 0 || q > 16) {
-            std::string msg{"qgram size (" + std::to_string(q_) + ") must be in the range [1,16]"};
-            throw std::invalid_argument{msg};
-        }
-
-        currentHash_ = HashImpl(BaseCode(*iter_), iter_, q - 1);
+        currentHash_ = HashImpl(BaseCode(*iter_), iter_, q_ - 1);
     }
 
     uint64_t HashNext(void)
