@@ -1,12 +1,10 @@
 // Author: Armin Töpfer
+#include <pbcopper/parallel/WorkQueue.h>
 
 #include <string>
 #include <vector>
 
 #include <gtest/gtest.h>
-#include <pbcopper/parallel/WorkQueue.h>
-
-using PacBio::Parallel::WorkQueue;
 
 void WorkerThread(PacBio::Parallel::WorkQueue<std::string>& queue, std::vector<std::string>* output)
 {

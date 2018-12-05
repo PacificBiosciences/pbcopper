@@ -14,8 +14,10 @@ using Json = PacBio::JSON::Json;
 
 namespace PacBio {
 namespace CLI {
+namespace ToolContract {
+namespace {
 
-static Option RegisteredOption(const Interface& interface, const std::string& optionId)
+Option RegisteredOption(const Interface& interface, const std::string& optionId)
 {
     const auto registeredOptions = interface.RegisteredOptions();
     for (const Option& opt : registeredOptions) {
@@ -24,12 +26,9 @@ static Option RegisteredOption(const Interface& interface, const std::string& op
     throw std::runtime_error("PacBio::CLI - could not find option with id: " + optionId);
 }
 
-namespace ToolContract {
-namespace internal {
+Json currentSchemaVersion(void) { return Json("2.0.0"); }
 
-static Json currentSchemaVersion(void) { return Json("2.0.0"); }
-
-static Json makeDriverJson(const Interface& interface)
+Json makeDriverJson(const Interface& interface)
 {
     const auto& driver = interface.ToolContract().driver_;
 
@@ -57,7 +56,7 @@ static Json makeDriverJson(const Interface& interface)
     return driverJson;
 }
 
-static Json makeInputTypesJson(const Interface& interface)
+Json makeInputTypesJson(const Interface& interface)
 {
     Json inputTypesJson = Json::array();
 
@@ -75,7 +74,7 @@ static Json makeInputTypesJson(const Interface& interface)
     return inputTypesJson;
 }
 
-static Json makeNproc(const ToolContract::Task& task)
+Json makeNproc(const ToolContract::Task& task)
 {
     const auto numProcessors = task.NumProcessors();
     if (numProcessors == ToolContract::Task::MAX_NPROC)
@@ -84,7 +83,7 @@ static Json makeNproc(const ToolContract::Task& task)
         return Json(numProcessors);
 }
 
-static Json makeOutputTypesJson(const Interface& interface)
+Json makeOutputTypesJson(const Interface& interface)
 {
     Json outputTypesJson = Json::array();
 
@@ -103,7 +102,7 @@ static Json makeOutputTypesJson(const Interface& interface)
     return outputTypesJson;
 }
 
-static Json makeResourceTypesJson(const ToolContract::Task& task)
+Json makeResourceTypesJson(const ToolContract::Task& task)
 {
     const std::unordered_map<ResourceType, std::string, Utility::EnumClassHash> lookup = {
         {ResourceType::LOG_FILE, "$logfile"},
@@ -124,8 +123,8 @@ static Json makeResourceTypesJson(const ToolContract::Task& task)
     return resourceTypesJson;
 }
 
-static Json makeSchemaOptionJson(const Interface& interface, const std::string& optionPrefix,
-                                 const std::pair<std::string, std::string>& taskOption)
+Json makeSchemaOptionJson(const Interface& interface, const std::string& optionPrefix,
+                          const std::pair<std::string, std::string>& taskOption)
 {
     // format ID/display name
     const std::string& optionId = taskOption.first;
@@ -151,7 +150,7 @@ static Json makeSchemaOptionJson(const Interface& interface, const std::string& 
     return schemaOption;
 }
 
-static Json makeSchemaOptionsJson(const Interface& interface)
+Json makeSchemaOptionsJson(const Interface& interface)
 {
     Json schemaOptions = Json::array();
 
@@ -165,7 +164,7 @@ static Json makeSchemaOptionsJson(const Interface& interface)
     return schemaOptions;
 }
 
-static std::string makeTaskType(const TaskType& type)
+std::string makeTaskType(const TaskType& type)
 {
     switch (type) {
         case TaskType::STANDARD:
@@ -179,7 +178,7 @@ static std::string makeTaskType(const TaskType& type)
     }
 }
 
-static Json makeTaskJson(const Interface& interface)
+Json makeTaskJson(const Interface& interface)
 {
     Json tcJson;
     const auto& task = interface.ToolContract().task_;
@@ -190,25 +189,25 @@ static Json makeTaskJson(const Interface& interface)
     tcJson["is_distributed"] = task.IsDistributed();
     tcJson["tool_contract_id"] = task.TaskId();
 
-    tcJson["nproc"] = internal::makeNproc(task);
-    tcJson["task_type"] = internal::makeTaskType(task.Type());
-    tcJson["input_types"] = internal::makeInputTypesJson(interface);
-    tcJson["output_types"] = internal::makeOutputTypesJson(interface);
-    tcJson["resource_types"] = internal::makeResourceTypesJson(task);
-    tcJson["schema_options"] = internal::makeSchemaOptionsJson(interface);
+    tcJson["nproc"] = makeNproc(task);
+    tcJson["task_type"] = makeTaskType(task.Type());
+    tcJson["input_types"] = makeInputTypesJson(interface);
+    tcJson["output_types"] = makeOutputTypesJson(interface);
+    tcJson["resource_types"] = makeResourceTypesJson(task);
+    tcJson["schema_options"] = makeSchemaOptionsJson(interface);
 
     return tcJson;
 }
 
-}  // namespace internal
+}  // anonymous
 
 void JsonPrinter::Print(const Interface& interface, std::ostream& out, const int indent)
 {
     // build up JSON object from @interface
     Json result;
-    result["driver"] = internal::makeDriverJson(interface);
-    result["schema_version"] = internal::currentSchemaVersion();
-    result["tool_contract"] = internal::makeTaskJson(interface);
+    result["driver"] = makeDriverJson(interface);
+    result["schema_version"] = currentSchemaVersion();
+    result["tool_contract"] = makeTaskJson(interface);
     result["tool_contract_id"] = interface.ToolContract().task_.TaskId();
     result["version"] = interface.ApplicationVersion();
 

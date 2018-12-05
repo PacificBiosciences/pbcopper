@@ -1,11 +1,10 @@
-#include <gtest/gtest.h>
 #include <pbcopper/json/JSON.h>
-using namespace PacBio;
-using namespace PacBio::JSON;
+
+#include <gtest/gtest.h>
 
 TEST(JSON_Json, default_constructed_object_is_null)
 {
-    Json j;
+    PacBio::JSON::Json j;
     EXPECT_TRUE(j.is_null());
 }
 

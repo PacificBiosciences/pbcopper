@@ -9,15 +9,13 @@
 
 namespace PacBio {
 namespace CLI {
-namespace internal {
 
-class ParserPrivate
+class Parser::ParserPrivate
 {
 public:
-    typedef std::unordered_map<std::string, size_t> NameLookup;
-    typedef std::unordered_map<size_t, std::vector<std::string> > ValueLookup;
+    using NameLookup = std::unordered_map<std::string, size_t>;
+    using ValueLookup = std::unordered_map<size_t, std::vector<std::string>>;
 
-public:
     // registered interface
     PacBio::CLI::Interface interface_;
     PacBio::CLI::Results results_;
@@ -25,8 +23,9 @@ public:
     std::vector<std::string> observedOptions_;  // consider a set
     ValueLookup observedOptionValues_;
 
-public:
-    ParserPrivate(const Interface& interface) : interface_(interface), results_(interface) {}
+    explicit ParserPrivate(const Interface& interface) : interface_(interface), results_(interface)
+    {
+    }
 
     ParserPrivate(const ParserPrivate&) = default;
 
@@ -36,7 +35,7 @@ public:
                           std::vector<std::string>::const_iterator argsEnd);
 };
 
-void ParserPrivate::Parse(const std::vector<std::string>& args)
+void Parser::ParserPrivate::Parse(const std::vector<std::string>& args)
 {
     results_ = Results{interface_, args};
 
@@ -128,6 +127,8 @@ void ParserPrivate::Parse(const std::vector<std::string>& args)
                     ParseOptionValue(optionName, arg, &argIter, argEnd);
                     break;
                 }
+                default:
+                    throw std::runtime_error{"CLI::Parser - unexpected dash mode"};
             }
         }
 
@@ -136,9 +137,10 @@ void ParserPrivate::Parse(const std::vector<std::string>& args)
     }
 }
 
-void ParserPrivate::ParseOptionValue(const std::string& optionName, const std::string& argument,
-                                     std::vector<std::string>::const_iterator* argumentIterator,
-                                     std::vector<std::string>::const_iterator argsEnd)
+void Parser::ParserPrivate::ParseOptionValue(
+    const std::string& optionName, const std::string& argument,
+    std::vector<std::string>::const_iterator* argumentIterator,
+    std::vector<std::string>::const_iterator argsEnd)
 {
     if (!interface_.HasOptionRegistered(optionName))
         throw std::runtime_error("CLI::Parser - unexpected argument " + argument);
@@ -168,15 +170,9 @@ void ParserPrivate::ParseOptionValue(const std::string& optionName, const std::s
     }
 }
 
-}  // namespace internal
+Parser::Parser(const Interface& interface) : d_(new ParserPrivate{interface}) {}
 
-// ------------------------
-// PacBio::CLI::Parser
-// ------------------------
-
-Parser::Parser(const Interface& interface) : d_(new internal::ParserPrivate{interface}) {}
-
-Parser::Parser(const Parser& other) : d_(new internal::ParserPrivate{*other.d_.get()}) {}
+Parser::Parser(const Parser& other) : d_(new ParserPrivate{*other.d_.get()}) {}
 
 Parser::~Parser(void) {}
 

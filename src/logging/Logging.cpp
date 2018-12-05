@@ -12,7 +12,7 @@
 
 namespace PacBio {
 namespace Logging {
-namespace internal {
+namespace {
 
 const char* LogLevelRepr(LogLevel level)
 {
@@ -53,7 +53,7 @@ LogLevel LogLevelFromString(const std::string& level)
     throw std::invalid_argument("invalid log level");
 }
 
-}  // namespace internal
+}  // anonymous
 
 void InstallSignalHandlers(Logger& logger)
 {
@@ -113,7 +113,7 @@ void InstallSignalHandlers(Logger& logger)
     });
 }
 
-LogLevel::LogLevel(const std::string& value) : value_{internal::LogLevelFromString(value)} {}
+LogLevel::LogLevel(const std::string& value) : value_{LogLevelFromString(value)} {}
 
 Logger::~Logger(void)
 {
@@ -218,7 +218,7 @@ LogMessage::LogMessage(const char* file, const char* function, unsigned int line
     std::strftime(buf, 20, "%Y%m%d %T.", gmtime_r(&time, &gmTime));
 
     std::get<1>(*ptr_) << ">|> " << buf << std::setfill('0') << std::setw(3) << std::to_string(msec)
-                       << delim << internal::LogLevelRepr(level) << delim << function
+                       << delim << LogLevelRepr(level) << delim << function
 #ifndef NDEBUG
                        << " at " << file << ':' << line
 #endif

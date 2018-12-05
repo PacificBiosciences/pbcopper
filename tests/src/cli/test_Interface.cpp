@@ -1,8 +1,6 @@
+#include <pbcopper/cli/Interface.h>
 
 #include <gtest/gtest.h>
-#include <pbcopper/cli/Interface.h>
-using namespace PacBio;
-using namespace PacBio::CLI;
 
 namespace InterfaceTests {
 
@@ -24,7 +22,7 @@ static inline std::string AppVersion(void)
     return appVersion;
 }
 
-static bool HasOption(const Interface& i, const std::string& name)
+static bool HasOption(const PacBio::CLI::Interface& i, const std::string& name)
 {
     const auto options = i.RegisteredOptions();
     for (auto&& option : options) {

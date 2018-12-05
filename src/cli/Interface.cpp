@@ -9,11 +9,10 @@
 
 namespace PacBio {
 namespace CLI {
-namespace internal {
 
-class InterfacePrivate
+class Interface::InterfacePrivate
 {
-    typedef std::unordered_map<std::string, size_t> NameLookup;
+    using NameLookup = std::unordered_map<std::string, size_t>;
 
 public:
     // application info
@@ -45,7 +44,6 @@ public:
     boost::optional<Option> verboseOption_;
     boost::optional<Option> versionOption_;
 
-public:
     InterfacePrivate(std::string appName, std::string appDescription, std::string appVersion)
         : appName_{std::move(appName)}
         , appDescription_{std::move(appDescription)}
@@ -59,57 +57,45 @@ public:
 
     InterfacePrivate(const InterfacePrivate&) = default;
 
-public:
-    void AddOption(const Option& option, const std::string& group = "Options");
-    void AddPositionalArgument(PositionalArg posArg);
-};
+    void AddOption(const Option& option, const std::string& group = "Options")
+    {
+        auto optionNames = option.Names();
+        assert(!optionNames.empty());
 
-void InterfacePrivate::AddOption(const Option& option, const std::string& group)
-{
-    auto optionNames = option.Names();
-    assert(!optionNames.empty());
+        // ensure unique
+        for (const auto& name : optionNames) {
+            if (optionNameLookup_.find(name) != optionNameLookup_.cend())
+                throw std::runtime_error("CLI::Interface - duplicate option name:" + name);
+        }
 
-    // ensure unique
-    for (const auto& name : optionNames) {
-        if (optionNameLookup_.find(name) != optionNameLookup_.cend())
-            throw std::runtime_error("CLI::Interface - duplicate option name:" + name);
+        // store option
+        options_.push_back(option);
+
+        // store names in lookup
+        const auto optionIndex = options_.size() - 1;
+        for (const auto& name : optionNames)
+            optionNameLookup_.insert(std::make_pair(name, optionIndex));
+
+        // add option to group
+        const auto nameIter = optionGroups_.find(group);
+        if (nameIter == optionGroups_.cend()) optionGroupNames_.push_back(group);  // add new group
+        optionGroups_[group].push_back(optionIndex);
     }
 
-    // store option
-    options_.push_back(option);
-
-    // store names in lookup
-    const auto optionIndex = options_.size() - 1;
-    for (const auto& name : optionNames)
-        optionNameLookup_.insert(std::make_pair(name, optionIndex));
-
-    // add option to group
-    const auto nameIter = optionGroups_.find(group);
-    if (nameIter == optionGroups_.cend()) optionGroupNames_.push_back(group);  // add new group
-    optionGroups_[group].push_back(optionIndex);
-}
-
-void InterfacePrivate::AddPositionalArgument(PositionalArg posArg)
-{
-    if (posArg.syntax_.empty()) posArg.syntax_ = posArg.name_;
-    positionalArgs_.push_back(posArg);
-}
-
-}  // namespace internal
-
-// ------------------------
-// PacBio::CLI::Interface
-// ------------------------
+    void AddPositionalArgument(PositionalArg posArg)
+    {
+        if (posArg.syntax_.empty()) posArg.syntax_ = posArg.name_;
+        positionalArgs_.push_back(posArg);
+    }
+};
 
 Interface::Interface(std::string appName, std::string appDescription, std::string appVersion)
-    : d_{std::make_unique<internal::InterfacePrivate>(std::move(appName), std::move(appDescription),
-                                                      std::move(appVersion))}
+    : d_{std::make_unique<InterfacePrivate>(std::move(appName), std::move(appDescription),
+                                            std::move(appVersion))}
 {
 }
 
-Interface::Interface(const Interface& other) : d_{new internal::InterfacePrivate{*other.d_.get()}}
-{
-}
+Interface::Interface(const Interface& other) : d_{new InterfacePrivate{*other.d_.get()}} {}
 
 Interface::~Interface(void) {}
 

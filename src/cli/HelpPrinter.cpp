@@ -17,9 +17,9 @@ using Json = PacBio::JSON::Json;
 
 namespace PacBio {
 namespace CLI {
-namespace internal {
+namespace {
 
-static bool shouldIncludeDefaultValue(const Json& defaultValue)
+bool shouldIncludeDefaultValue(const Json& defaultValue)
 {
     // omit if switch OR null
     if (defaultValue.is_boolean() || defaultValue.is_null()) return false;
@@ -34,8 +34,8 @@ static bool shouldIncludeDefaultValue(const Json& defaultValue)
     return true;
 }
 
-static std::string formatOption(std::string optionOutput, size_t longestOptionLength,
-                                std::string description, Json defaultValue)
+std::string formatOption(std::string optionOutput, size_t longestOptionLength,
+                         std::string description, Json defaultValue)
 {
     struct winsize ws;
     ioctl(STDOUT_FILENO, TIOCGWINSZ, &ws);
@@ -123,7 +123,7 @@ static std::string formatOption(std::string optionOutput, size_t longestOptionLe
     return result.str();
 }
 
-static std::string formatOptionNames(const Option& option)
+std::string formatOptionNames(const Option& option)
 {
     std::ostringstream optionOutput;
     auto first = true;
@@ -146,7 +146,7 @@ static std::string formatOptionNames(const Option& option)
     return optionOutput.str();
 }
 
-static std::string makeHelpText(const Interface& interface)
+std::string makeHelpText(const Interface& interface)
 {
     std::ostringstream result;
 
@@ -229,11 +229,11 @@ static std::string makeHelpText(const Interface& interface)
     return result.str();
 }
 
-}  // namespace internal
+}  // anonymous
 
 void HelpPrinter::Print(const Interface& interface, std::ostream& out)
 {
-    out << internal::makeHelpText(interface) << std::endl;
+    out << makeHelpText(interface) << std::endl;
 }
 
 }  // namespace CLI

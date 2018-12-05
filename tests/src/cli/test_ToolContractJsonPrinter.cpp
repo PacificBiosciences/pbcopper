@@ -1,11 +1,9 @@
-#include <gtest/gtest.h>
-#include <pbcopper/cli/Interface.h>
 #include <pbcopper/cli/toolcontract/JsonPrinter.h>
-#include <pbcopper/utility/PbcopperVersion.h>
 
-using namespace PacBio;
-using namespace PacBio::CLI;
-using namespace PacBio::CLI::ToolContract;
+#include <gtest/gtest.h>
+
+#include <pbcopper/cli/Interface.h>
+#include <pbcopper/utility/PbcopperVersion.h>
 
 namespace ToolContractJsonPrinterTests {
 
@@ -109,19 +107,19 @@ TEST(CLI_ToolContractJsonPrinter, prints_expected_output)
     // --------------------------------------------
 
     // clang-format off
-    Interface i {
+    PacBio::CLI::Interface i {
         "frobber",
         "Frobb your files in a most delightful, nobbly way",
         "3.14"
     };
     i.AddOptions({
-        {"max_nlines", "n", "Max Number of lines to Copy", Option::IntType(10)},
-        {"mode", "mode", "Run frobber in desired mode", Option::StringType("normal"), { "normal", "super", "secret" }},
-        {"delta", "d", "Some delta for things", Option::IntType(1), { 1, 2, 3 }}
+        {"max_nlines", "n", "Max Number of lines to Copy", PacBio::CLI::Option::IntType(10)},
+        {"mode", "mode", "Run frobber in desired mode", PacBio::CLI::Option::StringType("normal"), { "normal", "super", "secret" }},
+        {"delta", "d", "Some delta for things", PacBio::CLI::Option::IntType(1), { 1, 2, 3 }}
     });
 
     const std::string id{"frobber.tasks.dev_txt_app"};
-    ToolContract::Task tcTask(id);
+    PacBio::CLI::ToolContract::Task tcTask(id);
     tcTask.InputFileTypes({
         { "txt_in", "Txt file", "Generic Txt file", "PacBio.FileTypes.txt" }
     });
@@ -129,9 +127,9 @@ TEST(CLI_ToolContractJsonPrinter, prints_expected_output)
         { "txt_out", "Txt outfile", "Generic Output Txt file", "PacBio.FileTypes.txt", "output" }
     });
     tcTask.ResourceTypes({
-        ResourceType::TMP_FILE,
-        ResourceType::TMP_FILE,
-        ResourceType::TMP_DIR
+        PacBio::CLI::ToolContract::ResourceType::TMP_FILE,
+        PacBio::CLI::ToolContract::ResourceType::TMP_FILE,
+        PacBio::CLI::ToolContract::ResourceType::TMP_DIR
     });
     tcTask.Options({
         { "max_nlines","Max lines" },
@@ -140,7 +138,7 @@ TEST(CLI_ToolContractJsonPrinter, prints_expected_output)
     });
     // clang-format on
 
-    ToolContract::Config tcConfig(tcTask);
+    PacBio::CLI::ToolContract::Config tcConfig(tcTask);
     i.EnableToolContract(tcConfig);
 
     // --------------------------------------------
@@ -148,7 +146,7 @@ TEST(CLI_ToolContractJsonPrinter, prints_expected_output)
     // --------------------------------------------
 
     std::ostringstream s;
-    ToolContract::JsonPrinter::Print(i, s, 4);
+    PacBio::CLI::ToolContract::JsonPrinter::Print(i, s, 4);
     EXPECT_EQ(expectedText, s.str());
 }
 
@@ -161,19 +159,19 @@ TEST(CLI_ToolContractJsonPrinter, prints_expected_output_with_explicit_nproc)
     // --------------------------------------------
 
     // clang-format off
-    Interface i {
+    PacBio::CLI::Interface i {
         "frobber",
         "Frobb your files in a most delightful, nobbly way",
         "3.14"
     };
     i.AddOptions({
-        {"max_nlines", "n", "Max Number of lines to Copy", Option::IntType(10)},
-        {"mode", "mode", "Run frobber in desired mode", Option::StringType("normal"), { "normal", "super", "secret" }},
-        {"delta", "d", "Some delta for things", Option::IntType(1), { 1, 2, 3 }}
+        {"max_nlines", "n", "Max Number of lines to Copy", PacBio::CLI::Option::IntType(10)},
+        {"mode", "mode", "Run frobber in desired mode", PacBio::CLI::Option::StringType("normal"), { "normal", "super", "secret" }},
+        {"delta", "d", "Some delta for things", PacBio::CLI::Option::IntType(1), { 1, 2, 3 }}
     });
 
     const std::string id{"frobber.tasks.dev_txt_app"};
-    ToolContract::Task tcTask(id);
+    PacBio::CLI::ToolContract::Task tcTask(id);
     tcTask.InputFileTypes({
         { "txt_in", "Txt file", "Generic Txt file", "PacBio.FileTypes.txt" }
     });
@@ -181,9 +179,9 @@ TEST(CLI_ToolContractJsonPrinter, prints_expected_output_with_explicit_nproc)
         { "txt_out", "Txt outfile", "Generic Output Txt file", "PacBio.FileTypes.txt", "output" }
     });
     tcTask.ResourceTypes({
-        ResourceType::TMP_FILE,
-        ResourceType::TMP_FILE,
-        ResourceType::TMP_DIR
+        PacBio::CLI::ToolContract::ResourceType::TMP_FILE,
+        PacBio::CLI::ToolContract::ResourceType::TMP_FILE,
+        PacBio::CLI::ToolContract::ResourceType::TMP_DIR
     });
     tcTask.Options({
         { "max_nlines","Max lines" },
@@ -193,7 +191,7 @@ TEST(CLI_ToolContractJsonPrinter, prints_expected_output_with_explicit_nproc)
     tcTask.NumProcessors(4);
     // clang-format on
 
-    ToolContract::Config tcConfig(tcTask);
+    PacBio::CLI::ToolContract::Config tcConfig(tcTask);
     i.EnableToolContract(tcConfig);
 
     // --------------------------------------------
@@ -201,7 +199,7 @@ TEST(CLI_ToolContractJsonPrinter, prints_expected_output_with_explicit_nproc)
     // --------------------------------------------
 
     std::ostringstream s;
-    ToolContract::JsonPrinter::Print(i, s, 4);
+    PacBio::CLI::ToolContract::JsonPrinter::Print(i, s, 4);
     EXPECT_EQ(expectedText, s.str());
 }
 
@@ -215,19 +213,19 @@ TEST(CLI_ToolContractJsonPrinter, prints_expected_output_with_max_nproc)
     // --------------------------------------------
 
     // clang-format off
-    Interface i {
+    PacBio::CLI::Interface i {
         "frobber",
         "Frobb your files in a most delightful, nobbly way",
         "3.14"
     };
     i.AddOptions({
-        {"max_nlines", "n", "Max Number of lines to Copy", Option::IntType(10)},
-        {"mode", "mode", "Run frobber in desired mode", Option::StringType("normal"), { "normal", "super", "secret" }},
-        {"delta", "d", "Some delta for things", Option::IntType(1), { 1, 2, 3 }}
+        {"max_nlines", "n", "Max Number of lines to Copy", PacBio::CLI::Option::IntType(10)},
+        {"mode", "mode", "Run frobber in desired mode", PacBio::CLI::Option::StringType("normal"), { "normal", "super", "secret" }},
+        {"delta", "d", "Some delta for things", PacBio::CLI::Option::IntType(1), { 1, 2, 3 }}
     });
 
     const std::string id{"frobber.tasks.dev_txt_app"};
-    ToolContract::Task tcTask(id);
+    PacBio::CLI::ToolContract::Task tcTask(id);
     tcTask.InputFileTypes({
         { "txt_in", "Txt file", "Generic Txt file", "PacBio.FileTypes.txt" }
     });
@@ -235,19 +233,19 @@ TEST(CLI_ToolContractJsonPrinter, prints_expected_output_with_max_nproc)
         { "txt_out", "Txt outfile", "Generic Output Txt file", "PacBio.FileTypes.txt", "output" }
     });
     tcTask.ResourceTypes({
-        ResourceType::TMP_FILE,
-        ResourceType::TMP_FILE,
-        ResourceType::TMP_DIR
+        PacBio::CLI::ToolContract::ResourceType::TMP_FILE,
+        PacBio::CLI::ToolContract::ResourceType::TMP_FILE,
+        PacBio::CLI::ToolContract::ResourceType::TMP_DIR
     });
     tcTask.Options({
         { "max_nlines","Max lines" },
         { "mode", "Frobbing mode" },
         { "delta", "Frobbing delta" }
     });
-    tcTask.NumProcessors(Task::MAX_NPROC);
+    tcTask.NumProcessors(PacBio::CLI::ToolContract::Task::MAX_NPROC);
     // clang-format on
 
-    ToolContract::Config tcConfig(tcTask);
+    PacBio::CLI::ToolContract::Config tcConfig(tcTask);
     i.EnableToolContract(tcConfig);
 
     // --------------------------------------------
@@ -255,6 +253,6 @@ TEST(CLI_ToolContractJsonPrinter, prints_expected_output_with_max_nproc)
     // --------------------------------------------
 
     std::ostringstream s;
-    ToolContract::JsonPrinter::Print(i, s, 4);
+    PacBio::CLI::ToolContract::JsonPrinter::Print(i, s, 4);
     EXPECT_EQ(expectedText, s.str());
 }

@@ -1,12 +1,10 @@
+#include <pbcopper/cli/Option.h>
 
 #include <gtest/gtest.h>
-#include <pbcopper/cli/Option.h>
-using namespace PacBio;
-using namespace PacBio::CLI;
 
 TEST(CLI_Option, minimal_ctor_single_alias)
 {
-    Option opt{"opt_id", "o", ""};
+    PacBio::CLI::Option opt{"opt_id", "o", ""};
     EXPECT_EQ(std::string{"opt_id"}, opt.Id());
     EXPECT_EQ(std::vector<std::string>{"o"}, opt.Names());
     EXPECT_FALSE(opt.DefaultValue());
@@ -17,7 +15,7 @@ TEST(CLI_Option, minimal_ctor_single_alias)
 
 TEST(CLI_Option, can_be_constructed_from_name_list_only)
 {
-    Option opt{"opt_id", {"o", "output"}, ""};
+    PacBio::CLI::Option opt{"opt_id", {"o", "output"}, ""};
     EXPECT_EQ(std::string{"opt_id"}, opt.Id());
     const std::vector<std::string> expected{"o", "output"};
     EXPECT_EQ(expected, opt.Names());
@@ -29,8 +27,9 @@ TEST(CLI_Option, can_be_constructed_from_name_list_only)
 
 TEST(CLI_Option, can_be_constructed_from_name_and_extra_info)
 {
-    Option opt{"opt_id", "o", "write data to <file>", Option::StringType("default.txt"),
-               OptionFlags::HIDE_FROM_HELP};
+    PacBio::CLI::Option opt{"opt_id", "o", "write data to <file>",
+                            PacBio::CLI::Option::StringType("default.txt"),
+                            PacBio::CLI::OptionFlags::HIDE_FROM_HELP};
     EXPECT_EQ(std::string{"opt_id"}, opt.Id());
     EXPECT_EQ(std::vector<std::string>{"o"}, opt.Names());
     EXPECT_EQ(std::string{"default.txt"}, opt.DefaultValue());
@@ -40,8 +39,10 @@ TEST(CLI_Option, can_be_constructed_from_name_and_extra_info)
 
 TEST(CLI_Option, can_be_constructed_from_name_list_and_extra_info)
 {
-    Option opt{
-        "opt_id", {"o", "output"}, "write data to <file>", Option::StringType("default.txt")};
+    PacBio::CLI::Option opt{"opt_id",
+                            {"o", "output"},
+                            "write data to <file>",
+                            PacBio::CLI::Option::StringType("default.txt")};
     const std::vector<std::string> expected{"o", "output"};
     EXPECT_EQ(expected, opt.Names());
     EXPECT_EQ(std::string{"default.txt"}, opt.DefaultValue());
@@ -51,38 +52,41 @@ TEST(CLI_Option, can_be_constructed_from_name_list_and_extra_info)
 
 TEST(CLI_Option, rejects_empty_id)
 {
-    EXPECT_THROW(Option("", "name", "descr"), std::runtime_error);
-    EXPECT_THROW(Option("", std::vector<std::string>{"name"}, "descr"), std::runtime_error);
+    EXPECT_THROW(PacBio::CLI::Option("", "name", "descr"), std::runtime_error);
+    EXPECT_THROW(PacBio::CLI::Option("", std::vector<std::string>{"name"}, "descr"),
+                 std::runtime_error);
 }
 
 TEST(CLI_Option, rejects_empty_names)
 {
-    EXPECT_THROW(Option("opt_id", "", "descrip"), std::runtime_error);
-    EXPECT_THROW(Option("opt_id", std::vector<std::string>{}, "descr"), std::runtime_error);
+    EXPECT_THROW(PacBio::CLI::Option("opt_id", "", "descrip"), std::runtime_error);
+    EXPECT_THROW(PacBio::CLI::Option("opt_id", std::vector<std::string>{}, "descr"),
+                 std::runtime_error);
 }
 
 TEST(CLI_Option, rejects_names_beginning_with_dash)
 {
-    EXPECT_THROW(Option("opt_id", "-o", "desc"), std::runtime_error);
-    EXPECT_THROW(Option("opt_id", {"o", "-b"}, ""), std::runtime_error);
+    EXPECT_THROW(PacBio::CLI::Option("opt_id", "-o", "desc"), std::runtime_error);
+    EXPECT_THROW(PacBio::CLI::Option("opt_id", {"o", "-b"}, ""), std::runtime_error);
 }
 
 TEST(CLI_Option, rejects_names_beginning_with_slash)
 {
-    EXPECT_THROW(Option("opt_id", "/A", ""), std::runtime_error);
-    EXPECT_THROW(Option("opt_id", {"o", "/X"}, ""), std::runtime_error);
+    EXPECT_THROW(PacBio::CLI::Option("opt_id", "/A", ""), std::runtime_error);
+    EXPECT_THROW(PacBio::CLI::Option("opt_id", {"o", "/X"}, ""), std::runtime_error);
 }
 
 TEST(CLI_Option, rejects_names_containing_equal)
 {
-    EXPECT_THROW(Option("opt_id", "foo=bar", ""), std::runtime_error);
-    EXPECT_THROW(Option("opt_id", {"o", "foo=bar"}, ""), std::runtime_error);
+    EXPECT_THROW(PacBio::CLI::Option("opt_id", "foo=bar", ""), std::runtime_error);
+    EXPECT_THROW(PacBio::CLI::Option("opt_id", {"o", "foo=bar"}, ""), std::runtime_error);
 }
 
 TEST(CLI_Option, can_be_copy_constructed)
 {
-    Option original{"opt_id", "o", "write data to <file>", Option::StringType("default.txt")};
-    Option copy(original);
+    PacBio::CLI::Option original{"opt_id", "o", "write data to <file>",
+                                 PacBio::CLI::Option::StringType("default.txt")};
+    PacBio::CLI::Option copy(original);
 
     EXPECT_EQ(original.Names(), copy.Names());
     EXPECT_EQ(original.DefaultValue(), copy.DefaultValue());
@@ -93,8 +97,9 @@ TEST(CLI_Option, can_be_copy_constructed)
 
 TEST(CLI_Option, can_be_copy_assigned)
 {
-    Option original{"opt_id", "o", "write data to <file>", Option::StringType("default.txt")};
-    Option copy("opt_id2", "dummy", "");
+    PacBio::CLI::Option original{"opt_id", "o", "write data to <file>",
+                                 PacBio::CLI::Option::StringType("default.txt")};
+    PacBio::CLI::Option copy("opt_id2", "dummy", "");
     copy = original;
 
     EXPECT_EQ(original.Names(), copy.Names());
@@ -106,8 +111,9 @@ TEST(CLI_Option, can_be_copy_assigned)
 
 TEST(CLI_Option, can_be_move_constructed)
 {
-    Option original{"opt_id", "o", "write data to <file>", Option::StringType("default.txt")};
-    Option destination(std::move(original));
+    PacBio::CLI::Option original{"opt_id", "o", "write data to <file>",
+                                 PacBio::CLI::Option::StringType("default.txt")};
+    PacBio::CLI::Option destination(std::move(original));
 
     // ensure new option matches original's values (we can't touch original now)
     EXPECT_EQ(std::vector<std::string>{"o"}, destination.Names());
@@ -119,8 +125,9 @@ TEST(CLI_Option, can_be_move_constructed)
 
 TEST(CLI_Option, can_be_move_assigned)
 {
-    Option original{"opt_id", "o", "write data to <file>", Option::StringType("default.txt")};
-    Option destination("opt_id2", "dummy", "");
+    PacBio::CLI::Option original{"opt_id", "o", "write data to <file>",
+                                 PacBio::CLI::Option::StringType("default.txt")};
+    PacBio::CLI::Option destination("opt_id2", "dummy", "");
     destination = std::move(original);
 
     // ensure new option matches original's values (we can't touch original now)
@@ -134,28 +141,28 @@ TEST(CLI_Option, can_be_move_assigned)
 TEST(CLI_Option, expected_defaults)
 {
     // help
-    const auto help = Option::DefaultHelpOption();
+    const auto help = PacBio::CLI::Option::DefaultHelpOption();
     EXPECT_EQ("help", help.Id());
     EXPECT_EQ(std::vector<std::string>({"h", "help"}), help.Names());
     EXPECT_EQ("Output this help.", help.Description());
     EXPECT_FALSE(help.DefaultValue());
 
     // log level
-    const auto logLevel = Option::DefaultLogLevelOption();
+    const auto logLevel = PacBio::CLI::Option::DefaultLogLevelOption();
     EXPECT_EQ("log_level", logLevel.Id());
     EXPECT_EQ(std::vector<std::string>({"log-level", "logLevel"}), logLevel.Names());
     EXPECT_EQ("Set log level.", logLevel.Description());
     EXPECT_EQ("INFO", logLevel.DefaultValue());
 
     // verbose
-    const auto verbose = Option::DefaultVerboseOption();
+    const auto verbose = PacBio::CLI::Option::DefaultVerboseOption();
     EXPECT_EQ("verbose", verbose.Id());
     EXPECT_EQ(std::vector<std::string>({"v", "verbose"}), verbose.Names());
     EXPECT_EQ("Use verbose output.", verbose.Description());
     EXPECT_FALSE(verbose.DefaultValue());
 
     // version
-    const auto version = Option::DefaultVersionOption();
+    const auto version = PacBio::CLI::Option::DefaultVersionOption();
     EXPECT_EQ("version", version.Id());
     EXPECT_EQ(std::vector<std::string>({"version"}), version.Names());
     EXPECT_EQ("Output version info.", version.Description());

@@ -12,10 +12,6 @@
 namespace PacBio {
 namespace Utility {
 
-namespace internal {
-class CallbackTimerPrivate;
-}
-
 /// \brief The CallbackTimer class provides repetitive and single-shot timers
 ///        for scheduling asynchronous tasks.
 ///
@@ -32,33 +28,27 @@ class CallbackTimerPrivate;
 class CallbackTimer
 {
 public:
-    typedef uint64_t JobId;
-    typedef std::function<void()> HandlerFn;
+    using JobId = uint64_t;
+    using HandlerFn = std::function<void()>;
 
-public:
     static void SingleShot(uint64_t when, const HandlerFn& handler);
     static void SingleShot(uint64_t when, HandlerFn&& handler);
 
-public:
     CallbackTimer(void);
     ~CallbackTimer(void);
 
-public:
     JobId Schedule(const uint64_t when, const uint64_t period, const HandlerFn& handler);
-
     JobId Schedule(const uint64_t when, const uint64_t period, HandlerFn&& handler);
 
-public:
     bool Cancel(const JobId id);
     bool IsActive(const JobId id);
 
 private:
-    std::unique_ptr<internal::CallbackTimerPrivate> d_;
+    class CallbackTimerPrivate;
+    std::unique_ptr<CallbackTimerPrivate> d_;
 };
 
 }  // namespace Utility
 }  // namespace PacBio
-
-#include <pbcopper/utility/internal/CallbackTimer-inl.h>
 
 #endif  // PBCOPPER_UTILITY_CALLBACKTIMER_H
