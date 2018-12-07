@@ -109,7 +109,7 @@ inline Option& Option::operator=(Option&& other)
     return *this;
 }
 
-inline Option::~Option() {}
+inline Option::~Option() = default;
 
 inline PacBio::JSON::Json Option::Choices() const { return d_->option_["choices"]; }
 

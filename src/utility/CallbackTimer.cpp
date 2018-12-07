@@ -225,7 +225,7 @@ private:
 
 CallbackTimer::CallbackTimer() : d_(new CallbackTimerPrivate) {}
 
-CallbackTimer::~CallbackTimer() {}
+CallbackTimer::~CallbackTimer() = default;
 
 bool CallbackTimer::Cancel(const JobId id) { return d_->Cancel(id); }
 

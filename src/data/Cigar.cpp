@@ -9,7 +9,7 @@
 namespace PacBio {
 namespace Data {
 
-Cigar::Cigar() {}
+Cigar::Cigar() = default;
 
 Cigar::Cigar(const std::string& cigarString) : std::vector<CigarOperation>()
 {

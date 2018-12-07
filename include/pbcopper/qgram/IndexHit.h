@@ -23,7 +23,7 @@ public:
     ///
     /// \brief IndexHit
     ///
-    IndexHit() : id_(0), position_(0) {}
+    IndexHit() : IndexHit{0, 0} {}
 
     ///
     /// \brief IndexHit

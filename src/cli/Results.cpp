@@ -78,7 +78,7 @@ Results& Results::operator=(Results&& other)
     return *this;
 }
 
-Results::~Results() {}
+Results::~Results() = default;
 
 std::string Results::InputCommandLine() const { return Utility::Join(d_->inputCommandLine_, " "); }
 

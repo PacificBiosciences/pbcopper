@@ -97,7 +97,7 @@ Interface::Interface(std::string appName, std::string appDescription, std::strin
 
 Interface::Interface(const Interface& other) : d_{new InterfacePrivate{*other.d_.get()}} {}
 
-Interface::~Interface() {}
+Interface::~Interface() = default;
 
 Interface& Interface::AddGroup(const std::string& name, const std::vector<Option>& options)
 {

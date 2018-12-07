@@ -25,7 +25,7 @@ struct MovieName::PartsCache
 //       until the components are again requested. That should happen less often
 //       than moving these guys around.
 
-inline MovieName::MovieName() {}
+inline MovieName::MovieName() = default;
 
 inline MovieName::MovieName(std::string name) : movieName_{std::move(name)} {}
 
@@ -50,7 +50,7 @@ inline MovieName& MovieName::operator=(MovieName&& other) noexcept
     return *this;
 }
 
-inline MovieName::~MovieName() {}
+inline MovieName::~MovieName() = default;
 
 inline boost::string_ref MovieName::InstrumentName() const
 {
@@ -88,7 +88,7 @@ inline std::ostream& operator<<(std::ostream& os, const MovieName& movieName)
 
 inline std::istream& operator>>(std::istream& is, MovieName& movieName)
 {
-    auto s = std::string{};
+    std::string s;
     is >> s;
     movieName = MovieName{std::move(s)};
     return is;

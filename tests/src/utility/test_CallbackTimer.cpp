@@ -9,12 +9,12 @@ namespace CallbackTimerTests {
 class CallbackCounter
 {
 public:
-    CallbackCounter() : hits_(0) {}
+    CallbackCounter() = default;
     uint32_t Count() const { return hits_; }
     void Ping() { ++hits_; }
 
 private:
-    uint32_t hits_;
+    uint32_t hits_ = 0;
 };
 
 CallbackCounter freeFunctionCounter;

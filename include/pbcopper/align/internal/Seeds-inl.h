@@ -21,7 +21,7 @@ inline bool CanMergeSeeds(const Seed& lhs, const Seed& rhs)
 
 }  // namespace internal
 
-inline Seeds::Seeds() {}
+inline Seeds::Seeds() = default;
 
 inline bool Seeds::AddSeed(const Seed& s)
 {

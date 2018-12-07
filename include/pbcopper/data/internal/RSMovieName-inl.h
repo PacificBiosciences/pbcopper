@@ -28,7 +28,7 @@ struct RSMovieName::PartsCache
 //       until the components are again requested. That should happen less often
 //       than moving these guys around.
 
-inline RSMovieName::RSMovieName() {}
+inline RSMovieName::RSMovieName() = default;
 
 inline RSMovieName::RSMovieName(std::string name) : movieName_{std::move(name)} {}
 
@@ -53,7 +53,7 @@ inline RSMovieName& RSMovieName::operator=(RSMovieName&& other) noexcept
     return *this;
 }
 
-inline RSMovieName::~RSMovieName() {}
+inline RSMovieName::~RSMovieName() = default;
 
 inline boost::string_ref RSMovieName::InstrumentSerialNumber() const
 {
@@ -118,7 +118,7 @@ inline std::ostream& operator<<(std::ostream& os, const RSMovieName& movieName)
 
 inline std::istream& operator>>(std::istream& is, RSMovieName& movieName)
 {
-    auto s = std::string{};
+    std::string s;
     is >> s;
     movieName = RSMovieName{std::move(s)};
     return is;
