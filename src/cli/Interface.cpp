@@ -97,7 +97,7 @@ Interface::Interface(std::string appName, std::string appDescription, std::strin
 
 Interface::Interface(const Interface& other) : d_{new InterfacePrivate{*other.d_.get()}} {}
 
-Interface::~Interface(void) {}
+Interface::~Interface() {}
 
 Interface& Interface::AddGroup(const std::string& name, const std::vector<Option>& options)
 {
@@ -158,7 +158,7 @@ Interface& Interface::AddVersionOption(const Option& option)
     return *this;
 }
 
-const std::string& Interface::ApplicationDescription(void) const { return d_->appDescription_; }
+const std::string& Interface::ApplicationDescription() const { return d_->appDescription_; }
 
 Interface& Interface::ApplicationDescription(std::string description)
 {
@@ -166,7 +166,7 @@ Interface& Interface::ApplicationDescription(std::string description)
     return *this;
 }
 
-const std::string& Interface::ApplicationName(void) const { return d_->appName_; }
+const std::string& Interface::ApplicationName() const { return d_->appName_; }
 
 Interface& Interface::ApplicationName(std::string name)
 {
@@ -174,7 +174,7 @@ Interface& Interface::ApplicationName(std::string name)
     return *this;
 }
 
-const std::string& Interface::ApplicationVersion(void) const { return d_->appVersion_; }
+const std::string& Interface::ApplicationVersion() const { return d_->appVersion_; }
 
 Interface& Interface::ApplicationVersion(std::string version)
 {
@@ -182,7 +182,7 @@ Interface& Interface::ApplicationVersion(std::string version)
     return *this;
 }
 
-const std::string& Interface::AlternativeToolContractName(void) const
+const std::string& Interface::AlternativeToolContractName() const
 {
     return d_->alternativeToolContractName_;
 }
@@ -212,7 +212,7 @@ bool Interface::ExpectsValue(const std::string& optionName) const
     return !defaultValue.is_boolean();
 }
 
-const std::vector<std::string>& Interface::Groups(void) const { return d_->optionGroupNames_; }
+const std::vector<std::string>& Interface::Groups() const { return d_->optionGroupNames_; }
 
 std::vector<Option> Interface::GroupOptions(const std::string& group) const
 {
@@ -224,29 +224,20 @@ std::vector<Option> Interface::GroupOptions(const std::string& group) const
     return result;
 }
 
-bool Interface::HasHelpOptionRegistered(void) const { return d_->helpOption_.is_initialized(); }
+bool Interface::HasHelpOptionRegistered() const { return d_->helpOption_.is_initialized(); }
 
-bool Interface::HasLogLevelOptionRegistered(void) const
-{
-    return d_->logLevelOption_.is_initialized();
-}
+bool Interface::HasLogLevelOptionRegistered() const { return d_->logLevelOption_.is_initialized(); }
 
-bool Interface::HasVerboseOptionRegistered(void) const
-{
-    return d_->verboseOption_.is_initialized();
-}
+bool Interface::HasVerboseOptionRegistered() const { return d_->verboseOption_.is_initialized(); }
 
-bool Interface::HasVersionOptionRegistered(void) const
-{
-    return d_->versionOption_.is_initialized();
-}
+bool Interface::HasVersionOptionRegistered() const { return d_->versionOption_.is_initialized(); }
 
 bool Interface::HasOptionRegistered(const std::string& optionName) const
 {
     return d_->optionNameLookup_.find(optionName) != d_->optionNameLookup_.cend();
 }
 
-const Option& Interface::HelpOption(void) const
+const Option& Interface::HelpOption() const
 {
     if (!HasHelpOptionRegistered())
         throw std::runtime_error("CLI::Interface - help option requested, but not registered");
@@ -262,9 +253,9 @@ std::string Interface::IdForOptionName(const std::string& optionName) const
     return d_->options_.at(offset).Id();
 }
 
-bool Interface::IsToolContractEnabled(void) const { return d_->tcConfig_.is_initialized(); }
+bool Interface::IsToolContractEnabled() const { return d_->tcConfig_.is_initialized(); }
 
-const Option& Interface::LogLevelOption(void) const
+const Option& Interface::LogLevelOption() const
 {
     if (!HasLogLevelOptionRegistered())
         throw std::runtime_error("CLI::Interface - log level option requested, but not registered");
@@ -279,14 +270,14 @@ PacBio::JSON::Json Interface::OptionChoices(const std::string& optionId) const
     return PacBio::JSON::Json(nullptr);
 }
 
-const std::vector<Option>& Interface::RegisteredOptions(void) const { return d_->options_; }
+const std::vector<Option>& Interface::RegisteredOptions() const { return d_->options_; }
 
-const std::vector<PositionalArg>& Interface::RegisteredPositionalArgs(void) const
+const std::vector<PositionalArg>& Interface::RegisteredPositionalArgs() const
 {
     return d_->positionalArgs_;
 }
 
-const ToolContract::Config& Interface::ToolContract(void) const
+const ToolContract::Config& Interface::ToolContract() const
 {
     if (!d_->tcConfig_)
         throw std::runtime_error(
@@ -295,14 +286,14 @@ const ToolContract::Config& Interface::ToolContract(void) const
     return d_->tcConfig_.get();
 }
 
-const Option& Interface::VerboseOption(void) const
+const Option& Interface::VerboseOption() const
 {
     if (!HasVerboseOptionRegistered())
         throw std::runtime_error("CLI::Interface - verbose option requested, but not registered");
     return d_->verboseOption_.get();
 }
 
-const Option& Interface::VersionOption(void) const
+const Option& Interface::VersionOption() const
 {
     if (!HasVersionOptionRegistered())
         throw std::runtime_error("CLI::Interface - version option requested, but not registered");

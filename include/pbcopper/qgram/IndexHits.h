@@ -48,10 +48,10 @@ public:
 
     IndexHits(const IndexHits&) = default;
     IndexHits(IndexHits&&) = default;
-    ~IndexHits(void) = default;
+    ~IndexHits() = default;
 
 public:
-    size_t QueryPosition(void) const { return queryPos_; }
+    size_t QueryPosition() const { return queryPos_; }
 
 public:
     /// \name STL compatibility
@@ -63,11 +63,11 @@ public:
     using const_reference = std::vector<IndexHit>::const_reference;
     using size_type = std::vector<IndexHit>::size_type;
 
-    const_iterator begin(void) const { return source_->begin() + begin_; }
-    const_iterator cbegin(void) const { return source_->cbegin() + begin_; }
-    const_iterator end(void) const { return begin() + size(); }
-    const_iterator cend(void) const { return cbegin() + size(); }
-    size_type size(void) const { return end_ - begin_; }
+    const_iterator begin() const { return source_->begin() + begin_; }
+    const_iterator cbegin() const { return source_->cbegin() + begin_; }
+    const_iterator end() const { return begin() + size(); }
+    const_iterator cend() const { return cbegin() + size(); }
+    size_type size() const { return end_ - begin_; }
 
     const_reference operator[](size_type pos) const { return *(source_->begin() + begin_ + pos); }
 

@@ -31,7 +31,7 @@ public:
     Parser(const Interface& interface);
 
     Parser(const Parser& other);
-    ~Parser(void);
+    ~Parser();
 
     /// \}
 

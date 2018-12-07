@@ -12,13 +12,13 @@
 
 namespace CLITests {
 
-static std::string appName(void)
+static std::string appName()
 {
     static const std::string appName{"frobber"};
     return appName;
 }
 
-static PacBio::CLI::Interface makeInterface(void)
+static PacBio::CLI::Interface makeInterface()
 {
     // clang-format off
     PacBio::CLI::Interface i {
@@ -51,7 +51,7 @@ static PacBio::CLI::Interface makeInterface(void)
     return i;
 }
 
-static PacBio::CLI::Interface makeToolContractEnabledInterface(void)
+static PacBio::CLI::Interface makeToolContractEnabledInterface()
 {
     // yields <PREFIX>.pbsmrtpipe_task_options.<ID>
     // if not set, PREFIX=ApplicationName from Interface
@@ -168,7 +168,7 @@ struct RtcGenerator
 {
 public:
     RtcGenerator(const std::string& fn);
-    ~RtcGenerator(void);
+    ~RtcGenerator();
 
 private:
     std::string fn_;
@@ -438,6 +438,6 @@ RtcGenerator::RtcGenerator(const std::string& fn) : fn_(fn)
     out << text;
 }
 
-RtcGenerator::~RtcGenerator(void) { ::remove(fn_.c_str()); }
+RtcGenerator::~RtcGenerator() { ::remove(fn_.c_str()); }
 
 }  // namespace CLITests

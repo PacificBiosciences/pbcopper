@@ -9,9 +9,9 @@ namespace CallbackTimerTests {
 class CallbackCounter
 {
 public:
-    CallbackCounter(void) : hits_(0) {}
-    uint32_t Count(void) const { return hits_; }
-    void Ping(void) { ++hits_; }
+    CallbackCounter() : hits_(0) {}
+    uint32_t Count() const { return hits_; }
+    void Ping() { ++hits_; }
 
 private:
     uint32_t hits_;
@@ -19,7 +19,7 @@ private:
 
 CallbackCounter freeFunctionCounter;
 
-void tst_callback(void) { freeFunctionCounter.Ping(); }
+void tst_callback() { freeFunctionCounter.Ping(); }
 
 auto ping = [](CallbackCounter& counter) { counter.Ping(); };
 

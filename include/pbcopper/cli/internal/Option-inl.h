@@ -109,27 +109,27 @@ inline Option& Option::operator=(Option&& other)
     return *this;
 }
 
-inline Option::~Option(void) {}
+inline Option::~Option() {}
 
-inline PacBio::JSON::Json Option::Choices(void) const { return d_->option_["choices"]; }
+inline PacBio::JSON::Json Option::Choices() const { return d_->option_["choices"]; }
 
-inline PacBio::JSON::Json Option::DefaultValue(void) const { return d_->option_["defaultValue"]; }
+inline PacBio::JSON::Json Option::DefaultValue() const { return d_->option_["defaultValue"]; }
 
-inline std::string Option::Description(void) const { return d_->option_["description"]; }
+inline std::string Option::Description() const { return d_->option_["description"]; }
 
-inline bool Option::HasChoices(void) const
+inline bool Option::HasChoices() const
 {
     const auto choices = Choices();
     return choices.is_array() && !choices.empty();
 }
 
-inline std::string Option::Id(void) const { return d_->option_["id"]; }
+inline std::string Option::Id() const { return d_->option_["id"]; }
 
-inline bool Option::IsHidden(void) const { return d_->option_["hidden"]; }
+inline bool Option::IsHidden() const { return d_->option_["hidden"]; }
 
-inline std::vector<std::string> Option::Names(void) const { return d_->option_["names"]; }
+inline std::vector<std::string> Option::Names() const { return d_->option_["names"]; }
 
-inline std::string Option::ValueName(void) const { return std::string(); }
+inline std::string Option::ValueName() const { return std::string(); }
 
 }  // namespace CLI
 }  // namespace PacBio

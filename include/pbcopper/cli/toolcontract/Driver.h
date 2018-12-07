@@ -55,19 +55,19 @@ public:
     /// \brief Env
     /// \return
     ///
-    const Environment& Env(void) const;
+    const Environment& Env() const;
 
     ///
     /// \brief Exe
     /// \return
     ///
-    const std::string& Exe(void) const;
+    const std::string& Exe() const;
 
     ///
     /// \brief Serialization
     /// \return
     ///
-    const std::string& Serialization(void) const;
+    const std::string& Serialization() const;
 
     /// \}
 

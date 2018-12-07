@@ -174,7 +174,7 @@ Parser::Parser(const Interface& interface) : d_(new ParserPrivate{interface}) {}
 
 Parser::Parser(const Parser& other) : d_(new ParserPrivate{*other.d_.get()}) {}
 
-Parser::~Parser(void) {}
+Parser::~Parser() {}
 
 Results Parser::Parse(const std::vector<std::string>& args)
 {

@@ -115,7 +115,7 @@ void InstallSignalHandlers(Logger& logger)
 
 LogLevel::LogLevel(const std::string& value) : value_{LogLevelFromString(value)} {}
 
-Logger::~Logger(void)
+Logger::~Logger()
 {
     if (!writer_.joinable()) return;
 
@@ -155,7 +155,7 @@ Logger& Logger::Default(Logger* logger)
     return *logger_;
 }
 
-void Logger::MessageWriter(void)
+void Logger::MessageWriter()
 {
     while (true) {
         std::unique_ptr<LogLevelStream> ptr;

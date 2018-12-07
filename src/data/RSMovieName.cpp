@@ -30,7 +30,7 @@ RSMovieName::RSMovieName(const std::string& runStartTime, const std::string& ins
     // don't update cache until actually requested
 }
 
-void RSMovieName::UpdatePartsCache(void) const
+void RSMovieName::UpdatePartsCache() const
 {
     // sanity checks
     assert(partsCache_ == nullptr);

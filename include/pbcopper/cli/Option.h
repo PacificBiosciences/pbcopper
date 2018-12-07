@@ -44,25 +44,25 @@ public:
     /// \brief DefaultHelpOption
     /// \return
     ///
-    static const Option& DefaultHelpOption(void);
+    static const Option& DefaultHelpOption();
 
     ///
     /// \brief DefaultLogLevelOption
     /// \return
     ///
-    static const Option& DefaultLogLevelOption(void);
+    static const Option& DefaultLogLevelOption();
 
     ///
     /// \brief DefaultVerboseOption
     /// \return
     ///
-    static const Option& DefaultVerboseOption(void);
+    static const Option& DefaultVerboseOption();
 
     ///
     /// \brief DefaultVersionOption
     /// \return
     ///
-    static const Option& DefaultVersionOption(void);
+    static const Option& DefaultVersionOption();
 
     /// \}
 
@@ -184,7 +184,7 @@ public:
     Option(Option&& other);
     Option& operator=(const Option& other);
     Option& operator=(Option&& other);
-    ~Option(void);
+    ~Option();
 
     /// \}
 
@@ -196,55 +196,55 @@ public:
     /// \brief Choices
     /// \return
     ///
-    JSON::Json Choices(void) const;
+    JSON::Json Choices() const;
 
     ///
     /// \brief DefaultValue
     /// \return
     ///
-    JSON::Json DefaultValue(void) const;
+    JSON::Json DefaultValue() const;
 
     ///
     /// \brief Description
     /// \return
     ///
-    std::string Description(void) const;
+    std::string Description() const;
 
     ///
     /// \brief HasChoices
     /// \return
     ///
-    bool HasChoices(void) const;
+    bool HasChoices() const;
 
     ///
     /// \brief Id
     /// \return
     ///
-    std::string Id(void) const;
+    std::string Id() const;
 
     ///
     /// \brief IsHidden
     /// \return
     ///
-    bool IsHidden(void) const;
+    bool IsHidden() const;
 
     ///
     /// \brief Names
     /// \return
     ///
-    std::vector<std::string> Names(void) const;
+    std::vector<std::string> Names() const;
 
     ///
     /// \brief TypeId
     /// \return
     ///
-    std::string TypeId(void) const;
+    std::string TypeId() const;
 
     ///
     /// \brief ValueName
     /// \return
     ///
-    std::string ValueName(void) const;
+    std::string ValueName() const;
 
     /// \}
 

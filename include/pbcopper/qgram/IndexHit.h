@@ -23,7 +23,7 @@ public:
     ///
     /// \brief IndexHit
     ///
-    IndexHit(void) : id_(0), position_(0) {}
+    IndexHit() : id_(0), position_(0) {}
 
     ///
     /// \brief IndexHit
@@ -42,13 +42,13 @@ public:
     /// \brief Id
     /// \return id (index number) of Index input sequence containing this hit
     ///
-    uint32_t Id(void) const { return id_; }
+    uint32_t Id() const { return id_; }
 
     ///
     /// \brief Position
     /// \return position of hit
     ///
-    uint64_t Position(void) const { return position_; }
+    uint64_t Position() const { return position_; }
 
 private:
     uint32_t id_;

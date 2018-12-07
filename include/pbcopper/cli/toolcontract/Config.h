@@ -44,7 +44,7 @@ public:
     Config(Config&&) = default;
     Config& operator=(const Config&) = default;
     Config& operator=(Config&&) = default;
-    ~Config(void) = default;
+    ~Config() = default;
 
     /// \}
 

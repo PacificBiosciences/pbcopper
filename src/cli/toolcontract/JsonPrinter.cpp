@@ -26,7 +26,7 @@ Option RegisteredOption(const Interface& interface, const std::string& optionId)
     throw std::runtime_error("PacBio::CLI - could not find option with id: " + optionId);
 }
 
-Json currentSchemaVersion(void) { return Json("2.0.0"); }
+Json currentSchemaVersion() { return Json("2.0.0"); }
 
 Json makeDriverJson(const Interface& interface)
 {

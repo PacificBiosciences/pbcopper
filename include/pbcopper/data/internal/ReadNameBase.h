@@ -33,12 +33,12 @@ public:
 
     ReadNameBase(const MovieNameType& movieName, const PacBio::Data::Zmw& zmw, const CCSTag ccs);
 
-    ReadNameBase(void);
+    ReadNameBase();
     ReadNameBase(const ReadNameBase<MovieNameType>&) = default;
     ReadNameBase(ReadNameBase<MovieNameType>&&) = default;
     ReadNameBase<MovieNameType>& operator=(const ReadNameBase<MovieNameType>&) = default;
     ReadNameBase<MovieNameType>& operator=(ReadNameBase<MovieNameType>&&) = default;
-    ~ReadNameBase(void) = default;
+    ~ReadNameBase() = default;
 
     /// \}
 
@@ -46,11 +46,11 @@ public:
     /// \name Name Parts
     /// \{
 
-    MovieNameType MovieName(void) const;
-    PacBio::Data::Zmw Zmw(void) const;
-    Interval<Position> QueryInterval(void) const;
-    Position QueryStart(void) const;
-    Position QueryEnd(void) const;
+    MovieNameType MovieName() const;
+    PacBio::Data::Zmw Zmw() const;
+    Interval<Position> QueryInterval() const;
+    Position QueryStart() const;
+    Position QueryEnd() const;
 
     /// \}
 
@@ -58,8 +58,8 @@ public:
     /// \name Additional Methods & Operators
     /// \{
 
-    bool IsCCS(void) const;
-    std::string ToString(void) const;
+    bool IsCCS() const;
+    std::string ToString() const;
 
     bool operator==(const ReadNameBase<MovieNameType>& other) const;
     bool operator<(const ReadNameBase<MovieNameType>& other) const;
@@ -72,7 +72,7 @@ private:
     std::unique_ptr<Interval<Position>> queryInterval_;
 
 private:
-    void Check(void) const;
+    void Check() const;
     void FromString(std::string&& name);
 };
 

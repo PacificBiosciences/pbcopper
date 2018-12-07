@@ -91,7 +91,7 @@ class CallbackTimer::CallbackTimerPrivate
     using JobQueue = std::multiset<QueueValue, NextActive>;
 
 public:
-    CallbackTimerPrivate(void)
+    CallbackTimerPrivate()
         : nextId(1)
         , queue(NextActive())
         , worker(std::bind(&CallbackTimerPrivate::Run, this))
@@ -99,7 +99,7 @@ public:
     {
     }
 
-    ~CallbackTimerPrivate(void)
+    ~CallbackTimerPrivate()
     {
         CallbackTimerMutexLocker lock(sync);
 
@@ -164,7 +164,7 @@ private:
     // this is our main thread worker, processing the job queue & calling the
     // callback functions
     //
-    void Run(void)
+    void Run()
     {
         CallbackTimerMutexLocker lock(sync);
         while (!done) {
@@ -223,9 +223,9 @@ private:
     }
 };
 
-CallbackTimer::CallbackTimer(void) : d_(new CallbackTimerPrivate) {}
+CallbackTimer::CallbackTimer() : d_(new CallbackTimerPrivate) {}
 
-CallbackTimer::~CallbackTimer(void) {}
+CallbackTimer::~CallbackTimer() {}
 
 bool CallbackTimer::Cancel(const JobId id) { return d_->Cancel(id); }
 

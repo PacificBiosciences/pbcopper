@@ -19,15 +19,15 @@ inline OutputFileType::OutputFileType(std::string id, std::string title, std::st
 {
 }
 
-inline const std::string& OutputFileType::DefaultName(void) const { return defaultName_; }
+inline const std::string& OutputFileType::DefaultName() const { return defaultName_; }
 
-inline const std::string& OutputFileType::Description(void) const { return description_; }
+inline const std::string& OutputFileType::Description() const { return description_; }
 
-inline const std::string& OutputFileType::Id(void) const { return id_; }
+inline const std::string& OutputFileType::Id() const { return id_; }
 
-inline const std::string& OutputFileType::Title(void) const { return title_; }
+inline const std::string& OutputFileType::Title() const { return title_; }
 
-inline const std::string& OutputFileType::Type(void) const { return type_; }
+inline const std::string& OutputFileType::Type() const { return type_; }
 
 }  // namespace ToolContract
 }  // namespace CLI

@@ -16,7 +16,7 @@ class ResolvedToolContract
 {
 public:
     ResolvedToolContract(Interface interface);
-    ~ResolvedToolContract(void);
+    ~ResolvedToolContract();
 
 public:
     Results Parse(std::istream& in);

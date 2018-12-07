@@ -41,7 +41,7 @@ int RunMain(const MyAppSettings& s)
 }
 
 static
-PacBio::CLI::Interface createParser(void)
+PacBio::CLI::Interface createParser()
 {
     PacBio::CLI::Interface cl {
         "cli_demo",
