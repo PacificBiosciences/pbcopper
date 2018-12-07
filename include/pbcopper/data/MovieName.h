@@ -28,12 +28,12 @@ public:
     // create MovieName from name parts
     MovieName(const std::string& instrumentName, const std::string& runStartTime);
 
-    MovieName(void);
+    MovieName();
     MovieName(const MovieName& other);
     MovieName(MovieName&& other) noexcept;
     MovieName& operator=(const MovieName& other);
     MovieName& operator=(MovieName&& other) noexcept;
-    ~MovieName(void);
+    ~MovieName();
 
     /// \}
 
@@ -41,8 +41,8 @@ public:
     /// \name Name Parts
     /// \{
 
-    boost::string_ref InstrumentName(void) const;
-    boost::string_ref RunStartTime(void) const;
+    boost::string_ref InstrumentName() const;
+    boost::string_ref RunStartTime() const;
 
     /// \}
 
@@ -50,7 +50,7 @@ public:
     /// \name Additional Methods & Operators
     /// \{
 
-    std::string ToStdString(void) const;
+    std::string ToStdString() const;
 
     /// \}
 
@@ -61,7 +61,7 @@ private:
     mutable std::unique_ptr<PartsCache> partsCache_;
 
 private:
-    void UpdatePartsCache(void) const;
+    void UpdatePartsCache() const;
 };
 
 /// \name Related Non-members

@@ -22,7 +22,7 @@ template <typename T>
 class WorkQueue
 {
 private:
-    typedef boost::optional<std::packaged_task<T(void)>> TTask;
+    typedef boost::optional<std::packaged_task<T()>> TTask;
     typedef boost::optional<std::future<T>> TFuture;
 
 public:
@@ -61,8 +61,7 @@ public:
     template <typename F, typename... Args>
     void ProduceWith(F&& f, Args&&... args)
     {
-        std::packaged_task<T(void)> task{
-            std::bind(std::forward<F>(f), std::forward<Args>(args)...)};
+        std::packaged_task<T()> task{std::bind(std::forward<F>(f), std::forward<Args>(args)...)};
 
         {
             std::unique_lock<std::mutex> lk(m);

@@ -13,8 +13,7 @@ namespace Data {
 namespace internal {
 
 template <typename MovieNameType>
-inline ReadNameBase<MovieNameType>::ReadNameBase(void)
-    : movieName_(), zmw_(-1), queryInterval_(nullptr)
+inline ReadNameBase<MovieNameType>::ReadNameBase() : movieName_(), zmw_(-1), queryInterval_(nullptr)
 {
 }
 
@@ -58,40 +57,40 @@ inline ReadNameBase<MovieNameType>::ReadNameBase(const MovieNameType& movieName,
 }
 
 template <typename MovieNameType>
-inline bool ReadNameBase<MovieNameType>::IsCCS(void) const
+inline bool ReadNameBase<MovieNameType>::IsCCS() const
 {
     return !queryInterval_;
 }
 
 template <typename MovieNameType>
-inline MovieNameType ReadNameBase<MovieNameType>::MovieName(void) const
+inline MovieNameType ReadNameBase<MovieNameType>::MovieName() const
 {
     return movieName_;
 }
 
 template <typename MovieNameType>
-inline Interval<Position> ReadNameBase<MovieNameType>::QueryInterval(void) const
+inline Interval<Position> ReadNameBase<MovieNameType>::QueryInterval() const
 {
     if (IsCCS()) throw std::runtime_error("ReadName: cannot get query interval from CCS read");
     return *queryInterval_;
 }
 
 template <typename MovieNameType>
-inline Position ReadNameBase<MovieNameType>::QueryStart(void) const
+inline Position ReadNameBase<MovieNameType>::QueryStart() const
 {
     if (IsCCS()) throw std::runtime_error("ReadName: cannot get query start from CCS read");
     return queryInterval_->Start();
 }
 
 template <typename MovieNameType>
-inline Position ReadNameBase<MovieNameType>::QueryEnd(void) const
+inline Position ReadNameBase<MovieNameType>::QueryEnd() const
 {
     if (IsCCS()) throw std::runtime_error("ReadName: cannot get query end from CCS read");
     return queryInterval_->End();
 }
 
 template <typename MovieNameType>
-inline PacBio::Data::Zmw ReadNameBase<MovieNameType>::Zmw(void) const
+inline PacBio::Data::Zmw ReadNameBase<MovieNameType>::Zmw() const
 {
     return zmw_;
 }
@@ -149,7 +148,7 @@ inline bool ReadNameBase<MovieNameType>::operator<(const ReadNameBase<MovieNameT
 }
 
 template <typename MovieNameType>
-inline void ReadNameBase<MovieNameType>::Check(void) const
+inline void ReadNameBase<MovieNameType>::Check() const
 {
     if (movieName_.ToStdString().empty())
         throw std::runtime_error("ReadName: movie name must not be empty");
@@ -190,7 +189,7 @@ inline void ReadNameBase<MovieNameType>::FromString(std::string&& name)
 }
 
 template <typename MovieNameType>
-inline std::string ReadNameBase<MovieNameType>::ToString(void) const
+inline std::string ReadNameBase<MovieNameType>::ToString() const
 {
     // ensure we're OK
     Check();

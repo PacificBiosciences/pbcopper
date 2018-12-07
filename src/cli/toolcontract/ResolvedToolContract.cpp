@@ -22,7 +22,7 @@ ResolvedToolContract::ResolvedToolContract(Interface interface)
 {
 }
 
-ResolvedToolContract::~ResolvedToolContract(void) {}
+ResolvedToolContract::~ResolvedToolContract() = default;
 
 Results ResolvedToolContract::Parse(std::istream& in)
 {

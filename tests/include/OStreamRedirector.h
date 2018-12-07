@@ -18,7 +18,7 @@ public:
         , oldBuffer_(o.rdbuf())
     { o.rdbuf(newBuffer); }
 
-    virtual ~OStreamRedirect(void)
+    virtual ~OStreamRedirect()
     { s_.rdbuf(oldBuffer_); }
 
 private:

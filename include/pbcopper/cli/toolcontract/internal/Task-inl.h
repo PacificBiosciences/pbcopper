@@ -14,7 +14,7 @@ inline Task::Task(std::string taskId)
 {
 }
 
-inline const std::string& Task::Description(void) const { return description_; }
+inline const std::string& Task::Description() const { return description_; }
 
 inline Task& Task::Description(std::string description)
 {
@@ -22,10 +22,7 @@ inline Task& Task::Description(std::string description)
     return *this;
 }
 
-inline const std::vector<InputFileType>& Task::InputFileTypes(void) const
-{
-    return inputFileTypes_;
-}
+inline const std::vector<InputFileType>& Task::InputFileTypes() const { return inputFileTypes_; }
 
 inline Task& Task::InputFileTypes(std::vector<InputFileType> inputFileTypes)
 {
@@ -33,7 +30,7 @@ inline Task& Task::InputFileTypes(std::vector<InputFileType> inputFileTypes)
     return *this;
 }
 
-inline const std::map<size_t, std::string>& Task::InputFilesToOptions(void) const
+inline const std::map<size_t, std::string>& Task::InputFilesToOptions() const
 {
     return inputFilesToOptions_;
 }
@@ -44,9 +41,9 @@ inline Task& Task::InputFilesToOptions(std::map<size_t, std::string> mapping)
     return *this;
 }
 
-inline bool Task::IsDistributed(void) const { return isDistributed_; }
+inline bool Task::IsDistributed() const { return isDistributed_; }
 
-inline uint16_t Task::NumProcessors(void) const { return nProc_; }
+inline uint16_t Task::NumProcessors() const { return nProc_; }
 
 inline Task& Task::NumProcessors(const uint16_t nProc)
 {
@@ -54,7 +51,7 @@ inline Task& Task::NumProcessors(const uint16_t nProc)
     return *this;
 }
 
-inline std::map<std::string, std::string> Task::Options(void) const { return optionDisplayNames_; }
+inline std::map<std::string, std::string> Task::Options() const { return optionDisplayNames_; }
 
 inline Task& Task::Options(std::map<std::string, std::string> optionDisplayNames)
 {
@@ -68,12 +65,9 @@ inline Task& Task::AddOption(std::pair<std::string, std::string> optionConfig)
     return *this;
 }
 
-inline const std::vector<OutputFileType>& Task::OutputFileTypes(void) const
-{
-    return outputFileTypes_;
-}
+inline const std::vector<OutputFileType>& Task::OutputFileTypes() const { return outputFileTypes_; }
 
-inline const std::map<size_t, std::string>& Task::OutputFilesToOptions(void) const
+inline const std::map<size_t, std::string>& Task::OutputFilesToOptions() const
 {
     return outputFilesToOptions_;
 }
@@ -90,7 +84,7 @@ inline Task& Task::OutputFileTypes(std::vector<OutputFileType> outputFileTypes)
     return *this;
 }
 
-inline const std::vector<ResourceType>& Task::ResourceTypes(void) const { return resourceTypes_; }
+inline const std::vector<ResourceType>& Task::ResourceTypes() const { return resourceTypes_; }
 
 inline Task& Task::ResourceTypes(std::vector<ResourceType> resourceTypes)
 {
@@ -104,9 +98,9 @@ inline Task& Task::SetDistributed(const bool ok)
     return *this;
 }
 
-inline const std::string& Task::TaskId(void) const { return id_; }
+inline const std::string& Task::TaskId() const { return id_; }
 
-inline TaskType Task::Type(void) const { return type_; }
+inline TaskType Task::Type() const { return type_; }
 
 inline Task& Task::Type(const TaskType& type)
 {

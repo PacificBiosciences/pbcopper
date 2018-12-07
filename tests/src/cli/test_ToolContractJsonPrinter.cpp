@@ -7,7 +7,7 @@
 
 namespace ToolContractJsonPrinterTests {
 
-static std::string MakeHeader(void)
+static std::string MakeHeader()
 {
     const auto preVersion = R"({
     "driver": {

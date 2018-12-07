@@ -96,8 +96,8 @@ void Parser::ParserPrivate::Parse(const std::vector<std::string>& args)
 
             switch (singleDashMode_) {
                 case SingleDashMode::ParseAsShortOptions: {
-                    auto optionName = std::string{};
-                    auto valueFound = false;
+                    std::string optionName;
+                    bool valueFound = false;
 
                     for (size_t i = 1; i < arg.size(); ++i) {
                         optionName = arg.substr(i, 1);
@@ -174,7 +174,7 @@ Parser::Parser(const Interface& interface) : d_(new ParserPrivate{interface}) {}
 
 Parser::Parser(const Parser& other) : d_(new ParserPrivate{*other.d_.get()}) {}
 
-Parser::~Parser(void) {}
+Parser::~Parser() = default;
 
 Results Parser::Parse(const std::vector<std::string>& args)
 {

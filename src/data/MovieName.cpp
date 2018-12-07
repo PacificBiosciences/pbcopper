@@ -11,7 +11,7 @@ MovieName::MovieName(const std::string& instrumentName, const std::string& runSt
     : partsCache_(nullptr)
 {
     // construct name from parts
-    auto result = std::string{};
+    std::string result;
     result.reserve(128);
     result += "m";
     result += instrumentName;
@@ -21,7 +21,7 @@ MovieName::MovieName(const std::string& instrumentName, const std::string& runSt
     // don't update cache until actually requested
 }
 
-void MovieName::UpdatePartsCache(void) const
+void MovieName::UpdatePartsCache() const
 {
     // sanity checks
     assert(partsCache_ == nullptr);

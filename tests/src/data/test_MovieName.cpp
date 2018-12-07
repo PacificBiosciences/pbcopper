@@ -6,7 +6,7 @@
 
 namespace MovieNameTests {
 
-auto makeMovieName = [](void) { return PacBio::Data::MovieName{"m54001_160623_195125"}; };
+auto makeMovieName = []() { return PacBio::Data::MovieName{"m54001_160623_195125"}; };
 
 }  // namespace MovieNameTests
 

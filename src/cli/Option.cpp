@@ -37,15 +37,15 @@ static const Option defaultVersionOption {
 
 }  // anonymous
 
-const Option& Option::DefaultHelpOption(void) { return defaultHelpOption; }
+const Option& Option::DefaultHelpOption() { return defaultHelpOption; }
 
-const Option& Option::DefaultLogLevelOption(void) { return defaultLogLevelOption; }
+const Option& Option::DefaultLogLevelOption() { return defaultLogLevelOption; }
 
-const Option& Option::DefaultVerboseOption(void) { return defaultVerboseOption; }
+const Option& Option::DefaultVerboseOption() { return defaultVerboseOption; }
 
-const Option& Option::DefaultVersionOption(void) { return defaultVersionOption; }
+const Option& Option::DefaultVersionOption() { return defaultVersionOption; }
 
-std::string Option::TypeId(void) const
+std::string Option::TypeId() const
 {
     using Json = PacBio::JSON::Json;
 

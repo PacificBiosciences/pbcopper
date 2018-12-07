@@ -31,12 +31,12 @@ public:
                 const std::string& smrtCellBarcode, const std::string& setNumber,
                 const std::string& partNumber);
 
-    RSMovieName(void);
+    RSMovieName();
     RSMovieName(const RSMovieName& other);
     RSMovieName(RSMovieName&& other) noexcept;
     RSMovieName& operator=(const RSMovieName& other);
     RSMovieName& operator=(RSMovieName&& other) noexcept;
-    ~RSMovieName(void);
+    ~RSMovieName();
 
     /// \}
 
@@ -44,11 +44,11 @@ public:
     /// \name Name Parts
     /// \{
 
-    boost::string_ref InstrumentSerialNumber(void) const;
-    boost::string_ref PartNumber(void) const;
-    boost::string_ref RunStartTime(void) const;
-    boost::string_ref SetNumber(void) const;
-    boost::string_ref SMRTCellBarcode(void) const;
+    boost::string_ref InstrumentSerialNumber() const;
+    boost::string_ref PartNumber() const;
+    boost::string_ref RunStartTime() const;
+    boost::string_ref SetNumber() const;
+    boost::string_ref SMRTCellBarcode() const;
 
     /// \}
 
@@ -56,8 +56,8 @@ public:
     /// \name Additional Methods & Operators
     /// \{
 
-    bool IsReagentExpired(void) const;
-    std::string ToStdString(void) const;
+    bool IsReagentExpired() const;
+    std::string ToStdString() const;
 
     /// \}
 
@@ -68,7 +68,7 @@ private:
     mutable std::unique_ptr<PartsCache> partsCache_;
 
 private:
-    void UpdatePartsCache(void) const;
+    void UpdatePartsCache() const;
 };
 
 /// \name Related Non-members

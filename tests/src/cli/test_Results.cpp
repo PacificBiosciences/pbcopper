@@ -4,7 +4,7 @@
 
 namespace ResultsTests {
 
-static PacBio::CLI::Interface makeInterface(void)
+static PacBio::CLI::Interface makeInterface()
 {
     // clang-format off
     PacBio::CLI::Interface i {

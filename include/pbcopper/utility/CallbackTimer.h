@@ -21,7 +21,7 @@ namespace Utility {
 ///
 /// As it stands, the callback function must be of the signature:
 ///
-///     void foo(void);
+///     void foo();
 ///
 /// whether a free function, member function, or lambda.
 ///
@@ -34,8 +34,8 @@ public:
     static void SingleShot(uint64_t when, const HandlerFn& handler);
     static void SingleShot(uint64_t when, HandlerFn&& handler);
 
-    CallbackTimer(void);
-    ~CallbackTimer(void);
+    CallbackTimer();
+    ~CallbackTimer();
 
     JobId Schedule(const uint64_t when, const uint64_t period, const HandlerFn& handler);
     JobId Schedule(const uint64_t when, const uint64_t period, HandlerFn&& handler);

@@ -36,7 +36,7 @@ public:
 
 #endif  // no Boost endian
 
-inline constexpr SystemInfo::Endian SystemInfo::ByteOrder(void)
+inline constexpr SystemInfo::Endian SystemInfo::ByteOrder()
 {
 #if defined(BOOST_LITTLE_ENDIAN)
     return SystemInfo::LittleEndian;
@@ -47,12 +47,12 @@ inline constexpr SystemInfo::Endian SystemInfo::ByteOrder(void)
 #endif
 }
 
-inline constexpr bool SystemInfo::IsBigEndian(void)
+inline constexpr bool SystemInfo::IsBigEndian()
 {
     return SystemInfo::ByteOrder() == SystemInfo::BigEndian;
 }
 
-inline constexpr bool SystemInfo::IsLittleEndian(void)
+inline constexpr bool SystemInfo::IsLittleEndian()
 {
     return SystemInfo::ByteOrder() == SystemInfo::LittleEndian;
 }

@@ -29,7 +29,7 @@ public:
     /// \{
 
     /// \brief Creates an empty interval [0,0)
-    Interval(void);
+    Interval();
 
     /// \brief Creates a 'singleton' interval [val,val+1)
     Interval(const T val);
@@ -45,7 +45,7 @@ public:
 
     Interval<T>& operator=(const Interval<T>& other) = default;
     Interval<T>& operator=(Interval<T>&& other) = default;
-    ~Interval<T>(void) = default;
+    ~Interval<T>() = default;
 
     /// \}
 
@@ -66,7 +66,7 @@ public:
     /// \{
 
     /// \returns interval's start coordinate
-    T Start(void) const;
+    T Start() const;
 
     /// Sets this interval's start coordinate.
     ///
@@ -76,7 +76,7 @@ public:
     Interval<T>& Start(const T& start);
 
     /// \returns interval's end coordinate
-    T End(void) const;
+    T End() const;
 
     /// Sets this interval's end coordinate.
     ///
@@ -100,10 +100,10 @@ public:
     bool Intersects(const Interval<T>& other) const;
 
     /// \returns true if interval is valid (e.g. start < stop)
-    bool IsValid(void) const;
+    bool IsValid() const;
 
     /// \returns interval length
-    size_t Length(void) const;
+    size_t Length() const;
 
     /// \}
 

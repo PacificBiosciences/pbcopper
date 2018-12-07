@@ -17,13 +17,13 @@ public:
     InputFileType(std::string id, std::string title, std::string description, std::string type);
 
     InputFileType(const InputFileType&) = default;
-    ~InputFileType(void) = default;
+    ~InputFileType() = default;
 
 public:
-    const std::string& Id(void) const;
-    const std::string& Title(void) const;
-    const std::string& Description(void) const;
-    const std::string& Type(void) const;
+    const std::string& Id() const;
+    const std::string& Title() const;
+    const std::string& Description() const;
+    const std::string& Type() const;
 
 private:
     std::string id_;

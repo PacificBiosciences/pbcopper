@@ -19,7 +19,7 @@ public:
     ///
     /// \brief Seed
     ///
-    Seed(void);
+    Seed();
 
     ///
     /// \brief Seed
@@ -43,26 +43,26 @@ public:
     Seed(Seed&&) = default;
     Seed& operator=(const Seed&) = default;
     Seed& operator=(Seed&&) = default;
-    ~Seed(void) = default;
+    ~Seed() = default;
 
 public:
     ///
     /// \brief BeginDiagonal
     /// \return
     ///
-    int64_t BeginDiagonal(void) const;
+    int64_t BeginDiagonal() const;
 
     ///
     /// \brief BeginPositionH
     /// \return
     ///
-    uint64_t BeginPositionH(void) const;
+    uint64_t BeginPositionH() const;
 
     ///
     /// \brief BeginPositionV
     /// \return
     ///
-    uint64_t BeginPositionV(void) const;
+    uint64_t BeginPositionV() const;
 
     ///
     /// \brief Diagonal
@@ -76,49 +76,49 @@ public:
     /// \return int64_t The distance from the seed's upper-left corner and
     ///                 the diagonal axis of the matrix.
     ///
-    int64_t Diagonal(void) const;
+    int64_t Diagonal() const;
 
     ///
     /// \brief EndDiagonal
     /// \return
     ///
-    int64_t EndDiagonal(void) const;
+    int64_t EndDiagonal() const;
 
     ///
     /// \brief EndPositionH
     /// \return
     ///
-    uint64_t EndPositionH(void) const;
+    uint64_t EndPositionH() const;
 
     ///
     /// \brief EndPositionV
     /// \return
     ///
-    uint64_t EndPositionV(void) const;
+    uint64_t EndPositionV() const;
 
     ///
     /// \brief LowerDiagonal
     /// \return
     ///
-    int64_t LowerDiagonal(void) const;
+    int64_t LowerDiagonal() const;
 
     ///
     /// \brief UpperDiagonal
     /// \return
     ///
-    int64_t UpperDiagonal(void) const;
+    int64_t UpperDiagonal() const;
 
     ///
     /// \brief Score
     /// \return
     ///
-    int32_t Score(void) const;
+    int32_t Score() const;
 
     ///
     /// \brief Size
     /// \return
     ///
-    uint64_t Size(void) const;
+    uint64_t Size() const;
 
 public:
     ///

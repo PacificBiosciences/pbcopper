@@ -16,7 +16,7 @@ inline Driver::Driver(std::string exe, Environment env, std::string serializatio
 {
 }
 
-inline const Driver::Environment& Driver::Env(void) const { return env_; }
+inline const Driver::Environment& Driver::Env() const { return env_; }
 
 inline Driver& Driver::Env(Driver::Environment env)
 {
@@ -24,7 +24,7 @@ inline Driver& Driver::Env(Driver::Environment env)
     return *this;
 }
 
-inline const std::string& Driver::Exe(void) const { return exe_; }
+inline const std::string& Driver::Exe() const { return exe_; }
 
 inline Driver& Driver::Exe(std::string exe)
 {
@@ -32,7 +32,7 @@ inline Driver& Driver::Exe(std::string exe)
     return *this;
 }
 
-inline const std::string& Driver::Serialization(void) const { return serialization_; }
+inline const std::string& Driver::Serialization() const { return serialization_; }
 
 inline Driver& Driver::Serialization(std::string serialization)
 {
