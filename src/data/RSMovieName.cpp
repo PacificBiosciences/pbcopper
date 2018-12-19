@@ -13,7 +13,7 @@ RSMovieName::RSMovieName(const std::string& runStartTime, const std::string& ins
     : partsCache_(nullptr)
 {
     // construct name from parts
-    auto result = std::string{};
+    std::string result;
     result.reserve(128);
     result += "m";
     result += runStartTime;
@@ -30,7 +30,7 @@ RSMovieName::RSMovieName(const std::string& runStartTime, const std::string& ins
     // don't update cache until actually requested
 }
 
-void RSMovieName::UpdatePartsCache(void) const
+void RSMovieName::UpdatePartsCache() const
 {
     // sanity checks
     assert(partsCache_ == nullptr);

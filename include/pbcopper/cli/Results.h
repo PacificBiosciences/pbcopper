@@ -41,7 +41,7 @@ public:
     Results(Results&& other);
     Results& operator=(const Results& other);
     Results& operator=(Results&& other);
-    ~Results(void);
+    ~Results();
 
     /// \}
 
@@ -53,20 +53,20 @@ public:
     /// \brief ApplicationInterface
     /// \return
     ///
-    const Interface& ApplicationInterface(void) const;
+    const Interface& ApplicationInterface() const;
 
     ///
     /// \brief InputCommandLine
     /// \return
     ///
-    std::string InputCommandLine(void) const;
+    std::string InputCommandLine() const;
 
     ///
     /// \brief IsFromRTC
     /// \return true if this Results object generated from a resolved tool
     ///         contract (as opposed to command-line args)
     ///
-    bool IsFromRTC(void) const;
+    bool IsFromRTC() const;
 
     ///
     /// \brief LogLevel
@@ -78,7 +78,7 @@ public:
     ///
     /// \return
     ///
-    PacBio::Logging::LogLevel LogLevel(void) const;
+    PacBio::Logging::LogLevel LogLevel() const;
 
     ///
     /// \brief NumProcessors
@@ -90,13 +90,13 @@ public:
     ///
     /// \return number of processors specified by resolved tool contract.
     ///
-    uint16_t NumProcessors(void) const;
+    uint16_t NumProcessors() const;
 
     ///
     /// \brief PositionalArguments
     /// \return
     ///
-    std::vector<std::string> PositionalArguments(void) const;
+    std::vector<std::string> PositionalArguments() const;
 
     //    std::string PositionalArgument(const std::string& posArgName) const;
 

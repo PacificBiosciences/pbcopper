@@ -31,12 +31,12 @@ public:
     std::vector<IndexHits> Hits(const std::string& seq, const bool filterHomopolymers) const;
 
     // "private" method(s) - index construction
-    void Init(void);
+    void Init();
 
     // "private" method(s) - purely for testing access
-    const HashLookup_t& HashLookup(void) const;
-    size_t Size(void) const;
-    const SuffixArray_t& SuffixArray(void) const;
+    const HashLookup_t& HashLookup() const;
+    size_t Size() const;
+    const SuffixArray_t& SuffixArray() const;
 
 private:
     size_t q_;                       // qGramSize
@@ -50,9 +50,9 @@ inline IndexImpl::IndexImpl(size_t q, std::vector<std::string> seqs) : q_{q}, se
     Init();
 }
 
-inline const IndexImpl::HashLookup_t& IndexImpl::HashLookup(void) const { return hashLookup_; }
+inline const IndexImpl::HashLookup_t& IndexImpl::HashLookup() const { return hashLookup_; }
 
-inline void IndexImpl::Init(void)
+inline void IndexImpl::Init()
 {
     if (q_ == 0 || q_ > 16) {
         std::string msg{"qgram size (" + std::to_string(q_) + ") must be in the range [1,16]"};
@@ -144,9 +144,9 @@ inline std::vector<IndexHits> IndexImpl::Hits(const std::string& seq,
     return result;
 }
 
-inline size_t IndexImpl::Size(void) const { return q_; }
+inline size_t IndexImpl::Size() const { return q_; }
 
-inline const IndexImpl::SuffixArray_t& IndexImpl::SuffixArray(void) const { return suffixArray_; }
+inline const IndexImpl::SuffixArray_t& IndexImpl::SuffixArray() const { return suffixArray_; }
 
 }  // namespace internal
 
@@ -172,7 +172,7 @@ inline std::vector<IndexHits> Index::Hits(const std::string& seq,
     return d_->Hits(seq, filterHomopolymers);
 }
 
-inline size_t Index::Size(void) const
+inline size_t Index::Size() const
 {
     assert(d_);
     return d_->Size();

@@ -4,19 +4,19 @@
 
 namespace InterfaceTests {
 
-static inline std::string AppName(void)
+static inline std::string AppName()
 {
     static const std::string appName{"frobber"};
     return appName;
 }
 
-static inline std::string AppDescription(void)
+static inline std::string AppDescription()
 {
     static const std::string appDesc{"does the frobbing"};
     return appDesc;
 }
 
-static inline std::string AppVersion(void)
+static inline std::string AppVersion()
 {
     static const std::string appVersion{"3.14"};
     return appVersion;

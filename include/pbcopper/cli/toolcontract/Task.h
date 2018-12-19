@@ -45,7 +45,7 @@ public:
     explicit Task(std::string taskId);
 
     Task(const Task&) = default;
-    ~Task(void) = default;
+    ~Task() = default;
 
     /// \}
 
@@ -57,13 +57,13 @@ public:
     /// \brief Description
     /// \return
     ///
-    const std::string& Description(void) const;
+    const std::string& Description() const;
 
     ///
     /// \brief IsDistributed
     /// \return
     ///
-    bool IsDistributed(void) const;
+    bool IsDistributed() const;
 
     ///
     /// \brief NumProcessors
@@ -72,19 +72,19 @@ public:
     ///
     /// \return
     ///
-    uint16_t NumProcessors(void) const;
+    uint16_t NumProcessors() const;
 
     ///
     /// \brief TaskId
     /// \return
     ///
-    const std::string& TaskId(void) const;
+    const std::string& TaskId() const;
 
     ///
     /// \brief Type
     /// \return
     ///
-    TaskType Type(void) const;
+    TaskType Type() const;
 
     /// \}
 
@@ -92,7 +92,7 @@ public:
     /// \name Options
     /// \{
 
-    std::map<std::string, std::string> Options(void) const;
+    std::map<std::string, std::string> Options() const;
 
     /// \}
 
@@ -104,31 +104,31 @@ public:
     /// \brief InputFileTypes
     /// \return
     ///
-    const std::vector<InputFileType>& InputFileTypes(void) const;
+    const std::vector<InputFileType>& InputFileTypes() const;
 
     ///
     /// \brief InputFilesToOptions
     /// \return
     ///
-    const std::map<size_t, std::string>& InputFilesToOptions(void) const;
+    const std::map<size_t, std::string>& InputFilesToOptions() const;
 
     ///
     /// \brief OutputFileTypes
     /// \return
     ///
-    const std::vector<OutputFileType>& OutputFileTypes(void) const;
+    const std::vector<OutputFileType>& OutputFileTypes() const;
 
     ///
     /// \brief OutputFilesToOptions
     /// \return
     ///
-    const std::map<size_t, std::string>& OutputFilesToOptions(void) const;
+    const std::map<size_t, std::string>& OutputFilesToOptions() const;
 
     ///
     /// \brief ResourceTypes
     /// \return
     ///
-    const std::vector<ResourceType>& ResourceTypes(void) const;
+    const std::vector<ResourceType>& ResourceTypes() const;
 
     /// \}
 

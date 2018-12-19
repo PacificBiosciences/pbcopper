@@ -6,7 +6,7 @@
 
 namespace RSMovieNameTests {
 
-auto makeRSMovieName = [](void) {
+auto makeRSMovieName = []() {
     return PacBio::Data::RSMovieName{
         "m140415_143853_42175_c100635972550000001823121909121417_s1_p0"};
 };

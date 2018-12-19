@@ -80,7 +80,7 @@ public:
         currentHash_ = HashImpl(BaseCode(*iter_), iter_, q_ - 1);
     }
 
-    uint64_t HashNext(void)
+    uint64_t HashNext()
     {
         currentHash_ = ((currentHash_ - BaseCode(leftChar_) * hashFactor_) * ALPHABET_SIZE) +
                        BaseCode(*(iter_ + (q_ - 1)));

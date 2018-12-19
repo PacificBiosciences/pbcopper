@@ -65,7 +65,7 @@ public:
     /// \brief Size
     /// \return q-gram size
     ///
-    size_t Size(void) const;
+    size_t Size() const;
 
 private:
     std::unique_ptr<internal::IndexImpl> d_;

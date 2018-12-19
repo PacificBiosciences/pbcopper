@@ -29,7 +29,7 @@ inline void validate(const CigarOperationType type)
 
 }  // namespace Internal
 
-inline CigarOperation::CigarOperation(void) : type_(CigarOperationType::UNKNOWN_OP), length_(0) {}
+inline CigarOperation::CigarOperation() : type_(CigarOperationType::UNKNOWN_OP), length_(0) {}
 
 inline CigarOperation::CigarOperation(char c, uint32_t length)
     : type_(CigarOperation::CharToType(c)), length_(length)
@@ -43,14 +43,14 @@ inline CigarOperation::CigarOperation(CigarOperationType op, uint32_t length)
     Internal::validate(type_);
 }
 
-inline char CigarOperation::Char(void) const { return CigarOperation::TypeToChar(type_); }
+inline char CigarOperation::Char() const { return CigarOperation::TypeToChar(type_); }
 
 inline CigarOperation& CigarOperation::Char(const char opChar)
 {
     return Type(CigarOperation::CharToType(opChar));
 }
 
-inline uint32_t CigarOperation::Length(void) const { return length_; }
+inline uint32_t CigarOperation::Length() const { return length_; }
 
 inline CigarOperation& CigarOperation::Length(const uint32_t length)
 {
@@ -58,7 +58,7 @@ inline CigarOperation& CigarOperation::Length(const uint32_t length)
     return *this;
 }
 
-inline CigarOperationType CigarOperation::Type(void) const { return type_; }
+inline CigarOperationType CigarOperation::Type() const { return type_; }
 
 inline CigarOperation& CigarOperation::Type(const CigarOperationType opType)
 {

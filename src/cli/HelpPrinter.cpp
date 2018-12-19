@@ -171,8 +171,8 @@ std::string makeHelpText(const Interface& interface)
     result << std::endl;
 
     // options
-    auto formattedOptions = std::map<std::string, std::string>{};  // id -> formatted output
-    auto longestOptionOutputLength = size_t{0};
+    std::map<std::string, std::string> formattedOptions;  // id -> formatted output
+    size_t longestOptionOutputLength{0};
 
     // determine longest option names & store formatting for use later
     for (const auto& option : options) {

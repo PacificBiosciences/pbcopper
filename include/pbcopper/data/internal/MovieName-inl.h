@@ -25,7 +25,7 @@ struct MovieName::PartsCache
 //       until the components are again requested. That should happen less often
 //       than moving these guys around.
 
-inline MovieName::MovieName(void) {}
+inline MovieName::MovieName() = default;
 
 inline MovieName::MovieName(std::string name) : movieName_{std::move(name)} {}
 
@@ -50,23 +50,23 @@ inline MovieName& MovieName::operator=(MovieName&& other) noexcept
     return *this;
 }
 
-inline MovieName::~MovieName(void) {}
+inline MovieName::~MovieName() = default;
 
-inline boost::string_ref MovieName::InstrumentName(void) const
+inline boost::string_ref MovieName::InstrumentName() const
 {
     if (!partsCache_) UpdatePartsCache();
     assert(partsCache_);
     return partsCache_->instrumentName_;
 }
 
-inline boost::string_ref MovieName::RunStartTime(void) const
+inline boost::string_ref MovieName::RunStartTime() const
 {
     if (!partsCache_) UpdatePartsCache();
     assert(partsCache_);
     return partsCache_->runStartTime_;
 }
 
-inline std::string MovieName::ToStdString(void) const { return movieName_; }
+inline std::string MovieName::ToStdString() const { return movieName_; }
 
 inline bool operator==(const MovieName& lhs, const MovieName& rhs)
 {
@@ -88,7 +88,7 @@ inline std::ostream& operator<<(std::ostream& os, const MovieName& movieName)
 
 inline std::istream& operator>>(std::istream& is, MovieName& movieName)
 {
-    auto s = std::string{};
+    std::string s;
     is >> s;
     movieName = MovieName{std::move(s)};
     return is;

@@ -41,7 +41,7 @@ public:
     }
 
     ResultsPrivate(const ResultsPrivate&) = default;
-    ~ResultsPrivate(void) = default;
+    ~ResultsPrivate() = default;
 };
 
 // ------------------------
@@ -78,14 +78,11 @@ Results& Results::operator=(Results&& other)
     return *this;
 }
 
-Results::~Results(void) {}
+Results::~Results() = default;
 
-std::string Results::InputCommandLine(void) const
-{
-    return Utility::Join(d_->inputCommandLine_, " ");
-}
+std::string Results::InputCommandLine() const { return Utility::Join(d_->inputCommandLine_, " "); }
 
-bool Results::IsFromRTC(void) const { return d_->isFromRtc_; }
+bool Results::IsFromRTC() const { return d_->isFromRtc_; }
 
 Results& Results::LogLevel(const PacBio::Logging::LogLevel logLevel)
 {
@@ -93,9 +90,9 @@ Results& Results::LogLevel(const PacBio::Logging::LogLevel logLevel)
     return *this;
 }
 
-PacBio::Logging::LogLevel Results::LogLevel(void) const { return d_->logLevel_; }
+PacBio::Logging::LogLevel Results::LogLevel() const { return d_->logLevel_; }
 
-uint16_t Results::NumProcessors(void) const
+uint16_t Results::NumProcessors() const
 {
     if (!IsFromRTC()) {
         throw std::runtime_error(
@@ -188,9 +185,9 @@ Results& Results::SetFromRTC(const bool ok)
     return *this;
 }
 
-const Interface& Results::ApplicationInterface(void) const { return d_->interface_; }
+const Interface& Results::ApplicationInterface() const { return d_->interface_; }
 
-std::vector<std::string> Results::PositionalArguments(void) const { return d_->positionalArgs_; }
+std::vector<std::string> Results::PositionalArguments() const { return d_->positionalArgs_; }
 
 Results& Results::RegisterObservedOption(const std::string& optionId)
 {

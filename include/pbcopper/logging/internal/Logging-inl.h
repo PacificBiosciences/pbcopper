@@ -18,7 +18,7 @@ namespace Logging {
 
 inline LogLevel::LogLevel(const unsigned char value) : value_{value} {}
 
-inline LogLevel::operator unsigned char(void) const { return value_; }
+inline LogLevel::operator unsigned char() const { return value_; }
 
 // --------------
 // LoggerConfig
@@ -70,7 +70,7 @@ inline bool Logger::Handles(const LogLevel level) const
 // LogMessage
 // ------------
 
-inline LogMessage::~LogMessage(void)
+inline LogMessage::~LogMessage()
 {
     if (ptr_) logger_ << std::move(ptr_);
 }

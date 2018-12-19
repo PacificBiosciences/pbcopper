@@ -17,7 +17,7 @@
 /// #include "BlasrSettings.h" // for settings struct
 /// #include "BlasrEntry.h"    // app entry point that takes the settings & starts working
 ///
-/// static PacBio::CLI::Interface makeBlasrInterface(void)
+/// static PacBio::CLI::Interface makeBlasrInterface()
 /// {
 ///     // sets up interface object with options
 /// }

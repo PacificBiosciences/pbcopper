@@ -42,7 +42,7 @@ public:
     LogLevel(const std::string& value);
 
 public:
-    operator unsigned char(void) const;
+    operator unsigned char() const;
 
 private:
     unsigned char value_;
@@ -75,7 +75,7 @@ public:
     Logger(Args&&... args);
 
     Logger(const Logger& other) = delete;
-    ~Logger(void);
+    ~Logger();
 
 private:
     LoggerConfig cfg_;
@@ -89,7 +89,7 @@ private:
 private:
     Logger& operator<<(std::unique_ptr<LogLevelStream>&& ptr);
     bool Handles(const LogLevel level) const;
-    void MessageWriter(void);
+    void MessageWriter();
 };
 
 class LogMessage
@@ -98,7 +98,7 @@ public:
     LogMessage(const char* file, const char* function, unsigned int line, const LogLevel level,
                Logger& logger);
     LogMessage(const LogMessage& msg) = delete;
-    ~LogMessage(void);
+    ~LogMessage();
 
 public:
     template <typename T>

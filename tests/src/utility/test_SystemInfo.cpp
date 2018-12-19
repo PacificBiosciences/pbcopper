@@ -5,7 +5,7 @@
 namespace SystemInfoTests {
 
 // one sort of 'manual' endianness check - not used by the library
-static inline bool isLittleEndian(void)
+static inline bool isLittleEndian()
 {
     static const int i = 1;
     static const char* c = reinterpret_cast<const char*>(&i);

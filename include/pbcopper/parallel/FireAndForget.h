@@ -20,7 +20,7 @@ namespace Parallel {
 class FireAndForget
 {
 private:
-    typedef boost::optional<std::packaged_task<void(void)>> TTask;
+    typedef boost::optional<std::packaged_task<void()>> TTask;
 
 public:
     FireAndForget(const size_t size, const size_t mul = 2) : exc{nullptr}, sz{size * mul}
@@ -58,8 +58,7 @@ public:
     template <typename F, typename... Args>
     void ProduceWith(F&& f, Args&&... args)
     {
-        std::packaged_task<void(void)> task{
-            std::bind(std::forward<F>(f), std::forward<Args>(args)...)};
+        std::packaged_task<void()> task{std::bind(std::forward<F>(f), std::forward<Args>(args)...)};
 
         {
             std::unique_lock<std::mutex> lk(m);

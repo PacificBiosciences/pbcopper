@@ -19,13 +19,13 @@ namespace Align {
 class Seeds
 {
 public:
-    Seeds(void);
+    Seeds();
 
     Seeds(const Seeds&) = default;
     Seeds(Seeds&&) = default;
     Seeds& operator=(const Seeds&) = default;
     Seeds& operator=(Seeds&&) = default;
-    ~Seeds(void) = default;
+    ~Seeds() = default;
 
 public:
     ///
@@ -60,19 +60,19 @@ public:
     using const_reference = container_t::const_reference;
     using size_type = container_t::size_type;
 
-    iterator begin(void) { return data_.begin(); }
-    const_iterator begin(void) const { return data_.begin(); }
-    const_iterator cbegin(void) const { return data_.cbegin(); }
+    iterator begin() { return data_.begin(); }
+    const_iterator begin() const { return data_.begin(); }
+    const_iterator cbegin() const { return data_.cbegin(); }
 
-    iterator end(void) { return data_.end(); }
-    const_iterator end(void) const { return data_.end(); }
-    const_iterator cend(void) const { return data_.cend(); }
+    iterator end() { return data_.end(); }
+    const_iterator end() const { return data_.end(); }
+    const_iterator cend() const { return data_.cend(); }
 
-    const_reference back(void) const { return *data_.crbegin(); }
-    const_reference front(void) const { return *data_.cbegin(); }
+    const_reference back() const { return *data_.crbegin(); }
+    const_reference front() const { return *data_.cbegin(); }
 
-    bool empty(void) const { return data_.empty(); }
-    size_type size(void) const { return data_.size(); }
+    bool empty() const { return data_.empty(); }
+    size_type size() const { return data_.size(); }
 
 private:
     container_t data_;

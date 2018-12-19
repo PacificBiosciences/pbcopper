@@ -18,13 +18,13 @@ inline InputFileType::InputFileType(std::string id, std::string title, std::stri
 {
 }
 
-inline const std::string& InputFileType::Description(void) const { return description_; }
+inline const std::string& InputFileType::Description() const { return description_; }
 
-inline const std::string& InputFileType::Id(void) const { return id_; }
+inline const std::string& InputFileType::Id() const { return id_; }
 
-inline const std::string& InputFileType::Title(void) const { return title_; }
+inline const std::string& InputFileType::Title() const { return title_; }
 
-inline const std::string& InputFileType::Type(void) const { return type_; }
+inline const std::string& InputFileType::Type() const { return type_; }
 
 }  // namespace ToolContract
 }  // namespace CLI

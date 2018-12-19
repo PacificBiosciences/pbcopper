@@ -70,7 +70,7 @@ public:
     ///
     /// \brief Creates a default (unknown) CigarOperation, with length = 0.
     ///
-    CigarOperation(void);
+    CigarOperation();
 
     ///
     /// \brief Creates a CigarOperation from char code & leength.
@@ -92,7 +92,7 @@ public:
     CigarOperation(CigarOperation&& other) = default;
     CigarOperation& operator=(const CigarOperation& other) = default;
     CigarOperation& operator=(CigarOperation&& other) = default;
-    ~CigarOperation(void) = default;
+    ~CigarOperation() = default;
 
     /// \}
 
@@ -113,13 +113,13 @@ public:
     /// \{
 
     /// \returns operation type as SAM/BAM char code
-    char Char(void) const;
+    char Char() const;
 
     /// \returns operation length
-    uint32_t Length(void) const;
+    uint32_t Length() const;
 
     /// \returns operation type as CigarOperationType enum value
-    CigarOperationType Type(void) const;
+    CigarOperationType Type() const;
 
     /// \}
 

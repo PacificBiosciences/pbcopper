@@ -17,29 +17,29 @@ public:
     /// \{
 
     /// Creates a stopwatch and begins timing.
-    Stopwatch(void);
+    Stopwatch();
 
     Stopwatch(const Stopwatch& other) = default;
     Stopwatch(Stopwatch&& other) = default;
     Stopwatch& operator=(const Stopwatch& other) = default;
     Stopwatch& operator=(Stopwatch& other) = default;
-    ~Stopwatch(void) = default;
+    ~Stopwatch() = default;
 
     /// \}
 
 public:
     /// \returns the elapsed time (in milliseconds) since timing began.
-    float ElapsedMilliseconds(void) const;
+    float ElapsedMilliseconds() const;
 
     /// \returns the elapsed time (in seconds) since timing began.
-    float ElapsedSeconds(void) const;
+    float ElapsedSeconds() const;
 
     /// \returns the elapsed time (in user-provided units) since timing began.
     template <typename TimeUnit>
-    float Elapsed(void) const;
+    float Elapsed() const;
 
     // resets internal values
-    void Reset(void);
+    void Reset();
 
 private:
     std::chrono::steady_clock::time_point start_;

@@ -40,7 +40,7 @@ public:
     ///
     Interface(const Interface& other);
 
-    ~Interface(void);
+    ~Interface();
 
     /// \}
 
@@ -52,25 +52,25 @@ public:
     /// \brief ApplicationDescription
     /// \return
     ///
-    const std::string& ApplicationDescription(void) const;
+    const std::string& ApplicationDescription() const;
 
     ///
     /// \brief ApplicationName
     /// \return
     ///
-    const std::string& ApplicationName(void) const;
+    const std::string& ApplicationName() const;
 
     ///
     /// \brief ApplicationVersion
     /// \return
     ///
-    const std::string& ApplicationVersion(void) const;
+    const std::string& ApplicationVersion() const;
 
     ///
     /// \brief AlternativeToolContractName
     /// \return
     ///
-    const std::string& AlternativeToolContractName(void) const;
+    const std::string& AlternativeToolContractName() const;
 
     /// \}
 
@@ -89,7 +89,7 @@ public:
     /// \brief Groups
     /// \return
     ///
-    const std::vector<std::string>& Groups(void) const;
+    const std::vector<std::string>& Groups() const;
 
     ///
     /// \brief GroupOptions
@@ -109,31 +109,31 @@ public:
     /// \brief HasHelpOptionRegistered
     /// \return
     ///
-    bool HasHelpOptionRegistered(void) const;
+    bool HasHelpOptionRegistered() const;
 
     ///
     /// \brief HasLogLevelOptionRegistered
     /// \return
     ///
-    bool HasLogLevelOptionRegistered(void) const;
+    bool HasLogLevelOptionRegistered() const;
 
     ///
     /// \brief HasVerboseOptionRegistered
     /// \return
     ///
-    bool HasVerboseOptionRegistered(void) const;
+    bool HasVerboseOptionRegistered() const;
 
     ///
     /// \brief HasVersionOptionRegistered
     /// \return
     ///
-    bool HasVersionOptionRegistered(void) const;
+    bool HasVersionOptionRegistered() const;
 
     ///
     /// \brief HelpOption
     /// \return
     ///
-    const Option& HelpOption(void) const;
+    const Option& HelpOption() const;
 
     ///
     /// \brief IdForOptionName
@@ -146,13 +146,13 @@ public:
     /// \brief IsToolContractEnabled
     /// \return
     ///
-    bool IsToolContractEnabled(void) const;
+    bool IsToolContractEnabled() const;
 
     ///
     /// \brief LogLevelOption
     /// \return
     ///
-    const Option& LogLevelOption(void) const;
+    const Option& LogLevelOption() const;
 
     ///
     /// \brief OptionChoices
@@ -165,31 +165,31 @@ public:
     /// \brief RegisteredOptions
     /// \return
     ///
-    const std::vector<Option>& RegisteredOptions(void) const;
+    const std::vector<Option>& RegisteredOptions() const;
 
     ///
     /// \brief RegisteredPositionalArgs
     /// \return
     ///
-    const std::vector<PositionalArg>& RegisteredPositionalArgs(void) const;
+    const std::vector<PositionalArg>& RegisteredPositionalArgs() const;
 
     ///
     /// \brief ToolContract
     /// \return
     ///
-    const ToolContract::Config& ToolContract(void) const;
+    const ToolContract::Config& ToolContract() const;
 
     ///
     /// \brief VerboseOption
     /// \return
     ///
-    const Option& VerboseOption(void) const;
+    const Option& VerboseOption() const;
 
     ///
     /// \brief VersionOption
     /// \return
     ///
-    const Option& VersionOption(void) const;
+    const Option& VersionOption() const;
 
     /// \}
 

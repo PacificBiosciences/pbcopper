@@ -28,7 +28,7 @@ struct RSMovieName::PartsCache
 //       until the components are again requested. That should happen less often
 //       than moving these guys around.
 
-inline RSMovieName::RSMovieName(void) {}
+inline RSMovieName::RSMovieName() = default;
 
 inline RSMovieName::RSMovieName(std::string name) : movieName_{std::move(name)} {}
 
@@ -53,50 +53,50 @@ inline RSMovieName& RSMovieName::operator=(RSMovieName&& other) noexcept
     return *this;
 }
 
-inline RSMovieName::~RSMovieName(void) {}
+inline RSMovieName::~RSMovieName() = default;
 
-inline boost::string_ref RSMovieName::InstrumentSerialNumber(void) const
+inline boost::string_ref RSMovieName::InstrumentSerialNumber() const
 {
     if (!partsCache_) UpdatePartsCache();
     assert(partsCache_);
     return partsCache_->serialNumber_;
 }
 
-inline bool RSMovieName::IsReagentExpired(void) const
+inline bool RSMovieName::IsReagentExpired() const
 {
     const auto expiredStatus = PartNumber().at(0);
     return expiredStatus == 'X' || expiredStatus == 'x';
 }
 
-inline boost::string_ref RSMovieName::PartNumber(void) const
+inline boost::string_ref RSMovieName::PartNumber() const
 {
     if (!partsCache_) UpdatePartsCache();
     assert(partsCache_);
     return partsCache_->partNumber_;
 }
 
-inline boost::string_ref RSMovieName::RunStartTime(void) const
+inline boost::string_ref RSMovieName::RunStartTime() const
 {
     if (!partsCache_) UpdatePartsCache();
     assert(partsCache_);
     return partsCache_->runStartTime_;
 }
 
-inline boost::string_ref RSMovieName::SetNumber(void) const
+inline boost::string_ref RSMovieName::SetNumber() const
 {
     if (!partsCache_) UpdatePartsCache();
     assert(partsCache_);
     return partsCache_->setNumber_;
 }
 
-inline boost::string_ref RSMovieName::SMRTCellBarcode(void) const
+inline boost::string_ref RSMovieName::SMRTCellBarcode() const
 {
     if (!partsCache_) UpdatePartsCache();
     assert(partsCache_);
     return partsCache_->smrtCellBarcode_;
 }
 
-inline std::string RSMovieName::ToStdString(void) const { return movieName_; }
+inline std::string RSMovieName::ToStdString() const { return movieName_; }
 
 inline bool operator==(const RSMovieName& lhs, const RSMovieName& rhs)
 {
@@ -118,7 +118,7 @@ inline std::ostream& operator<<(std::ostream& os, const RSMovieName& movieName)
 
 inline std::istream& operator>>(std::istream& is, RSMovieName& movieName)
 {
-    auto s = std::string{};
+    std::string s;
     is >> s;
     movieName = RSMovieName{std::move(s)};
     return is;

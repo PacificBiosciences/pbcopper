@@ -18,9 +18,9 @@ public:
     };
 
 public:
-    static constexpr SystemInfo::Endian ByteOrder(void);
-    static constexpr bool IsBigEndian(void);
-    static constexpr bool IsLittleEndian(void);
+    static constexpr SystemInfo::Endian ByteOrder();
+    static constexpr bool IsBigEndian();
+    static constexpr bool IsLittleEndian();
 };
 
 }  // namespace Utility
