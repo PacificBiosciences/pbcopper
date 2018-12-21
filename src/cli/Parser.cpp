@@ -20,9 +20,6 @@ public:
     PacBio::CLI::Interface interface_;
     PacBio::CLI::Results results_;
 
-    std::vector<std::string> observedOptions_;  // consider a set
-    ValueLookup observedOptionValues_;
-
     explicit ParserPrivate(const Interface& interface) : interface_(interface), results_(interface)
     {
     }

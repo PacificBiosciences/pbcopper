@@ -82,6 +82,9 @@ int argRunner(const PacBio::CLI::Results& args)
     s.tempDir = args["temp_dir"];
     s.timeout   = args["timeout"];
 
+    std::cout << "Effective commandline:\n"
+        << args.EffectiveCommandLine() << "\n";
+
     const auto positionalArgs = args.PositionalArguments();
     if (positionalArgs.size() < 2) {
         std::cerr << "ERROR: source & dest args are required\n";

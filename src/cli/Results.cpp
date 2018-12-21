@@ -11,6 +11,7 @@
 #include <pbcopper/json/JSON.h>
 #include <pbcopper/utility/StringUtils.h>
 
+#include <sstream>
 using Json = PacBio::JSON::Json;
 
 namespace PacBio {
@@ -36,8 +37,9 @@ public:
     {
         // init with default values
         const auto registeredOptions = interface_.RegisteredOptions();
-        for (const Option& opt : registeredOptions)
+        for (const Option& opt : registeredOptions) {
             options_[opt.Id()] = opt.DefaultValue();
+        }
     }
 
     ResultsPrivate(const ResultsPrivate&) = default;
@@ -81,6 +83,42 @@ Results& Results::operator=(Results&& other)
 Results::~Results() = default;
 
 std::string Results::InputCommandLine() const { return Utility::Join(d_->inputCommandLine_, " "); }
+
+std::string Results::EffectiveCommandLine() const
+{
+    std::ostringstream sout;
+    const std::vector<Option> registeredOptions = d_->interface_.RegisteredOptions();
+    for (const Option& opt : registeredOptions) {
+        const auto defVal = opt.DefaultValue();
+        if (defVal.is_boolean()) {
+            const std::string alias = opt.Names().front();  // The last is probably the short one.
+            // Print only if not false.
+            if (d_->options_[opt.Id()]) {
+                if (1 == alias.size()) {
+                    // typical boolean flag
+                    sout << " -" << alias;
+                } else {
+                    // just a guess
+                    sout << " --" << alias;
+                }
+            }
+        } else {
+            const std::string alias =
+                opt.Names().back();  // The last is probably the most descriptive.
+            if (1 == alias.size()) {
+                // just a guess
+                sout << " -" << alias << " " << d_->options_[opt.Id()];
+            } else {
+                // typical
+                sout << " --" << alias << "=" << d_->options_[opt.Id()];
+            }
+        }
+    }
+    for (const auto arg : d_->positionalArgs_) {
+        sout << " " << arg;
+    }
+    return sout.str();
+}
 
 bool Results::IsFromRTC() const { return d_->isFromRtc_; }
 
