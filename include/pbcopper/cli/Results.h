@@ -62,6 +62,12 @@ public:
     std::string InputCommandLine() const;
 
     ///
+    /// \bbrief EffectiveCommandLine
+    /// \return vector of command-line args to repeat this call, but with explicit defaults
+    ///
+    std::string EffectiveCommandLine() const;
+
+    ///
     /// \brief IsFromRTC
     /// \return true if this Results object generated from a resolved tool
     ///         contract (as opposed to command-line args)

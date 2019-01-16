@@ -93,8 +93,8 @@ public:
     /// cl.addOption({"verbose_arg", "verbose", "Verbose mode."});
     /// \endcode
     ///
-    /// \param[in]  id              option ID (must be unique, used later to fetch results)
-    /// \param[in]  name            option name
+    /// \param[in]  id              unique option id
+    /// \param[in]  name            unique option name
     /// \param[in]  description     option description
     /// \param[in]  defaultValue    default value, if not user-specified
     /// \param[in]  choices         list of accepted inputs
@@ -131,9 +131,9 @@ public:
     /// cl.addOption({"output_file", {"o", "output"}, "Write results to <file>."});
     /// \endcode
     ///
-    /// \param[in]  name            option name
+    /// \param[in]  id              unique option id
+    /// \param[in]  names           unique option aliases
     /// \param[in]  description     option description
-    /// \param[in]  valueName       value name (used in help display)
     /// \param[in]  defaultValue    default value for option if not specified
     /// \param[in]  choices         list of accepted inputs
     /// \param[in]  flags           extra configuration
@@ -169,9 +169,9 @@ public:
     /// cl.addOption({"output_file", {"o", "output"}, "Write results to <file>."});
     /// \endcode
     ///
-    /// \param[in]  name            option name
+    /// \param[in]  id              unique option id
+    /// \param[in]  names           unique option aliases
     /// \param[in]  description     option description
-    /// \param[in]  valueName       value name (used in help display)
     /// \param[in]  defaultValue    default value for option if not specified
     /// \param[in]  choices         list of accepted inputs
     /// \param[in]  flags           extra configuration
