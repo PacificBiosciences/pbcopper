@@ -49,7 +49,7 @@ pbcopper_test_cpp_sources = files([
   'src/utility/test_CallbackTimer.cpp',
   'src/utility/test_FileUtils.cpp',
   'src/utility/test_Stopwatch.cpp',
-  'src/utility/test_SystemInfo.cpp'
+  'src/utility/test_SystemInfo.cpp',
 ])
 
 # find GoogleTest

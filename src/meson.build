@@ -36,7 +36,9 @@ pbcopper_cpp_sources = files([
   # ---------
   # utility
   # ---------
-  'utility/CallbackTimer.cpp'])
+  'utility/CallbackTimer.cpp',
+  'utility/Stopwatch.cpp',
+  ])
 
 subdir('utility')
 
