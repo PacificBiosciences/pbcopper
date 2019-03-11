@@ -62,3 +62,17 @@ TEST(Utility_Stopwatch, determines_elapsed_time_since_reset)
     auto elapsed = s.ElapsedMilliseconds();
     ASSERT_FLOAT_EQ(3, elapsed);
 }
+
+TEST(Utility_Stopwatch, TestPrettyPrintNanoseconds)
+{
+    const std::string x = PacBio::Utility::Stopwatch::PrettyPrintNanoseconds(
+        std::chrono::duration_cast<std::chrono::nanoseconds>(std::chrono::hours(4)).count());
+    const std::string y = PacBio::Utility::Stopwatch::PrettyPrintNanoseconds(
+        std::chrono::duration_cast<std::chrono::nanoseconds>(std::chrono::hours(4 * 24)).count());
+    const std::string z = PacBio::Utility::Stopwatch::PrettyPrintNanoseconds(
+        std::chrono::duration_cast<std::chrono::nanoseconds>(std::chrono::hours(4 * 24 + 1))
+            .count());
+    EXPECT_EQ(x, "4h ");
+    EXPECT_EQ(y, "4d ");
+    EXPECT_EQ(z, "4d 1h ");
+}
