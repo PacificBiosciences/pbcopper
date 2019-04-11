@@ -1,11 +1,11 @@
 project(
   'pbcopper',
   'cpp',
-  version : '0.4.2',
+  version : '0.5.0',
   default_options : [
     'buildtype=release',
     'warning_level=3',
-    'cpp_std=c++11',
+    'cpp_std=c++14',
     'b_ndebug=if-release'],
   license : 'BSD-3',
   meson_version : '>= 0.46.0')
