@@ -6,6 +6,11 @@
 - Initial sequence-related data structures
 - FireAndForget increase buffer
 
+## [0.5.0] - 2019-04-11
+
+### Changed
+ - Requires C++14 at minimum.
+
 ## [0.3.0] - 2018-04-30
 
 ### Changed
