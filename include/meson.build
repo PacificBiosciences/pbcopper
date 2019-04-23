@@ -7,8 +7,7 @@ if not meson.is_subproject()
   # pbcopper
   install_headers(
     files([
-      'pbcopper/PbcopperConfig.h',
-      'pbcopper/PbcopperMakeUnique.h']),
+      'pbcopper/PbcopperConfig.h']),
     subdir : 'pbcopper')
 
   # pbcopper/align
@@ -185,7 +184,6 @@ if not meson.is_subproject()
   install_headers(
     files([
       'pbcopper/utility/CallbackTimer.h',
-      'pbcopper/utility/EnumClassHash.h',
       'pbcopper/utility/FileUtils.h',
       'pbcopper/utility/MoveAppend.h',
       'pbcopper/utility/PbcopperVersion.h',
