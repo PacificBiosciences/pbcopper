@@ -6,6 +6,22 @@
 - Initial sequence-related data structures
 - FireAndForget increase buffer
 
+## [1.0.0] - 2019-04-23
+
+### Changed
+ - C++14 is now a *hard* minimum.
+
+### Removed
+ - Headers emulating C++14 features for C++11.
+
+### Added
+ - New (opt-in) CLI version 2.
+
+## [0.5.0] - 2019-04-11
+
+### Changed
+ - Requires C++14 at minimum.
+
 ## [0.3.0] - 2018-04-30
 
 ### Changed

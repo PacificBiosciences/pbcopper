@@ -13,15 +13,34 @@ inline Stopwatch::Stopwatch() { Reset(); }
 template <typename TimeUnit>
 float Stopwatch::Elapsed() const
 {
-    const auto now = std::chrono::steady_clock::now();
-    return std::chrono::duration_cast<TimeUnit>(now - start_).count();
+    if (frozen_) {
+        return std::chrono::duration_cast<TimeUnit>(tock_ - tick_).count();
+    } else {
+        auto tock = std::chrono::steady_clock::now();
+        return std::chrono::duration_cast<TimeUnit>(tock - tick_).count();
+    }
 }
 
+inline float Stopwatch::ElapsedNanoseconds() const { return Elapsed<std::chrono::nanoseconds>(); }
 inline float Stopwatch::ElapsedMilliseconds() const { return Elapsed<std::chrono::milliseconds>(); }
-
 inline float Stopwatch::ElapsedSeconds() const { return Elapsed<std::chrono::seconds>(); }
 
-void Stopwatch::Reset() { start_ = std::chrono::steady_clock::now(); }
+inline std::string Stopwatch::ElapsedTime() const
+{
+    auto nanosecs = ElapsedNanoseconds();
+    return PrettyPrintNanoseconds(nanosecs);
+}
+
+inline void Stopwatch::Reset()
+{
+    tick_ = std::chrono::steady_clock::now();
+    frozen_ = false;
+}
+inline void Stopwatch::Freeze()
+{
+    tock_ = std::chrono::steady_clock::now();
+    frozen_ = true;
+}
 
 }  // namespace Utility
 }  // namespace PacBio

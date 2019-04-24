@@ -21,6 +21,24 @@ pbcopper_cpp_sources = files([
   'cli/toolcontract/ResolvedToolContract.cpp',
 
   # -------
+  # cli2
+  # -------
+
+  'cli2/CLI.cpp',
+  'cli2/CommandLineParser.cpp',
+  'cli2/Interface.cpp',
+  'cli2/InterfaceHelpPrinter.cpp',
+  'cli2/MultiToolInterface.cpp',
+  'cli2/MultiToolInterfaceHelpPrinter.cpp',
+  'cli2/OptionTranslator.cpp',
+  'cli2/Option.cpp',
+  'cli2/OptionValue.cpp',
+  'cli2/PositionalArgumentTranslator.cpp',
+  'cli2/Result.cpp',
+  'cli2/Results.cpp',
+  'cli2/VersionPrinter.cpp',
+
+  # -------
   # data
   # -------
   'data/Cigar.cpp',
@@ -36,7 +54,9 @@ pbcopper_cpp_sources = files([
   # ---------
   # utility
   # ---------
-  'utility/CallbackTimer.cpp'])
+  'utility/CallbackTimer.cpp',
+  'utility/Stopwatch.cpp',
+  'utility/StringUtils.cpp'])
 
 subdir('utility')
 

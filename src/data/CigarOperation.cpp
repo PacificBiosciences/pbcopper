@@ -6,8 +6,6 @@
 #include <stdexcept>
 #include <unordered_map>
 
-#include <pbcopper/utility/EnumClassHash.h>
-
 namespace PacBio {
 namespace Data {
 
@@ -40,10 +38,8 @@ CigarOperationType CigarOperation::CharToType(const char c)
 
 char CigarOperation::TypeToChar(const CigarOperationType type)
 {
-    using Hash = PacBio::Utility::EnumClassHash;
-
     // clang-format off
-    static const auto lookup = std::unordered_map<CigarOperationType, char, Hash>
+    static const auto lookup = std::unordered_map<CigarOperationType, char>
     {
         { CigarOperationType::SOFT_CLIP,         'S' },
         { CigarOperationType::SEQUENCE_MATCH,    '=' },

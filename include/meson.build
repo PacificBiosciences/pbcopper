@@ -7,8 +7,7 @@ if not meson.is_subproject()
   # pbcopper
   install_headers(
     files([
-      'pbcopper/PbcopperConfig.h',
-      'pbcopper/PbcopperMakeUnique.h']),
+      'pbcopper/PbcopperConfig.h']),
     subdir : 'pbcopper')
 
   # pbcopper/align
@@ -68,6 +67,39 @@ if not meson.is_subproject()
       'pbcopper/cli/toolcontract/internal/OutputFileType-inl.h',
       'pbcopper/cli/toolcontract/internal/Task-inl.h']),
     subdir : 'pbcopper/cli/toolcontract/internal')
+
+  # pbcopper/cli2
+  install_headers(
+    files([
+      'pbcopper/cli2/CLI.h',
+      'pbcopper/cli2/Interface.h',
+      'pbcopper/cli2/MultiToolInterface.h',
+      'pbcopper/cli2/Option.h',
+      'pbcopper/cli2/OptionValue.h',
+      'pbcopper/cli2/OptionGroup.h',
+      'pbcopper/cli2/PositionalArgument.h',
+      'pbcopper/cli2/Result.h',
+      'pbcopper/cli2/Results.h',
+      'pbcopper/cli2/ResultsHandler.h',
+      'pbcopper/cli2/Tool.h'
+      ]),
+    subdir : 'pbcopper/cli2')
+
+  # pbcopper/cli2/internal
+  install_headers(
+    files([
+      'pbcopper/cli2/internal/BuiltinOptions.h',
+      'pbcopper/cli2/internal/CommandLineParser.h',
+      'pbcopper/cli2/internal/InterfaceData.h',
+      'pbcopper/cli2/internal/InterfaceHelpPrinter.h',
+      'pbcopper/cli2/internal/MultiToolInterfaceData.h',
+      'pbcopper/cli2/internal/MultiToolInterfaceHelpPrinter.h',
+      'pbcopper/cli2/internal/OptionData.h',
+      'pbcopper/cli2/internal/OptionTranslator.h',
+      'pbcopper/cli2/internal/PositionalArgumentData.h',
+      'pbcopper/cli2/internal/PositionalArgumentTranslator.h',
+      'pbcopper/cli2/internal/VersionPrinter.h',]),
+    subdir : 'pbcopper/cli2/internal')
 
   # pbcopper/data
   install_headers(
@@ -152,7 +184,6 @@ if not meson.is_subproject()
   install_headers(
     files([
       'pbcopper/utility/CallbackTimer.h',
-      'pbcopper/utility/EnumClassHash.h',
       'pbcopper/utility/FileUtils.h',
       'pbcopper/utility/MoveAppend.h',
       'pbcopper/utility/PbcopperVersion.h',
@@ -168,7 +199,6 @@ if not meson.is_subproject()
     files([
       'pbcopper/utility/internal/FileUtils-inl.h',
       'pbcopper/utility/internal/Stopwatch-inl.h',
-      'pbcopper/utility/internal/StringUtils-inl.h',
       'pbcopper/utility/internal/SystemInfo-inl.h']),
     subdir : 'pbcopper/utility/internal')
 endif
