@@ -6,6 +6,11 @@
 - Initial sequence-related data structures
 - FireAndForget increase buffer
 
+## [1.1.0] - 2019-04-29
+
+### Added
+ - Reports module
+
 ## [1.0.0] - 2019-04-23
 
 ### Changed
