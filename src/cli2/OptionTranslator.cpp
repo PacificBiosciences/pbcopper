@@ -124,7 +124,7 @@ OptionData OptionTranslator::Translate(const Option& option)
         if (names != root.cend())
         {
             for (const auto& name : *names)
-                result.names.push_back(name);
+                result.names.push_back(name.get<std::string>());
         }
 
         // names.hidden
@@ -132,13 +132,13 @@ OptionData OptionTranslator::Translate(const Option& option)
         if (hiddenNames != root.cend())
         {
             for (const auto& hiddenName : *hiddenNames)
-                result.hiddenNames.push_back(hiddenName);
+                result.hiddenNames.push_back(hiddenName.get<std::string>());
         }
 
         // description
         const auto description = root.find("description");
         if (description != root.cend())
-            result.description = *description;
+            result.description = description->get<std::string>();
 
         // hidden
         const auto hidden = root.find("hidden");
