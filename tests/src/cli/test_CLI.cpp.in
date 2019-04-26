@@ -140,9 +140,9 @@ static int appRunner(const PacBio::CLI::Results& args)
     MyAppSettings s;
     s.force_ = args["force"];
     s.showProgress_ = args["progress"];
-    s.targetDir_ = args["target_dir"];
-    s.ploidy_ = args["ploidy"];
-    s.element_ = args["element"];
+    s.targetDir_ = args["target_dir"].get<std::string>();;
+    s.ploidy_ = args["ploidy"].get<std::string>();;
+    s.element_ = args["element"].get<std::string>();;
     s.timeout_ = args["timeout"];
     s.delta_ = args["delta"];
 

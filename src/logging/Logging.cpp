@@ -53,7 +53,7 @@ LogLevel LogLevelFromString(const std::string& level)
     throw std::invalid_argument("invalid log level");
 }
 
-}  // anonymous
+}  // namespace
 
 void InstallSignalHandlers(Logger& logger)
 {

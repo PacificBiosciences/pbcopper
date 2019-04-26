@@ -56,16 +56,16 @@ PositionalArgumentData PositionalArgumentTranslator::Translate(const PositionalA
         const Json root = Json::parse(posArg.text);
 
         // name
-        const auto name = root.find("name");
-        if (name != root.cend()) result.name = *name;
+        auto name = root.find("name");
+        if (name != root.cend()) result.name = name->get<std::string>();
 
         // description
         const auto description = root.find("description");
-        if (description != root.cend()) result.description = *description;
+        if (description != root.cend()) result.description = description->get<std::string>();
 
         // type
         const auto type = root.find("type");
-        if (type != root.cend()) result.type = ValueType(*type);
+        if (type != root.cend()) result.type = ValueType(type->get<std::string>());
 
     } catch (std::exception& e) {
         std::ostringstream msg;
