@@ -53,6 +53,9 @@ pbcopper_test_cpp_sources = files([
   # qgram
   'src/qgram/test_Index.cpp',
 
+  # reports
+  'src/reports/test_Report.cpp',
+
   # stream
   'src/stream/test_Stream.cpp',
 

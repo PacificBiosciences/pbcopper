@@ -159,6 +159,12 @@ if not meson.is_subproject()
       'pbcopper/parallel/WorkQueue.h']),
     subdir : 'pbcopper/parallel')
 
+  # pbcopper/reports
+  install_headers(
+    files([
+      'pbcopper/reports/Report.h']),
+    subdir : 'pbcopper/reports')
+
   # pbcopper/qgram
   install_headers(
     files([
