@@ -439,7 +439,7 @@ TEST(CLI2_InterfaceHelpPrinter, formats_builtin_option_group)
     const std::string expectedText{
         "Options:\n"
         "  -h,--help          Show this help.\n"
-        "  --log-level  STR   Set log level. [INFO]\n"
+        "  --log-level  STR   Set log level. Valid choices: (TRACE, DEBUG, INFO, WARN, FATAL). [WARN]\n"
         "  --log-file   FILE  Log to a file, instead of stderr.\n"
         "  --version          Show application version.\n"};
 
@@ -552,7 +552,8 @@ Algorithm Options:
                           [haploid]
 
   -h,--help               Show this help.
-  --log-level      STR    Set log level. [INFO]
+  --log-level      STR    Set log level. Valid choices: (TRACE, DEBUG, INFO,
+                          WARN, FATAL). [WARN]
   --log-file       FILE   Log to a file, instead of stderr.
   --version               Show application version.
 

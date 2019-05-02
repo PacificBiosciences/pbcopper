@@ -24,9 +24,8 @@ R"({
     "names.hidden" : ["logLevel"],
     "description" : "Set log level.",
     "type" : "string",
-    "default" : "INFO",
-    "choices" : ["TRACE", "DEBUG", "INFO", "WARN", "FATAL"],
-    "choices.hidden" : true
+    "default" : "WARN",
+    "choices" : ["TRACE", "DEBUG", "INFO", "WARN", "FATAL"]
 })"};
 
 const Option LogFile{

@@ -134,7 +134,7 @@ TEST(CLI2_CLI, can_print_help)
 "\n"
 "Options:\n"
 "  -h,--help          Show this help.\n"
-"  --log-level  STR   Set log level. [INFO]\n"
+"  --log-level  STR   Set log level. Valid choices: (TRACE, DEBUG, INFO, WARN, FATAL). [WARN]\n"
 "  --log-file   FILE  Log to a file, instead of stderr.\n"
 "  --version          Show application version.\n"
 "\n"
@@ -252,7 +252,7 @@ Usage:
   --count      INT   Should see this entry too [5]
 
   -h,--help          Show this help.
-  --log-level  STR   Set log level. [INFO]
+  --log-level  STR   Set log level. Valid choices: (TRACE, DEBUG, INFO, WARN, FATAL). [WARN]
   --log-file   FILE  Log to a file, instead of stderr.
   --version          Show application version.
 
