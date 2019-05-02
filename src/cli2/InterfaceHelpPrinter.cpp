@@ -352,8 +352,13 @@ std::string InterfaceHelpPrinter::Usage()
     usage << "Usage:\n"
           << "  " << interface_.ApplicationName() << " [options]";
 
-    for (const auto& posArg : interface_.PositionalArguments())
-        usage << " <" << posArg.name << '>';
+    // print all required pos args & then optional ones after, regardless of order added
+    for (const auto& posArg : interface_.PositionalArguments()) {
+        if (posArg.required) usage << " <" << posArg.name << '>';
+    }
+    for (const auto& posArg : interface_.PositionalArguments()) {
+        if (!posArg.required) usage << " [" << posArg.name << ']';
+    }
 
     return usage.str();
 }

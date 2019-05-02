@@ -127,6 +127,16 @@ R"({
 })"
 };
 
+static const PositionalArgument OptionalStats
+{
+R"({
+    "name" : "stats",
+    "description" : "Write stats to file, rather than to stdout.",
+    "type" : "FILE",
+    "required" : false
+})"
+};
+
 }  // namespace Options
 }  // namespace CLI_v2_InterfaceHelpPrinterTests
 
@@ -135,6 +145,38 @@ TEST(CLI2_InterfaceHelpPrinter, formats_usage)
     const std::string expectedText{"Usage:\n  frobber [options]"};
 
     Interface i{"frobber"};
+
+    InterfaceHelpPrinter help{i};
+    const auto formattedText = help.Usage();
+    EXPECT_EQ(expectedText, formattedText);
+}
+
+TEST(CLI2_InterfaceHelpPrinter, formats_usage_with_pos_args)
+{
+    const std::string expectedText{"Usage:\n  frobber [options] <source> <dest> [stats]"};
+
+    Interface i{"frobber"};
+    i.AddPositionalArguments({
+        CLI_v2_InterfaceHelpPrinterTests::Options::Source,
+        CLI_v2_InterfaceHelpPrinterTests::Options::Dest,
+        CLI_v2_InterfaceHelpPrinterTests::Options::OptionalStats
+    });
+
+    InterfaceHelpPrinter help{i};
+    const auto formattedText = help.Usage();
+    EXPECT_EQ(expectedText, formattedText);
+}
+
+TEST(CLI2_InterfaceHelpPrinter, usage_with_optional_pos_args_always_places_them_after_required_args)
+{
+    const std::string expectedText{"Usage:\n  frobber [options] <source> <dest> [stats]"};
+
+    Interface i{"frobber"};
+    i.AddPositionalArguments({
+        CLI_v2_InterfaceHelpPrinterTests::Options::Source,
+        CLI_v2_InterfaceHelpPrinterTests::Options::OptionalStats,
+        CLI_v2_InterfaceHelpPrinterTests::Options::Dest
+    });
 
     InterfaceHelpPrinter help{i};
     const auto formattedText = help.Usage();
@@ -486,12 +528,13 @@ TEST(CLI2_InterfaceHelpPrinter, prints_expected_full_interface_help)
     const std::string expectedText{R"(frobber - Frobb your files in a most delightful, nobbly way
 
 Usage:
-  frobber [options] <source> <dest>
+  frobber [options] <source> <dest> [stats]
 
   source           FILE   Source file to copy.
   dest             DIR    Destination directory. Essentially where we want to
                           drop things, but really just making a long
                           description.
+  stats            FILE   Write stats to file, rather than to stdout.
 
 General Options:
   -p                      Show progress during copy.
@@ -536,7 +579,8 @@ Algorithm Options:
 
     i.AddPositionalArguments({
         CLI_v2_InterfaceHelpPrinterTests::Options::Source,
-        CLI_v2_InterfaceHelpPrinterTests::Options::Dest
+        CLI_v2_InterfaceHelpPrinterTests::Options::Dest,
+        CLI_v2_InterfaceHelpPrinterTests::Options::OptionalStats
     });
 
     const InterfaceHelpPrinter help{i, 80};

@@ -67,6 +67,10 @@ PositionalArgumentData PositionalArgumentTranslator::Translate(const PositionalA
         const auto type = root.find("type");
         if (type != root.cend()) result.type = ValueType(type->get<std::string>());
 
+        // required
+        const auto required = root.find("required");
+        if (required != root.cend()) result.required = *required;
+
     } catch (std::exception& e) {
         std::ostringstream msg;
         msg << "[pbcopper] command line argument ERROR: cannot parse definition:\n"
