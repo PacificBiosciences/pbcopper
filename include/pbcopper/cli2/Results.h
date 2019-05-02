@@ -112,11 +112,6 @@ public:
     Results& InputCommandLine(std::string cmdLine);
 
     ///
-    /// Sets the requested log level
-    ///
-    Results& LogLevel(PacBio::Logging::LogLevel logLevel);
-
-    ///
     /// Sets the requested number of processors to use (e.g. from "nproc")
     ///
     Results& NumProcessors(size_t nproc);
@@ -128,8 +123,6 @@ public:
 
 private:
     std::string inputCommandLine_;
-
-    PacBio::Logging::LogLevel logLevel_ = PacBio::Logging::LogLevel::INFO;
     size_t numProcessors_ = 1;
 
     std::unordered_map<std::string, std::shared_ptr<Result>> results_;

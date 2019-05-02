@@ -89,6 +89,19 @@ const std::string& Interface::ApplicationName() const { return data_.appName_; }
 
 const std::string& Interface::ApplicationVersion() const { return data_.appVersion_; }
 
+Logging::LogLevel Interface::DefaultLogLevel() const
+{
+    const auto& value = *data_.logLevelOption_.defaultValue;
+    return Logging::LogLevel{boost::get<std::string>(value)};
+}
+
+Interface& Interface::DefaultLogLevel(Logging::LogLevel level)
+{
+    std::string levelStr = level;
+    data_.logLevelOption_.defaultValue = std::move(levelStr);
+    return *this;
+}
+
 const std::string& Interface::Example() const { return data_.example_; }
 
 Interface& Interface::Example(std::string example)

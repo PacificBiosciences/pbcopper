@@ -2,6 +2,7 @@
 
 #include <stdexcept>
 
+#include <pbcopper/cli2/internal/BuiltinOptions.h>
 #include <pbcopper/cli2/internal/OptionTranslator.h>
 #include <pbcopper/cli2/internal/PositionalArgumentTranslator.h>
 
@@ -55,12 +56,12 @@ Results& Results::InputCommandLine(std::string cmdLine)
     return *this;
 }
 
-PacBio::Logging::LogLevel Results::LogLevel() const { return logLevel_; }
-
-Results& Results::LogLevel(PacBio::Logging::LogLevel logLevel)
+PacBio::Logging::LogLevel Results::LogLevel() const
 {
-    logLevel_ = logLevel;
-    return *this;
+
+    const auto& logLevelOpt = (*this)[Builtin::LogLevel];
+    const std::string logLevelStr = logLevelOpt;
+    return PacBio::Logging::LogLevel(logLevelStr);
 }
 
 size_t Results::NumProcessors() const { return numProcessors_; }

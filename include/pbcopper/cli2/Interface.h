@@ -16,6 +16,7 @@
 #include <pbcopper/cli2/PositionalArgument.h>
 #include <pbcopper/cli2/Results.h>
 #include <pbcopper/cli2/internal/InterfaceData.h>
+#include <pbcopper/logging/Logging.h>
 
 namespace PacBio {
 namespace CLI_v2 {
@@ -77,6 +78,14 @@ public:
     Interface& AddPositionalArguments(const std::vector<PositionalArgument>& posArgs);
 
     ///
+    /// Set explicit default log level.
+    ///
+    /// The built-in log level defaults to WARN, if not set by user. Applications
+    /// may use this method to override that default (e.g. to INFO) if desired.
+    ///
+    Interface& DefaultLogLevel(Logging::LogLevel level);
+
+    ///
     /// Set application example.
     ///
     /// \note Currently only used when part of multi-tool interfaces.
@@ -98,6 +107,11 @@ public:
     /// \return application's version
     ///
     const std::string& ApplicationVersion() const;
+
+    ///
+    /// \return current default log level (client application's may override)
+    ///
+    Logging::LogLevel DefaultLogLevel() const;
 
     ///
     /// \return application example
