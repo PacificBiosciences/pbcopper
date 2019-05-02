@@ -438,10 +438,10 @@ TEST(CLI2_InterfaceHelpPrinter, formats_builtin_option_group)
 {
     const std::string expectedText{
         "Options:\n"
-        "  -h,--help          Show this help.\n"
+        "  -h,--help          Show this help and exit.\n"
         "  --log-level  STR   Set log level. Valid choices: (TRACE, DEBUG, INFO, WARN, FATAL). [WARN]\n"
         "  --log-file   FILE  Log to a file, instead of stderr.\n"
-        "  --version          Show application version.\n"};
+        "  --version          Show application version and exit.\n"};
 
     Interface i{"frobber"};
     InterfaceHelpPrinter help{i};
@@ -453,10 +453,10 @@ TEST(CLI2_InterfaceHelpPrinter, prints_log_level_override)
 {
     const std::string expectedText{
         "Options:\n"
-        "  -h,--help          Show this help.\n"
+        "  -h,--help          Show this help and exit.\n"
         "  --log-level  STR   Set log level. Valid choices: (TRACE, DEBUG, INFO, WARN, FATAL). [DEBUG]\n"
         "  --log-file   FILE  Log to a file, instead of stderr.\n"
-        "  --version          Show application version.\n"};
+        "  --version          Show application version and exit.\n"};
 
     Interface i{"frobber"};
     i.DefaultLogLevel(PacBio::Logging::LogLevel::DEBUG);
@@ -567,11 +567,11 @@ Algorithm Options:
   --ploidy         STR    Genome ploidy. Valid choices: (haploid, diploid).
                           [haploid]
 
-  -h,--help               Show this help.
+  -h,--help               Show this help and exit.
   --log-level      STR    Set log level. Valid choices: (TRACE, DEBUG, INFO,
                           WARN, FATAL). [WARN]
   --log-file       FILE   Log to a file, instead of stderr.
-  --version               Show application version.
+  --version               Show application version and exit.
 
 )"};
 

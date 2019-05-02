@@ -133,10 +133,10 @@ TEST(CLI2_CLI, can_print_help)
 "  frobber [options]\n"
 "\n"
 "Options:\n"
-"  -h,--help          Show this help.\n"
+"  -h,--help          Show this help and exit.\n"
 "  --log-level  STR   Set log level. Valid choices: (TRACE, DEBUG, INFO, WARN, FATAL). [WARN]\n"
 "  --log-file   FILE  Log to a file, instead of stderr.\n"
-"  --version          Show application version.\n"
+"  --version          Show application version and exit.\n"
 "\n"
 };
 
@@ -251,10 +251,10 @@ Usage:
   --test             Should see this entry
   --count      INT   Should see this entry too [5]
 
-  -h,--help          Show this help.
+  -h,--help          Show this help and exit.
   --log-level  STR   Set log level. Valid choices: (TRACE, DEBUG, INFO, WARN, FATAL). [WARN]
   --log-file   FILE  Log to a file, instead of stderr.
-  --version          Show application version.
+  --version          Show application version and exit.
 
 )"};
 

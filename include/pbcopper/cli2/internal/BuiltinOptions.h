@@ -15,7 +15,7 @@ namespace Builtin {
 const Option Help{
 R"({
     "names" : ["h", "help"],
-    "description" : "Show this help."
+    "description" : "Show this help and exit."
 })"};
 
 const Option LogLevel{
@@ -39,7 +39,7 @@ R"({
 const Option Version{
 R"({
     "names" : ["version"],
-    "description" : "Show application version."
+    "description" : "Show application version and exit."
 })"};
 
 } // namespace Builtin
