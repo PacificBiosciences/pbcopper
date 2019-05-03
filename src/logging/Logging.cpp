@@ -115,7 +115,7 @@ void InstallSignalHandlers(Logger& logger)
 
 LogLevel::LogLevel(const std::string& value) : value_{LogLevelFromString(value)} {}
 
-LogLevel::operator std::string() const
+std::string LogLevel::ToString() const
 {
     switch (value_) {
         case LogLevel::TRACE:
