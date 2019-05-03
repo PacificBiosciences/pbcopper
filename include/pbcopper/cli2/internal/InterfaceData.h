@@ -23,13 +23,15 @@ namespace internal {
 struct InterfaceData
 {
     InterfaceData(std::string appName, std::string appDescription, std::string appVersion,
-                  OptionData help, OptionData logFile, OptionData logLevel, OptionData version)
+                  OptionData help, OptionData logFile, OptionData logLevel, OptionData numThreads,
+                  OptionData version)
         : appName_{std::move(appName)}
         , appDescription_{std::move(appDescription)}
         , appVersion_{std::move(appVersion)}
         , helpOption_{std::move(help)}
         , logFileOption_{std::move(logFile)}
         , logLevelOption_{std::move(logLevel)}
+        , numThreadsOption_{std::move(numThreads)}
         , versionOption_{std::move(version)}
     {
     }
@@ -44,6 +46,7 @@ struct InterfaceData
     OptionData helpOption_;
     OptionData logFileOption_;
     OptionData logLevelOption_;
+    OptionData numThreadsOption_;
     OptionData versionOption_;
 
     std::vector<OptionGroupData> optionGroups_;

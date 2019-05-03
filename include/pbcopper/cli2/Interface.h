@@ -152,6 +152,10 @@ public:
     const internal::OptionData& LogLevelOption() const;
 
     /// \internal
+    /// \return (translated) numThreads option.
+    const internal::OptionData& NumThreadsOption() const;
+
+    /// \internal
     /// \return (translated) version option.
     ///
     const internal::OptionData& VersionOption() const;

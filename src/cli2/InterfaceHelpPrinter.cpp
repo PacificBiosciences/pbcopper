@@ -104,6 +104,7 @@ void InterfaceHelpPrinter::CalculateMetrics()
     updateMetricsWithOption(interface_.HelpOption());
     updateMetricsWithOption(interface_.LogLevelOption());
     updateMetricsWithOption(interface_.LogFileOption());
+    updateMetricsWithOption(interface_.NumThreadsOption());
     updateMetricsWithOption(interface_.VersionOption());
 
     // metrics using pos args
@@ -305,7 +306,8 @@ std::string InterfaceHelpPrinter::Options()
     OptionGroupData group;
     if (optionGroups.empty()) group.name = "Options";
     group.options = {interface_.HelpOption(), interface_.LogLevelOption(),
-                     interface_.LogFileOption(), interface_.VersionOption()};
+                     interface_.LogFileOption(), interface_.NumThreadsOption(),
+                     interface_.VersionOption()};
     out << OptionGroup(group);
     return out.str();
 }

@@ -25,6 +25,7 @@ Interface::Interface(std::string name, std::string description, std::string vers
             OptionTranslator::Translate(Builtin::Help),
             OptionTranslator::Translate(Builtin::LogFile),
             OptionTranslator::Translate(Builtin::LogLevel),
+            OptionTranslator::Translate(Builtin::NumThreads),
             OptionTranslator::Translate(Builtin::Version)}
 {
     if (data_.appName_.empty()) {
@@ -116,6 +117,8 @@ const OptionData& Interface::LogFileOption() const { return data_.logFileOption_
 
 const OptionData& Interface::LogLevelOption() const { return data_.logLevelOption_; }
 
+const OptionData& Interface::NumThreadsOption() const { return data_.numThreadsOption_; }
+
 Results Interface::MakeDefaultResults() const
 {
     Results results;
@@ -141,6 +144,7 @@ std::vector<OptionData> Interface::Options() const
     result.push_back(data_.helpOption_);
     result.push_back(data_.logLevelOption_);
     result.push_back(data_.logFileOption_);
+    result.push_back(data_.numThreadsOption_);
     result.push_back(data_.versionOption_);
     return result;
 }

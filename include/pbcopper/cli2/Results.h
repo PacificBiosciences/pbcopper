@@ -49,9 +49,10 @@ public:
     PacBio::Logging::LogLevel LogLevel() const;
 
     ///
-    /// \return number of processors to use (e.g. from tool contract "nproc")
+    /// \return number of threads to use, resolved from user-requested count and
+    //          C++ implementation hints (see std::thread::hardware_concurrency)
     ///
-    size_t NumProcessors() const;
+    size_t NumThreads() const;
 
     ///
     /// \return full list of positional argument values
@@ -112,19 +113,12 @@ public:
     Results& InputCommandLine(std::string cmdLine);
 
     ///
-    /// Sets the requested number of processors to use (e.g. from "nproc")
-    ///
-    Results& NumProcessors(size_t nproc);
-
-    ///
     /// Registers the interface's positional arguments.
     ///
     Results& PositionalArguments(const std::vector<internal::PositionalArgumentData>& posArgs);
 
 private:
     std::string inputCommandLine_;
-    size_t numProcessors_ = 1;
-
     std::unordered_map<std::string, std::shared_ptr<Result>> results_;
     std::vector<std::string> posArgNames_;
     std::vector<std::string> posArgValues_;

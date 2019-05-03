@@ -1,6 +1,8 @@
 #include <pbcopper/cli2/Results.h>
 
+#include <algorithm>
 #include <stdexcept>
+#include <thread>
 
 #include <pbcopper/cli2/internal/BuiltinOptions.h>
 #include <pbcopper/cli2/internal/OptionTranslator.h>
@@ -58,18 +60,21 @@ Results& Results::InputCommandLine(std::string cmdLine)
 
 PacBio::Logging::LogLevel Results::LogLevel() const
 {
-
     const auto& logLevelOpt = (*this)[Builtin::LogLevel];
     const std::string logLevelStr = logLevelOpt;
     return PacBio::Logging::LogLevel(logLevelStr);
 }
 
-size_t Results::NumProcessors() const { return numProcessors_; }
-
-Results& Results::NumProcessors(size_t nproc)
+size_t Results::NumThreads() const
 {
-    numProcessors_ = nproc;
-    return *this;
+    const auto& numThreadOpt = (*this)[Builtin::NumThreads];
+    const unsigned int requestedNumThreads = numThreadOpt;
+    // NOTE: max may be 0 if unknown
+    const unsigned int maxNumThreads = std::thread::hardware_concurrency();
+
+    if (requestedNumThreads == 0) return std::max(1U, maxNumThreads);
+    if (maxNumThreads == 0) return requestedNumThreads;
+    return std::min(requestedNumThreads, maxNumThreads);
 }
 
 const std::vector<std::string>& Results::PositionalArguments() const { return posArgValues_; }

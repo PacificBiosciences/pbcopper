@@ -36,6 +36,14 @@ R"({
     "type" : "file"
 })"};
 
+const Option NumThreads{
+R"({
+    "names" : ["j", "num-threads"],
+    "description" : "Number of threads to use, 0 means autodetection.",
+    "type" : "unsigned int",
+    "default" : 0
+})"};
+
 const Option Version{
 R"({
     "names" : ["version"],
