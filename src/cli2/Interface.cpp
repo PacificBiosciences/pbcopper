@@ -98,8 +98,7 @@ Logging::LogLevel Interface::DefaultLogLevel() const
 
 Interface& Interface::DefaultLogLevel(Logging::LogLevel level)
 {
-    std::string levelStr = level;
-    data_.logLevelOption_.defaultValue = std::move(levelStr);
+    data_.logLevelOption_.defaultValue = level.ToString();
     return *this;
 }
 
