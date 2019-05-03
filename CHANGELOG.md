@@ -2,9 +2,13 @@
 
 ## Active
 
-### TODO
-- Initial sequence-related data structures
-- FireAndForget increase buffer
+## [1.2.0] - 2019-05-03
+
+### Changed
+ - CLI_v2::Results::NumProcessors() changed to CLI_v2::Results::NumThreads() for clarity.
+
+### Added
+ - Convenience methods for CLI_v2 clients: default log level override, explicit access to built-ins, built-in 'num-threads' option.
 
 ## [1.1.0] - 2019-04-29
 

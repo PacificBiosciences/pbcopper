@@ -20,7 +20,9 @@ namespace CLI_v2 {
 ///
 /// Additional properties:
 ///
-///   - type : (string) one of {"integer", "string", "float", "boolean", "file", "dir"}
+///   - type     : (string) one of {"integer", "string", "float", "boolean", "file", "dir"}
+///   - required : (bool) the default is true. If false, this argument is optional.
+///                Help display will render this arg as either <required.in> or [optional.in]
 ///
 /// Example:
 ///

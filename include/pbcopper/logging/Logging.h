@@ -43,6 +43,7 @@ public:
 
 public:
     operator unsigned char() const;
+    operator std::string() const;
 
 private:
     unsigned char value_;
