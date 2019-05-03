@@ -58,6 +58,13 @@ Results& Results::InputCommandLine(std::string cmdLine)
     return *this;
 }
 
+std::string Results::LogFile() const
+{
+    const auto& logFileOpt = (*this)[Builtin::LogFile];
+    const std::string logFileStr = logFileOpt;
+    return logFileStr;
+}
+
 PacBio::Logging::LogLevel Results::LogLevel() const
 {
     const auto& logLevelOpt = (*this)[Builtin::LogLevel];

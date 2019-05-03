@@ -33,7 +33,8 @@ R"({
     "names" : ["log-file"],
     "names.hidden" : ["logFile"],
     "description" : "Log to a file, instead of stderr.",
-    "type" : "file"
+    "type" : "file",
+    "default" : ""
 })"};
 
 const Option NumThreads{

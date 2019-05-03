@@ -133,10 +133,11 @@ TEST(CLI2_CLI, can_print_help)
 "  frobber [options]\n"
 "\n"
 "Options:\n"
-"  -h,--help          Show this help and exit.\n"
-"  --log-level  STR   Set log level. Valid choices: (TRACE, DEBUG, INFO, WARN, FATAL). [WARN]\n"
-"  --log-file   FILE  Log to a file, instead of stderr.\n"
-"  --version          Show application version and exit.\n"
+"  -h,--help               Show this help and exit.\n"
+"  --log-level       STR   Set log level. Valid choices: (TRACE, DEBUG, INFO, WARN, FATAL). [WARN]\n"
+"  --log-file        FILE  Log to a file, instead of stderr.\n"
+"  -j,--num-threads  INT   Number of threads to use, 0 means autodetection. [0]\n"
+"  --version               Show application version and exit.\n"
 "\n"
 };
 
@@ -248,13 +249,14 @@ TEST(CLI2_CLI, can_print_subtool_help_for_multitoolinterface)
 Usage:
   refine [options]
 
-  --test             Should see this entry
-  --count      INT   Should see this entry too [5]
+  --test                  Should see this entry
+  --count           INT   Should see this entry too [5]
 
-  -h,--help          Show this help and exit.
-  --log-level  STR   Set log level. Valid choices: (TRACE, DEBUG, INFO, WARN, FATAL). [WARN]
-  --log-file   FILE  Log to a file, instead of stderr.
-  --version          Show application version and exit.
+  -h,--help               Show this help and exit.
+  --log-level       STR   Set log level. Valid choices: (TRACE, DEBUG, INFO, WARN, FATAL). [WARN]
+  --log-file        FILE  Log to a file, instead of stderr.
+  -j,--num-threads  INT   Number of threads to use, 0 means autodetection. [0]
+  --version               Show application version and exit.
 
 )"};
 
@@ -275,7 +277,7 @@ Usage:
 
     const int result = CLI_v2::Run(args, i);
     EXPECT_EQ(EXIT_SUCCESS, result);
-    EXPECT_EQ(s.str(), expectedText);
+    EXPECT_EQ(expectedText, s.str());
 }
 
 TEST(CLI2_CLI, can_run_from_command_line_args)
@@ -337,7 +339,7 @@ TEST(CLI2_CLI, can_run_multitoolinterface_subtool_from_command_line_args)
     EXPECT_EQ(EXIT_SUCCESS, result);
 }
 
-TEST(CLI2_CLI, can_fetch_default_log_level_from_results)
+TEST(CLI2_CLI, can_fetch_default_log_level_and_log_file_from_results)
 {
     const Option MaxNumLines
     {
@@ -365,12 +367,9 @@ TEST(CLI2_CLI, can_fetch_default_log_level_from_results)
     tests::CoutRedirect redirect(s.rdbuf());
     UNUSED(redirect);
 
-    auto runner = [&MaxNumLines, &defaultLogLevel](const Results& results)
+    auto runner = [&defaultLogLevel](const Results& results)
     {
-        const int expectedNumLines = 27;
-        const int maxNumLines = results[MaxNumLines];
-
-        EXPECT_EQ(expectedNumLines, maxNumLines);
+        EXPECT_TRUE(results.LogFile().empty());
         EXPECT_EQ(defaultLogLevel, results.LogLevel());
         return EXIT_SUCCESS;
     };
@@ -414,6 +413,7 @@ TEST(CLI2_CLI, can_fetch_overriden_default_log_level_from_results)
         const int maxNumLines = results[MaxNumLines];
 
         EXPECT_EQ(expectedNumLines, maxNumLines);
+        EXPECT_TRUE(results.LogFile().empty());
         EXPECT_EQ(defaultLogLevel, results.LogLevel());
         return EXIT_SUCCESS;
     };
@@ -424,35 +424,38 @@ TEST(CLI2_CLI, can_fetch_overriden_default_log_level_from_results)
 
 TEST(CLI2_CLI, can_fetch_log_level_from_results)
 {
-    const Option MaxNumLines
-    {
-    R"({
-        "names" : ["n"],
-        "description" : "Max Number of lines to Copy",
-        "type" : "int",
-        "default" : 10,
-        "tool_contract.option" : {
-            "title" : "Maximum Line Count",
-            "id" : "max_nlines"
-        }
-    })"
-    };
-
     const std::vector<std::string> args {
-        "frobber", "-n", "27", "--log-level", "DEBUG"
+        "frobber", "--log-level", "DEBUG"
     };
-    auto runner = [&MaxNumLines](const Results& results)
+    auto runner = [](const Results& results)
     {
-        const int expectedNumLines = 27;
-        const int maxNumLines = results[MaxNumLines];
-
-        EXPECT_EQ(expectedNumLines, maxNumLines);
+        EXPECT_TRUE(results.LogFile().empty());
         EXPECT_EQ(PacBio::Logging::LogLevel::DEBUG, results.LogLevel());
         return EXIT_SUCCESS;
     };
 
     Interface i{"frobber", "Frob all the things.", "v3.1"};
-    i.AddOption(MaxNumLines);
+
+    std::ostringstream s;
+    tests::CoutRedirect redirect(s.rdbuf());
+    UNUSED(redirect);
+
+    const int result = CLI_v2::Run(args, i, runner);
+    EXPECT_EQ(EXIT_SUCCESS, result);
+}
+
+TEST(CLI2_CLI, can_fetch_log_file_from_results)
+{
+    const std::vector<std::string> args {
+        "frobber", "--log-file", "log.txt"
+    };
+    auto runner = [](const Results& results)
+    {
+        EXPECT_EQ("log.txt", results.LogFile());
+        return EXIT_SUCCESS;
+    };
+
+    Interface i{"frobber", "Frob all the things.", "v3.1"};
 
     std::ostringstream s;
     tests::CoutRedirect redirect(s.rdbuf());

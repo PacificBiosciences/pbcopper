@@ -44,6 +44,11 @@ public:
     const std::string& InputCommandLine() const;
 
     ///
+    /// \return requested log file (empty string if not provided)
+    ///
+    std::string LogFile() const;
+
+    ///
     /// \return enum value for requested log level
     ///
     PacBio::Logging::LogLevel LogLevel() const;
