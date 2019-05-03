@@ -6,9 +6,11 @@
 
 #include <pbcopper/cli2/Interface.h>
 #include <pbcopper/cli2/MultiToolInterface.h>
+#include <pbcopper/cli2/internal/InterfaceHelpPrinter.h>
 #include <pbcopper/cli2/internal/MultiToolInterfaceHelpPrinter.h>
 
 using Interface = PacBio::CLI_v2::Interface;
+using InterfaceHelpPrinter = PacBio::CLI_v2::internal::InterfaceHelpPrinter;
 using MultiToolInterface = PacBio::CLI_v2::MultiToolInterface;
 using MultiToolInterfaceHelpPrinter = PacBio::CLI_v2::internal::MultiToolInterfaceHelpPrinter;
 
@@ -70,6 +72,7 @@ int SummarizeRunner(const PacBio::CLI_v2::Results&)
 TEST(CLI2_MultiToolInterfaceHelpPrinter, can_print_top_level_help)
 {
     using namespace CLI_v2_MultiToolInterfaceHelpPrinterTests;
+    InterfaceHelpPrinter::TestingFixedWidth = 80;
 
     const std::string expectedText{R"(isoseq3 - De Novo Transcript Reconstruction
 

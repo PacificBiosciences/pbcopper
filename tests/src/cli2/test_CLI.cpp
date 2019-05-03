@@ -12,6 +12,8 @@
 #include <pbcopper/cli2/Results.h>
 #include <pbcopper/utility/Unused.h>
 
+#include <pbcopper/cli2/internal/InterfaceHelpPrinter.h>
+
 #include "../../include/OStreamRedirector.h"
 #include "PbcopperTestData.h"
 
@@ -104,6 +106,8 @@ int SummarizeRunner(const PacBio::CLI_v2::Results&)
 
 TEST(CLI2_CLI, can_print_version)
 {
+    internal::InterfaceHelpPrinter::TestingFixedWidth = 80;
+
     const std::string expectedText{"frobber v3.1\n"};
     const std::vector<std::string> args {
         "frobber", "--version"
@@ -126,6 +130,8 @@ TEST(CLI2_CLI, can_print_version)
 
 TEST(CLI2_CLI, can_print_help)
 {
+    internal::InterfaceHelpPrinter::TestingFixedWidth = 80;
+
     const std::string expectedText{
 "frobber - Frob all the things.\n"
 "\n"
@@ -134,7 +140,8 @@ TEST(CLI2_CLI, can_print_help)
 "\n"
 "Options:\n"
 "  -h,--help               Show this help and exit.\n"
-"  --log-level       STR   Set log level. Valid choices: (TRACE, DEBUG, INFO, WARN, FATAL). [WARN]\n"
+"  --log-level       STR   Set log level. Valid choices: (TRACE, DEBUG, INFO,\n"
+"                          WARN, FATAL). [WARN]\n"
 "  --log-file        FILE  Log to a file, instead of stderr.\n"
 "  -j,--num-threads  INT   Number of threads to use, 0 means autodetection. [0]\n"
 "  --version               Show application version and exit.\n"
@@ -162,7 +169,9 @@ TEST(CLI2_CLI, can_print_help)
 
 TEST(CLI2_CLI, can_print_top_help_for_multitoolinterface)
 {
-        const std::string expectedText{R"(isoseq3 - De Novo Transcript Reconstruction
+    internal::InterfaceHelpPrinter::TestingFixedWidth = 80;
+
+    const std::string expectedText{R"(isoseq3 - De Novo Transcript Reconstruction
 
 Usage:
   isoseq3 <tool>
@@ -244,6 +253,8 @@ Typical workflow:
 
 TEST(CLI2_CLI, can_print_subtool_help_for_multitoolinterface)
 {
+    internal::InterfaceHelpPrinter::TestingFixedWidth = 80;
+
     const std::string expectedText{R"(refine - Remove concatemers and optionally poly-A tails (FL to FLNC)
 
 Usage:
@@ -253,13 +264,13 @@ Usage:
   --count           INT   Should see this entry too [5]
 
   -h,--help               Show this help and exit.
-  --log-level       STR   Set log level. Valid choices: (TRACE, DEBUG, INFO, WARN, FATAL). [WARN]
+  --log-level       STR   Set log level. Valid choices: (TRACE, DEBUG, INFO,
+                          WARN, FATAL). [WARN]
   --log-file        FILE  Log to a file, instead of stderr.
   -j,--num-threads  INT   Number of threads to use, 0 means autodetection. [0]
   --version               Show application version and exit.
 
 )"};
-
 
     MultiToolInterface i{"isoseq3", "De Novo Transcript Reconstruction", "3.1.2"};
     i.AddTools({{"refine",    CLI_v2_CLITests::MakeRefineInterface(),    &CLI_v2_CLITests::RefineRunner},
@@ -380,6 +391,8 @@ TEST(CLI2_CLI, can_fetch_default_log_level_and_log_file_from_results)
 
 TEST(CLI2_CLI, can_fetch_overriden_default_log_level_from_results)
 {
+
+
     const Option MaxNumLines
     {
     R"({

@@ -429,7 +429,7 @@ TEST(CLI2_InterfaceHelpPrinter, formats_empty_option_group)
     const std::string expectedText{""};
 
     Interface i{"frobber"};
-    InterfaceHelpPrinter help{i};
+    InterfaceHelpPrinter help{i, 80};
     const auto formattedText = help.OptionGroup(OptionGroupData{});
     EXPECT_EQ(expectedText, formattedText);
 }
@@ -439,13 +439,14 @@ TEST(CLI2_InterfaceHelpPrinter, formats_builtin_option_group)
     const std::string expectedText{
         "Options:\n"
         "  -h,--help               Show this help and exit.\n"
-        "  --log-level       STR   Set log level. Valid choices: (TRACE, DEBUG, INFO, WARN, FATAL). [WARN]\n"
+        "  --log-level       STR   Set log level. Valid choices: (TRACE, DEBUG, INFO,\n"
+        "                          WARN, FATAL). [WARN]\n"
         "  --log-file        FILE  Log to a file, instead of stderr.\n"
         "  -j,--num-threads  INT   Number of threads to use, 0 means autodetection. [0]\n"
         "  --version               Show application version and exit.\n"};
 
     Interface i{"frobber"};
-    InterfaceHelpPrinter help{i};
+    InterfaceHelpPrinter help{i, 80};
     const auto formattedText = help.Options();
     EXPECT_EQ(expectedText, formattedText);
 }
@@ -455,14 +456,15 @@ TEST(CLI2_InterfaceHelpPrinter, prints_log_level_override)
     const std::string expectedText{
         "Options:\n"
         "  -h,--help               Show this help and exit.\n"
-        "  --log-level       STR   Set log level. Valid choices: (TRACE, DEBUG, INFO, WARN, FATAL). [DEBUG]\n"
+        "  --log-level       STR   Set log level. Valid choices: (TRACE, DEBUG, INFO,\n"
+        "                          WARN, FATAL). [DEBUG]\n"
         "  --log-file        FILE  Log to a file, instead of stderr.\n"
         "  -j,--num-threads  INT   Number of threads to use, 0 means autodetection. [0]\n"
         "  --version               Show application version and exit.\n"};
 
     Interface i{"frobber"};
     i.DefaultLogLevel(PacBio::Logging::LogLevel::DEBUG);
-    InterfaceHelpPrinter help{i};
+    InterfaceHelpPrinter help{i, 80};
     const auto formattedText = help.Options();
     EXPECT_EQ(expectedText, formattedText);
 }

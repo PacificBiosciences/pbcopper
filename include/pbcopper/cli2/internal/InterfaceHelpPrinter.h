@@ -44,7 +44,6 @@ class InterfaceHelpPrinter
 {
 public:
     explicit InterfaceHelpPrinter(Interface interface);
-
     InterfaceHelpPrinter(Interface interface, const size_t maxColumn);
 
     ///
@@ -73,6 +72,11 @@ public:
     std::string Usage();
     ///
     /// \}
+
+public:
+    /// \internal
+    /// Purely for unit testing help output.
+    static size_t TestingFixedWidth;
 
 private:
     ///
