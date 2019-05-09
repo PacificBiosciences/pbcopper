@@ -22,6 +22,7 @@ struct PositionalArgumentData
 {
     std::string name;
     std::string description;
+    bool required = true;
 
     OptionValueType type = OptionValueType::STRING;
 

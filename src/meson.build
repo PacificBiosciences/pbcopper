@@ -52,6 +52,12 @@ pbcopper_cpp_sources = files([
   'logging/Logging.cpp',
 
   # ---------
+  # reports
+  # ---------
+  'reports/Report.cpp',
+  'reports/ReportPrinter.cpp',
+
+  # ---------
   # utility
   # ---------
   'utility/CallbackTimer.cpp',

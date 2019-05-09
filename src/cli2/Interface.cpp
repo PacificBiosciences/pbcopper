@@ -25,6 +25,7 @@ Interface::Interface(std::string name, std::string description, std::string vers
             OptionTranslator::Translate(Builtin::Help),
             OptionTranslator::Translate(Builtin::LogFile),
             OptionTranslator::Translate(Builtin::LogLevel),
+            OptionTranslator::Translate(Builtin::NumThreads),
             OptionTranslator::Translate(Builtin::Version)}
 {
     if (data_.appName_.empty()) {
@@ -89,6 +90,18 @@ const std::string& Interface::ApplicationName() const { return data_.appName_; }
 
 const std::string& Interface::ApplicationVersion() const { return data_.appVersion_; }
 
+Logging::LogLevel Interface::DefaultLogLevel() const
+{
+    const auto& value = *data_.logLevelOption_.defaultValue;
+    return Logging::LogLevel{boost::get<std::string>(value)};
+}
+
+Interface& Interface::DefaultLogLevel(Logging::LogLevel level)
+{
+    data_.logLevelOption_.defaultValue = level.ToString();
+    return *this;
+}
+
 const std::string& Interface::Example() const { return data_.example_; }
 
 Interface& Interface::Example(std::string example)
@@ -102,6 +115,8 @@ const OptionData& Interface::HelpOption() const { return data_.helpOption_; }
 const OptionData& Interface::LogFileOption() const { return data_.logFileOption_; }
 
 const OptionData& Interface::LogLevelOption() const { return data_.logLevelOption_; }
+
+const OptionData& Interface::NumThreadsOption() const { return data_.numThreadsOption_; }
 
 Results Interface::MakeDefaultResults() const
 {
@@ -128,6 +143,7 @@ std::vector<OptionData> Interface::Options() const
     result.push_back(data_.helpOption_);
     result.push_back(data_.logLevelOption_);
     result.push_back(data_.logFileOption_);
+    result.push_back(data_.numThreadsOption_);
     result.push_back(data_.versionOption_);
     return result;
 }

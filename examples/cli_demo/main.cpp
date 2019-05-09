@@ -79,7 +79,7 @@ int argRunner(const PacBio::CLI::Results& args)
     s.progress  = args["progress"];
     s.force     = args["force"];
     s.verbose   = args["verbose"];
-    s.tempDir = args["temp_dir"];
+    s.tempDir = args["temp_dir"].get<std::string>();;
     s.timeout   = args["timeout"];
 
     std::cout << "Effective commandline:\n"

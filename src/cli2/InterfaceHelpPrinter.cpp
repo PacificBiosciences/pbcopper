@@ -58,14 +58,25 @@ namespace PacBio {
 namespace CLI_v2 {
 namespace internal {
 
+// Some tests are not capabile of calling the printer's ctor that takes an
+// explicit column count (i.e. CLI::Run()). Setting this value beforehand provides
+// this testing hook. The default of 0 leaves auto-detection enabled.
+//
+size_t InterfaceHelpPrinter::TestingFixedWidth = 0;
+
 InterfaceHelpPrinter::InterfaceHelpPrinter(Interface interface) : interface_{std::move(interface)}
 {
-    // determine column count from terminal width
-    struct winsize ws;
-    ioctl(STDOUT_FILENO, TIOCGWINSZ, &ws);
-    if (ws.ws_col >= 2) metrics_.maxColumn = ws.ws_col - 1;
-    constexpr const size_t MaxColumn = 119;
-    metrics_.maxColumn = std::min(metrics_.maxColumn, MaxColumn);
+    if (TestingFixedWidth == 0) {
+        // determine column count from terminal width (default behavior)
+        struct winsize ws;
+        ioctl(STDOUT_FILENO, TIOCGWINSZ, &ws);
+        if (ws.ws_col >= 2) metrics_.maxColumn = ws.ws_col - 1;
+        constexpr const size_t MaxColumn = 119;
+        metrics_.maxColumn = std::min(metrics_.maxColumn, MaxColumn);
+    } else {
+        // use provided column count (testing only)
+        metrics_.maxColumn = TestingFixedWidth;
+    }
 
     CalculateMetrics();
     MakeHelpText();
@@ -104,6 +115,7 @@ void InterfaceHelpPrinter::CalculateMetrics()
     updateMetricsWithOption(interface_.HelpOption());
     updateMetricsWithOption(interface_.LogLevelOption());
     updateMetricsWithOption(interface_.LogFileOption());
+    updateMetricsWithOption(interface_.NumThreadsOption());
     updateMetricsWithOption(interface_.VersionOption());
 
     // metrics using pos args
@@ -305,7 +317,8 @@ std::string InterfaceHelpPrinter::Options()
     OptionGroupData group;
     if (optionGroups.empty()) group.name = "Options";
     group.options = {interface_.HelpOption(), interface_.LogLevelOption(),
-                     interface_.LogFileOption(), interface_.VersionOption()};
+                     interface_.LogFileOption(), interface_.NumThreadsOption(),
+                     interface_.VersionOption()};
     out << OptionGroup(group);
     return out.str();
 }
@@ -352,8 +365,13 @@ std::string InterfaceHelpPrinter::Usage()
     usage << "Usage:\n"
           << "  " << interface_.ApplicationName() << " [options]";
 
-    for (const auto& posArg : interface_.PositionalArguments())
-        usage << " <" << posArg.name << '>';
+    // print all required pos args & then optional ones after, regardless of order added
+    for (const auto& posArg : interface_.PositionalArguments()) {
+        if (posArg.required) usage << " <" << posArg.name << '>';
+    }
+    for (const auto& posArg : interface_.PositionalArguments()) {
+        if (!posArg.required) usage << " [" << posArg.name << ']';
+    }
 
     return usage.str();
 }

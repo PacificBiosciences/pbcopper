@@ -127,6 +127,16 @@ R"({
 })"
 };
 
+static const PositionalArgument OptionalStats
+{
+R"({
+    "name" : "stats",
+    "description" : "Write stats to file, rather than to stdout.",
+    "type" : "FILE",
+    "required" : false
+})"
+};
+
 }  // namespace Options
 }  // namespace CLI_v2_InterfaceHelpPrinterTests
 
@@ -135,6 +145,38 @@ TEST(CLI2_InterfaceHelpPrinter, formats_usage)
     const std::string expectedText{"Usage:\n  frobber [options]"};
 
     Interface i{"frobber"};
+
+    InterfaceHelpPrinter help{i};
+    const auto formattedText = help.Usage();
+    EXPECT_EQ(expectedText, formattedText);
+}
+
+TEST(CLI2_InterfaceHelpPrinter, formats_usage_with_pos_args)
+{
+    const std::string expectedText{"Usage:\n  frobber [options] <source> <dest> [stats]"};
+
+    Interface i{"frobber"};
+    i.AddPositionalArguments({
+        CLI_v2_InterfaceHelpPrinterTests::Options::Source,
+        CLI_v2_InterfaceHelpPrinterTests::Options::Dest,
+        CLI_v2_InterfaceHelpPrinterTests::Options::OptionalStats
+    });
+
+    InterfaceHelpPrinter help{i};
+    const auto formattedText = help.Usage();
+    EXPECT_EQ(expectedText, formattedText);
+}
+
+TEST(CLI2_InterfaceHelpPrinter, usage_with_optional_pos_args_always_places_them_after_required_args)
+{
+    const std::string expectedText{"Usage:\n  frobber [options] <source> <dest> [stats]"};
+
+    Interface i{"frobber"};
+    i.AddPositionalArguments({
+        CLI_v2_InterfaceHelpPrinterTests::Options::Source,
+        CLI_v2_InterfaceHelpPrinterTests::Options::OptionalStats,
+        CLI_v2_InterfaceHelpPrinterTests::Options::Dest
+    });
 
     InterfaceHelpPrinter help{i};
     const auto formattedText = help.Usage();
@@ -197,7 +239,7 @@ TEST(CLI2_InterfaceHelpPrinter, can_calculate_metrics_from_builtins_only)
 
     const auto& metrics = help.Metrics();
 
-    const std::string longestTest{"--log-level"};
+    const std::string longestTest{"-j,--num-threads"};
     EXPECT_EQ(longestTest.size(), metrics.maxNameLength);
 }
 
@@ -360,11 +402,11 @@ TEST(CLI2_InterfaceHelpPrinter, formats_option_with_wordwrapped_description)
 //                                                                               80
 //                                                                               v
     const std::string expectedText{
-"  -x                 Lorem ipsum dolor sit amet, consectetur adipiscing elit,\n"
-"                     sed do eiusmod tempor incididunt ut labore et dolore magna\n"
-"                     aliqua."};
+"  -x                      Lorem ipsum dolor sit amet, consectetur adipiscing\n"
+"                          elit, sed do eiusmod tempor incididunt ut labore et\n"
+"                          dolore magna aliqua."};
 /*
-"  --log-file   FILE  Log to a file rather than stderr.\n"        <-- initial spacing to description based on this built-in
+"  -j,--num-threads  INT   Number of threads to use, 0 means autodetection. [0]        <-- initial spacing to description based on this built-in
 */
     const Option optionWithLongDescription{
         R"({
@@ -387,7 +429,7 @@ TEST(CLI2_InterfaceHelpPrinter, formats_empty_option_group)
     const std::string expectedText{""};
 
     Interface i{"frobber"};
-    InterfaceHelpPrinter help{i};
+    InterfaceHelpPrinter help{i, 80};
     const auto formattedText = help.OptionGroup(OptionGroupData{});
     EXPECT_EQ(expectedText, formattedText);
 }
@@ -396,13 +438,33 @@ TEST(CLI2_InterfaceHelpPrinter, formats_builtin_option_group)
 {
     const std::string expectedText{
         "Options:\n"
-        "  -h,--help          Show this help.\n"
-        "  --log-level  STR   Set log level. [INFO]\n"
-        "  --log-file   FILE  Log to a file, instead of stderr.\n"
-        "  --version          Show application version.\n"};
+        "  -h,--help               Show this help and exit.\n"
+        "  --log-level       STR   Set log level. Valid choices: (TRACE, DEBUG, INFO,\n"
+        "                          WARN, FATAL). [WARN]\n"
+        "  --log-file        FILE  Log to a file, instead of stderr.\n"
+        "  -j,--num-threads  INT   Number of threads to use, 0 means autodetection. [0]\n"
+        "  --version               Show application version and exit.\n"};
 
     Interface i{"frobber"};
-    InterfaceHelpPrinter help{i};
+    InterfaceHelpPrinter help{i, 80};
+    const auto formattedText = help.Options();
+    EXPECT_EQ(expectedText, formattedText);
+}
+
+TEST(CLI2_InterfaceHelpPrinter, prints_log_level_override)
+{
+    const std::string expectedText{
+        "Options:\n"
+        "  -h,--help               Show this help and exit.\n"
+        "  --log-level       STR   Set log level. Valid choices: (TRACE, DEBUG, INFO,\n"
+        "                          WARN, FATAL). [DEBUG]\n"
+        "  --log-file        FILE  Log to a file, instead of stderr.\n"
+        "  -j,--num-threads  INT   Number of threads to use, 0 means autodetection. [0]\n"
+        "  --version               Show application version and exit.\n"};
+
+    Interface i{"frobber"};
+    i.DefaultLogLevel(PacBio::Logging::LogLevel::DEBUG);
+    InterfaceHelpPrinter help{i, 80};
     const auto formattedText = help.Options();
     EXPECT_EQ(expectedText, formattedText);
 }
@@ -413,12 +475,12 @@ TEST(CLI2_InterfaceHelpPrinter, formats_option_group)
 //                                                                               v
     const std::string expectedText{
 "Test Group:\n"
-"  -f,--force         Overwrite things.\n"
-"  -p                 Show progress during copy.\n"
-"  -n,--no-op         Dry run. Report actions that would be taken but do not\n"
-"                     perform them.\n"
+"  -f,--force              Overwrite things.\n"
+"  -p                      Show progress during copy.\n"
+"  -n,--no-op              Dry run. Report actions that would be taken but do not\n"
+"                          perform them.\n"
 /*
-"  --log-file   FILE  Log to a file rather than stderr.\n"        <-- initial spacing to description based on this built-in
+"  -j,--num-threads  INT   Number of threads to use, 0 means autodetection. [0]        <-- initial spacing to description based on this built-in
 */
     };
 
@@ -439,10 +501,10 @@ TEST(CLI2_InterfaceHelpPrinter, formats_option_group)
 TEST(CLI2_InterfaceHelpPrinter, formats_positional_argument)
 {
     const std::string expectedText{
-"  source       FILE  Source file to copy."
+"  source            FILE  Source file to copy."
     };
 /*
-"  --log-file   FILE  Log to a file rather than stderr.\n"        <-- initial spacing to type based on this built-in
+"  -j,--num-threads  INT   Number of threads to use, 0 means autodetection. [0]       <-- initial spacing to type based on this built-in
 */
 
     Interface i{"frobber"};
@@ -460,12 +522,13 @@ TEST(CLI2_InterfaceHelpPrinter, formats_positional_argument_with_wordwrapped_des
 //                                                                               80
 //                                                                               v
    const std::string expectedText{
-"  source       FILE  Source file to copy.\n"
-"  dest         DIR   Destination directory. Essentially where we want to drop\n"
-"                     things, but really just making a long description.\n"
+"  source            FILE  Source file to copy.\n"
+"  dest              DIR   Destination directory. Essentially where we want to\n"
+"                          drop things, but really just making a long\n"
+"                          description.\n"
     };
 /*
-"  --log-file   FILE  Log to a file rather than stderr.\n"        <-- initial spacing to description based on this built-in
+"  -j,--num-threads  INT   Number of threads to use, 0 means autodetection. [0]        <-- initial spacing to description based on this built-in
 */
 
     Interface i{"frobber"};
@@ -486,32 +549,35 @@ TEST(CLI2_InterfaceHelpPrinter, prints_expected_full_interface_help)
     const std::string expectedText{R"(frobber - Frobb your files in a most delightful, nobbly way
 
 Usage:
-  frobber [options] <source> <dest>
+  frobber [options] <source> <dest> [stats]
 
-  source           FILE   Source file to copy.
-  dest             DIR    Destination directory. Essentially where we want to
-                          drop things, but really just making a long
-                          description.
+  source            FILE   Source file to copy.
+  dest              DIR    Destination directory. Essentially where we want to
+                           drop things, but really just making a long
+                           description.
+  stats             FILE   Write stats to file, rather than to stdout.
 
-General Options:
-  -p                      Show progress during copy.
-  -f,--force              Overwrite things.
-  -t,--target-dir  DIR    Copy all source files into <DIR>. [my/default/dir]
-  -n,--no-op              Dry run. Report actions that would be taken but do not
-                          perform them.
-  --timeout        INT    Abort execution after <INT> milliseconds. [5000]
+Output Options:
+  -p                       Show progress during copy.
+  -f,--force               Overwrite things.
+  -t,--target-dir   DIR    Copy all source files into <DIR>. [my/default/dir]
+  -n,--no-op               Dry run. Report actions that would be taken but do
+                           not perform them.
+  --timeout         INT    Abort execution after <INT> milliseconds. [5000]
 
 Algorithm Options:
-  --delta          FLOAT  Some delta for things. [0.01]
-  -e,--element     STR    Choice of element indicates mood. Science. Valid
-                          choices: (earth, wind, fire, water). [fire]
-  --ploidy         STR    Genome ploidy. Valid choices: (haploid, diploid).
-                          [haploid]
+  --delta           FLOAT  Some delta for things. [0.01]
+  -e,--element      STR    Choice of element indicates mood. Science. Valid
+                           choices: (earth, wind, fire, water). [fire]
+  --ploidy          STR    Genome ploidy. Valid choices: (haploid, diploid).
+                           [haploid]
 
-  -h,--help               Show this help.
-  --log-level      STR    Set log level. [INFO]
-  --log-file       FILE   Log to a file, instead of stderr.
-  --version               Show application version.
+  -h,--help                Show this help and exit.
+  --log-level       STR    Set log level. Valid choices: (TRACE, DEBUG, INFO,
+                           WARN, FATAL). [WARN]
+  --log-file        FILE   Log to a file, instead of stderr.
+  -j,--num-threads  INT    Number of threads to use, 0 means autodetection. [0]
+  --version                Show application version and exit.
 
 )"};
 
@@ -521,7 +587,7 @@ Algorithm Options:
         "3.14"
     };
 
-    i.AddOptionGroup("General Options", {
+    i.AddOptionGroup("Output Options", {
         CLI_v2_InterfaceHelpPrinterTests::Options::Progress,
         CLI_v2_InterfaceHelpPrinterTests::Options::Force,
         CLI_v2_InterfaceHelpPrinterTests::Options::TargetDirectory,
@@ -536,7 +602,8 @@ Algorithm Options:
 
     i.AddPositionalArguments({
         CLI_v2_InterfaceHelpPrinterTests::Options::Source,
-        CLI_v2_InterfaceHelpPrinterTests::Options::Dest
+        CLI_v2_InterfaceHelpPrinterTests::Options::Dest,
+        CLI_v2_InterfaceHelpPrinterTests::Options::OptionalStats
     });
 
     const InterfaceHelpPrinter help{i, 80};

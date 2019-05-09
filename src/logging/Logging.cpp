@@ -53,7 +53,7 @@ LogLevel LogLevelFromString(const std::string& level)
     throw std::invalid_argument("invalid log level");
 }
 
-}  // anonymous
+}  // namespace
 
 void InstallSignalHandlers(Logger& logger)
 {
@@ -114,6 +114,30 @@ void InstallSignalHandlers(Logger& logger)
 }
 
 LogLevel::LogLevel(const std::string& value) : value_{LogLevelFromString(value)} {}
+
+std::string LogLevel::ToString() const
+{
+    switch (value_) {
+        case LogLevel::TRACE:
+            return "TRACE";
+        case LogLevel::DEBUG:
+            return "DEBUG";
+        case LogLevel::INFO:
+            return "INFO";
+        case LogLevel::NOTICE:
+            return "NOTICE";
+        case LogLevel::WARN:
+            return "WARN";
+        case LogLevel::ERROR:
+            return "ERROR";
+        case LogLevel::CRITICAL:
+            return "CRITICAL";
+        case LogLevel::FATAL:
+            return "FATAL";
+        default:
+            return "OTHER";
+    }
+}
 
 Logger::~Logger()
 {
