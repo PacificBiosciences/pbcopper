@@ -62,7 +62,7 @@ Results::Results(Interface interface, std::vector<std::string> inputCommandLine)
 
 Results::Results(const Results& other) : d_(new ResultsPrivate{*other.d_.get()}) {}
 
-Results::Results(Results&& other) : d_(std::move(other.d_)) {}
+Results::Results(Results&& other) noexcept = default;
 
 Results& Results::operator=(const Results& other)
 {
@@ -72,13 +72,7 @@ Results& Results::operator=(const Results& other)
     return *this;
 }
 
-Results& Results::operator=(Results&& other)
-{
-    if (this != &other) {
-        d_ = std::move(other.d_);
-    }
-    return *this;
-}
+Results& Results::operator=(Results&& other) noexcept = default;
 
 Results::~Results() = default;
 

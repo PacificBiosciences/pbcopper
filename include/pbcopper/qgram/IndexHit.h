@@ -33,9 +33,9 @@ public:
     IndexHit(const uint32_t id, const uint64_t pos) : id_(id), position_(pos) {}
 
     IndexHit(const IndexHit&) = default;
-    IndexHit(IndexHit&&) = default;
+    IndexHit(IndexHit&&) noexcept = default;
     IndexHit& operator=(const IndexHit&) = default;
-    IndexHit& operator=(IndexHit&&) = default;
+    IndexHit& operator=(IndexHit&&) noexcept = default;
 
 public:
     ///

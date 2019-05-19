@@ -95,7 +95,20 @@ Interface::Interface(std::string appName, std::string appDescription, std::strin
 {
 }
 
-Interface::Interface(const Interface& other) : d_{new InterfacePrivate{*other.d_.get()}} {}
+Interface::Interface(const Interface& other)
+    : d_{std::make_unique<InterfacePrivate>(*other.d_.get())}
+{
+}
+
+Interface::Interface(Interface&&) noexcept = default;
+
+Interface& Interface::operator=(const Interface& other)
+{
+    if (this != &other) *this = Interface{other};
+    return *this;
+}
+
+Interface& Interface::operator=(Interface&&) noexcept = default;
 
 Interface::~Interface() = default;
 

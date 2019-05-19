@@ -33,9 +33,9 @@ public:
               std::string version = std::string{});
 
     Interface(const Interface&);
-    Interface(Interface&&);
+    Interface(Interface&&) noexcept;
     Interface& operator=(const Interface&);
-    Interface& operator=(Interface&&);
+    Interface& operator=(Interface&&) noexcept;
     ~Interface();
 
 public:

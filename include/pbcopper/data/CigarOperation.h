@@ -89,9 +89,9 @@ public:
     CigarOperation(CigarOperationType op, uint32_t length);
 
     CigarOperation(const CigarOperation& other) = default;
-    CigarOperation(CigarOperation&& other) = default;
+    CigarOperation(CigarOperation&&) noexcept = default;
     CigarOperation& operator=(const CigarOperation& other) = default;
-    CigarOperation& operator=(CigarOperation&& other) = default;
+    CigarOperation& operator=(CigarOperation&&) noexcept = default;
     ~CigarOperation() = default;
 
     /// \}

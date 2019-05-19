@@ -17,11 +17,11 @@ Option::Option(std::string def, std::string val) : text{std::move(def)}, default
 
 Option::Option(const Option&) = default;
 
-Option::Option(Option&&) = default;
+Option::Option(Option&&) noexcept = default;
 
 Option& Option::operator=(const Option&) = default;
 
-Option& Option::operator=(Option&&) = default;
+Option& Option::operator=(Option&&) noexcept = default;
 
 Option::~Option() = default;
 
