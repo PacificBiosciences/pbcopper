@@ -38,13 +38,13 @@ public:
     Interval(const T start, const T end);
 
     /// \brief Copy constructs an interval
-    Interval(const Interval<T>& other);
+    Interval(const Interval<T>& other) = default;
+    Interval<T>& operator=(const Interval<T>&) = default;
 
     /// \brief Move constructs an interval
-    Interval(Interval<T>&& other);
+    Interval(Interval<T>&& other) noexcept = default;
+    Interval<T>& operator=(Interval<T>&&) noexcept = default;
 
-    Interval<T>& operator=(const Interval<T>& other) = default;
-    Interval<T>& operator=(Interval<T>&& other) = default;
     ~Interval<T>() = default;
 
     /// \}

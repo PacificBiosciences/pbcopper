@@ -38,9 +38,9 @@ public:
     Results(Interface interface, std::vector<std::string> inputCommandLine);
 
     Results(const Results& other);
-    Results(Results&& other);
+    Results(Results&& other) noexcept;
     Results& operator=(const Results& other);
-    Results& operator=(Results&& other);
+    Results& operator=(Results&& other) noexcept;
     ~Results();
 
     /// \}

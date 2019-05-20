@@ -26,18 +26,6 @@ inline Interval<T>::Interval(const T start, const T end)
 }
 
 template <typename T>
-inline Interval<T>::Interval(const Interval<T>& other)
-    : data_(boost::icl::discrete_interval<T>::right_open(other.Start(), other.End()))
-{
-}
-
-template <typename T>
-inline Interval<T>::Interval(Interval<T>&& other)
-    : data_(boost::icl::discrete_interval<T>::right_open(other.Start(), other.End()))
-{
-}
-
-template <typename T>
 inline bool Interval<T>::operator==(const Interval<T>& other) const
 {
     return data_ == other.data_;

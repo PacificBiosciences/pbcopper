@@ -22,9 +22,9 @@ public:
     Seeds();
 
     Seeds(const Seeds&) = default;
-    Seeds(Seeds&&) = default;
+    Seeds(Seeds&&) noexcept = default;
     Seeds& operator=(const Seeds&) = default;
-    Seeds& operator=(Seeds&&) = default;
+    Seeds& operator=(Seeds&&) noexcept = default;
     ~Seeds() = default;
 
 public:

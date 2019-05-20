@@ -44,9 +44,9 @@ public:
     Result(OptionValue data, SetByMode mode = SetByMode::DEFAULT);
 
     Result(const Result&) = default;
-    Result(Result&&) = default;
+    Result(Result&&) noexcept = default;
     Result& operator=(const Result&) = default;
-    Result& operator=(Result&&) = default;
+    Result& operator=(Result&&) noexcept = default;
     ~Result() = default;
 
     ///

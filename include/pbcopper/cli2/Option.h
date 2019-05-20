@@ -120,9 +120,9 @@ struct Option
     Option(std::string def, std::string val);
 
     Option(const Option&);
-    Option(Option&&);
+    Option(Option&&) noexcept;
     Option& operator=(const Option&);
-    Option& operator=(Option&&);
+    Option& operator=(Option&&) noexcept;
     ~Option();
 
     std::string text;

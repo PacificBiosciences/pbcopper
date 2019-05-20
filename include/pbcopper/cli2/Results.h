@@ -33,9 +33,9 @@ class Results
 public:
     Results() = default;
     Results(const Results&) = delete;
-    Results(Results&&) = default;
+    Results(Results&&) noexcept = default;
     Results& operator=(const Result&) = delete;
-    Results& operator=(Results&&) = default;
+    Results& operator=(Results&&) noexcept = default;
 
 public:
     ///

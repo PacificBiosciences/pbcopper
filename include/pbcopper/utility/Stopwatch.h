@@ -23,10 +23,10 @@ public:
     /// Creates a stopwatch and begins timing.
     Stopwatch();
 
-    Stopwatch(const Stopwatch& other) = default;
-    Stopwatch(Stopwatch&& other) = default;
-    Stopwatch& operator=(const Stopwatch& other) = default;
-    Stopwatch& operator=(Stopwatch& other) = default;
+    Stopwatch(const Stopwatch&) = default;
+    Stopwatch(Stopwatch&&) noexcept = default;
+    Stopwatch& operator=(const Stopwatch&) = default;
+    Stopwatch& operator=(Stopwatch&&) noexcept = default;
     ~Stopwatch() = default;
 
     /// \}

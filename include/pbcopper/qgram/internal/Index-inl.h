@@ -159,12 +159,6 @@ inline Index::Index(size_t q, std::vector<std::string> seqs)
 
 inline Index::Index(const Index& other) : d_{std::make_unique<internal::IndexImpl>(*other.d_)} {}
 
-inline Index& Index::operator=(const Index& other)
-{
-    d_ = std::make_unique<internal::IndexImpl>(*other.d_);
-    return *this;
-}
-
 inline std::vector<IndexHits> Index::Hits(const std::string& seq,
                                           const bool filterHomopolymers) const
 {

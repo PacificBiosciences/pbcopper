@@ -180,9 +180,9 @@ public:
            OptionFlags flags = OptionFlags::DEFAULT);
 
     Option(const Option& other);
-    Option(Option&& other);
+    Option(Option&& other) noexcept;
     Option& operator=(const Option& other);
-    Option& operator=(Option&& other);
+    Option& operator=(Option&& other) noexcept;
     ~Option();
 
     /// \}

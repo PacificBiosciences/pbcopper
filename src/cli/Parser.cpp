@@ -25,6 +25,9 @@ public:
     }
 
     ParserPrivate(const ParserPrivate&) = default;
+    ParserPrivate(ParserPrivate&&) noexcept = default;
+    ParserPrivate& operator=(const ParserPrivate&) = default;
+    ParserPrivate& operator=(ParserPrivate&&) noexcept = default;
 
     void Parse(const std::vector<std::string>& args);
     void ParseOptionValue(const std::string& optionName, const std::string& argument,
@@ -167,9 +170,7 @@ void Parser::ParserPrivate::ParseOptionValue(
     }
 }
 
-Parser::Parser(const Interface& interface) : d_(new ParserPrivate{interface}) {}
-
-Parser::Parser(const Parser& other) : d_(new ParserPrivate{*other.d_.get()}) {}
+Parser::Parser(const Interface& interface) : d_{std::make_unique<ParserPrivate>(interface)} {}
 
 Parser::~Parser() = default;
 

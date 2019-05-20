@@ -18,6 +18,9 @@ public:
                    std::string defaultName);
 
     OutputFileType(const OutputFileType&) = default;
+    OutputFileType(OutputFileType&&) noexcept = default;
+    OutputFileType& operator=(const OutputFileType&) = default;
+    OutputFileType& operator=(OutputFileType&&) noexcept = default;
     ~OutputFileType() = default;
 
 public:
