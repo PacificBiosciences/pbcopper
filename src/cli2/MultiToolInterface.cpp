@@ -17,11 +17,11 @@ MultiToolInterface::MultiToolInterface(std::string name, std::string description
 
 MultiToolInterface::MultiToolInterface(const MultiToolInterface&) = default;
 
-MultiToolInterface::MultiToolInterface(MultiToolInterface&&) = default;
+MultiToolInterface::MultiToolInterface(MultiToolInterface&&) noexcept = default;
 
 MultiToolInterface& MultiToolInterface::operator=(const MultiToolInterface&) = default;
 
-MultiToolInterface& MultiToolInterface::operator=(MultiToolInterface&&) = default;
+MultiToolInterface& MultiToolInterface::operator=(MultiToolInterface&&) noexcept = default;
 
 MultiToolInterface::~MultiToolInterface() = default;
 

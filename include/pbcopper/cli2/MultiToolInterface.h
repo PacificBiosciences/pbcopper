@@ -21,9 +21,9 @@ public:
                        std::string version = std::string{});
 
     MultiToolInterface(const MultiToolInterface&);
-    MultiToolInterface(MultiToolInterface&&);
+    MultiToolInterface(MultiToolInterface&&) noexcept;
     MultiToolInterface& operator=(const MultiToolInterface&);
-    MultiToolInterface& operator=(MultiToolInterface&&);
+    MultiToolInterface& operator=(MultiToolInterface&&) noexcept;
     ~MultiToolInterface();
 
 public:

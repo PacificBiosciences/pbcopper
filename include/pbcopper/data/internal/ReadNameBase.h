@@ -35,9 +35,9 @@ public:
 
     ReadNameBase();
     ReadNameBase(const ReadNameBase<MovieNameType>&) = default;
-    ReadNameBase(ReadNameBase<MovieNameType>&&) = default;
+    ReadNameBase(ReadNameBase<MovieNameType>&&) noexcept = default;
     ReadNameBase<MovieNameType>& operator=(const ReadNameBase<MovieNameType>&) = default;
-    ReadNameBase<MovieNameType>& operator=(ReadNameBase<MovieNameType>&&) = default;
+    ReadNameBase<MovieNameType>& operator=(ReadNameBase<MovieNameType>&&) noexcept = default;
     ~ReadNameBase() = default;
 
     /// \}

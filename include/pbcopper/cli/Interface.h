@@ -38,8 +38,10 @@ public:
     /// \brief Interface
     /// \param other
     ///
-    Interface(const Interface& other);
-
+    Interface(const Interface&);
+    Interface(Interface&&) noexcept;
+    Interface& operator=(const Interface&);
+    Interface& operator=(Interface&&) noexcept;
     ~Interface();
 
     /// \}

@@ -36,9 +36,9 @@ public:
     explicit Cigar(const std::string& cigarString);
 
     Cigar(const Cigar&) = default;
-    Cigar(Cigar&&) = default;
+    Cigar(Cigar&&) noexcept = default;
     Cigar& operator=(const Cigar&) = default;
-    Cigar& operator=(Cigar&&) = default;
+    Cigar& operator=(Cigar&&) noexcept = default;
     ~Cigar() = default;
 
     /// \}

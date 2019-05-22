@@ -36,11 +36,11 @@ Interface::Interface(std::string name, std::string description, std::string vers
 
 Interface::Interface(const Interface&) = default;
 
-Interface::Interface(Interface&&) = default;
+Interface::Interface(Interface&&) noexcept = default;
 
 Interface& Interface::operator=(const Interface&) = default;
 
-Interface& Interface::operator=(Interface&&) = default;
+Interface& Interface::operator=(Interface&&) noexcept = default;
 
 Interface::~Interface() = default;
 

@@ -40,9 +40,9 @@ public:
 
     Driver() = default;
     Driver(const Driver&) = default;
-    Driver(Driver&&) = default;
+    Driver(Driver&&) noexcept = default;
     Driver& operator=(const Driver&) = default;
-    Driver& operator=(Driver&&) = default;
+    Driver& operator=(Driver&&) noexcept = default;
     ~Driver() = default;
 
     /// \}

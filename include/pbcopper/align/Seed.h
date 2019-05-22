@@ -40,9 +40,9 @@ public:
          const uint64_t endPosV);
 
     Seed(const Seed&) = default;
-    Seed(Seed&&) = default;
+    Seed(Seed&&) noexcept = default;
     Seed& operator=(const Seed&) = default;
-    Seed& operator=(Seed&&) = default;
+    Seed& operator=(Seed&&) noexcept = default;
     ~Seed() = default;
 
 public:
