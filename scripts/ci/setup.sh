@@ -5,8 +5,11 @@ export BUILD_NUMBER="0"
 export ENABLED_TESTS="true"
 
 case "${GCC_VERSION}" in
-  4.8)
+  RHEL)
     module load gtest/gcc48
+
+    # load SCL GCC
+    source /opt/rh/devtoolset-6/enable
     ;;
 
   next)
