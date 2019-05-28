@@ -43,7 +43,8 @@ inline RSMovieName& RSMovieName::operator=(const RSMovieName& other)
     return *this;
 }
 
-inline RSMovieName& RSMovieName::operator=(RSMovieName&& other) noexcept = default;
+inline RSMovieName& RSMovieName::operator=(RSMovieName&& other)
+    PBCOPPER_NOEXCEPT_MOVE_ASSIGN = default;
 
 inline RSMovieName::~RSMovieName() = default;
 

@@ -3,11 +3,12 @@
 #ifndef PBCOPPER_CLI_v2_COMMANDLINEPARSER_H
 #define PBCOPPER_CLI_v2_COMMANDLINEPARSER_H
 
+#include <pbcopper/PbcopperConfig.h>
+
 #include <string>
 #include <unordered_map>
 #include <vector>
 
-#include <pbcopper/PbcopperConfig.h>
 #include <pbcopper/cli2/Interface.h>
 #include <pbcopper/cli2/Results.h>
 #include <pbcopper/cli2/internal/OptionData.h>

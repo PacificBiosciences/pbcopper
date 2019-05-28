@@ -3,11 +3,12 @@
 #ifndef PBCOPPER_ALIGN_SEEDS_H
 #define PBCOPPER_ALIGN_SEEDS_H
 
+#include <pbcopper/PbcopperConfig.h>
+
 #include <functional>
 #include <set>
 #include <vector>
 
-#include <pbcopper/PbcopperConfig.h>
 #include <pbcopper/align/Seed.h>
 
 namespace PacBio {

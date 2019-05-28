@@ -3,9 +3,9 @@
 #ifndef PBCOPPER_CLI_VERSIONPRINTER_H
 #define PBCOPPER_CLI_VERSIONPRINTER_H
 
-#include <iosfwd>
-
 #include <pbcopper/PbcopperConfig.h>
+
+#include <iosfwd>
 
 namespace PacBio {
 namespace CLI {

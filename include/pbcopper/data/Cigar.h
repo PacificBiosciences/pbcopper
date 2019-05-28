@@ -3,10 +3,11 @@
 #ifndef PBCOPPER_DATA_CIGAR_H
 #define PBCOPPER_DATA_CIGAR_H
 
+#include <pbcopper/PbcopperConfig.h>
+
 #include <string>
 #include <vector>
 
-#include <pbcopper/PbcopperConfig.h>
 #include <pbcopper/data/CigarOperation.h>
 
 namespace PacBio {

@@ -3,6 +3,10 @@
 #ifndef PBCOPPER_DATA_READNAMEBASE_H
 #define PBCOPPER_DATA_READNAMEBASE_H
 
+#include <pbcopper/PbcopperConfig.h>
+
+#include <type_traits>
+
 #include <pbcopper/data/CCSTag.h>
 #include <pbcopper/data/Interval.h>
 #include <pbcopper/data/MovieName.h>
@@ -37,7 +41,8 @@ public:
     ReadNameBase(const ReadNameBase<MovieNameType>&) = default;
     ReadNameBase(ReadNameBase<MovieNameType>&&) noexcept = default;
     ReadNameBase<MovieNameType>& operator=(const ReadNameBase<MovieNameType>&) = default;
-    ReadNameBase<MovieNameType>& operator=(ReadNameBase<MovieNameType>&&) noexcept = default;
+    ReadNameBase<MovieNameType>& operator=(ReadNameBase<MovieNameType>&&) noexcept(
+        std::is_nothrow_move_assignable<MovieNameType>::value) = default;
     ~ReadNameBase() = default;
 
     /// \}

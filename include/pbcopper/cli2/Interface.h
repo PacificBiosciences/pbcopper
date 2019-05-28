@@ -3,14 +3,16 @@
 #ifndef PBCOPPER_CLI_v2_INTERFACE_H
 #define PBCOPPER_CLI_v2_INTERFACE_H
 
+#include <pbcopper/PbcopperConfig.h>
+
 #include <memory>
 #include <string>
+#include <type_traits>
 #include <utility>
 #include <vector>
 
 #include <boost/optional.hpp>
 
-#include <pbcopper/PbcopperConfig.h>
 #include <pbcopper/cli2/Option.h>
 #include <pbcopper/cli2/OptionGroup.h>
 #include <pbcopper/cli2/PositionalArgument.h>
@@ -35,7 +37,8 @@ public:
     Interface(const Interface&);
     Interface(Interface&&) noexcept;
     Interface& operator=(const Interface&);
-    Interface& operator=(Interface&&) noexcept;
+    Interface& operator=(Interface&&) noexcept(
+        std::is_nothrow_move_assignable<internal::InterfaceData>::value);
     ~Interface();
 
 public:

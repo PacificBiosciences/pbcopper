@@ -3,13 +3,13 @@
 #ifndef PBCOPPER_DATA_RSMOVIENAME_H
 #define PBCOPPER_DATA_RSMOVIENAME_H
 
+#include <pbcopper/PbcopperConfig.h>
+
 #include <iosfwd>
 #include <memory>
 #include <string>
 
 #include <boost/utility/string_ref.hpp>
-
-#include <pbcopper/PbcopperConfig.h>
 
 namespace PacBio {
 namespace Data {
@@ -35,7 +35,7 @@ public:
     RSMovieName(const RSMovieName& other);
     RSMovieName(RSMovieName&& other) noexcept;
     RSMovieName& operator=(const RSMovieName& other);
-    RSMovieName& operator=(RSMovieName&& other) noexcept;
+    RSMovieName& operator=(RSMovieName&& other) PBCOPPER_NOEXCEPT_MOVE_ASSIGN;
     ~RSMovieName();
 
     /// \}

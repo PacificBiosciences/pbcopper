@@ -40,7 +40,8 @@ Interface::Interface(Interface&&) noexcept = default;
 
 Interface& Interface::operator=(const Interface&) = default;
 
-Interface& Interface::operator=(Interface&&) noexcept = default;
+Interface& Interface::operator=(Interface&&) noexcept(
+    std::is_nothrow_move_assignable<internal::InterfaceData>::value) = default;
 
 Interface::~Interface() = default;
 

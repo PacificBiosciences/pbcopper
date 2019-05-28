@@ -3,6 +3,8 @@
 #ifndef PBCOPPER_PARALLEL_FIREANDFORGET_H
 #define PBCOPPER_PARALLEL_FIREANDFORGET_H
 
+#include <pbcopper/PbcopperConfig.h>
+
 #include <condition_variable>
 #include <cstddef>
 #include <exception>
@@ -11,8 +13,6 @@
 #include <queue>
 
 #include <boost/optional.hpp>
-
-#include <pbcopper/PbcopperConfig.h>
 
 namespace PacBio {
 namespace Parallel {

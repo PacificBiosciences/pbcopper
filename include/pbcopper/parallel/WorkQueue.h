@@ -3,6 +3,8 @@
 #ifndef PBCOPPER_PARALLEL_WORKQUEUE_H
 #define PBCOPPER_PARALLEL_WORKQUEUE_H
 
+#include <pbcopper/PbcopperConfig.h>
+
 #include <condition_variable>
 #include <cstddef>
 #include <deque>
@@ -12,8 +14,6 @@
 #include <vector>
 
 #include <boost/optional.hpp>
-
-#include <pbcopper/PbcopperConfig.h>
 
 namespace PacBio {
 namespace Parallel {

@@ -3,9 +3,9 @@
 #ifndef PBCOPPER_UTILITY_SAFESUBTRACT_H
 #define PBCOPPER_UTILITY_SAFESUBTRACT_H
 
-#include <cstddef>
-
 #include <pbcopper/PbcopperConfig.h>
+
+#include <cstddef>
 
 namespace PacBio {
 namespace Utility {

@@ -3,9 +3,10 @@
 #ifndef PBCOPPER_CLI_TOOLCONTRACT_CONFIG_H
 #define PBCOPPER_CLI_TOOLCONTRACT_CONFIG_H
 
+#include <pbcopper/PbcopperConfig.h>
+
 #include <string>
 
-#include <pbcopper/PbcopperConfig.h>
 #include <pbcopper/cli/toolcontract/Driver.h>
 #include <pbcopper/cli/toolcontract/Task.h>
 

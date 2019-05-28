@@ -3,10 +3,10 @@
 #ifndef PBCOPPER_UTILITY_MOVEAPPEND_H
 #define PBCOPPER_UTILITY_MOVEAPPEND_H
 
+#include <pbcopper/PbcopperConfig.h>
+
 #include <iterator>
 #include <vector>
-
-#include <pbcopper/PbcopperConfig.h>
 
 namespace PacBio {
 namespace Utility {

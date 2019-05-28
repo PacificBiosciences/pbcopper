@@ -3,10 +3,10 @@
 #ifndef PBCOPPER_DATA_CIGAROPERATION_H
 #define PBCOPPER_DATA_CIGAROPERATION_H
 
+#include <pbcopper/PbcopperConfig.h>
+
 #include <cstdint>
 #include <iostream>
-
-#include <pbcopper/PbcopperConfig.h>
 
 namespace PacBio {
 namespace Data {

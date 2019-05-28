@@ -3,12 +3,13 @@
 #ifndef PBCOPPER_CLI_OPTION_H
 #define PBCOPPER_CLI_OPTION_H
 
+#include <pbcopper/PbcopperConfig.h>
+
 #include <initializer_list>
 #include <memory>
 #include <string>
 #include <vector>
 
-#include <pbcopper/PbcopperConfig.h>
 #include <pbcopper/cli/OptionFlags.h>
 #include <pbcopper/json/JSON.h>
 

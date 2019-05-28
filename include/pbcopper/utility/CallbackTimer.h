@@ -3,11 +3,11 @@
 #ifndef PBCOPPER_UTILITY_CALLBACKTIMER_H
 #define PBCOPPER_UTILITY_CALLBACKTIMER_H
 
+#include <pbcopper/PbcopperConfig.h>
+
 #include <cstdint>
 #include <functional>
 #include <memory>
-
-#include <pbcopper/PbcopperConfig.h>
 
 namespace PacBio {
 namespace Utility {
