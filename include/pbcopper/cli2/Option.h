@@ -123,7 +123,7 @@ struct Option
     Option(const Option&);
     Option(Option&&) noexcept;
     Option& operator=(const Option&);
-    Option& operator=(Option&&) noexcept;
+    Option& operator=(Option&&) PBCOPPER_NOEXCEPT_MOVE_ASSIGN;
     ~Option();
 
     std::string text;

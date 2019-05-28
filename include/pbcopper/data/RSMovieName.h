@@ -35,7 +35,7 @@ public:
     RSMovieName(const RSMovieName& other);
     RSMovieName(RSMovieName&& other) noexcept;
     RSMovieName& operator=(const RSMovieName& other);
-    RSMovieName& operator=(RSMovieName&& other) noexcept;
+    RSMovieName& operator=(RSMovieName&& other) PBCOPPER_NOEXCEPT_MOVE_ASSIGN;
     ~RSMovieName();
 
     /// \}

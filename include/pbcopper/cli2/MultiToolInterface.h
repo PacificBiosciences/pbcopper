@@ -6,6 +6,7 @@
 #include <pbcopper/PbcopperConfig.h>
 
 #include <string>
+#include <type_traits>
 #include <utility>
 #include <vector>
 
@@ -24,7 +25,8 @@ public:
     MultiToolInterface(const MultiToolInterface&);
     MultiToolInterface(MultiToolInterface&&) noexcept;
     MultiToolInterface& operator=(const MultiToolInterface&);
-    MultiToolInterface& operator=(MultiToolInterface&&) noexcept;
+    MultiToolInterface& operator=(MultiToolInterface&&) noexcept(
+        std::is_nothrow_move_assignable<internal::MultiToolInterfaceData>::value);
     ~MultiToolInterface();
 
 public:

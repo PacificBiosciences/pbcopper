@@ -7,6 +7,7 @@
 
 #include <memory>
 #include <string>
+#include <type_traits>
 #include <utility>
 #include <vector>
 
@@ -36,7 +37,8 @@ public:
     Interface(const Interface&);
     Interface(Interface&&) noexcept;
     Interface& operator=(const Interface&);
-    Interface& operator=(Interface&&) noexcept;
+    Interface& operator=(Interface&&) noexcept(
+        std::is_nothrow_move_assignable<internal::InterfaceData>::value);
     ~Interface();
 
 public:

@@ -32,7 +32,7 @@ public:
     MovieName(const MovieName& other);
     MovieName(MovieName&& other) noexcept;
     MovieName& operator=(const MovieName& other);
-    MovieName& operator=(MovieName&& other) noexcept;
+    MovieName& operator=(MovieName&& other) PBCOPPER_NOEXCEPT_MOVE_ASSIGN;
     ~MovieName();
 
     /// \}

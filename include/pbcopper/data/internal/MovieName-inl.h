@@ -40,7 +40,7 @@ inline MovieName& MovieName::operator=(const MovieName& other)
     return *this;
 }
 
-inline MovieName& MovieName::operator=(MovieName&&) noexcept = default;
+inline MovieName& MovieName::operator=(MovieName&&) PBCOPPER_NOEXCEPT_MOVE_ASSIGN = default;
 
 inline MovieName::~MovieName() = default;
 

@@ -21,7 +21,8 @@ MultiToolInterface::MultiToolInterface(MultiToolInterface&&) noexcept = default;
 
 MultiToolInterface& MultiToolInterface::operator=(const MultiToolInterface&) = default;
 
-MultiToolInterface& MultiToolInterface::operator=(MultiToolInterface&&) noexcept = default;
+MultiToolInterface& MultiToolInterface::operator=(MultiToolInterface&&) noexcept(
+    std::is_nothrow_move_assignable<internal::MultiToolInterfaceData>::value) = default;
 
 MultiToolInterface::~MultiToolInterface() = default;
 

@@ -21,7 +21,7 @@ Option::Option(Option&&) noexcept = default;
 
 Option& Option::operator=(const Option&) = default;
 
-Option& Option::operator=(Option&&) noexcept = default;
+Option& Option::operator=(Option&&) PBCOPPER_NOEXCEPT_MOVE_ASSIGN = default;
 
 Option::~Option() = default;
 
