@@ -3,6 +3,8 @@
 #ifndef PBCOPPER_CLI_v2_INTERFACE_H
 #define PBCOPPER_CLI_v2_INTERFACE_H
 
+#include <pbcopper/PbcopperConfig.h>
+
 #include <memory>
 #include <string>
 #include <utility>
@@ -10,7 +12,6 @@
 
 #include <boost/optional.hpp>
 
-#include <pbcopper/PbcopperConfig.h>
 #include <pbcopper/cli2/Option.h>
 #include <pbcopper/cli2/OptionGroup.h>
 #include <pbcopper/cli2/PositionalArgument.h>

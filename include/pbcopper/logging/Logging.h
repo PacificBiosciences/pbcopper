@@ -3,6 +3,8 @@
 #ifndef PBCOPPER_LOGGING_LOGGING_H
 #define PBCOPPER_LOGGING_LOGGING_H
 
+#include <pbcopper/PbcopperConfig.h>
+
 #include <condition_variable>
 #include <functional>
 #include <iosfwd>
@@ -14,8 +16,6 @@
 #include <thread>
 #include <utility>
 #include <vector>
-
-#include <pbcopper/PbcopperConfig.h>
 
 namespace PacBio {
 namespace Logging {

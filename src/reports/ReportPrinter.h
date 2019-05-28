@@ -5,6 +5,8 @@
 #ifndef PBCOPPER_REPORTS_REPORTPRINTER_H
 #define PBCOPPER_REPORTS_REPORTPRINTER_H
 
+#include <pbcopper/PbcopperConfig.h>
+
 #include <iosfwd>
 #include <string>
 

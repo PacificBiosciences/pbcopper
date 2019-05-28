@@ -3,12 +3,13 @@
 #ifndef PBCOPPER_CLI_v2_INTERFACEDATA_H
 #define PBCOPPER_CLI_v2_INTERFACEDATA_H
 
+#include <pbcopper/PbcopperConfig.h>
+
 #include <string>
 #include <vector>
 
 #include <boost/optional.hpp>
 
-#include <pbcopper/PbcopperConfig.h>
 #include <pbcopper/cli2/PositionalArgument.h>
 #include <pbcopper/cli2/internal/OptionData.h>
 #include <pbcopper/cli2/internal/PositionalArgumentData.h>

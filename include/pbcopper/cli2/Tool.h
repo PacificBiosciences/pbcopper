@@ -4,6 +4,7 @@
 #define PBCOPPER_CLI_v2_TOOL_H
 
 #include <pbcopper/PbcopperConfig.h>
+
 #include <pbcopper/cli2/Interface.h>
 #include <pbcopper/cli2/ResultsHandler.h>
 

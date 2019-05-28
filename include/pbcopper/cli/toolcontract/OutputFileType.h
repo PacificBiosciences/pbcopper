@@ -3,9 +3,9 @@
 #ifndef PBCOPPER_CLI_TOOLCONTRACT_OUTPUTFILETYPE_H
 #define PBCOPPER_CLI_TOOLCONTRACT_OUTPUTFILETYPE_H
 
-#include <string>
-
 #include <pbcopper/PbcopperConfig.h>
+
+#include <string>
 
 namespace PacBio {
 namespace CLI {

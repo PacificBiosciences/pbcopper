@@ -3,11 +3,12 @@
 #ifndef PBCOPPER_CLI_v2_MULTITOOLINTERFACE_H
 #define PBCOPPER_CLI_v2_MULTITOOLINTERFACE_H
 
+#include <pbcopper/PbcopperConfig.h>
+
 #include <string>
 #include <utility>
 #include <vector>
 
-#include <pbcopper/PbcopperConfig.h>
 #include <pbcopper/cli2/Tool.h>
 #include <pbcopper/cli2/internal/MultiToolInterfaceData.h>
 

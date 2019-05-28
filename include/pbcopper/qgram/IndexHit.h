@@ -3,9 +3,9 @@
 #ifndef PBCOPPER_QGRAM_INDEXHIT_H
 #define PBCOPPER_QGRAM_INDEXHIT_H
 
-#include <cstdint>
-
 #include <pbcopper/PbcopperConfig.h>
+
+#include <cstdint>
 
 namespace PacBio {
 namespace QGram {

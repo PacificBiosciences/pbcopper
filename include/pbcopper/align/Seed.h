@@ -3,9 +3,9 @@
 #ifndef PBCOPPER_ALIGN_SEED_H
 #define PBCOPPER_ALIGN_SEED_H
 
-#include <cstdint>
-
 #include <pbcopper/PbcopperConfig.h>
+
+#include <cstdint>
 
 namespace PacBio {
 namespace Align {

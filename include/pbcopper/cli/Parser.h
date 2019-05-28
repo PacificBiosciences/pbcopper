@@ -3,11 +3,12 @@
 #ifndef PBCOPPER_CLI_PARSER_H
 #define PBCOPPER_CLI_PARSER_H
 
+#include <pbcopper/PbcopperConfig.h>
+
 #include <memory>
 #include <string>
 #include <vector>
 
-#include <pbcopper/PbcopperConfig.h>
 #include <pbcopper/cli/Results.h>
 
 namespace PacBio {

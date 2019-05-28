@@ -3,13 +3,14 @@
 #ifndef PBCOPPER_CLI_TOOLCONTRACT_TASK_H
 #define PBCOPPER_CLI_TOOLCONTRACT_TASK_H
 
+#include <pbcopper/PbcopperConfig.h>
+
 #include <cstddef>
 #include <cstdint>
 #include <map>
 #include <string>
 #include <vector>
 
-#include <pbcopper/PbcopperConfig.h>
 #include <pbcopper/cli/toolcontract/InputFileType.h>
 #include <pbcopper/cli/toolcontract/OutputFileType.h>
 #include <pbcopper/cli/toolcontract/ResourceType.h>

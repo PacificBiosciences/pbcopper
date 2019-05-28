@@ -3,13 +3,13 @@
 #ifndef PBCOPPER_DATA_MOVIENAME_H
 #define PBCOPPER_DATA_MOVIENAME_H
 
+#include <pbcopper/PbcopperConfig.h>
+
 #include <iosfwd>
 #include <memory>
 #include <string>
 
 #include <boost/utility/string_ref.hpp>
-
-#include <pbcopper/PbcopperConfig.h>
 
 namespace PacBio {
 namespace Data {

@@ -3,10 +3,10 @@
 #ifndef PBCOPPER_UTILITY_PBCOPPERVERSION_H
 #define PBCOPPER_UTILITY_PBCOPPERVERSION_H
 
+#include <pbcopper/PbcopperConfig.h>
+
 #include <string>
 #include <tuple>
-
-#include <pbcopper/PbcopperConfig.h>
 
 namespace PacBio {
 namespace Utility {

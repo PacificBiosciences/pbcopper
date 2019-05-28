@@ -4,6 +4,7 @@
 #define PBCOPPER_CLI_v2_BUILTINOPTIONS_H
 
 #include <pbcopper/PbcopperConfig.h>
+
 #include <pbcopper/cli2/Option.h>
 
 // clang-format off

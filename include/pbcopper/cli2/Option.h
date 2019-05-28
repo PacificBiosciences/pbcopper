@@ -3,11 +3,12 @@
 #ifndef PBCOPPER_CLI_v2_OPTION_H
 #define PBCOPPER_CLI_v2_OPTION_H
 
+#include <pbcopper/PbcopperConfig.h>
+
 #include <string>
 
 #include <boost/optional.hpp>
 
-#include <pbcopper/PbcopperConfig.h>
 #include <pbcopper/cli2/OptionValue.h>
 
 namespace PacBio {

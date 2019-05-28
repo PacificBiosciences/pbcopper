@@ -5,6 +5,8 @@
 #ifndef PBCOPPER_REPORTS_REPORT_H
 #define PBCOPPER_REPORTS_REPORT_H
 
+#include <pbcopper/PbcopperConfig.h>
+
 #include <cstddef>
 #include <iosfwd>
 #include <string>

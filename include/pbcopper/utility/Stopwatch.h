@@ -4,12 +4,12 @@
 #ifndef PBCOPPER_UTILITY_STOPWATCH_H
 #define PBCOPPER_UTILITY_STOPWATCH_H
 
+#include <pbcopper/PbcopperConfig.h>
+
 #include <sys/resource.h>
 #include <sys/time.h>
 #include <chrono>
 #include <string>
-
-#include <pbcopper/PbcopperConfig.h>
 
 namespace PacBio {
 namespace Utility {

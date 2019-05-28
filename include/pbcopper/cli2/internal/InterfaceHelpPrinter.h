@@ -3,13 +3,14 @@
 #ifndef PBCOPPER_CLI_v2_INTERFACEHELPPRINTER_H
 #define PBCOPPER_CLI_v2_INTERFACEHELPPRINTER_H
 
+#include <pbcopper/PbcopperConfig.h>
+
 #include <iosfwd>
 #include <string>
 #include <unordered_map>
 
 #include <boost/optional.hpp>
 
-#include <pbcopper/PbcopperConfig.h>
 #include <pbcopper/cli2/Interface.h>
 #include <pbcopper/cli2/MultiToolInterface.h>
 #include <pbcopper/cli2/internal/OptionData.h>

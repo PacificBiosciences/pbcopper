@@ -3,9 +3,9 @@
 #ifndef PBCOPPER_CLI_v2_RESULTSHANDLER_H
 #define PBCOPPER_CLI_v2_RESULTSHANDLER_H
 
-#include <functional>
-
 #include <pbcopper/PbcopperConfig.h>
+
+#include <functional>
 
 namespace PacBio {
 namespace CLI_v2 {
