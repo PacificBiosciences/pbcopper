@@ -4,6 +4,7 @@
 
 ### Removed
  - Unused CallbackTimer
+ - Unused PacBio::Stream utilities
 
 ## [1.2.0] - 2019-05-03
 

@@ -56,9 +56,6 @@ pbcopper_test_cpp_sources = files([
   # reports
   'src/reports/test_Report.cpp',
 
-  # stream
-  'src/stream/test_Stream.cpp',
-
   # utility
   'src/utility/test_FileUtils.cpp',
   'src/utility/test_Stopwatch.cpp',

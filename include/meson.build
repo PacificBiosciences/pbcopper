@@ -180,12 +180,6 @@ if not meson.is_subproject()
       'pbcopper/qgram/internal/Index-inl.h']),
     subdir : 'pbcopper/qgram/internal')
 
-  # pbcopper/stream
-  install_headers(
-    files([
-      'pbcopper/stream/Stream.h']),
-    subdir : 'pbcopper/stream')
-
   # pbcopper/utility
   install_headers(
     files([
