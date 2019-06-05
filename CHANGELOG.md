@@ -2,6 +2,9 @@
 
 ## Active
 
+### Removed
+ - Unused CallbackTimer
+
 ## [1.2.0] - 2019-05-03
 
 ### Changed

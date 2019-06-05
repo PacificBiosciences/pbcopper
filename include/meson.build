@@ -189,7 +189,6 @@ if not meson.is_subproject()
   # pbcopper/utility
   install_headers(
     files([
-      'pbcopper/utility/CallbackTimer.h',
       'pbcopper/utility/FileUtils.h',
       'pbcopper/utility/MoveAppend.h',
       'pbcopper/utility/PbcopperVersion.h',

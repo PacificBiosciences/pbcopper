@@ -60,7 +60,6 @@ pbcopper_cpp_sources = files([
   # ---------
   # utility
   # ---------
-  'utility/CallbackTimer.cpp',
   'utility/Stopwatch.cpp',
   'utility/StringUtils.cpp'])
 

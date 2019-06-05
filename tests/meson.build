@@ -60,7 +60,6 @@ pbcopper_test_cpp_sources = files([
   'src/stream/test_Stream.cpp',
 
   # utility
-  'src/utility/test_CallbackTimer.cpp',
   'src/utility/test_FileUtils.cpp',
   'src/utility/test_Stopwatch.cpp',
   'src/utility/test_StringUtils.cpp',
