@@ -31,8 +31,6 @@ pbcopper_test_cpp_sources = files([
   'src/cli2/test_VersionPrinter.cpp',
 
   # data
-  'src/data/test_Cigar.cpp',
-  'src/data/test_CigarOperation.cpp',
   'src/data/test_Interval.cpp',
   'src/data/test_MovieName.cpp',
   'src/data/test_ReadName.cpp',
@@ -56,11 +54,7 @@ pbcopper_test_cpp_sources = files([
   # reports
   'src/reports/test_Report.cpp',
 
-  # stream
-  'src/stream/test_Stream.cpp',
-
   # utility
-  'src/utility/test_CallbackTimer.cpp',
   'src/utility/test_FileUtils.cpp',
   'src/utility/test_Stopwatch.cpp',
   'src/utility/test_StringUtils.cpp',

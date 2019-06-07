@@ -105,8 +105,6 @@ if not meson.is_subproject()
   install_headers(
     files([
       'pbcopper/data/CCSTag.h',
-      'pbcopper/data/Cigar.h',
-      'pbcopper/data/CigarOperation.h',
       'pbcopper/data/Interval.h',
       'pbcopper/data/MovieName.h',
       'pbcopper/data/Position.h',
@@ -119,7 +117,6 @@ if not meson.is_subproject()
   # pbcopper/data/internal
   install_headers(
     files([
-      'pbcopper/data/internal/CigarOperation-inl.h',
       'pbcopper/data/internal/Interval-inl.h',
       'pbcopper/data/internal/MovieName-inl.h',
       'pbcopper/data/internal/ReadNameBase-inl.h',
@@ -180,16 +177,9 @@ if not meson.is_subproject()
       'pbcopper/qgram/internal/Index-inl.h']),
     subdir : 'pbcopper/qgram/internal')
 
-  # pbcopper/stream
-  install_headers(
-    files([
-      'pbcopper/stream/Stream.h']),
-    subdir : 'pbcopper/stream')
-
   # pbcopper/utility
   install_headers(
     files([
-      'pbcopper/utility/CallbackTimer.h',
       'pbcopper/utility/FileUtils.h',
       'pbcopper/utility/MoveAppend.h',
       'pbcopper/utility/PbcopperVersion.h',

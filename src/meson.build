@@ -41,8 +41,6 @@ pbcopper_cpp_sources = files([
   # -------
   # data
   # -------
-  'data/Cigar.cpp',
-  'data/CigarOperation.cpp',
   'data/MovieName.cpp',
   'data/RSMovieName.cpp',
 
@@ -60,7 +58,6 @@ pbcopper_cpp_sources = files([
   # ---------
   # utility
   # ---------
-  'utility/CallbackTimer.cpp',
   'utility/Stopwatch.cpp',
   'utility/StringUtils.cpp'])
 
