@@ -2,7 +2,9 @@
 
 #include <pbcopper/cli/Option.h>
 
+#include <cassert>
 #include <stdexcept>
+#include <type_traits>
 
 namespace PacBio {
 namespace CLI {
@@ -36,6 +38,15 @@ static const Option defaultVersionOption {
 // clang-format on
 
 }  // anonymous
+
+static_assert(std::is_copy_constructible<Option>::value, "Option(const Option&) is not = default");
+static_assert(std::is_copy_assignable<Option>::value,
+              "Option& operator=(const Option&) is not = default");
+
+static_assert(std::is_nothrow_move_constructible<Option>::value,
+              "Option(Option&&) is not = noexcept");
+static_assert(std::is_nothrow_move_assignable<Option>::value,
+              "Option& operator=(Option&&) is not = noexcept");
 
 const Option& Option::DefaultHelpOption() { return defaultHelpOption; }
 

@@ -5,9 +5,22 @@
 
 #include <pbcopper/cli/toolcontract/Driver.h>
 
+#include <cassert>
+#include <type_traits>
+
 namespace PacBio {
 namespace CLI {
 namespace ToolContract {
+
+static_assert(std::is_copy_constructible<Driver>::value, "Driver(const Driver&) is not = default");
+static_assert(std::is_copy_assignable<Driver>::value,
+              "Driver& operator=(const Driver&) is not = default");
+
+static_assert(std::is_nothrow_move_constructible<Driver>::value,
+              "Driver(Driver&&) is not = noexcept");
+static_assert(std::is_nothrow_move_assignable<Driver>::value ==
+                  std::is_nothrow_move_assignable<std::string>::value,
+              "");
 
 inline Driver::Driver(std::string exe) : exe_{std::move(exe)} {}
 

@@ -20,13 +20,7 @@ namespace Align {
 class Seeds
 {
 public:
-    Seeds();
-
-    Seeds(const Seeds&) = default;
-    Seeds(Seeds&&) noexcept = default;
-    Seeds& operator=(const Seeds&) = default;
-    Seeds& operator=(Seeds&&) noexcept = default;
-    ~Seeds() = default;
+    Seeds() = default;
 
 public:
     ///

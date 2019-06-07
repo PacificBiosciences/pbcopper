@@ -3,7 +3,10 @@
 #ifndef PBCOPPER_DATA_CIGAROPERATION_INL_H
 #define PBCOPPER_DATA_CIGAROPERATION_INL_H
 
+#include <cassert>
 #include <stdexcept>
+#include <tuple>
+#include <type_traits>
 
 #include <pbcopper/data/CigarOperation.h>
 
@@ -29,16 +32,24 @@ inline void validate(const CigarOperationType type)
 
 }  // namespace Internal
 
-inline CigarOperation::CigarOperation() : type_(CigarOperationType::UNKNOWN_OP), length_(0) {}
+static_assert(std::is_copy_constructible<CigarOperation>::value,
+              "CigarOperation(const CigarOperation&) is not = default");
+static_assert(std::is_copy_assignable<CigarOperation>::value,
+              "CigarOperation& operator=(const CigarOperation&) is not = default");
+
+static_assert(std::is_nothrow_move_constructible<CigarOperation>::value,
+              "CigarOperation(CigarOperation&&) is not = noexcept");
+static_assert(std::is_nothrow_move_assignable<CigarOperation>::value,
+              "CigarOperation& operator=(CigarOperation&&) is not = noexcept");
 
 inline CigarOperation::CigarOperation(char c, uint32_t length)
-    : type_(CigarOperation::CharToType(c)), length_(length)
+    : type_{CigarOperation::CharToType(c)}, length_{length}
 {
     Internal::validate(type_);
 }
 
 inline CigarOperation::CigarOperation(CigarOperationType op, uint32_t length)
-    : type_(op), length_(length)
+    : type_{op}, length_{length}
 {
     Internal::validate(type_);
 }
@@ -69,7 +80,7 @@ inline CigarOperation& CigarOperation::Type(const CigarOperationType opType)
 
 inline bool CigarOperation::operator==(const CigarOperation& other) const
 {
-    return type_ == other.type_ && length_ == other.length_;
+    return std::tie(type_, length_) == std::tie(other.type_, other.length_);
 }
 
 inline bool CigarOperation::operator!=(const CigarOperation& other) const

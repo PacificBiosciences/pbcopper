@@ -70,7 +70,7 @@ public:
     ///
     /// \brief Creates a default (unknown) CigarOperation, with length = 0.
     ///
-    CigarOperation();
+    CigarOperation() = default;
 
     ///
     /// \brief Creates a CigarOperation from char code & leength.
@@ -87,12 +87,6 @@ public:
     /// \param length   op length
     ///
     CigarOperation(CigarOperationType op, uint32_t length);
-
-    CigarOperation(const CigarOperation& other) = default;
-    CigarOperation(CigarOperation&&) noexcept = default;
-    CigarOperation& operator=(const CigarOperation& other) = default;
-    CigarOperation& operator=(CigarOperation&&) noexcept = default;
-    ~CigarOperation() = default;
 
     /// \}
 
@@ -148,8 +142,8 @@ public:
     /// \}
 
 private:
-    CigarOperationType type_;
-    uint32_t length_;
+    CigarOperationType type_ = CigarOperationType::UNKNOWN_OP;
+    uint32_t length_ = 0;
 };
 
 ///

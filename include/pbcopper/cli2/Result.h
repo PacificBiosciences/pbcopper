@@ -41,14 +41,8 @@ class Results;
 class Result
 {
 public:
-    Result();
+    Result() = default;
     Result(OptionValue data, SetByMode mode = SetByMode::DEFAULT);
-
-    Result(const Result&) = default;
-    Result(Result&&) noexcept = default;
-    Result& operator=(const Result&) = default;
-    Result& operator=(Result&&) noexcept = default;
-    ~Result() = default;
 
     ///
     /// Convience method for querying value's source.
@@ -90,7 +84,7 @@ public:
 
 private:
     OptionValue data_;
-    SetByMode setBy_;
+    SetByMode setBy_ = SetByMode::DEFAULT;
 };
 
 }  // namespace CLI_v2

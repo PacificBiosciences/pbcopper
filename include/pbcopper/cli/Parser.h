@@ -31,10 +31,8 @@ public:
     ///
     Parser(const Interface& interface);
 
-    Parser(const Parser&) = default;
-    Parser(Parser&&) noexcept = default;
-    Parser& operator=(const Parser&) = default;
-    Parser& operator=(Parser&&) noexcept = default;
+    Parser(Parser&&) noexcept;
+    Parser& operator=(Parser&&) noexcept;
     ~Parser();
 
     /// \}

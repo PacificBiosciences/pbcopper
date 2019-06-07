@@ -41,12 +41,6 @@ public:
     {
     }
 
-    Config(const Config&) = default;
-    Config(Config&&) noexcept = default;
-    Config& operator=(const Config&) = default;
-    Config& operator=(Config&&) noexcept = default;
-    ~Config() = default;
-
     /// \}
 
 public:

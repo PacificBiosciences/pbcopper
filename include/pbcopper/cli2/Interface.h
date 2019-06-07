@@ -34,13 +34,6 @@ public:
     Interface(std::string name, std::string description = std::string{},
               std::string version = std::string{});
 
-    Interface(const Interface&);
-    Interface(Interface&&) noexcept;
-    Interface& operator=(const Interface&);
-    Interface& operator=(Interface&&) noexcept(
-        std::is_nothrow_move_assignable<internal::InterfaceData>::value);
-    ~Interface();
-
 public:
     ///
     /// Add an option to the interface.

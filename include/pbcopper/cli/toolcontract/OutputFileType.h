@@ -17,12 +17,6 @@ public:
     OutputFileType(std::string id, std::string title, std::string description, std::string type,
                    std::string defaultName);
 
-    OutputFileType(const OutputFileType&) = default;
-    OutputFileType(OutputFileType&&) noexcept = default;
-    OutputFileType& operator=(const OutputFileType&) = default;
-    OutputFileType& operator=(OutputFileType&&) noexcept = default;
-    ~OutputFileType() = default;
-
 public:
     const std::string& Id() const;
     const std::string& Title() const;

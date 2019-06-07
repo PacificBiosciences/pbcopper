@@ -3,6 +3,7 @@
 #include <cassert>
 #include <map>
 #include <stdexcept>
+#include <type_traits>
 
 #include <pbcopper/cli2/Interface.h>
 #include <pbcopper/cli2/internal/BuiltinOptions.h>
@@ -17,6 +18,17 @@ using PositionalArgumentTranslator = PacBio::CLI_v2::internal::PositionalArgumen
 
 namespace PacBio {
 namespace CLI_v2 {
+
+static_assert(std::is_copy_constructible<Interface>::value,
+              "Interface(const Interface&) is not = default");
+static_assert(std::is_copy_assignable<Interface>::value,
+              "Interface& operator=(const Interface&) is not = default");
+
+static_assert(std::is_nothrow_move_constructible<Interface>::value,
+              "Interface(Interface&&) is not = noexcept");
+static_assert(std::is_nothrow_move_assignable<Interface>::value ==
+                  std::is_nothrow_move_assignable<internal::InterfaceData>::value,
+              "");
 
 Interface::Interface(std::string name, std::string description, std::string version)
     : data_{std::move(name),
@@ -33,17 +45,6 @@ Interface::Interface(std::string name, std::string description, std::string vers
             "[pbcopper] command line interface ERROR: application name must not be empty"};
     }
 }
-
-Interface::Interface(const Interface&) = default;
-
-Interface::Interface(Interface&&) noexcept = default;
-
-Interface& Interface::operator=(const Interface&) = default;
-
-Interface& Interface::operator=(Interface&&) noexcept(
-    std::is_nothrow_move_assignable<internal::InterfaceData>::value) = default;
-
-Interface::~Interface() = default;
 
 Interface& Interface::AddOption(const Option& option)
 {

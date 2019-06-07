@@ -19,7 +19,7 @@ public:
     ///
     /// \brief Seed
     ///
-    Seed();
+    Seed() = default;
 
     ///
     /// \brief Seed
@@ -38,12 +38,6 @@ public:
     ///
     Seed(const uint64_t beginPosH, const uint64_t beginPosV, const uint64_t endPosH,
          const uint64_t endPosV);
-
-    Seed(const Seed&) = default;
-    Seed(Seed&&) noexcept = default;
-    Seed& operator=(const Seed&) = default;
-    Seed& operator=(Seed&&) noexcept = default;
-    ~Seed() = default;
 
 public:
     ///
@@ -192,13 +186,13 @@ public:
     Seed operator+(const Seed& other) const;
 
 private:
-    uint64_t beginPositionH_;
-    uint64_t beginPositionV_;
-    uint64_t endPositionH_;
-    uint64_t endPositionV_;
-    int64_t lowerDiagonal_;
-    int64_t upperDiagonal_;
-    int32_t score_;
+    uint64_t beginPositionH_ = 0;
+    uint64_t beginPositionV_ = 0;
+    uint64_t endPositionH_ = 0;
+    uint64_t endPositionV_ = 0;
+    int64_t lowerDiagonal_ = 0;
+    int64_t upperDiagonal_ = 0;
+    int32_t score_ = 0;
 };
 
 ///

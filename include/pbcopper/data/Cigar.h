@@ -28,19 +28,13 @@ public:
     /// \{
 
     /// \brief Creates an empty Cigar.
-    Cigar();
+    Cigar() = default;
 
     /// \brief Creates a Cigar object from SAM/BAM string input
     ///
     /// \param [in] cigarString   SAM/BAM-formatted CIGAR data
     ///
     explicit Cigar(const std::string& cigarString);
-
-    Cigar(const Cigar&) = default;
-    Cigar(Cigar&&) noexcept = default;
-    Cigar& operator=(const Cigar&) = default;
-    Cigar& operator=(Cigar&&) noexcept = default;
-    ~Cigar() = default;
 
     /// \}
 

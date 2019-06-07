@@ -5,9 +5,23 @@
 
 #include <pbcopper/cli/toolcontract/OutputFileType.h>
 
+#include <cassert>
+#include <type_traits>
+
 namespace PacBio {
 namespace CLI {
 namespace ToolContract {
+
+static_assert(std::is_copy_constructible<OutputFileType>::value,
+              "OutputFileType(const OutputFileType&) is not = default");
+static_assert(std::is_copy_assignable<OutputFileType>::value,
+              "OutputFileType& operator=(const OutputFileType&) is not = default");
+
+static_assert(std::is_nothrow_move_constructible<OutputFileType>::value,
+              "OutputFileType(OutputFileType&&) is not = noexcept");
+static_assert(std::is_nothrow_move_assignable<OutputFileType>::value ==
+                  std::is_nothrow_move_assignable<std::string>::value,
+              "");
 
 inline OutputFileType::OutputFileType(std::string id, std::string title, std::string description,
                                       std::string type, std::string defaultName)

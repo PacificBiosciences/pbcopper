@@ -36,6 +36,7 @@ inline void Stopwatch::Reset()
     tick_ = std::chrono::steady_clock::now();
     frozen_ = false;
 }
+
 inline void Stopwatch::Freeze()
 {
     tock_ = std::chrono::steady_clock::now();

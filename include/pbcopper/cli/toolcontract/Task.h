@@ -46,11 +46,6 @@ public:
     explicit Task(std::string taskId);
 
     Task() = default;
-    Task(const Task&) = default;
-    Task(Task&&) noexcept = default;
-    Task& operator=(const Task&) = default;
-    Task& operator=(Task&&) noexcept = default;
-    ~Task() = default;
 
     /// \}
 
