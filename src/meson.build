@@ -41,8 +41,6 @@ pbcopper_cpp_sources = files([
   # -------
   # data
   # -------
-  'data/Cigar.cpp',
-  'data/CigarOperation.cpp',
   'data/MovieName.cpp',
   'data/RSMovieName.cpp',
 
