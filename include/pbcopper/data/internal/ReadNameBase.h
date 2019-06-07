@@ -37,13 +37,7 @@ public:
 
     ReadNameBase(const MovieNameType& movieName, const PacBio::Data::Zmw& zmw, const CCSTag ccs);
 
-    ReadNameBase();
-    ReadNameBase(const ReadNameBase<MovieNameType>&) = default;
-    ReadNameBase(ReadNameBase<MovieNameType>&&) noexcept = default;
-    ReadNameBase<MovieNameType>& operator=(const ReadNameBase<MovieNameType>&) = default;
-    ReadNameBase<MovieNameType>& operator=(ReadNameBase<MovieNameType>&&) noexcept(
-        std::is_nothrow_move_assignable<MovieNameType>::value) = default;
-    ~ReadNameBase() = default;
+    ReadNameBase() = default;
 
     /// \}
 
@@ -73,7 +67,7 @@ public:
 
 private:
     MovieNameType movieName_;
-    PacBio::Data::Zmw zmw_;
+    PacBio::Data::Zmw zmw_ = -1;
     std::unique_ptr<Interval<Position>> queryInterval_;
 
 private:

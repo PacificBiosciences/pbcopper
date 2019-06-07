@@ -2,14 +2,22 @@
 
 #include <pbcopper/data/Cigar.h>
 
+#include <cassert>
 #include <cctype>
 #include <cstddef>
 #include <sstream>
+#include <type_traits>
 
 namespace PacBio {
 namespace Data {
 
-Cigar::Cigar() = default;
+static_assert(std::is_copy_constructible<Cigar>::value, "Cigar(const Cigar&) is not = default");
+static_assert(std::is_copy_assignable<Cigar>::value,
+              "Cigar& operator=(const Cigar&) is not = default");
+
+static_assert(std::is_nothrow_move_constructible<Cigar>::value, "Cigar(Cigar&&) is not = noexcept");
+static_assert(std::is_nothrow_move_assignable<Cigar>::value,
+              "Cigar& operator=(Cigar&&) is not = noexcept");
 
 Cigar::Cigar(const std::string& cigarString) : std::vector<CigarOperation>()
 {

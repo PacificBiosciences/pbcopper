@@ -39,11 +39,6 @@ public:
     Driver(std::string exe, Environment env, std::string serialization);
 
     Driver() = default;
-    Driver(const Driver&) = default;
-    Driver(Driver&&) noexcept = default;
-    Driver& operator=(const Driver&) = default;
-    Driver& operator=(Driver&&) noexcept = default;
-    ~Driver() = default;
 
     /// \}
 

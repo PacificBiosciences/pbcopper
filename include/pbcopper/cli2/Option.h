@@ -120,12 +120,6 @@ struct Option
     Option(std::string def, float val);
     Option(std::string def, std::string val);
 
-    Option(const Option&);
-    Option(Option&&) noexcept;
-    Option& operator=(const Option&);
-    Option& operator=(Option&&) PBCOPPER_NOEXCEPT_MOVE_ASSIGN;
-    ~Option();
-
     std::string text;
     boost::optional<OptionValue> defaultValue;
 

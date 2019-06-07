@@ -47,12 +47,6 @@ public:
         assert(begin_ <= end_);
     }
 
-    IndexHits(const IndexHits&) = default;
-    IndexHits(IndexHits&&) noexcept = default;
-    IndexHits& operator=(const IndexHits&) = default;
-    IndexHits& operator=(IndexHits&&) noexcept = default;
-    ~IndexHits() = default;
-
 public:
     size_t QueryPosition() const { return queryPos_; }
 

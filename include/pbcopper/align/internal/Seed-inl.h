@@ -6,22 +6,20 @@
 #include <algorithm>
 #include <cassert>
 #include <cmath>
+#include <type_traits>
 
 #include <pbcopper/align/Seed.h>
 
 namespace PacBio {
 namespace Align {
 
-inline Seed::Seed()
-    : beginPositionH_{0}
-    , beginPositionV_{0}
-    , endPositionH_{0}
-    , endPositionV_{0}
-    , lowerDiagonal_{0}
-    , upperDiagonal_{0}
-    , score_{0}
-{
-}
+static_assert(std::is_copy_constructible<Seed>::value, "Seed(const Seed&) is not = default");
+static_assert(std::is_copy_assignable<Seed>::value,
+              "Seed& operator=(const Seed&) is not = default");
+
+static_assert(std::is_nothrow_move_constructible<Seed>::value, "Seed(Seed&&) is not = noexcept");
+static_assert(std::is_nothrow_move_assignable<Seed>::value,
+              "Seed& operator=(Seed&&) is not = noexcept");
 
 inline Seed::Seed(const uint64_t beginPosH, const uint64_t beginPosV, const uint64_t seedLength)
     : beginPositionH_{beginPosH}

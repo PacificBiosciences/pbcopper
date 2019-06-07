@@ -22,13 +22,6 @@ public:
     MultiToolInterface(std::string name, std::string description = std::string{},
                        std::string version = std::string{});
 
-    MultiToolInterface(const MultiToolInterface&);
-    MultiToolInterface(MultiToolInterface&&) noexcept;
-    MultiToolInterface& operator=(const MultiToolInterface&);
-    MultiToolInterface& operator=(MultiToolInterface&&) noexcept(
-        std::is_nothrow_move_assignable<internal::MultiToolInterfaceData>::value);
-    ~MultiToolInterface();
-
 public:
     MultiToolInterface& AddTool(const Tool& tool);
 
