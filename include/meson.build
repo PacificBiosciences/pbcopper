@@ -13,13 +13,25 @@ if not meson.is_subproject()
   # pbcopper/align
   install_headers(
     files([
+      'pbcopper/align/AffineAlignment.h',
+      'pbcopper/align/AlignConfig.h',
+      'pbcopper/align/BandedChainAlignment.h',
+      'pbcopper/align/ChainSeeds.h',
+      'pbcopper/align/ChainSeedsConfig.h',
+      'pbcopper/align/FindSeeds.h',
+      'pbcopper/align/LinearAlignment.h',
+      'pbcopper/align/LocalAlignment.h',
+      'pbcopper/align/PairwiseAlignment.h',
       'pbcopper/align/Seed.h',
-      'pbcopper/align/Seeds.h']),
+      'pbcopper/align/Seeds.h',
+      'pbcopper/align/SparseAlignment.h']),
     subdir : 'pbcopper/align')
 
   # pbcopper/align/internal
   install_headers(
     files([
+      'pbcopper/align/internal/BCAlignBlocks.h',
+      'pbcopper/align/internal/BCAlignImpl.h',
       'pbcopper/align/internal/Seed-inl.h',
       'pbcopper/align/internal/Seeds-inl.h']),
     subdir : 'pbcopper/align/internal')
@@ -184,6 +196,7 @@ if not meson.is_subproject()
       'pbcopper/utility/MoveAppend.h',
       'pbcopper/utility/PbcopperVersion.h',
       'pbcopper/utility/SafeSubtract.h',
+      'pbcopper/utility/SequenceUtils.h',
       'pbcopper/utility/Stopwatch.h',
       'pbcopper/utility/StringUtils.h',
       'pbcopper/utility/SystemInfo.h',

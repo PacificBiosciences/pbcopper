@@ -8,6 +8,8 @@ pbcopper_test_CLI_cpp = configure_file(
 
 pbcopper_test_cpp_sources = files([
   # align
+  'src/align/test_Alignment.cpp',
+  'src/align/test_BandedChainAlign.cpp',
   'src/align/test_Seeds.cpp',
 
   # cli

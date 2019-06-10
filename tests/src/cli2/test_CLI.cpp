@@ -19,12 +19,9 @@
 
 // clang-format off
 
-using namespace PacBio;
-using namespace PacBio::CLI_v2;
-
 namespace CLI_v2_CLITests {
 
-const Option RefineTestOption
+const PacBio::CLI_v2::Option RefineTestOption
 {
 R"({
     "names" : ["test"],
@@ -33,7 +30,7 @@ R"({
 })"
 };
 
-const Option RefineCountOption
+const PacBio::CLI_v2::Option RefineCountOption
 {
 R"({
     "names" : ["count"],
@@ -43,9 +40,9 @@ R"({
 })"
 };
 
-Interface MakeRefineInterface()
+PacBio::CLI_v2::Interface MakeRefineInterface()
 {
-    Interface refine{"refine", "Remove concatemers and optionally poly-A tails (FL to FLNC)"};
+    PacBio::CLI_v2::Interface refine{"refine", "Remove concatemers and optionally poly-A tails (FL to FLNC)"};
     refine.AddOptions({
         RefineTestOption,
         RefineCountOption});
@@ -65,9 +62,9 @@ int RefineRunner(const PacBio::CLI_v2::Results& results)
     return EXIT_SUCCESS;
 }
 
-Interface MakeClusterInterface()
+PacBio::CLI_v2::Interface MakeClusterInterface()
 {
-    Interface cluster{"cluster", "Cluster FLNC reads and generate unpolished transcripts (FLNC to UNPOLISHED"};
+    PacBio::CLI_v2::Interface cluster{"cluster", "Cluster FLNC reads and generate unpolished transcripts (FLNC to UNPOLISHED"};
     cluster.Example("isoseq3 cluster movie.flnc.bam unpolished.bam");
     return cluster;
 }
@@ -77,9 +74,9 @@ int ClusterRunner(const PacBio::CLI_v2::Results&)
     return EXIT_SUCCESS;
 }
 
-Interface MakePolishInterface()
+PacBio::CLI_v2::Interface MakePolishInterface()
 {
-    Interface polish{"polish", "Polish transcripts using subreads (UNPOLISHED to POLISHED)"};
+    PacBio::CLI_v2::Interface polish{"polish", "Polish transcripts using subreads (UNPOLISHED to POLISHED)"};
     polish.Example("isoseq3 polish unpolished.bam movie.subreadset.xml polished.bam");
     return polish;
 }
@@ -89,9 +86,9 @@ int PolishRunner(const PacBio::CLI_v2::Results&)
     return EXIT_SUCCESS;
 }
 
-Interface MakeSummarizeInterface()
+PacBio::CLI_v2::Interface MakeSummarizeInterface()
 {
-    Interface summarize{"summarize", "Create barcode overview from transcripts (POLISHED to CSV)"};
+    PacBio::CLI_v2::Interface summarize{"summarize", "Create barcode overview from transcripts (POLISHED to CSV)"};
     summarize.Example("isoseq3 summarize polished.bam summary.csv");
     return summarize;
 }
@@ -106,13 +103,13 @@ int SummarizeRunner(const PacBio::CLI_v2::Results&)
 
 TEST(CLI2_CLI, can_print_version)
 {
-    internal::InterfaceHelpPrinter::TestingFixedWidth = 80;
+    PacBio::CLI_v2::internal::InterfaceHelpPrinter::TestingFixedWidth = 80;
 
     const std::string expectedText{"frobber v3.1\n"};
     const std::vector<std::string> args {
         "frobber", "--version"
     };
-    auto runner = [](const Results&)
+    auto runner = [](const PacBio::CLI_v2::Results&)
     {
         return EXIT_SUCCESS;
     };
@@ -121,8 +118,8 @@ TEST(CLI2_CLI, can_print_version)
     tests::CoutRedirect redirect(s.rdbuf());
     UNUSED(redirect);
 
-    const Interface i{"frobber", "Frob all the things", "v3.1"};
-    const int result = CLI_v2::Run(args, i, runner);
+    const PacBio::CLI_v2::Interface i{"frobber", "Frob all the things", "v3.1"};
+    const int result = PacBio::CLI_v2::Run(args, i, runner);
 
     EXPECT_EQ(EXIT_SUCCESS, result);
     EXPECT_EQ(expectedText, s.str());
@@ -130,7 +127,7 @@ TEST(CLI2_CLI, can_print_version)
 
 TEST(CLI2_CLI, can_print_help)
 {
-    internal::InterfaceHelpPrinter::TestingFixedWidth = 80;
+    PacBio::CLI_v2::internal::InterfaceHelpPrinter::TestingFixedWidth = 80;
 
     const std::string expectedText{
 "frobber - Frob all the things.\n"
@@ -151,7 +148,7 @@ TEST(CLI2_CLI, can_print_help)
     const std::vector<std::string> args {
         "frobber", "-h"
     };
-    auto runner = [](const Results&)
+    auto runner = [](const PacBio::CLI_v2::Results&)
     {
         return EXIT_SUCCESS;
     };
@@ -160,8 +157,8 @@ TEST(CLI2_CLI, can_print_help)
     tests::CoutRedirect redirect(s.rdbuf());
     UNUSED(redirect);
 
-    const Interface i{"frobber", "Frob all the things.", "v3.1"};
-    const int result = CLI_v2::Run(args, i, runner);
+    const PacBio::CLI_v2::Interface i{"frobber", "Frob all the things.", "v3.1"};
+    const int result = PacBio::CLI_v2::Run(args, i, runner);
 
     EXPECT_EQ(EXIT_SUCCESS, result);
     EXPECT_EQ(expectedText, s.str());
@@ -169,7 +166,7 @@ TEST(CLI2_CLI, can_print_help)
 
 TEST(CLI2_CLI, can_print_top_help_for_multitoolinterface)
 {
-    internal::InterfaceHelpPrinter::TestingFixedWidth = 80;
+    PacBio::CLI_v2::internal::InterfaceHelpPrinter::TestingFixedWidth = 80;
 
     const std::string expectedText{R"(isoseq3 - De Novo Transcript Reconstruction
 
@@ -210,7 +207,7 @@ Typical workflow:
      $ isoseq3 polish unpolished.bam movie.subreads.bam polished.bam
 )"};
 
-    MultiToolInterface i{"isoseq3", "De Novo Transcript Reconstruction", "3.1.2"};
+    PacBio::CLI_v2::MultiToolInterface i{"isoseq3", "De Novo Transcript Reconstruction", "3.1.2"};
     i.AddTools({{"refine",    CLI_v2_CLITests::MakeRefineInterface(),    &CLI_v2_CLITests::RefineRunner},
                 {"cluster",   CLI_v2_CLITests::MakeClusterInterface(),   &CLI_v2_CLITests::ClusterRunner},
                 {"polish",    CLI_v2_CLITests::MakePolishInterface(),    &CLI_v2_CLITests::PolishRunner},
@@ -245,7 +242,7 @@ Typical workflow:
     tests::CoutRedirect redirect(s.rdbuf());
     UNUSED(redirect);
 
-    const int result = CLI_v2::Run(args, i);
+    const int result = PacBio::CLI_v2::Run(args, i);
     EXPECT_EQ(EXIT_SUCCESS, result);
 
     EXPECT_EQ(s.str(), expectedText);
@@ -253,7 +250,7 @@ Typical workflow:
 
 TEST(CLI2_CLI, can_print_subtool_help_for_multitoolinterface)
 {
-    internal::InterfaceHelpPrinter::TestingFixedWidth = 80;
+    PacBio::CLI_v2::internal::InterfaceHelpPrinter::TestingFixedWidth = 80;
 
     const std::string expectedText{R"(refine - Remove concatemers and optionally poly-A tails (FL to FLNC)
 
@@ -272,7 +269,7 @@ Usage:
 
 )"};
 
-    MultiToolInterface i{"isoseq3", "De Novo Transcript Reconstruction", "3.1.2"};
+    PacBio::CLI_v2::MultiToolInterface i{"isoseq3", "De Novo Transcript Reconstruction", "3.1.2"};
     i.AddTools({{"refine",    CLI_v2_CLITests::MakeRefineInterface(),    &CLI_v2_CLITests::RefineRunner},
                 {"cluster",   CLI_v2_CLITests::MakeClusterInterface(),   &CLI_v2_CLITests::ClusterRunner},
                 {"polish",    CLI_v2_CLITests::MakePolishInterface(),    &CLI_v2_CLITests::PolishRunner},
@@ -286,14 +283,14 @@ Usage:
     tests::CoutRedirect redirect(s.rdbuf());
     UNUSED(redirect);
 
-    const int result = CLI_v2::Run(args, i);
+    const int result = PacBio::CLI_v2::Run(args, i);
     EXPECT_EQ(EXIT_SUCCESS, result);
     EXPECT_EQ(expectedText, s.str());
 }
 
 TEST(CLI2_CLI, can_run_from_command_line_args)
 {
-    const Option MaxNumLines
+    const PacBio::CLI_v2::Option MaxNumLines
     {
     R"({
         "names" : ["n"],
@@ -310,7 +307,7 @@ TEST(CLI2_CLI, can_run_from_command_line_args)
     const std::vector<std::string> args {
         "frobber", "-n", "27"
     };
-    auto runner = [&MaxNumLines](const Results& results)
+    auto runner = [&MaxNumLines](const PacBio::CLI_v2::Results& results)
     {
         const int expectedNumLines = 27;
         const int maxNumLines = results[MaxNumLines];
@@ -319,20 +316,20 @@ TEST(CLI2_CLI, can_run_from_command_line_args)
         return EXIT_SUCCESS;
     };
 
-    Interface i{"frobber", "Frob all the things.", "v3.1"};
+    PacBio::CLI_v2::Interface i{"frobber", "Frob all the things.", "v3.1"};
     i.AddOption(MaxNumLines);
 
     std::ostringstream s;
     tests::CoutRedirect redirect(s.rdbuf());
     UNUSED(redirect);
 
-    const int result = CLI_v2::Run(args, i, runner);
+    const int result = PacBio::CLI_v2::Run(args, i, runner);
     EXPECT_EQ(EXIT_SUCCESS, result);
 }
 
 TEST(CLI2_CLI, can_run_multitoolinterface_subtool_from_command_line_args)
 {
-    MultiToolInterface i{"isoseq3", "De Novo Transcript Reconstruction", "3.1.2"};
+    PacBio::CLI_v2::MultiToolInterface i{"isoseq3", "De Novo Transcript Reconstruction", "3.1.2"};
     i.AddTools({{"refine",    CLI_v2_CLITests::MakeRefineInterface(),    &CLI_v2_CLITests::RefineRunner},
                 {"cluster",   CLI_v2_CLITests::MakeClusterInterface(),   &CLI_v2_CLITests::ClusterRunner},
                 {"polish",    CLI_v2_CLITests::MakePolishInterface(),    &CLI_v2_CLITests::PolishRunner},
@@ -346,13 +343,13 @@ TEST(CLI2_CLI, can_run_multitoolinterface_subtool_from_command_line_args)
     tests::CoutRedirect redirect(s.rdbuf());
     UNUSED(redirect);
 
-    const int result = CLI_v2::Run(args, i);
+    const int result = PacBio::CLI_v2::Run(args, i);
     EXPECT_EQ(EXIT_SUCCESS, result);
 }
 
 TEST(CLI2_CLI, can_fetch_default_log_level_and_log_file_from_results)
 {
-    const Option MaxNumLines
+    const PacBio::CLI_v2::Option MaxNumLines
     {
     R"({
         "names" : ["n"],
@@ -370,7 +367,7 @@ TEST(CLI2_CLI, can_fetch_default_log_level_and_log_file_from_results)
         "frobber", "-n", "27"
     };
 
-    Interface i{"frobber", "Frob all the things.", "v3.1"};
+    PacBio::CLI_v2::Interface i{"frobber", "Frob all the things.", "v3.1"};
     i.AddOption(MaxNumLines);
     const auto defaultLogLevel = i.DefaultLogLevel();
 
@@ -378,22 +375,20 @@ TEST(CLI2_CLI, can_fetch_default_log_level_and_log_file_from_results)
     tests::CoutRedirect redirect(s.rdbuf());
     UNUSED(redirect);
 
-    auto runner = [&defaultLogLevel](const Results& results)
+    auto runner = [&defaultLogLevel](const PacBio::CLI_v2::Results& results)
     {
         EXPECT_TRUE(results.LogFile().empty());
         EXPECT_EQ(defaultLogLevel, results.LogLevel());
         return EXIT_SUCCESS;
     };
 
-    const int result = CLI_v2::Run(args, i, runner);
+    const int result = PacBio::CLI_v2::Run(args, i, runner);
     EXPECT_EQ(EXIT_SUCCESS, result);
 }
 
 TEST(CLI2_CLI, can_fetch_overriden_default_log_level_from_results)
 {
-
-
-    const Option MaxNumLines
+    const PacBio::CLI_v2::Option MaxNumLines
     {
     R"({
         "names" : ["n"],
@@ -411,7 +406,7 @@ TEST(CLI2_CLI, can_fetch_overriden_default_log_level_from_results)
         "frobber", "-n", "27"
     };
 
-    Interface i{"frobber", "Frob all the things.", "v3.1"};
+    PacBio::CLI_v2::Interface i{"frobber", "Frob all the things.", "v3.1"};
     i.AddOption(MaxNumLines);
     const auto defaultLogLevel = PacBio::Logging::LogLevel::DEBUG;
     i.DefaultLogLevel(defaultLogLevel);
@@ -420,7 +415,7 @@ TEST(CLI2_CLI, can_fetch_overriden_default_log_level_from_results)
     tests::CoutRedirect redirect(s.rdbuf());
     UNUSED(redirect);
 
-    auto runner = [&MaxNumLines, &defaultLogLevel](const Results& results)
+    auto runner = [&MaxNumLines, &defaultLogLevel](const PacBio::CLI_v2::Results& results)
     {
         const int expectedNumLines = 27;
         const int maxNumLines = results[MaxNumLines];
@@ -431,7 +426,7 @@ TEST(CLI2_CLI, can_fetch_overriden_default_log_level_from_results)
         return EXIT_SUCCESS;
     };
 
-    const int result = CLI_v2::Run(args, i, runner);
+    const int result = PacBio::CLI_v2::Run(args, i, runner);
     EXPECT_EQ(EXIT_SUCCESS, result);
 }
 
@@ -440,20 +435,20 @@ TEST(CLI2_CLI, can_fetch_log_level_from_results)
     const std::vector<std::string> args {
         "frobber", "--log-level", "DEBUG"
     };
-    auto runner = [](const Results& results)
+    auto runner = [](const PacBio::CLI_v2::Results& results)
     {
         EXPECT_TRUE(results.LogFile().empty());
         EXPECT_EQ(PacBio::Logging::LogLevel::DEBUG, results.LogLevel());
         return EXIT_SUCCESS;
     };
 
-    Interface i{"frobber", "Frob all the things.", "v3.1"};
+    PacBio::CLI_v2::Interface i{"frobber", "Frob all the things.", "v3.1"};
 
     std::ostringstream s;
     tests::CoutRedirect redirect(s.rdbuf());
     UNUSED(redirect);
 
-    const int result = CLI_v2::Run(args, i, runner);
+    const int result = PacBio::CLI_v2::Run(args, i, runner);
     EXPECT_EQ(EXIT_SUCCESS, result);
 }
 
@@ -462,19 +457,19 @@ TEST(CLI2_CLI, can_fetch_log_file_from_results)
     const std::vector<std::string> args {
         "frobber", "--log-file", "log.txt"
     };
-    auto runner = [](const Results& results)
+    auto runner = [](const PacBio::CLI_v2::Results& results)
     {
         EXPECT_EQ("log.txt", results.LogFile());
         return EXIT_SUCCESS;
     };
 
-    Interface i{"frobber", "Frob all the things.", "v3.1"};
+    PacBio::CLI_v2::Interface i{"frobber", "Frob all the things.", "v3.1"};
 
     std::ostringstream s;
     tests::CoutRedirect redirect(s.rdbuf());
     UNUSED(redirect);
 
-    const int result = CLI_v2::Run(args, i, runner);
+    const int result = PacBio::CLI_v2::Run(args, i, runner);
     EXPECT_EQ(EXIT_SUCCESS, result);
 }
 
