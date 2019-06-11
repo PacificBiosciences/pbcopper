@@ -3,6 +3,23 @@
 ###########
 
 pbcopper_cpp_sources = files([
+
+  # -------
+  # align
+  # -------
+  'align/AffineAlignment.cpp',
+  'align/AlignConfig.cpp',
+  'align/BandedChainAlignment.cpp',
+  'align/LinearAlignment.cpp',
+  'align/LocalAlignment.cpp',
+  'align/PairwiseAlignment.cpp',
+
+  # ------------
+  # align/cssw
+  # ------------
+  'align/cssw/ssw.c',
+  'align/cssw/ssw_cpp.cpp',
+
   # -------
   # cli
   # -------
