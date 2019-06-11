@@ -2,6 +2,11 @@
 
 ## Active
 
+## [1.3.0] - 2019-07-11
+
+### Added
+ - Alignment algorithms from unanimity (local alignment, semi-global, affine, etc)
+
 ### Removed
  - Unused CallbackTimer
  - Unused PacBio::Stream utilities
