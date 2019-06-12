@@ -5,10 +5,10 @@
 
 #include <vector>
 
-#include <pbcopper/align/Seeds.h>
-
 #include <pbcopper/align/ChainSeeds.h>
 #include <pbcopper/align/FindSeeds.h>
+#include <pbcopper/align/Seeds.h>
+#include <pbcopper/utility/SequenceUtils.h>
 
 namespace PacBio {
 namespace Align {
@@ -68,7 +68,7 @@ inline std::pair<size_t, std::vector<Seed>> BestSparseAlign(const std::string& s
                                                             const std::string& seq2,
                                                             const bool filterHomopolymers)
 {
-    const auto seq2rc = ::PacBio::Data::ReverseComplement(seq2);
+    const auto seq2rc = PacBio::Utility::ReverseComplemented(seq2);
 
     const auto fwd = SparseAlignSeeds(10, seq1, seq2, filterHomopolymers);
     const auto rev = SparseAlignSeeds(10, seq1, seq2rc, filterHomopolymers);
