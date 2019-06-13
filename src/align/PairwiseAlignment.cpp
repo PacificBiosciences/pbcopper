@@ -11,10 +11,25 @@
 
 #include <boost/numeric/ublas/matrix.hpp>
 
+#include <pbcopper/utility/MinMax.h>
 #include <pbcopper/utility/SequenceUtils.h>
 
 namespace PacBio {
 namespace Align {
+namespace {
+
+constexpr int ArgMax3(int a, int b, int c)
+{
+    if (a >= b && a >= c)
+        return 0;
+    else if (b >= c)
+        return 1;
+    else
+        return 2;
+}
+
+}  // namespace
+
 namespace internal {
 
 bool Rewrite2L(std::string* target, std::string* query, std::string* transcript, const size_t i)
@@ -298,8 +313,9 @@ PairwiseAlignment* Align(const std::string& target, const std::string& query, in
     for (int i = 1; i <= I; i++) {
         for (int j = 1; j <= J; j++) {
             bool isMatch = (query[i - 1] == target[j - 1]);
-            Score(i, j) = Max3(Score(i - 1, j - 1) + (isMatch ? params.Match : params.Mismatch),
-                               Score(i - 1, j) + params.Insert, Score(i, j - 1) + params.Delete);
+            Score(i, j) =
+                Utility::Max(Score(i - 1, j - 1) + (isMatch ? params.Match : params.Mismatch),
+                             Score(i - 1, j) + params.Insert, Score(i, j - 1) + params.Delete);
         }
     }
     if (score != nullptr) {

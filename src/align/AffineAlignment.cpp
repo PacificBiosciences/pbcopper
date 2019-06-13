@@ -13,6 +13,7 @@
 #include <boost/numeric/ublas/matrix_proxy.hpp>
 
 #include <pbcopper/align/PairwiseAlignment.h>
+#include <pbcopper/utility/MinMax.h>
 #include <pbcopper/utility/SequenceUtils.h>
 
 namespace PacBio {
@@ -22,11 +23,6 @@ namespace {
 
 class IupacAware;
 class Standard;
-
-static float MAX4(float a, float b, float c, float d)
-{
-    return std::max(std::max(a, b), std::max(c, d));
-}
 
 inline bool IsIupacPartialMatch(char iupacCode, char b)
 {
@@ -105,7 +101,8 @@ PairwiseAlignment* AlignAffineGeneric(const std::string& target, const std::stri
             float matchScore = MatchScore<C>(target[j - 1], query[i - 1], params.MatchScore,
                                              params.MismatchScore, params.PartialMatchScore);
             M(i, j) = std::max(M(i - 1, j - 1), GAP(i - 1, j - 1)) + matchScore;
-            GAP(i, j) = MAX4(M(i, j - 1) + params.GapOpen, GAP(i, j - 1) + params.GapExtend,
+            GAP(i, j) =
+                Utility::Max(M(i, j - 1) + params.GapOpen, GAP(i, j - 1) + params.GapExtend,
                              M(i - 1, j) + params.GapOpen, GAP(i - 1, j) + params.GapExtend);
         }
     }

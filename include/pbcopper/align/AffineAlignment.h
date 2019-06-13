@@ -4,7 +4,6 @@
 #define PBCOPPER_ALIGN_AFFINEALIGNMENT_H
 
 #include <string>
-#include <vector>
 
 namespace PacBio {
 namespace Align {
