@@ -10,9 +10,15 @@ pbcopper_cpp_sources = files([
   'align/AffineAlignment.cpp',
   'align/AlignConfig.cpp',
   'align/BandedChainAlignment.cpp',
+  'align/ChainSeeds.cpp',
+  'align/ChainSeedsConfig.cpp',
+  'align/FindSeeds.cpp',
   'align/LinearAlignment.cpp',
   'align/LocalAlignment.cpp',
   'align/PairwiseAlignment.cpp',
+  'align/Seed.cpp',
+  'align/Seeds.cpp',
+  'align/SparseAlignment.cpp',
 
   # ------------
   # align/cssw

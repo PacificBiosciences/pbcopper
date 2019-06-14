@@ -564,8 +564,8 @@ TEST(Align_AffineAlignment, can_generate_IUPAC_aware_alignments)
 
 TEST(Align_LinearAlignment, can_generate_basic_linear_alignments)
 {
-    PacBio::Align::AlignParams params(2, -1, -2, -2);
-    PacBio::Align::AlignConfig config(params, PacBio::Align::AlignMode::GLOBAL);
+    PacBio::Align::AlignParams params{2, -1, -2, -2};
+    PacBio::Align::AlignConfig config{params, PacBio::Align::AlignMode::GLOBAL};
 
     int score, peerScore;
     std::unique_ptr<PairwiseAlignment> a{PacBio::Align::AlignLinear("GATTACA", "GATTACA", &score)};
@@ -681,8 +681,8 @@ TEST(Align_SemiGlobalAlignment, can_generate_basic_semiglobal_alignments)
 {
     const std::string target = "CAGCCTTTCTGACCCGGAAATCAAAATAGGCACAACAAA";
     const std::string query = "CTGAGCCGGTAAATC";
-    const PacBio::Align::AlignConfig cfg(PacBio::Align::AlignParams::Default(),
-                                         PacBio::Align::AlignMode::SEMIGLOBAL);
+    const PacBio::Align::AlignConfig cfg{PacBio::Align::AlignParams::Default(),
+                                         PacBio::Align::AlignMode::SEMIGLOBAL};
 
     std::unique_ptr<PairwiseAlignment> pa{PacBio::Align::Align(target, query, cfg)};
     EXPECT_EQ(13, pa->Matches());

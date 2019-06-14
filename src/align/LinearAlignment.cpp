@@ -26,6 +26,7 @@
 #include <boost/numeric/ublas/vector.hpp>
 
 #include <pbcopper/align/PairwiseAlignment.h>
+#include <pbcopper/utility/MinMax.h>
 
 //#define DEBUG_LINEAR_ALIGNMENT
 
@@ -44,9 +45,9 @@ int ALIGN_DELETE_SCORE = -2;
 int ALIGN_MISALIGN_MATCH_SCORE = -1;
 int ALIGN_MATCH_SCORE = +2;
 
-const AlignParams params(ALIGN_MATCH_SCORE, ALIGN_MISALIGN_MATCH_SCORE, ALIGN_INSERT_SCORE,
-                         ALIGN_DELETE_SCORE);
-const AlignConfig config(params, AlignMode::GLOBAL);
+const AlignParams params{ALIGN_MATCH_SCORE, ALIGN_MISALIGN_MATCH_SCORE, ALIGN_INSERT_SCORE,
+                         ALIGN_DELETE_SCORE};
+const AlignConfig config{params, AlignMode::GLOBAL};
 
 //
 // Get transcript of NW alignment taking
@@ -151,9 +152,9 @@ std::string OptimalTranscript(const std::string& target, int j1, int j2, const s
             for (int j = j1; j <= j2; j++) {
                 char t = target[j - 1];
                 char q = query[i - 1];
-                c = Max3(Sm(j) + configParams.Insert,
-                         s + (t == q ? configParams.Match : configParams.Mismatch),
-                         c + configParams.Delete);
+                c = Utility::Max(Sm(j) + configParams.Insert,
+                                 s + (t == q ? configParams.Match : configParams.Mismatch),
+                                 c + configParams.Delete);
                 s = Sm(j);
                 Sm(j) = c;
             }
@@ -176,9 +177,9 @@ std::string OptimalTranscript(const std::string& target, int j1, int j2, const s
             for (int j = j2 - 1; j >= j1 - 1; j--) {
                 char t = target[j];  // j + 1 - 1
                 char q = query[i];   // i + 1 - 1
-                c = Max3(Sp(j) + configParams.Insert,
-                         s + (t == q ? configParams.Match : configParams.Mismatch),
-                         c + configParams.Delete);
+                c = Utility::Max(Sp(j) + configParams.Insert,
+                                 s + (t == q ? configParams.Match : configParams.Mismatch),
+                                 c + configParams.Delete);
                 s = Sp(j);
                 Sp(j) = c;
             }

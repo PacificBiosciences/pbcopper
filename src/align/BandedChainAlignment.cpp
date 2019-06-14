@@ -13,25 +13,22 @@
 
 #include <pbcopper/align/internal/BCAlignBlocks.h>
 #include <pbcopper/align/internal/BCAlignImpl.h>
+#include <pbcopper/utility/MinMax.h>
 
 namespace PacBio {
 namespace Align {
-namespace Internal {
+namespace {
 
-static inline float max4(const float a, const float b, const float c, const float d)
-{
-    return std::max(std::max(a, b), std::max(c, d));
-}
-
-static inline float score(const char t, const char q, const BandedChainAlignConfig& config)
+float score(const char t, const char q, const BandedChainAlignConfig& config)
 {
     return (t == q ? config.matchScore_ : config.mismatchPenalty_);
 }
 
-static inline void addAlignmentOp(std::string* transcript, const char c)
-{
-    transcript->push_back(c);
-}
+void addAlignmentOp(std::string* transcript, const char c) { transcript->push_back(c); }
+
+}  // namespace
+
+namespace Internal {
 
 // ------------------------
 // BandedGlobalAlignBlock
@@ -82,11 +79,11 @@ std::string BandedGlobalAlignBlock::Align(const char* target, const char* query,
 
             matchScores_[currentIdx] = (std::max(matchScores_[diagIdx], gapScores_[diagIdx]) + s);
 
-            gapScores_[currentIdx] =
-                max4((leftAllowed ? matchScores_[leftIdx] + config_.gapOpenPenalty_ : -FLT_MAX),
-                     (leftAllowed ? gapScores_[leftIdx] + config_.gapExtendPenalty_ : -FLT_MAX),
-                     (upAllowed ? matchScores_[upIdx] + config_.gapOpenPenalty_ : -FLT_MAX),
-                     (upAllowed ? gapScores_[upIdx] + config_.gapExtendPenalty_ : -FLT_MAX));
+            gapScores_[currentIdx] = Utility::Max(
+                (leftAllowed ? matchScores_[leftIdx] + config_.gapOpenPenalty_ : -FLT_MAX),
+                (leftAllowed ? gapScores_[leftIdx] + config_.gapExtendPenalty_ : -FLT_MAX),
+                (upAllowed ? matchScores_[upIdx] + config_.gapOpenPenalty_ : -FLT_MAX),
+                (upAllowed ? gapScores_[upIdx] + config_.gapExtendPenalty_ : -FLT_MAX));
         }
     }
 
@@ -313,10 +310,10 @@ std::string StandardGlobalAlignBlock::Align(const char* target, const size_t tLe
             const auto s = score(target[j - 1], query[i - 1], config_);
             matchScores_[i][j] =
                 (std::max(matchScores_[i - 1][j - 1], gapScores_[i - 1][j - 1]) + s);
-            gapScores_[i][j] = max4(matchScores_[i][j - 1] + config_.gapOpenPenalty_,
-                                    gapScores_[i][j - 1] + config_.gapExtendPenalty_,
-                                    matchScores_[i - 1][j] + config_.gapOpenPenalty_,
-                                    gapScores_[i - 1][j] + config_.gapExtendPenalty_);
+            gapScores_[i][j] = Utility::Max(matchScores_[i][j - 1] + config_.gapOpenPenalty_,
+                                            gapScores_[i][j - 1] + config_.gapExtendPenalty_,
+                                            matchScores_[i - 1][j] + config_.gapOpenPenalty_,
+                                            gapScores_[i - 1][j] + config_.gapExtendPenalty_);
         }
     }
 

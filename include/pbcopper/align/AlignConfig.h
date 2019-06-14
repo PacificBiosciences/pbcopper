@@ -18,13 +18,11 @@ struct AlignParams
     int Insert;
     int Delete;
 
-    AlignParams(int match, int mismatch, int insert, int delete_);
-
-    // Edit distance params
+    // edit distance params
     static AlignParams Default();
 };
 
-enum struct AlignMode : uint8_t
+enum struct AlignMode
 {
     GLOBAL = 0,      // Global in both sequences
     SEMIGLOBAL = 1,  // Global in query, local in target
@@ -36,9 +34,7 @@ struct AlignConfig
     AlignParams Params;
     AlignMode Mode;
 
-    AlignConfig(AlignParams params, AlignMode mode);
-
-    // Default corresponds to global alignment mode, edit distance params
+    // edit distance params, global alignment mode
     static AlignConfig Default();
 };
 

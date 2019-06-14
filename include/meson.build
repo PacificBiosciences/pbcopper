@@ -31,9 +31,7 @@ if not meson.is_subproject()
   install_headers(
     files([
       'pbcopper/align/internal/BCAlignBlocks.h',
-      'pbcopper/align/internal/BCAlignImpl.h',
-      'pbcopper/align/internal/Seed-inl.h',
-      'pbcopper/align/internal/Seeds-inl.h']),
+      'pbcopper/align/internal/BCAlignImpl.h']),
     subdir : 'pbcopper/align/internal')
 
   # pbcopper/cli
@@ -193,6 +191,7 @@ if not meson.is_subproject()
   install_headers(
     files([
       'pbcopper/utility/FileUtils.h',
+      'pbcopper/utility/MinMax.h',
       'pbcopper/utility/MoveAppend.h',
       'pbcopper/utility/PbcopperVersion.h',
       'pbcopper/utility/SafeSubtract.h',

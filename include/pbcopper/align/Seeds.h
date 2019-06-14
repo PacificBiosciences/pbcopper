@@ -73,9 +73,9 @@ private:
     container_t data_;
 };
 
+bool CanMergeSeeds(const Seed& lhs, const Seed& rhs);
+
 }  // namespace Align
 }  // namespace PacBio
-
-#include <pbcopper/align/internal/Seeds-inl.h>
 
 #endif  // PBCOPPER_ALIGN_SEEDS_H

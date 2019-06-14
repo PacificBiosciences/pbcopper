@@ -10,22 +10,6 @@
 
 namespace PacBio {
 namespace Align {
-namespace {
-
-// Utility functions common to implementations of aligners
-
-inline int Max3(int a, int b, int c) { return std::max((a), std::max((b), (c))); }
-inline int ArgMax3(int a, int b, int c)
-{
-    if (a >= b && a >= c)
-        return 0;
-    else if (b >= c)
-        return 1;
-    else
-        return 2;
-}
-
-}  // anonymous namespace
 
 enum class LRType
 {

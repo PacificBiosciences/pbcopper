@@ -3,18 +3,15 @@
 #ifndef PBCOPPER_ALIGN_SPARSEALIGNMENT_H
 #define PBCOPPER_ALIGN_SPARSEALIGNMENT_H
 
+#include <string>
+#include <utility>
 #include <vector>
 
-#include <pbcopper/align/ChainSeeds.h>
-#include <pbcopper/align/FindSeeds.h>
-#include <pbcopper/align/Seeds.h>
-#include <pbcopper/utility/SequenceUtils.h>
+#include <pbcopper/align/Seed.h>
 
 namespace PacBio {
 namespace Align {
 
-namespace {
-
 /// \brief Generate an SDP alignment from two sequences
 ///
 /// \param[in] qGramSize    qgram size to use for index hashing
@@ -24,14 +21,8 @@ namespace {
 ///
 /// \returns   The SDP alignment as a vector of Seeds
 ///
-inline std::vector<Seed> SparseAlignSeeds(const size_t qGramSize, const std::string& seq1,
-                                          const std::string& seq2, const bool filterHomopolymers)
-{
-    const auto seeds = FindSeeds(qGramSize, seq1, seq2, filterHomopolymers);
-    const auto chains = ChainSeeds(seeds, ChainSeedsConfig{});
-    if (chains.empty()) return std::vector<Seed>{};
-    return chains[0];
-}
+std::vector<Seed> SparseAlignSeeds(const size_t qGramSize, const std::string& seq1,
+                                   const std::string& seq2, const bool filterHomopolymers);
 
 /// \brief Generate an SDP alignment from two sequences
 ///
@@ -43,17 +34,8 @@ inline std::vector<Seed> SparseAlignSeeds(const size_t qGramSize, const std::str
 ///
 /// \returns   The SDP alignment as a vector of Seeds
 ///
-inline std::vector<Seed> SparseAlignSeeds(const size_t qGramSize, const std::string& seq1,
-                                          const std::string& seq2)
-{
-#ifdef FILTERHOMOPOLYMERS
-    const bool filterHomopolymers = true;
-#else
-    const bool filterHomopolymers = false;
-#endif
-
-    return SparseAlignSeeds(qGramSize, seq1, seq2, filterHomopolymers);
-}
+std::vector<Seed> SparseAlignSeeds(const size_t qGramSize, const std::string& seq1,
+                                   const std::string& seq2);
 
 /// \brief Generate an SDP alignment from the best orientation of two sequences
 ///
@@ -64,18 +46,9 @@ inline std::vector<Seed> SparseAlignSeeds(const size_t qGramSize, const std::str
 /// \returns   A flag for the best orientation found, and the SDP alignment
 ///             from that orientation as a SeedString, in an std::pair
 ///
-inline std::pair<size_t, std::vector<Seed>> BestSparseAlign(const std::string& seq1,
-                                                            const std::string& seq2,
-                                                            const bool filterHomopolymers)
-{
-    const auto seq2rc = PacBio::Utility::ReverseComplemented(seq2);
-
-    const auto fwd = SparseAlignSeeds(10, seq1, seq2, filterHomopolymers);
-    const auto rev = SparseAlignSeeds(10, seq1, seq2rc, filterHomopolymers);
-
-    if (fwd.size() > rev.size()) return std::make_pair(0, fwd);
-    return std::make_pair(1, rev);
-}
+std::pair<size_t, std::vector<Seed>> BestSparseAlign(const std::string& seq1,
+                                                     const std::string& seq2,
+                                                     const bool filterHomopolymers);
 
 /// \brief Generate an SDP alignment from the best orientation of two sequences
 ///
@@ -87,17 +60,8 @@ inline std::pair<size_t, std::vector<Seed>> BestSparseAlign(const std::string& s
 /// \returns   A flag for the best orientation found, and the SDP alignment
 ///             from that orientation as a SeedString, in an std::pair
 ///
-inline std::pair<size_t, std::vector<Seed>> BestSparseAlign(const std::string& seq1,
-                                                            const std::string& seq2)
-{
-#ifdef FILTERHOMOPOLYMERS
-    const bool filterHomopolymers = true;
-#else
-    const bool filterHomopolymers = false;
-#endif
-
-    return BestSparseAlign(seq1, seq2, filterHomopolymers);
-}
+std::pair<size_t, std::vector<Seed>> BestSparseAlign(const std::string& seq1,
+                                                     const std::string& seq2);
 
 /// \brief Generate an SDP alignment from two sequences and hide the
 ///         SeqAn library dependencies
@@ -110,19 +74,9 @@ inline std::pair<size_t, std::vector<Seed>> BestSparseAlign(const std::string& s
 /// \returns   A vector of pairs, representing Kmer start positions
 ///             that match in the query and reference sequences
 ///
-inline const std::vector<std::pair<size_t, size_t>> SparseAlign(const size_t qGramSize,
-                                                                const std::string& seq1,
-                                                                const std::string& seq2,
-                                                                const bool filterHomopolymers)
-{
-    std::vector<std::pair<size_t, size_t>> result;
-
-    const auto chain = SparseAlignSeeds(qGramSize, seq1, seq2, filterHomopolymers);
-    for (const auto& s : chain)
-        result.emplace_back(s.BeginPositionH(), s.BeginPositionV());
-
-    return result;
-}
+std::vector<std::pair<size_t, size_t>> SparseAlign(const size_t qGramSize, const std::string& seq1,
+                                                   const std::string& seq2,
+                                                   const bool filterHomopolymers);
 
 /// \brief Generate an SDP alignment from two sequences and hide the
 ///         SeqAn library dependencies
@@ -136,20 +90,9 @@ inline const std::vector<std::pair<size_t, size_t>> SparseAlign(const size_t qGr
 /// \returns   A vector of pairs, representing Kmer start positions
 ///             that match in the query and reference sequences
 ///
-inline const std::vector<std::pair<size_t, size_t>> SparseAlign(const size_t qGramSize,
-                                                                const std::string& seq1,
-                                                                const std::string& seq2)
-{
-#ifdef FILTERHOMOPOLYMERS
-    const bool filterHomopolymers = true;
-#else
-    const bool filterHomopolymers = false;
-#endif
+std::vector<std::pair<size_t, size_t>> SparseAlign(const size_t qGramSize, const std::string& seq1,
+                                                   const std::string& seq2);
 
-    return SparseAlign(qGramSize, seq1, seq2, filterHomopolymers);
-}
-
-}  // Anonymous namespace
 }  // namespace Align
 }  // namespace PacBio
 
