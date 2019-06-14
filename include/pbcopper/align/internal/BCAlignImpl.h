@@ -8,6 +8,11 @@
 #define PBCOPPER_ALIGN_BCALIGNIMPL_H
 
 #include <cassert>
+#include <cstddef>
+#include <cstdint>
+
+#include <string>
+#include <vector>
 
 #include <pbcopper/align/BandedChainAlignment.h>
 #include <pbcopper/align/internal/BCAlignBlocks.h>
