@@ -9,6 +9,8 @@
 
 #include <cfloat>
 
+#include <string>
+#include <utility>
 #include <vector>
 
 #include <pbcopper/align/BandedChainAlignment.h>
@@ -39,8 +41,7 @@ struct AlignInput
 class BandedGlobalAlignBlock
 {
 public:
-    BandedGlobalAlignBlock(const BandedChainAlignConfig& config) : config_(config) {}
-    ~BandedGlobalAlignBlock(void) {}
+    BandedGlobalAlignBlock(const BandedChainAlignConfig& config) : config_{config} {}
 
 public:
     ///
@@ -66,7 +67,7 @@ private:
     void InitScores(const size_t tLen, const size_t qLen, const size_t n);
 
 private:
-    const BandedChainAlignConfig& config_;
+    BandedChainAlignConfig config_;
 
     ///
     /// \brief The LookupElement struct helps provide mappings from the 2-D
@@ -81,12 +82,9 @@ private:
         size_t jEnd_;
 
         LookupElement(const size_t start, const size_t jBeg, const size_t jEnd)
-            : arrayStart_(start), jBegin_(jBeg), jEnd_(jEnd)
+            : arrayStart_{start}, jBegin_{jBeg}, jEnd_{jEnd}
         {
         }
-
-        LookupElement(const LookupElement&) = default;
-        LookupElement(LookupElement&&) = default;
     };
 
     std::vector<LookupElement> lookup_;
@@ -104,8 +102,7 @@ private:
 class StandardGlobalAlignBlock
 {
 public:
-    StandardGlobalAlignBlock(const BandedChainAlignConfig& config) : config_(config) {}
-    ~StandardGlobalAlignBlock(void) {}
+    StandardGlobalAlignBlock(const BandedChainAlignConfig& config) : config_{config} {}
 
 public:
     ///
@@ -128,7 +125,8 @@ private:
     void Init(const size_t tLen, const size_t qLen);
 
 private:
-    const BandedChainAlignConfig& config_;
+    BandedChainAlignConfig config_;
+
     using Matrix_t = std::vector<std::vector<float>>;
     Matrix_t matchScores_;
     Matrix_t gapScores_;
