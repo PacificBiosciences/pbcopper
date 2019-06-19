@@ -1,5 +1,8 @@
 #include <pbcopper/cli2/MultiToolInterface.h>
 
+#include <cassert>
+#include <type_traits>
+
 #include <pbcopper/cli2/internal/BuiltinOptions.h>
 #include <pbcopper/cli2/internal/InterfaceData.h>
 #include <pbcopper/cli2/internal/OptionTranslator.h>
@@ -9,21 +12,22 @@ using OptionTranslator = PacBio::CLI_v2::internal::OptionTranslator;
 namespace PacBio {
 namespace CLI_v2 {
 
+static_assert(std::is_copy_constructible<MultiToolInterface>::value,
+              "MultiToolInterface(const MultiToolInterface&) is not = default");
+static_assert(std::is_copy_assignable<MultiToolInterface>::value,
+              "MultiToolInterface& operator=(const MultiToolInterface&) is not = default");
+
+static_assert(std::is_nothrow_move_constructible<MultiToolInterface>::value,
+              "MultiToolInterface(MultiToolInterface&&) is not = noexcept");
+static_assert(std::is_nothrow_move_assignable<MultiToolInterface>::value ==
+                  std::is_nothrow_move_assignable<internal::MultiToolInterfaceData>::value,
+              "");
+
 MultiToolInterface::MultiToolInterface(std::string name, std::string description,
                                        std::string version)
     : data_{std::move(name), std::move(description), std::move(version)}
 {
 }
-
-MultiToolInterface::MultiToolInterface(const MultiToolInterface&) = default;
-
-MultiToolInterface::MultiToolInterface(MultiToolInterface&&) noexcept = default;
-
-MultiToolInterface& MultiToolInterface::operator=(const MultiToolInterface&) = default;
-
-MultiToolInterface& MultiToolInterface::operator=(MultiToolInterface&&) noexcept = default;
-
-MultiToolInterface::~MultiToolInterface() = default;
 
 MultiToolInterface& MultiToolInterface::AddTool(const Tool& tool)
 {

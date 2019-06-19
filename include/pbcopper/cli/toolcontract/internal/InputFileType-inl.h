@@ -5,9 +5,23 @@
 
 #include <pbcopper/cli/toolcontract/InputFileType.h>
 
+#include <cassert>
+#include <type_traits>
+
 namespace PacBio {
 namespace CLI {
 namespace ToolContract {
+
+static_assert(std::is_copy_constructible<InputFileType>::value,
+              "InputFileType(const InputFileType&) is not = default");
+static_assert(std::is_copy_assignable<InputFileType>::value,
+              "InputFileType& operator=(const InputFileType&) is not = default");
+
+static_assert(std::is_nothrow_move_constructible<InputFileType>::value,
+              "InputFileType(InputFileType&&) is not = noexcept");
+static_assert(std::is_nothrow_move_assignable<InputFileType>::value ==
+                  std::is_nothrow_move_assignable<std::string>::value,
+              "");
 
 inline InputFileType::InputFileType(std::string id, std::string title, std::string description,
                                     std::string type)

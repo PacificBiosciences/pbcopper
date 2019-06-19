@@ -3,7 +3,9 @@
 #ifndef PBCOPPER_DATA_READNAMEBASE_INL_H
 #define PBCOPPER_DATA_READNAMEBASE_INL_H
 
+#include <cassert>
 #include <stdexcept>
+#include <type_traits>
 
 #include <pbcopper/data/internal/ReadNameBase.h>
 #include <pbcopper/utility/StringUtils.h>
@@ -11,11 +13,6 @@
 namespace PacBio {
 namespace Data {
 namespace internal {
-
-template <typename MovieNameType>
-inline ReadNameBase<MovieNameType>::ReadNameBase() : movieName_(), zmw_(-1), queryInterval_(nullptr)
-{
-}
 
 template <typename MovieNameType>
 inline ReadNameBase<MovieNameType>::ReadNameBase(const std::string& name)

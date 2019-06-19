@@ -13,15 +13,25 @@ if not meson.is_subproject()
   # pbcopper/align
   install_headers(
     files([
+      'pbcopper/align/AffineAlignment.h',
+      'pbcopper/align/AlignConfig.h',
+      'pbcopper/align/BandedChainAlignment.h',
+      'pbcopper/align/ChainSeeds.h',
+      'pbcopper/align/ChainSeedsConfig.h',
+      'pbcopper/align/FindSeeds.h',
+      'pbcopper/align/LinearAlignment.h',
+      'pbcopper/align/LocalAlignment.h',
+      'pbcopper/align/PairwiseAlignment.h',
       'pbcopper/align/Seed.h',
-      'pbcopper/align/Seeds.h']),
+      'pbcopper/align/Seeds.h',
+      'pbcopper/align/SparseAlignment.h']),
     subdir : 'pbcopper/align')
 
   # pbcopper/align/internal
   install_headers(
     files([
-      'pbcopper/align/internal/Seed-inl.h',
-      'pbcopper/align/internal/Seeds-inl.h']),
+      'pbcopper/align/internal/BCAlignBlocks.h',
+      'pbcopper/align/internal/BCAlignImpl.h']),
     subdir : 'pbcopper/align/internal')
 
   # pbcopper/cli
@@ -105,8 +115,6 @@ if not meson.is_subproject()
   install_headers(
     files([
       'pbcopper/data/CCSTag.h',
-      'pbcopper/data/Cigar.h',
-      'pbcopper/data/CigarOperation.h',
       'pbcopper/data/Interval.h',
       'pbcopper/data/MovieName.h',
       'pbcopper/data/Position.h',
@@ -119,7 +127,6 @@ if not meson.is_subproject()
   # pbcopper/data/internal
   install_headers(
     files([
-      'pbcopper/data/internal/CigarOperation-inl.h',
       'pbcopper/data/internal/Interval-inl.h',
       'pbcopper/data/internal/MovieName-inl.h',
       'pbcopper/data/internal/ReadNameBase-inl.h',
@@ -180,20 +187,15 @@ if not meson.is_subproject()
       'pbcopper/qgram/internal/Index-inl.h']),
     subdir : 'pbcopper/qgram/internal')
 
-  # pbcopper/stream
-  install_headers(
-    files([
-      'pbcopper/stream/Stream.h']),
-    subdir : 'pbcopper/stream')
-
   # pbcopper/utility
   install_headers(
     files([
-      'pbcopper/utility/CallbackTimer.h',
       'pbcopper/utility/FileUtils.h',
+      'pbcopper/utility/MinMax.h',
       'pbcopper/utility/MoveAppend.h',
       'pbcopper/utility/PbcopperVersion.h',
       'pbcopper/utility/SafeSubtract.h',
+      'pbcopper/utility/SequenceUtils.h',
       'pbcopper/utility/Stopwatch.h',
       'pbcopper/utility/StringUtils.h',
       'pbcopper/utility/SystemInfo.h',

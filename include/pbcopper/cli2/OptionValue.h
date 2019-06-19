@@ -3,11 +3,11 @@
 #ifndef PBCOPPER_CLI_v2_OPTIONVALUE_H
 #define PBCOPPER_CLI_v2_OPTIONVALUE_H
 
+#include <pbcopper/PbcopperConfig.h>
+
 #include <string>
 
 #include <boost/variant.hpp>
-
-#include <pbcopper/PbcopperConfig.h>
 
 // clang-format off
 

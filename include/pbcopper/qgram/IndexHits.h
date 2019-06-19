@@ -3,11 +3,12 @@
 #ifndef PBCOPPER_QGRAM_INDEXHITS_H
 #define PBCOPPER_QGRAM_INDEXHITS_H
 
+#include <pbcopper/PbcopperConfig.h>
+
 #include <cassert>
 #include <cstddef>
 #include <vector>
 
-#include <pbcopper/PbcopperConfig.h>
 #include <pbcopper/qgram/IndexHit.h>
 
 namespace PacBio {
@@ -45,12 +46,6 @@ public:
         assert(source_);
         assert(begin_ <= end_);
     }
-
-    IndexHits(const IndexHits&) = default;
-    IndexHits(IndexHits&&) noexcept = default;
-    IndexHits& operator=(const IndexHits&) = default;
-    IndexHits& operator=(IndexHits&&) noexcept = default;
-    ~IndexHits() = default;
 
 public:
     size_t QueryPosition() const { return queryPos_; }

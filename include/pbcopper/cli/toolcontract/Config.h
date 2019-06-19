@@ -3,9 +3,10 @@
 #ifndef PBCOPPER_CLI_TOOLCONTRACT_CONFIG_H
 #define PBCOPPER_CLI_TOOLCONTRACT_CONFIG_H
 
+#include <pbcopper/PbcopperConfig.h>
+
 #include <string>
 
-#include <pbcopper/PbcopperConfig.h>
 #include <pbcopper/cli/toolcontract/Driver.h>
 #include <pbcopper/cli/toolcontract/Task.h>
 
@@ -39,12 +40,6 @@ public:
         : task_{std::move(task)}, driver_{std::move(driver)}
     {
     }
-
-    Config(const Config&) = default;
-    Config(Config&&) noexcept = default;
-    Config& operator=(const Config&) = default;
-    Config& operator=(Config&&) noexcept = default;
-    ~Config() = default;
 
     /// \}
 

@@ -3,9 +3,10 @@
 #ifndef PBCOPPER_CLI_TOOLCONTRACT_RESOLVEDTOOLCONTRACT_H
 #define PBCOPPER_CLI_TOOLCONTRACT_RESOLVEDTOOLCONTRACT_H
 
+#include <pbcopper/PbcopperConfig.h>
+
 #include <iosfwd>
 
-#include <pbcopper/PbcopperConfig.h>
 #include <pbcopper/cli/Results.h>
 
 namespace PacBio {

@@ -3,6 +3,29 @@
 ###########
 
 pbcopper_cpp_sources = files([
+
+  # -------
+  # align
+  # -------
+  'align/AffineAlignment.cpp',
+  'align/AlignConfig.cpp',
+  'align/BandedChainAlignment.cpp',
+  'align/ChainSeeds.cpp',
+  'align/ChainSeedsConfig.cpp',
+  'align/FindSeeds.cpp',
+  'align/LinearAlignment.cpp',
+  'align/LocalAlignment.cpp',
+  'align/PairwiseAlignment.cpp',
+  'align/Seed.cpp',
+  'align/Seeds.cpp',
+  'align/SparseAlignment.cpp',
+
+  # ------------
+  # align/cssw
+  # ------------
+  'align/cssw/ssw.c',
+  'align/cssw/ssw_cpp.cpp',
+
   # -------
   # cli
   # -------
@@ -41,8 +64,6 @@ pbcopper_cpp_sources = files([
   # -------
   # data
   # -------
-  'data/Cigar.cpp',
-  'data/CigarOperation.cpp',
   'data/MovieName.cpp',
   'data/RSMovieName.cpp',
 
@@ -60,7 +81,6 @@ pbcopper_cpp_sources = files([
   # ---------
   # utility
   # ---------
-  'utility/CallbackTimer.cpp',
   'utility/Stopwatch.cpp',
   'utility/StringUtils.cpp'])
 

@@ -5,9 +5,21 @@
 
 #include <pbcopper/cli/toolcontract/Task.h>
 
+#include <cassert>
+#include <type_traits>
+
 namespace PacBio {
 namespace CLI {
 namespace ToolContract {
+
+static_assert(std::is_copy_constructible<Task>::value, "Task(const Task&) is not = default");
+static_assert(std::is_copy_assignable<Task>::value,
+              "Task& operator=(const Task&) is not = default");
+
+static_assert(std::is_nothrow_move_constructible<Task>::value, "Task(Task&&) is not = noexcept");
+static_assert(std::is_nothrow_move_assignable<Task>::value ==
+                  std::is_nothrow_move_assignable<std::string>::value,
+              "");
 
 inline Task::Task(std::string taskId)
     : id_{std::move(taskId)}, nProc_{1}, isDistributed_{true}, type_{TaskType::STANDARD}

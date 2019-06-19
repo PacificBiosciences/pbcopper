@@ -3,11 +3,12 @@
 #ifndef PBCOPPER_CLI_v2_OPTION_H
 #define PBCOPPER_CLI_v2_OPTION_H
 
+#include <pbcopper/PbcopperConfig.h>
+
 #include <string>
 
 #include <boost/optional.hpp>
 
-#include <pbcopper/PbcopperConfig.h>
 #include <pbcopper/cli2/OptionValue.h>
 
 namespace PacBio {
@@ -118,12 +119,6 @@ struct Option
     Option(std::string def, unsigned int val);
     Option(std::string def, float val);
     Option(std::string def, std::string val);
-
-    Option(const Option&);
-    Option(Option&&) noexcept;
-    Option& operator=(const Option&);
-    Option& operator=(Option&&) noexcept;
-    ~Option();
 
     std::string text;
     boost::optional<OptionValue> defaultValue;

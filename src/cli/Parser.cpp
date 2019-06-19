@@ -3,12 +3,17 @@
 #include <pbcopper/cli/Parser.h>
 
 #include <cassert>
+#include <type_traits>
 #include <unordered_map>
 
 #include <pbcopper/cli/Interface.h>
 
 namespace PacBio {
 namespace CLI {
+
+static_assert(!std::is_copy_constructible<Parser>::value, "Parser(const Parser&) is not = default");
+static_assert(!std::is_copy_assignable<Parser>::value,
+              "Parser& operator=(const Parser&) is not = default");
 
 class Parser::ParserPrivate
 {
@@ -23,11 +28,6 @@ public:
     explicit ParserPrivate(const Interface& interface) : interface_(interface), results_(interface)
     {
     }
-
-    ParserPrivate(const ParserPrivate&) = default;
-    ParserPrivate(ParserPrivate&&) noexcept = default;
-    ParserPrivate& operator=(const ParserPrivate&) = default;
-    ParserPrivate& operator=(ParserPrivate&&) noexcept = default;
 
     void Parse(const std::vector<std::string>& args);
     void ParseOptionValue(const std::string& optionName, const std::string& argument,
@@ -171,6 +171,10 @@ void Parser::ParserPrivate::ParseOptionValue(
 }
 
 Parser::Parser(const Interface& interface) : d_{std::make_unique<ParserPrivate>(interface)} {}
+
+Parser::Parser(Parser&&) noexcept = default;
+
+Parser& Parser::operator=(Parser&&) noexcept = default;
 
 Parser::~Parser() = default;
 

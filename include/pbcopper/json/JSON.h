@@ -4,6 +4,7 @@
 #define PBCOPPER_JSON_JSON_H
 
 #include <pbcopper/PbcopperConfig.h>
+
 #include <pbcopper/json/internal/json.hpp>
 
 //

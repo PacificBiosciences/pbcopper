@@ -41,32 +41,32 @@ TEST(Align_Seed, check_combineable)
     {  // partial overlap
         const PacBio::Align::Seed s1{0, 0, 3};
         const PacBio::Align::Seed s2{2, 2, 3};
-        EXPECT_TRUE(PacBio::Align::internal::CanMergeSeeds(s1, s2));
+        EXPECT_TRUE(PacBio::Align::CanMergeSeeds(s1, s2));
     }
     {  // complete overlap
         const PacBio::Align::Seed s1{0, 0, 3};
         const PacBio::Align::Seed s2{0, 0, 3};
-        EXPECT_TRUE(PacBio::Align::internal::CanMergeSeeds(s1, s2));
+        EXPECT_TRUE(PacBio::Align::CanMergeSeeds(s1, s2));
     }
     {  // contained - prefix overlap
         const PacBio::Align::Seed s1{0, 0, 3};
         const PacBio::Align::Seed s2{0, 0, 4};
-        EXPECT_TRUE(PacBio::Align::internal::CanMergeSeeds(s1, s2));
+        EXPECT_TRUE(PacBio::Align::CanMergeSeeds(s1, s2));
     }
     {  // contained - suffix overlap
         const PacBio::Align::Seed s1{0, 0, 3};
         const PacBio::Align::Seed s2{1, 1, 3};
-        EXPECT_TRUE(PacBio::Align::internal::CanMergeSeeds(s1, s2));
+        EXPECT_TRUE(PacBio::Align::CanMergeSeeds(s1, s2));
     }
     {  // no overlap
         const PacBio::Align::Seed s1{0, 0, 4};
         const PacBio::Align::Seed s2{5, 5, 3};
-        EXPECT_FALSE(PacBio::Align::internal::CanMergeSeeds(s1, s2));
+        EXPECT_FALSE(PacBio::Align::CanMergeSeeds(s1, s2));
     }
     {  // improper order
         const PacBio::Align::Seed s1{2, 2, 3};
         const PacBio::Align::Seed s2{0, 0, 3};
-        EXPECT_FALSE(PacBio::Align::internal::CanMergeSeeds(s1, s2));
+        EXPECT_FALSE(PacBio::Align::CanMergeSeeds(s1, s2));
     }
 }
 

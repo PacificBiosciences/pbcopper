@@ -3,9 +3,9 @@
 #ifndef PBCOPPER_DATA_POSITION_H
 #define PBCOPPER_DATA_POSITION_H
 
-#include <cstdint>
-
 #include <pbcopper/PbcopperConfig.h>
+
+#include <cstdint>
 
 namespace PacBio {
 namespace Data {

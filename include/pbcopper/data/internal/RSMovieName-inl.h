@@ -43,7 +43,8 @@ inline RSMovieName& RSMovieName::operator=(const RSMovieName& other)
     return *this;
 }
 
-inline RSMovieName& RSMovieName::operator=(RSMovieName&& other) noexcept = default;
+inline RSMovieName& RSMovieName::operator=(RSMovieName&& other) noexcept(
+    std::is_nothrow_move_assignable<std::string>::value) = default;
 
 inline RSMovieName::~RSMovieName() = default;
 

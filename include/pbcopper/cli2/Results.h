@@ -3,12 +3,13 @@
 #ifndef PBCOPPER_CLI_v2_RESULTS_H
 #define PBCOPPER_CLI_v2_RESULTS_H
 
+#include <pbcopper/PbcopperConfig.h>
+
 #include <memory>
 #include <string>
 #include <unordered_map>
 #include <vector>
 
-#include <pbcopper/PbcopperConfig.h>
 #include <pbcopper/cli2/Option.h>
 #include <pbcopper/cli2/OptionValue.h>
 #include <pbcopper/cli2/PositionalArgument.h>

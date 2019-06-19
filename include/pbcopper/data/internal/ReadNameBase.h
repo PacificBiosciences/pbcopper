@@ -3,6 +3,10 @@
 #ifndef PBCOPPER_DATA_READNAMEBASE_H
 #define PBCOPPER_DATA_READNAMEBASE_H
 
+#include <pbcopper/PbcopperConfig.h>
+
+#include <type_traits>
+
 #include <pbcopper/data/CCSTag.h>
 #include <pbcopper/data/Interval.h>
 #include <pbcopper/data/MovieName.h>
@@ -33,12 +37,7 @@ public:
 
     ReadNameBase(const MovieNameType& movieName, const PacBio::Data::Zmw& zmw, const CCSTag ccs);
 
-    ReadNameBase();
-    ReadNameBase(const ReadNameBase<MovieNameType>&) = default;
-    ReadNameBase(ReadNameBase<MovieNameType>&&) noexcept = default;
-    ReadNameBase<MovieNameType>& operator=(const ReadNameBase<MovieNameType>&) = default;
-    ReadNameBase<MovieNameType>& operator=(ReadNameBase<MovieNameType>&&) noexcept = default;
-    ~ReadNameBase() = default;
+    ReadNameBase() = default;
 
     /// \}
 
@@ -68,7 +67,7 @@ public:
 
 private:
     MovieNameType movieName_;
-    PacBio::Data::Zmw zmw_;
+    PacBio::Data::Zmw zmw_ = -1;
     std::unique_ptr<Interval<Position>> queryInterval_;
 
 private:

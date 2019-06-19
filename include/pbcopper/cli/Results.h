@@ -3,12 +3,13 @@
 #ifndef PBCOPPER_CLI_RESULTS_H
 #define PBCOPPER_CLI_RESULTS_H
 
+#include <pbcopper/PbcopperConfig.h>
+
 #include <cstdint>
 #include <string>
 #include <unordered_map>
 #include <vector>
 
-#include <pbcopper/PbcopperConfig.h>
 #include <pbcopper/cli/Interface.h>
 #include <pbcopper/cli/Option.h>
 #include <pbcopper/json/JSON.h>

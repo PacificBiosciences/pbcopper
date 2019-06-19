@@ -3,12 +3,13 @@
 #ifndef PBCOPPER_QGRAM_INDEX_H
 #define PBCOPPER_QGRAM_INDEX_H
 
+#include <pbcopper/PbcopperConfig.h>
+
 #include <cstddef>
 #include <memory>
 #include <string>
 #include <vector>
 
-#include <pbcopper/PbcopperConfig.h>
 #include <pbcopper/qgram/IndexHits.h>
 
 namespace PacBio {
@@ -45,10 +46,10 @@ public:
     Index(size_t q, std::vector<std::string> seqs);
 
     Index(const Index& other);
-    Index(Index&&) noexcept = default;
-    Index& operator=(const Index& other) = default;
-    Index& operator=(Index&&) noexcept = default;
-    ~Index() = default;
+    Index(Index&&) noexcept;
+    Index& operator=(const Index& other);
+    Index& operator=(Index&&) noexcept;
+    ~Index();
 
 public:
     ///

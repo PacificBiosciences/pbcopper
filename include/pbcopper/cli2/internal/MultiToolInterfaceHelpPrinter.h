@@ -3,10 +3,11 @@
 #ifndef PBCOPPER_CLI_v2_MULTITOOLINTERFACEHELPPRINTER_H
 #define PBCOPPER_CLI_v2_MULTITOOLINTERFACEHELPPRINTER_H
 
+#include <pbcopper/PbcopperConfig.h>
+
 #include <iosfwd>
 #include <string>
 
-#include <pbcopper/PbcopperConfig.h>
 #include <pbcopper/cli2/MultiToolInterface.h>
 #include <pbcopper/cli2/internal/InterfaceHelpPrinter.h>
 

@@ -9,7 +9,7 @@ namespace PacBio {
 namespace Data {
 
 template <typename T>
-inline Interval<T>::Interval() : data_(boost::icl::discrete_interval<T>::right_open(0, 0))
+inline Interval<T>::Interval() : data_{boost::icl::discrete_interval<T>::right_open(0, 0)}
 {
 }
 

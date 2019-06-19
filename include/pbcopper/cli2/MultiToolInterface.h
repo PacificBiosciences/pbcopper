@@ -3,11 +3,13 @@
 #ifndef PBCOPPER_CLI_v2_MULTITOOLINTERFACE_H
 #define PBCOPPER_CLI_v2_MULTITOOLINTERFACE_H
 
+#include <pbcopper/PbcopperConfig.h>
+
 #include <string>
+#include <type_traits>
 #include <utility>
 #include <vector>
 
-#include <pbcopper/PbcopperConfig.h>
 #include <pbcopper/cli2/Tool.h>
 #include <pbcopper/cli2/internal/MultiToolInterfaceData.h>
 
@@ -19,12 +21,6 @@ class MultiToolInterface
 public:
     MultiToolInterface(std::string name, std::string description = std::string{},
                        std::string version = std::string{});
-
-    MultiToolInterface(const MultiToolInterface&);
-    MultiToolInterface(MultiToolInterface&&) noexcept;
-    MultiToolInterface& operator=(const MultiToolInterface&);
-    MultiToolInterface& operator=(MultiToolInterface&&) noexcept;
-    ~MultiToolInterface();
 
 public:
     MultiToolInterface& AddTool(const Tool& tool);

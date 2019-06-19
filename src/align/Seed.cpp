@@ -1,29 +1,25 @@
 // Author: Derek Barnett
 
-#ifndef PBCOPPER_ALIGN_SEED_INL_H
-#define PBCOPPER_ALIGN_SEED_INL_H
+#include <pbcopper/align/Seed.h>
 
-#include <algorithm>
 #include <cassert>
 #include <cmath>
 
-#include <pbcopper/align/Seed.h>
+#include <algorithm>
+#include <type_traits>
 
 namespace PacBio {
 namespace Align {
 
-inline Seed::Seed()
-    : beginPositionH_{0}
-    , beginPositionV_{0}
-    , endPositionH_{0}
-    , endPositionV_{0}
-    , lowerDiagonal_{0}
-    , upperDiagonal_{0}
-    , score_{0}
-{
-}
+static_assert(std::is_copy_constructible<Seed>::value, "Seed(const Seed&) is not = default");
+static_assert(std::is_copy_assignable<Seed>::value,
+              "Seed& operator=(const Seed&) is not = default");
 
-inline Seed::Seed(const uint64_t beginPosH, const uint64_t beginPosV, const uint64_t seedLength)
+static_assert(std::is_nothrow_move_constructible<Seed>::value, "Seed(Seed&&) is not = noexcept");
+static_assert(std::is_nothrow_move_assignable<Seed>::value,
+              "Seed& operator=(Seed&&) is not = noexcept");
+
+Seed::Seed(const uint64_t beginPosH, const uint64_t beginPosV, const uint64_t seedLength)
     : beginPositionH_{beginPosH}
     , beginPositionV_{beginPosV}
     , endPositionH_{beginPosH + seedLength}
@@ -34,8 +30,8 @@ inline Seed::Seed(const uint64_t beginPosH, const uint64_t beginPosV, const uint
 {
 }
 
-inline Seed::Seed(const uint64_t beginPosH, const uint64_t beginPosV, const uint64_t endPosH,
-                  const uint64_t endPosV)
+Seed::Seed(const uint64_t beginPosH, const uint64_t beginPosV, const uint64_t endPosH,
+           const uint64_t endPosV)
     : beginPositionH_{beginPosH}
     , beginPositionV_{beginPosV}
     , endPositionH_{endPosH}
@@ -49,28 +45,28 @@ inline Seed::Seed(const uint64_t beginPosH, const uint64_t beginPosV, const uint
     assert(upperDiagonal_ >= lowerDiagonal_);
 }
 
-inline int64_t Seed::BeginDiagonal() const
+int64_t Seed::BeginDiagonal() const
 {
     return static_cast<int64_t>(beginPositionH_ - beginPositionV_);
 }
 
-inline uint64_t Seed::BeginPositionH() const { return beginPositionH_; }
+uint64_t Seed::BeginPositionH() const { return beginPositionH_; }
 
-inline Seed& Seed::BeginPositionH(const uint64_t beginPosH)
+Seed& Seed::BeginPositionH(const uint64_t beginPosH)
 {
     beginPositionH_ = beginPosH;
     return *this;
 }
 
-inline uint64_t Seed::BeginPositionV() const { return beginPositionV_; }
+uint64_t Seed::BeginPositionV() const { return beginPositionV_; }
 
-inline Seed& Seed::BeginPositionV(const uint64_t beginPosV)
+Seed& Seed::BeginPositionV(const uint64_t beginPosV)
 {
     beginPositionV_ = beginPosV;
     return *this;
 }
 
-inline int64_t Seed::Diagonal() const
+int64_t Seed::Diagonal() const
 {
     if (beginPositionV_ > beginPositionH_)
         return -static_cast<int64_t>(beginPositionV_ - beginPositionH_);
@@ -78,57 +74,54 @@ inline int64_t Seed::Diagonal() const
         return static_cast<int64_t>(beginPositionH_ - beginPositionV_);
 }
 
-inline int64_t Seed::EndDiagonal() const
-{
-    return static_cast<int64_t>(endPositionH_ - endPositionV_);
-}
+int64_t Seed::EndDiagonal() const { return static_cast<int64_t>(endPositionH_ - endPositionV_); }
 
-inline uint64_t Seed::EndPositionH() const { return endPositionH_; }
+uint64_t Seed::EndPositionH() const { return endPositionH_; }
 
-inline Seed& Seed::EndPositionH(const uint64_t endPosH)
+Seed& Seed::EndPositionH(const uint64_t endPosH)
 {
     endPositionH_ = endPosH;
     return *this;
 }
 
-inline uint64_t Seed::EndPositionV() const { return endPositionV_; }
+uint64_t Seed::EndPositionV() const { return endPositionV_; }
 
-inline Seed& Seed::EndPositionV(const uint64_t endPosV)
+Seed& Seed::EndPositionV(const uint64_t endPosV)
 {
     endPositionV_ = endPosV;
     return *this;
 }
 
-inline int64_t Seed::LowerDiagonal() const { return lowerDiagonal_; }
+int64_t Seed::LowerDiagonal() const { return lowerDiagonal_; }
 
-inline Seed& Seed::LowerDiagonal(const int64_t lowerDiagonal)
+Seed& Seed::LowerDiagonal(const int64_t lowerDiagonal)
 {
     lowerDiagonal_ = lowerDiagonal;
     return *this;
 }
 
-inline int64_t Seed::UpperDiagonal() const { return upperDiagonal_; }
+int64_t Seed::UpperDiagonal() const { return upperDiagonal_; }
 
-inline Seed& Seed::UpperDiagonal(const int64_t upperDiagonal)
+Seed& Seed::UpperDiagonal(const int64_t upperDiagonal)
 {
     upperDiagonal_ = upperDiagonal;
     return *this;
 }
 
-inline int32_t Seed::Score() const { return score_; }
+int32_t Seed::Score() const { return score_; }
 
-inline Seed& Seed::Score(const int32_t score)
+Seed& Seed::Score(const int32_t score)
 {
     score_ = score;
     return *this;
 }
 
-inline uint64_t Seed::Size() const
+uint64_t Seed::Size() const
 {
     return std::max(endPositionH_ - beginPositionH_, endPositionV_ - beginPositionV_);
 }
 
-inline Seed& Seed::operator+=(const Seed& other)
+Seed& Seed::operator+=(const Seed& other)
 {
     // cached initial, input sizes
     const auto initialSize = Size();
@@ -167,19 +160,19 @@ inline Seed& Seed::operator+=(const Seed& other)
     return *this;
 }
 
-inline Seed Seed::operator+(const Seed& other) const
+Seed Seed::operator+(const Seed& other) const
 {
     Seed s(*this);
     s += other;
     return s;
 }
 
-inline bool operator<(const Seed& lhs, const Seed& rhs)
+bool operator<(const Seed& lhs, const Seed& rhs)
 {
     return lhs.BeginDiagonal() < rhs.BeginDiagonal();
 }
 
-inline bool operator==(const Seed& lhs, const Seed& rhs)
+bool operator==(const Seed& lhs, const Seed& rhs)
 {
     return lhs.BeginPositionH() == rhs.BeginPositionH() &&
            lhs.BeginPositionV() == rhs.BeginPositionV() &&
@@ -190,5 +183,3 @@ inline bool operator==(const Seed& lhs, const Seed& rhs)
 
 }  // namespace Align
 }  // namespace PacBio
-
-#endif  // PBCOPPER_ALIGN_SEED_INL_H

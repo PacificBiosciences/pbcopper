@@ -3,9 +3,9 @@
 #ifndef PBCOPPER_CLI_TOOLCONTRACT_INPUTFILETYPE_H
 #define PBCOPPER_CLI_TOOLCONTRACT_INPUTFILETYPE_H
 
-#include <string>
-
 #include <pbcopper/PbcopperConfig.h>
+
+#include <string>
 
 namespace PacBio {
 namespace CLI {
@@ -15,12 +15,6 @@ class InputFileType
 {
 public:
     InputFileType(std::string id, std::string title, std::string description, std::string type);
-
-    InputFileType(const InputFileType&) = default;
-    InputFileType(InputFileType&&) noexcept = default;
-    InputFileType& operator=(const InputFileType&) = default;
-    InputFileType& operator=(InputFileType&&) noexcept = default;
-    ~InputFileType() = default;
 
 public:
     const std::string& Id() const;

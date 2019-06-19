@@ -3,12 +3,13 @@
 #ifndef PBCOPPER_CLI_OPTION_H
 #define PBCOPPER_CLI_OPTION_H
 
+#include <pbcopper/PbcopperConfig.h>
+
 #include <initializer_list>
 #include <memory>
 #include <string>
 #include <vector>
 
-#include <pbcopper/PbcopperConfig.h>
 #include <pbcopper/cli/OptionFlags.h>
 #include <pbcopper/json/JSON.h>
 
@@ -178,12 +179,6 @@ public:
     Option(std::string id, std::initializer_list<std::string> names, std::string description,
            JSON::Json defaultValue = JSON::Json(nullptr), JSON::Json choices = JSON::Json(nullptr),
            OptionFlags flags = OptionFlags::DEFAULT);
-
-    Option(const Option& other);
-    Option(Option&& other) noexcept;
-    Option& operator=(const Option& other);
-    Option& operator=(Option&& other) noexcept;
-    ~Option();
 
     /// \}
 

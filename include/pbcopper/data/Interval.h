@@ -3,13 +3,13 @@
 #ifndef PBCOPPER_DATA_INTERVAL_H
 #define PBCOPPER_DATA_INTERVAL_H
 
+#include <pbcopper/PbcopperConfig.h>
+
 #include <cstddef>
 
 #define BOOST_ICL_USE_STATIC_BOUNDED_INTERVALS
 #include <boost/icl/discrete_interval.hpp>
 #include <boost/icl/interval_traits.hpp>
-
-#include <pbcopper/PbcopperConfig.h>
 
 namespace PacBio {
 namespace Data {
@@ -36,16 +36,6 @@ public:
 
     /// \brief Creates an interval from [start, end) */
     Interval(const T start, const T end);
-
-    /// \brief Copy constructs an interval
-    Interval(const Interval<T>& other) = default;
-    Interval<T>& operator=(const Interval<T>&) = default;
-
-    /// \brief Move constructs an interval
-    Interval(Interval<T>&& other) noexcept = default;
-    Interval<T>& operator=(Interval<T>&&) noexcept = default;
-
-    ~Interval<T>() = default;
 
     /// \}
 
