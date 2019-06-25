@@ -77,6 +77,7 @@ pbcopper_cpp_sources = files([
   # ---------
   'reports/Report.cpp',
   'reports/ReportPrinter.cpp',
+  'reports/TaskReport.cpp',
 
   # ---------
   # utility

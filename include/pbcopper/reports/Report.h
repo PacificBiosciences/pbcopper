@@ -138,6 +138,9 @@ private:
     std::vector<Attribute> attributes_;
     std::vector<Table> tables_;
 };
+
+// utility functions
+void writeTaskReport(std::string jsonFile, int nproc, double runTime, int exitCode);
 }  // namespace Reports
 }  // namespace PacBio
 

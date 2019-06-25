@@ -107,4 +107,9 @@ TEST(Reports_Report, can_print_summary)
     EXPECT_EQ(expectedText, s.str());
 }
 
+
+TEST(Reports_Report, can_write_task_report)
+{
+    writeTaskReport("task-report.json", 16, 100, 0);
+}
 // clang-format on
