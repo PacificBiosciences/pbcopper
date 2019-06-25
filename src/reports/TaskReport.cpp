@@ -11,7 +11,8 @@
 namespace PacBio {
 namespace Reports {
 
-void writeTaskReport(std::string jsonFile, int nproc, double runTime, int exitCode)
+TaskReport::TaskReport(int nproc, double runTime, int exitCode)
+    : report_{"workflow_task", "Task Report"}
 {
 #if defined(_POSIX_VERSION)
     char hostname_[255];
@@ -21,13 +22,19 @@ void writeTaskReport(std::string jsonFile, int nproc, double runTime, int exitCo
 #else
     std::string hostname = "unknown";
 #endif
-    Report report{"workflow_task", "Task Report"};
-    report.Attributes({{"host", hostname, "Hostname"},
-                       {"nproc", nproc, "Number of cores/slots"},
-                       {"run_time", runTime, "Run time (seconds)"},
-                       {"exit_code", exitCode, "Exit code"}});
-    std::ofstream jsonOut(jsonFile);
-    report.Print(jsonOut);
+    report_.Attributes({{"host", hostname, "Hostname"},
+                        {"nproc", nproc, "Number of cores/slots"},
+                        {"run_time", runTime, "Run time (seconds)"},
+                        {"exit_code", exitCode, "Exit code"}});
+}
+
+void TaskReport::Print(const std::string& fn, const std::string& prefix) const
+{
+    report_.Print(fn, prefix);
+}
+void TaskReport::Print(std::ostream& out, const std::string& prefix) const
+{
+    report_.Print(out, prefix);
 }
 }
 }

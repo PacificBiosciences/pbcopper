@@ -140,7 +140,18 @@ private:
 };
 
 // utility functions
-void writeTaskReport(std::string jsonFile, int nproc, double runTime, int exitCode);
+class TaskReport
+{
+public:
+    TaskReport(int nproc, double runTime, int exitCode);
+
+    void Print(const std::string& fn, const std::string& prefix = "") const;
+    void Print(std::ostream& out, const std::string& prefix = "") const;
+
+private:
+    Report report_;
+};
+
 }  // namespace Reports
 }  // namespace PacBio
 

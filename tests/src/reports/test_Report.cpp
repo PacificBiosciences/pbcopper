@@ -110,6 +110,6 @@ TEST(Reports_Report, can_print_summary)
 
 TEST(Reports_Report, can_write_task_report)
 {
-    writeTaskReport("task-report.json", 16, 100, 0);
+    TaskReport(16, 100, 0).Print("task-report.json");
 }
 // clang-format on
