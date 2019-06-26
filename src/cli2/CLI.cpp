@@ -118,7 +118,7 @@ int Run(const std::vector<std::string>& args, const MultiToolInterface& interfac
     if (interface.HasTool(args.at(1))) {
         const Tool& tool = interface.ToolFor(args.at(1));
         const std::vector<std::string> toolArgs{args.cbegin() + 1, args.cend()};
-        return Run(args, tool.interface, tool.runner);
+        return Run(toolArgs, tool.interface, tool.runner);
     }
 
     //
