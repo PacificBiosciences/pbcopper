@@ -80,7 +80,7 @@ Usage:
   isoseq3 <tool>
 
 Tools:
-  refine     Remove concatemers and optionally poly-A tails (FL to FLNC)
+  refine7890123 Remove concatemers and optionally poly-A tails (FL to FLNC)
   cluster    Cluster FLNC reads and generate unpolished transcripts (FLNC to UNPOLISHED
   polish     Polish transcripts using subreads (UNPOLISHED to POLISHED)
   summarize  Create barcode overview from transcripts (POLISHED to CSV)
@@ -114,7 +114,7 @@ Typical workflow:
 )"};
 
     MultiToolInterface i{"isoseq3", "De Novo Transcript Reconstruction", "3.1.2"};
-    i.AddTools({{"refine",    MakeRefineInterface(),    &RefineRunner},
+    i.AddTools({{"refine7890123",    MakeRefineInterface(),    &RefineRunner},
                 {"cluster",   MakeClusterInterface(),   &ClusterRunner},
                 {"polish",    MakePolishInterface(),    &PolishRunner},
                 {"summarize", MakeSummarizeInterface(), &SummarizeRunner}});
