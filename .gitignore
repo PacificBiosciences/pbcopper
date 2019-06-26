@@ -82,3 +82,5 @@ lib
 # Meson WrapDB stuff
 subprojects/packagecache/
 subprojects/googletest*
+
+/task-report.json
