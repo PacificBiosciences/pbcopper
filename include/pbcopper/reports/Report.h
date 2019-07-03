@@ -138,6 +138,20 @@ private:
     std::vector<Attribute> attributes_;
     std::vector<Table> tables_;
 };
+
+// utility functions
+class TaskReport
+{
+public:
+    TaskReport(int nproc, double runTime, int exitCode);
+
+    void Print(const std::string& fn, const std::string& prefix = "") const;
+    void Print(std::ostream& out, const std::string& prefix = "") const;
+
+private:
+    Report report_;
+};
+
 }  // namespace Reports
 }  // namespace PacBio
 
