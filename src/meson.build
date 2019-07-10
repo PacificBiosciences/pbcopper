@@ -64,8 +64,17 @@ pbcopper_cpp_sources = files([
   # -------
   # data
   # -------
+  'data/Cigar.cpp',
+  'data/CigarOperation.cpp',
+  'data/Clipping.cpp',
+  'data/Frames.cpp',
+  'data/MappedSimpleRead.cpp',
   'data/MovieName.cpp',
+  'data/QualityValue.cpp',
+  'data/QualityValues.cpp',
   'data/RSMovieName.cpp',
+  'data/SimpleRead.cpp',
+  'data/SNR.cpp',
 
   # ---------
   # logging

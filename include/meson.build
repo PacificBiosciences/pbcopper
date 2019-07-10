@@ -115,18 +115,29 @@ if not meson.is_subproject()
   install_headers(
     files([
       'pbcopper/data/CCSTag.h',
+      'pbcopper/data/Cigar.h',
+      'pbcopper/data/CigarOperation.h',
+      'pbcopper/data/Clipping.h',
+      'pbcopper/data/Frames.h',
       'pbcopper/data/Interval.h',
+      'pbcopper/data/MappedSimpleRead.h',
       'pbcopper/data/MovieName.h',
       'pbcopper/data/Position.h',
+      'pbcopper/data/QualityValue.h',
+      'pbcopper/data/QualityValues.h',
       'pbcopper/data/ReadName.h',
       'pbcopper/data/RSMovieName.h',
       'pbcopper/data/RSReadName.h',
+      'pbcopper/data/SimpleRead.h',
+      'pbcopper/data/SNR.h',
+      'pbcopper/data/Strand.h',
       'pbcopper/data/Zmw.h']),
     subdir : 'pbcopper/data')
 
   # pbcopper/data/internal
   install_headers(
     files([
+      'pbcopper/data/internal/ClippingImpl.h',
       'pbcopper/data/internal/Interval-inl.h',
       'pbcopper/data/internal/MovieName-inl.h',
       'pbcopper/data/internal/ReadNameBase-inl.h',
