@@ -81,25 +81,6 @@ SOFTWARE.
 
 #include <cstddef> // size_t
 
-// disable float-equal warnings on GCC/clang
-#if defined(__clang__) || defined(__GNUC__) || defined(__GNUG__)
-    #pragma GCC diagnostic push
-    #pragma GCC diagnostic ignored "-Wfloat-equal"
-    #pragma GCC diagnostic ignored "-Wshadow"
-
-    #if defined(__GNUC__) && !defined(__clang__)
-        #pragma GCC diagnostic push
-        #pragma GCC diagnostic ignored "-Wlogical-op"
-        #pragma GCC diagnostic ignored "-Wuseless-cast"
-    #endif
-#endif
-
-// disable documentation warnings on clang
-#if defined(__clang__)
-    #pragma GCC diagnostic push
-    #pragma GCC diagnostic ignored "-Wdocumentation"
-#endif
-
 namespace nlohmann
 {
 namespace detail
@@ -21046,15 +21027,6 @@ inline nlohmann::json::json_pointer operator "" _json_pointer(const char* s, std
 #undef JSON_HAS_CPP_17
 #undef NLOHMANN_BASIC_JSON_TPL_DECLARATION
 #undef NLOHMANN_BASIC_JSON_TPL
-
-
-// restore GCC/clang diagnostic settings
-#if defined(__clang__) || defined(__GNUC__) || defined(__GNUG__)
-    #pragma GCC diagnostic pop
-#endif
-#if defined(__clang__)
-    #pragma GCC diagnostic pop
-#endif
 
 
 #endif  // INCLUDE_NLOHMANN_JSON_HPP_
