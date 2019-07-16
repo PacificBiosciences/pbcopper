@@ -6,6 +6,7 @@
 #include <pbcopper/PbcopperConfig.h>
 
 #include <cstdint>
+#include <limits>
 
 namespace PacBio {
 namespace Data {
@@ -13,6 +14,8 @@ namespace Data {
 typedef int32_t Position;
 
 static const Position UnmappedPosition = Position{-1};
+
+constexpr Position MaximumPosition = std::numeric_limits<decltype(MaximumPosition)>::max();
 
 }  // namespace Data
 }  // namespace PacBio
