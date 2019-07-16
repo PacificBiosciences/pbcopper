@@ -201,6 +201,7 @@ if not meson.is_subproject()
   # pbcopper/utility
   install_headers(
     files([
+      'pbcopper/utility/Deleters.h',
       'pbcopper/utility/FileUtils.h',
       'pbcopper/utility/MinMax.h',
       'pbcopper/utility/MoveAppend.h',
