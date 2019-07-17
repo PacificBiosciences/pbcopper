@@ -6,6 +6,7 @@
 #include <pbcopper/PbcopperConfig.h>
 
 #include <condition_variable>
+#include <fstream>
 #include <functional>
 #include <iosfwd>
 #include <map>
@@ -59,6 +60,11 @@ public:
     LoggerConfig(const std::map<std::string, OStreams>& cfg);
     LoggerConfig(std::ostream& os, const LogLevel level = LogLevel::INFO);
     LoggerConfig(std::ostream& os, const std::string& level);
+    LoggerConfig(const std::string& logFileName, const LogLevel level = LogLevel::INFO);
+    LoggerConfig(const std::string& logFileName, const std::string& level);
+
+private:
+    std::ofstream logToFile;
 };
 
 class LogMessage;

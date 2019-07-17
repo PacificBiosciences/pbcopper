@@ -47,6 +47,18 @@ inline LoggerConfig::LoggerConfig(std::ostream& os, const std::string& level)
 {
 }
 
+inline LoggerConfig::LoggerConfig(const std::string& logFileName, const LogLevel level)
+{
+    logToFile.open(logFileName);
+    for (size_t i = static_cast<size_t>(level); i < LogLevel::MAX_LOG_LEVEL; ++i)
+        (*this)[static_cast<LogLevel>(i)].push_back(logToFile);
+}
+
+inline LoggerConfig::LoggerConfig(const std::string& logFileName, const std::string& level)
+    : LoggerConfig(logFileName, LogLevel(level))
+{
+}
+
 // ---------
 // Logger
 // ---------
