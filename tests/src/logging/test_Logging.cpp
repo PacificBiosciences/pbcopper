@@ -4,7 +4,10 @@
 #include <string>
 
 #include <gtest/gtest.h>
+#include <pbcopper/utility/StringUtils.h>
 #include <boost/algorithm/string/predicate.hpp>
+
+using namespace PacBio;
 
 //
 // NOTE: We need to scope the Loggers used here and invoke the macros that take
@@ -17,43 +20,105 @@
 
 namespace LoggingTests {
 
-static const std::string infoMsg = "*** Application INFO ***";
+static const std::string debugMsg{"*** Application DEBUG ***"};
+static const std::string infoMsg{"*** Application INFO ***"};
 static const std::string noticeMsg = "*** Application NOTE ***";
 static const std::string warnMsg = "*** Application WARNING ***";
 
 }  // namespace LoggingTests
 
-TEST(Logging_Logger, info_message_logged_to_stream)
+TEST(Logging_LogLevel, can_be_constructed_from_string)
+{
+    Logging::LogLevel info{"INFO"};
+    EXPECT_EQ(Logging::LogLevel::INFO, info);
+
+    Logging::LogLevel warn{"WARN"};
+    EXPECT_EQ(Logging::LogLevel::WARN, warn);
+
+    EXPECT_THROW(Logging::LogLevel(""), std::invalid_argument);
+    EXPECT_THROW(Logging::LogLevel("bad"), std::invalid_argument);
+}
+
+TEST(Logging_LogLevel, can_be_converted_to_string)
+{
+    const Logging::LogLevel info{Logging::LogLevel::INFO};
+    const Logging::LogLevel warn{Logging::LogLevel::WARN};
+
+    EXPECT_EQ("INFO", info.ToString());
+    EXPECT_EQ("WARN", warn.ToString());
+}
+
+TEST(Logging_Logger, writes_normal_info_message_to_output_stream)
 {
     std::ostringstream s;
     {
-        PacBio::Logging::Logger logger(s, PacBio::Logging::LogLevel::INFO);
+        Logging::Logger logger{s, Logging::LogLevel::INFO};
         PBLOGGER_INFO(logger) << LoggingTests::infoMsg;
     }
-    EXPECT_TRUE(s.str().find(LoggingTests::infoMsg) != std::string::npos);
+
+    const std::string result = s.str();
+    EXPECT_NE(std::string::npos, result.find(LoggingTests::infoMsg));
 }
 
-TEST(Logging_Logger, custom_logging_sinks_receive_expected_messages)
+TEST(Logging_Logger, ignores_lower_level_messages)
 {
-    // specify custom output destinations by log level... and also 'tee' one
-    // log level stream (warning) into separate ostreams
-
-    std::ostringstream info;
-    std::ostringstream notice;
-    std::ostringstream warn, warn2;
-    std::map<PacBio::Logging::LogLevel, PacBio::Logging::OStreams> logConfig = {
-        {PacBio::Logging::LogLevel::INFO, {info}},
-        {PacBio::Logging::LogLevel::NOTICE, {notice}},
-        {PacBio::Logging::LogLevel::WARN, {warn, warn2}}};
-
+    std::ostringstream s;
     {
-        PacBio::Logging::Logger logger(logConfig);
-        PBLOGGER_INFO(logger) << LoggingTests::infoMsg;
-        PBLOGGER_NOTICE(logger) << LoggingTests::noticeMsg;
-        PBLOGGER_WARN(logger) << LoggingTests::warnMsg;
+        Logging::Logger logger{s, Logging::LogLevel::INFO};
+        PBLOGGER_DEBUG(logger) << LoggingTests::debugMsg;
     }
-    EXPECT_TRUE(info.str().find(LoggingTests::infoMsg) != std::string::npos);
-    EXPECT_TRUE(notice.str().find(LoggingTests::noticeMsg) != std::string::npos);
-    EXPECT_TRUE(warn.str().find(LoggingTests::warnMsg) != std::string::npos);
-    EXPECT_TRUE(warn2.str().find(LoggingTests::warnMsg) != std::string::npos);
+    EXPECT_TRUE(s.str().empty());
+}
+
+TEST(Logging_Logger, can_write_message_only_custom_field_config)
+{
+    {
+        std::ostringstream s;
+        {
+            Logging::LogConfig config;
+            config.Fields = Logging::LogField::NONE;
+
+            Logging::Logger logger(s, config);
+            PBLOGGER_INFO(logger) << LoggingTests::infoMsg;
+        }
+        EXPECT_EQ(">|> *** Application INFO ***\n", s.str());
+    }
+    {
+        std::ostringstream s;
+        {
+            Logging::LogConfig config;
+            config.Fields = Logging::LogField::LOG_LEVEL;
+
+            Logging::Logger logger(s, config);
+            PBLOGGER_INFO(logger) << LoggingTests::infoMsg;
+        }
+        EXPECT_EQ(">|> INFO -|- *** Application INFO ***\n", s.str());
+    }
+    {
+        std::ostringstream s;
+        {
+            Logging::LogConfig config;
+            config.Fields = Logging::LogField::LOG_LEVEL | Logging::LogField::THREAD_ID;
+
+            Logging::Logger logger(s, config);
+            PBLOGGER_ERROR(logger) << "Message";
+        }
+        EXPECT_NE(std::string::npos, s.str().find("ERROR"));
+        EXPECT_NE(std::string::npos, s.str().find("Message"));
+        EXPECT_NE(std::string::npos, s.str().find("0x"));
+    }
+}
+
+TEST(Logging_Logger, can_use_custom_delimiter)
+{
+    std::ostringstream s;
+    {
+        Logging::LogConfig config;
+        config.Fields = Logging::LogField::LOG_LEVEL;
+        config.Delimiter = " :: ";
+
+        Logging::Logger logger(s, config);
+        PBLOGGER_INFO(logger) << LoggingTests::infoMsg;
+    }
+    EXPECT_EQ(">|> INFO :: *** Application INFO ***\n", s.str());
 }
