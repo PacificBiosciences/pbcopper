@@ -32,8 +32,8 @@ inline ReadNameBase<MovieNameType>::ReadNameBase(std::string&& name)
 template <typename MovieNameType>
 inline ReadNameBase<MovieNameType>::ReadNameBase(const MovieNameType& movieName,
                                                  const PacBio::Data::Zmw& zmw,
-                                                 const Interval<Position>& queryInterval)
-    : movieName_(movieName), zmw_(zmw), queryInterval_(new Interval<Position>{queryInterval})
+                                                 const Interval& queryInterval)
+    : movieName_(movieName), zmw_(zmw), queryInterval_(new Interval{queryInterval})
 {
 }
 
@@ -42,7 +42,7 @@ inline ReadNameBase<MovieNameType>::ReadNameBase(const MovieNameType& movieName,
                                                  const PacBio::Data::Zmw& zmw,
                                                  const Position& queryStart,
                                                  const Position& queryEnd)
-    : ReadNameBase<MovieNameType>(movieName, zmw, Interval<Position>(queryStart, queryEnd))
+    : ReadNameBase<MovieNameType>(movieName, zmw, Interval(queryStart, queryEnd))
 {
 }
 
@@ -66,7 +66,7 @@ inline MovieNameType ReadNameBase<MovieNameType>::MovieName() const
 }
 
 template <typename MovieNameType>
-inline Interval<Position> ReadNameBase<MovieNameType>::QueryInterval() const
+inline Interval ReadNameBase<MovieNameType>::QueryInterval() const
 {
     if (IsCCS()) throw std::runtime_error("ReadName: cannot get query interval from CCS read");
     return *queryInterval_;
@@ -181,7 +181,7 @@ inline void ReadNameBase<MovieNameType>::FromString(std::string&& name)
         if (queryParts.size() != 2) return;
         const Position queryStart = std::stoi(queryParts.at(0));
         const Position queryEnd = std::stoi(queryParts.at(1));
-        queryInterval_.reset(new Interval<Position>{queryStart, queryEnd});
+        queryInterval_.reset(new Interval{queryStart, queryEnd});
     }
 }
 

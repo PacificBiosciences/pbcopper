@@ -5,16 +5,19 @@
 
 #include <pbcopper/PbcopperConfig.h>
 
+#include <cstdint>
+
 namespace PacBio {
 namespace Data {
 
 /// \brief This enum defines the strand orientations used for reporting
 ///        alignment-related information.
 ///
-enum class Strand
+enum class Strand : uint8_t
 {
     FORWARD,  ///< Forward strand
-    REVERSE   ///< Reverse strand
+    REVERSE,  ///< Reverse strand
+    UNMAPPED,
 };
 
 }  // namespace Data
