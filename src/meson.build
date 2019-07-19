@@ -71,12 +71,13 @@ pbcopper_cpp_sources = files([
   'data/Frames.cpp',
   'data/GenomicInterval.cpp',
   'data/Interval.cpp',
-  'data/MappedSimpleRead.cpp',
+  'data/MappedRead.cpp',
   'data/MovieName.cpp',
   'data/QualityValue.cpp',
   'data/QualityValues.cpp',
+  'data/Read.cpp',
+  'data/ReadId.cpp',
   'data/RSMovieName.cpp',
-  'data/SimpleRead.cpp',
   'data/SNR.cpp',
 
   # ---------
