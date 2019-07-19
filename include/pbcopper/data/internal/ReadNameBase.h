@@ -30,7 +30,7 @@ public:
 
     // create ReadName from name parts
     ReadNameBase(const MovieNameType& movieName, const PacBio::Data::Zmw& zmw,
-                 const Interval<Position>& queryInterval);
+                 const Interval& queryInterval);
 
     ReadNameBase(const MovieNameType& movieName, const PacBio::Data::Zmw& zmw,
                  const Position& queryStart, const Position& queryEnd);
@@ -47,7 +47,7 @@ public:
 
     MovieNameType MovieName() const;
     PacBio::Data::Zmw Zmw() const;
-    Interval<Position> QueryInterval() const;
+    Interval QueryInterval() const;
     Position QueryStart() const;
     Position QueryEnd() const;
 
@@ -68,7 +68,7 @@ public:
 private:
     MovieNameType movieName_;
     PacBio::Data::Zmw zmw_ = -1;
-    std::unique_ptr<Interval<Position>> queryInterval_;
+    std::unique_ptr<Interval> queryInterval_;
 
 private:
     void Check() const;

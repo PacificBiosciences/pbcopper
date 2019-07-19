@@ -64,10 +64,13 @@ pbcopper_cpp_sources = files([
   # -------
   # data
   # -------
+  'data/Accuracy.cpp',
   'data/Cigar.cpp',
   'data/CigarOperation.cpp',
   'data/Clipping.cpp',
   'data/Frames.cpp',
+  'data/GenomicInterval.cpp',
+  'data/Interval.cpp',
   'data/MappedSimpleRead.cpp',
   'data/MovieName.cpp',
   'data/QualityValue.cpp',
