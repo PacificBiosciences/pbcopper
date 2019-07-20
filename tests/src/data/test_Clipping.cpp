@@ -5,13 +5,13 @@
 #include <gtest/gtest.h>
 
 #include <pbcopper/data/Clipping.h>
-#include <pbcopper/data/MappedSimpleRead.h>
-#include <pbcopper/data/SimpleRead.h>
+#include <pbcopper/data/MappedRead.h>
+#include <pbcopper/data/Read.h>
 #include <pbcopper/data/internal/ClippingImpl.h>
 
 using namespace PacBio::Data;
 
-TEST(SimpleReadTest, ClipSimpleRead)
+TEST(Data_Read, ClipRead)
 {
     const std::string seq = "AACCGTTAGC";
     const QualityValues quals = QualityValues::FromFastq("0123456789");
@@ -26,30 +26,30 @@ TEST(SimpleReadTest, ClipSimpleRead)
     const size_t clipEnd = 509;
     const ClipResult clipResult{2, 502, 509};
 
-    SimpleRead read{"name", seq, quals, snr, qStart, qEnd, pw, ipd};
-    internal::ClipSimpleRead(read, clipResult, clipStart, clipEnd);
+    Read read{"name", seq, quals, snr, qStart, qEnd, pw, ipd};
+    internal::ClipRead(read, clipResult, clipStart, clipEnd);
 
     const std::string expectedSeq = "CCGTTAG";
     const QualityValues expectedQuals = QualityValues::FromFastq("2345678");
     const SNR expectedSnr{0.9, 0.9, 0.9, 0.9};
     const Position expectedQStart = 502;
     const Position expectedQEnd = 509;
-    const std::vector<uint16_t> expectedPw{30, 40, 50, 60, 70, 80, 90};
+    const std::vector<uint8_t> expectedPw{30, 40, 50, 60, 67, 72, 77};
     const std::vector<uint16_t> expectedIpd{30, 40, 50, 60, 70, 80, 90};
 
-    EXPECT_EQ("name", read.Name);
-    EXPECT_EQ(expectedSeq, read.Sequence);
+    EXPECT_EQ("name", read.Id.MovieName);
+    EXPECT_EQ(expectedSeq, read.Seq);
     EXPECT_EQ(expectedQuals, read.Qualities);
     EXPECT_EQ(expectedQStart, read.QueryStart);
     EXPECT_EQ(expectedQEnd, read.QueryEnd);
     EXPECT_EQ(expectedSnr, read.SignalToNoise);
-    EXPECT_TRUE(read.PulseWidths);
-    EXPECT_TRUE(std::equal(expectedPw.cbegin(), expectedPw.cend(), read.PulseWidths->begin()));
+    EXPECT_TRUE(read.PulseWidth.size());
+    EXPECT_TRUE(std::equal(expectedPw.cbegin(), expectedPw.cend(), read.PulseWidth.begin()));
     EXPECT_TRUE(read.IPD);
     EXPECT_TRUE(std::equal(expectedIpd.cbegin(), expectedIpd.cend(), read.IPD->begin()));
 }
 
-TEST(SimpleReadTest, ClipMappedSimpleRead)
+TEST(Data_Read, ClipMappedRead)
 {
     const std::string seq = "AACCGTTAGC";
     const QualityValues quals = QualityValues::FromFastq("0123456789");
@@ -67,12 +67,8 @@ TEST(SimpleReadTest, ClipMappedSimpleRead)
     // ClipToReference(read, 102, 107);
     const ClipResult clipResult{2, 502, 507, 102, Cigar{"2=1D2I2D"}};
 
-    MappedSimpleRead read{SimpleRead{"name", seq, quals, snr, qStart, qEnd, pw, ipd},
-                          strand,
-                          tStart,
-                          tEnd,
-                          cigar,
-                          mapQV};
+    MappedRead read{
+        Read{"name", seq, quals, snr, qStart, qEnd, pw, ipd}, strand, tStart, tEnd, cigar, mapQV};
     internal::ClipMappedRead(read, clipResult);
 
     const std::string expectedSeq = "CCGTT";
@@ -80,7 +76,7 @@ TEST(SimpleReadTest, ClipMappedSimpleRead)
     const SNR expectedSnr{0.9, 0.9, 0.9, 0.9};
     const Position expectedQStart = 502;
     const Position expectedQEnd = 507;
-    const std::vector<uint16_t> expectedPw{30, 40, 50, 60, 70};
+    const std::vector<uint8_t> expectedPw{30, 40, 50, 60, 67};
     const std::vector<uint16_t> expectedIpd{30, 40, 50, 60, 70};
     const Strand expectedStrand = Strand::FORWARD;
     const Position expectedTStart = 102;
@@ -88,13 +84,13 @@ TEST(SimpleReadTest, ClipMappedSimpleRead)
     const Cigar expectedCigar{"2=1D2I2D"};
     const uint8_t expectedMapQV = 80;
 
-    EXPECT_EQ("name", read.Name);
-    EXPECT_EQ(expectedSeq, read.Sequence);
+    EXPECT_EQ("name", read.Id.MovieName);
+    EXPECT_EQ(expectedSeq, read.Seq);
     EXPECT_EQ(expectedQuals, read.Qualities);
     EXPECT_EQ(expectedQStart, read.QueryStart);
     EXPECT_EQ(expectedQEnd, read.QueryEnd);
     EXPECT_EQ(expectedSnr, read.SignalToNoise);
-    EXPECT_TRUE(std::equal(expectedPw.cbegin(), expectedPw.cend(), read.PulseWidths->begin()));
+    EXPECT_TRUE(std::equal(expectedPw.cbegin(), expectedPw.cend(), read.PulseWidth.begin()));
     EXPECT_TRUE(std::equal(expectedIpd.cbegin(), expectedIpd.cend(), read.IPD->begin()));
     EXPECT_EQ(expectedStrand, read.Strand);
     EXPECT_EQ(expectedTStart, read.TemplateStart);
@@ -103,7 +99,7 @@ TEST(SimpleReadTest, ClipMappedSimpleRead)
     EXPECT_EQ(expectedMapQV, read.MapQuality);
 }
 
-TEST(SimpleReadTest, ClipToReferenceOutsideAlignedRegion)
+TEST(Data_Read, ClipToReferenceOutsideAlignedRegion)
 {
     const std::string seq{"GATTACA"};
     const QualityValues quals{"ZZZZZZZ"};
@@ -123,7 +119,7 @@ TEST(SimpleReadTest, ClipToReferenceOutsideAlignedRegion)
     const SNR expectedSnr{0.9, 0.9, 0.9, 0.9};
     const Position expectedQStart = -1;
     const Position expectedQEnd = -1;
-    const std::vector<uint16_t> expectedPw{};
+    const std::vector<uint8_t> expectedPw{};
     const std::vector<uint16_t> expectedIpd{};
     const Strand expectedStrand = Strand::FORWARD;
     const Position expectedTStart = -1;
@@ -132,22 +128,22 @@ TEST(SimpleReadTest, ClipToReferenceOutsideAlignedRegion)
     const uint8_t expectedMapQV = 255;
 
     auto shouldClipToEmptyRead = [&](Position start, Position end) {
-        MappedSimpleRead read{SimpleRead{"name", seq, quals, snr, qStart, qEnd, pw, ipd},
-                              strand,
-                              tStart,
-                              tEnd,
-                              cigar,
-                              mapQV};
+        MappedRead read{Read{"name", seq, quals, snr, qStart, qEnd, pw, ipd},
+                        strand,
+                        tStart,
+                        tEnd,
+                        cigar,
+                        mapQV};
 
         ClipToReference(read, start, end, true);
 
-        EXPECT_EQ("name", read.Name);
-        EXPECT_EQ(expectedSeq, read.Sequence);
+        EXPECT_EQ("name", read.Id.MovieName);
+        EXPECT_EQ(expectedSeq, read.Seq);
         EXPECT_EQ(expectedQuals, read.Qualities);
         EXPECT_EQ(expectedQStart, read.QueryStart);
         EXPECT_EQ(expectedQEnd, read.QueryEnd);
         EXPECT_EQ(expectedSnr, read.SignalToNoise);
-        EXPECT_TRUE(std::equal(expectedPw.cbegin(), expectedPw.cend(), read.PulseWidths->begin()));
+        EXPECT_TRUE(std::equal(expectedPw.cbegin(), expectedPw.cend(), read.PulseWidth.begin()));
         EXPECT_TRUE(std::equal(expectedIpd.cbegin(), expectedIpd.cend(), read.IPD->begin()));
         EXPECT_EQ(expectedStrand, read.Strand);
         EXPECT_EQ(expectedTStart, read.TemplateStart);
@@ -174,7 +170,7 @@ TEST(SimpleReadTest, ClipToReferenceOutsideAlignedRegion)
     }
 }
 
-TEST(SimpleReadTest, MultipleClipsToReference)
+TEST(Data_Read, MultipleClipsToReference)
 {
     const std::string seq(1200, 'A');
     const QualityValues quals{std::string(1200, 'Z')};
@@ -190,12 +186,8 @@ TEST(SimpleReadTest, MultipleClipsToReference)
     const uint8_t mapQV = 99;
 
     // intial read, aligned to reference: [0, 1200)
-    MappedSimpleRead read{SimpleRead{"name", seq, quals, snr, qStart, qEnd, pw, ipd},
-                          strand,
-                          tStart,
-                          tEnd,
-                          cigar,
-                          mapQV};
+    MappedRead read{
+        Read{"name", seq, quals, snr, qStart, qEnd, pw, ipd}, strand, tStart, tEnd, cigar, mapQV};
 
     // clip to reference: [0, 1000) - shrinking from right
     ClipToReference(read, 0, 1000, true);
@@ -213,13 +205,13 @@ TEST(SimpleReadTest, MultipleClipsToReference)
     Cigar expectedCigar{"1000="};
     const uint8_t expectedMapQV = 99;
 
-    EXPECT_EQ("name", read.Name);
-    EXPECT_EQ(expectedSeq, read.Sequence);
+    EXPECT_EQ("name", read.Id.MovieName);
+    EXPECT_EQ(expectedSeq, read.Seq);
     EXPECT_EQ(expectedQuals, read.Qualities);
     EXPECT_EQ(expectedQStart, read.QueryStart);
     EXPECT_EQ(expectedQEnd, read.QueryEnd);
     EXPECT_EQ(expectedSnr, read.SignalToNoise);
-    EXPECT_TRUE(std::equal(expectedPw.cbegin(), expectedPw.cend(), read.PulseWidths->begin()));
+    EXPECT_TRUE(std::equal(expectedPw.cbegin(), expectedPw.cend(), read.PulseWidth.begin()));
     EXPECT_TRUE(std::equal(expectedIpd.cbegin(), expectedIpd.cend(), read.IPD->begin()));
     EXPECT_EQ(expectedStrand, read.Strand);
     EXPECT_EQ(expectedTStart, read.TemplateStart);
@@ -240,13 +232,13 @@ TEST(SimpleReadTest, MultipleClipsToReference)
     expectedTEnd = 1000;
     expectedCigar = Cigar{"900="};
 
-    EXPECT_EQ("name", read.Name);
-    EXPECT_EQ(expectedSeq, read.Sequence);
+    EXPECT_EQ("name", read.Id.MovieName);
+    EXPECT_EQ(expectedSeq, read.Seq);
     EXPECT_EQ(expectedQuals, read.Qualities);
     EXPECT_EQ(expectedQStart, read.QueryStart);
     EXPECT_EQ(expectedQEnd, read.QueryEnd);
     EXPECT_EQ(expectedSnr, read.SignalToNoise);
-    EXPECT_TRUE(std::equal(expectedPw.cbegin(), expectedPw.cend(), read.PulseWidths->begin()));
+    EXPECT_TRUE(std::equal(expectedPw.cbegin(), expectedPw.cend(), read.PulseWidth.begin()));
     EXPECT_TRUE(std::equal(expectedIpd.cbegin(), expectedIpd.cend(), read.IPD->begin()));
     EXPECT_EQ(expectedStrand, read.Strand);
     EXPECT_EQ(expectedTStart, read.TemplateStart);
@@ -267,13 +259,13 @@ TEST(SimpleReadTest, MultipleClipsToReference)
     expectedTEnd = 800;
     expectedCigar = Cigar{"600="};
 
-    EXPECT_EQ("name", read.Name);
-    EXPECT_EQ(expectedSeq, read.Sequence);
+    EXPECT_EQ("name", read.Id.MovieName);
+    EXPECT_EQ(expectedSeq, read.Seq);
     EXPECT_EQ(expectedQuals, read.Qualities);
     EXPECT_EQ(expectedQStart, read.QueryStart);
     EXPECT_EQ(expectedQEnd, read.QueryEnd);
     EXPECT_EQ(expectedSnr, read.SignalToNoise);
-    EXPECT_TRUE(std::equal(expectedPw.cbegin(), expectedPw.cend(), read.PulseWidths->begin()));
+    EXPECT_TRUE(std::equal(expectedPw.cbegin(), expectedPw.cend(), read.PulseWidth.begin()));
     EXPECT_TRUE(std::equal(expectedIpd.cbegin(), expectedIpd.cend(), read.IPD->begin()));
     EXPECT_EQ(expectedStrand, read.Strand);
     EXPECT_EQ(expectedTStart, read.TemplateStart);
@@ -282,7 +274,7 @@ TEST(SimpleReadTest, MultipleClipsToReference)
     EXPECT_EQ(expectedMapQV, read.MapQuality);
 }
 
-TEST(SimpleReadTest, MultipleClipsToReference_WithLargeDeletion)
+TEST(Data_Read, MultipleClipsToReference_WithLargeDeletion)
 {
     const std::string seq(1000, 'A');
     const QualityValues quals{std::string(1000, 'Z')};
@@ -298,12 +290,8 @@ TEST(SimpleReadTest, MultipleClipsToReference_WithLargeDeletion)
     const uint8_t mapQV = 99;
 
     // intial read, aligned to reference: [0, 1200)
-    MappedSimpleRead read{SimpleRead{"name", seq, quals, snr, qStart, qEnd, pw, ipd},
-                          strand,
-                          tStart,
-                          tEnd,
-                          cigar,
-                          mapQV};
+    MappedRead read{
+        Read{"name", seq, quals, snr, qStart, qEnd, pw, ipd}, strand, tStart, tEnd, cigar, mapQV};
 
     // clip to reference: [0, 1000) - shrinking from right
     ClipToReference(read, 0, 1000, true);
@@ -321,13 +309,13 @@ TEST(SimpleReadTest, MultipleClipsToReference_WithLargeDeletion)
     Cigar expectedCigar{"400=200D400="};
     const uint8_t expectedMapQV = 99;
 
-    EXPECT_EQ("name", read.Name);
-    EXPECT_EQ(expectedSeq, read.Sequence);
+    EXPECT_EQ("name", read.Id.MovieName);
+    EXPECT_EQ(expectedSeq, read.Seq);
     EXPECT_EQ(expectedQuals, read.Qualities);
     EXPECT_EQ(expectedQStart, read.QueryStart);
     EXPECT_EQ(expectedQEnd, read.QueryEnd);
     EXPECT_EQ(expectedSnr, read.SignalToNoise);
-    EXPECT_TRUE(std::equal(expectedPw.cbegin(), expectedPw.cend(), read.PulseWidths->begin()));
+    EXPECT_TRUE(std::equal(expectedPw.cbegin(), expectedPw.cend(), read.PulseWidth.begin()));
     EXPECT_TRUE(std::equal(expectedIpd.cbegin(), expectedIpd.cend(), read.IPD->begin()));
     EXPECT_EQ(expectedStrand, read.Strand);
     EXPECT_EQ(expectedTStart, read.TemplateStart);
@@ -348,13 +336,13 @@ TEST(SimpleReadTest, MultipleClipsToReference_WithLargeDeletion)
     expectedTEnd = 1000;
     expectedCigar = Cigar{"300=200D400="};
 
-    EXPECT_EQ("name", read.Name);
-    EXPECT_EQ(expectedSeq, read.Sequence);
+    EXPECT_EQ("name", read.Id.MovieName);
+    EXPECT_EQ(expectedSeq, read.Seq);
     EXPECT_EQ(expectedQuals, read.Qualities);
     EXPECT_EQ(expectedQStart, read.QueryStart);
     EXPECT_EQ(expectedQEnd, read.QueryEnd);
     EXPECT_EQ(expectedSnr, read.SignalToNoise);
-    EXPECT_TRUE(std::equal(expectedPw.cbegin(), expectedPw.cend(), read.PulseWidths->begin()));
+    EXPECT_TRUE(std::equal(expectedPw.cbegin(), expectedPw.cend(), read.PulseWidth.begin()));
     EXPECT_TRUE(std::equal(expectedIpd.cbegin(), expectedIpd.cend(), read.IPD->begin()));
     EXPECT_EQ(expectedStrand, read.Strand);
     EXPECT_EQ(expectedTStart, read.TemplateStart);
@@ -375,13 +363,13 @@ TEST(SimpleReadTest, MultipleClipsToReference_WithLargeDeletion)
     expectedTEnd = 800;
     expectedCigar = Cigar{"200=200D200="};
 
-    EXPECT_EQ("name", read.Name);
-    EXPECT_EQ(expectedSeq, read.Sequence);
+    EXPECT_EQ("name", read.Id.MovieName);
+    EXPECT_EQ(expectedSeq, read.Seq);
     EXPECT_EQ(expectedQuals, read.Qualities);
     EXPECT_EQ(expectedQStart, read.QueryStart);
     EXPECT_EQ(expectedQEnd, read.QueryEnd);
     EXPECT_EQ(expectedSnr, read.SignalToNoise);
-    EXPECT_TRUE(std::equal(expectedPw.cbegin(), expectedPw.cend(), read.PulseWidths->begin()));
+    EXPECT_TRUE(std::equal(expectedPw.cbegin(), expectedPw.cend(), read.PulseWidth.begin()));
     EXPECT_TRUE(std::equal(expectedIpd.cbegin(), expectedIpd.cend(), read.IPD->begin()));
     EXPECT_EQ(expectedStrand, read.Strand);
     EXPECT_EQ(expectedTStart, read.TemplateStart);
