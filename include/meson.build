@@ -129,6 +129,7 @@ if not meson.is_subproject()
       'pbcopper/data/QualityValue.h',
       'pbcopper/data/QualityValues.h',
       'pbcopper/data/Read.h',
+      'pbcopper/data/ReadId.h',
       'pbcopper/data/ReadName.h',
       'pbcopper/data/RSMovieName.h',
       'pbcopper/data/RSReadName.h',
