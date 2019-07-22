@@ -12,6 +12,7 @@
 #include <pbcopper/cli2/internal/InterfaceHelpPrinter.h>
 #include <pbcopper/cli2/internal/MultiToolInterfaceHelpPrinter.h>
 #include <pbcopper/cli2/internal/VersionPrinter.h>
+#include <pbcopper/logging/Logging.h>
 
 using CommandLineParser = PacBio::CLI_v2::internal::CommandLineParser;
 using InterfaceHelpPrinter = PacBio::CLI_v2::internal::InterfaceHelpPrinter;
@@ -59,33 +60,19 @@ int Run(const std::vector<std::string>& args, const Interface& interface,
         return EXIT_SUCCESS;
     }
 
-    //
-    // TODO:
-    //
-    //  eventually set up logging here, with loglevel, logfile, ...
-    //
-    //  setup local stack logger here, using logLevel/logFile/etc params
-    //  set global ref to point here
-    //
-    //  now with logger on stack here...
-    //
-    //  PBLOG_INFO << interface.ApplicationVersion();
-    //  PBLOG_INFO << results.InputCommandLine();
-    //
-    //  int status = 0;
-    //  try {
-    //      status = handler(results);
-    //  } catch (std::exception& e) {
-    //      log exception message
-    //      status = EXIT_FAILURE;
-    //  }
-    //  catch (... blah...) {
-    //      something ??
-    //      status = EXIT_FAILURE;
-    //  }
-    //  return status;
-    //
+    // initialize logging
+    const Logging::LogLevel logLevel = results.LogLevel();
+    const std::string logFile = results.LogFile();
+    const auto logger = [&]() {
+        if (logFile.empty())
+            return std::make_unique<Logging::Logger>(std::cerr, logLevel);
+        else
+            return std::make_unique<Logging::Logger>(logFile, logLevel);
+    }();
+    Logging::Logger::Current(logger.get());
+    Logging::InstallSignalHandlers(*(logger.get()));
 
+    // run application
     return handler(results);
 }
 
