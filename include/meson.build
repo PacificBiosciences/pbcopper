@@ -163,14 +163,12 @@ if not meson.is_subproject()
   # pbcopper/logging
   install_headers(
     files([
-      'pbcopper/logging/Logging.h']),
+      'pbcopper/logging/Logging.h',
+      'pbcopper/logging/LogConfig.h',
+      'pbcopper/logging/LogField.h',
+      'pbcopper/logging/LogLevel.h',
+      'pbcopper/logging/LogMessage.h']),
     subdir : 'pbcopper/logging')
-
-  # pbcopper/logging/internal
-  install_headers(
-    files([
-      'pbcopper/logging/internal/Logging-inl.h']),
-    subdir : 'pbcopper/logging/internal')
 
   # pbcopper/parallel
   install_headers(

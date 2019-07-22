@@ -84,6 +84,9 @@ pbcopper_cpp_sources = files([
   # logging
   # ---------
   'logging/Logging.cpp',
+  'logging/LogConfig.cpp',
+  'logging/LogLevel.cpp',
+  'logging/LogMessage.cpp',
 
   # ---------
   # reports
