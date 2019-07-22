@@ -24,6 +24,16 @@ namespace Logging {
 class Logger
 {
 public:
+    ///
+    /// Contains a non-owning pointer to the current logger in use. Client code
+    /// is responsible for lifetime of newLogger, if provided.
+    ///
+    static Logger& Current(Logger* newLogger = nullptr);
+
+    ///
+    /// For legacy reasons, this maintains ownership of (and possibly creates)
+    /// the default logger.
+    ///
     static Logger& Default(Logger* logger = nullptr);
 
     Logger(std::ostream& out, const LogLevel level);
@@ -79,9 +89,9 @@ private:
 #define PBLOGGER_FATAL(lg) PBLOGGER_LEVEL(lg, LogLevel::FATAL)
 
 //
-// Log message with desired log level & default logger
+// Log message with desired log level & current logger
 //
-#define PBLOG_LEVEL(lvl) PBLOGGER_LEVEL(PacBio::Logging::Logger::Default(), lvl)
+#define PBLOG_LEVEL(lvl) PBLOGGER_LEVEL(PacBio::Logging::Logger::Current(), lvl)
 
 #define PBLOG_TRACE PBLOG_LEVEL(LogLevel::TRACE)
 #define PBLOG_DEBUG PBLOG_LEVEL(LogLevel::DEBUG)
@@ -92,7 +102,7 @@ private:
 #define PBLOG_CRITICAL PBLOG_LEVEL(LogLevel::CRITICAL)
 #define PBLOG_FATAL PBLOG_LEVEL(LogLevel::FATAL)
 
-void InstallSignalHandlers(Logger& logger = Logger::Default());
+void InstallSignalHandlers(Logger& logger = Logger::Current());
 
 }  // namespace Logging
 }  // namespace PacBio

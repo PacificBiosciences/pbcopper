@@ -18,7 +18,6 @@
 namespace PacBio {
 namespace Logging {
 namespace {
-
 }  // namespace
 
 void InstallSignalHandlers(Logger& logger)
@@ -141,9 +140,25 @@ Logger& Logger::operator<<(std::unique_ptr<LogLevelStream>&& ptr)
     return *this;
 }
 
+Logger& Logger::Current(Logger* newLogger)
+{
+    // NOTE: non-owning
+    static Logger* currentLogger = nullptr;
+
+    // If a new logger is explicitly provided, use it.
+    if (newLogger)
+        currentLogger = newLogger;
+    else {
+        // If we don't have a current logger set yet, create via Default().
+        // Default() maintains its own logger's lifetime.
+        if (!currentLogger) currentLogger = &(Default());
+    }
+    return *currentLogger;
+}
+
 Logger& Logger::Default(Logger* logger)
 {
-    static std::unique_ptr<Logger> logger_(new Logger(std::cerr, LogLevel::INFO));
+    static auto logger_ = std::make_unique<Logger>(std::cerr, LogLevel::INFO);
     if (logger) logger_.reset(logger);
     return *logger_;
 }
