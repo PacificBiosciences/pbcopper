@@ -88,6 +88,11 @@ public:
     ///
     Interface& Example(std::string example);
 
+    ///
+    /// Provide a custom application-defined logging config
+    ///
+    Interface& LogConfig(const Logging::LogConfig& config);
+
 public:
     ///
     /// \return application's description
@@ -115,6 +120,13 @@ public:
     /// \note Currently only used when part of multi-tool interfaces.
     ///
     const std::string& Example() const;
+
+    ///
+    /// \return logging configuration
+    ///
+    /// Default Logging::LogConfig if not otherwise specified.
+    ///
+    const Logging::LogConfig& LogConfig() const;
 
     /// \internal
     /// \return "flattened" list of all registered options (grouping is ignored)

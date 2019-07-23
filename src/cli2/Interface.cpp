@@ -114,6 +114,14 @@ Interface& Interface::Example(std::string example)
 
 const OptionData& Interface::HelpOption() const { return data_.helpOption_; }
 
+const Logging::LogConfig& Interface::LogConfig() const { return data_.logConfig_; }
+
+Interface& Interface::LogConfig(const Logging::LogConfig& config)
+{
+    data_.logConfig_ = config;
+    return *this;
+}
+
 const OptionData& Interface::LogFileOption() const { return data_.logFileOption_; }
 
 const OptionData& Interface::LogLevelOption() const { return data_.logLevelOption_; }
