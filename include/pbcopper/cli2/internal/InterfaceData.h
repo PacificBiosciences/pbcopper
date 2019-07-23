@@ -13,6 +13,7 @@
 #include <pbcopper/cli2/PositionalArgument.h>
 #include <pbcopper/cli2/internal/OptionData.h>
 #include <pbcopper/cli2/internal/PositionalArgumentData.h>
+#include <pbcopper/logging/LogConfig.h>
 
 namespace PacBio {
 namespace CLI_v2 {
@@ -49,6 +50,8 @@ struct InterfaceData
     OptionData logLevelOption_;
     OptionData numThreadsOption_;
     OptionData versionOption_;
+
+    Logging::LogConfig logConfig_;
 
     std::vector<OptionGroupData> optionGroups_;
     std::vector<PositionalArgumentData> positionalArgs_;
