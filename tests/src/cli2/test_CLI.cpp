@@ -489,7 +489,7 @@ TEST(CLI2_CLI, can_run_tool_with_optional_pos_args)
     const std::vector<std::string> args {"frobber"};
     auto runner = [](const PacBio::CLI_v2::Results& results)
     {
-        EXPECT_EQ("", results[CLI_v2_CLITests::Source]);
+        EXPECT_TRUE(results.PositionalArguments().empty());
         return EXIT_SUCCESS;
     };
 

@@ -11,16 +11,9 @@
 namespace PacBio {
 namespace CLI_v2 {
 
-Results& Results::AddPositionalArgument(size_t position, std::string arg)
+Results& Results::AddPositionalArgument(std::string arg)
 {
-    if (position >= posArgs_.size()) {
-        std::ostringstream out;
-        out << "[pbcopper] command line results ERROR: a maximum of " << posArgs_.size()
-            << " positional arguments are supported, but too many have been provided.";
-        throw std::invalid_argument{out.str()};
-    }
-
-    posArgs_[position].second = arg;
+    posArgValues_.emplace_back(std::move(arg));
     return *this;
 }
 
@@ -91,18 +84,12 @@ size_t Results::NumThreads() const
     return std::min(requestedNumThreads, maxNumThreads);
 }
 
-std::vector<std::string> Results::PositionalArguments() const
-{
-    std::vector<std::string> result;
-    for (const auto& posArg : posArgs_)
-        result.push_back(posArg.second);
-    return result;
-}
+const std::vector<std::string>& Results::PositionalArguments() const { return posArgValues_; }
 
 Results& Results::PositionalArguments(const std::vector<internal::PositionalArgumentData>& posArgs)
 {
     for (const auto& posArg : posArgs)
-        posArgs_.push_back(std::make_pair(posArg, ""));
+        posArgNames_.push_back(posArg.name);
     return *this;
 }
 
@@ -124,15 +111,15 @@ const Result& Results::operator[](const Option& opt) const
 
 const std::string& Results::operator[](const PositionalArgument& posArg) const
 {
-    const auto requestedName = internal::PositionalArgumentTranslator::PositionalArgName(posArg);
-    for (const auto& argResult : posArgs_) {
-        if (argResult.first.name == requestedName) return argResult.second;
+    const auto& name = internal::PositionalArgumentTranslator::PositionalArgName(posArg);
+    for (size_t i = 0; i < posArgNames_.size(); ++i) {
+        if (posArgNames_.at(i) == name) return posArgValues_.at(i);
     }
 
     // not found
     std::ostringstream out;
-    out << "[pbcopper] command line results ERROR: unknown positional argument, with name: "
-        << requestedName << '\n';
+    out << "[pbcopper] command line results ERROR: unknown positional argument, with name: " << name
+        << '\n';
     throw std::invalid_argument{out.str()};
 }
 

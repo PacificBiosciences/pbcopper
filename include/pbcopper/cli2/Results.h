@@ -63,7 +63,7 @@ public:
     ///
     /// \return full list of positional argument values
     ///
-    std::vector<std::string> PositionalArguments() const;
+    const std::vector<std::string>& PositionalArguments() const;
 
     ///
     /// \return value associated with option
@@ -96,7 +96,7 @@ public:
     ///
     /// Registers an observed positional argument value
     ///
-    Results& AddPositionalArgument(size_t position, std::string arg);
+    Results& AddPositionalArgument(std::string arg);
 
     ///
     /// Initializes an option on this Results container, using its default value.
@@ -126,7 +126,8 @@ public:
 private:
     std::string inputCommandLine_;
     std::unordered_map<std::string, std::shared_ptr<Result>> results_;
-    std::vector<std::pair<internal::PositionalArgumentData, std::string>> posArgs_;
+    std::vector<std::string> posArgNames_;
+    std::vector<std::string> posArgValues_;
 };
 
 }  // namespace CLI_v2
