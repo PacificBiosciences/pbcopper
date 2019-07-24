@@ -143,7 +143,7 @@ std::string InterfaceHelpPrinter::Choices(const OptionData& option)
                 out << boost::get<unsigned int>(choice);
                 break;
             case OptionValueType::FLOAT:
-                out << boost::get<float>(choice);
+                out << boost::get<double>(choice);
                 break;
             case OptionValueType::STRING:
             case OptionValueType::FILE:
@@ -175,7 +175,7 @@ std::string InterfaceHelpPrinter::DefaultValue(const OptionData& option)
             out << boost::get<unsigned int>(option.defaultValue.get());
             break;
         case OptionValueType::FLOAT:
-            out << boost::get<float>(option.defaultValue.get());
+            out << boost::get<double>(option.defaultValue.get());
             break;
         case OptionValueType::STRING:
         case OptionValueType::FILE:

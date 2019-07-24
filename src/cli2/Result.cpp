@@ -34,7 +34,9 @@ Result::operator int() const { return boost::get<int>(data_); }
 
 Result::operator unsigned int() const { return boost::get<unsigned int>(data_); }
 
-Result::operator float() const { return boost::get<float>(data_); }
+Result::operator float() const { return static_cast<float>(boost::get<double>(data_)); }
+
+Result::operator double() const { return boost::get<double>(data_); }
 
 Result::operator bool() const { return boost::get<bool>(data_); }
 

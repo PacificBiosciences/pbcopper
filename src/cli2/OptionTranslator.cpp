@@ -72,8 +72,8 @@ OptionValue MakeOptionValue(const Json& value, const OptionValueType type)
             return OptionValue{u};
         }
         case OptionValueType::FLOAT: {
-            const float f = value;
-            return OptionValue{f};
+            const double d = value;
+            return OptionValue{d};
         }
         case OptionValueType::BOOL: {
             const bool b = value;
