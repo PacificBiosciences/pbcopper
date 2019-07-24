@@ -126,7 +126,7 @@ TEST(CLI2_OptionTranslator, creates_basic_unsigned_integer_option_data_from_text
     EXPECT_EQ(42u, value);
 
     EXPECT_THROW({boost::get<int>(*optionData.defaultValue); },         boost::bad_get);
-    EXPECT_THROW({boost::get<float>(*optionData.defaultValue); },       boost::bad_get);
+    EXPECT_THROW({boost::get<double>(*optionData.defaultValue); },       boost::bad_get);
     EXPECT_THROW({boost::get<bool>(*optionData.defaultValue); },        boost::bad_get);
     EXPECT_THROW({boost::get<std::string>(*optionData.defaultValue); }, boost::bad_get);
 }
@@ -149,8 +149,8 @@ TEST(CLI2_OptionTranslator, creates_basic_float_option_data_from_text)
     ASSERT_EQ(1u, names.size());
     EXPECT_EQ("test", names[0]);
 
-    const float value = boost::get<float>(*optionData.defaultValue);
-    EXPECT_EQ(3.14f, value);
+    const double value = boost::get<double>(*optionData.defaultValue);
+    EXPECT_EQ(3.14, value);
 
     EXPECT_EQ("test_description", optionData.description);
     EXPECT_EQ(OptionValueType::FLOAT, optionData.type);
@@ -394,7 +394,7 @@ TEST(CLI2_OptionTranslator, can_pass_default_unsigned_integer_value_at_option_ct
 
 TEST(CLI2_OptionTranslator, can_pass_default_float_value_at_option_ctor)
 {
-    const float DefaultValue = 3.14;
+    const double DefaultValue = 3.14;
 
     const Option testOption
     {
@@ -409,7 +409,7 @@ TEST(CLI2_OptionTranslator, can_pass_default_float_value_at_option_ctor)
     const auto testOptionData = OptionTranslator::Translate(testOption);
     EXPECT_TRUE(testOptionData.defaultValue);
 
-    const float value = boost::get<float>(*testOptionData.defaultValue);
+    const double value = boost::get<double>(*testOptionData.defaultValue);
     EXPECT_EQ(DefaultValue, value);
 }
 

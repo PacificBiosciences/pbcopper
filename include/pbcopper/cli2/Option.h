@@ -118,6 +118,7 @@ struct Option
     Option(std::string def, int val);
     Option(std::string def, unsigned int val);
     Option(std::string def, float val);
+    Option(std::string def, double val);
     Option(std::string def, std::string val);
 
     std::string text;

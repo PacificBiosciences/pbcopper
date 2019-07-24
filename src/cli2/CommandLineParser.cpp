@@ -59,7 +59,7 @@ OptionValue ValueFromString(const OptionData& option, const std::string valueStr
         }
 
         case OptionValueType::FLOAT:
-            return OptionValue{std::strtof(valueString.c_str(), nullptr)};
+            return OptionValue{std::strtod(valueString.c_str(), nullptr)};
 
         case OptionValueType::STRING:
         case OptionValueType::FILE:
