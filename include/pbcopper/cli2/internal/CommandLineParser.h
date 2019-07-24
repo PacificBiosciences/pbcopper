@@ -31,20 +31,18 @@ public:
     ///
     /// Parse this command line input for results
     ///
-    Results Parse(const std::vector<std::string>& arguments) const;
+    Results Parse(const std::vector<std::string>& arguments);
 
 private:
     ///
     /// Determine an option's value given a long option (e.g. "--reference")
     ///
-    void ParseLongOption(const std::string& arg, std::deque<std::string>& args,
-                         Results& results) const;
+    void ParseLongOption(const std::string& arg, std::deque<std::string>& args, Results& results);
 
     ///
     /// Determine an option's value given a short option (e.g. "-r")
     ///
-    void ParseShortOption(const std::string& arg, std::deque<std::string>& args,
-                          Results& results) const;
+    void ParseShortOption(const std::string& arg, std::deque<std::string>& args, Results& results);
 
     ///
     /// Look up option data for a command-line token. Throws if not found.
@@ -55,6 +53,7 @@ private:
     Interface interface_;
     std::vector<OptionData> options_;
     std::unordered_map<std::string, OptionData> optionsByName_;  // name -> OptionData
+    size_t currentPosArgNumber_ = 0;
 };
 
 }  // namespace internal

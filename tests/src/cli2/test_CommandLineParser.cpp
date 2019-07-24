@@ -472,7 +472,7 @@ TEST(CLI2_CommandLineParser, displays_useful_message_on_bad_args)
 {
     // rather than ungraceful 'unordered_map::at: key not found'
 
-    const CommandLineParser parser{makeInterface()};
+    CommandLineParser parser{makeInterface()};
 
     try {
         const std::vector<std::string> args{"frobber", "--badarg"};

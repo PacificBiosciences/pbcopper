@@ -30,20 +30,19 @@ int Run(int argc, char* argv[], const Interface& interface, const ResultsHandler
 int Run(const std::vector<std::string>& args, const Interface& interface,
         const ResultsHandler& handler)
 {
-    // if just application name, show help
     //
-    // TODO: what about piped in applications?
-    //       $ some_upstream_tool | mytool
-    //       revist if/when that happens
+    // If application name only & positional arguments are required, show help.
+    // This allows, for example, tools that to stream stdin without requiring
+    // input filenames.
     //
-    if (args.size() == 1) {
+    if (args.size() == 1 && interface.HasRequiredPosArgs()) {
         const InterfaceHelpPrinter help{interface};
         std::cout << help;
         return EXIT_SUCCESS;
     }
 
     // parse command line args
-    const CommandLineParser parser{interface};
+    CommandLineParser parser{interface};
     Results results = parser.Parse(args);
 
     // help

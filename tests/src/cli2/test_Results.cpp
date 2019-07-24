@@ -131,14 +131,22 @@ TEST(CLI2_Result, will_not_allow_invalid_conversion)
 
 TEST(CLI2_Results, can_add_and_fetch_positional_args_via_index_number)
 {
-   Results results;
-   results.AddPositionalArgument("in");
-   results.AddPositionalArgument("out");
+    const auto posArgs = PositionalArgumentTranslator::Translate(
+    {
+        CLI_v2_ResultsTests::Source,
+        CLI_v2_ResultsTests::Dest
 
-   const auto& posArgs = results.PositionalArguments();
-   ASSERT_EQ(2, posArgs.size());
-   EXPECT_EQ("in", posArgs.at(0));
-   EXPECT_EQ("out", posArgs.at(1));
+    });
+
+    Results results;
+    results.PositionalArguments(posArgs);
+    results.AddPositionalArgument(0, "in");
+    results.AddPositionalArgument(1, "out");
+
+    const auto& posArgValues = results.PositionalArguments();
+    ASSERT_EQ(2, posArgValues.size());
+    EXPECT_EQ("in", posArgValues.at(0));
+    EXPECT_EQ("out", posArgValues.at(1));
 }
 
 TEST(CLI2_Results, can_fetch_positional_args_via_pos_arg_object)
@@ -162,8 +170,8 @@ TEST(CLI2_Results, can_fetch_positional_args_via_pos_arg_object)
 
     Results results;
     results.PositionalArguments(posArgs);
-    results.AddPositionalArgument("inFile.txt");
-    results.AddPositionalArgument("outFile.txt");
+    results.AddPositionalArgument(0, "inFile.txt");
+    results.AddPositionalArgument(1, "outFile.txt");
 
     const Settings s{results};
     EXPECT_EQ("inFile.txt", s.source);
@@ -234,8 +242,8 @@ TEST(CLI2_Results, can_add_and_fetch_options_and_pos_args)
         CLI_v2_ResultsTests::Dest
     });
     results.PositionalArguments(posArgs);
-    results.AddPositionalArgument("inFile.txt");
-    results.AddPositionalArgument("outFile.txt");
+    results.AddPositionalArgument(0, "inFile.txt");
+    results.AddPositionalArgument(1, "outFile.txt");
 
     const Settings s{results};
     EXPECT_TRUE(s.force);

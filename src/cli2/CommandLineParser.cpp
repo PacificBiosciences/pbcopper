@@ -101,7 +101,7 @@ const OptionData& CommandLineParser::OptionFor(const std::string& name) const
     throw CommandLineParserException{"unknown option '" + name + "'"};
 }
 
-Results CommandLineParser::Parse(const std::vector<std::string>& arguments) const
+Results CommandLineParser::Parse(const std::vector<std::string>& arguments)
 {
     if (arguments.empty())
         throw CommandLineParserException{
@@ -130,13 +130,16 @@ Results CommandLineParser::Parse(const std::vector<std::string>& arguments) cons
             ParseShortOption(arg, args, results);
 
         // positional argument
-        else
-            results.AddPositionalArgument(arg);
+        else {
+            results.AddPositionalArgument(currentPosArgNumber_, arg);
+            ++currentPosArgNumber_;
+        }
     }
 
     // add any remaining positional args after '--' break
     while (!args.empty()) {
-        results.AddPositionalArgument(args.front());
+        results.AddPositionalArgument(currentPosArgNumber_, args.front());
+        ++currentPosArgNumber_;
         args.pop_front();
     }
 
@@ -144,7 +147,7 @@ Results CommandLineParser::Parse(const std::vector<std::string>& arguments) cons
 }
 
 void CommandLineParser::ParseLongOption(const std::string& arg, std::deque<std::string>& args,
-                                        Results& results) const
+                                        Results& results)
 {
     assert(arg.length() > 2);
 
@@ -196,11 +199,12 @@ void CommandLineParser::ParseLongOption(const std::string& arg, std::deque<std::
 }
 
 void CommandLineParser::ParseShortOption(const std::string& arg, std::deque<std::string>& args,
-                                         Results& results) const
+                                         Results& results)
 {
     // single dash only (usually indicating 'stdin')
     if (arg.length() == 1) {
-        results.AddPositionalArgument(arg);
+        results.AddPositionalArgument(currentPosArgNumber_, arg);
+        ++currentPosArgNumber_;
         return;
     }
 

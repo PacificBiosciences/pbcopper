@@ -112,6 +112,14 @@ Interface& Interface::Example(std::string example)
     return *this;
 }
 
+bool Interface::HasRequiredPosArgs() const
+{
+    for (const auto& posArg : data_.positionalArgs_) {
+        if (posArg.required) return true;
+    }
+    return false;
+}
+
 const OptionData& Interface::HelpOption() const { return data_.helpOption_; }
 
 const Logging::LogConfig& Interface::LogConfig() const { return data_.logConfig_; }
