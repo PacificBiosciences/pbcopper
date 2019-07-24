@@ -150,8 +150,8 @@ TEST(CLI2_Results, can_add_and_fetch_positional_args_via_index_number)
 
     Results results;
     results.PositionalArguments(posArgs);
-    results.AddPositionalArgument(0, "in");
-    results.AddPositionalArgument(1, "out");
+    results.AddPositionalArgument("in");
+    results.AddPositionalArgument("out");
 
     const auto& posArgValues = results.PositionalArguments();
     ASSERT_EQ(2, posArgValues.size());
@@ -180,8 +180,8 @@ TEST(CLI2_Results, can_fetch_positional_args_via_pos_arg_object)
 
     Results results;
     results.PositionalArguments(posArgs);
-    results.AddPositionalArgument(0, "inFile.txt");
-    results.AddPositionalArgument(1, "outFile.txt");
+    results.AddPositionalArgument("inFile.txt");
+    results.AddPositionalArgument("outFile.txt");
 
     const Settings s{results};
     EXPECT_EQ("inFile.txt", s.source);
@@ -259,8 +259,8 @@ TEST(CLI2_Results, can_add_and_fetch_options_and_pos_args)
         CLI_v2_ResultsTests::Dest
     });
     results.PositionalArguments(posArgs);
-    results.AddPositionalArgument(0, "inFile.txt");
-    results.AddPositionalArgument(1, "outFile.txt");
+    results.AddPositionalArgument("inFile.txt");
+    results.AddPositionalArgument("outFile.txt");
 
     const Settings s{results};
     EXPECT_TRUE(s.force);
