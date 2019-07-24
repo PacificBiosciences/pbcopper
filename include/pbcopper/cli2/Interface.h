@@ -122,6 +122,11 @@ public:
     const std::string& Example() const;
 
     ///
+    /// \return true if any positional arguments are required
+    ///
+    bool HasRequiredPosArgs() const;
+
+    ///
     /// \return logging configuration
     ///
     /// Default Logging::LogConfig if not otherwise specified.
