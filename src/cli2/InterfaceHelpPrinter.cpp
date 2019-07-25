@@ -255,6 +255,9 @@ void InterfaceHelpPrinter::MakeHelpText()
     const std::string options = Options();
     if (!options.empty()) result << '\n' << options << '\n';
 
+    const auto& footer = interface_.HelpFooter();
+    if (!footer.empty()) result << footer << '\n';
+
     text_ = result.str();
 }
 
