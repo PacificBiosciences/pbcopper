@@ -46,9 +46,9 @@ struct InterfaceData
     std::string footer_;
 
     OptionData helpOption_;
-    OptionData logFileOption_;
-    OptionData logLevelOption_;
-    OptionData numThreadsOption_;
+    boost::optional<internal::OptionData> logFileOption_;
+    boost::optional<internal::OptionData> logLevelOption_;
+    boost::optional<internal::OptionData> numThreadsOption_;
     OptionData versionOption_;
 
     Logging::LogConfig logConfig_;

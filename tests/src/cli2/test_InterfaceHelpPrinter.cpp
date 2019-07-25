@@ -212,7 +212,7 @@ TEST(CLI2_InterfaceHelpPrinter, formats_option_names)
     Interface i{"frobber"};
     InterfaceHelpPrinter help{i};
     const auto formattedHelp = help.OptionNames(i.HelpOption());
-    const auto formattedLogLevel = help.OptionNames(i.LogLevelOption());
+    const auto formattedLogLevel = help.OptionNames(i.LogLevelOption().get());
     const auto formattedVersion = help.OptionNames(i.VersionOption());
     EXPECT_EQ(expected[0], formattedHelp);
     EXPECT_EQ(expected[1], formattedLogLevel);
@@ -268,7 +268,7 @@ TEST(CLI2_InterfaceHelpPrinter, can_calculate_metrics_with_long_option)
 
     const auto testOptionData = OptionTranslator::Translate(testOption);
     const auto& helpOption = i.HelpOption();
-    const auto& logLevelOption = i.LogLevelOption();
+    const auto& logLevelOption = i.LogLevelOption().get();
     const auto& versionOption = i.VersionOption();
     EXPECT_EQ(longestText,  metrics.formattedOptionNames.at(testOptionData).nameString);
     EXPECT_EQ(helpText,     metrics.formattedOptionNames.at(helpOption).nameString);
@@ -701,6 +701,23 @@ Typical workflow:
 
     std::cerr << "\n\n--\n";
     std::cerr << help.Usage();
+}
+
+TEST(CLI2_InterfaceHelpPrinter, can_disable_builtins)
+{
+    const std::string expectedText{
+        "Options:\n"
+        "  -h,--help    Show this help and exit.\n"
+        "  --version    Show application version and exit.\n"};
+
+    Interface i{"frobber"};
+    i.DisableLogFileOption()
+     .DisableLogLevelOption()
+     .DisableNumThreadsOption();
+
+    InterfaceHelpPrinter help{i, 80};
+    const auto formattedText = help.Options();
+    EXPECT_EQ(expectedText, formattedText);
 }
 
 // clang-format on
