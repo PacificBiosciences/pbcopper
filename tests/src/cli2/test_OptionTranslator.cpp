@@ -473,4 +473,30 @@ TEST(CLI2_OptionTranslator, can_add_hidden_names)
     EXPECT_EQ("Who_would_name_an_Option_like__this", testOptionData.hiddenNames[1]);
 }
 
+TEST(CLI2_OptionTranslator, can_create_description_from_array)
+{
+    const std::string expectedText{
+        "Specifies the level of info which will be output produced on stderr. "
+        "0 turns all output off, 1 outputs only warnings, while levels 2 and "
+        "above outputs a status message every 1000000 (2), 100000 (3), 1000 (4), "
+        "100 (5), 10 (6) and 1 (7) reads."
+    };
+
+    const Option testOption
+    {
+     R"({
+        "names" : ["test"],
+        "description" : [
+            "Specifies the level of info which will be output produced on stderr. ",
+            "0 turns all output off, 1 outputs only warnings, while levels 2 and ",
+            "above outputs a status message every 1000000 (2), 100000 (3), 1000 (4), ",
+            "100 (5), 10 (6) and 1 (7) reads."
+        ],
+        "type" : "bool"
+     })"
+    };
+    const auto testOptionData = OptionTranslator::Translate(testOption);
+    EXPECT_EQ(expectedText, testOptionData.description);
+}
+
 // clang-format on
