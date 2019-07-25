@@ -82,6 +82,21 @@ public:
     Interface& DefaultLogLevel(Logging::LogLevel level);
 
     ///
+    /// Disables built-in log file option.
+    ///
+    Interface& DisableLogFileOption();
+
+    ///
+    /// Disables built-in log level option.
+    ///
+    Interface& DisableLogLevelOption();
+
+    ///
+    /// Disables built-in num threads option.
+    ///
+    Interface& DisableNumThreadsOption();
+
+    ///
     /// Set application example.
     ///
     /// \note Currently only used when part of multi-tool interfaces.
@@ -170,16 +185,16 @@ public:
     /// \internal
     /// \return (translated) log file option.
     ///
-    const internal::OptionData& LogFileOption() const;
+    const boost::optional<internal::OptionData>& LogFileOption() const;
 
     /// \internal
     /// \return (translated) log level option.
     ///
-    const internal::OptionData& LogLevelOption() const;
+    const boost::optional<internal::OptionData>& LogLevelOption() const;
 
     /// \internal
     /// \return (translated) numThreads option.
-    const internal::OptionData& NumThreadsOption() const;
+    const boost::optional<internal::OptionData>& NumThreadsOption() const;
 
     /// \internal
     /// \return (translated) version option.

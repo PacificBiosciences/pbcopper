@@ -114,9 +114,9 @@ void InterfaceHelpPrinter::CalculateMetrics()
 
     // metrics with builtin options
     updateMetricsWithOption(interface_.HelpOption());
-    updateMetricsWithOption(interface_.LogLevelOption());
-    updateMetricsWithOption(interface_.LogFileOption());
-    updateMetricsWithOption(interface_.NumThreadsOption());
+    if (interface_.LogLevelOption()) updateMetricsWithOption(interface_.LogLevelOption().get());
+    if (interface_.LogFileOption()) updateMetricsWithOption(interface_.LogFileOption().get());
+    if (interface_.NumThreadsOption()) updateMetricsWithOption(interface_.NumThreadsOption().get());
     updateMetricsWithOption(interface_.VersionOption());
 
     // metrics using pos args
@@ -332,9 +332,11 @@ std::string InterfaceHelpPrinter::Options()
     // print builtin group
     OptionGroupData group;
     if (optionGroups.empty()) group.name = "Options";
-    group.options = {interface_.HelpOption(), interface_.LogLevelOption(),
-                     interface_.LogFileOption(), interface_.NumThreadsOption(),
-                     interface_.VersionOption()};
+    group.options.push_back(interface_.HelpOption());
+    if (interface_.LogLevelOption()) group.options.push_back(interface_.LogLevelOption().get());
+    if (interface_.LogFileOption()) group.options.push_back(interface_.LogFileOption().get());
+    if (interface_.NumThreadsOption()) group.options.push_back(interface_.NumThreadsOption().get());
+    group.options.push_back(interface_.VersionOption());
     out << OptionGroup(group);
     return out.str();
 }
