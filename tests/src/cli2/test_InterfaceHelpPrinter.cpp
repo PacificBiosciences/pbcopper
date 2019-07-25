@@ -617,4 +617,36 @@ Algorithm Options:
     EXPECT_EQ(expectedText, out.str());
 }
 
+TEST(CLI2_InterfaceHelpPrinter, word_wraps_application_description)
+{
+//                                                                               80
+//                                                                               v
+    const std::string expectedText {
+"frobber - Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do\n"
+"          eiusmod tempor incididunt ut labore et dolore magna aliqua.\n"
+"\n"
+"Usage:\n"
+"  frobber [options]\n"
+"\n"
+"Options:\n"
+"  -h,--help               Show this help and exit.\n"
+"  --log-level       STR   Set log level. Valid choices: (TRACE, DEBUG, INFO,\n"
+"                          WARN, FATAL). [WARN]\n"
+"  --log-file        FILE  Log to a file, instead of stderr.\n"
+"  -j,--num-threads  INT   Number of threads to use, 0 means autodetection. [0]\n"
+"  --version               Show application version and exit.\n"
+"\n"
+    };
+
+    Interface i {
+        "frobber",
+        "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
+        "3.14"
+    };
+    InterfaceHelpPrinter help{i, 80};
+    std::ostringstream out;
+    out << help;
+    EXPECT_EQ(expectedText, out.str());
+}
+
 // clang-format on
