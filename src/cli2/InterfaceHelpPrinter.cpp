@@ -195,8 +195,20 @@ std::string InterfaceHelpPrinter::DefaultValue(const OptionData& option)
 
 std::string InterfaceHelpPrinter::Description()
 {
-    if (interface_.ApplicationDescription().empty()) return {};
-    return interface_.ApplicationDescription();
+    const auto& description = interface_.ApplicationDescription();
+    if (description.empty()) return {};
+
+    // maybe word-wrap description
+    std::ostringstream out;
+    const auto indent = interface_.ApplicationName().size() + 3;  // " - " spacer
+    const auto max = metrics_.maxColumn - indent;
+    const auto wrappedLines = Utility::WordWrappedLines(description, max);
+    if (!wrappedLines.empty()) {
+        out << wrappedLines.at(0);
+        for (size_t i = 1; i < wrappedLines.size(); ++i)
+            out << '\n' << std::string(indent, ' ') << wrappedLines.at(i);
+    }
+    return out.str();
 }
 
 std::string InterfaceHelpPrinter::HelpEntry(std::string name, std::string type,
