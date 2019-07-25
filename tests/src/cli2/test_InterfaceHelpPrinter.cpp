@@ -649,4 +649,58 @@ TEST(CLI2_InterfaceHelpPrinter, word_wraps_application_description)
     EXPECT_EQ(expectedText, out.str());
 }
 
+TEST(CLI2_InterfaceHelpPrinter, displays_footer_text)
+{
+    const std::string expectedText {R"(frobber - Frobb your files in a most delightful, nobbly way.
+
+Usage:
+  frobber [options]
+
+Options:
+  -h,--help               Show this help and exit.
+  --log-level       STR   Set log level. Valid choices: (TRACE, DEBUG, INFO,
+                          WARN, FATAL). [WARN]
+  --log-file        FILE  Log to a file, instead of stderr.
+  -j,--num-threads  INT   Number of threads to use, 0 means autodetection. [0]
+  --version               Show application version and exit.
+
+Typical workflow:
+  1. Do a thing to the thing.
+     $ frobber
+
+  2. Do the frobbing again, because why not?
+     $ frobber
+
+  3. Lather, rinse, repeat.
+
+  So long, and thanks for all the fish.
+)"};
+
+    Interface i {
+        "frobber",
+        "Frobb your files in a most delightful, nobbly way.",
+        "3.14"
+    };
+    i.HelpFooter(R"(Typical workflow:
+  1. Do a thing to the thing.
+     $ frobber
+
+  2. Do the frobbing again, because why not?
+     $ frobber
+
+  3. Lather, rinse, repeat.
+
+  So long, and thanks for all the fish.)");
+
+    InterfaceHelpPrinter help{i, 80};
+    std::ostringstream out;
+    out << help;
+    EXPECT_EQ(expectedText, out.str());
+
+    std::cerr << out.str();
+
+    std::cerr << "\n\n--\n";
+    std::cerr << help.Usage();
+}
+
 // clang-format on

@@ -120,6 +120,14 @@ bool Interface::HasRequiredPosArgs() const
     return false;
 }
 
+const std::string& Interface::HelpFooter() const { return data_.footer_; }
+
+Interface& Interface::HelpFooter(std::string footer)
+{
+    data_.footer_ = std::move(footer);
+    return *this;
+}
+
 const OptionData& Interface::HelpOption() const { return data_.helpOption_; }
 
 const Logging::LogConfig& Interface::LogConfig() const { return data_.logConfig_; }

@@ -89,6 +89,14 @@ public:
     Interface& Example(std::string example);
 
     ///
+    /// Set help display footer text.
+    ///
+    /// \note In order to preserve the precise layout of the footer text, it will
+    ///       NOT be automatically word-wrapped.
+    ///
+    Interface& HelpFooter(std::string footer);
+
+    ///
     /// Provide a custom application-defined logging config
     ///
     Interface& LogConfig(const Logging::LogConfig& config);
@@ -125,6 +133,11 @@ public:
     /// \return true if any positional arguments are required
     ///
     bool HasRequiredPosArgs() const;
+
+    ///
+    /// \return help display footer text.
+    ///
+    const std::string& HelpFooter() const;
 
     ///
     /// \return logging configuration
