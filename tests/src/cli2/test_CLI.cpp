@@ -504,4 +504,40 @@ TEST(CLI2_CLI, can_run_tool_with_optional_pos_args)
     EXPECT_EQ(EXIT_SUCCESS, result);
 }
 
+TEST(CLI2_CLI, no_throw_on_disabled_log_file_option_in_setup)
+{
+    const std::vector<std::string> args {"frobber"};
+    auto runner = [](const PacBio::CLI_v2::Results&)
+    {
+        return EXIT_SUCCESS;
+    };
+
+    PacBio::CLI_v2::Interface i{"frobber", "Frob all the things.", "v3.1"};
+    i.DisableLogFileOption();
+
+    std::ostringstream s;
+    tests::CoutRedirect redirect(s.rdbuf());
+    UNUSED(redirect);
+
+    EXPECT_NO_THROW(PacBio::CLI_v2::Run(args, i, runner););
+}
+
+TEST(CLI2_CLI, no_throw_on_disabled_log_level_option_in_setup)
+{
+    const std::vector<std::string> args {"frobber"};
+    auto runner = [](const PacBio::CLI_v2::Results&)
+    {
+        return EXIT_SUCCESS;
+    };
+
+    PacBio::CLI_v2::Interface i{"frobber", "Frob all the things.", "v3.1"};
+    i.DisableLogLevelOption();
+
+    std::ostringstream s;
+    tests::CoutRedirect redirect(s.rdbuf());
+    UNUSED(redirect);
+
+    EXPECT_NO_THROW(PacBio::CLI_v2::Run(args, i, runner););
+}
+
 // clang-format on

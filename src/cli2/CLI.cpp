@@ -63,18 +63,20 @@ int Run(const std::vector<std::string>& args, const Interface& interface,
     // Initialize logging
     //
     // Use application-provided config (i.e. fields), but give priority to
-    // command line-provided log level.
+    // command line-provided log settings.
+    //
+    // If 'log-level' or 'log-file' were not set or were disabled as command
+    // line options, use the default.
     //
     Logging::LogConfig logConfig = interface.LogConfig();
-    const Logging::LogLevel logLevel = results.LogLevel();
-    if (logConfig.Level != logLevel) logConfig.Level = logLevel;
+    if (interface.LogLevelOption()) logConfig.Level = results.LogLevel();
 
     const auto logger = [&]() {
-        const auto logFile = results.LogFile();
-        if (logFile.empty())
-            return std::make_unique<Logging::Logger>(std::cerr, logConfig);
-        else
-            return std::make_unique<Logging::Logger>(logFile, logConfig);
+        if (interface.LogFileOption()) {
+            const auto logFile = results.LogFile();
+            if (!logFile.empty()) return std::make_unique<Logging::Logger>(logFile, logConfig);
+        }
+        return std::make_unique<Logging::Logger>(std::cerr, logConfig);
     }();
 
     Logging::Logger::Current(logger.get());
