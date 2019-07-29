@@ -97,7 +97,7 @@ Logging::LogLevel Interface::DefaultLogLevel() const
         const auto& value = data_.logLevelOption_->defaultValue.get();
         return Logging::LogLevel{boost::get<std::string>(value)};
     } else
-        return Logging::LogLevel::WARN;
+        return data_.logConfig_.Level;
 }
 
 Interface& Interface::DefaultLogLevel(Logging::LogLevel level)
