@@ -22,8 +22,8 @@ static_assert(std::is_nothrow_move_assignable<Read>::value ==
                   std::is_nothrow_move_assignable<std::string>::value,
               "");
 
-Read::Read(const PacBio::Data::ReadId id, const std::string seq, const std::vector<uint8_t> pw,
-           LocalContextFlags flags, Accuracy readAccuracy, const SNR snr, std::string model)
+Read::Read(Data::ReadId id, std::string seq, std::vector<uint8_t> pw, LocalContextFlags flags,
+           Accuracy readAccuracy, SNR snr, std::string model)
     : Id{std::move(id)}
     , Seq{std::move(seq)}
     , PulseWidth{std::move(pw)}
@@ -89,6 +89,8 @@ Read Read::ClipTo(const int32_t begin, const int32_t end) const
 }
 
 size_t Read::Length() const { return Seq.length(); }
+
+std::string Read::FullName() const { return Id; }
 
 void ClipToQuery(Read& read, Position start, Position end)
 {

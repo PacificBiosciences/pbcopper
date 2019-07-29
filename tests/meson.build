@@ -35,12 +35,12 @@ pbcopper_test_cpp_sources = files([
   # data
   'src/data/test_Accuracy.cpp',
   'src/data/test_Cigar.cpp',
-  'src/data/test_Clipping.cpp',
   'src/data/test_Frames.cpp',
   'src/data/test_GenomicInterval.cpp',
   'src/data/test_Interval.cpp',
   'src/data/test_MovieName.cpp',
   'src/data/test_QualityValues.cpp',
+  'src/data/test_Read.cpp',
   'src/data/test_ReadName.cpp',
   'src/data/test_RSMovieName.cpp',
   'src/data/test_RSReadName.cpp',

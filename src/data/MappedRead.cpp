@@ -21,9 +21,11 @@ static_assert(std::is_nothrow_move_assignable<MappedRead>::value ==
                   std::is_nothrow_move_assignable<Read>::value,
               "");
 
-MappedRead::MappedRead(const Read& read, enum Strand strand, size_t templateStart,
-                       size_t templateEnd, bool pinStart, bool pinEnd)
-    : Read(read)
+MappedRead::MappedRead(Read read) noexcept : Read{std::move(read)} {}
+
+MappedRead::MappedRead(Read read, enum Strand strand, size_t templateStart, size_t templateEnd,
+                       bool pinStart, bool pinEnd) noexcept
+    : Read{std::move(read)}
     , Strand{strand}
     , TemplateStart(templateStart)
     , TemplateEnd(templateEnd)
@@ -32,15 +34,139 @@ MappedRead::MappedRead(const Read& read, enum Strand strand, size_t templateStar
 {
 }
 
-MappedRead::MappedRead(const Read& read, PacBio::Data::Strand strand, Position templateStart,
+MappedRead::MappedRead(Read read, PacBio::Data::Strand strand, Position templateStart,
+                       PacBio::Data::Cigar cigar, uint8_t mapQV)
+    : MappedRead{std::move(read), strand, templateStart, UnmappedPosition, std::move(cigar), mapQV}
+{
+    if (!Cigar.empty()) {
+        TemplateEnd = TemplateStart;
+        for (const auto& op : Cigar) {
+            const auto type = op.Type();
+            const auto len = op.Length();
+
+            switch (type) {
+                case CigarOperationType::ALIGNMENT_MATCH:
+                case CigarOperationType::SEQUENCE_MATCH:
+                case CigarOperationType::SEQUENCE_MISMATCH:
+                case CigarOperationType::DELETION:
+                case CigarOperationType::REFERENCE_SKIP:
+                    TemplateEnd += len;
+                    break;
+
+                case CigarOperationType::INSERTION:
+                case CigarOperationType::SOFT_CLIP:
+                case CigarOperationType::HARD_CLIP:
+                    break;
+
+                default:
+                    throw std::runtime_error{"Encountered unknown CIGAR operation!"};
+            }
+        }
+    }
+}
+
+MappedRead::MappedRead(Read read, PacBio::Data::Strand strand, Position templateStart,
                        Position templateEnd, PacBio::Data::Cigar cigar, uint8_t mapQV)
-    : Read{read}
+    : Read{std::move(read)}
     , Strand{strand}
     , TemplateStart{templateStart}
     , TemplateEnd{templateEnd}
     , Cigar{std::move(cigar)}
     , MapQuality{mapQV}
 {
+}
+
+Position MappedRead::AlignedStart() const
+{
+    if (QueryStart == UnmappedPosition)
+        throw std::runtime_error{"MappedRead contains unmapped query start position"};
+    if (Strand == Strand::UNMAPPED) throw std::runtime_error{"MappedRead contains unmapped strand"};
+
+    Position startOffset = QueryStart;
+    const Position seqLength = Seq.length();
+    const auto findAlignedStart = [&startOffset, seqLength](auto it, const auto end) {
+        for (; it != end; ++it) {
+            const auto type = it->Type();
+            const auto len = it->Length();
+            if (type == CigarOperationType::HARD_CLIP) {
+                if (startOffset != 0 && startOffset != seqLength) {
+                    startOffset = -1;
+                    break;
+                }
+            } else if (type == CigarOperationType::SOFT_CLIP)
+                startOffset += len;
+            else
+                break;
+        }
+    };
+
+    if (Strand == Strand::FORWARD)
+        findAlignedStart(Cigar.cbegin(), Cigar.cend());
+    else
+        findAlignedStart(Cigar.crbegin(), Cigar.crend());
+
+    return startOffset;
+}
+
+Position MappedRead::AlignedEnd() const
+{
+    if (QueryEnd == UnmappedPosition)
+        throw std::runtime_error{"MappedRead contains unmapped query end position"};
+    if (Strand == Strand::UNMAPPED) throw std::runtime_error{"MappedRead contains unmapped strand"};
+
+    Position endOffset = QueryEnd;
+    const Position seqLength = Seq.length();
+    const auto findAlignedEnd = [&endOffset, seqLength](auto it, const auto end) {
+        for (; it != end; ++it) {
+            const auto type = it->Type();
+            const auto len = it->Length();
+            if (type == CigarOperationType::HARD_CLIP) {
+                if (endOffset != 0 && endOffset != seqLength) {
+                    endOffset = -1;
+                    break;
+                }
+            } else if (type == CigarOperationType::SOFT_CLIP)
+                endOffset -= len;
+            else
+                break;
+        }
+    };
+
+    if (Strand == Strand::FORWARD)
+        findAlignedEnd(Cigar.crbegin(), Cigar.crend());
+    else
+        findAlignedEnd(Cigar.cbegin(), Cigar.cend());
+
+    return endOffset;
+}
+
+Position MappedRead::ReferenceStart() const
+{
+    if (TemplateStart == UnmappedPosition)
+        throw std::runtime_error{"MappedRead contains unmapped template start position"};
+    return TemplateStart;
+}
+
+Position MappedRead::ReferenceEnd() const
+{
+    if (TemplateEnd == UnmappedPosition)
+        throw std::runtime_error{"MappedRead contains unmapped template end position"};
+    return TemplateEnd;
+}
+
+Strand MappedRead::AlignedStrand() const { return Strand; }
+
+size_t MappedRead::NumMismatches() const
+{
+    size_t result = 0;
+
+    for (const auto& op : Cigar) {
+        const auto type = op.Type();
+        const auto len = op.Length();
+        result += (type == CigarOperationType::SEQUENCE_MISMATCH) * len;
+    }
+
+    return result;
 }
 
 std::ostream& operator<<(std::ostream& os, const MappedRead& mr)

@@ -25,8 +25,8 @@ namespace Data {
 /// A Read contains the name, sequence, covariates, SNR, and associated model.
 struct Read
 {
-    Read(const PacBio::Data::ReadId id, const std::string seq, const std::vector<uint8_t> pw,
-         LocalContextFlags flags, Accuracy readAccuracy, const SNR snr, std::string model);
+    Read(Data::ReadId id, std::string seq, std::vector<uint8_t> pw, LocalContextFlags flags,
+         Accuracy readAccuracy, SNR snr, std::string model);
     Read(const std::string& name, std::string seq, QualityValues qualities, SNR snr);
     Read(const std::string& name, std::string seq, QualityValues qualities, SNR snr,
          Position qStart, Position qEnd);
@@ -41,8 +41,8 @@ struct Read
     QualityValues Qualities;
     boost::optional<Frames> IPD;
 
-    Position QueryStart;
-    Position QueryEnd;
+    Position QueryStart = UnmappedPosition;
+    Position QueryEnd = UnmappedPosition;
 
     LocalContextFlags Flags;
     Accuracy ReadAccuracy = 0;
@@ -51,6 +51,7 @@ struct Read
     bool FullLength;
 
     size_t Length() const;
+    std::string FullName() const;
 
     Read ClipTo(const int32_t begin, const int32_t end) const;
 };
