@@ -7,8 +7,8 @@
 #include <algorithm>
 #include <iostream>
 
-#include <pbcopper/data/MappedSimpleRead.h>
-#include <pbcopper/data/SimpleRead.h>
+#include <pbcopper/data/MappedRead.h>
+#include <pbcopper/data/Read.h>
 #include <pbcopper/data/internal/ClippingImpl.h>
 
 namespace PacBio {
@@ -175,24 +175,24 @@ void ClipToReferenceImpl(ClipToReferenceConfig& config, size_t* queryPosRemovedF
 
 namespace internal {
 
-void ClipSimpleRead(SimpleRead& read, const ClipResult& result, size_t start, size_t end)
+void ClipRead(Read& read, const ClipResult& result, size_t start, size_t end)
 {
     const auto clipFrom = result.clipOffset_;
     const auto clipLength = (end - start);
-    read.Sequence = clipContainer(read.Sequence, clipFrom, clipLength);
+    read.Seq = clipContainer(read.Seq, clipFrom, clipLength);
     read.Qualities = clipContainer(read.Qualities, clipFrom, clipLength);
     read.QueryStart = result.qStart_;
     read.QueryEnd = result.qEnd_;
-    if (read.PulseWidths)
-        read.PulseWidths = clipContainer(read.PulseWidths->Data(), clipFrom, clipLength);
+    if (!read.PulseWidth.empty())
+        read.PulseWidth = clipContainer(read.PulseWidth, clipFrom, clipLength);
     if (read.IPD) read.IPD = clipContainer(read.IPD->Data(), clipFrom, clipLength);
 }
 
 // NOTE: 'result' is moved into here, so we can take the CIGAR
-void ClipMappedRead(MappedSimpleRead& read, ClipResult result)
+void ClipMappedRead(MappedRead& read, ClipResult result)
 {
     // clip common data
-    ClipSimpleRead(read, result, result.qStart_, result.qEnd_);
+    ClipRead(read, result, result.qStart_, result.qEnd_);
 
     // clip mapped data
     read.Cigar = std::move(result.cigar_);

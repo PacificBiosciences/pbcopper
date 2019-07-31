@@ -82,11 +82,39 @@ public:
     Interface& DefaultLogLevel(Logging::LogLevel level);
 
     ///
+    /// Disables built-in log file option.
+    ///
+    Interface& DisableLogFileOption();
+
+    ///
+    /// Disables built-in log level option.
+    ///
+    Interface& DisableLogLevelOption();
+
+    ///
+    /// Disables built-in num threads option.
+    ///
+    Interface& DisableNumThreadsOption();
+
+    ///
     /// Set application example.
     ///
     /// \note Currently only used when part of multi-tool interfaces.
     ///
     Interface& Example(std::string example);
+
+    ///
+    /// Set help display footer text.
+    ///
+    /// \note In order to preserve the precise layout of the footer text, it will
+    ///       NOT be automatically word-wrapped.
+    ///
+    Interface& HelpFooter(std::string footer);
+
+    ///
+    /// Provide a custom application-defined logging config
+    ///
+    Interface& LogConfig(const Logging::LogConfig& config);
 
 public:
     ///
@@ -116,6 +144,23 @@ public:
     ///
     const std::string& Example() const;
 
+    ///
+    /// \return true if any positional arguments are required
+    ///
+    bool HasRequiredPosArgs() const;
+
+    ///
+    /// \return help display footer text.
+    ///
+    const std::string& HelpFooter() const;
+
+    ///
+    /// \return logging configuration
+    ///
+    /// Default Logging::LogConfig if not otherwise specified.
+    ///
+    const Logging::LogConfig& LogConfig() const;
+
     /// \internal
     /// \return "flattened" list of all registered options (grouping is ignored)
     ///
@@ -140,16 +185,16 @@ public:
     /// \internal
     /// \return (translated) log file option.
     ///
-    const internal::OptionData& LogFileOption() const;
+    const boost::optional<internal::OptionData>& LogFileOption() const;
 
     /// \internal
     /// \return (translated) log level option.
     ///
-    const internal::OptionData& LogLevelOption() const;
+    const boost::optional<internal::OptionData>& LogLevelOption() const;
 
     /// \internal
     /// \return (translated) numThreads option.
-    const internal::OptionData& NumThreadsOption() const;
+    const boost::optional<internal::OptionData>& NumThreadsOption() const;
 
     /// \internal
     /// \return (translated) version option.

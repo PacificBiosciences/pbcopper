@@ -2,57 +2,22 @@
 
 #include <pbcopper/logging/Logging.h>
 
+#include <cassert>
 #include <chrono>
 #include <csignal>
+#include <cstddef>
 #include <ctime>
+
 #include <iomanip>
 #include <iostream>
+#include <sstream>
+#include <stdexcept>
 
 #include <pbcopper/utility/Unused.h>
 
 namespace PacBio {
 namespace Logging {
 namespace {
-
-const char* LogLevelRepr(LogLevel level)
-{
-    // by specification these are all of length 10
-    switch (level) {
-        case LogLevel::TRACE:
-            return "TRACE     ";
-        case LogLevel::DEBUG:
-            return "DEBUG     ";
-        case LogLevel::INFO:
-            return "INFO      ";
-        case LogLevel::NOTICE:
-            return "NOTICE    ";
-        case LogLevel::WARN:
-            return "WARN      ";
-        case LogLevel::ERROR:
-            return "ERROR     ";
-        case LogLevel::CRITICAL:
-            return "CRITICAL  ";
-        case LogLevel::FATAL:
-            return "FATAL     ";
-        default:
-            return "OTHER     ";
-    }
-}
-
-LogLevel LogLevelFromString(const std::string& level)
-{
-    if (level == "TRACE") return LogLevel::TRACE;
-    if (level == "DEBUG") return LogLevel::DEBUG;
-    if (level == "INFO") return LogLevel::INFO;
-    if (level == "NOTICE") return LogLevel::NOTICE;
-    if (level == "ERROR") return LogLevel::ERROR;
-    if (level == "CRITICAL") return LogLevel::CRITICAL;
-    if (level == "FATAL") return LogLevel::FATAL;
-    if (level == "WARN" || level == "WARNING") return LogLevel::WARN;
-
-    throw std::invalid_argument("invalid log level");
-}
-
 }  // namespace
 
 void InstallSignalHandlers(Logger& logger)
@@ -113,30 +78,33 @@ void InstallSignalHandlers(Logger& logger)
     });
 }
 
-LogLevel::LogLevel(const std::string& value) : value_{LogLevelFromString(value)} {}
+// ---------
+// Logger
+// ---------
 
-std::string LogLevel::ToString() const
+Logger::Logger(std::ostream& out, const LogLevel level) : Logger{out, LogConfig{level}} {}
+
+Logger::Logger(const std::string& filename, const LogLevel level)
+    : Logger{filename, LogConfig{level}}
 {
-    switch (value_) {
-        case LogLevel::TRACE:
-            return "TRACE";
-        case LogLevel::DEBUG:
-            return "DEBUG";
-        case LogLevel::INFO:
-            return "INFO";
-        case LogLevel::NOTICE:
-            return "NOTICE";
-        case LogLevel::WARN:
-            return "WARN";
-        case LogLevel::ERROR:
-            return "ERROR";
-        case LogLevel::CRITICAL:
-            return "CRITICAL";
-        case LogLevel::FATAL:
-            return "FATAL";
-        default:
-            return "OTHER";
-    }
+}
+
+Logger::Logger(std::ostream& out, const LogConfig& config)
+    : stream_{out}, config_{config}, writer_{&Logger::MessageWriter, this}
+{
+#ifdef NDEBUG
+    if (Handles(LogLevel::TRACE))
+        throw std::invalid_argument{"one cannot simply log TRACE messages in release builds!"};
+#endif
+}
+
+Logger::Logger(const std::string& filename, const LogConfig& config)
+    : logFile_{filename}, stream_{logFile_}, config_{config}, writer_{&Logger::MessageWriter, this}
+{
+#ifdef NDEBUG
+    if (Handles(LogLevel::TRACE))
+        throw std::invalid_argument{"one cannot simply log TRACE messages in release builds!"};
+#endif
 }
 
 Logger::~Logger()
@@ -172,12 +140,30 @@ Logger& Logger::operator<<(std::unique_ptr<LogLevelStream>&& ptr)
     return *this;
 }
 
+Logger& Logger::Current(Logger* newLogger)
+{
+    // NOTE: non-owning
+    static Logger* currentLogger = nullptr;
+
+    // If a new logger is explicitly provided, use it.
+    if (newLogger)
+        currentLogger = newLogger;
+    else {
+        // If we don't have a current logger set yet, create via Default().
+        // Default() maintains its own logger's lifetime.
+        if (!currentLogger) currentLogger = &(Default());
+    }
+    return *currentLogger;
+}
+
 Logger& Logger::Default(Logger* logger)
 {
-    static std::unique_ptr<Logger> logger_(new Logger(std::cerr));
+    static auto logger_ = std::make_unique<Logger>(std::cerr, LogLevel::INFO);
     if (logger) logger_.reset(logger);
     return *logger_;
 }
+
+bool Logger::Handles(const LogLevel level) const { return level >= config_.Level; }
 
 void Logger::MessageWriter()
 {
@@ -203,56 +189,14 @@ void Logger::MessageWriter()
 
         // otherwise, push the message onto os_
         const LogLevel level = std::get<0>(*ptr);
-        if (cfg_.find(level) != cfg_.end()) {
-            for (const auto& os : cfg_.at(level))
-                os.get() << std::get<1>(*ptr).str() << std::endl;
+        if (Handles(level)) {
+            auto& os = stream_.get();
+            os << std::get<1>(*ptr).str() << std::endl;
         }
 
         // and notify flush we delivered a message to os_,
         popped_.notify_all();
     }
-}
-
-LogMessage::LogMessage(const char* file, const char* function, unsigned int line,
-                       const LogLevel level, Logger& logger)
-    : logger_(logger)
-{
-    using std::chrono::duration_cast;
-    using std::chrono::milliseconds;
-    using std::chrono::seconds;
-    using std::chrono::system_clock;
-
-    if (!logger_.Handles(level)) return;
-
-    ptr_.reset(new Logger::LogLevelStream(std::piecewise_construct, std::forward_as_tuple(level),
-                                          std::forward_as_tuple()));
-
-    static const char* delim = " -|- ";
-
-    // get the time, separated into seconds and milliseconds
-    const auto now = system_clock::now();
-    const auto secs = duration_cast<seconds>(now.time_since_epoch());
-    const auto time = system_clock::to_time_t(system_clock::time_point(secs));
-    const auto msec = duration_cast<milliseconds>(now.time_since_epoch() - secs).count();
-
-    // format the time and print out the log header to the ostringstream
-    // TODO(lhepler) make this std::put_time when we move to gcc-5
-    char buf[20];
-    struct tm gmTime;
-    std::strftime(buf, 20, "%Y%m%d %T.", gmtime_r(&time, &gmTime));
-
-    std::get<1>(*ptr_) << ">|> " << buf << std::setfill('0') << std::setw(3) << std::to_string(msec)
-                       << delim << LogLevelRepr(level) << delim << function
-#ifndef NDEBUG
-                       << " at " << file << ':' << line
-#endif
-                       << delim << std::hex << std::showbase << std::this_thread::get_id()
-                       << std::noshowbase << std::dec << "||" << delim;
-
-#ifdef NDEBUG
-    UNUSED(file);
-    UNUSED(line);
-#endif
 }
 
 }  // namespace Logging

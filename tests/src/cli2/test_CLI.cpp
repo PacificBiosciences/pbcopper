@@ -40,6 +40,17 @@ R"({
 })"
 };
 
+const PacBio::CLI_v2::PositionalArgument Source
+{
+R"({
+    "name" : "source",
+    "description" : "Source file to copy.",
+    "syntax" : "FILE",
+    "required" : false
+})"
+};
+
+
 PacBio::CLI_v2::Interface MakeRefineInterface()
 {
     PacBio::CLI_v2::Interface refine{"refine", "Remove concatemers and optionally poly-A tails (FL to FLNC)"};
@@ -471,6 +482,62 @@ TEST(CLI2_CLI, can_fetch_log_file_from_results)
 
     const int result = PacBio::CLI_v2::Run(args, i, runner);
     EXPECT_EQ(EXIT_SUCCESS, result);
+}
+
+TEST(CLI2_CLI, can_run_tool_with_optional_pos_args)
+{
+    const std::vector<std::string> args {"frobber"};
+    auto runner = [](const PacBio::CLI_v2::Results& results)
+    {
+        EXPECT_TRUE(results.PositionalArguments().empty());
+        return EXIT_SUCCESS;
+    };
+
+    PacBio::CLI_v2::Interface i{"frobber", "Frob all the things.", "v3.1"};
+    i.AddPositionalArgument(CLI_v2_CLITests::Source);
+
+    std::ostringstream s;
+    tests::CoutRedirect redirect(s.rdbuf());
+    UNUSED(redirect);
+
+    const int result = PacBio::CLI_v2::Run(args, i, runner);
+    EXPECT_EQ(EXIT_SUCCESS, result);
+}
+
+TEST(CLI2_CLI, no_throw_on_disabled_log_file_option_in_setup)
+{
+    const std::vector<std::string> args {"frobber"};
+    auto runner = [](const PacBio::CLI_v2::Results&)
+    {
+        return EXIT_SUCCESS;
+    };
+
+    PacBio::CLI_v2::Interface i{"frobber", "Frob all the things.", "v3.1"};
+    i.DisableLogFileOption();
+
+    std::ostringstream s;
+    tests::CoutRedirect redirect(s.rdbuf());
+    UNUSED(redirect);
+
+    EXPECT_NO_THROW(PacBio::CLI_v2::Run(args, i, runner););
+}
+
+TEST(CLI2_CLI, no_throw_on_disabled_log_level_option_in_setup)
+{
+    const std::vector<std::string> args {"frobber"};
+    auto runner = [](const PacBio::CLI_v2::Results&)
+    {
+        return EXIT_SUCCESS;
+    };
+
+    PacBio::CLI_v2::Interface i{"frobber", "Frob all the things.", "v3.1"};
+    i.DisableLogLevelOption();
+
+    std::ostringstream s;
+    tests::CoutRedirect redirect(s.rdbuf());
+    UNUSED(redirect);
+
+    EXPECT_NO_THROW(PacBio::CLI_v2::Run(args, i, runner););
 }
 
 // clang-format on

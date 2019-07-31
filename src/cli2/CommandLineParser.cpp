@@ -26,7 +26,7 @@ struct CommandLineParserException : public std::runtime_error
     CommandLineParserException(const std::string& reason) : std::runtime_error("")
     {
         std::ostringstream msg;
-        msg << "[pbcopper] command line parser ERROR:" << reason << '\n';
+        msg << "[pbcopper] command line parser ERROR: " << reason << '\n';
         msg_ = msg.str();
     }
 
@@ -59,7 +59,7 @@ OptionValue ValueFromString(const OptionData& option, const std::string valueStr
         }
 
         case OptionValueType::FLOAT:
-            return OptionValue{std::strtof(valueString.c_str(), nullptr)};
+            return OptionValue{std::strtod(valueString.c_str(), nullptr)};
 
         case OptionValueType::STRING:
         case OptionValueType::FILE:
@@ -69,8 +69,8 @@ OptionValue ValueFromString(const OptionData& option, const std::string valueStr
         case OptionValueType::BOOL: {
             if (IsTrueBoolean(valueString)) return OptionValue{true};
             if (IsFalseBoolean(valueString)) return OptionValue{false};
-            throw CommandLineParserException{"value (" + valueString +
-                                             ") is unexpected after a switch"};
+            throw CommandLineParserException{"value '" + valueString +
+                                             "' is unexpected after a switch"};
         }
         default:
             throw CommandLineParserException{"unknown option type"};
@@ -92,6 +92,13 @@ CommandLineParser::CommandLineParser(Interface interface) : interface_{std::move
         for (const auto& hiddenName : option.hiddenNames)
             optionsByName_.insert({hiddenName, option});
     }
+}
+
+const OptionData& CommandLineParser::OptionFor(const std::string& name) const
+{
+    const auto found = optionsByName_.find(name);
+    if (found != optionsByName_.cend()) return found->second;
+    throw CommandLineParserException{"unknown option '" + name + "'"};
 }
 
 Results CommandLineParser::Parse(const std::vector<std::string>& arguments) const
@@ -153,9 +160,8 @@ void CommandLineParser::ParseLongOption(const std::string& arg, std::deque<std::
         optionName = optionToken.substr(0, equalOffset);
         valueString = optionToken.substr(equalOffset + 1);
 
-        const auto& option = optionsByName_.at(optionName);
+        const auto& option = OptionFor(optionName);
         auto value = ValueFromString(option, valueString);
-
         results.AddObservedValue(optionName, value, SetByMode::USER);
         return;
     }
@@ -164,7 +170,7 @@ void CommandLineParser::ParseLongOption(const std::string& arg, std::deque<std::
     optionName = optionToken;
 
     // boolean options are a special case
-    const auto& option = optionsByName_.at(optionName);
+    const auto& option = OptionFor(optionName);
     if (option.type == OptionValueType::BOOL) results.AddObservedFlag(optionName, SetByMode::USER);
 
     // non-boolean options
@@ -177,14 +183,15 @@ void CommandLineParser::ParseLongOption(const std::string& arg, std::deque<std::
 
             // if the expected value is actually the next option
             if (nextIsOption)
-                throw CommandLineParserException{"value is missing for option " + optionName};
+                throw CommandLineParserException{"value is missing for option '" + optionName +
+                                                 "'"};
             else {
                 auto value = ValueFromString(option, valueString);
                 results.AddObservedValue(optionName, value, SetByMode::USER);
                 args.pop_front();
             }
         } else
-            throw CommandLineParserException{"value is missing for option " + optionName};
+            throw CommandLineParserException{"value is missing for option '" + optionName + "'"};
     }
 }
 
@@ -203,7 +210,7 @@ void CommandLineParser::ParseShortOption(const std::string& arg, std::deque<std:
     for (size_t i = 1; i < arg.size(); ++i) {
         optionName = arg.substr(i, 1);
 
-        const auto& option = optionsByName_.at(optionName);
+        const auto& option = OptionFor(optionName);
         if (option.type == OptionValueType::BOOL) {
             results.AddObservedFlag(optionName, SetByMode::USER);
             valueExpected = false;
@@ -224,7 +231,7 @@ void CommandLineParser::ParseShortOption(const std::string& arg, std::deque<std:
         auto valueString = args.front();
         args.pop_front();
 
-        const auto& option = optionsByName_.at(optionName);
+        const auto& option = OptionFor(optionName);
         auto value = ValueFromString(option, valueString);
         results.AddObservedValue(optionName, value, SetByMode::USER);
     }

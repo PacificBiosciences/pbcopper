@@ -46,6 +46,11 @@ private:
     void ParseShortOption(const std::string& arg, std::deque<std::string>& args,
                           Results& results) const;
 
+    ///
+    /// Look up option data for a command-line token. Throws if not found.
+    ///
+    const OptionData& OptionFor(const std::string& name) const;
+
 private:
     Interface interface_;
     std::vector<OptionData> options_;

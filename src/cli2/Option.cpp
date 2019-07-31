@@ -24,7 +24,12 @@ Option::Option(std::string def, int val) : text{std::move(def)}, defaultValue{va
 
 Option::Option(std::string def, unsigned int val) : text{std::move(def)}, defaultValue{val} {}
 
-Option::Option(std::string def, float val) : text{std::move(def)}, defaultValue{val} {}
+Option::Option(std::string def, float val)
+    : text{std::move(def)}, defaultValue{static_cast<double>(val)}
+{
+}
+
+Option::Option(std::string def, double val) : text{std::move(def)}, defaultValue{val} {}
 
 Option::Option(std::string def, std::string val) : text{std::move(def)}, defaultValue{val} {}
 

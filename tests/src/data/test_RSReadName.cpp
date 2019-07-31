@@ -8,7 +8,7 @@ TEST(Data_RSReadName, read_name_from_string)
     const PacBio::Data::Zmw zmw = 553;
     const PacBio::Data::Position queryStart = 3100;
     const PacBio::Data::Position queryEnd = 11230;
-    const PacBio::Data::Interval<PacBio::Data::Position> queryInterval{queryStart, queryEnd};
+    const PacBio::Data::Interval queryInterval{queryStart, queryEnd};
 
     const PacBio::Data::RSReadName readName(
         "m140415_143853_42175_c100635972550000001823121909121417_s1_p0/553/3100_11230");
@@ -29,7 +29,7 @@ TEST(Data_RSReadName, ccs_read_name_from_string)
     const PacBio::Data::Zmw zmw = 553;
     const PacBio::Data::Position queryStart = 3100;
     const PacBio::Data::Position queryEnd = 11230;
-    const PacBio::Data::Interval<PacBio::Data::Position> queryInterval{queryStart, queryEnd};
+    const PacBio::Data::Interval queryInterval{queryStart, queryEnd};
 
     const PacBio::Data::RSReadName readName(
         "m140415_143853_42175_c100635972550000001823121909121417_s1_p0/553/ccs");
@@ -50,7 +50,7 @@ TEST(Data_RSReadName, read_name_from_parts_with_query_interval)
     const PacBio::Data::Zmw zmw = 553;
     const PacBio::Data::Position queryStart = 3100;
     const PacBio::Data::Position queryEnd = 11230;
-    const PacBio::Data::Interval<PacBio::Data::Position> queryInterval{queryStart, queryEnd};
+    const PacBio::Data::Interval queryInterval{queryStart, queryEnd};
 
     const PacBio::Data::RSReadName readName{PacBio::Data::RSMovieName{movieName}, zmw,
                                             queryInterval};
@@ -71,7 +71,7 @@ TEST(Data_RSReadName, read_name_from_parts_with_query_positions)
     const PacBio::Data::Zmw zmw = 553;
     const PacBio::Data::Position queryStart = 3100;
     const PacBio::Data::Position queryEnd = 11230;
-    const PacBio::Data::Interval<PacBio::Data::Position> queryInterval{queryStart, queryEnd};
+    const PacBio::Data::Interval queryInterval{queryStart, queryEnd};
 
     const PacBio::Data::RSReadName readName{PacBio::Data::RSMovieName{movieName}, zmw, queryStart,
                                             queryEnd};
@@ -92,7 +92,7 @@ TEST(Data_RSReadName, ccs_read_name_from_parts)
     const PacBio::Data::Zmw zmw = 553;
     const PacBio::Data::Position queryStart = 3100;
     const PacBio::Data::Position queryEnd = 11230;
-    const PacBio::Data::Interval<PacBio::Data::Position> queryInterval{queryStart, queryEnd};
+    const PacBio::Data::Interval queryInterval{queryStart, queryEnd};
 
     const PacBio::Data::RSReadName readName{PacBio::Data::RSMovieName{movieName}, zmw,
                                             PacBio::Data::CCSTag()};
@@ -145,7 +145,7 @@ TEST(Data_RSReadName, constructed_from_name_parts_prints_expected_value_to_outpu
 
     const PacBio::Data::RSReadName r{
         PacBio::Data::RSMovieName{"m140415_143853_42175_c100635972550000001823121909121417_s1_p0"},
-        553, PacBio::Data::Interval<PacBio::Data::Position>{3100, 11230}};
+        553, PacBio::Data::Interval{3100, 11230}};
 
     std::ostringstream s;
     s << r;

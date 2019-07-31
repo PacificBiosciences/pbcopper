@@ -212,7 +212,7 @@ TEST(CLI2_InterfaceHelpPrinter, formats_option_names)
     Interface i{"frobber"};
     InterfaceHelpPrinter help{i};
     const auto formattedHelp = help.OptionNames(i.HelpOption());
-    const auto formattedLogLevel = help.OptionNames(i.LogLevelOption());
+    const auto formattedLogLevel = help.OptionNames(i.LogLevelOption().get());
     const auto formattedVersion = help.OptionNames(i.VersionOption());
     EXPECT_EQ(expected[0], formattedHelp);
     EXPECT_EQ(expected[1], formattedLogLevel);
@@ -268,7 +268,7 @@ TEST(CLI2_InterfaceHelpPrinter, can_calculate_metrics_with_long_option)
 
     const auto testOptionData = OptionTranslator::Translate(testOption);
     const auto& helpOption = i.HelpOption();
-    const auto& logLevelOption = i.LogLevelOption();
+    const auto& logLevelOption = i.LogLevelOption().get();
     const auto& versionOption = i.VersionOption();
     EXPECT_EQ(longestText,  metrics.formattedOptionNames.at(testOptionData).nameString);
     EXPECT_EQ(helpText,     metrics.formattedOptionNames.at(helpOption).nameString);
@@ -615,6 +615,109 @@ Algorithm Options:
     out.str("");
     out << help;
     EXPECT_EQ(expectedText, out.str());
+}
+
+TEST(CLI2_InterfaceHelpPrinter, word_wraps_application_description)
+{
+//                                                                               80
+//                                                                               v
+    const std::string expectedText {
+"frobber - Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do\n"
+"          eiusmod tempor incididunt ut labore et dolore magna aliqua.\n"
+"\n"
+"Usage:\n"
+"  frobber [options]\n"
+"\n"
+"Options:\n"
+"  -h,--help               Show this help and exit.\n"
+"  --log-level       STR   Set log level. Valid choices: (TRACE, DEBUG, INFO,\n"
+"                          WARN, FATAL). [WARN]\n"
+"  --log-file        FILE  Log to a file, instead of stderr.\n"
+"  -j,--num-threads  INT   Number of threads to use, 0 means autodetection. [0]\n"
+"  --version               Show application version and exit.\n"
+"\n"
+    };
+
+    Interface i {
+        "frobber",
+        "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
+        "3.14"
+    };
+    InterfaceHelpPrinter help{i, 80};
+    std::ostringstream out;
+    out << help;
+    EXPECT_EQ(expectedText, out.str());
+}
+
+TEST(CLI2_InterfaceHelpPrinter, displays_footer_text)
+{
+    const std::string expectedText {R"(frobber - Frobb your files in a most delightful, nobbly way.
+
+Usage:
+  frobber [options]
+
+Options:
+  -h,--help               Show this help and exit.
+  --log-level       STR   Set log level. Valid choices: (TRACE, DEBUG, INFO,
+                          WARN, FATAL). [WARN]
+  --log-file        FILE  Log to a file, instead of stderr.
+  -j,--num-threads  INT   Number of threads to use, 0 means autodetection. [0]
+  --version               Show application version and exit.
+
+Typical workflow:
+  1. Do a thing to the thing.
+     $ frobber
+
+  2. Do the frobbing again, because why not?
+     $ frobber
+
+  3. Lather, rinse, repeat.
+
+  So long, and thanks for all the fish.
+)"};
+
+    Interface i {
+        "frobber",
+        "Frobb your files in a most delightful, nobbly way.",
+        "3.14"
+    };
+    i.HelpFooter(R"(Typical workflow:
+  1. Do a thing to the thing.
+     $ frobber
+
+  2. Do the frobbing again, because why not?
+     $ frobber
+
+  3. Lather, rinse, repeat.
+
+  So long, and thanks for all the fish.)");
+
+    InterfaceHelpPrinter help{i, 80};
+    std::ostringstream out;
+    out << help;
+    EXPECT_EQ(expectedText, out.str());
+
+    std::cerr << out.str();
+
+    std::cerr << "\n\n--\n";
+    std::cerr << help.Usage();
+}
+
+TEST(CLI2_InterfaceHelpPrinter, can_disable_builtins)
+{
+    const std::string expectedText{
+        "Options:\n"
+        "  -h,--help    Show this help and exit.\n"
+        "  --version    Show application version and exit.\n"};
+
+    Interface i{"frobber"};
+    i.DisableLogFileOption()
+     .DisableLogLevelOption()
+     .DisableNumThreadsOption();
+
+    InterfaceHelpPrinter help{i, 80};
+    const auto formattedText = help.Options();
+    EXPECT_EQ(expectedText, formattedText);
 }
 
 // clang-format on

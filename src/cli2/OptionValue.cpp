@@ -18,7 +18,8 @@ OptionValueType ValueType(std::string typeString)
         {"unsigned int", OptionValueType::UINT}, {"unsigned integer", OptionValueType::UINT},
         {"string", OptionValueType::STRING},     {"file", OptionValueType::FILE},
         {"dir", OptionValueType::DIR},           {"float", OptionValueType::FLOAT},
-        {"bool", OptionValueType::BOOL},         {"boolean", OptionValueType::BOOL}};
+        {"double", OptionValueType::FLOAT},      {"bool", OptionValueType::BOOL},
+        {"boolean", OptionValueType::BOOL}};
 
     boost::to_lower(typeString);
     const auto found = stringToType.find(typeString);

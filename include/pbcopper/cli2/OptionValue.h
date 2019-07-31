@@ -35,7 +35,7 @@ enum class OptionValueType
 using OptionValue = boost::variant<
     int,
     unsigned int,
-    float,
+    double,
     bool,
     std::string>;
 

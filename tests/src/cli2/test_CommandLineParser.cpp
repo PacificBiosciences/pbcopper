@@ -468,4 +468,31 @@ TEST(CLI2_CommandLineParser, can_handle_long_name_switch_before_positional_args)
     EXPECT_EQ("water", element);
 }
 
+TEST(CLI2_CommandLineParser, displays_useful_message_on_bad_args)
+{
+    // rather than ungraceful 'unordered_map::at: key not found'
+
+    CommandLineParser parser{makeInterface()};
+
+    try {
+        const std::vector<std::string> args{"frobber", "--badarg"};
+        const auto results = parser.Parse(args);
+    } catch (std::exception& e) {
+        const std::string message{e.what()};
+        EXPECT_NE("unordered_map::at: key not found", message);
+        EXPECT_TRUE(message.find("unknown option") != std::string::npos);
+        EXPECT_TRUE(message.find("badarg") != std::string::npos);
+    }
+
+    try {
+        const std::vector<std::string> args{"frobber", "-X"};
+        const auto results = parser.Parse(args);
+    } catch (std::exception& e) {
+        const std::string message{e.what()};
+        EXPECT_NE("unordered_map::at: key not found", message);
+        EXPECT_TRUE(message.find("unknown option") != std::string::npos);
+        EXPECT_TRUE(message.find("X") != std::string::npos);
+    }
+}
+
 // clang-format on

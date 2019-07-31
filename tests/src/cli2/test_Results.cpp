@@ -49,6 +49,16 @@ R"({
 })"
 };
 
+static const Option DoubleDelta
+{
+R"({
+    "names" : ["double-delta"],
+    "description" : "Some double delta for things.",
+    "type" : "float",
+    "default" : 0.01
+})"
+};
+
 static const Option Ploidy
 {
 R"({
@@ -93,12 +103,11 @@ TEST(CLI2_Result, can_construct_from_basic_types)
         const Result result{input};
         const unsigned int resultValue = result;
         EXPECT_EQ(input, resultValue);
-
     }
-    {   // float
-        const float input = 3.14;
+    {   // double
+        const double input = 3.14;
         const Result result{input};
-        const float resultValue = result;
+        const double resultValue = result;
         EXPECT_EQ(input, resultValue);
     }
     {   // bool
@@ -125,20 +134,29 @@ TEST(CLI2_Result, will_not_allow_invalid_conversion)
 
     EXPECT_THROW({const unsigned int resultValue = result;(void)resultValue;}, boost::bad_get);
     EXPECT_THROW({const float resultValue = result;(void)resultValue;}, boost::bad_get);
+    EXPECT_THROW({const double resultValue = result;(void)resultValue;}, boost::bad_get);
     EXPECT_THROW({const bool resultValue = result;(void)resultValue;}, boost::bad_get);
     EXPECT_NO_THROW({const int resultValue = result;(void)resultValue;});
 }
 
 TEST(CLI2_Results, can_add_and_fetch_positional_args_via_index_number)
 {
-   Results results;
-   results.AddPositionalArgument("in");
-   results.AddPositionalArgument("out");
+    const auto posArgs = PositionalArgumentTranslator::Translate(
+    {
+        CLI_v2_ResultsTests::Source,
+        CLI_v2_ResultsTests::Dest
 
-   const auto& posArgs = results.PositionalArguments();
-   ASSERT_EQ(2, posArgs.size());
-   EXPECT_EQ("in", posArgs.at(0));
-   EXPECT_EQ("out", posArgs.at(1));
+    });
+
+    Results results;
+    results.PositionalArguments(posArgs);
+    results.AddPositionalArgument("in");
+    results.AddPositionalArgument("out");
+
+    const auto& posArgValues = results.PositionalArguments();
+    ASSERT_EQ(2, posArgValues.size());
+    EXPECT_EQ("in", posArgValues.at(0));
+    EXPECT_EQ("out", posArgValues.at(1));
 }
 
 TEST(CLI2_Results, can_fetch_positional_args_via_pos_arg_object)
@@ -178,25 +196,29 @@ TEST(CLI2_Results, can_add_and_fetch_option_values)
             : force(results[CLI_v2_ResultsTests::Force])
             , timeout(results[CLI_v2_ResultsTests::Timeout])
             , delta(results[CLI_v2_ResultsTests::Delta])
+            , doubleDelta(results[CLI_v2_ResultsTests::DoubleDelta])
             , ploidy(results[CLI_v2_ResultsTests::Ploidy])
         { }
 
         bool force;
         int timeout;
         float delta;
+        double doubleDelta;
         std::string ploidy;
     };
 
     Results results;
     results.AddObservedValue("force", true, SetByMode::USER);
     results.AddObservedValue("timeout", 300, SetByMode::USER);
-    results.AddObservedValue("delta", 2.77f, SetByMode::USER);
+    results.AddObservedValue("delta", 2.77, SetByMode::USER);
+    results.AddObservedValue("double-delta", 35.6, SetByMode::USER);
     results.AddObservedValue("ploidy", std::string{"diploid"}, SetByMode::USER);
 
     const Settings s{results};
     EXPECT_TRUE(s.force);
     EXPECT_EQ(300, s.timeout);
     EXPECT_EQ(2.77f, s.delta);
+    EXPECT_EQ(35.6, s.doubleDelta);
     EXPECT_EQ("diploid", s.ploidy);
 }
 
@@ -208,6 +230,7 @@ TEST(CLI2_Results, can_add_and_fetch_options_and_pos_args)
             : force(results[CLI_v2_ResultsTests::Force])
             , timeout(results[CLI_v2_ResultsTests::Timeout])
             , delta(results[CLI_v2_ResultsTests::Delta])
+            , doubleDelta(results[CLI_v2_ResultsTests::DoubleDelta])
             , ploidy(results[CLI_v2_ResultsTests::Ploidy])
             , source(results[CLI_v2_ResultsTests::Source])
             , dest(results[CLI_v2_ResultsTests::Dest])
@@ -216,6 +239,7 @@ TEST(CLI2_Results, can_add_and_fetch_options_and_pos_args)
         bool force;
         int timeout;
         float delta;
+        double doubleDelta;
         std::string ploidy;
 
         std::string source;
@@ -225,7 +249,8 @@ TEST(CLI2_Results, can_add_and_fetch_options_and_pos_args)
     Results results;
     results.AddObservedValue("force", true, SetByMode::USER);
     results.AddObservedValue("timeout", 300, SetByMode::USER);
-    results.AddObservedValue("delta", 2.77f, SetByMode::USER);
+    results.AddObservedValue("delta", 2.77, SetByMode::USER);
+    results.AddObservedValue("double-delta", 35.6, SetByMode::USER);
     results.AddObservedValue("ploidy", std::string{"diploid"}, SetByMode::USER);
 
     const auto posArgs = PositionalArgumentTranslator::Translate(
@@ -241,6 +266,7 @@ TEST(CLI2_Results, can_add_and_fetch_options_and_pos_args)
     EXPECT_TRUE(s.force);
     EXPECT_EQ(300, s.timeout);
     EXPECT_EQ(2.77f, s.delta);
+    EXPECT_EQ(35.6, s.doubleDelta);
     EXPECT_EQ("diploid", s.ploidy);
     EXPECT_EQ("inFile.txt", s.source);
     EXPECT_EQ("outFile.txt", s.dest);

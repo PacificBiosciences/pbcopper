@@ -13,7 +13,7 @@ namespace CLI_v2 {
 
 Results& Results::AddPositionalArgument(std::string arg)
 {
-    posArgValues_.push_back(std::move(arg));
+    posArgValues_.emplace_back(std::move(arg));
     return *this;
 }
 

@@ -76,6 +76,7 @@ public:
     operator int() const;
     operator unsigned int() const;
     operator float() const;
+    operator double() const;
     operator bool() const;
     operator std::string() const;
     size_t which() const;

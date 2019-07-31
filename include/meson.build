@@ -114,21 +114,25 @@ if not meson.is_subproject()
   # pbcopper/data
   install_headers(
     files([
+      'pbcopper/data/Accuracy.h',
       'pbcopper/data/CCSTag.h',
       'pbcopper/data/Cigar.h',
       'pbcopper/data/CigarOperation.h',
       'pbcopper/data/Clipping.h',
       'pbcopper/data/Frames.h',
+      'pbcopper/data/GenomicInterval.h',
       'pbcopper/data/Interval.h',
-      'pbcopper/data/MappedSimpleRead.h',
+      'pbcopper/data/LocalContextFlags.h',
+      'pbcopper/data/MappedRead.h',
       'pbcopper/data/MovieName.h',
       'pbcopper/data/Position.h',
       'pbcopper/data/QualityValue.h',
       'pbcopper/data/QualityValues.h',
+      'pbcopper/data/Read.h',
+      'pbcopper/data/ReadId.h',
       'pbcopper/data/ReadName.h',
       'pbcopper/data/RSMovieName.h',
       'pbcopper/data/RSReadName.h',
-      'pbcopper/data/SimpleRead.h',
       'pbcopper/data/SNR.h',
       'pbcopper/data/Strand.h',
       'pbcopper/data/Zmw.h']),
@@ -138,7 +142,6 @@ if not meson.is_subproject()
   install_headers(
     files([
       'pbcopper/data/internal/ClippingImpl.h',
-      'pbcopper/data/internal/Interval-inl.h',
       'pbcopper/data/internal/MovieName-inl.h',
       'pbcopper/data/internal/ReadNameBase-inl.h',
       'pbcopper/data/internal/ReadNameBase.h',
@@ -160,14 +163,12 @@ if not meson.is_subproject()
   # pbcopper/logging
   install_headers(
     files([
-      'pbcopper/logging/Logging.h']),
+      'pbcopper/logging/Logging.h',
+      'pbcopper/logging/LogConfig.h',
+      'pbcopper/logging/LogField.h',
+      'pbcopper/logging/LogLevel.h',
+      'pbcopper/logging/LogMessage.h']),
     subdir : 'pbcopper/logging')
-
-  # pbcopper/logging/internal
-  install_headers(
-    files([
-      'pbcopper/logging/internal/Logging-inl.h']),
-    subdir : 'pbcopper/logging/internal')
 
   # pbcopper/parallel
   install_headers(

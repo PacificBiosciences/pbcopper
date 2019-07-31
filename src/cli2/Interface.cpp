@@ -48,7 +48,6 @@ Interface::Interface(std::string name, std::string description, std::string vers
 
 Interface& Interface::AddOption(const Option& option)
 {
-    // assert(!data_.optionGroups_.empty());
     if (data_.optionGroups_.empty()) data_.optionGroups_.push_back(OptionGroupData{});
     data_.optionGroups_[0].options.push_back(OptionTranslator::Translate(option));
     return *this;
@@ -94,13 +93,36 @@ const std::string& Interface::ApplicationVersion() const { return data_.appVersi
 
 Logging::LogLevel Interface::DefaultLogLevel() const
 {
-    const auto& value = *data_.logLevelOption_.defaultValue;
-    return Logging::LogLevel{boost::get<std::string>(value)};
+    if (data_.logLevelOption_) {
+        const auto& value = data_.logLevelOption_->defaultValue.get();
+        return Logging::LogLevel{boost::get<std::string>(value)};
+    } else
+        return data_.logConfig_.Level;
 }
 
 Interface& Interface::DefaultLogLevel(Logging::LogLevel level)
 {
-    data_.logLevelOption_.defaultValue = level.ToString();
+    // Error if client is setting default log level, when that option has been disabled.
+    assert(data_.logLevelOption_);
+    data_.logLevelOption_->defaultValue = level.ToString();
+    return *this;
+}
+
+Interface& Interface::DisableLogFileOption()
+{
+    data_.logFileOption_ = boost::none;
+    return *this;
+}
+
+Interface& Interface::DisableLogLevelOption()
+{
+    data_.logLevelOption_ = boost::none;
+    return *this;
+}
+
+Interface& Interface::DisableNumThreadsOption()
+{
+    data_.numThreadsOption_ = boost::none;
     return *this;
 }
 
@@ -112,13 +134,46 @@ Interface& Interface::Example(std::string example)
     return *this;
 }
 
+bool Interface::HasRequiredPosArgs() const
+{
+    for (const auto& posArg : data_.positionalArgs_) {
+        if (posArg.required) return true;
+    }
+    return false;
+}
+
+const std::string& Interface::HelpFooter() const { return data_.footer_; }
+
+Interface& Interface::HelpFooter(std::string footer)
+{
+    data_.footer_ = std::move(footer);
+    return *this;
+}
+
 const OptionData& Interface::HelpOption() const { return data_.helpOption_; }
 
-const OptionData& Interface::LogFileOption() const { return data_.logFileOption_; }
+const Logging::LogConfig& Interface::LogConfig() const { return data_.logConfig_; }
 
-const OptionData& Interface::LogLevelOption() const { return data_.logLevelOption_; }
+Interface& Interface::LogConfig(const Logging::LogConfig& config)
+{
+    data_.logConfig_ = config;
+    return *this;
+}
 
-const OptionData& Interface::NumThreadsOption() const { return data_.numThreadsOption_; }
+const boost::optional<internal::OptionData>& Interface::LogFileOption() const
+{
+    return data_.logFileOption_;
+}
+
+const boost::optional<internal::OptionData>& Interface::LogLevelOption() const
+{
+    return data_.logLevelOption_;
+}
+
+const boost::optional<internal::OptionData>& Interface::NumThreadsOption() const
+{
+    return data_.numThreadsOption_;
+}
 
 Results Interface::MakeDefaultResults() const
 {
@@ -143,9 +198,9 @@ std::vector<OptionData> Interface::Options() const
 
     // add builtins
     result.push_back(data_.helpOption_);
-    result.push_back(data_.logLevelOption_);
-    result.push_back(data_.logFileOption_);
-    result.push_back(data_.numThreadsOption_);
+    if (data_.logLevelOption_) result.push_back(data_.logLevelOption_.get());
+    if (data_.logFileOption_) result.push_back(data_.logFileOption_.get());
+    if (data_.numThreadsOption_) result.push_back(data_.numThreadsOption_.get());
     result.push_back(data_.versionOption_);
     return result;
 }

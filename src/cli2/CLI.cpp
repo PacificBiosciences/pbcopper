@@ -12,6 +12,7 @@
 #include <pbcopper/cli2/internal/InterfaceHelpPrinter.h>
 #include <pbcopper/cli2/internal/MultiToolInterfaceHelpPrinter.h>
 #include <pbcopper/cli2/internal/VersionPrinter.h>
+#include <pbcopper/logging/Logging.h>
 
 using CommandLineParser = PacBio::CLI_v2::internal::CommandLineParser;
 using InterfaceHelpPrinter = PacBio::CLI_v2::internal::InterfaceHelpPrinter;
@@ -29,20 +30,19 @@ int Run(int argc, char* argv[], const Interface& interface, const ResultsHandler
 int Run(const std::vector<std::string>& args, const Interface& interface,
         const ResultsHandler& handler)
 {
-    // if just application name, show help
     //
-    // TODO: what about piped in applications?
-    //       $ some_upstream_tool | mytool
-    //       revist if/when that happens
+    // If application name only & positional arguments are required, show help.
+    // This allows, for example, tools that to stream stdin without requiring
+    // input filenames.
     //
-    if (args.size() == 1) {
+    if (args.size() == 1 && interface.HasRequiredPosArgs()) {
         const InterfaceHelpPrinter help{interface};
         std::cout << help;
         return EXIT_SUCCESS;
     }
 
     // parse command line args
-    const CommandLineParser parser{interface};
+    CommandLineParser parser{interface};
     Results results = parser.Parse(args);
 
     // help
@@ -60,32 +60,29 @@ int Run(const std::vector<std::string>& args, const Interface& interface,
     }
 
     //
-    // TODO:
+    // Initialize logging
     //
-    //  eventually set up logging here, with loglevel, logfile, ...
+    // Use application-provided config (i.e. fields), but give priority to
+    // command line-provided log settings.
     //
-    //  setup local stack logger here, using logLevel/logFile/etc params
-    //  set global ref to point here
+    // If 'log-level' or 'log-file' were not set or were disabled as command
+    // line options, use the default.
     //
-    //  now with logger on stack here...
-    //
-    //  PBLOG_INFO << interface.ApplicationVersion();
-    //  PBLOG_INFO << results.InputCommandLine();
-    //
-    //  int status = 0;
-    //  try {
-    //      status = handler(results);
-    //  } catch (std::exception& e) {
-    //      log exception message
-    //      status = EXIT_FAILURE;
-    //  }
-    //  catch (... blah...) {
-    //      something ??
-    //      status = EXIT_FAILURE;
-    //  }
-    //  return status;
-    //
+    Logging::LogConfig logConfig = interface.LogConfig();
+    if (interface.LogLevelOption()) logConfig.Level = results.LogLevel();
 
+    const auto logger = [&]() {
+        if (interface.LogFileOption()) {
+            const auto logFile = results.LogFile();
+            if (!logFile.empty()) return std::make_unique<Logging::Logger>(logFile, logConfig);
+        }
+        return std::make_unique<Logging::Logger>(std::cerr, logConfig);
+    }();
+
+    Logging::Logger::Current(logger.get());
+    Logging::InstallSignalHandlers(*(logger.get()));
+
+    // run application
     return handler(results);
 }
 

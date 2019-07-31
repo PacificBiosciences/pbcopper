@@ -114,9 +114,9 @@ void InterfaceHelpPrinter::CalculateMetrics()
 
     // metrics with builtin options
     updateMetricsWithOption(interface_.HelpOption());
-    updateMetricsWithOption(interface_.LogLevelOption());
-    updateMetricsWithOption(interface_.LogFileOption());
-    updateMetricsWithOption(interface_.NumThreadsOption());
+    if (interface_.LogLevelOption()) updateMetricsWithOption(interface_.LogLevelOption().get());
+    if (interface_.LogFileOption()) updateMetricsWithOption(interface_.LogFileOption().get());
+    if (interface_.NumThreadsOption()) updateMetricsWithOption(interface_.NumThreadsOption().get());
     updateMetricsWithOption(interface_.VersionOption());
 
     // metrics using pos args
@@ -143,7 +143,7 @@ std::string InterfaceHelpPrinter::Choices(const OptionData& option)
                 out << boost::get<unsigned int>(choice);
                 break;
             case OptionValueType::FLOAT:
-                out << boost::get<float>(choice);
+                out << boost::get<double>(choice);
                 break;
             case OptionValueType::STRING:
             case OptionValueType::FILE:
@@ -175,7 +175,7 @@ std::string InterfaceHelpPrinter::DefaultValue(const OptionData& option)
             out << boost::get<unsigned int>(option.defaultValue.get());
             break;
         case OptionValueType::FLOAT:
-            out << boost::get<float>(option.defaultValue.get());
+            out << boost::get<double>(option.defaultValue.get());
             break;
         case OptionValueType::STRING:
         case OptionValueType::FILE:
@@ -195,8 +195,20 @@ std::string InterfaceHelpPrinter::DefaultValue(const OptionData& option)
 
 std::string InterfaceHelpPrinter::Description()
 {
-    if (interface_.ApplicationDescription().empty()) return {};
-    return interface_.ApplicationDescription();
+    const auto& description = interface_.ApplicationDescription();
+    if (description.empty()) return {};
+
+    // maybe word-wrap description
+    std::ostringstream out;
+    const auto indent = interface_.ApplicationName().size() + 3;  // " - " spacer
+    const auto max = metrics_.maxColumn - indent;
+    const auto wrappedLines = Utility::WordWrappedLines(description, max);
+    if (!wrappedLines.empty()) {
+        out << wrappedLines.at(0);
+        for (size_t i = 1; i < wrappedLines.size(); ++i)
+            out << '\n' << std::string(indent, ' ') << wrappedLines.at(i);
+    }
+    return out.str();
 }
 
 std::string InterfaceHelpPrinter::HelpEntry(std::string name, std::string type,
@@ -242,6 +254,9 @@ void InterfaceHelpPrinter::MakeHelpText()
 
     const std::string options = Options();
     if (!options.empty()) result << '\n' << options << '\n';
+
+    const auto& footer = interface_.HelpFooter();
+    if (!footer.empty()) result << footer << '\n';
 
     text_ = result.str();
 }
@@ -317,9 +332,11 @@ std::string InterfaceHelpPrinter::Options()
     // print builtin group
     OptionGroupData group;
     if (optionGroups.empty()) group.name = "Options";
-    group.options = {interface_.HelpOption(), interface_.LogLevelOption(),
-                     interface_.LogFileOption(), interface_.NumThreadsOption(),
-                     interface_.VersionOption()};
+    group.options.push_back(interface_.HelpOption());
+    if (interface_.LogLevelOption()) group.options.push_back(interface_.LogLevelOption().get());
+    if (interface_.LogFileOption()) group.options.push_back(interface_.LogFileOption().get());
+    if (interface_.NumThreadsOption()) group.options.push_back(interface_.NumThreadsOption().get());
+    group.options.push_back(interface_.VersionOption());
     out << OptionGroup(group);
     return out.str();
 }

@@ -7,113 +7,63 @@
 
 #include <condition_variable>
 #include <fstream>
-#include <functional>
-#include <iosfwd>
-#include <map>
+#include <iostream>
 #include <memory>
 #include <mutex>
 #include <queue>
 #include <string>
 #include <thread>
-#include <utility>
-#include <vector>
+
+#include <pbcopper/logging/LogConfig.h>
+#include <pbcopper/logging/LogLevel.h>
+#include <pbcopper/logging/LogMessage.h>
 
 namespace PacBio {
 namespace Logging {
 
-class LogLevel
-{
-public:
-    enum : unsigned char
-    {
-        TRACE = 0,
-        DEBUG = 1,
-        INFO = 2,
-        NOTICE = 3,
-        WARN = 4,
-        ERROR = 5,
-        CRITICAL = 6,
-        FATAL = 7,
-
-        MAX_LOG_LEVEL = 8
-    };
-
-public:
-    LogLevel(const unsigned char value);
-    LogLevel(const std::string& value);
-
-public:
-    operator unsigned char() const;
-    std::string ToString() const;
-
-private:
-    unsigned char value_;
-};
-
-typedef std::reference_wrapper<std::ostream> OStreamWrapper;
-typedef std::vector<OStreamWrapper> OStreams;
-
-class LoggerConfig : public std::map<LogLevel, OStreams>
-{
-public:
-    LoggerConfig(const std::map<LogLevel, OStreams>& cfg);
-    LoggerConfig(const std::map<std::string, OStreams>& cfg);
-    LoggerConfig(std::ostream& os, const LogLevel level = LogLevel::INFO);
-    LoggerConfig(std::ostream& os, const std::string& level);
-    LoggerConfig(const std::string& logFileName, const LogLevel level = LogLevel::INFO);
-    LoggerConfig(const std::string& logFileName, const std::string& level);
-
-private:
-    std::ofstream logToFile;
-};
-
-class LogMessage;
-
 class Logger
 {
-private:
-    typedef std::pair<LogLevel, std::ostringstream> LogLevelStream;
-
 public:
+    ///
+    /// Contains a non-owning pointer to the current logger in use. Client code
+    /// is responsible for lifetime of newLogger, if provided.
+    ///
+    static Logger& Current(Logger* newLogger = nullptr);
+
+    ///
+    /// For legacy reasons, this maintains ownership of (and possibly creates)
+    /// the default logger.
+    ///
     static Logger& Default(Logger* logger = nullptr);
 
-public:
-    template <typename... Args>
-    Logger(Args&&... args);
+    Logger(std::ostream& out, const LogLevel level);
+    Logger(const std::string& filename, const LogLevel level);
 
-    Logger(const Logger& other) = delete;
+    Logger(std::ostream& out, const LogConfig& config);
+    Logger(const std::string& filename, const LogConfig& config);
+
+    Logger(const Logger&) = delete;
+    Logger& operator=(const Logger&) = delete;
     ~Logger();
 
 private:
-    LoggerConfig cfg_;
+    // output control
+    std::ofstream logFile_;
+    std::reference_wrapper<std::ostream> stream_;
+    LogConfig config_;
+
+    // thread control
     std::mutex m_;
     std::condition_variable popped_;
     std::condition_variable pushed_;
     std::queue<std::unique_ptr<LogLevelStream>> queue_;
     std::thread writer_;
+
     friend class LogMessage;
 
-private:
     Logger& operator<<(std::unique_ptr<LogLevelStream>&& ptr);
     bool Handles(const LogLevel level) const;
     void MessageWriter();
-};
-
-class LogMessage
-{
-public:
-    LogMessage(const char* file, const char* function, unsigned int line, const LogLevel level,
-               Logger& logger);
-    LogMessage(const LogMessage& msg) = delete;
-    ~LogMessage();
-
-public:
-    template <typename T>
-    LogMessage& operator<<(const T& t);
-
-private:
-    std::unique_ptr<Logger::LogLevelStream> ptr_;
-    Logger& logger_;
 };
 
 // trace is disabled under Release builds (-DNDEBUG)
@@ -139,9 +89,9 @@ private:
 #define PBLOGGER_FATAL(lg) PBLOGGER_LEVEL(lg, LogLevel::FATAL)
 
 //
-// Log message with desired log level & default logger
+// Log message with desired log level & current logger
 //
-#define PBLOG_LEVEL(lvl) PBLOGGER_LEVEL(PacBio::Logging::Logger::Default(), lvl)
+#define PBLOG_LEVEL(lvl) PBLOGGER_LEVEL(PacBio::Logging::Logger::Current(), lvl)
 
 #define PBLOG_TRACE PBLOG_LEVEL(LogLevel::TRACE)
 #define PBLOG_DEBUG PBLOG_LEVEL(LogLevel::DEBUG)
@@ -152,11 +102,9 @@ private:
 #define PBLOG_CRITICAL PBLOG_LEVEL(LogLevel::CRITICAL)
 #define PBLOG_FATAL PBLOG_LEVEL(LogLevel::FATAL)
 
-extern void InstallSignalHandlers(Logger& logger = Logger::Default());
+void InstallSignalHandlers(Logger& logger = Logger::Current());
 
 }  // namespace Logging
 }  // namespace PacBio
-
-#include <pbcopper/logging/internal/Logging-inl.h>
 
 #endif  // PBCOPPER_LOGGING_LOGGING_H

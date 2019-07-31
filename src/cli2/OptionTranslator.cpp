@@ -72,8 +72,8 @@ OptionValue MakeOptionValue(const Json& value, const OptionValueType type)
             return OptionValue{u};
         }
         case OptionValueType::FLOAT: {
-            const float f = value;
-            return OptionValue{f};
+            const double d = value;
+            return OptionValue{d};
         }
         case OptionValueType::BOOL: {
             const bool b = value;
@@ -135,10 +135,16 @@ OptionData OptionTranslator::Translate(const Option& option)
                 result.hiddenNames.push_back(hiddenName.get<std::string>());
         }
 
-        // description
+        // description - from single string, or joining array of strings
         const auto description = root.find("description");
-        if (description != root.cend())
-            result.description = description->get<std::string>();
+        if (description != root.cend()) {
+            if (description->is_array()) {
+                for (const auto& line : *description)
+                    result.description += line.get<std::string>();
+            }
+            else
+                result.description = description->get<std::string>();
+        }
 
         // hidden
         const auto hidden = root.find("hidden");
