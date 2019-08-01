@@ -72,8 +72,6 @@ public:
     /// \returns interval's start coordinate
     Position Start() const;
 
-    [[deprecated("Replaced by Start()")]] Position Left() const;
-
     /// Sets this interval's start coordinate.
     ///
     /// \param[in] start
@@ -84,16 +82,12 @@ public:
     /// \returns interval's end coordinate
     Position End() const;
 
-    [[deprecated("Replaced by End()")]] Position Right() const;
-    [[deprecated("Replaced by End()")]] Position Stop() const;
-
     /// Sets this interval's end coordinate.
     ///
     /// \param[in] end
     /// \returns reference to this interval
     ///
     Interval& End(const Position& end);
-    [[deprecated("Replaced by End()")]] Interval& Stop(const Position& end);
 
     /// \}
 

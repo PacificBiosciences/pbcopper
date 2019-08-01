@@ -44,17 +44,11 @@ bool Interval::Contains(const Interval& other) const
 
 Position Interval::End() const { return data_.upper(); }
 
-Position Interval::Right() const { return End(); }
-
-Position Interval::Stop() const { return End(); }
-
 Interval& Interval::End(const Position& end)
 {
     data_ = interval_type{data_.lower(), end};
     return *this;
 }
-
-Interval& Interval::Stop(const Position& end) { return End(end); }
 
 bool Interval::Intersects(const Interval& other) const
 {
@@ -73,8 +67,6 @@ bool Interval::IsValid() const { return !boost::icl::is_empty(data_); }
 size_t Interval::Length() const { return boost::icl::length(data_); }
 
 Position Interval::Start() const { return data_.lower(); }
-
-Position Interval::Left() const { return Start(); }
 
 Interval& Interval::Start(const Position& start)
 {
