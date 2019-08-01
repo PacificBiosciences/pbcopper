@@ -168,6 +168,7 @@ OptionData OptionTranslator::Translate(const Option& option)
         //  - direct value supplied to Option ctor
         //  - supplied in Option definition text
         //  - ok if absent for bool switches, default is OFF
+        //  - ok if absent for string options, default is ""
         //
         const auto defaultValue = root.find("default");
         if (option.defaultValue)
@@ -176,6 +177,8 @@ OptionData OptionTranslator::Translate(const Option& option)
             result.defaultValue = MakeOptionValue(*defaultValue, result.type);
         else if (result.type == OptionValueType::BOOL)
             result.defaultValue = false;
+        else if (IsStringLike(result.type))
+            result.defaultValue = std::string{};
 
     } catch (std::exception& e) {
         std::ostringstream msg;

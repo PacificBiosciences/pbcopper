@@ -338,6 +338,65 @@ TEST(CLI2_CLI, can_run_from_command_line_args)
     EXPECT_EQ(EXIT_SUCCESS, result);
 }
 
+TEST(CLI2_CLI, correctly_interprets_implicit_empty_strings)
+{
+    const PacBio::CLI_v2::Option TestDefaultEmptyString
+    {
+    R"({
+        "names" : ["test-default-string"],
+        "description" : "Nothing to see here.",
+        "type" : "string"
+    })"
+    };
+
+    const PacBio::CLI_v2::Option TestDefaultEmptyFile
+    {
+    R"({
+        "names" : ["test-default-file"],
+        "description" : "Nothing to see here.",
+        "type" : "file"
+    })"
+    };
+
+    const PacBio::CLI_v2::Option TestDefaultEmptyDir
+    {
+    R"({
+        "names" : ["test-default-dir"],
+        "description" : "Nothing to see here.",
+        "type" : "dir"
+    })"
+    };
+
+    const std::vector<std::string> args {
+        "frobber"
+    };
+    auto runner = [&](const PacBio::CLI_v2::Results& results)
+    {
+        const std::string shouldBeEmptyString = results[TestDefaultEmptyString];
+        const std::string shouldBeEmptyFile = results[TestDefaultEmptyFile];
+        const std::string shouldBeEmptyDir = results[TestDefaultEmptyDir];
+
+        EXPECT_TRUE(shouldBeEmptyString.empty());
+        EXPECT_TRUE(shouldBeEmptyFile.empty());
+        EXPECT_TRUE(shouldBeEmptyDir.empty());
+        return EXIT_SUCCESS;
+    };
+
+    PacBio::CLI_v2::Interface i{"frobber", "Frob all the things.", "v3.1"};
+    i.AddOptions({
+        TestDefaultEmptyString,
+        TestDefaultEmptyFile,
+        TestDefaultEmptyDir
+    });
+
+    std::ostringstream s;
+    tests::CoutRedirect redirect(s.rdbuf());
+    UNUSED(redirect);
+
+    const int result = PacBio::CLI_v2::Run(args, i, runner);
+    EXPECT_EQ(EXIT_SUCCESS, result);
+}
+
 TEST(CLI2_CLI, can_run_multitoolinterface_subtool_from_command_line_args)
 {
     PacBio::CLI_v2::MultiToolInterface i{"isoseq3", "De Novo Transcript Reconstruction", "3.1.2"};
