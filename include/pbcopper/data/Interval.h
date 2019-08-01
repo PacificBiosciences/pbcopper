@@ -72,8 +72,6 @@ public:
     /// \returns interval's start coordinate
     Position Start() const;
 
-    [[deprecated("Replaced by Start()")]] Position Left() const;
-
     /// Sets this interval's start coordinate.
     ///
     /// \param[in] start
@@ -84,16 +82,12 @@ public:
     /// \returns interval's end coordinate
     Position End() const;
 
-    [[deprecated("Replaced by End()")]] Position Right() const;
-    [[deprecated("Replaced by End()")]] Position Stop() const;
-
     /// Sets this interval's end coordinate.
     ///
     /// \param[in] end
     /// \returns reference to this interval
     ///
     Interval& End(const Position& end);
-    [[deprecated("Replaced by End()")]] Interval& Stop(const Position& end);
 
     /// \}
 
@@ -104,13 +98,10 @@ public:
     bool IsEmpty() const;
 
     /// \returns true if this interval is fully covered by (or contained in) \p other
-    bool CoveredBy(const Interval& other) const;
+    bool ContainedBy(const Interval& other) const;
 
-    //// \returns true if this interval covers (or contains) \p other
-    bool Covers(const Interval& other) const;
-
-    [[deprecated("Replaced by Covers(const Interval&)")]] bool Contains(
-        const Interval& other) const;
+    //// \returns true if this interval contains (or covers) \p other
+    bool Contains(const Interval& other) const;
 
     /// \returns true if intervals intersect
     bool Intersects(const Interval& other) const;

@@ -91,8 +91,8 @@ TEST(Data_Interval, modification_of_copy_does_not_affect_original)
 TEST(Data_Interval, self_covers_and_is_covered_by_self)
 {
     PacBio::Data::Interval interval(2, 4);
-    EXPECT_TRUE(interval.Covers(interval));
-    EXPECT_TRUE(interval.CoveredBy(interval));
+    EXPECT_TRUE(interval.Contains(interval));
+    EXPECT_TRUE(interval.ContainedBy(interval));
 }
 
 TEST(Data_Interval, covers_and_coveredby_are_reciprocal)
@@ -100,11 +100,11 @@ TEST(Data_Interval, covers_and_coveredby_are_reciprocal)
     PacBio::Data::Interval inner(3, 5);
     PacBio::Data::Interval outer(1, 7);
 
-    EXPECT_TRUE(inner.CoveredBy(outer));  // a.coveredBy(b)
-    EXPECT_TRUE(outer.Covers(inner));     // thus b.covers(a)
+    EXPECT_TRUE(inner.ContainedBy(outer));  // a.coveredBy(b)
+    EXPECT_TRUE(outer.Contains(inner));     // thus b.covers(a)
 
-    EXPECT_FALSE(inner == outer);       // if a != b
-    EXPECT_FALSE(inner.Covers(outer));  // then !a.covers(b)
+    EXPECT_FALSE(inner == outer);         // if a != b
+    EXPECT_FALSE(inner.Contains(outer));  // then !a.covers(b)
 }
 
 TEST(Data_Interval, completely_disjoint_intervals_do_not_cover_each_other)
@@ -112,10 +112,10 @@ TEST(Data_Interval, completely_disjoint_intervals_do_not_cover_each_other)
     PacBio::Data::Interval left(3, 5);
     PacBio::Data::Interval right(6, 8);
 
-    EXPECT_FALSE(left.Covers(right));
-    EXPECT_FALSE(right.Covers(left));
-    EXPECT_FALSE(left.CoveredBy(right));
-    EXPECT_FALSE(right.CoveredBy(left));
+    EXPECT_FALSE(left.Contains(right));
+    EXPECT_FALSE(right.Contains(left));
+    EXPECT_FALSE(left.ContainedBy(right));
+    EXPECT_FALSE(right.ContainedBy(left));
 }
 
 TEST(Data_Interval, no_coverage_when_left_stop_same_as_right_start)
@@ -123,8 +123,8 @@ TEST(Data_Interval, no_coverage_when_left_stop_same_as_right_start)
     PacBio::Data::Interval left(3, 5);
     PacBio::Data::Interval right(5, 8);
 
-    EXPECT_FALSE(left.Covers(right));
-    EXPECT_FALSE(left.CoveredBy(right));
+    EXPECT_FALSE(left.Contains(right));
+    EXPECT_FALSE(left.ContainedBy(right));
 }
 
 TEST(Data_Interval, coverage_when_endpoints_are_same_and_inner_start_contained_by_outer)
@@ -132,8 +132,8 @@ TEST(Data_Interval, coverage_when_endpoints_are_same_and_inner_start_contained_b
     PacBio::Data::Interval inner(6, 8);
     PacBio::Data::Interval outer(5, 8);
 
-    EXPECT_TRUE(outer.Covers(inner));
-    EXPECT_TRUE(inner.CoveredBy(outer));
+    EXPECT_TRUE(outer.Contains(inner));
+    EXPECT_TRUE(inner.ContainedBy(outer));
 }
 
 TEST(Data_Interval, calculates_proper_intersection)
@@ -149,7 +149,7 @@ TEST(Data_Interval, calculates_proper_intersection)
     EXPECT_TRUE(interval1.Intersects(interval2));  // if a.intersects(b)
     EXPECT_TRUE(interval2.Intersects(interval1));  // then b.intersects(a)
 
-    EXPECT_TRUE(interval4.Covers(interval1));      // if b.covers(a),
+    EXPECT_TRUE(interval4.Contains(interval1));    // if b.covers(a),
     EXPECT_TRUE(interval1.Intersects(interval4));  // then a.intersects(b)
     EXPECT_TRUE(interval4.Intersects(interval1));  // and b.intersects(a)
 
@@ -276,24 +276,25 @@ TEST(Data_Interval, cover_test)
     PacBio::Data::Interval interval4(1, 7);
     PacBio::Data::Interval interval5(5, 8);
 
-    EXPECT_TRUE(interval1.Covers(interval1));     // self-cover: a.covers(a)
-    EXPECT_TRUE(interval1.CoveredBy(interval1));  // self-cover: a.coveredBy(a)
+    EXPECT_TRUE(interval1.Contains(interval1));     // self-cover: a.covers(a)
+    EXPECT_TRUE(interval1.ContainedBy(interval1));  // self-cover: a.coveredBy(a)
 
-    EXPECT_TRUE(interval2.CoveredBy(interval4));  // a.coveredBy(b)
-    EXPECT_TRUE(interval4.Covers(interval2));     // thus b.covers(a)
-    EXPECT_FALSE(interval2 == interval4);         // if a != b
-    EXPECT_FALSE(interval2.Covers(interval4));    // then !a.covers(b)
+    EXPECT_TRUE(interval2.ContainedBy(interval4));  // a.coveredBy(b)
+    EXPECT_TRUE(interval4.Contains(interval2));     // thus b.covers(a)
+    EXPECT_FALSE(interval2 == interval4);           // if a != b
+    EXPECT_FALSE(interval2.Contains(interval4));    // then !a.covers(b)
 
-    EXPECT_FALSE(interval2.Covers(interval3));  // completely disjoint
-    EXPECT_FALSE(interval3.Covers(interval2));
-    EXPECT_FALSE(interval2.CoveredBy(interval3));
-    EXPECT_FALSE(interval3.CoveredBy(interval2));
+    EXPECT_FALSE(interval2.Contains(interval3));  // completely disjoint
+    EXPECT_FALSE(interval3.Contains(interval2));
+    EXPECT_FALSE(interval2.ContainedBy(interval3));
+    EXPECT_FALSE(interval3.ContainedBy(interval2));
 
-    EXPECT_FALSE(interval2.Covers(interval5));  // a.stop == b.start
-    EXPECT_FALSE(interval2.CoveredBy(interval5));
+    EXPECT_FALSE(interval2.Contains(interval5));  // a.stop == b.start
+    EXPECT_FALSE(interval2.ContainedBy(interval5));
 
-    EXPECT_TRUE(interval5.Covers(interval3));  // shared endpoint, start contained, thus a.covers(b)
-    EXPECT_TRUE(interval3.CoveredBy(interval5));  // and b.coveredBy(a)
+    EXPECT_TRUE(
+        interval5.Contains(interval3));  // shared endpoint, start contained, thus a.covers(b)
+    EXPECT_TRUE(interval3.ContainedBy(interval5));  // and b.coveredBy(a)
 }
 
 TEST(Data_Interval, intersect_test)
@@ -309,7 +310,7 @@ TEST(Data_Interval, intersect_test)
     EXPECT_TRUE(interval1.Intersects(interval2));  // if a.intersects(b)
     EXPECT_TRUE(interval2.Intersects(interval1));  // then b.intersects(a)
 
-    EXPECT_TRUE(interval4.Covers(interval1));      // if b.covers(a),
+    EXPECT_TRUE(interval4.Contains(interval1));    // if b.covers(a),
     EXPECT_TRUE(interval1.Intersects(interval4));  // then a.intersects(b)
     EXPECT_TRUE(interval4.Intersects(interval1));  // and b.intersects(a)
 

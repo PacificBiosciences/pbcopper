@@ -83,16 +83,16 @@ bool GenomicInterval::operator==(const GenomicInterval& other) const
 
 bool GenomicInterval::operator!=(const GenomicInterval& other) const { return !(*this == other); }
 
-bool GenomicInterval::CoveredBy(const GenomicInterval& other) const
+bool GenomicInterval::ContainedBy(const GenomicInterval& other) const
 {
     if (name_ != other.name_) return false;
-    return interval_.CoveredBy(other.interval_);
+    return interval_.ContainedBy(other.interval_);
 }
 
-bool GenomicInterval::Covers(const GenomicInterval& other) const
+bool GenomicInterval::Contains(const GenomicInterval& other) const
 {
     if (name_ != other.name_) return false;
-    return interval_.Covers(other.interval_);
+    return interval_.Contains(other.interval_);
 }
 
 bool GenomicInterval::Intersects(const GenomicInterval& other) const

@@ -83,30 +83,31 @@ TEST(Data_GenomicInterval, CoverTest)
     Data::GenomicInterval interval6(interval2);
     interval6.Name("bar");
 
-    EXPECT_TRUE(interval1.Covers(interval1));     // self-cover: a.covers(a)
-    EXPECT_TRUE(interval1.CoveredBy(interval1));  // self-cover: a.coveredBy(a)
+    EXPECT_TRUE(interval1.Contains(interval1));     // self-cover: a.covers(a)
+    EXPECT_TRUE(interval1.ContainedBy(interval1));  // self-cover: a.coveredBy(a)
 
-    EXPECT_TRUE(interval2.CoveredBy(interval4));  // a.coveredBy(b)
-    EXPECT_TRUE(interval4.Covers(interval2));     // thus b.covers(a)
-    EXPECT_FALSE(interval2 == interval4);         // if a != b
-    EXPECT_FALSE(interval2.Covers(interval4));    // then !a.covers(b)
+    EXPECT_TRUE(interval2.ContainedBy(interval4));  // a.coveredBy(b)
+    EXPECT_TRUE(interval4.Contains(interval2));     // thus b.covers(a)
+    EXPECT_FALSE(interval2 == interval4);           // if a != b
+    EXPECT_FALSE(interval2.Contains(interval4));    // then !a.covers(b)
 
     EXPECT_FALSE(
-        interval6.CoveredBy(interval4));  // interval 6 has same start/stop as 2, w/ different ref
-    EXPECT_FALSE(interval4.Covers(interval6));  //
-    EXPECT_FALSE(interval6 == interval4);       //
-    EXPECT_FALSE(interval6.Covers(interval4));  //
+        interval6.ContainedBy(interval4));  // interval 6 has same start/stop as 2, w/ different ref
+    EXPECT_FALSE(interval4.Contains(interval6));  //
+    EXPECT_FALSE(interval6 == interval4);         //
+    EXPECT_FALSE(interval6.Contains(interval4));  //
 
-    EXPECT_FALSE(interval2.Covers(interval3));  // completely disjoint
-    EXPECT_FALSE(interval3.Covers(interval2));
-    EXPECT_FALSE(interval2.CoveredBy(interval3));
-    EXPECT_FALSE(interval3.CoveredBy(interval2));
+    EXPECT_FALSE(interval2.Contains(interval3));  // completely disjoint
+    EXPECT_FALSE(interval3.Contains(interval2));
+    EXPECT_FALSE(interval2.ContainedBy(interval3));
+    EXPECT_FALSE(interval3.ContainedBy(interval2));
 
-    EXPECT_FALSE(interval2.Covers(interval5));  // a.stop == b.start
-    EXPECT_FALSE(interval2.CoveredBy(interval5));
+    EXPECT_FALSE(interval2.Contains(interval5));  // a.stop == b.start
+    EXPECT_FALSE(interval2.ContainedBy(interval5));
 
-    EXPECT_TRUE(interval5.Covers(interval3));  // shared endpoint, start contained, thus a.covers(b)
-    EXPECT_TRUE(interval3.CoveredBy(interval5));  // and b.coveredBy(a)
+    EXPECT_TRUE(
+        interval5.Contains(interval3));  // shared endpoint, start contained, thus a.covers(b)
+    EXPECT_TRUE(interval3.ContainedBy(interval5));  // and b.coveredBy(a)
 }
 
 TEST(Data_GenomicInterval, ValidityTest)
