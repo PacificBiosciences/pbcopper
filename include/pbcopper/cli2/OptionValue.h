@@ -44,6 +44,15 @@ using OptionValue = boost::variant<
 ///
 OptionValueType ValueType(std::string typeString);
 
+///
+/// \return true if option is interpreted as string on command line
+///
+constexpr bool IsStringLike(OptionValueType type) {
+    return (type == OptionValueType::STRING) ||
+           (type == OptionValueType::FILE) ||
+           (type == OptionValueType::DIR);
+}
+
 }  // namespace CLI_v2
 }  // namespace PacBio
 
