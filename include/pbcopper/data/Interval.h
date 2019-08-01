@@ -104,13 +104,10 @@ public:
     bool IsEmpty() const;
 
     /// \returns true if this interval is fully covered by (or contained in) \p other
-    bool CoveredBy(const Interval& other) const;
+    bool ContainedBy(const Interval& other) const;
 
-    //// \returns true if this interval covers (or contains) \p other
-    bool Covers(const Interval& other) const;
-
-    [[deprecated("Replaced by Covers(const Interval&)")]] bool Contains(
-        const Interval& other) const;
+    //// \returns true if this interval contains (or covers) \p other
+    bool Contains(const Interval& other) const;
 
     /// \returns true if intervals intersect
     bool Intersects(const Interval& other) const;

@@ -32,17 +32,15 @@ bool Interval::operator<(const Interval& other) const { return data_ < other.dat
 
 bool Interval::IsEmpty() const { return Length() == 0; }
 
-bool Interval::CoveredBy(const Interval& other) const
+bool Interval::ContainedBy(const Interval& other) const
 {
     return boost::icl::within(data_, other.data_);
 }
 
-bool Interval::Covers(const Interval& other) const
+bool Interval::Contains(const Interval& other) const
 {
     return boost::icl::contains(data_, other.data_);
 }
-
-bool Interval::Contains(const Interval& other) const { return Covers(other); }
 
 Position Interval::End() const { return data_.upper(); }
 

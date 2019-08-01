@@ -60,11 +60,11 @@ public:
     /// \name Interval Operations
     /// \{
 
-    /// \returns true if same id and underlying Interval::CoveredBy() other.
-    bool CoveredBy(const GenomicInterval& other) const;
+    /// \returns true if same id and underlying Interval::ContainedBy() other.
+    bool ContainedBy(const GenomicInterval& other) const;
 
-    /// \returns true if same id and underlying Interval::Covers() other.
-    bool Covers(const GenomicInterval& other) const;
+    /// \returns true if same id and underlying Interval::Contains() other.
+    bool Contains(const GenomicInterval& other) const;
 
     /// \returns true if same id and underlying Interval::Intersects() other.
     bool Intersects(const GenomicInterval& other) const;
