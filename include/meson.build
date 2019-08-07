@@ -125,6 +125,7 @@ if not meson.is_subproject()
       'pbcopper/data/LocalContextFlags.h',
       'pbcopper/data/MappedRead.h',
       'pbcopper/data/MovieName.h',
+      'pbcopper/data/Orientation.h',
       'pbcopper/data/Position.h',
       'pbcopper/data/QualityValue.h',
       'pbcopper/data/QualityValues.h',
