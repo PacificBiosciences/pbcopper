@@ -19,7 +19,7 @@ namespace Data {
 ///
 /// This class is used to store the data and convert between the 2 storage types.
 ///
-class Frames
+class Frames : private std::vector<uint16_t>
 {
 public:
     /// \name Conversion Methods
@@ -50,9 +50,11 @@ public:
     /// \name Constructors & Related Methods
     /// \{
 
-    Frames(std::vector<uint16_t> frames);
+    Frames(std::vector<uint16_t> frames) noexcept;
 
     Frames() = default;
+
+    using std::vector<uint16_t>::vector;
 
     /// \}
 
@@ -63,6 +65,10 @@ public:
     /// \returns Frame data in expanded (not encoded) form
     std::vector<uint16_t>& DataRaw();
     const std::vector<uint16_t>& Data() const;
+
+    using std::vector<uint16_t>::at;
+
+    using std::vector<uint16_t>::operator[];
 
     /// \}
 
@@ -89,28 +95,28 @@ public:
     /// \{
 
     /// \returns A const_iterator to the beginning of the sequence.
-    std::vector<uint16_t>::const_iterator cbegin() const;
+    using std::vector<uint16_t>::cbegin;
 
     /// \returns A const_iterator to the element past the end of the sequence.
-    std::vector<uint16_t>::const_iterator cend() const;
+    using std::vector<uint16_t>::cend;
 
-    /// \returns A const_iterator to the beginning of the sequence.
-    std::vector<uint16_t>::const_iterator begin() const;
+    /// \returns A (const_)iterator to the beginning of the sequence.
+    using std::vector<uint16_t>::begin;
 
-    /// \returns A const_iterator to the element past the end of the sequence.
-    std::vector<uint16_t>::const_iterator end() const;
-
-    /// \returns An iterator to the beginning of the sequence.
-    std::vector<uint16_t>::iterator begin();
-
-    /// \returns An iterator to the element past the end of the sequence.
-    std::vector<uint16_t>::iterator end();
+    /// \returns A (const_)iterator to the element past the end of the sequence.
+    using std::vector<uint16_t>::end;
 
     /// \returns The number of frame data points.
-    size_t size() const;
+    using std::vector<uint16_t>::size;
 
     /// \returns True if the container is empty, false otherwise.
-    bool empty() const;
+    using std::vector<uint16_t>::empty;
+
+    /// Clears all frames.
+    using std::vector<uint16_t>::clear;
+
+    /// Emulates std::vector::emplace_back
+    using std::vector<uint16_t>::emplace_back;
 
     /// \}
 
@@ -126,9 +132,6 @@ public:
     Frames& Data(std::vector<uint16_t> frames);
 
     /// \}
-
-private:
-    std::vector<uint16_t> data_;
 };
 
 }  // namespace Data

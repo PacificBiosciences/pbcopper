@@ -109,47 +109,32 @@ static_assert(std::is_nothrow_move_constructible<Frames>::value,
 static_assert(std::is_nothrow_move_assignable<Frames>::value,
               "Frames& operator=(Frames&&) is not = noexcept");
 
-Frames::Frames(std::vector<uint16_t> frames) : data_{std::move(frames)} {}
+Frames::Frames(std::vector<uint16_t> frames) noexcept : std::vector<uint16_t>{std::move(frames)} {}
 
-const std::vector<uint16_t>& Frames::Data() const { return data_; }
+const std::vector<uint16_t>& Frames::Data() const { return *this; }
 
-std::vector<uint16_t>& Frames::DataRaw() { return data_; }
+std::vector<uint16_t>& Frames::DataRaw() { return *this; }
 
-Frames Frames::Decode(const std::vector<uint8_t>& codedData)
-{
-    return Frames{CodeToFrames(codedData)};
-}
+Frames Frames::Decode(const std::vector<uint8_t>& codedData) { return CodeToFrames(codedData); }
 
 std::vector<uint8_t> Frames::Encode(const std::vector<uint16_t>& frames)
 {
     return FramesToCode(frames);
 }
 
-std::vector<uint8_t> Frames::Encode() const { return Frames::Encode(data_); }
+std::vector<uint8_t> Frames::Encode() const { return Frames::Encode(*this); }
 
 Frames& Frames::Data(std::vector<uint16_t> frames)
 {
-    data_ = std::move(frames);
+    *this = std::move(frames);
     return *this;
 }
 
-std::vector<uint16_t>::const_iterator Frames::begin() const { return data_.begin(); }
-
-std::vector<uint16_t>::iterator Frames::begin() { return data_.begin(); }
-
-std::vector<uint16_t>::const_iterator Frames::cbegin() const { return data_.cbegin(); }
-
-std::vector<uint16_t>::const_iterator Frames::cend() const { return data_.cend(); }
-
-std::vector<uint16_t>::const_iterator Frames::end() const { return data_.end(); }
-
-std::vector<uint16_t>::iterator Frames::end() { return data_.end(); }
-
-bool Frames::empty() const { return data_.empty(); }
-
-size_t Frames::size() const { return data_.size(); }
-
-bool Frames::operator==(const Frames& other) const { return data_ == other.data_; }
+bool Frames::operator==(const Frames& other) const
+{
+    return static_cast<const std::vector<uint16_t>&>(*this) ==
+           static_cast<const std::vector<uint16_t>&>(other);
+}
 
 bool Frames::operator!=(const Frames& other) const { return !(*this == other); }
 
