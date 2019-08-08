@@ -34,7 +34,7 @@ TEST(Data_Read, ClipRead)
     const SNR expectedSnr{0.9, 0.9, 0.9, 0.9};
     const Position expectedQStart = 502;
     const Position expectedQEnd = 509;
-    const std::vector<uint8_t> expectedPw{30, 40, 50, 60, 67, 72, 77};
+    const std::vector<uint16_t> expectedPw{30, 40, 50, 60, 70, 80, 90};
     const std::vector<uint16_t> expectedIpd{30, 40, 50, 60, 70, 80, 90};
 
     EXPECT_EQ("name", read.FullName());
@@ -76,7 +76,7 @@ TEST(Data_Read, ClipMappedRead)
     const SNR expectedSnr{0.9, 0.9, 0.9, 0.9};
     const Position expectedQStart = 502;
     const Position expectedQEnd = 507;
-    const std::vector<uint8_t> expectedPw{30, 40, 50, 60, 67};
+    const std::vector<uint16_t> expectedPw{30, 40, 50, 60, 70};
     const std::vector<uint16_t> expectedIpd{30, 40, 50, 60, 70};
     const Strand expectedStrand = Strand::FORWARD;
     const Position expectedTStart = 102;
@@ -119,7 +119,7 @@ TEST(Data_Read, ClipToReferenceOutsideAlignedRegion)
     const SNR expectedSnr{0.9, 0.9, 0.9, 0.9};
     const Position expectedQStart = -1;
     const Position expectedQEnd = -1;
-    const std::vector<uint8_t> expectedPw{};
+    const std::vector<uint16_t> expectedPw{};
     const std::vector<uint16_t> expectedIpd{};
     const Strand expectedStrand = Strand::FORWARD;
     const Position expectedTStart = -1;
