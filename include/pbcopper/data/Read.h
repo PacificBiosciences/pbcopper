@@ -37,7 +37,7 @@ struct Read
 
     // base-level vectors
     std::string Seq;
-    std::vector<uint8_t> PulseWidth;
+    Frames PulseWidth;
     QualityValues Qualities;
     boost::optional<Frames> IPD;
 

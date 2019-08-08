@@ -26,7 +26,7 @@ Read::Read(Data::ReadId id, std::string seq, std::vector<uint8_t> pw, LocalConte
            Accuracy readAccuracy, SNR snr, std::string model)
     : Id{std::move(id)}
     , Seq{std::move(seq)}
-    , PulseWidth{std::move(pw)}
+    , PulseWidth{Frames::Decode(pw)}
     , Flags{std::move(flags)}
     , ReadAccuracy{std::move(readAccuracy)}
     , SignalToNoise{std::move(snr)}
@@ -66,7 +66,7 @@ Read::Read(const std::string& name, std::string seq, QualityValues qualities, SN
            Position qStart, Position qEnd, Frames pulseWidths, Frames ipd)
     : Id{name}
     , Seq{std::move(seq)}
-    , PulseWidth{pulseWidths.Encode()}
+    , PulseWidth{std::move(pulseWidths)}
     , Qualities{std::move(qualities)}
     , IPD{std::move(ipd)}
     , QueryStart{qStart}
