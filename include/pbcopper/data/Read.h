@@ -25,7 +25,7 @@ namespace Data {
 /// A Read contains the name, sequence, covariates, SNR, and associated model.
 struct Read
 {
-    Read(Data::ReadId id, std::string seq, std::vector<uint8_t> pw, LocalContextFlags flags,
+    Read(Data::ReadId id, std::string seq, Frames pw, LocalContextFlags flags,
          Accuracy readAccuracy, SNR snr, std::string model);
     Read(const std::string& name, std::string seq, QualityValues qualities, SNR snr);
     Read(const std::string& name, std::string seq, QualityValues qualities, SNR snr,

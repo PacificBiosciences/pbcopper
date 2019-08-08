@@ -22,11 +22,11 @@ static_assert(std::is_nothrow_move_assignable<Read>::value ==
                   std::is_nothrow_move_assignable<std::string>::value,
               "");
 
-Read::Read(Data::ReadId id, std::string seq, std::vector<uint8_t> pw, LocalContextFlags flags,
+Read::Read(Data::ReadId id, std::string seq, Frames pw, LocalContextFlags flags,
            Accuracy readAccuracy, SNR snr, std::string model)
     : Id{std::move(id)}
     , Seq{std::move(seq)}
-    , PulseWidth{Frames::Decode(pw)}
+    , PulseWidth{std::move(pw)}
     , Flags{std::move(flags)}
     , ReadAccuracy{std::move(readAccuracy)}
     , SignalToNoise{std::move(snr)}
@@ -77,14 +77,13 @@ Read::Read(const std::string& name, std::string seq, QualityValues qualities, SN
 
 Read Read::ClipTo(const int32_t begin, const int32_t end) const
 {
-    Read copy{
-        this->Id,
-        this->Seq.substr(begin, end - begin),
-        std::vector<uint8_t>(this->PulseWidth.begin() + begin, this->PulseWidth.begin() + end),
-        this->Flags,
-        this->ReadAccuracy,
-        this->SignalToNoise,
-        this->Model};
+    Read copy{this->Id,
+              this->Seq.substr(begin, end - begin),
+              Frames(this->PulseWidth.begin() + begin, this->PulseWidth.begin() + end),
+              this->Flags,
+              this->ReadAccuracy,
+              this->SignalToNoise,
+              this->Model};
     return copy;
 }
 
