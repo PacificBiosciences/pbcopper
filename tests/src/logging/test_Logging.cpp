@@ -122,3 +122,27 @@ TEST(Logging_Logger, can_use_custom_delimiter)
     }
     EXPECT_EQ(">|> INFO :: *** Application INFO ***\n", s.str());
 }
+
+TEST(Logging_Logger, trace_level_is_a_noop_in_release_mode)
+{
+    std::ostringstream s;
+    int x = 0;
+    {
+        Logging::LogConfig config{Logging::LogLevel::TRACE};
+        Logging::Logger logger(s, config);
+
+        auto incremented = [](int& y) {
+            ++y;
+            return std::to_string(y);  // just something to feed the logger
+        };
+
+        PBLOGGER_TRACE(logger) << incremented(x) << incremented(x);
+        PBLOGGER_TRACE(logger) << incremented(x) << incremented(x);
+    }
+
+#ifdef NDEBUG
+    EXPECT_EQ(0, x);
+#else
+    EXPECT_EQ(4, x);
+#endif  // NDEBUG
+}

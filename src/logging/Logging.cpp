@@ -92,19 +92,11 @@ Logger::Logger(const std::string& filename, const LogLevel level)
 Logger::Logger(std::ostream& out, const LogConfig& config)
     : stream_{out}, config_{config}, writer_{&Logger::MessageWriter, this}
 {
-#ifdef NDEBUG
-    if (Handles(LogLevel::TRACE))
-        throw std::invalid_argument{"one cannot simply log TRACE messages in release builds!"};
-#endif
 }
 
 Logger::Logger(const std::string& filename, const LogConfig& config)
     : logFile_{filename}, stream_{logFile_}, config_{config}, writer_{&Logger::MessageWriter, this}
 {
-#ifdef NDEBUG
-    if (Handles(LogLevel::TRACE))
-        throw std::invalid_argument{"one cannot simply log TRACE messages in release builds!"};
-#endif
 }
 
 Logger::~Logger()

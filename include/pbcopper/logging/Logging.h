@@ -66,20 +66,13 @@ private:
     void MessageWriter();
 };
 
-// trace is disabled under Release builds (-DNDEBUG)
-#ifdef NDEBUG
-#define PBLOGGER_LEVEL(lg, lvl)                                   \
-    if (PacBio::Logging::lvl != PacBio::Logging::LogLevel::TRACE) \
-    PacBio::Logging::LogMessage(__FILE__, __func__, __LINE__, PacBio::Logging::lvl, (lg))
-#else
 #define PBLOGGER_LEVEL(lg, lvl) \
     PacBio::Logging::LogMessage(__FILE__, __func__, __LINE__, PacBio::Logging::lvl, (lg))
-#endif
 
 //
-// Log message with desired log level & provided logger
+// Log message with desired log level & provided logger. TRACE level messages
+// are disabled in Release mode.
 //
-#define PBLOGGER_TRACE(lg) PBLOGGER_LEVEL(lg, LogLevel::TRACE)
 #define PBLOGGER_DEBUG(lg) PBLOGGER_LEVEL(lg, LogLevel::DEBUG)
 #define PBLOGGER_INFO(lg) PBLOGGER_LEVEL(lg, LogLevel::INFO)
 #define PBLOGGER_NOTICE(lg) PBLOGGER_LEVEL(lg, LogLevel::NOTICE)
@@ -88,12 +81,19 @@ private:
 #define PBLOGGER_CRITICAL(lg) PBLOGGER_LEVEL(lg, LogLevel::CRITICAL)
 #define PBLOGGER_FATAL(lg) PBLOGGER_LEVEL(lg, LogLevel::FATAL)
 
+#ifdef NDEBUG
+#define PBLOGGER_TRACE(lg) \
+    if (false) PBLOGGER_LEVEL(lg, LogLevel::TRACE)
+#else
+#define PBLOGGER_TRACE(lg) PBLOGGER_LEVEL(lg, LogLevel::TRACE)
+#endif
+
 //
-// Log message with desired log level & current logger
+// Log message with desired log level & current logger. TRACE level messages
+// are disabled in Release mode.
 //
 #define PBLOG_LEVEL(lvl) PBLOGGER_LEVEL(PacBio::Logging::Logger::Current(), lvl)
 
-#define PBLOG_TRACE PBLOG_LEVEL(LogLevel::TRACE)
 #define PBLOG_DEBUG PBLOG_LEVEL(LogLevel::DEBUG)
 #define PBLOG_INFO PBLOG_LEVEL(LogLevel::INFO)
 #define PBLOG_NOTICE PBLOG_LEVEL(LogLevel::NOTICE)
@@ -101,6 +101,13 @@ private:
 #define PBLOG_ERROR PBLOG_LEVEL(LogLevel::ERROR)
 #define PBLOG_CRITICAL PBLOG_LEVEL(LogLevel::CRITICAL)
 #define PBLOG_FATAL PBLOG_LEVEL(LogLevel::FATAL)
+
+#ifdef NDEBUG
+#define PBLOG_TRACE \
+    if (false) PBLOG_LEVEL(LogLevel::TRACE)
+#else
+#define PBLOG_TRACE PBLOG_LEVEL(LogLevel::TRACE)
+#endif
 
 void InstallSignalHandlers(Logger& logger = Logger::Current());
 
