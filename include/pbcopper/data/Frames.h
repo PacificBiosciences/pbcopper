@@ -118,6 +118,9 @@ public:
     /// Emulates std::vector::emplace_back
     using std::vector<uint16_t>::emplace_back;
 
+    /// Emulates std::vector::resize
+    using std::vector<uint16_t>::resize;
+
     /// \}
 
 public:
