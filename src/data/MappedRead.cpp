@@ -2,13 +2,127 @@
 
 #include <pbcopper/data/MappedRead.h>
 
+#include <cassert>
+
+#include <algorithm>
+#include <numeric>
 #include <type_traits>
 
 #include <pbcopper/data/Clipping.h>
 #include <pbcopper/data/internal/ClippingImpl.h>
+#include <pbcopper/utility/SequenceUtils.h>
 
 namespace PacBio {
 namespace Data {
+namespace {
+
+template <class InputIt, class Size, class OutputIt>
+OutputIt Move_N(InputIt first, Size count, OutputIt result)
+{
+    return std::move(first, first + count, result);
+}
+
+template <typename F, typename N>
+void ClipAndGapify(F* seq, const Cigar& cigar, const GapBehavior gapBehavior,
+                   const SoftClipBehavior softClipBehavior, N paddingNullValue, N deletionNullValue)
+{
+    assert(seq);
+    assert((gapBehavior == GapBehavior::SHOW) || (softClipBehavior == SoftClipBehavior::REMOVE));
+
+    const bool showGaps = (gapBehavior == GapBehavior::SHOW);
+    const bool removeSoftClips = (softClipBehavior == SoftClipBehavior::REMOVE);
+
+    // clang-format off
+    // determine output container's length
+    const size_t outputLength = std::accumulate(cigar.cbegin(), cigar.cend(), 0,
+        [&](size_t totalLength, const CigarOperation& op) {
+            const auto opLength = op.Length();
+            switch (op.Type())
+            {
+                // these operations never increment output length
+                case CigarOperationType::HARD_CLIP:
+                case CigarOperationType::REFERENCE_SKIP:
+                    return totalLength;
+
+                // if we're removing soft clip, do not increment output length
+                case CigarOperationType::SOFT_CLIP:
+                    return totalLength + (removeSoftClips ? 0 : opLength);
+
+                // increase output length only if we're adding deletion/padding chars
+                case CigarOperationType::DELETION:
+                case CigarOperationType::PADDING:
+                    return totalLength + (showGaps ? opLength : 0);
+
+                // otherwise, all operations contribute to output length
+                default:
+                    return totalLength + opLength;
+            }
+        });
+    // clang-format on
+
+    // move original data to temp, prep output container size
+    F originalSeq = std::move(*seq);
+    seq->resize(outputLength);
+
+    // apply CIGAR ops
+    size_t srcIndex = 0;
+    size_t dstIndex = 0;
+    for (const auto& op : cigar) {
+        const auto opLength = op.Length();
+        const auto opType = op.Type();
+
+        // nothing to do for hard-clipped & ref-skipped positions
+        if (opType == CigarOperationType::HARD_CLIP ||
+            opType == CigarOperationType::REFERENCE_SKIP) {
+            continue;
+        }
+
+        // maybe skip soft-clipped positions
+        else if (opType == CigarOperationType::SOFT_CLIP && removeSoftClips)
+            srcIndex += opLength;
+
+        // maybe add deletions
+        else if (opType == CigarOperationType::DELETION && showGaps) {
+            for (size_t i = 0; i < opLength; ++i) {
+                (*seq)[dstIndex] = deletionNullValue;
+                ++dstIndex;
+            }
+        }
+
+        // maybe add padding
+        else if (opType == CigarOperationType::PADDING && showGaps) {
+            for (size_t i = 0; i < opLength; ++i) {
+                (*seq)[dstIndex] = paddingNullValue;
+                ++dstIndex;
+            }
+        }
+
+        // otherwise move input sequence to output
+        else {
+            Move_N(originalSeq.begin() + srcIndex, opLength, seq->begin() + dstIndex);
+            srcIndex += opLength;
+            dstIndex += opLength;
+        }
+    }
+}
+
+template <typename Container>
+void OrientData(Container* data, Orientation currentOrientation, Orientation targetOrientation,
+                enum Strand strand)
+{
+    if ((currentOrientation != targetOrientation) && (strand == Strand::REVERSE))
+        std::reverse(data->begin(), data->end());
+}
+
+template <>
+void OrientData(std::string* data, Orientation currentOrientation, Orientation targetOrientation,
+                enum Strand strand)
+{
+    if ((currentOrientation != targetOrientation) && (strand == Strand::REVERSE))
+        Utility::ReverseComplement(*data);
+}
+
+}  // namespace
 
 static_assert(std::is_copy_constructible<MappedRead>::value,
               "MappedRead(const MappedRead&) is not = default");
@@ -74,6 +188,92 @@ MappedRead::MappedRead(Read read, PacBio::Data::Strand strand, Position template
     , Cigar{std::move(cigar)}
     , MapQuality{mapQV}
 {
+}
+
+std::string MappedRead::AlignedSequence(Orientation orientation, GapBehavior gapBehavior,
+                                        SoftClipBehavior softClipBehavior) const
+{
+    if (Strand == Strand::UNMAPPED || Cigar.empty()) return Seq;
+
+    std::string bases = Seq;  // native orientation
+    Orientation currentOrientation = Orientation::NATIVE;
+
+    // if we need to touch CIGAR, force into genomic orientation (for mapping to CIGAR),
+    // then apply gaps and/or remove soft clips
+    if ((gapBehavior == GapBehavior::SHOW) || (softClipBehavior == SoftClipBehavior::REMOVE)) {
+        OrientData(&bases, currentOrientation, Orientation::GENOMIC, AlignedStrand());
+        currentOrientation = Orientation::GENOMIC;
+        ClipAndGapify(&bases, Cigar, gapBehavior, softClipBehavior, '*', '-');
+    }
+
+    // place back in requested orientation
+    OrientData(&bases, currentOrientation, orientation, AlignedStrand());
+    return bases;
+}
+
+QualityValues MappedRead::AlignedQualities(Orientation orientation, GapBehavior gapBehavior,
+                                           SoftClipBehavior softClipBehavior) const
+{
+    if (Strand == Strand::UNMAPPED || Cigar.empty()) return Qualities;
+
+    QualityValues quals = Qualities;  // native orientation
+    Orientation currentOrientation = Orientation::NATIVE;
+
+    // if we need to touch CIGAR, force into genomic orientation (for mapping to CIGAR),
+    // then apply gaps and/or remove soft clips
+    if ((gapBehavior == GapBehavior::SHOW) || (softClipBehavior == SoftClipBehavior::REMOVE)) {
+        OrientData(&quals, currentOrientation, Orientation::GENOMIC, AlignedStrand());
+        currentOrientation = Orientation::GENOMIC;
+        ClipAndGapify(&quals, Cigar, gapBehavior, softClipBehavior, QualityValue{0},
+                      QualityValue{0});
+    }
+
+    // place back in requested orientation
+    OrientData(&quals, currentOrientation, orientation, AlignedStrand());
+    return quals;
+}
+
+boost::optional<Frames> MappedRead::AlignedIPD(Orientation orientation, GapBehavior gapBehavior,
+                                               SoftClipBehavior softClipBehavior) const
+{
+    if (!IPD) return boost::none;
+    if (Strand == Strand::UNMAPPED || Cigar.empty()) return IPD;
+
+    Frames ipd = IPD.get();  // native orientation
+    Orientation currentOrientation = Orientation::NATIVE;
+
+    // if we need to touch CIGAR, force into genomic orientation (for mapping to CIGAR),
+    // then apply gaps and/or remove soft clips
+    if ((gapBehavior == GapBehavior::SHOW) || (softClipBehavior == SoftClipBehavior::REMOVE)) {
+        OrientData(&ipd, currentOrientation, Orientation::GENOMIC, AlignedStrand());
+        currentOrientation = Orientation::GENOMIC;
+        ClipAndGapify(&ipd, Cigar, gapBehavior, softClipBehavior, 0, 0);
+    }
+
+    // place back in requested orientation
+    OrientData(&ipd, currentOrientation, orientation, AlignedStrand());
+    return ipd;
+}
+
+Frames MappedRead::AlignedPulseWidth(Orientation orientation, GapBehavior gapBehavior,
+                                     SoftClipBehavior softClipBehavior) const
+{
+    if (Strand == Strand::UNMAPPED || Cigar.empty()) return PulseWidth;
+
+    Frames pw = PulseWidth;  // native orientation
+    Orientation currentOrientation = Orientation::NATIVE;
+
+    // if we need to touch CIGAR, force into genomic orientation (for mapping to CIGAR),
+    // then apply gaps and/or remove soft clips
+    if ((gapBehavior == GapBehavior::SHOW) || (softClipBehavior == SoftClipBehavior::REMOVE)) {
+        OrientData(&pw, currentOrientation, Orientation::GENOMIC, AlignedStrand());
+        currentOrientation = Orientation::GENOMIC;
+        ClipAndGapify(&pw, Cigar, gapBehavior, softClipBehavior, 0, 0);
+    }
+
+    // place back in requested orientation
+    OrientData(&pw, currentOrientation, orientation, AlignedStrand());
+    return pw;
 }
 
 Position MappedRead::AlignedStart() const
