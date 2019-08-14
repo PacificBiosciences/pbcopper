@@ -32,31 +32,23 @@ bool Interval::operator<(const Interval& other) const { return data_ < other.dat
 
 bool Interval::IsEmpty() const { return Length() == 0; }
 
-bool Interval::CoveredBy(const Interval& other) const
+bool Interval::ContainedBy(const Interval& other) const
 {
     return boost::icl::within(data_, other.data_);
 }
 
-bool Interval::Covers(const Interval& other) const
+bool Interval::Contains(const Interval& other) const
 {
     return boost::icl::contains(data_, other.data_);
 }
 
-bool Interval::Contains(const Interval& other) const { return Covers(other); }
-
 Position Interval::End() const { return data_.upper(); }
-
-Position Interval::Right() const { return End(); }
-
-Position Interval::Stop() const { return End(); }
 
 Interval& Interval::End(const Position& end)
 {
     data_ = interval_type{data_.lower(), end};
     return *this;
 }
-
-Interval& Interval::Stop(const Position& end) { return End(end); }
 
 bool Interval::Intersects(const Interval& other) const
 {
@@ -75,8 +67,6 @@ bool Interval::IsValid() const { return !boost::icl::is_empty(data_); }
 size_t Interval::Length() const { return boost::icl::length(data_); }
 
 Position Interval::Start() const { return data_.lower(); }
-
-Position Interval::Left() const { return Start(); }
 
 Interval& Interval::Start(const Position& start)
 {
