@@ -97,7 +97,7 @@ TEST(CLI2_OptionTranslator, creates_basic_integer_option_data_from_text)
     ASSERT_EQ(1u, names.size());
     EXPECT_EQ("test", names[0]);
 
-    const int value = boost::get<int>(*optionData.defaultValue);
+    const auto value = PacBio::CLI_v2::OptionValueToInt(*optionData.defaultValue);
     EXPECT_EQ(42, value);
 
     EXPECT_EQ("test_description", optionData.description);
@@ -120,15 +120,13 @@ TEST(CLI2_OptionTranslator, creates_basic_unsigned_integer_option_data_from_text
     };
 
     const auto optionData = OptionTranslator::Translate(testOption);
-    EXPECT_EQ(static_cast<int>(OptionValueType::UINT), optionData.defaultValue->which());
-
-    const unsigned int value = boost::get<unsigned int>(*optionData.defaultValue);
+    const auto value = PacBio::CLI_v2::OptionValueToUInt(*optionData.defaultValue);
     EXPECT_EQ(42u, value);
 
-    EXPECT_THROW({boost::get<int>(*optionData.defaultValue); },         boost::bad_get);
-    EXPECT_THROW({boost::get<double>(*optionData.defaultValue); },       boost::bad_get);
-    EXPECT_THROW({boost::get<bool>(*optionData.defaultValue); },        boost::bad_get);
-    EXPECT_THROW({boost::get<std::string>(*optionData.defaultValue); }, boost::bad_get);
+    EXPECT_THROW({PacBio::CLI_v2::OptionValueToInt(*optionData.defaultValue); },    std::exception);
+    EXPECT_THROW({PacBio::CLI_v2::OptionValueToDouble(*optionData.defaultValue); }, std::exception);
+    EXPECT_THROW({PacBio::CLI_v2::OptionValueToBool(*optionData.defaultValue); },   std::exception);
+    EXPECT_THROW({PacBio::CLI_v2::OptionValueToString(*optionData.defaultValue); }, std::exception);
 }
 
 TEST(CLI2_OptionTranslator, creates_basic_float_option_data_from_text)
@@ -149,7 +147,7 @@ TEST(CLI2_OptionTranslator, creates_basic_float_option_data_from_text)
     ASSERT_EQ(1u, names.size());
     EXPECT_EQ("test", names[0]);
 
-    const double value = boost::get<double>(*optionData.defaultValue);
+    const auto value = PacBio::CLI_v2::OptionValueToDouble(*optionData.defaultValue);
     EXPECT_EQ(3.14, value);
 
     EXPECT_EQ("test_description", optionData.description);
@@ -176,7 +174,7 @@ TEST(CLI2_OptionTranslator, creates_basic_boolean_option_data_from_text)
     ASSERT_EQ(1u, names.size());
     EXPECT_EQ("test", names[0]);
 
-    const bool value = boost::get<bool>(*optionData.defaultValue);
+    const auto value = PacBio::CLI_v2::OptionValueToBool(*optionData.defaultValue);
     EXPECT_FALSE(value);
 
     EXPECT_EQ("test_description", optionData.description);
@@ -204,7 +202,7 @@ TEST(CLI2_OptionTranslator, creates_basic_string_option_data_from_text)
     ASSERT_EQ(1u, names.size());
     EXPECT_EQ("test", names[0]);
 
-    const std::string value = boost::get<std::string>(*optionData.defaultValue);
+    const auto value = PacBio::CLI_v2::OptionValueToString(*optionData.defaultValue);
     EXPECT_EQ("foo", value);
 
     EXPECT_EQ("test_description", optionData.description);
@@ -232,7 +230,7 @@ TEST(CLI2_OptionTranslator, creates_basic_file_option_data_from_text)
     ASSERT_EQ(1u, names.size());
     EXPECT_EQ("test", names[0]);
 
-    const std::string value = boost::get<std::string>(*optionData.defaultValue);
+    const auto value = PacBio::CLI_v2::OptionValueToString(*optionData.defaultValue);
     EXPECT_EQ("foo", value);
 
     EXPECT_EQ("test_description", optionData.description);
@@ -260,7 +258,7 @@ TEST(CLI2_OptionTranslator, creates_basic_dir_option_data_from_text)
     ASSERT_EQ(1u, names.size());
     EXPECT_EQ("test", names[0]);
 
-    const std::string value = boost::get<std::string>(*optionData.defaultValue);
+    const auto value = PacBio::CLI_v2::OptionValueToString(*optionData.defaultValue);
     EXPECT_EQ("foo", value);
 
     EXPECT_EQ("test_description", optionData.description);
@@ -289,7 +287,7 @@ TEST(CLI2_OptionTranslator, creates_option_with_choices)
     ASSERT_EQ(1u, names.size());
     EXPECT_EQ("test", names[0]);
 
-    const std::string value = boost::get<std::string>(*optionData.defaultValue);
+    const auto value = PacBio::CLI_v2::OptionValueToString(*optionData.defaultValue);
     EXPECT_EQ("foo", value);
 
     EXPECT_EQ("test_description", optionData.description);
@@ -297,9 +295,9 @@ TEST(CLI2_OptionTranslator, creates_option_with_choices)
 
     const auto& choices = optionData.choices;
     ASSERT_EQ(3u, choices.size());
-    EXPECT_EQ("bar", boost::get<std::string>(choices[0]));
-    EXPECT_EQ("foo", boost::get<std::string>(choices[1]));
-    EXPECT_EQ("baz", boost::get<std::string>(choices[2]));
+    EXPECT_EQ("bar", PacBio::CLI_v2::OptionValueToString(choices[0]));
+    EXPECT_EQ("foo", PacBio::CLI_v2::OptionValueToString(choices[1]));
+    EXPECT_EQ("baz", PacBio::CLI_v2::OptionValueToString(choices[2]));
 
     EXPECT_FALSE(optionData.isHidden);
 }
@@ -325,7 +323,7 @@ TEST(CLI2_OptionTranslator, creates_hidden_option)
     ASSERT_EQ(1u, names.size());
     EXPECT_EQ("test", names[0]);
 
-    const int value = boost::get<int>(*optionData.defaultValue);
+    const auto value = PacBio::CLI_v2::OptionValueToInt(*optionData.defaultValue);
     EXPECT_EQ(10, value);
 
     EXPECT_EQ("test_description", optionData.description);
@@ -367,7 +365,7 @@ TEST(CLI2_OptionTranslator, can_pass_default_integer_value_at_option_ctor)
     const auto testOptionData = OptionTranslator::Translate(testOption);
     EXPECT_TRUE(testOptionData.defaultValue);
 
-    const int value = boost::get<int>(*testOptionData.defaultValue);
+    const auto value = PacBio::CLI_v2::OptionValueToInt(*testOptionData.defaultValue);
     EXPECT_EQ(DefaultValue, value);
 }
 
@@ -388,7 +386,7 @@ TEST(CLI2_OptionTranslator, can_pass_default_unsigned_integer_value_at_option_ct
     const auto testOptionData = OptionTranslator::Translate(testOption);
     EXPECT_TRUE(testOptionData.defaultValue);
 
-    const unsigned int value = boost::get<unsigned int>(*testOptionData.defaultValue);
+    const auto value = PacBio::CLI_v2::OptionValueToUInt(*testOptionData.defaultValue);
     EXPECT_EQ(DefaultValue, value);
 }
 
@@ -409,7 +407,7 @@ TEST(CLI2_OptionTranslator, can_pass_default_float_value_at_option_ctor)
     const auto testOptionData = OptionTranslator::Translate(testOption);
     EXPECT_TRUE(testOptionData.defaultValue);
 
-    const double value = boost::get<double>(*testOptionData.defaultValue);
+    const auto value = PacBio::CLI_v2::OptionValueToDouble(*testOptionData.defaultValue);
     EXPECT_EQ(DefaultValue, value);
 }
 
@@ -430,7 +428,7 @@ TEST(CLI2_OptionTranslator, can_pass_default_string_value_at_option_ctor)
     const auto testOptionData = OptionTranslator::Translate(testOption);
     EXPECT_TRUE(testOptionData.defaultValue);
 
-    const std::string value = boost::get<std::string>(*testOptionData.defaultValue);
+    const auto value = PacBio::CLI_v2::OptionValueToString(*testOptionData.defaultValue);
     EXPECT_EQ(DefaultValue, value);
 }
 

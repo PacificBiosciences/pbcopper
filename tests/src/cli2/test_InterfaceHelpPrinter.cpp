@@ -696,11 +696,6 @@ Typical workflow:
     std::ostringstream out;
     out << help;
     EXPECT_EQ(expectedText, out.str());
-
-    std::cerr << out.str();
-
-    std::cerr << "\n\n--\n";
-    std::cerr << help.Usage();
 }
 
 TEST(CLI2_InterfaceHelpPrinter, can_disable_builtins)
