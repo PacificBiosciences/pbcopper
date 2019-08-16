@@ -137,21 +137,21 @@ std::string InterfaceHelpPrinter::Choices(const OptionData& option)
     for (const auto& choice : option.choices) {
         switch (option.type) {
             case OptionValueType::INT:
-                out << boost::get<int>(choice);
+                out << OptionValueToInt(choice);
                 break;
             case OptionValueType::UINT:
-                out << boost::get<unsigned int>(choice);
+                out << OptionValueToUInt(choice);
                 break;
             case OptionValueType::FLOAT:
-                out << boost::get<double>(choice);
+                out << OptionValueToDouble(choice);
                 break;
             case OptionValueType::STRING:
             case OptionValueType::FILE:
             case OptionValueType::DIR:
-                out << boost::get<std::string>(choice);
+                out << OptionValueToString(choice);
                 break;
             case OptionValueType::BOOL:
-                out << (boost::get<bool>(choice) ? "true" : "false");
+                out << (OptionValueToBool(choice) ? "true" : "false");
                 break;
         }
         out << ", ";
@@ -169,21 +169,21 @@ std::string InterfaceHelpPrinter::DefaultValue(const OptionData& option)
     std::stringstream out;
     switch (option.type) {
         case OptionValueType::INT:
-            out << boost::get<int>(option.defaultValue.get());
+            out << OptionValueToInt(option.defaultValue.get());
             break;
         case OptionValueType::UINT:
-            out << boost::get<unsigned int>(option.defaultValue.get());
+            out << OptionValueToUInt(option.defaultValue.get());
             break;
         case OptionValueType::FLOAT:
-            out << boost::get<double>(option.defaultValue.get());
+            out << OptionValueToDouble(option.defaultValue.get());
             break;
         case OptionValueType::STRING:
         case OptionValueType::FILE:
         case OptionValueType::DIR:
-            out << boost::get<std::string>(option.defaultValue.get());
+            out << OptionValueToString(option.defaultValue.get());
             break;
         case OptionValueType::BOOL: {
-            const bool on = boost::get<bool>(option.defaultValue.get());
+            const bool on = OptionValueToBool(option.defaultValue.get());
             out << (on ? "true" : "false");
             break;
         }
@@ -368,7 +368,7 @@ bool InterfaceHelpPrinter::ShouldShowDefaultValue(const OptionData& option)
 
     // omit if string-type option has an empty default
     if (option.type == OptionValueType::STRING) {
-        const auto& defaultValue = boost::get<std::string>(option.defaultValue.get());
+        const auto& defaultValue = OptionValueToString(option.defaultValue.get());
         return !defaultValue.empty();
     }
 

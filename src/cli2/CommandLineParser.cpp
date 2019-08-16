@@ -49,12 +49,12 @@ OptionValue ValueFromString(const OptionData& option, const std::string valueStr
 {
     switch (option.type) {
         case OptionValueType::INT: {
-            const int v = std::strtol(valueString.c_str(), nullptr, 10);
+            const int64_t v = std::strtoll(valueString.c_str(), nullptr, 10);
             return OptionValue{v};
         }
 
         case OptionValueType::UINT: {
-            const unsigned int v = std::strtoul(valueString.c_str(), nullptr, 10);
+            const uint64_t v = std::strtoull(valueString.c_str(), nullptr, 10);
             return OptionValue{v};
         }
 
