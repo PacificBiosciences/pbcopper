@@ -117,6 +117,7 @@ void InterfaceHelpPrinter::CalculateMetrics()
     if (interface_.LogLevelOption()) updateMetricsWithOption(interface_.LogLevelOption().get());
     if (interface_.LogFileOption()) updateMetricsWithOption(interface_.LogFileOption().get());
     if (interface_.NumThreadsOption()) updateMetricsWithOption(interface_.NumThreadsOption().get());
+    if (interface_.VerboseOption()) updateMetricsWithOption(interface_.VerboseOption().get());
     updateMetricsWithOption(interface_.VersionOption());
 
     // metrics using pos args
@@ -336,6 +337,7 @@ std::string InterfaceHelpPrinter::Options()
     if (interface_.LogLevelOption()) group.options.push_back(interface_.LogLevelOption().get());
     if (interface_.LogFileOption()) group.options.push_back(interface_.LogFileOption().get());
     if (interface_.NumThreadsOption()) group.options.push_back(interface_.NumThreadsOption().get());
+    if (interface_.VerboseOption()) group.options.push_back(interface_.VerboseOption().get());
     group.options.push_back(interface_.VersionOption());
     out << OptionGroup(group);
     return out.str();

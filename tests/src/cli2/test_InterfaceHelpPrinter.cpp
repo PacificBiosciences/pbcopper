@@ -715,4 +715,24 @@ TEST(CLI2_InterfaceHelpPrinter, can_disable_builtins)
     EXPECT_EQ(expectedText, formattedText);
 }
 
+TEST(CLI2_InterfaceHelpPrinter, can_enable_verbose_option)
+{
+    const std::string expectedText{
+        "Options:\n"
+        "  -h,--help               Show this help and exit.\n"
+        "  --log-level       STR   Set log level. Valid choices: (TRACE, DEBUG, INFO,\n"
+        "                          WARN, FATAL). [WARN]\n"
+        "  --log-file        FILE  Log to a file, instead of stderr.\n"
+        "  -j,--num-threads  INT   Number of threads to use, 0 means autodetection. [0]\n"
+        "  -v,--verbose            Use verbose output.\n"
+        "  --version               Show application version and exit.\n"};
+
+    Interface i{"frobber"};
+    i.EnableVerboseOption();
+
+    InterfaceHelpPrinter help{i, 80};
+    const auto formattedText = help.Options();
+    EXPECT_EQ(expectedText, formattedText);
+}
+
 // clang-format on

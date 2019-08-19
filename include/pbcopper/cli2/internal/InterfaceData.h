@@ -35,8 +35,7 @@ struct InterfaceData
         , logLevelOption_{std::move(logLevel)}
         , numThreadsOption_{std::move(numThreads)}
         , versionOption_{std::move(version)}
-    {
-    }
+    {}
 
     std::string appName_;
     std::string appDescription_;
@@ -45,11 +44,15 @@ struct InterfaceData
     std::string example_;
     std::string footer_;
 
+    // default enabled
     OptionData helpOption_;
     boost::optional<internal::OptionData> logFileOption_;
     boost::optional<internal::OptionData> logLevelOption_;
     boost::optional<internal::OptionData> numThreadsOption_;
     OptionData versionOption_;
+
+    // default disabled
+    boost::optional<internal::OptionData> verboseOption_ = boost::none;
 
     Logging::LogConfig logConfig_;
 

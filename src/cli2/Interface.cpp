@@ -126,6 +126,12 @@ Interface& Interface::DisableNumThreadsOption()
     return *this;
 }
 
+Interface& Interface::EnableVerboseOption()
+{
+    data_.verboseOption_ = OptionTranslator::Translate(Builtin::Verbose);
+    return *this;
+}
+
 const std::string& Interface::Example() const { return data_.example_; }
 
 Interface& Interface::Example(std::string example)
@@ -210,6 +216,11 @@ const std::vector<OptionGroupData>& Interface::OptionGroups() const { return dat
 const std::vector<PositionalArgumentData>& Interface::PositionalArguments() const
 {
     return data_.positionalArgs_;
+}
+
+const boost::optional<internal::OptionData>& Interface::VerboseOption() const
+{
+    return data_.verboseOption_;
 }
 
 const internal::OptionData& Interface::VersionOption() const { return data_.versionOption_; }
