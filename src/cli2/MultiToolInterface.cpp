@@ -25,7 +25,9 @@ static_assert(std::is_nothrow_move_assignable<MultiToolInterface>::value ==
 
 MultiToolInterface::MultiToolInterface(std::string name, std::string description,
                                        std::string version)
-    : data_{std::move(name), std::move(description), std::move(version)}
+    : data_{std::move(name), std::move(description), std::move(version),
+            OptionTranslator::Translate(Builtin::Help),
+            OptionTranslator::Translate(Builtin::Version)}
 {
 }
 
@@ -67,6 +69,8 @@ MultiToolInterface& MultiToolInterface::HelpFooter(std::string footer)
     return *this;
 }
 
+const internal::OptionData& MultiToolInterface::HelpOption() const { return data_.helpOption_; }
+
 const Tool& MultiToolInterface::ToolFor(const std::string& toolName) const
 {
     for (const auto& tool : data_.tools_) {
@@ -77,6 +81,11 @@ const Tool& MultiToolInterface::ToolFor(const std::string& toolName) const
 }
 
 const std::vector<Tool>& MultiToolInterface::Tools() const { return data_.tools_; }
+
+const internal::OptionData& MultiToolInterface::VersionOption() const
+{
+    return data_.versionOption_;
+}
 
 }  // namespace CLI_v2
 }  // namespace PacBio

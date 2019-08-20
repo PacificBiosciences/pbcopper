@@ -25,16 +25,16 @@ namespace internal {
 struct InterfaceData
 {
     InterfaceData(std::string appName, std::string appDescription, std::string appVersion,
-                  OptionData help, OptionData logFile, OptionData logLevel, OptionData numThreads,
-                  OptionData version)
+                  OptionData help, OptionData version, OptionData numThreads, OptionData logFile,
+                  OptionData logLevel)
         : appName_{std::move(appName)}
         , appDescription_{std::move(appDescription)}
         , appVersion_{std::move(appVersion)}
         , helpOption_{std::move(help)}
+        , versionOption_{std::move(version)}
+        , numThreadsOption_{std::move(numThreads)}
         , logFileOption_{std::move(logFile)}
         , logLevelOption_{std::move(logLevel)}
-        , numThreadsOption_{std::move(numThreads)}
-        , versionOption_{std::move(version)}
     {
     }
 
@@ -45,11 +45,15 @@ struct InterfaceData
     std::string example_;
     std::string footer_;
 
+    // default enabled
     OptionData helpOption_;
+    OptionData versionOption_;
+    boost::optional<internal::OptionData> numThreadsOption_;
     boost::optional<internal::OptionData> logFileOption_;
     boost::optional<internal::OptionData> logLevelOption_;
-    boost::optional<internal::OptionData> numThreadsOption_;
-    OptionData versionOption_;
+
+    // default disabled
+    boost::optional<internal::OptionData> verboseOption_ = boost::none;
 
     Logging::LogConfig logConfig_;
 

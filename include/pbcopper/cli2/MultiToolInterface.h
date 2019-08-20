@@ -12,6 +12,7 @@
 
 #include <pbcopper/cli2/Tool.h>
 #include <pbcopper/cli2/internal/MultiToolInterfaceData.h>
+#include <pbcopper/cli2/internal/OptionData.h>
 
 namespace PacBio {
 namespace CLI_v2 {
@@ -52,6 +53,16 @@ public:
     /// \return true if requested name is a subtool of this interface
     ///
     bool HasTool(const std::string& toolName) const;
+
+    /// \internal
+    /// \return (translated) help option.
+    ///
+    const internal::OptionData& HelpOption() const;
+
+    /// \internal
+    /// \return (translated) help option.
+    ///
+    const internal::OptionData& VersionOption() const;
 
     ///
     /// \return help display footer text.
