@@ -35,10 +35,10 @@ Interface::Interface(std::string name, std::string description, std::string vers
             std::move(description),
             std::move(version),
             OptionTranslator::Translate(Builtin::Help),
-            OptionTranslator::Translate(Builtin::LogFile),
-            OptionTranslator::Translate(Builtin::LogLevel),
+            OptionTranslator::Translate(Builtin::Version),
             OptionTranslator::Translate(Builtin::NumThreads),
-            OptionTranslator::Translate(Builtin::Version)}
+            OptionTranslator::Translate(Builtin::LogFile),
+            OptionTranslator::Translate(Builtin::LogLevel)}
 {
     if (data_.appName_.empty()) {
         throw std::runtime_error{

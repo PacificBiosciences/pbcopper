@@ -205,31 +205,13 @@ TEST(CLI2_InterfaceHelpPrinter, formats_empty_description)
     EXPECT_EQ(expectedText, formattedText);
 }
 
-TEST(CLI2_InterfaceHelpPrinter, formats_option_names)
-{
-    const std::vector<std::string> expected{"-h,--help", "--log-level", "--version"};
-
-    Interface i{"frobber"};
-    InterfaceHelpPrinter help{i};
-    const auto formattedHelp = help.OptionNames(i.HelpOption());
-    const auto formattedLogLevel = help.OptionNames(i.LogLevelOption().get());
-    const auto formattedVersion = help.OptionNames(i.VersionOption());
-    EXPECT_EQ(expected[0], formattedHelp);
-    EXPECT_EQ(expected[1], formattedLogLevel);
-    EXPECT_EQ(expected[2], formattedVersion);
-}
-
 TEST(CLI2_InterfaceHelpPrinter, no_formatted_option_names_for_hidden_option)
 {
     OptionData option;
     option.isHidden = true;
 
-    const std::string expectedText{""};
-
-    Interface i{"frobber"};
-    InterfaceHelpPrinter help{i};
-    const auto formattedText = help.OptionNames(option);
-    EXPECT_EQ(expectedText, formattedText);
+    const auto formattedText = PacBio::CLI_v2::internal::HelpMetrics::OptionNames(option);
+    EXPECT_TRUE(formattedText.empty());
 }
 
 TEST(CLI2_InterfaceHelpPrinter, can_calculate_metrics_from_builtins_only)
@@ -439,11 +421,11 @@ TEST(CLI2_InterfaceHelpPrinter, formats_builtin_option_group)
     const std::string expectedText{
         "Options:\n"
         "  -h,--help               Show this help and exit.\n"
+        "  --version               Show application version and exit.\n"
+        "  -j,--num-threads  INT   Number of threads to use, 0 means autodetection. [0]\n"
         "  --log-level       STR   Set log level. Valid choices: (TRACE, DEBUG, INFO,\n"
         "                          WARN, FATAL). [WARN]\n"
-        "  --log-file        FILE  Log to a file, instead of stderr.\n"
-        "  -j,--num-threads  INT   Number of threads to use, 0 means autodetection. [0]\n"
-        "  --version               Show application version and exit.\n"};
+        "  --log-file        FILE  Log to a file, instead of stderr.\n"};
 
     Interface i{"frobber"};
     InterfaceHelpPrinter help{i, 80};
@@ -456,11 +438,11 @@ TEST(CLI2_InterfaceHelpPrinter, prints_log_level_override)
     const std::string expectedText{
         "Options:\n"
         "  -h,--help               Show this help and exit.\n"
+        "  --version               Show application version and exit.\n"
+        "  -j,--num-threads  INT   Number of threads to use, 0 means autodetection. [0]\n"
         "  --log-level       STR   Set log level. Valid choices: (TRACE, DEBUG, INFO,\n"
         "                          WARN, FATAL). [DEBUG]\n"
-        "  --log-file        FILE  Log to a file, instead of stderr.\n"
-        "  -j,--num-threads  INT   Number of threads to use, 0 means autodetection. [0]\n"
-        "  --version               Show application version and exit.\n"};
+        "  --log-file        FILE  Log to a file, instead of stderr.\n"};
 
     Interface i{"frobber"};
     i.DefaultLogLevel(PacBio::Logging::LogLevel::DEBUG);
@@ -573,11 +555,11 @@ Algorithm Options:
                            [haploid]
 
   -h,--help                Show this help and exit.
+  --version                Show application version and exit.
+  -j,--num-threads  INT    Number of threads to use, 0 means autodetection. [0]
   --log-level       STR    Set log level. Valid choices: (TRACE, DEBUG, INFO,
                            WARN, FATAL). [WARN]
   --log-file        FILE   Log to a file, instead of stderr.
-  -j,--num-threads  INT    Number of threads to use, 0 means autodetection. [0]
-  --version                Show application version and exit.
 
 )"};
 
@@ -630,11 +612,11 @@ TEST(CLI2_InterfaceHelpPrinter, word_wraps_application_description)
 "\n"
 "Options:\n"
 "  -h,--help               Show this help and exit.\n"
+"  --version               Show application version and exit.\n"
+"  -j,--num-threads  INT   Number of threads to use, 0 means autodetection. [0]\n"
 "  --log-level       STR   Set log level. Valid choices: (TRACE, DEBUG, INFO,\n"
 "                          WARN, FATAL). [WARN]\n"
 "  --log-file        FILE  Log to a file, instead of stderr.\n"
-"  -j,--num-threads  INT   Number of threads to use, 0 means autodetection. [0]\n"
-"  --version               Show application version and exit.\n"
 "\n"
     };
 
@@ -658,11 +640,11 @@ Usage:
 
 Options:
   -h,--help               Show this help and exit.
+  --version               Show application version and exit.
+  -j,--num-threads  INT   Number of threads to use, 0 means autodetection. [0]
   --log-level       STR   Set log level. Valid choices: (TRACE, DEBUG, INFO,
                           WARN, FATAL). [WARN]
   --log-file        FILE  Log to a file, instead of stderr.
-  -j,--num-threads  INT   Number of threads to use, 0 means autodetection. [0]
-  --version               Show application version and exit.
 
 Typical workflow:
   1. Do a thing to the thing.
@@ -720,12 +702,12 @@ TEST(CLI2_InterfaceHelpPrinter, can_enable_verbose_option)
     const std::string expectedText{
         "Options:\n"
         "  -h,--help               Show this help and exit.\n"
+        "  --version               Show application version and exit.\n"
+        "  -j,--num-threads  INT   Number of threads to use, 0 means autodetection. [0]\n"
         "  --log-level       STR   Set log level. Valid choices: (TRACE, DEBUG, INFO,\n"
         "                          WARN, FATAL). [WARN]\n"
         "  --log-file        FILE  Log to a file, instead of stderr.\n"
-        "  -j,--num-threads  INT   Number of threads to use, 0 means autodetection. [0]\n"
-        "  -v,--verbose            Use verbose output.\n"
-        "  --version               Show application version and exit.\n"};
+        "  -v,--verbose            Use verbose output.\n"};
 
     Interface i{"frobber"};
     i.EnableVerboseOption();

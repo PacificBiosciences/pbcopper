@@ -1,45 +1,26 @@
 #include <pbcopper/cli2/internal/MultiToolInterfaceHelpPrinter.h>
 
-#include <sys/ioctl.h>
-#include <unistd.h>
-
 #include <iomanip>
 #include <iostream>
 #include <sstream>
+
+#include <pbcopper/cli2/internal/OptionData.h>
 
 namespace PacBio {
 namespace CLI_v2 {
 namespace internal {
 
 MultiToolInterfaceHelpPrinter::MultiToolInterfaceHelpPrinter(MultiToolInterface multiToolInterface)
-    : interface_{std::move(multiToolInterface)}
+    : metrics_{multiToolInterface}, interface_{std::move(multiToolInterface)}
 {
-    // determine column count from terminal width
-    struct winsize ws;
-    ioctl(STDOUT_FILENO, TIOCGWINSZ, &ws);
-    if (ws.ws_col >= 2) metrics_.maxColumn = ws.ws_col - 1;
-    constexpr const size_t MaxColumn = 119;
-    metrics_.maxColumn = std::min(metrics_.maxColumn, MaxColumn);
-
-    CalculateMetrics();
     MakeHelpText();
 }
 
 MultiToolInterfaceHelpPrinter::MultiToolInterfaceHelpPrinter(MultiToolInterface multiToolInterface,
                                                              const size_t maxColumn)
-    : interface_{std::move(multiToolInterface)}
+    : metrics_{multiToolInterface, maxColumn}, interface_{std::move(multiToolInterface)}
 {
-    // use client-provided column count
-    metrics_.maxColumn = maxColumn;
-
-    CalculateMetrics();
     MakeHelpText();
-}
-
-void MultiToolInterfaceHelpPrinter::CalculateMetrics()
-{
-    // TODO: calculate metrics, a la standard interface help printer, with
-    //       explicit terminal widths, etc.
 }
 
 void MultiToolInterfaceHelpPrinter::MakeHelpText()
@@ -55,6 +36,9 @@ void MultiToolInterfaceHelpPrinter::MakeHelpText()
            << "Usage:\n"
            << "  " << interface_.ApplicationName() << " <tool>\n"
            << '\n';
+
+    result << metrics_.HelpEntry(interface_.HelpOption()) << '\n'
+           << metrics_.HelpEntry(interface_.VersionOption()) << "\n\n";
 
     bool hasExamples = false;
     result << "Tools:\n";

@@ -100,6 +100,7 @@ if not meson.is_subproject()
     files([
       'pbcopper/cli2/internal/BuiltinOptions.h',
       'pbcopper/cli2/internal/CommandLineParser.h',
+      'pbcopper/cli2/internal/HelpMetrics.h',
       'pbcopper/cli2/internal/InterfaceData.h',
       'pbcopper/cli2/internal/InterfaceHelpPrinter.h',
       'pbcopper/cli2/internal/MultiToolInterfaceData.h',
