@@ -66,6 +66,11 @@ public:
     const std::vector<std::string>& PositionalArguments() const;
 
     ///
+    /// \return true if verbosity is enabled & user-requested
+    ///
+    bool Verbose() const;
+
+    ///
     /// \return value associated with option
     ///
     /// The lookup uses the same Option as defined in the application. Example:

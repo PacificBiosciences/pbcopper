@@ -547,6 +547,71 @@ TEST(CLI2_CLI, can_fetch_log_file_from_results)
     EXPECT_EQ(EXIT_SUCCESS, result);
 }
 
+TEST(CLI2_CLI, verbosity_is_true_if_enabled_and_user_requested)
+{
+    const std::vector<std::string> args {
+        "frobber", "-v"
+    };
+    auto runner = [](const PacBio::CLI_v2::Results& results)
+    {
+        EXPECT_TRUE(results.Verbose());
+        return EXIT_SUCCESS;
+    };
+
+    PacBio::CLI_v2::Interface i{"frobber", "Frob all the things.", "v3.1"};
+    i.EnableVerboseOption();
+
+    std::ostringstream s;
+    tests::CoutRedirect redirect(s.rdbuf());
+    UNUSED(redirect);
+
+    const int result = PacBio::CLI_v2::Run(args, i, runner);
+    EXPECT_EQ(EXIT_SUCCESS, result);
+}
+
+TEST(CLI2_CLI, verbosity_is_false_if_enabled_but_not_user_requested)
+{
+    const std::vector<std::string> args {
+        "frobber"
+    };
+    auto runner = [](const PacBio::CLI_v2::Results& results)
+    {
+        EXPECT_FALSE(results.Verbose());
+        return EXIT_SUCCESS;
+    };
+
+    PacBio::CLI_v2::Interface i{"frobber", "Frob all the things.", "v3.1"};
+    i.EnableVerboseOption();
+
+    std::ostringstream s;
+    tests::CoutRedirect redirect(s.rdbuf());
+    UNUSED(redirect);
+
+    const int result = PacBio::CLI_v2::Run(args, i, runner);
+    EXPECT_EQ(EXIT_SUCCESS, result);
+}
+
+TEST(CLI2_CLI, verbosity_is_false_if_not_enabled)
+{
+    const std::vector<std::string> args {
+        "frobber"
+    };
+    auto runner = [](const PacBio::CLI_v2::Results& results)
+    {
+        EXPECT_FALSE(results.Verbose());
+        return EXIT_SUCCESS;
+    };
+
+    PacBio::CLI_v2::Interface i{"frobber", "Frob all the things.", "v3.1"};
+
+    std::ostringstream s;
+    tests::CoutRedirect redirect(s.rdbuf());
+    UNUSED(redirect);
+
+    const int result = PacBio::CLI_v2::Run(args, i, runner);
+    EXPECT_EQ(EXIT_SUCCESS, result);
+}
+
 TEST(CLI2_CLI, can_run_tool_with_optional_pos_args)
 {
     const std::vector<std::string> args {"frobber"};
