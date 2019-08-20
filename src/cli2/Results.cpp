@@ -93,6 +93,13 @@ Results& Results::PositionalArguments(const std::vector<internal::PositionalArgu
     return *this;
 }
 
+bool Results::Verbose() const
+{
+    const auto found = results_.find("verbose");
+    if (found != results_.cend()) return *(found->second.get());
+    return false;  // verbose option not enabled
+}
+
 const Result& Results::operator[](const Option& opt) const
 {
     const auto optionNames = internal::OptionTranslator::OptionNames(opt);
