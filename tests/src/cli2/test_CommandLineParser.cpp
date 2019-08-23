@@ -495,4 +495,240 @@ TEST(CLI2_CommandLineParser, displays_useful_message_on_bad_args)
     }
 }
 
+TEST(CLI2_CommandLineParser, can_interpret_consecutive_short_options)
+{
+    const Option ShortFlag_X{
+    R"({
+        "names" : ["x"],
+        "description" : "short flag"
+    })"};
+    const Option ShortFlag_Y{
+    R"({
+        "names" : ["y"],
+        "description" : "short flag"
+    })"};
+    const Option ShortFlag_Z{
+    R"({
+        "names" : ["z"],
+        "description" : "short flag"
+    })"};
+
+    Interface i {
+        "frobber",
+        "Frobb your files in a most delightful, nobbly way",
+        "3.14"
+    };
+    i.AddOptions(
+    {
+        ShortFlag_X,
+        ShortFlag_Y,
+        ShortFlag_Z
+    });
+
+    const std::vector<std::string> args{
+        "frobber",
+        "-xz"
+    };
+
+    CommandLineParser parser{i};
+    const auto results = parser.Parse(args);
+
+    EXPECT_TRUE(results[ShortFlag_X]);
+    EXPECT_FALSE(results[ShortFlag_Y]);
+    EXPECT_TRUE(results[ShortFlag_Z]);
+}
+
+TEST(CLI2_CommandLineParser, can_interpret_negative_values_for_options)
+{
+    const Option ShortOptionAttached{
+    R"({
+        "names" : ["x"],
+        "description" : "short attached",
+        "type" : "int",
+        "default" : 0
+    })"};
+
+    const Option ShortOptionDetached{
+    R"({
+        "names" : ["y"],
+        "description" : "short detached",
+        "type" : "int",
+        "default" : 0
+    })"};
+
+    const Option ShortFlag{
+    R"({
+        "names" : ["z"],
+        "description" : "short flag"
+    })"};
+
+    const Option LongOptionAttached{
+    R"({
+        "names" : ["attached"],
+        "description" : "attached",
+        "type" : "int",
+        "default" : 0
+    })"};
+
+    const Option LongOptionDetached{
+    R"({
+        "names" : ["detached"],
+        "description" : "detached",
+        "type" : "int",
+        "default" : 0
+    })"};
+
+    Interface i {
+        "frobber",
+        "Frobb your files in a most delightful, nobbly way",
+        "3.14"
+    };
+    i.AddOptions(
+    {
+        ShortOptionAttached,
+        ShortOptionDetached,
+        ShortFlag,
+        LongOptionAttached,
+        LongOptionDetached
+    });
+
+    const std::vector<std::string> args{
+        "frobber",
+        "-x=-1",            // short option, attached via '='
+        "-y",               // short option, detached
+        "-6",
+        "--attached=-8",    // long option, attached via '='
+        "--detached",       // long option, detached
+        "-42"
+    };
+
+    const CommandLineParser parser{i};
+    const auto results = parser.Parse(args);
+
+    const int shortAttachedValue = results[ShortOptionAttached];
+    const int shortDetachedValue = results[ShortOptionDetached];
+    const int longAttachedValue = results[LongOptionAttached];
+    const int longDetachedValue = results[LongOptionDetached];
+    EXPECT_EQ(-1,  shortAttachedValue);
+    EXPECT_EQ(-6,  shortDetachedValue);
+    EXPECT_EQ(-8,  longAttachedValue);
+    EXPECT_EQ(-42, longDetachedValue);
+}
+TEST(CLI2_CommandLineParser, throws_if_expected_value_is_next_option_instead)
+{
+    const Option ShortOption{
+    R"({
+        "names" : ["x"],
+        "description" : "short option",
+        "type" : "int",
+        "default" : 0
+    })"};
+
+    const Option LongOption{
+    R"({
+        "names" : ["long-y"],
+        "description" : "long option",
+        "type" : "int",
+        "default" : 0
+    })"};
+
+    Interface i {
+        "frobber",
+        "Frobb your files in a most delightful, nobbly way",
+        "3.14"
+    };
+
+    i.AddOptions(
+    {
+        ShortOption,
+        LongOption
+    });
+
+    const CommandLineParser parser{i};
+
+    {
+        const std::vector<std::string> args{
+            "frobber",
+            "-x",           // value expected for short option, but given another option instead
+            "-z"
+        };
+
+        try {
+            const auto results = parser.Parse(args);
+            ASSERT_TRUE(false); // should not execute
+        } catch (std::exception& e)
+        {
+            const std::string msg{e.what()};
+            EXPECT_TRUE(msg.find("value is missing for option 'x'") != std::string::npos);
+        }
+    }
+    {
+        const std::vector<std::string> args{
+            "frobber",
+            "--long-y",     // value expected for long option, but given another option instead
+            "-x"
+        };
+
+        try {
+            const auto results = parser.Parse(args);
+            ASSERT_TRUE(false); // should not execute
+        } catch (std::exception& e)
+        {
+            const std::string msg{e.what()};
+            EXPECT_TRUE(msg.find("value is missing for option 'long-y'") != std::string::npos);
+        }
+    }
+}
+
+TEST(CLI2_CommandLineParser, does_not_allow_negative_value_for_unsigned_option)
+{
+    const Option UIntOption{
+    R"({
+        "names" : ["x"],
+        "description" : "x",
+        "type" : "unsigned int",
+        "default" : 0
+    })"};
+    Interface i {
+        "frobber",
+        "Frobb your files in a most delightful, nobbly way",
+        "3.14"
+    };
+    i.AddOption(UIntOption);
+
+    try {
+        const CommandLineParser parser{i};
+        parser.Parse({"frobber", "-x", "-42"});
+        ASSERT_TRUE(false); // should not execute
+    } catch (std::exception& e) {
+        const std::string msg{e.what()};
+        EXPECT_TRUE(msg.find("negative value -42 is not allowed for option 'x'") != std::string::npos);
+    }
+}
+
+TEST(CLI2_CommandLineParser, does_not_allow_negative_value_for_string_option)
+{
+    const Option StringOption{
+    R"({
+        "names" : ["x"],
+        "description" : "x",
+        "type" : "string"
+    })"};
+    Interface i {
+        "frobber",
+        "Frobb your files in a most delightful, nobbly way",
+        "3.14"
+    };
+    i.AddOption(StringOption);
+
+    try {
+        const CommandLineParser parser{i};
+        parser.Parse({"frobber", "-x", "-42"});
+        ASSERT_TRUE(false); // should not execute
+    } catch (std::exception& e) {
+        const std::string msg{e.what()};
+        EXPECT_TRUE(msg.find("negative value -42 is not allowed for option 'x'") != std::string::npos);
+    }
+}
+
 // clang-format on

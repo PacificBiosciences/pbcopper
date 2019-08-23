@@ -51,6 +51,25 @@ using OptionValue = boost::variant<
 OptionValueType ValueType(std::string typeString);
 
 ///
+/// \return true if option is interpreted as a number on command line
+///
+constexpr bool IsNumeric(OptionValueType type)
+{
+    return (type == OptionValueType::INT) ||
+           (type == OptionValueType::UINT) ||
+           (type == OptionValueType::FLOAT);
+}
+
+///
+/// \return true if option may be interpreted as a negative number on command line
+///
+constexpr bool CanBeNegative(OptionValueType type)
+{
+    return (type == OptionValueType::INT) ||
+           (type == OptionValueType::FLOAT);
+}
+
+///
 /// \return true if option is interpreted as string on command line
 ///
 constexpr bool IsStringLike(OptionValueType type) {
