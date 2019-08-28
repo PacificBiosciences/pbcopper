@@ -3,9 +3,9 @@
 #ifndef PBCOPPER_CLI_TOOLCONTRACT_OUTPUTFILETYPE_H
 #define PBCOPPER_CLI_TOOLCONTRACT_OUTPUTFILETYPE_H
 
-#include <string>
-
 #include <pbcopper/PbcopperConfig.h>
+
+#include <string>
 
 namespace PacBio {
 namespace CLI {
@@ -16,9 +16,6 @@ class OutputFileType
 public:
     OutputFileType(std::string id, std::string title, std::string description, std::string type,
                    std::string defaultName);
-
-    OutputFileType(const OutputFileType&) = default;
-    ~OutputFileType() = default;
 
 public:
     const std::string& Id() const;

@@ -93,24 +93,6 @@ inline Option::Option(std::string id, std::vector<std::string> names, std::strin
 {
 }
 
-inline Option::Option(const Option& other) : d_(new internal::OptionPrivate(*other.d_.get())) {}
-
-inline Option::Option(Option&& other) : d_(std::move(other.d_)) {}
-
-inline Option& Option::operator=(const Option& other)
-{
-    d_->option_ = other.d_->option_;
-    return *this;
-}
-
-inline Option& Option::operator=(Option&& other)
-{
-    std::swap(d_, other.d_);
-    return *this;
-}
-
-inline Option::~Option() = default;
-
 inline PacBio::JSON::Json Option::Choices() const { return d_->option_["choices"]; }
 
 inline PacBio::JSON::Json Option::DefaultValue() const { return d_->option_["defaultValue"]; }

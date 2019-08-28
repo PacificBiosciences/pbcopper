@@ -1,11 +1,12 @@
 project(
   'pbcopper',
-  'cpp',
-  version : '0.4.2',
+  ['cpp', 'c'],
+  version : '1.3.0',
   default_options : [
     'buildtype=release',
     'warning_level=3',
-    'cpp_std=c++11',
+    'cpp_std=c++14',
+    'c_std=c11',
     'b_ndebug=if-release'],
   license : 'BSD-3',
   meson_version : '>= 0.46.0')
@@ -21,7 +22,6 @@ foreach cflag: [
   '-Wduplicated-branches',
   '-Wlogical-op',
   '-Wrestrict',
-  '-Wnull-dereference',
   '-Wuseless-cast',
   '-Wdouble-promotion',
   '-Wshadow',

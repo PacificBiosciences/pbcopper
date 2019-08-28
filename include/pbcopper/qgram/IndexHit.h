@@ -3,9 +3,10 @@
 #ifndef PBCOPPER_QGRAM_INDEXHIT_H
 #define PBCOPPER_QGRAM_INDEXHIT_H
 
-#include <cstdint>
-
 #include <pbcopper/PbcopperConfig.h>
+
+#include <cstdint>
+#include <tuple>
 
 namespace PacBio {
 namespace QGram {
@@ -23,7 +24,7 @@ public:
     ///
     /// \brief IndexHit
     ///
-    IndexHit() : IndexHit{0, 0} {}
+    IndexHit() = default;
 
     ///
     /// \brief IndexHit
@@ -31,11 +32,6 @@ public:
     /// \param[in] pos  position in input sequence
     ///
     IndexHit(const uint32_t id, const uint64_t pos) : id_(id), position_(pos) {}
-
-    IndexHit(const IndexHit&) = default;
-    IndexHit(IndexHit&&) = default;
-    IndexHit& operator=(const IndexHit&) = default;
-    IndexHit& operator=(IndexHit&&) = default;
 
 public:
     ///
@@ -51,8 +47,8 @@ public:
     uint64_t Position() const { return position_; }
 
 private:
-    uint32_t id_;
-    uint64_t position_;
+    uint32_t id_ = 0;
+    uint64_t position_ = 0;
 };
 
 ///
@@ -63,7 +59,7 @@ private:
 ///
 inline bool operator==(const IndexHit& lhs, const IndexHit& rhs)
 {
-    return lhs.Id() == rhs.Id() && lhs.Position() == rhs.Position();
+    return std::make_tuple(lhs.Id(), lhs.Position()) == std::make_tuple(rhs.Id(), rhs.Position());
 }
 
 }  // namespace QGram

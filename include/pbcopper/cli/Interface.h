@@ -3,11 +3,12 @@
 #ifndef PBCOPPER_CLI_INTERFACE_H
 #define PBCOPPER_CLI_INTERFACE_H
 
+#include <pbcopper/PbcopperConfig.h>
+
 #include <memory>
 #include <string>
 #include <vector>
 
-#include <pbcopper/PbcopperConfig.h>
 #include <pbcopper/cli/Option.h>
 #include <pbcopper/cli/PositionalArg.h>
 #include <pbcopper/cli/SingleDashMode.h>
@@ -38,8 +39,10 @@ public:
     /// \brief Interface
     /// \param other
     ///
-    Interface(const Interface& other);
-
+    Interface(const Interface&);
+    Interface(Interface&&) noexcept;
+    Interface& operator=(const Interface&);
+    Interface& operator=(Interface&&) noexcept;
     ~Interface();
 
     /// \}

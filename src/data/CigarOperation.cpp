@@ -2,86 +2,141 @@
 
 #include <pbcopper/data/CigarOperation.h>
 
-#include <sstream>
+#include <cassert>
 #include <stdexcept>
-#include <unordered_map>
-
-#include <pbcopper/utility/EnumClassHash.h>
+#include <tuple>
+#include <type_traits>
 
 namespace PacBio {
 namespace Data {
+namespace {
+
+static bool AutoValidateCigar = true;
+
+// Since we can't rely on having htslib, define its CIGAR helpers here.
+// See <htslib/sam.h> . Names are changed to ensure we don't clash if htslib is
+// present.
+
+// clang-format off
+#define HTSLIB_BAM_CMATCH      0
+#define HTSLIB_BAM_CINS        1
+#define HTSLIB_BAM_CDEL        2
+#define HTSLIB_BAM_CREF_SKIP   3
+#define HTSLIB_BAM_CSOFT_CLIP  4
+#define HTSLIB_BAM_CHARD_CLIP  5
+#define HTSLIB_BAM_CPAD        6
+#define HTSLIB_BAM_CEQUAL      7
+#define HTSLIB_BAM_CDIFF       8
+#define HTSLIB_BAM_CBACK       9
+
+#define HTSLIB_BAM_CIGAR_STR    "MIDNSHP=XB"
+#define HTSLIB_BAM_CIGAR_SHIFT  4
+#define HTSLIB_BAM_CIGAR_MASK   0xf
+#define HTSLIB_BAM_CIGAR_TYPE   0x3C1A7
+
+#define htslib_bam_cigar_op(c)     ((c) & HTSLIB_BAM_CIGAR_MASK)
+#define htslib_bam_cigar_oplen(c)  ((c) >> HTSLIB_BAM_CIGAR_SHIFT)
+#define htslib_bam_cigar_opchr(c)  (HTSLIB_BAM_CIGAR_STR "??????"[htslib_bam_cigar_op(c)])
+#define htslib_bam_cigar_gen(l, o) ((l) << HTSLIB_BAM_CIGAR_SHIFT | (o))
+#define htslib_bam_cigar_type(o)   (HTSLIB_BAM_CIGAR_TYPE >> ((o) << 1) & 3)
+// clang-format on
+
+}  // namespace
+
+static_assert(std::is_copy_constructible<CigarOperation>::value,
+              "CigarOperation(const CigarOperation&) is not = default");
+static_assert(std::is_copy_assignable<CigarOperation>::value,
+              "CigarOperation& operator=(const CigarOperation&) is not = default");
+
+static_assert(std::is_nothrow_move_constructible<CigarOperation>::value,
+              "CigarOperation(CigarOperation&&) is not = noexcept");
+static_assert(std::is_nothrow_move_assignable<CigarOperation>::value,
+              "CigarOperation& operator=(CigarOperation&&) is not = noexcept");
+
+CigarOperation::CigarOperation(char c, uint32_t length)
+    : CigarOperation{CigarOperation::CharToType(c), length}
+{
+}
+
+CigarOperation::CigarOperation(CigarOperationType op, uint32_t length) : type_{op}, length_{length}
+{
+    if (AutoValidateCigar && (type_ == CigarOperationType::ALIGNMENT_MATCH))
+        throw std::runtime_error{
+            "CIGAR operation 'M' is not allowed in PacBio BAM files. Use 'X/=' instead."};
+}
+
+bool CigarOperation::operator==(const CigarOperation& other) const
+{
+    return std::tie(type_, length_) == std::tie(other.type_, other.length_);
+}
+
+bool CigarOperation::operator!=(const CigarOperation& other) const { return !(*this == other); }
+
+char CigarOperation::Char() const { return CigarOperation::TypeToChar(type_); }
+
+CigarOperation& CigarOperation::Char(const char opChar)
+{
+    type_ = CigarOperation::CharToType(opChar);
+    return *this;
+}
 
 CigarOperationType CigarOperation::CharToType(const char c)
 {
-    // clang-format off
-    static const auto lookup = std::unordered_map<char, CigarOperationType>
-    {
-        { 'S', CigarOperationType::SOFT_CLIP },
-        { '=', CigarOperationType::SEQUENCE_MATCH },
-        { 'X', CigarOperationType::SEQUENCE_MISMATCH },
-        { 'I', CigarOperationType::INSERTION },
-        { 'D', CigarOperationType::DELETION },
-        { 'N', CigarOperationType::REFERENCE_SKIP },
-        { 'H', CigarOperationType::HARD_CLIP },
-        { 'P', CigarOperationType::PADDING },
-        { 'M', CigarOperationType::ALIGNMENT_MATCH }
-    };
-    // clang-format on
+    switch (c) {
+        case 'S':
+            return CigarOperationType::SOFT_CLIP;
+        case '=':
+            return CigarOperationType::SEQUENCE_MATCH;
+        case 'X':
+            return CigarOperationType::SEQUENCE_MISMATCH;
+        case 'I':
+            return CigarOperationType::INSERTION;
+        case 'D':
+            return CigarOperationType::DELETION;
+        case 'N':
+            return CigarOperationType::REFERENCE_SKIP;
+        case 'H':
+            return CigarOperationType::HARD_CLIP;
+        case 'P':
+            return CigarOperationType::PADDING;
+        case 'M':
+            return CigarOperationType::ALIGNMENT_MATCH;
+        default:
+            return CigarOperationType::UNKNOWN_OP;
+    }
+}
 
-    const auto found = lookup.find(c);
-    if (found == lookup.cend()) {
-        std::ostringstream s;
-        s << "pbcopper: unrecognized CIGAR char code " << c << " (int: " << static_cast<int>(c)
-          << ")";
-        throw std::runtime_error(s.str());
-    } else
-        return found->second;
+void CigarOperation::DisableAutoValidation() { AutoValidateCigar = false; }
+
+uint32_t CigarOperation::Length() const { return length_; }
+
+CigarOperation& CigarOperation::Length(const uint32_t length)
+{
+    length_ = length;
+    return *this;
+}
+
+CigarOperationType CigarOperation::Type() const { return type_; }
+
+CigarOperation& CigarOperation::Type(const CigarOperationType opType)
+{
+    type_ = opType;
+    return *this;
 }
 
 char CigarOperation::TypeToChar(const CigarOperationType type)
 {
-    using Hash = PacBio::Utility::EnumClassHash;
-
-    // clang-format off
-    static const auto lookup = std::unordered_map<CigarOperationType, char, Hash>
-    {
-        { CigarOperationType::SOFT_CLIP,         'S' },
-        { CigarOperationType::SEQUENCE_MATCH,    '=' },
-        { CigarOperationType::SEQUENCE_MISMATCH, 'X' },
-        { CigarOperationType::INSERTION,         'I' },
-        { CigarOperationType::DELETION,          'D' },
-        { CigarOperationType::REFERENCE_SKIP,    'N' },
-        { CigarOperationType::HARD_CLIP,         'H' },
-        { CigarOperationType::PADDING,           'P' },
-        { CigarOperationType::ALIGNMENT_MATCH,   'M' }
-    };
-    // clang-format on
-
-    const auto found = lookup.find(type);
-    if (found == lookup.cend()) {
-        std::ostringstream s;
-        s << "pbcopper: unrecognized CIGAR operation value " << static_cast<int>(type);
-        throw std::runtime_error(s.str());
-    } else
-        return found->second;
+    return htslib_bam_cigar_opchr(static_cast<int>(type));
 }
 
-std::istream& operator>>(std::istream& in, CigarOperation& op)
+bool ConsumesQuery(const CigarOperationType type)
 {
-    uint32_t l;
-    char c;
-
-    in >> l >> c;
-
-    op.Length(l);
-    op.Char(c);
-    return in;
+    return (htslib_bam_cigar_type(static_cast<int>(type)) & 0x1) != 0;
 }
 
-std::ostream& operator<<(std::ostream& out, const CigarOperation& op)
+bool ConsumesReference(const CigarOperationType type)
 {
-    out << op.Length() << op.Char();
-    return out;
+    return (htslib_bam_cigar_type(static_cast<int>(type)) & 0x2) != 0;
 }
 
 }  // namespace Data

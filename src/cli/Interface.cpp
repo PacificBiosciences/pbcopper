@@ -55,8 +55,6 @@ public:
             throw std::runtime_error("CLI::Interface - application name must not be empty");
     }
 
-    InterfacePrivate(const InterfacePrivate&) = default;
-
     void AddOption(const Option& option, const std::string& group = "Options")
     {
         auto optionNames = option.Names();
@@ -95,7 +93,20 @@ Interface::Interface(std::string appName, std::string appDescription, std::strin
 {
 }
 
-Interface::Interface(const Interface& other) : d_{new InterfacePrivate{*other.d_.get()}} {}
+Interface::Interface(const Interface& other)
+    : d_{std::make_unique<InterfacePrivate>(*other.d_.get())}
+{
+}
+
+Interface::Interface(Interface&&) noexcept = default;
+
+Interface& Interface::operator=(const Interface& other)
+{
+    if (this != &other) *this = Interface{other};
+    return *this;
+}
+
+Interface& Interface::operator=(Interface&&) noexcept = default;
 
 Interface::~Interface() = default;
 

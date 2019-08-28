@@ -41,9 +41,6 @@ public:
             options_[opt.Id()] = opt.DefaultValue();
         }
     }
-
-    ResultsPrivate(const ResultsPrivate&) = default;
-    ~ResultsPrivate() = default;
 };
 
 // ------------------------
@@ -60,25 +57,17 @@ Results::Results(Interface interface, std::vector<std::string> inputCommandLine)
 {
 }
 
-Results::Results(const Results& other) : d_(new ResultsPrivate{*other.d_.get()}) {}
+Results::Results(const Results& other) : d_{std::make_unique<ResultsPrivate>(*other.d_.get())} {}
 
-Results::Results(Results&& other) : d_(std::move(other.d_)) {}
+Results::Results(Results&& other) noexcept = default;
 
 Results& Results::operator=(const Results& other)
 {
-    if (this != &other) {
-        d_.reset(new ResultsPrivate{*other.d_.get()});
-    }
+    if (this != &other) *this = Results{other};
     return *this;
 }
 
-Results& Results::operator=(Results&& other)
-{
-    if (this != &other) {
-        d_ = std::move(other.d_);
-    }
-    return *this;
-}
+Results& Results::operator=(Results&& other) noexcept = default;
 
 Results::~Results() = default;
 

@@ -3,6 +3,8 @@
 #ifndef PBCOPPER_PARALLEL_FIREANDFORGETINDEXED_H
 #define PBCOPPER_PARALLEL_FIREANDFORGETINDEXED_H
 
+#include <pbcopper/PbcopperConfig.h>
+
 #include <condition_variable>
 #include <cstddef>
 #include <exception>
@@ -12,8 +14,6 @@
 #include <queue>
 
 #include <boost/optional.hpp>
-
-#include <pbcopper/PbcopperConfig.h>
 
 namespace PacBio {
 namespace Parallel {
@@ -25,9 +25,12 @@ namespace Parallel {
  * The Index is from 0 to size-1.
  * Each thread knows its own Index.
  * As a result, each task can use its Index to look into a predefined vector (user-controlled).
- * A 'fini' function is called for each thread after Finalize() pushes the sentinel onto the queue.
+ * A 'finish' function is called for each thread after Finalize() pushes the sentinel onto the queue.
  
- The 'fini' function is not really needed, but it's helpful for debugging.
+ The 'finish' function is not really needed, but it's helpful for debugging. Or
+ to summarize results / close output streams.
+
+ Caution: If an exception is thrown by your task, the 'finish' function is not called!
 */
 class FireAndForgetIndexed
 {
@@ -37,37 +40,44 @@ public:
     using TPTask = std::packaged_task<void(Index)>;
 
 public:
-    FireAndForgetIndexed(const size_t size, const size_t mul = 2, TFunc fini = TFunc{[](Index) {}})
-        : exc{nullptr}, sz{size * mul}
+    FireAndForgetIndexed(const size_t size, const size_t mul = 2,
+                         TFunc finish = TFunc{[](Index) {}})
+        : exc{nullptr}, sz{size * mul}, abort{false}
     {
         for (Index index = 0; index < size; ++index) {
-            threads.emplace_back(std::thread([this, fini, index]() {
-                try {
-                    while (auto task = PopTask()) {
-                        (*task)(index);
-                    }
-                    fini(index);
-                } catch (...) {
-                    {
+            threads.emplace_back(std::thread([this, finish, index]() {
+                // Get the first task per thread
+                TTask task = PopTask();
+                do {
+                    try {
+                        // Check if queue should be aborted and
+                        // if there is a task
+                        if (!abort && task) {
+                            // Execute task
+                            (*task)(index);
+                            // Check for the return value / exception
+                            task->get_future().get();
+                        };
+                    } catch (...) {
                         std::lock_guard<std::mutex> g(m);
+                        // If there is an exception, signal to abort queue
+                        abort = true;
+                        // And store exception
                         exc = std::current_exception();
+                        popped.notify_one();
                     }
-                    popped.notify_one();
+                    task = PopTask();
+                } while (!abort && task);  // Stop if there are no tasks or abort has been signaled
+                try {
+                    if (!abort) finish(index);
+                } catch (...) {
+                    std::lock_guard<std::mutex> g(m);
+                    // If there is an exception, signal to abort queue
+                    abort = true;
+                    // And store exception
+                    exc = std::current_exception();
                 }
             }));
-        }
-    }
-
-    ~FireAndForgetIndexed()
-    {
-        for (auto& thread : threads) {
-            thread.join();
-        }
-
-        // wait to see if there's a final exception, throw if so..
-        {
-            std::lock_guard<std::mutex> g(m);
-            if (exc) std::rethrow_exception(exc);
         }
     }
 
@@ -100,9 +110,19 @@ public:
     {
         {
             std::lock_guard<std::mutex> g(m);
+            // Push boost::none to signal that there are no further tasks
             head.emplace(boost::none);
         }
+        // Let all workers know that they should look that there is no further work
         pushed.notify_all();
+
+        // Wait for all threads to join and do not continue before all tasks
+        // have been finishshed.
+        for (auto& thread : threads)
+            thread.join();
+
+        // Is there a final exception, throw if so..
+        if (exc) std::rethrow_exception(exc);
     }
 
 private:
@@ -119,7 +139,6 @@ private:
 
                 if ((task = std::move(head.front()))) {
                     head.pop();
-                    task->get_future();
                 }
 
                 return true;
@@ -137,6 +156,7 @@ private:
     std::exception_ptr exc;
     std::mutex m;
     size_t sz;
+    std::atomic_bool abort;
 };
 
 }  // namespace Parallel

@@ -8,6 +8,8 @@ pbcopper_test_CLI_cpp = configure_file(
 
 pbcopper_test_cpp_sources = files([
   # align
+  'src/align/test_Alignment.cpp',
+  'src/align/test_BandedChainAlign.cpp',
   'src/align/test_Seeds.cpp',
 
   # cli
@@ -19,11 +21,27 @@ pbcopper_test_cpp_sources = files([
   'src/cli/test_ToolContractJsonPrinter.cpp',
   'src/cli/test_VersionPrinter.cpp',
 
+  #cli2
+  'src/cli2/test_CLI.cpp',
+  'src/cli2/test_CommandLineParser.cpp',
+  'src/cli2/test_InterfaceHelpPrinter.cpp',
+  'src/cli2/test_MultiToolInterfaceHelpPrinter.cpp',
+  'src/cli2/test_OptionTranslator.cpp',
+  'src/cli2/test_OptionValue.cpp',
+  'src/cli2/test_PositionalArgumentTranslator.cpp',
+  'src/cli2/test_Results.cpp',
+  'src/cli2/test_VersionPrinter.cpp',
+
   # data
+  'src/data/test_Accuracy.cpp',
   'src/data/test_Cigar.cpp',
-  'src/data/test_CigarOperation.cpp',
+  'src/data/test_Frames.cpp',
+  'src/data/test_GenomicInterval.cpp',
   'src/data/test_Interval.cpp',
+  'src/data/test_MappedRead.cpp',
   'src/data/test_MovieName.cpp',
+  'src/data/test_QualityValues.cpp',
+  'src/data/test_Read.cpp',
   'src/data/test_ReadName.cpp',
   'src/data/test_RSMovieName.cpp',
   'src/data/test_RSReadName.cpp',
@@ -42,18 +60,31 @@ pbcopper_test_cpp_sources = files([
   # qgram
   'src/qgram/test_Index.cpp',
 
-  # stream
-  'src/stream/test_Stream.cpp',
+  # reports
+  'src/reports/test_Report.cpp',
 
   # utility
-  'src/utility/test_CallbackTimer.cpp',
   'src/utility/test_FileUtils.cpp',
+  'src/utility/test_MinMax.cpp',
   'src/utility/test_Stopwatch.cpp',
+  'src/utility/test_StringUtils.cpp',
   'src/utility/test_SystemInfo.cpp'
 ])
 
 # find GoogleTest
 pbcopper_gtest_dep = dependency('gtest_main', fallback : ['gtest', 'gtest_main_dep'])
+
+pbcopper_PbcopperTestData_h_config = configuration_data()
+pbcopper_PbcopperTestData_h_config.set('Pbcopper_TestsDir', meson.current_source_dir())
+pbcopper_PbcopperTestData_h_config.set('CMAKE_CURRENT_BINARY_DIR', meson.current_build_dir())
+pbcopper_PbcopperTestData_h_config.set('GeneratedDir', meson.current_build_dir())
+pbcopper_PbcopperTestData_h_config.set('GeneratedTestDataDir', meson.current_build_dir())
+
+pbcopper_PbcopperTestData_h = configure_file(
+  input : files('include/PbcopperTestData.h.in'),
+  output : 'PbcopperTestData.h',
+  configuration : pbcopper_PbcopperTestData_h_config)
+pbcopper_test_cpp_sources += pbcopper_PbcopperTestData_h
 
 pbcopper_test = executable(
   'pbcopper_test', [

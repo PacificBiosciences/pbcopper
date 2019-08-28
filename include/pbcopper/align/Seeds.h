@@ -3,11 +3,12 @@
 #ifndef PBCOPPER_ALIGN_SEEDS_H
 #define PBCOPPER_ALIGN_SEEDS_H
 
+#include <pbcopper/PbcopperConfig.h>
+
 #include <functional>
 #include <set>
 #include <vector>
 
-#include <pbcopper/PbcopperConfig.h>
 #include <pbcopper/align/Seed.h>
 
 namespace PacBio {
@@ -19,13 +20,7 @@ namespace Align {
 class Seeds
 {
 public:
-    Seeds();
-
-    Seeds(const Seeds&) = default;
-    Seeds(Seeds&&) = default;
-    Seeds& operator=(const Seeds&) = default;
-    Seeds& operator=(Seeds&&) = default;
-    ~Seeds() = default;
+    Seeds() = default;
 
 public:
     ///
@@ -78,9 +73,9 @@ private:
     container_t data_;
 };
 
+bool CanMergeSeeds(const Seed& lhs, const Seed& rhs);
+
 }  // namespace Align
 }  // namespace PacBio
-
-#include <pbcopper/align/internal/Seeds-inl.h>
 
 #endif  // PBCOPPER_ALIGN_SEEDS_H

@@ -3,10 +3,11 @@
 #ifndef PBCOPPER_DATA_CIGAR_H
 #define PBCOPPER_DATA_CIGAR_H
 
+#include <pbcopper/PbcopperConfig.h>
+
 #include <string>
 #include <vector>
 
-#include <pbcopper/PbcopperConfig.h>
 #include <pbcopper/data/CigarOperation.h>
 
 namespace PacBio {
@@ -26,20 +27,26 @@ public:
     /// \name Constructors & Related Methods
     /// \{
 
+    /// \brief Creates a Cigar object from SAM/BAM string input
+    ///
+    /// \param [in] stdString   SAM/BAM formatted CIGAR data
+    /// \returns a Cigar object representing the input data
+    ///
+    /// \note This class may be removed from the public API in the future,
+    ///       as the constructor taking a std::string accomplishes the same end.
+    ///
+    static Cigar FromStdString(const std::string& stdString);
+
     /// \brief Creates an empty Cigar.
-    Cigar();
+    Cigar() = default;
 
     /// \brief Creates a Cigar object from SAM/BAM string input
     ///
-    /// \param [in] cigarString   SAM/BAM-formatted CIGAR data
+    /// \param [in] cigarString   SAM/BAM formatted CIGAR data
     ///
-    explicit Cigar(const std::string& cigarString);
+    Cigar(const std::string& cigarString);
 
-    Cigar(const Cigar&) = default;
-    Cigar(Cigar&&) = default;
-    Cigar& operator=(const Cigar&) = default;
-    Cigar& operator=(Cigar&&) = default;
-    ~Cigar() = default;
+    Cigar(std::vector<CigarOperation> cigar);
 
     /// \}
 
@@ -47,7 +54,7 @@ public:
     /// \name Conversion Methods
     /// \{
 
-    /// Converts Cigar object data to SAM/BAM-formatted string
+    /// Converts Cigar object data to SAM/BAM formatted string
     ///
     /// \returns SAM/BAM formatted std::string
     ///
@@ -57,19 +64,12 @@ public:
 };
 
 ///
-/// \brief Input operator
-/// \param in
-/// \param op
-/// \return
+/// \brief
 ///
-std::istream& operator>>(std::istream& in, Cigar& cigar);
-
+/// \param cigar
+/// \return size_t
 ///
-/// \brief Output operator
-/// \param out
-/// \param op
-///
-std::ostream& operator<<(std::ostream& out, const Cigar& cigar);
+size_t ReferenceLength(const Cigar& cigar);
 
 }  // namespace Data
 }  // namespace PacBio

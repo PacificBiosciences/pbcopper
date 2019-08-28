@@ -3,6 +3,9 @@
 #ifndef PBCOPPER_PARALLEL_WORKQUEUE_H
 #define PBCOPPER_PARALLEL_WORKQUEUE_H
 
+#include <pbcopper/PbcopperConfig.h>
+
+#include <atomic>
 #include <condition_variable>
 #include <cstddef>
 #include <deque>
@@ -13,25 +16,30 @@
 
 #include <boost/optional.hpp>
 
-#include <pbcopper/PbcopperConfig.h>
-
 namespace PacBio {
 namespace Parallel {
 
+/// To properly shut down the workqueue, call methods in this order:
+///    workQueue.FinalizeWorkers();
+///    workerThread.wait(); // Shut down the consuming worker thread!
+///    workQueue.Finalize();
 template <typename T>
 class WorkQueue
 {
 private:
-    typedef boost::optional<std::packaged_task<T()>> TTask;
-    typedef boost::optional<std::future<T>> TFuture;
+    using TTask = boost::optional<std::packaged_task<T()>>;
+    using TFuture = boost::optional<std::future<T>>;
 
 public:
-    WorkQueue(const size_t size, const size_t mul = 2) : exc{nullptr}, sz{size * mul}
+    WorkQueue(const size_t size, const size_t mul = 2)
+        : exc{nullptr}, sz{size * mul}, abort{false}, workersFinalized{false}
     {
         for (size_t i = 0; i < size; ++i) {
             threads.emplace_back(std::thread([this]() {
                 try {
+                    if (abort) return;
                     while (auto task = PopTask()) {
+                        if (abort) return;
                         (*task)();
                     }
                 } catch (...) {
@@ -42,19 +50,6 @@ public:
                     popped.notify_all();
                 }
             }));
-        }
-    }
-
-    ~WorkQueue()
-    {
-        for (auto& thread : threads) {
-            thread.join();
-        }
-
-        // wait to see if there's a final exception, throw if so..
-        {
-            std::lock_guard<std::mutex> g(m);
-            if (exc) std::rethrow_exception(exc);
         }
     }
 
@@ -97,11 +92,12 @@ public:
         try {
             for (auto& fut : futs) {
                 if (!fut) return false;
-                cont(std::forward<Args>(args)..., std::move(fut->get()));
+                auto result = fut->get();
+                cont(std::forward<Args>(args)..., std::move(result));
             }
-
             return true;
         } catch (...) {
+            abort = true;
             {
                 std::lock_guard<std::mutex> g(m);
                 exc = std::current_exception();
@@ -111,13 +107,30 @@ public:
         return false;
     }
 
+    void FinalizeWorkers()
+    {
+        if (!workersFinalized) {
+            {
+                std::lock_guard<std::mutex> g(m);
+                // Push boost::none to signal that there are no further tasks
+                head.emplace_back(boost::none);
+            }
+            // Let all workers know that they should look that there is no further work
+            pushed.notify_all();
+            workersFinalized = true;
+        }
+    }
+
     void Finalize()
     {
-        {
-            std::lock_guard<std::mutex> g(m);
-            head.emplace_back(boost::none);
-        }
-        pushed.notify_all();
+        FinalizeWorkers();
+        // Wait for all threads to join and do not continue before all tasks
+        // have been finished.
+        for (auto& thread : threads)
+            thread.join();
+
+        // Is there a final exception, throw if so..
+        if (exc) std::rethrow_exception(exc);
     }
 
 private:
@@ -153,6 +166,8 @@ private:
     std::exception_ptr exc;
     std::mutex m;
     size_t sz;
+    std::atomic_bool abort;
+    std::atomic_bool workersFinalized;
 };
 }  // namespace Parallel
 }  // namespace PacBio

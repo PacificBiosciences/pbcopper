@@ -3,13 +3,14 @@
 #ifndef PBCOPPER_DATA_MOVIENAME_H
 #define PBCOPPER_DATA_MOVIENAME_H
 
+#include <pbcopper/PbcopperConfig.h>
+
 #include <iosfwd>
 #include <memory>
 #include <string>
+#include <type_traits>
 
 #include <boost/utility/string_ref.hpp>
-
-#include <pbcopper/PbcopperConfig.h>
 
 namespace PacBio {
 namespace Data {
@@ -32,7 +33,8 @@ public:
     MovieName(const MovieName& other);
     MovieName(MovieName&& other) noexcept;
     MovieName& operator=(const MovieName& other);
-    MovieName& operator=(MovieName&& other) noexcept;
+    MovieName& operator=(MovieName&& other) noexcept(
+        std::is_nothrow_move_assignable<std::string>::value);
     ~MovieName();
 
     /// \}

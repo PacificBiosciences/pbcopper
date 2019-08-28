@@ -2,9 +2,43 @@
 
 ## Active
 
-### TODO
-- Initial sequence-related data structures
-- FireAndForget increase buffer
+## [1.3.0] - 2019-07-11
+
+### Added
+ - Alignment algorithms from unanimity (local alignment, semi-global, affine, etc)
+
+### Removed
+ - Unused CallbackTimer
+ - Unused PacBio::Stream utilities
+
+## [1.2.0] - 2019-05-03
+
+### Changed
+ - CLI_v2::Results::NumProcessors() changed to CLI_v2::Results::NumThreads() for clarity.
+
+### Added
+ - Convenience methods for CLI_v2 clients: default log level override, explicit access to built-ins, built-in 'num-threads' option.
+
+## [1.1.0] - 2019-04-29
+
+### Added
+ - Reports module
+
+## [1.0.0] - 2019-04-23
+
+### Changed
+ - C++14 is now a *hard* minimum.
+
+### Removed
+ - Headers emulating C++14 features for C++11.
+
+### Added
+ - New (opt-in) CLI version 2.
+
+## [0.5.0] - 2019-04-11
+
+### Changed
+ - Requires C++14 at minimum.
 
 ## [0.3.0] - 2018-04-30
 

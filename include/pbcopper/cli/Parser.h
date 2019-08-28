@@ -3,11 +3,12 @@
 #ifndef PBCOPPER_CLI_PARSER_H
 #define PBCOPPER_CLI_PARSER_H
 
+#include <pbcopper/PbcopperConfig.h>
+
 #include <memory>
 #include <string>
 #include <vector>
 
-#include <pbcopper/PbcopperConfig.h>
 #include <pbcopper/cli/Results.h>
 
 namespace PacBio {
@@ -30,7 +31,8 @@ public:
     ///
     Parser(const Interface& interface);
 
-    Parser(const Parser& other);
+    Parser(Parser&&) noexcept;
+    Parser& operator=(Parser&&) noexcept;
     ~Parser();
 
     /// \}

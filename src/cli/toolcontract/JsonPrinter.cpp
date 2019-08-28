@@ -7,7 +7,6 @@
 
 #include <pbcopper/cli/Interface.h>
 #include <pbcopper/json/JSON.h>
-#include <pbcopper/utility/EnumClassHash.h>
 #include <pbcopper/utility/PbcopperVersion.h>
 
 using Json = PacBio::JSON::Json;
@@ -104,7 +103,7 @@ Json makeOutputTypesJson(const Interface& interface)
 
 Json makeResourceTypesJson(const ToolContract::Task& task)
 {
-    const std::unordered_map<ResourceType, std::string, Utility::EnumClassHash> lookup = {
+    const std::unordered_map<ResourceType, std::string> lookup = {
         {ResourceType::LOG_FILE, "$logfile"},
         {ResourceType::TMP_FILE, "$tmpfile"},
         {ResourceType::TMP_DIR, "$tmpdir"},
@@ -199,7 +198,7 @@ Json makeTaskJson(const Interface& interface)
     return tcJson;
 }
 
-}  // anonymous
+}  // namespace
 
 void JsonPrinter::Print(const Interface& interface, std::ostream& out, const int indent)
 {

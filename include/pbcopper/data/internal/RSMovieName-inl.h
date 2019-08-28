@@ -34,10 +34,7 @@ inline RSMovieName::RSMovieName(std::string name) : movieName_{std::move(name)} 
 
 inline RSMovieName::RSMovieName(const RSMovieName& other) : movieName_{other.movieName_} {}
 
-inline RSMovieName::RSMovieName(RSMovieName&& other) noexcept
-    : movieName_{std::move(other.movieName_)}, partsCache_{std::move(other.partsCache_)}
-{
-}
+inline RSMovieName::RSMovieName(RSMovieName&&) noexcept = default;
 
 inline RSMovieName& RSMovieName::operator=(const RSMovieName& other)
 {
@@ -46,12 +43,8 @@ inline RSMovieName& RSMovieName::operator=(const RSMovieName& other)
     return *this;
 }
 
-inline RSMovieName& RSMovieName::operator=(RSMovieName&& other) noexcept
-{
-    movieName_ = std::move(other.movieName_);
-    partsCache_ = std::move(other.partsCache_);
-    return *this;
-}
+inline RSMovieName& RSMovieName::operator=(RSMovieName&& other) noexcept(
+    std::is_nothrow_move_assignable<std::string>::value) = default;
 
 inline RSMovieName::~RSMovieName() = default;
 

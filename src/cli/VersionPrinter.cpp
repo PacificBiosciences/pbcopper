@@ -11,7 +11,7 @@ namespace CLI {
 
 void VersionPrinter::Print(const Interface& interface, std::ostream& out)
 {
-    out << interface.ApplicationName() << " " << interface.ApplicationVersion() << std::endl;
+    out << interface.ApplicationName() << " " << interface.ApplicationVersion() << '\n';
 }
 
 }  // namespace CLI

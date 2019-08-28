@@ -3,12 +3,13 @@
 #ifndef PBCOPPER_CLI_CLI_H
 #define PBCOPPER_CLI_CLI_H
 
+#include <pbcopper/PbcopperConfig.h>
+
 #include <functional>
 #include <iosfwd>
 #include <string>
 #include <vector>
 
-#include <pbcopper/PbcopperConfig.h>
 #include <pbcopper/cli/Interface.h>
 #include <pbcopper/cli/Results.h>
 

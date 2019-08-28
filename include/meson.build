@@ -7,22 +7,31 @@ if not meson.is_subproject()
   # pbcopper
   install_headers(
     files([
-      'pbcopper/PbcopperConfig.h',
-      'pbcopper/PbcopperMakeUnique.h']),
+      'pbcopper/PbcopperConfig.h']),
     subdir : 'pbcopper')
 
   # pbcopper/align
   install_headers(
     files([
+      'pbcopper/align/AffineAlignment.h',
+      'pbcopper/align/AlignConfig.h',
+      'pbcopper/align/BandedChainAlignment.h',
+      'pbcopper/align/ChainSeeds.h',
+      'pbcopper/align/ChainSeedsConfig.h',
+      'pbcopper/align/FindSeeds.h',
+      'pbcopper/align/LinearAlignment.h',
+      'pbcopper/align/LocalAlignment.h',
+      'pbcopper/align/PairwiseAlignment.h',
       'pbcopper/align/Seed.h',
-      'pbcopper/align/Seeds.h']),
+      'pbcopper/align/Seeds.h',
+      'pbcopper/align/SparseAlignment.h']),
     subdir : 'pbcopper/align')
 
   # pbcopper/align/internal
   install_headers(
     files([
-      'pbcopper/align/internal/Seed-inl.h',
-      'pbcopper/align/internal/Seeds-inl.h']),
+      'pbcopper/align/internal/BCAlignBlocks.h',
+      'pbcopper/align/internal/BCAlignImpl.h']),
     subdir : 'pbcopper/align/internal')
 
   # pbcopper/cli
@@ -69,26 +78,72 @@ if not meson.is_subproject()
       'pbcopper/cli/toolcontract/internal/Task-inl.h']),
     subdir : 'pbcopper/cli/toolcontract/internal')
 
+  # pbcopper/cli2
+  install_headers(
+    files([
+      'pbcopper/cli2/CLI.h',
+      'pbcopper/cli2/Interface.h',
+      'pbcopper/cli2/MultiToolInterface.h',
+      'pbcopper/cli2/Option.h',
+      'pbcopper/cli2/OptionValue.h',
+      'pbcopper/cli2/OptionGroup.h',
+      'pbcopper/cli2/PositionalArgument.h',
+      'pbcopper/cli2/Result.h',
+      'pbcopper/cli2/Results.h',
+      'pbcopper/cli2/ResultsHandler.h',
+      'pbcopper/cli2/Tool.h'
+      ]),
+    subdir : 'pbcopper/cli2')
+
+  # pbcopper/cli2/internal
+  install_headers(
+    files([
+      'pbcopper/cli2/internal/BuiltinOptions.h',
+      'pbcopper/cli2/internal/CommandLineParser.h',
+      'pbcopper/cli2/internal/HelpMetrics.h',
+      'pbcopper/cli2/internal/InterfaceData.h',
+      'pbcopper/cli2/internal/InterfaceHelpPrinter.h',
+      'pbcopper/cli2/internal/MultiToolInterfaceData.h',
+      'pbcopper/cli2/internal/MultiToolInterfaceHelpPrinter.h',
+      'pbcopper/cli2/internal/OptionData.h',
+      'pbcopper/cli2/internal/OptionTranslator.h',
+      'pbcopper/cli2/internal/PositionalArgumentData.h',
+      'pbcopper/cli2/internal/PositionalArgumentTranslator.h',
+      'pbcopper/cli2/internal/VersionPrinter.h',]),
+    subdir : 'pbcopper/cli2/internal')
+
   # pbcopper/data
   install_headers(
     files([
+      'pbcopper/data/Accuracy.h',
       'pbcopper/data/CCSTag.h',
       'pbcopper/data/Cigar.h',
       'pbcopper/data/CigarOperation.h',
+      'pbcopper/data/Clipping.h',
+      'pbcopper/data/Frames.h',
+      'pbcopper/data/GenomicInterval.h',
       'pbcopper/data/Interval.h',
+      'pbcopper/data/LocalContextFlags.h',
+      'pbcopper/data/MappedRead.h',
       'pbcopper/data/MovieName.h',
+      'pbcopper/data/Orientation.h',
       'pbcopper/data/Position.h',
+      'pbcopper/data/QualityValue.h',
+      'pbcopper/data/QualityValues.h',
+      'pbcopper/data/Read.h',
+      'pbcopper/data/ReadId.h',
       'pbcopper/data/ReadName.h',
       'pbcopper/data/RSMovieName.h',
       'pbcopper/data/RSReadName.h',
+      'pbcopper/data/SNR.h',
+      'pbcopper/data/Strand.h',
       'pbcopper/data/Zmw.h']),
     subdir : 'pbcopper/data')
 
   # pbcopper/data/internal
   install_headers(
     files([
-      'pbcopper/data/internal/CigarOperation-inl.h',
-      'pbcopper/data/internal/Interval-inl.h',
+      'pbcopper/data/internal/ClippingImpl.h',
       'pbcopper/data/internal/MovieName-inl.h',
       'pbcopper/data/internal/ReadNameBase-inl.h',
       'pbcopper/data/internal/ReadNameBase.h',
@@ -110,14 +165,12 @@ if not meson.is_subproject()
   # pbcopper/logging
   install_headers(
     files([
-      'pbcopper/logging/Logging.h']),
+      'pbcopper/logging/Logging.h',
+      'pbcopper/logging/LogConfig.h',
+      'pbcopper/logging/LogField.h',
+      'pbcopper/logging/LogLevel.h',
+      'pbcopper/logging/LogMessage.h']),
     subdir : 'pbcopper/logging')
-
-  # pbcopper/logging/internal
-  install_headers(
-    files([
-      'pbcopper/logging/internal/Logging-inl.h']),
-    subdir : 'pbcopper/logging/internal')
 
   # pbcopper/parallel
   install_headers(
@@ -126,6 +179,12 @@ if not meson.is_subproject()
       'pbcopper/parallel/FireAndForgetIndexed.h',
       'pbcopper/parallel/WorkQueue.h']),
     subdir : 'pbcopper/parallel')
+
+  # pbcopper/reports
+  install_headers(
+    files([
+      'pbcopper/reports/Report.h']),
+    subdir : 'pbcopper/reports')
 
   # pbcopper/qgram
   install_headers(
@@ -142,21 +201,16 @@ if not meson.is_subproject()
       'pbcopper/qgram/internal/Index-inl.h']),
     subdir : 'pbcopper/qgram/internal')
 
-  # pbcopper/stream
-  install_headers(
-    files([
-      'pbcopper/stream/Stream.h']),
-    subdir : 'pbcopper/stream')
-
   # pbcopper/utility
   install_headers(
     files([
-      'pbcopper/utility/CallbackTimer.h',
-      'pbcopper/utility/EnumClassHash.h',
+      'pbcopper/utility/Deleters.h',
       'pbcopper/utility/FileUtils.h',
+      'pbcopper/utility/MinMax.h',
       'pbcopper/utility/MoveAppend.h',
       'pbcopper/utility/PbcopperVersion.h',
       'pbcopper/utility/SafeSubtract.h',
+      'pbcopper/utility/SequenceUtils.h',
       'pbcopper/utility/Stopwatch.h',
       'pbcopper/utility/StringUtils.h',
       'pbcopper/utility/SystemInfo.h',
@@ -168,7 +222,6 @@ if not meson.is_subproject()
     files([
       'pbcopper/utility/internal/FileUtils-inl.h',
       'pbcopper/utility/internal/Stopwatch-inl.h',
-      'pbcopper/utility/internal/StringUtils-inl.h',
       'pbcopper/utility/internal/SystemInfo-inl.h']),
     subdir : 'pbcopper/utility/internal')
 endif

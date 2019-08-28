@@ -3,9 +3,9 @@
 #ifndef PBCOPPER_UTILITY_FILEUTILS_H
 #define PBCOPPER_UTILITY_FILEUTILS_H
 
-#include <string>
-
 #include <pbcopper/PbcopperConfig.h>
+
+#include <string>
 
 namespace PacBio {
 namespace Utility {

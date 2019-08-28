@@ -3,12 +3,13 @@
 #ifndef PBCOPPER_CLI_RESULTS_H
 #define PBCOPPER_CLI_RESULTS_H
 
+#include <pbcopper/PbcopperConfig.h>
+
 #include <cstdint>
 #include <string>
 #include <unordered_map>
 #include <vector>
 
-#include <pbcopper/PbcopperConfig.h>
 #include <pbcopper/cli/Interface.h>
 #include <pbcopper/cli/Option.h>
 #include <pbcopper/json/JSON.h>
@@ -38,9 +39,9 @@ public:
     Results(Interface interface, std::vector<std::string> inputCommandLine);
 
     Results(const Results& other);
-    Results(Results&& other);
+    Results(Results&& other) noexcept;
     Results& operator=(const Results& other);
-    Results& operator=(Results&& other);
+    Results& operator=(Results&& other) noexcept;
     ~Results();
 
     /// \}
