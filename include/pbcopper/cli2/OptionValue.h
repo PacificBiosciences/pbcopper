@@ -5,6 +5,7 @@
 
 #include <pbcopper/PbcopperConfig.h>
 
+#include <iosfwd>
 #include <string>
 
 #include <boost/variant.hpp>
@@ -107,6 +108,11 @@ bool OptionValueToBool(const OptionValue& value);
 /// \throws if not a string type
 //
 std::string OptionValueToString(const OptionValue& value);
+
+///
+/// print to stream, depending on underlying type
+///
+std::ostream& operator<<(std::ostream& out, const OptionValue& value);
 
 }  // namespace CLI_v2
 }  // namespace PacBio

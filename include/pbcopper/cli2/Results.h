@@ -40,7 +40,13 @@ public:
 
 public:
     ///
-    /// \return full command line text
+    /// \return the equivalent of InputCommandLine() plus all default values
+    ///         that were not specified
+    ///
+    std::string EffectiveCommandLine() const;
+
+    ///
+    /// \return full command line text, verbatim, as provided
     ///
     const std::string& InputCommandLine() const;
 
