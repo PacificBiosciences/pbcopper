@@ -1,14 +1,20 @@
 #include <sstream>
 #include <stdexcept>
+#include <string>
+#include <vector>
 
 #include <gtest/gtest.h>
 
+#include <pbcopper/cli2/Interface.h>
 #include <pbcopper/cli2/Option.h>
 #include <pbcopper/cli2/PositionalArgument.h>
 #include <pbcopper/cli2/Results.h>
+#include <pbcopper/cli2/internal/CommandLineParser.h>
 #include <pbcopper/cli2/internal/OptionTranslator.h>
 #include <pbcopper/cli2/internal/PositionalArgumentTranslator.h>
 
+using CommandLineParser = PacBio::CLI_v2::internal::CommandLineParser;
+using Interface = PacBio::CLI_v2::Interface;
 using Option = PacBio::CLI_v2::Option;
 using OptionTranslator = PacBio::CLI_v2::internal::OptionTranslator;
 using PositionalArgument = PacBio::CLI_v2::PositionalArgument;
@@ -37,6 +43,25 @@ R"({
     "description" : "Abort execution after <INT> milliseconds.",
     "type" : "integer",
     "default" : 5000
+})"
+};
+
+static const Option Zshort
+{
+R"({
+    "names" : ["Z"],
+    "description" : "Short name-only switch.",
+    "type" : "boolean"
+})"
+};
+
+static const Option Yshort
+{
+R"({
+    "names" : ["Y"],
+    "description" : "Short name-only option.",
+    "type" : "integer",
+    "default" : 7
 })"
 };
 
@@ -407,6 +432,121 @@ TEST(CLI2_Results, can_add_and_fetch_options_and_pos_args)
     EXPECT_EQ("diploid", s.ploidy);
     EXPECT_EQ("inFile.txt", s.source);
     EXPECT_EQ("outFile.txt", s.dest);
+}
+
+TEST(CLI2_Results, can_provide_effective_command_line_from_default_parameters_only)
+{
+    Interface i{"frobber", "Frobb your files in a most delightful, nobbly way", "3.14"};
+    i.AddOptions({
+        CLI_v2_ResultsTests::Force,
+        CLI_v2_ResultsTests::Timeout,
+        CLI_v2_ResultsTests::Delta,
+        CLI_v2_ResultsTests::Ploidy
+    });
+    i.AddPositionalArguments({
+        CLI_v2_ResultsTests::Source,
+        CLI_v2_ResultsTests::Dest
+    });
+
+    CommandLineParser parser{i};
+    const std::vector<std::string> args{
+        i.ApplicationName(),
+        "requiredIn",
+        "requiredOut"
+    };
+    const auto results = parser.Parse(args);
+    const auto cmdLine = results.EffectiveCommandLine();
+
+    EXPECT_NE(std::string::npos, cmdLine.find("--log-level=WARN"));
+    EXPECT_NE(std::string::npos, cmdLine.find("--delta=0.01"));
+    EXPECT_NE(std::string::npos, cmdLine.find("--ploidy=haploid"));
+    EXPECT_NE(std::string::npos, cmdLine.find("--num-threads=0"));
+    EXPECT_NE(std::string::npos, cmdLine.find("--timeout=5000"));
+    EXPECT_NE(std::string::npos, cmdLine.find("requiredIn"));
+    EXPECT_NE(std::string::npos, cmdLine.find("requiredOut"));
+}
+
+TEST(CLI2_Results, can_provide_effective_command_line_from_user_parameters_only)
+{
+    Interface i{"frobber", "Frobb your files in a most delightful, nobbly way", "3.14"};
+    i.AddOptions({
+        CLI_v2_ResultsTests::Force,
+        CLI_v2_ResultsTests::Timeout,
+        CLI_v2_ResultsTests::Delta,
+        CLI_v2_ResultsTests::Ploidy
+    });
+    i.AddPositionalArguments({
+        CLI_v2_ResultsTests::Source,
+        CLI_v2_ResultsTests::Dest
+    });
+
+    CommandLineParser parser{i};
+    const std::vector<std::string> args{
+        i.ApplicationName(),
+        "-f",
+        "--delta=0.22",
+        "--ploidy", "diploid",
+        "--log-level", "DEBUG",
+        "--log-file", "out.log",
+        "-j", "10",
+        "--timeout=99",
+        "requiredIn",
+        "requiredOut"
+    };
+    const auto results = parser.Parse(args);
+    const auto cmdLine = results.EffectiveCommandLine();
+
+    EXPECT_NE(std::string::npos, cmdLine.find("--delta=0.22"));
+    EXPECT_NE(std::string::npos, cmdLine.find("--force"));
+    EXPECT_NE(std::string::npos, cmdLine.find("--ploidy=diploid"));
+    EXPECT_NE(std::string::npos, cmdLine.find("--num-threads=10"));
+    EXPECT_NE(std::string::npos, cmdLine.find("--timeout=99"));
+    EXPECT_NE(std::string::npos, cmdLine.find("--log-level=DEBUG"));
+    EXPECT_NE(std::string::npos, cmdLine.find("--log-file=out.log"));
+    EXPECT_NE(std::string::npos, cmdLine.find("requiredIn"));
+    EXPECT_NE(std::string::npos, cmdLine.find("requiredOut"));
+}
+
+TEST(CLI2_Results, can_provide_effective_command_line_from_mixed_user_and_default_parameters)
+{
+    Interface i{"frobber", "Frobb your files in a most delightful, nobbly way", "3.14"};
+    i.AddOptions({
+        CLI_v2_ResultsTests::Force,
+        CLI_v2_ResultsTests::Timeout,
+        CLI_v2_ResultsTests::Delta,
+        CLI_v2_ResultsTests::Ploidy,
+        CLI_v2_ResultsTests::Zshort,
+        CLI_v2_ResultsTests::Yshort
+    });
+    i.AddPositionalArguments({
+        CLI_v2_ResultsTests::Source,
+        CLI_v2_ResultsTests::Dest
+    });
+
+    CommandLineParser parser{i};
+    const std::vector<std::string> args{
+        i.ApplicationName(),
+        "-f",
+        "-j", "10",
+        "--timeout=99",
+        "-Z",
+        "-Y", "12",
+        "requiredIn",
+        "requiredOut"
+    };
+    const auto results = parser.Parse(args);
+    const auto cmdLine = results.EffectiveCommandLine();
+
+    EXPECT_NE(std::string::npos, cmdLine.find("--log-level=WARN"));
+    EXPECT_NE(std::string::npos, cmdLine.find("--delta=0.01"));
+    EXPECT_NE(std::string::npos, cmdLine.find("--force"));
+    EXPECT_NE(std::string::npos, cmdLine.find("--ploidy=haploid"));
+    EXPECT_NE(std::string::npos, cmdLine.find("-Z"));
+    EXPECT_NE(std::string::npos, cmdLine.find("--num-threads=10"));
+    EXPECT_NE(std::string::npos, cmdLine.find("-Y=12"));
+    EXPECT_NE(std::string::npos, cmdLine.find("--timeout=99"));
+    EXPECT_NE(std::string::npos, cmdLine.find("requiredIn"));
+    EXPECT_NE(std::string::npos, cmdLine.find("requiredOut"));
 }
 
 // clang-format on

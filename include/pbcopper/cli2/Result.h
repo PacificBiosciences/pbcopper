@@ -6,7 +6,7 @@
 #include <pbcopper/PbcopperConfig.h>
 
 #include <cassert>
-#include <iostream>
+#include <iosfwd>
 #include <stdexcept>
 #include <string>
 
@@ -91,10 +91,15 @@ public:
     ///
     /// \}
 
+    // \internal
+    const OptionValue& RawValue() const;
+
 private:
     OptionValue data_;
     SetByMode setBy_ = SetByMode::DEFAULT;
 };
+
+std::ostream& operator<<(std::ostream& out, const Result& result);
 
 }  // namespace CLI_v2
 }  // namespace PacBio
