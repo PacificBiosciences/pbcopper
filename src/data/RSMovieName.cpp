@@ -65,17 +65,19 @@ void RSMovieName::UpdatePartsCache() const
         boost::string_ref{partNumStart, partNumSize},      // partNumber
     });
 
+    // clang-format off
     // checks - here? or elsewhere?
     if (partsCache_->runStartTime_.empty())
-        throw std::runtime_error("RSMovieName: run start time must not be empty");
+        throw std::runtime_error("[pbcopper] RS movie name ERROR: run start time must not be empty");
     if (partsCache_->serialNumber_.empty())
-        throw std::runtime_error("RSMovieName: instrument serial number must not be empty");
+        throw std::runtime_error("[pbcopper] RS movie name ERROR: instrument serial number must not be empty");
     if (partsCache_->smrtCellBarcode_.empty())
-        throw std::runtime_error("RSMovieName: SMRT cell barcode must not be empty");
+        throw std::runtime_error("[pbcopper] RS movie name ERROR: SMRT cell barcode must not be empty");
     if (partsCache_->setNumber_.empty())
-        throw std::runtime_error("RSMovieName: set number must not be empty");
+        throw std::runtime_error("[pbcopper] RS movie name ERROR: set number must not be empty");
     if (partsCache_->partNumber_.empty())
-        throw std::runtime_error("RSMovieName: part number must not be empty");
+        throw std::runtime_error("[pbcopper] RS movie name ERROR: part number must not be empty");
+    // clang-format on
 }
 
 }  // namespace Data

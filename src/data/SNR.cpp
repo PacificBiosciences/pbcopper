@@ -3,6 +3,7 @@
 #include <pbcopper/data/SNR.h>
 
 #include <algorithm>
+#include <string>
 
 #include <boost/algorithm/clamp.hpp>
 
@@ -40,7 +41,8 @@ const double& SNR::operator[](const size_t i) const
     if (i == 1) return C;
     if (i == 2) return G;
     if (i == 3) return T;
-    throw std::invalid_argument("SNR out of bounds!");
+    throw std::invalid_argument{"[pbcopper] SNR ERROR: index " + std::to_string(i) +
+                                " is out of bounds"};
 }
 
 double& SNR::operator[](const size_t i)

@@ -62,7 +62,8 @@ CigarOperation::CigarOperation(CigarOperationType op, uint32_t length) : type_{o
 {
     if (AutoValidateCigar && (type_ == CigarOperationType::ALIGNMENT_MATCH))
         throw std::runtime_error{
-            "CIGAR operation 'M' is not allowed in PacBio BAM files. Use 'X/=' instead."};
+            "[pbcopper] CIGAR operation ERROR: 'M' is not allowed in PacBio BAM files. Use 'X/=' "
+            "instead."};
 }
 
 bool CigarOperation::operator==(const CigarOperation& other) const

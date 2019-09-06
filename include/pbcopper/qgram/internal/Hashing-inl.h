@@ -59,7 +59,7 @@ public:
             // as this would trigger undefined behavior otherwise
             ((1 <= q_) && (q_ <= 16))
                           ? static_cast<uint32_t>(std::pow(ALPHABET_SIZE, q_ - 1))
-                          : throw std::invalid_argument{"qgram size (" + std::to_string(q_) +
+                          : throw std::invalid_argument{"[pbcopper] qgram ERROR: qgram size (" + std::to_string(q_) +
                                                         ") must be in the range [1,16]"}}
         , seq_(seq)
         , iter_{seq_.cbegin()}
@@ -70,12 +70,10 @@ public:
         // but want to still enforce this requirement here (in case of clients
         // 'sneaking' into internal implementation or, more likely, in case later
         // refactoring upstream removes the check).
-
-        if (seq.size() < q_) {
-            std::string msg{"sequence size (" + std::to_string(seq.size()) + ") must be >= q (" +
-                            std::to_string(q_)};
-            throw std::invalid_argument{msg};
-        }
+        if (seq.size() < q_)
+            throw std::invalid_argument{"[pbcopper] qgram ERROR: sequence size (" +
+                                        std::to_string(seq.size()) + ") must be >= q (" +
+                                        std::to_string(q_)};
 
         currentHash_ = HashImpl(BaseCode(*iter_), iter_, q_ - 1);
     }

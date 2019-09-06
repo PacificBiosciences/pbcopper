@@ -21,7 +21,8 @@ public:
     template <typename T>
     bool operator()(const T&) const
     {
-        throw std::runtime_error{"OptionValue: cannot convert value to bool"};
+        throw std::runtime_error{
+            "[pbcopper] command line option ERROR: cannot convert value to bool"};
         return 0;
     }
 };
@@ -35,7 +36,8 @@ public:
     template <typename T>
     double operator()(const T&) const
     {
-        throw std::runtime_error{"OptionValue: cannot convert value to double"};
+        throw std::runtime_error{
+            "[pbcopper] command line option ERROR: cannot convert value to double"};
         return 0;
     }
 };
@@ -52,7 +54,8 @@ public:
     template <typename T>
     int64_t operator()(const T&) const
     {
-        throw std::runtime_error{"OptionValue: cannot convert value to integer"};
+        throw std::runtime_error{
+            "[pbcopper] command line option ERROR: cannot convert value to integer"};
         return 0;
     }
 };
@@ -69,7 +72,8 @@ public:
     template <typename T>
     uint64_t operator()(const T&) const
     {
-        throw std::runtime_error{"OptionValue: cannot convert value to unsigned integer"};
+        throw std::runtime_error{
+            "[pbcopper] command line option ERROR: cannot convert value to unsigned integer"};
         return 0;
     }
 };
@@ -83,7 +87,8 @@ public:
     template <typename T>
     std::string operator()(const T&) const
     {
-        throw std::runtime_error{"OptionValue: cannot convert value to string"};
+        throw std::runtime_error{
+            "[pbcopper] command line option ERROR: cannot convert value to string"};
         return 0;
     }
 };
@@ -117,8 +122,8 @@ OptionValueType ValueType(std::string typeString)
         return found->second;
     else {
         std::ostringstream msg;
-        msg << "[pbcopper] option ERROR: could not determine value type for \"" << typeString
-            << "\"\n";
+        msg << "[pbcopper] command line option ERROR: could not determine value type for \""
+            << typeString << "\"\n";
         throw std::runtime_error{msg.str()};
     }
 }
@@ -193,7 +198,7 @@ std::ostream& operator<<(std::ostream& out, const OptionValue& value)
 
         default: {
             std::ostringstream msg;
-            msg << "[pbcopper] option ERROR: cannot print value for option of type: \""
+            msg << "[pbcopper] command line option ERROR: cannot print value for option of type: \""
                 << typeToString.at(typeIndex) << "\"\n";
             throw std::runtime_error{msg.str()};
         }
