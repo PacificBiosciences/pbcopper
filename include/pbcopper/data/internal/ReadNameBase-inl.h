@@ -68,21 +68,26 @@ inline MovieNameType ReadNameBase<MovieNameType>::MovieName() const
 template <typename MovieNameType>
 inline Interval ReadNameBase<MovieNameType>::QueryInterval() const
 {
-    if (IsCCS()) throw std::runtime_error("ReadName: cannot get query interval from CCS read");
+    if (IsCCS())
+        throw std::runtime_error{
+            "[pbcopper] read name ERROR: cannot get query interval from CCS read"};
     return *queryInterval_;
 }
 
 template <typename MovieNameType>
 inline Position ReadNameBase<MovieNameType>::QueryStart() const
 {
-    if (IsCCS()) throw std::runtime_error("ReadName: cannot get query start from CCS read");
+    if (IsCCS())
+        throw std::runtime_error{
+            "[pbcopper] read name ERROR: cannot get query start from CCS read"};
     return queryInterval_->Start();
 }
 
 template <typename MovieNameType>
 inline Position ReadNameBase<MovieNameType>::QueryEnd() const
 {
-    if (IsCCS()) throw std::runtime_error("ReadName: cannot get query end from CCS read");
+    if (IsCCS())
+        throw std::runtime_error{"[pbcopper] read name ERROR: cannot get query end from CCS read"};
     return queryInterval_->End();
 }
 
@@ -148,15 +153,19 @@ template <typename MovieNameType>
 inline void ReadNameBase<MovieNameType>::Check() const
 {
     if (movieName_.ToStdString().empty())
-        throw std::runtime_error("ReadName: movie name must not be empty");
+        throw std::runtime_error{"[pbcopper] read name ERROR: movie name must not be empty"};
 
-    if (zmw_ < 0) throw std::runtime_error("ReadName: ZMW hole number must be a positive integer");
+    if (zmw_ < 0)
+        throw std::runtime_error{
+            "[pbcopper] read name ERROR: ZMW hole number must be a positive integer"};
 
     if (!IsCCS()) {
         if (QueryStart() < 0)
-            throw std::runtime_error("ReadName: query start must be a positive integer");
+            throw std::runtime_error{
+                "[pbcopper] read name ERROR: query start must be a positive integer"};
         if (QueryEnd() < 0)
-            throw std::runtime_error("ReadName: query end must be a positive integer");
+            throw std::runtime_error{
+                "[pbcopper] read name ERROR: query end must be a positive integer"};
     }
 }
 

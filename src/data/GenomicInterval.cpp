@@ -17,14 +17,22 @@ namespace PacBio {
 namespace Data {
 namespace {
 
+struct RegionStringException : public std::runtime_error
+{
+    RegionStringException(std::string region)
+        : std::runtime_error{"[pbcopper] genomic interval ERROR: malformed region string '" +
+                             region + "'"}
+    {
+    }
+};
+
 // returns sequence name & sets begin/end, from input regionString
 std::string parseRegionString(const std::string& reg, Position* begin, Position* end)
 {
     std::vector<std::string> parts;
     boost::split(parts, reg, boost::is_any_of(":"), boost::token_compress_on);
 
-    if (parts.empty() || parts.size() > 2)
-        throw std::runtime_error{"GenomicInterval: malformed region string (" + reg + ")"};
+    if (parts.empty() || parts.size() > 2) throw RegionStringException{reg};
 
     // given name only, default min,max intervals
     if (parts.size() == 1) {
@@ -36,8 +44,7 @@ std::string parseRegionString(const std::string& reg, Position* begin, Position*
     else if (parts.size() == 2) {
         std::vector<std::string> intervalParts;
         boost::split(intervalParts, parts.at(1), boost::is_any_of("-"), boost::token_compress_on);
-        if (intervalParts.empty() || intervalParts.size() > 2)
-            throw std::runtime_error{"GenomicInterval: malformed region string (" + reg + ")"};
+        if (intervalParts.empty() || intervalParts.size() > 2) throw RegionStringException{reg};
         *begin = std::stoi(intervalParts.at(0));
         *end = std::stoi(intervalParts.at(1));
     }
@@ -45,7 +52,7 @@ std::string parseRegionString(const std::string& reg, Position* begin, Position*
     return parts.at(0);
 }
 
-}  // anonymous
+}  // namespace
 
 static_assert(std::is_copy_constructible<GenomicInterval>::value,
               "GenomicInterval(const GenomicInterval&) is not = default");
@@ -70,9 +77,7 @@ GenomicInterval::GenomicInterval(const std::string& samtoolsRegionString)
 
     name_ = parseRegionString(samtoolsRegionString, &begin, &end);
     if (begin == UnmappedPosition || end == UnmappedPosition)
-        throw std::runtime_error{"GenomicInterval: malformed region string (" +
-                                 samtoolsRegionString + ")"};
-
+        throw RegionStringException{samtoolsRegionString};
     interval_ = Data::Interval(begin, end);
 }
 

@@ -54,10 +54,9 @@ inline const IndexImpl::HashLookup_t& IndexImpl::HashLookup() const { return has
 
 inline void IndexImpl::Init()
 {
-    if (q_ == 0 || q_ > 16) {
-        std::string msg{"qgram size (" + std::to_string(q_) + ") must be in the range [1,16]"};
-        throw std::invalid_argument{msg};
-    }
+    if (q_ == 0 || q_ > 16)
+        throw std::invalid_argument{"[pbcopper] qgram ERROR: qgram size (" + std::to_string(q_) +
+                                    ") must be in the range [1,16]"};
 
     // init hash lookup (and calculate totalNumQGrams for later suffixArray)
     const auto lookupSize = static_cast<size_t>(std::pow(4, q_) + 1);
@@ -66,11 +65,10 @@ inline void IndexImpl::Init()
     for (const auto& seq : seqs_) {
 
         const auto seqLength = seq.size();
-        if (seqLength < q_) {
-            std::string msg{"sequence size (" + std::to_string(seqLength) + ") must be >= q (" +
-                            std::to_string(q_)};
-            throw std::invalid_argument{msg};
-        }
+        if (seqLength < q_)
+            throw std::invalid_argument{"[pbcopper] qgram ERROR: sequence size (" +
+                                        std::to_string(seqLength) + ") must be >= q (" +
+                                        std::to_string(q_)};
 
         const auto numQGrams = seqLength - q_ + 1;
         Shape shape{q_, seq};
