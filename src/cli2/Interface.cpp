@@ -35,10 +35,10 @@ Interface::Interface(std::string name, std::string description, std::string vers
             std::move(description),
             std::move(version),
             OptionTranslator::Translate(Builtin::Help),
-            OptionTranslator::Translate(Builtin::LogFile),
-            OptionTranslator::Translate(Builtin::LogLevel),
+            OptionTranslator::Translate(Builtin::Version),
             OptionTranslator::Translate(Builtin::NumThreads),
-            OptionTranslator::Translate(Builtin::Version)}
+            OptionTranslator::Translate(Builtin::LogFile),
+            OptionTranslator::Translate(Builtin::LogLevel)}
 {
     if (data_.appName_.empty()) {
         throw std::runtime_error{
@@ -126,6 +126,12 @@ Interface& Interface::DisableNumThreadsOption()
     return *this;
 }
 
+Interface& Interface::EnableVerboseOption()
+{
+    data_.verboseOption_ = OptionTranslator::Translate(Builtin::Verbose);
+    return *this;
+}
+
 const std::string& Interface::Example() const { return data_.example_; }
 
 Interface& Interface::Example(std::string example)
@@ -198,10 +204,11 @@ std::vector<OptionData> Interface::Options() const
 
     // add builtins
     result.push_back(data_.helpOption_);
+    result.push_back(data_.versionOption_);
+    if (data_.numThreadsOption_) result.push_back(data_.numThreadsOption_.get());
     if (data_.logLevelOption_) result.push_back(data_.logLevelOption_.get());
     if (data_.logFileOption_) result.push_back(data_.logFileOption_.get());
-    if (data_.numThreadsOption_) result.push_back(data_.numThreadsOption_.get());
-    result.push_back(data_.versionOption_);
+    if (data_.verboseOption_) result.push_back(data_.verboseOption_.get());
     return result;
 }
 
@@ -210,6 +217,11 @@ const std::vector<OptionGroupData>& Interface::OptionGroups() const { return dat
 const std::vector<PositionalArgumentData>& Interface::PositionalArguments() const
 {
     return data_.positionalArgs_;
+}
+
+const boost::optional<internal::OptionData>& Interface::VerboseOption() const
+{
+    return data_.verboseOption_;
 }
 
 const internal::OptionData& Interface::VersionOption() const { return data_.versionOption_; }

@@ -45,9 +45,9 @@ void MovieName::UpdatePartsCache() const
 
     // checks - here? or elsewhere?
     if (partsCache_->instrumentName_.empty())
-        throw std::runtime_error("MovieName: instrument name must not be empty");
+        throw std::runtime_error("[pbcopper] movie name ERROR: instrument name must not be empty");
     if (partsCache_->runStartTime_.empty())
-        throw std::runtime_error("MovieName: run start time must not be empty");
+        throw std::runtime_error("[pbcopper] movie name ERROR: run start time must not be empty");
 }
 
 }  // namespace Data

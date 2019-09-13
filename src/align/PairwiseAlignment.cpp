@@ -216,7 +216,8 @@ PairwiseAlignment::PairwiseAlignment(std::string target, std::string query, cons
     , refEnd_(refEnd)
 {
     if (target_.length() != query_.length()) {
-        throw std::invalid_argument("target length must equal query length");
+        throw std::invalid_argument(
+            "[pbcopper] pairwise alignment ERROR: target length must equal query length");
     }
     for (unsigned int i = 0; i < target_.length(); i++) {
         char t = target_[i];
@@ -224,7 +225,8 @@ PairwiseAlignment::PairwiseAlignment(std::string target, std::string query, cons
         char tr;
 
         if (t == '-' && q == '-') {
-            throw std::invalid_argument("invalid target and query transcript");
+            throw std::invalid_argument{
+                "[pbcopper] pairwise alignment ERROR: invalid target and query transcript"};
         } else if (t == q) {
             tr = 'M';
         } else if (t == '-') {
@@ -252,7 +254,9 @@ std::vector<int> PairwiseAlignment::TargetPositions() const
         } else if (c == 'I') {
             pos.push_back(refPos);
         } else {
-            throw std::runtime_error("unreachable");
+            throw std::runtime_error{
+                "[pbcopper] pairwise alignment ERROR: unknown transcript code: " +
+                std::string(1, c)};
         }
     }
 
@@ -263,7 +267,8 @@ std::vector<int> PairwiseAlignment::TargetPositions() const
 PairwiseAlignment PairwiseAlignment::ClippedTo(const size_t refStart, const size_t refEnd)
 {
     if (refStart >= refEnd || refStart >= ReferenceEnd() || refEnd <= ReferenceStart()) {
-        throw std::runtime_error("Clipping query does not overlap alignment");
+        throw std::runtime_error{
+            "[pbcopper] pairwise alignment ERROR: requested clip range does not overlap alignment"};
     }
 
     const size_t clipRefStart = std::max(refStart, ReferenceStart());
@@ -290,7 +295,9 @@ PairwiseAlignment* Align(const std::string& target, const std::string& query, in
 
     const AlignParams& params = config.Params;
     if (config.Mode != AlignMode::GLOBAL && config.Mode != AlignMode::SEMIGLOBAL) {
-        throw std::invalid_argument("Only GLOBAL and SEMIGLOBAL alignments supported at present");
+        throw std::invalid_argument{
+            "[pbcopper] pairwise alignment ERROR: only GLOBAL and SEMIGLOBAL alignments supported "
+            "at present"};
     }
 
     int I = query.length();
@@ -439,7 +446,9 @@ std::vector<int> TargetToQueryPositions(const std::string& transcript)
         } else if (c == 'I') {
             queryPos++;
         } else {
-            throw std::runtime_error("unreachable");
+            throw std::runtime_error{
+                "[pbcopper] pairwise alignment ERROR: unknown transcript code: " +
+                std::string(1, c)};
         }
     }
     ntp.push_back(queryPos);

@@ -71,4 +71,52 @@ TEST(Utility_StringUtils, word_wrapping_longer_than_max_yields_wrapped_line)
     }
 }
 
+TEST(Utility_StringUtils, si_string_to_int_throws_on_empty_input)
+{
+    EXPECT_THROW(PacBio::Utility::SIStringToInt(""), std::exception);
+}
+
+TEST(Utility_StringUtils, si_string_to_int_throws_on_invalid_input)
+{
+    EXPECT_THROW(PacBio::Utility::SIStringToInt("+"), std::exception);
+    EXPECT_THROW(PacBio::Utility::SIStringToInt("-"), std::exception);
+    EXPECT_THROW(PacBio::Utility::SIStringToInt("G"), std::exception);
+    EXPECT_THROW(PacBio::Utility::SIStringToInt("X"), std::exception);
+    EXPECT_THROW(PacBio::Utility::SIStringToInt("100x"), std::exception);
+    EXPECT_THROW(PacBio::Utility::SIStringToInt("-100x"), std::exception);
+}
+
+TEST(Utility_StringUtils, converts_si_string_to_positive_int)
+{
+    EXPECT_EQ(0, PacBio::Utility::SIStringToInt("0"));
+    EXPECT_EQ(42, PacBio::Utility::SIStringToInt("42"));
+
+    EXPECT_EQ(100000, PacBio::Utility::SIStringToInt("100K"));
+    EXPECT_EQ(100000, PacBio::Utility::SIStringToInt("100k"));
+
+    EXPECT_EQ(100000, PacBio::Utility::SIStringToInt("+100K"));
+    EXPECT_EQ(100000, PacBio::Utility::SIStringToInt("+100k"));
+
+    EXPECT_EQ(2000000, PacBio::Utility::SIStringToInt("2M"));
+    EXPECT_EQ(2000000, PacBio::Utility::SIStringToInt("2m"));
+
+    EXPECT_EQ(60000000000, PacBio::Utility::SIStringToInt("60G"));
+    EXPECT_EQ(60000000000, PacBio::Utility::SIStringToInt("60g"));
+}
+
+TEST(Utility_StringUtils, converts_si_string_to_negative_int)
+{
+    EXPECT_EQ(0, PacBio::Utility::SIStringToInt("-0"));
+    EXPECT_EQ(-42, PacBio::Utility::SIStringToInt("-42"));
+
+    EXPECT_EQ(-100000, PacBio::Utility::SIStringToInt("-100K"));
+    EXPECT_EQ(-100000, PacBio::Utility::SIStringToInt("-100k"));
+
+    EXPECT_EQ(-2000000, PacBio::Utility::SIStringToInt("-2M"));
+    EXPECT_EQ(-2000000, PacBio::Utility::SIStringToInt("-2m"));
+
+    EXPECT_EQ(-60000000000, PacBio::Utility::SIStringToInt("-60G"));
+    EXPECT_EQ(-60000000000, PacBio::Utility::SIStringToInt("-60g"));
+}
+
 // clang-format on

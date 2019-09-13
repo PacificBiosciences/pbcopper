@@ -139,7 +139,8 @@ int Run(const std::vector<std::string>& args, const MultiToolInterface& interfac
     }
 
     // no matching tool
-    throw std::runtime_error{"unknown tool: " + args.at(1)};
+    throw std::runtime_error{"[pbcopper] command line ERROR: unknown tool '" + args.at(1) +
+                             "' requested"};
 }
 
 }  // namespace CLI_v2

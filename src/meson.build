@@ -49,6 +49,7 @@ pbcopper_cpp_sources = files([
 
   'cli2/CLI.cpp',
   'cli2/CommandLineParser.cpp',
+  'cli2/HelpMetrics.cpp',
   'cli2/Interface.cpp',
   'cli2/InterfaceHelpPrinter.cpp',
   'cli2/MultiToolInterface.cpp',

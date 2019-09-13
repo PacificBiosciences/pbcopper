@@ -49,12 +49,12 @@ OptionValue ValueFromString(const OptionData& option, const std::string valueStr
 {
     switch (option.type) {
         case OptionValueType::INT: {
-            const int v = std::strtol(valueString.c_str(), nullptr, 10);
+            const int64_t v = std::strtoll(valueString.c_str(), nullptr, 10);
             return OptionValue{v};
         }
 
         case OptionValueType::UINT: {
-            const unsigned int v = std::strtoul(valueString.c_str(), nullptr, 10);
+            const uint64_t v = std::strtoull(valueString.c_str(), nullptr, 10);
             return OptionValue{v};
         }
 
@@ -74,6 +74,31 @@ OptionValue ValueFromString(const OptionData& option, const std::string valueStr
         }
         default:
             throw CommandLineParserException{"unknown option type"};
+    }
+}
+
+void EnsureOptionValue(const std::string& valueString, const std::string& optionName,
+                       const OptionValueType optionType)
+{
+    assert(!valueString.empty());
+
+    // value string does not begin with a dash, treat as option value
+    if (valueString.find(token_dash) != 0) return;
+
+    // value string begins with dash, may be either a new option or a valid negative value
+    else {
+
+        // not a number, e.g. "-X", we're definitely missing our expected value
+        if (!std::isdigit(valueString.at(1)))
+            throw CommandLineParserException{"value is missing for option '" + optionName + "'"};
+
+        // next token looks like a negative number, but is not valid
+        // for this option type
+        else if (!CanBeNegative(optionType))
+            throw CommandLineParserException{"negative value " + valueString +
+                                             " is not allowed for option '" + optionName + "'"};
+
+        // else looks like valid negative number
     }
 }
 
@@ -169,27 +194,22 @@ void CommandLineParser::ParseLongOption(const std::string& arg, std::deque<std::
     // arg is either "opt" or "opt value", ignore parsing out the "option token"
     optionName = optionToken;
 
-    // boolean options are a special case
+    // boolean options do not require a value
     const auto& option = OptionFor(optionName);
     if (option.type == OptionValueType::BOOL) results.AddObservedFlag(optionName, SetByMode::USER);
 
-    // non-boolean options
+    // non-boolean options do requre a value
     else {
         const bool argsRemaining = !args.empty();
         if (argsRemaining) {
             valueString = args.front();
 
-            const auto nextIsOption = (valueString.find(token_dash) == 0);
+            // parse value for option
+            EnsureOptionValue(valueString, optionName, option.type);
+            auto value = ValueFromString(option, valueString);
+            results.AddObservedValue(optionName, value, SetByMode::USER);
+            args.pop_front();
 
-            // if the expected value is actually the next option
-            if (nextIsOption)
-                throw CommandLineParserException{"value is missing for option '" + optionName +
-                                                 "'"};
-            else {
-                auto value = ValueFromString(option, valueString);
-                results.AddObservedValue(optionName, value, SetByMode::USER);
-                args.pop_front();
-            }
         } else
             throw CommandLineParserException{"value is missing for option '" + optionName + "'"};
     }
@@ -207,31 +227,40 @@ void CommandLineParser::ParseShortOption(const std::string& arg, std::deque<std:
     std::string optionName;
     bool valueExpected = true;
 
+    // iterate over arg chars, may be a combo of short args (e.g. -xvf)
     for (size_t i = 1; i < arg.size(); ++i) {
         optionName = arg.substr(i, 1);
-
         const auto& option = OptionFor(optionName);
+
+        // boolean options do not require a value
         if (option.type == OptionValueType::BOOL) {
             results.AddObservedFlag(optionName, SetByMode::USER);
             valueExpected = false;
-        } else {
+        }
+
+        // otherwise expects value, check for "attached" value (e.g. -n5 or -f=2)
+        // if found, no remaining value expected
+        else {
             if (i + 1 < arg.size()) {
                 if (arg.at(i + 1) == token_equal) ++i;
                 auto valueString = arg.substr(i + 1);
                 auto value = ValueFromString(option, valueString);
                 results.AddObservedValue(optionName, value, SetByMode::USER);
-                valueExpected = false;
+                return;
             }
         }
     }
 
+    // value still expected, use the next token
     if (valueExpected) {
         assert(!optionName.empty());
+        const auto& option = OptionFor(optionName);
 
         auto valueString = args.front();
         args.pop_front();
 
-        const auto& option = OptionFor(optionName);
+        // parse value for option
+        EnsureOptionValue(valueString, optionName, option.type);
         auto value = ValueFromString(option, valueString);
         results.AddObservedValue(optionName, value, SetByMode::USER);
     }

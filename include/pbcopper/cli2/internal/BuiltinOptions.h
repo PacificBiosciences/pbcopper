@@ -52,6 +52,12 @@ R"({
     "description" : "Show application version and exit."
 })"};
 
+const Option Verbose{
+R"({
+    "names" : ["v", "verbose"],
+    "description" : "Use verbose output."
+})"};
+
 } // namespace Builtin
 } // namespace CLI_v2
 } // namespace PacBio

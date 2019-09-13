@@ -6,7 +6,7 @@
 #include <pbcopper/PbcopperConfig.h>
 
 #include <cassert>
-#include <iostream>
+#include <iosfwd>
 #include <stdexcept>
 #include <string>
 
@@ -73,20 +73,33 @@ public:
     // \name Conversion operators & type-related methods
     // \{
     ///
-    operator int() const;
-    operator unsigned int() const;
     operator float() const;
     operator double() const;
     operator bool() const;
     operator std::string() const;
+
+    operator int8_t() const;
+    operator uint8_t() const;
+    operator int16_t() const;
+    operator uint16_t() const;
+    operator int32_t() const;
+    operator uint32_t() const;
+    operator int64_t() const;
+    operator uint64_t() const;
+
     size_t which() const;
     ///
     /// \}
+
+    // \internal
+    const OptionValue& RawValue() const;
 
 private:
     OptionValue data_;
     SetByMode setBy_ = SetByMode::DEFAULT;
 };
+
+std::ostream& operator<<(std::ostream& out, const Result& result);
 
 }  // namespace CLI_v2
 }  // namespace PacBio

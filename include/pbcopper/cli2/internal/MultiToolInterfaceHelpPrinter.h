@@ -24,12 +24,11 @@ public:
     void Print(std::ostream& out) const;
 
 private:
-    void CalculateMetrics();
     void MakeHelpText();
 
 private:
-    MultiToolInterface interface_;
     HelpMetrics metrics_;
+    MultiToolInterface interface_;
     std::string text_;
 };
 

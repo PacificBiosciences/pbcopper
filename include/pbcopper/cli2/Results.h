@@ -40,7 +40,13 @@ public:
 
 public:
     ///
-    /// \return full command line text
+    /// \return the equivalent of InputCommandLine() plus all default values
+    ///         that were not specified
+    ///
+    std::string EffectiveCommandLine() const;
+
+    ///
+    /// \return full command line text, verbatim, as provided
     ///
     const std::string& InputCommandLine() const;
 
@@ -64,6 +70,11 @@ public:
     /// \return full list of positional argument values
     ///
     const std::vector<std::string>& PositionalArguments() const;
+
+    ///
+    /// \return true if verbosity is enabled & user-requested
+    ///
+    bool Verbose() const;
 
     ///
     /// \return value associated with option

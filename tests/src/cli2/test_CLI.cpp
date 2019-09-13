@@ -12,6 +12,7 @@
 #include <pbcopper/cli2/Results.h>
 #include <pbcopper/utility/Unused.h>
 
+#include <pbcopper/cli2/internal/HelpMetrics.h>
 #include <pbcopper/cli2/internal/InterfaceHelpPrinter.h>
 
 #include "../../include/OStreamRedirector.h"
@@ -114,7 +115,7 @@ int SummarizeRunner(const PacBio::CLI_v2::Results&)
 
 TEST(CLI2_CLI, can_print_version)
 {
-    PacBio::CLI_v2::internal::InterfaceHelpPrinter::TestingFixedWidth = 80;
+    PacBio::CLI_v2::internal::HelpMetrics::TestingFixedWidth = 80;
 
     const std::string expectedText{"frobber v3.1\n"};
     const std::vector<std::string> args {
@@ -138,7 +139,7 @@ TEST(CLI2_CLI, can_print_version)
 
 TEST(CLI2_CLI, can_print_help)
 {
-    PacBio::CLI_v2::internal::InterfaceHelpPrinter::TestingFixedWidth = 80;
+    PacBio::CLI_v2::internal::HelpMetrics::TestingFixedWidth = 80;
 
     const std::string expectedText{
 "frobber - Frob all the things.\n"
@@ -148,11 +149,11 @@ TEST(CLI2_CLI, can_print_help)
 "\n"
 "Options:\n"
 "  -h,--help               Show this help and exit.\n"
+"  --version               Show application version and exit.\n"
+"  -j,--num-threads  INT   Number of threads to use, 0 means autodetection. [0]\n"
 "  --log-level       STR   Set log level. Valid choices: (TRACE, DEBUG, INFO,\n"
 "                          WARN, FATAL). [WARN]\n"
 "  --log-file        FILE  Log to a file, instead of stderr.\n"
-"  -j,--num-threads  INT   Number of threads to use, 0 means autodetection. [0]\n"
-"  --version               Show application version and exit.\n"
 "\n"
 };
 
@@ -177,12 +178,15 @@ TEST(CLI2_CLI, can_print_help)
 
 TEST(CLI2_CLI, can_print_top_help_for_multitoolinterface)
 {
-    PacBio::CLI_v2::internal::InterfaceHelpPrinter::TestingFixedWidth = 80;
+    PacBio::CLI_v2::internal::HelpMetrics::TestingFixedWidth = 80;
 
     const std::string expectedText{R"(isoseq3 - De Novo Transcript Reconstruction
 
 Usage:
   isoseq3 <tool>
+
+  -h,--help    Show this help and exit.
+  --version    Show application version and exit.
 
 Tools:
   refine     Remove concatemers and optionally poly-A tails (FL to FLNC)
@@ -261,7 +265,7 @@ Typical workflow:
 
 TEST(CLI2_CLI, can_print_subtool_help_for_multitoolinterface)
 {
-    PacBio::CLI_v2::internal::InterfaceHelpPrinter::TestingFixedWidth = 80;
+    PacBio::CLI_v2::internal::HelpMetrics::TestingFixedWidth = 80;
 
     const std::string expectedText{R"(refine - Remove concatemers and optionally poly-A tails (FL to FLNC)
 
@@ -272,11 +276,11 @@ Usage:
   --count           INT   Should see this entry too [5]
 
   -h,--help               Show this help and exit.
+  --version               Show application version and exit.
+  -j,--num-threads  INT   Number of threads to use, 0 means autodetection. [0]
   --log-level       STR   Set log level. Valid choices: (TRACE, DEBUG, INFO,
                           WARN, FATAL). [WARN]
   --log-file        FILE  Log to a file, instead of stderr.
-  -j,--num-threads  INT   Number of threads to use, 0 means autodetection. [0]
-  --version               Show application version and exit.
 
 )"};
 
@@ -530,6 +534,71 @@ TEST(CLI2_CLI, can_fetch_log_file_from_results)
     auto runner = [](const PacBio::CLI_v2::Results& results)
     {
         EXPECT_EQ("log.txt", results.LogFile());
+        return EXIT_SUCCESS;
+    };
+
+    PacBio::CLI_v2::Interface i{"frobber", "Frob all the things.", "v3.1"};
+
+    std::ostringstream s;
+    tests::CoutRedirect redirect(s.rdbuf());
+    UNUSED(redirect);
+
+    const int result = PacBio::CLI_v2::Run(args, i, runner);
+    EXPECT_EQ(EXIT_SUCCESS, result);
+}
+
+TEST(CLI2_CLI, verbosity_is_true_if_enabled_and_user_requested)
+{
+    const std::vector<std::string> args {
+        "frobber", "-v"
+    };
+    auto runner = [](const PacBio::CLI_v2::Results& results)
+    {
+        EXPECT_TRUE(results.Verbose());
+        return EXIT_SUCCESS;
+    };
+
+    PacBio::CLI_v2::Interface i{"frobber", "Frob all the things.", "v3.1"};
+    i.EnableVerboseOption();
+
+    std::ostringstream s;
+    tests::CoutRedirect redirect(s.rdbuf());
+    UNUSED(redirect);
+
+    const int result = PacBio::CLI_v2::Run(args, i, runner);
+    EXPECT_EQ(EXIT_SUCCESS, result);
+}
+
+TEST(CLI2_CLI, verbosity_is_false_if_enabled_but_not_user_requested)
+{
+    const std::vector<std::string> args {
+        "frobber"
+    };
+    auto runner = [](const PacBio::CLI_v2::Results& results)
+    {
+        EXPECT_FALSE(results.Verbose());
+        return EXIT_SUCCESS;
+    };
+
+    PacBio::CLI_v2::Interface i{"frobber", "Frob all the things.", "v3.1"};
+    i.EnableVerboseOption();
+
+    std::ostringstream s;
+    tests::CoutRedirect redirect(s.rdbuf());
+    UNUSED(redirect);
+
+    const int result = PacBio::CLI_v2::Run(args, i, runner);
+    EXPECT_EQ(EXIT_SUCCESS, result);
+}
+
+TEST(CLI2_CLI, verbosity_is_false_if_not_enabled)
+{
+    const std::vector<std::string> args {
+        "frobber"
+    };
+    auto runner = [](const PacBio::CLI_v2::Results& results)
+    {
+        EXPECT_FALSE(results.Verbose());
         return EXIT_SUCCESS;
     };
 

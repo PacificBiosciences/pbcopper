@@ -710,8 +710,9 @@ BandedChainAlignment::BandedChainAlignment(const BandedChainAlignConfig& config,
                 break;
             }
             default:
-                throw std::runtime_error{"BandedChainAlignment - unknown transcript code: " +
-                                         std::string(1, c)};
+                throw std::runtime_error{
+                    "[pbcopper] banded chain alignment ERROR: unknown transcript code: " +
+                    std::string(1, c)};
         }
     }
 }

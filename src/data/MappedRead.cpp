@@ -6,6 +6,7 @@
 
 #include <algorithm>
 #include <numeric>
+#include <stdexcept>
 #include <type_traits>
 
 #include <pbcopper/data/Clipping.h>
@@ -15,6 +16,14 @@
 namespace PacBio {
 namespace Data {
 namespace {
+
+struct InvalidMappedReadException : public std::runtime_error
+{
+    InvalidMappedReadException(std::string reason)
+        : std::runtime_error{"[pbcopper] mapped read ERROR: " + reason}
+    {
+    }
+};
 
 template <class InputIt, class Size, class OutputIt>
 OutputIt Move_N(InputIt first, Size count, OutputIt result)
@@ -173,7 +182,7 @@ MappedRead::MappedRead(Read read, PacBio::Data::Strand strand, Position template
                     break;
 
                 default:
-                    throw std::runtime_error{"Encountered unknown CIGAR operation!"};
+                    throw InvalidMappedReadException{"encountered unrecognized CIGAR operation"};
             }
         }
     }
@@ -279,8 +288,8 @@ Frames MappedRead::AlignedPulseWidth(Orientation orientation, GapBehavior gapBeh
 Position MappedRead::AlignedStart() const
 {
     if (QueryStart == UnmappedPosition)
-        throw std::runtime_error{"MappedRead contains unmapped query start position"};
-    if (Strand == Strand::UNMAPPED) throw std::runtime_error{"MappedRead contains unmapped strand"};
+        throw InvalidMappedReadException{"contains unmapped query start position"};
+    if (Strand == Strand::UNMAPPED) throw InvalidMappedReadException{"contains unmapped strand"};
 
     Position startOffset = QueryStart;
     const Position seqLength = Seq.length();
@@ -311,8 +320,8 @@ Position MappedRead::AlignedStart() const
 Position MappedRead::AlignedEnd() const
 {
     if (QueryEnd == UnmappedPosition)
-        throw std::runtime_error{"MappedRead contains unmapped query end position"};
-    if (Strand == Strand::UNMAPPED) throw std::runtime_error{"MappedRead contains unmapped strand"};
+        throw InvalidMappedReadException{"contains unmapped query end position"};
+    if (Strand == Strand::UNMAPPED) throw InvalidMappedReadException{"contains unmapped strand"};
 
     Position endOffset = QueryEnd;
     const Position seqLength = Seq.length();
@@ -343,14 +352,14 @@ Position MappedRead::AlignedEnd() const
 Position MappedRead::ReferenceStart() const
 {
     if (TemplateStart == UnmappedPosition)
-        throw std::runtime_error{"MappedRead contains unmapped template start position"};
+        throw InvalidMappedReadException{"contains unmapped template start position"};
     return TemplateStart;
 }
 
 Position MappedRead::ReferenceEnd() const
 {
     if (TemplateEnd == UnmappedPosition)
-        throw std::runtime_error{"MappedRead contains unmapped template end position"};
+        throw InvalidMappedReadException{"contains unmapped template end position"};
     return TemplateEnd;
 }
 
@@ -383,7 +392,7 @@ std::ostream& operator<<(std::ostream& os, const MappedRead& mr)
             os << "StrandType_UNMAPPED, ";
             break;
         default:
-            throw std::runtime_error{"Unsupported Strand"};
+            throw InvalidMappedReadException{"encountered unrecognized strand"};
     }
     os << mr.TemplateStart << ", " << mr.TemplateEnd << ", ";
     os << mr.PinStart << ", " << mr.PinEnd << ')';

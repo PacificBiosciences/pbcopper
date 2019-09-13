@@ -1,33 +1,68 @@
 #include <pbcopper/utility/StringUtils.h>
 
+#include <cctype>
 #include <cstddef>
 #include <sstream>
+#include <stdexcept>
 
 namespace PacBio {
 namespace Utility {
 
-std::string Join(const std::vector<std::string>& input, const std::string& delim)
+std::string Join(const std::vector<std::string>& input, const std::string& separator)
 {
     // determine total joined length
     size_t totalLen = 0;
     for (const auto& s : input)
         totalLen += s.size();
     if (!input.empty())
-        totalLen += delim.size() * (input.size() - 1);  // no delim after last string
+        totalLen += separator.size() * (input.size() - 1);  // no separator after last string
 
     // join input strings
     std::string result;
     result.reserve(totalLen);
     for (size_t i = 0; i < input.size(); ++i) {
-        if (i != 0) result += delim;
+        if (i != 0) result += separator;
         result += input.at(i);
     }
     return result;
 }
 
-std::string Join(const std::vector<std::string>& input, const char delim)
+std::string Join(const std::vector<std::string>& input, const char separator)
 {
-    return Join(input, std::string(1, delim));
+    return Join(input, std::string(1, separator));
+}
+
+int64_t SIStringToInt(const std::string& input)
+{
+    if (input.empty()) {
+        throw std::runtime_error{
+            "[pbcopper] string utility ERROR: cannot convert empty string to integer."};
+    }
+
+    const auto suffix = input.back();
+    if (!std::isalpha(suffix)) return std::stoi(input);
+
+    int64_t result = std::stoi(input.substr(0, input.size() - 1));
+    switch (suffix) {
+        case 'K':
+        case 'k':
+            result *= 1000;
+            break;
+        case 'M':
+        case 'm':
+            result *= (1000 * 1000);
+            break;
+        case 'G':
+        case 'g':
+            result *= (1000 * 1000 * 1000);
+            break;
+        default:
+            std::ostringstream msg;
+            msg << "[pbcopper] string utility ERROR: cannot convert string '" << input
+                << "' to integer, suffix '" << suffix << "' is not a recognized multipler.";
+            throw std::runtime_error{msg.str()};
+    }
+    return result;
 }
 
 std::vector<std::string> Split(const std::string& line, const char delim)

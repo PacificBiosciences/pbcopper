@@ -2,6 +2,8 @@
 
 #include <pbcopper/data/Interval.h>
 
+#include <sstream>
+
 #include <boost/algorithm/string.hpp>
 #include <boost/lexical_cast.hpp>
 
@@ -76,16 +78,26 @@ Interval& Interval::Start(const Position& start)
 
 Interval Interval::Union(const Interval& other) const
 {
-    if (!Overlaps(other)) throw std::invalid_argument{"interval to merge does not overlap!"};
-
-    return {std::min(Start(), other.Start()), std::max(End(), other.End())};
+    if (Overlaps(other))
+        return {std::min(Start(), other.Start()), std::max(End(), other.End())};
+    else {
+        std::ostringstream msg;
+        msg << "[pbcopper] interval ERROR: cannot merge intervals " << *this << " and " << other
+            << ", because they do not overlap.";
+        throw std::invalid_argument{msg.str()};
+    }
 }
 
 Interval Interval::Intersect(const Interval& other) const
 {
-    if (!Overlaps(other)) throw std::invalid_argument{"interval to intersect does not overlap!"};
-
-    return {std::max(Start(), other.Start()), std::min(End(), other.End())};
+    if (Overlaps(other))
+        return {std::max(Start(), other.Start()), std::min(End(), other.End())};
+    else {
+        std::ostringstream msg;
+        msg << "[pbcopper] interval ERROR: cannot create the intersection of intervals " << *this
+            << " and " << other << ", because they do not overlap.";
+        throw std::invalid_argument{msg.str()};
+    }
 }
 
 Interval Interval::FromString(const std::string& str)
@@ -104,7 +116,9 @@ Interval Interval::FromString(const std::string& str)
         }
     } catch (...) {
     }
-    throw std::invalid_argument("invalid Interval specification");
+
+    throw std::invalid_argument("[pbcopper] interval ERROR: cannot create an interval from '" +
+                                str + "'");
 }
 
 Interval Interval::begin() const { return Interval(Start(), End()); }

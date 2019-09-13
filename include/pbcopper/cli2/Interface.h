@@ -97,6 +97,13 @@ public:
     Interface& DisableNumThreadsOption();
 
     ///
+    /// Enables built-in verbose option.
+    ///
+    /// This is off by default, as opposed to the other built-ins.
+    ///
+    Interface& EnableVerboseOption();
+
+    ///
     /// Set application example.
     ///
     /// \note Currently only used when part of multi-tool interfaces.
@@ -195,6 +202,10 @@ public:
     /// \internal
     /// \return (translated) numThreads option.
     const boost::optional<internal::OptionData>& NumThreadsOption() const;
+
+    /// \internal
+    /// \return (translated) verbose option.
+    const boost::optional<internal::OptionData>& VerboseOption() const;
 
     /// \internal
     /// \return (translated) version option.

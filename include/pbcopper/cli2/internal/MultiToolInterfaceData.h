@@ -10,6 +10,7 @@
 
 #include <pbcopper/cli2/Tool.h>
 #include <pbcopper/cli2/internal/InterfaceData.h>
+#include <pbcopper/cli2/internal/OptionData.h>
 
 namespace PacBio {
 namespace CLI_v2 {
@@ -20,10 +21,13 @@ namespace internal {
 ///
 struct MultiToolInterfaceData
 {
-    MultiToolInterfaceData(std::string appName, std::string appDescription, std::string appVersion)
+    MultiToolInterfaceData(std::string appName, std::string appDescription, std::string appVersion,
+                           OptionData help, OptionData versionOption)
         : appName_{std::move(appName)}
         , appDescription_{std::move(appDescription)}
         , appVersion_{std::move(appVersion)}
+        , helpOption_{std::move(help)}
+        , versionOption_{std::move(versionOption)}
     {
     }
 
@@ -31,6 +35,9 @@ struct MultiToolInterfaceData
     std::string appDescription_;
     std::string appVersion_;
     std::string helpFooter_;
+
+    OptionData helpOption_;
+    OptionData versionOption_;
 
     std::vector<Tool> tools_;
 };

@@ -13,30 +13,13 @@
 
 #include <pbcopper/cli2/Interface.h>
 #include <pbcopper/cli2/MultiToolInterface.h>
+#include <pbcopper/cli2/internal/HelpMetrics.h>
 #include <pbcopper/cli2/internal/OptionData.h>
 #include <pbcopper/cli2/internal/PositionalArgumentData.h>
 
 namespace PacBio {
 namespace CLI_v2 {
 namespace internal {
-
-///
-/// Terminal & formatted text widths
-///
-struct FormattedEntry
-{
-    std::string nameString;  // e.g. "-h,--help"
-    std::string typeString;  // e.g. "STR"
-};
-
-struct HelpMetrics
-{
-    std::unordered_map<OptionData, FormattedEntry> formattedOptionNames;
-    std::unordered_map<PositionalArgumentData, FormattedEntry> formattedPosArgNames;
-    size_t maxNameLength = 0;
-    size_t maxTypeLength = 0;
-    size_t maxColumn = 79;
-};
 
 ///
 /// Generates help display.
@@ -56,7 +39,6 @@ public:
     /// \name Formatting helpers, exposed for testing only
     /// \{
     ///
-    void CalculateMetrics();
     std::string Choices(const OptionData& option);
     std::string DefaultValue(const OptionData& option);
     std::string Description();
@@ -64,20 +46,13 @@ public:
     std::string Option(const OptionData& option);
     std::string OptionDescription(const OptionData& option);
     std::string OptionGroup(const OptionGroupData& group);
-    std::string OptionNames(const OptionData& option);
     std::string Options();
-    std::string HelpEntry(std::string name, std::string type, const std::string& description);
     bool ShouldShowDefaultValue(const OptionData& option);
     std::string PositionalArgument(const PositionalArgumentData& posArg);
     std::string PositionalArguments();
     std::string Usage();
     ///
     /// \}
-
-public:
-    /// \internal
-    /// Purely for unit testing help output.
-    static size_t TestingFixedWidth;
 
 private:
     ///
@@ -86,8 +61,8 @@ private:
     void MakeHelpText();
 
 private:
-    Interface interface_;
     HelpMetrics metrics_;
+    Interface interface_;
     std::string text_;
 };
 

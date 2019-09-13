@@ -19,7 +19,7 @@ LogLevel LogLevelFromString(const std::string& level)
     if (level == "FATAL") return LogLevel::FATAL;
     if (level == "WARN" || level == "WARNING") return LogLevel::WARN;
 
-    throw std::invalid_argument("invalid log level");
+    throw std::invalid_argument{"[pbcopper] logging ERROR: invalid log level '" + level + "'"};
 }
 
 }  // namespace

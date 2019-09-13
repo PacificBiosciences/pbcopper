@@ -34,8 +34,8 @@ Read::Read(Data::ReadId id, std::string seq, Frames pw, LocalContextFlags flags,
     , FullLength{Flags & Data::ADAPTER_BEFORE && Flags & Data::ADAPTER_AFTER}
 {
     if (PulseWidth.size() != Seq.size()) {
-        throw std::invalid_argument("Invalid Read (name=" + std::string(Id) +
-                                    "): features PW/seq are of mismatched length: " +
+        throw std::invalid_argument("[pbcopper] read (name=" + std::string(Id) +
+                                    ") ERROR: features PW/seq are of mismatched length: " +
                                     std::to_string(PulseWidth.size()) + " vs " +
                                     std::to_string(Seq.size()));
     }

@@ -6,9 +6,11 @@
 
 #include <pbcopper/cli2/Interface.h>
 #include <pbcopper/cli2/MultiToolInterface.h>
+#include <pbcopper/cli2/internal/HelpMetrics.h>
 #include <pbcopper/cli2/internal/InterfaceHelpPrinter.h>
 #include <pbcopper/cli2/internal/MultiToolInterfaceHelpPrinter.h>
 
+using HelpMetrics = PacBio::CLI_v2::internal::HelpMetrics;
 using Interface = PacBio::CLI_v2::Interface;
 using InterfaceHelpPrinter = PacBio::CLI_v2::internal::InterfaceHelpPrinter;
 using MultiToolInterface = PacBio::CLI_v2::MultiToolInterface;
@@ -72,12 +74,15 @@ int SummarizeRunner(const PacBio::CLI_v2::Results&)
 TEST(CLI2_MultiToolInterfaceHelpPrinter, can_print_top_level_help)
 {
     using namespace CLI_v2_MultiToolInterfaceHelpPrinterTests;
-    InterfaceHelpPrinter::TestingFixedWidth = 80;
+    HelpMetrics::TestingFixedWidth = 80;
 
     const std::string expectedText{R"(isoseq3 - De Novo Transcript Reconstruction
 
 Usage:
   isoseq3 <tool>
+
+  -h,--help    Show this help and exit.
+  --version    Show application version and exit.
 
 Tools:
   refine7890123 Remove concatemers and optionally poly-A tails (FL to FLNC)
