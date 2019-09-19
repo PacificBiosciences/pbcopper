@@ -380,22 +380,23 @@ size_t MappedRead::NumMismatches() const
 
 std::ostream& operator<<(std::ostream& os, const MappedRead& mr)
 {
-    os << "MappedRead(Read(\"" << mr.Id << "\", \"" << mr.Seq << "\", \"" << mr.Model << "\"), ";
+    os << "MappedRead(" << static_cast<const Read&>(mr) << ", RefId=" << mr.RefId << ", Strand=";
     switch (mr.Strand) {
         case Strand::FORWARD:
-            os << "StrandType_FORWARD, ";
+            os << "FORWARD";
             break;
         case Strand::REVERSE:
-            os << "StrandType_REVERSE, ";
+            os << "REVERSE";
             break;
         case Strand::UNMAPPED:
-            os << "StrandType_UNMAPPED, ";
+            os << "UNMAPPED";
             break;
         default:
             throw InvalidMappedReadException{"encountered unrecognized strand"};
     }
-    os << mr.TemplateStart << ", " << mr.TemplateEnd << ", ";
-    os << mr.PinStart << ", " << mr.PinEnd << ')';
+    os << ", TemplateStart=" << mr.TemplateStart << ", TemplateEnd=" << mr.TemplateEnd
+       << ", PinStart=" << mr.PinStart << ", PinEnd=" << mr.PinEnd << ", Cigar=" << mr.Cigar
+       << ", MapQuality=" << int{mr.MapQuality} << ')';
     return os;
 }
 

@@ -5,6 +5,7 @@
 
 #include <cstddef>
 #include <cstdint>
+#include <ostream>
 #include <string>
 #include <tuple>
 #include <vector>
@@ -25,8 +26,13 @@ namespace Data {
 /// A Read contains the name, sequence, covariates, SNR, and associated model.
 struct Read
 {
-    Read(Data::ReadId id, std::string seq, Frames pw, LocalContextFlags flags,
-         Accuracy readAccuracy, SNR snr, std::string model);
+    // old unanimity-era constructor
+    [[deprecated("Use the ctor with the ipd argument")]] Read(Data::ReadId id, std::string seq,
+                                                              Frames pw, LocalContextFlags flags,
+                                                              Accuracy readAccuracy, SNR snr,
+                                                              std::string model);
+    Read(Data::ReadId id, std::string seq, Frames pw, boost::optional<Frames> ipd,
+         LocalContextFlags flags, Accuracy readAccuracy, SNR snr, std::string model);
     Read(const std::string& name, std::string seq, QualityValues qualities, SNR snr);
     Read(const std::string& name, std::string seq, QualityValues qualities, SNR snr,
          Position qStart, Position qEnd);
@@ -44,17 +50,19 @@ struct Read
     Position QueryStart = UnmappedPosition;
     Position QueryEnd = UnmappedPosition;
 
-    LocalContextFlags Flags;
+    LocalContextFlags Flags = LocalContextFlags::NO_LOCAL_CONTEXT;
     Accuracy ReadAccuracy = 0;
     SNR SignalToNoise;
     std::string Model;
-    bool FullLength;
+    bool FullLength = false;
 
     size_t Length() const;
     std::string FullName() const;
 
     Read ClipTo(const int32_t begin, const int32_t end) const;
 };
+
+std::ostream& operator<<(std::ostream& os, const Read& read);
 
 void ClipToQuery(Read& read, Position start, Position end);
 

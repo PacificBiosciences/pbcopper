@@ -6,6 +6,7 @@
 #include <pbcopper/PbcopperConfig.h>
 
 #include <cstddef>
+#include <ostream>
 #include <vector>
 
 namespace PacBio {
@@ -39,6 +40,8 @@ struct SNR
 };
 
 SNR ClampSNR(const SNR& val, const SNR& min, const SNR& max);
+
+std::ostream& operator<<(std::ostream& os, const SNR& snr);
 
 }  // namespace Data
 }  // namespace PacBio

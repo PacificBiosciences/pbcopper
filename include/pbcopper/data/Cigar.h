@@ -5,6 +5,7 @@
 
 #include <pbcopper/PbcopperConfig.h>
 
+#include <ostream>
 #include <string>
 #include <vector>
 
@@ -70,6 +71,8 @@ public:
 /// \return size_t
 ///
 size_t ReferenceLength(const Cigar& cigar);
+
+std::ostream& operator<<(std::ostream& os, const Cigar& cigar);
 
 }  // namespace Data
 }  // namespace PacBio

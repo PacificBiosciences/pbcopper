@@ -11,6 +11,9 @@
 #include <mutex>
 #include <type_traits>
 
+#include <boost/algorithm/string/join.hpp>
+#include <boost/range/adaptor/transformed.hpp>
+
 namespace PacBio {
 namespace Data {
 namespace {
@@ -137,6 +140,15 @@ bool Frames::operator==(const Frames& other) const
 }
 
 bool Frames::operator!=(const Frames& other) const { return !(*this == other); }
+
+std::ostream& operator<<(std::ostream& os, const Frames& frames)
+{
+    return os << "Frames("
+              << boost::algorithm::join(frames | boost::adaptors::transformed(
+                                                     [](uint16_t i) { return std::to_string(i); }),
+                                        ", ")
+              << ')';
+}
 
 }  // namespace Data
 }  // namespace PacBio

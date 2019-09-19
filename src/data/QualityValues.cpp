@@ -110,5 +110,10 @@ bool QualityValues::operator!=(const std::string& fastq) const
     return *this != QualityValues(fastq);
 }
 
+std::ostream& operator<<(std::ostream& os, const QualityValues& qualityvalues)
+{
+    return os << "QualityValues(Fastq=" << qualityvalues.Fastq() << ')';
+}
+
 }  // namespace Data
 }  // namespace PacBio

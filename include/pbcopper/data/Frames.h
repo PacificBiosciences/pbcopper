@@ -7,6 +7,7 @@
 
 #include <cstddef>
 #include <cstdint>
+#include <ostream>
 #include <vector>
 
 namespace PacBio {
@@ -94,6 +95,12 @@ public:
     /// \name STL Compatbility
     /// \{
 
+    /// \returns Type of the underlying const_iterator.
+    using std::vector<uint16_t>::const_iterator;
+
+    /// \returns Type of the underlying iterator.
+    using std::vector<uint16_t>::iterator;
+
     /// \returns A const_iterator to the beginning of the sequence.
     using std::vector<uint16_t>::cbegin;
 
@@ -136,6 +143,8 @@ public:
 
     /// \}
 };
+
+std::ostream& operator<<(std::ostream& os, const Frames& frames);
 
 }  // namespace Data
 }  // namespace PacBio
