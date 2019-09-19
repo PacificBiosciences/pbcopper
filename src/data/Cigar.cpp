@@ -58,5 +58,10 @@ size_t ReferenceLength(const Cigar& cigar)
     return length;
 }
 
+std::ostream& operator<<(std::ostream& os, const Cigar& cigar)
+{
+    return os << "Cigar(" << cigar.ToStdString() << ')';
+}
+
 }  // namespace Data
 }  // namespace PacBio

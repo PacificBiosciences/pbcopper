@@ -5,6 +5,7 @@
 
 #include <cstddef>
 #include <cstdint>
+#include <ostream>
 #include <string>
 #include <tuple>
 #include <vector>
@@ -60,6 +61,8 @@ struct Read
 
     Read ClipTo(const int32_t begin, const int32_t end) const;
 };
+
+std::ostream& operator<<(std::ostream& os, const Read& read);
 
 void ClipToQuery(Read& read, Position start, Position end);
 

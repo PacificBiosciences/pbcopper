@@ -3,6 +3,7 @@
 #include <pbcopper/data/Read.h>
 
 #include <cassert>
+#include <iomanip>
 #include <stdexcept>
 #include <type_traits>
 #include <utility>
@@ -104,6 +105,22 @@ Read Read::ClipTo(const int32_t begin, const int32_t end) const
 size_t Read::Length() const { return Seq.length(); }
 
 std::string Read::FullName() const { return Id; }
+
+std::ostream& operator<<(std::ostream& os, const Read& read)
+{
+    os << std::boolalpha;
+    os << "Read(Id=" << read.Id << ", Seq=" << read.Seq << ", PulseWidth=" << read.PulseWidth
+       << ", Qualities=" << read.Qualities << ", IPD=";
+    if (read.IPD)
+        os << *read.IPD;
+    else
+        os << "None";
+    os << ", QueryStart=" << read.QueryStart << ", QueryEnd=" << read.QueryEnd
+       << ", Flags=" << read.Flags << ", ReadAccuracy=" << read.ReadAccuracy
+       << ", SignalToNoise=" << read.SignalToNoise << ", Model=" << read.Model
+       << ", FullLength=" << read.FullLength << ')';
+    return os;
+}
 
 void ClipToQuery(Read& read, Position start, Position end)
 {
