@@ -50,11 +50,11 @@ struct Read
     Position QueryStart = UnmappedPosition;
     Position QueryEnd = UnmappedPosition;
 
-    LocalContextFlags Flags;
+    LocalContextFlags Flags = LocalContextFlags::NO_LOCAL_CONTEXT;
     Accuracy ReadAccuracy = 0;
     SNR SignalToNoise;
     std::string Model;
-    bool FullLength;
+    bool FullLength = false;
 
     size_t Length() const;
     std::string FullName() const;
