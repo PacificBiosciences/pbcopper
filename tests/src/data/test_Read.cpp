@@ -26,7 +26,7 @@ TEST(Data_Read, ClipRead)
     const size_t clipEnd = 509;
     const ClipResult clipResult{2, 502, 509};
 
-    Read read{"name", seq, quals, snr, qStart, qEnd, pw, ipd};
+    Read read{"name/0/500_510", seq, quals, snr, qStart, qEnd, pw, ipd};
     internal::ClipRead(read, clipResult, clipStart, clipEnd);
 
     const std::string expectedSeq = "CCGTTAG";
@@ -37,7 +37,7 @@ TEST(Data_Read, ClipRead)
     const std::vector<uint16_t> expectedPw{30, 40, 50, 60, 70, 80, 90};
     const std::vector<uint16_t> expectedIpd{30, 40, 50, 60, 70, 80, 90};
 
-    EXPECT_EQ("name", read.FullName());
+    EXPECT_EQ("name/0/500_510", read.FullName());
     EXPECT_EQ(expectedSeq, read.Seq);
     EXPECT_EQ(expectedQuals, read.Qualities);
     EXPECT_EQ(expectedQStart, read.QueryStart);
@@ -67,8 +67,12 @@ TEST(Data_Read, ClipMappedRead)
     // ClipToReference(read, 102, 107);
     const ClipResult clipResult{2, 502, 507, 102, Cigar{"2=1D2I2D"}};
 
-    MappedRead read{
-        Read{"name", seq, quals, snr, qStart, qEnd, pw, ipd}, strand, tStart, tEnd, cigar, mapQV};
+    MappedRead read{Read{"name/0/500_510", seq, quals, snr, qStart, qEnd, pw, ipd},
+                    strand,
+                    tStart,
+                    tEnd,
+                    cigar,
+                    mapQV};
     internal::ClipMappedRead(read, clipResult);
 
     const std::string expectedSeq = "CCGTT";
@@ -84,7 +88,7 @@ TEST(Data_Read, ClipMappedRead)
     const Cigar expectedCigar{"2=1D2I2D"};
     const uint8_t expectedMapQV = 80;
 
-    EXPECT_EQ("name", read.FullName());
+    EXPECT_EQ("name/0/500_510", read.FullName());
     EXPECT_EQ(expectedSeq, read.Seq);
     EXPECT_EQ(expectedQuals, read.Qualities);
     EXPECT_EQ(expectedQStart, read.QueryStart);
@@ -128,7 +132,7 @@ TEST(Data_Read, ClipToReferenceOutsideAlignedRegion)
     const uint8_t expectedMapQV = 255;
 
     auto shouldClipToEmptyRead = [&](Position start, Position end) {
-        MappedRead read{Read{"name", seq, quals, snr, qStart, qEnd, pw, ipd},
+        MappedRead read{Read{"name/0/500_507", seq, quals, snr, qStart, qEnd, pw, ipd},
                         strand,
                         tStart,
                         tEnd,
@@ -137,7 +141,7 @@ TEST(Data_Read, ClipToReferenceOutsideAlignedRegion)
 
         ClipToReference(read, start, end, true);
 
-        EXPECT_EQ("name", read.FullName());
+        EXPECT_EQ("name/0/500_507", read.FullName());
         EXPECT_EQ(expectedSeq, read.Seq);
         EXPECT_EQ(expectedQuals, read.Qualities);
         EXPECT_EQ(expectedQStart, read.QueryStart);
@@ -186,8 +190,12 @@ TEST(Data_Read, MultipleClipsToReference)
     const uint8_t mapQV = 99;
 
     // intial read, aligned to reference: [0, 1200)
-    MappedRead read{
-        Read{"name", seq, quals, snr, qStart, qEnd, pw, ipd}, strand, tStart, tEnd, cigar, mapQV};
+    MappedRead read{Read{"name/0/0_1200", seq, quals, snr, qStart, qEnd, pw, ipd},
+                    strand,
+                    tStart,
+                    tEnd,
+                    cigar,
+                    mapQV};
 
     // clip to reference: [0, 1000) - shrinking from right
     ClipToReference(read, 0, 1000, true);
@@ -205,7 +213,7 @@ TEST(Data_Read, MultipleClipsToReference)
     Cigar expectedCigar{"1000="};
     const uint8_t expectedMapQV = 99;
 
-    EXPECT_EQ("name", read.FullName());
+    EXPECT_EQ("name/0/0_1200", read.FullName());
     EXPECT_EQ(expectedSeq, read.Seq);
     EXPECT_EQ(expectedQuals, read.Qualities);
     EXPECT_EQ(expectedQStart, read.QueryStart);
@@ -232,7 +240,7 @@ TEST(Data_Read, MultipleClipsToReference)
     expectedTEnd = 1000;
     expectedCigar = Cigar{"900="};
 
-    EXPECT_EQ("name", read.FullName());
+    EXPECT_EQ("name/0/0_1200", read.FullName());
     EXPECT_EQ(expectedSeq, read.Seq);
     EXPECT_EQ(expectedQuals, read.Qualities);
     EXPECT_EQ(expectedQStart, read.QueryStart);
@@ -259,7 +267,7 @@ TEST(Data_Read, MultipleClipsToReference)
     expectedTEnd = 800;
     expectedCigar = Cigar{"600="};
 
-    EXPECT_EQ("name", read.FullName());
+    EXPECT_EQ("name/0/0_1200", read.FullName());
     EXPECT_EQ(expectedSeq, read.Seq);
     EXPECT_EQ(expectedQuals, read.Qualities);
     EXPECT_EQ(expectedQStart, read.QueryStart);
@@ -290,8 +298,12 @@ TEST(Data_Read, MultipleClipsToReference_WithLargeDeletion)
     const uint8_t mapQV = 99;
 
     // intial read, aligned to reference: [0, 1200)
-    MappedRead read{
-        Read{"name", seq, quals, snr, qStart, qEnd, pw, ipd}, strand, tStart, tEnd, cigar, mapQV};
+    MappedRead read{Read{"name/0/0_1000", seq, quals, snr, qStart, qEnd, pw, ipd},
+                    strand,
+                    tStart,
+                    tEnd,
+                    cigar,
+                    mapQV};
 
     // clip to reference: [0, 1000) - shrinking from right
     ClipToReference(read, 0, 1000, true);
@@ -309,7 +321,7 @@ TEST(Data_Read, MultipleClipsToReference_WithLargeDeletion)
     Cigar expectedCigar{"400=200D400="};
     const uint8_t expectedMapQV = 99;
 
-    EXPECT_EQ("name", read.FullName());
+    EXPECT_EQ("name/0/0_1000", read.FullName());
     EXPECT_EQ(expectedSeq, read.Seq);
     EXPECT_EQ(expectedQuals, read.Qualities);
     EXPECT_EQ(expectedQStart, read.QueryStart);
@@ -336,7 +348,7 @@ TEST(Data_Read, MultipleClipsToReference_WithLargeDeletion)
     expectedTEnd = 1000;
     expectedCigar = Cigar{"300=200D400="};
 
-    EXPECT_EQ("name", read.FullName());
+    EXPECT_EQ("name/0/0_1000", read.FullName());
     EXPECT_EQ(expectedSeq, read.Seq);
     EXPECT_EQ(expectedQuals, read.Qualities);
     EXPECT_EQ(expectedQStart, read.QueryStart);
@@ -363,7 +375,7 @@ TEST(Data_Read, MultipleClipsToReference_WithLargeDeletion)
     expectedTEnd = 800;
     expectedCigar = Cigar{"200=200D200="};
 
-    EXPECT_EQ("name", read.FullName());
+    EXPECT_EQ("name/0/0_1000", read.FullName());
     EXPECT_EQ(expectedSeq, read.Seq);
     EXPECT_EQ(expectedQuals, read.Qualities);
     EXPECT_EQ(expectedQStart, read.QueryStart);
@@ -396,8 +408,9 @@ TEST(Data_Read, BamRecordFunctions)
 
     {
         // s1 - FORWARD
-        MappedRead s1{Read{"Read", seq, QualityValues{quals}, SNR{1, 2, 3, 4}, qStart, qEnd},
-                      Strand::FORWARD, 100, Cigar::FromStdString(s1_cigar), 60};
+        MappedRead s1{
+            Read{"name/0/500_510", seq, QualityValues{quals}, SNR{1, 2, 3, 4}, qStart, qEnd},
+            Strand::FORWARD, 100, Cigar::FromStdString(s1_cigar), 60};
 
         EXPECT_EQ(Strand::FORWARD, s1.AlignedStrand());
         EXPECT_EQ(qStart, s1.QueryStart);
@@ -410,8 +423,9 @@ TEST(Data_Read, BamRecordFunctions)
 
     {
         // s1 - REVERSE
-        MappedRead s1_rev{Read{"Read", seq, QualityValues{quals}, SNR{1, 2, 3, 4}, qStart, qEnd},
-                          Strand::REVERSE, 100, Cigar::FromStdString(s1_cigar), 60};
+        MappedRead s1_rev{
+            Read{"name/0/500_510", seq, QualityValues{quals}, SNR{1, 2, 3, 4}, qStart, qEnd},
+            Strand::REVERSE, 100, Cigar::FromStdString(s1_cigar), 60};
 
         EXPECT_EQ(Strand::REVERSE, s1_rev.AlignedStrand());
         EXPECT_EQ(qStart, s1_rev.QueryStart);
@@ -424,8 +438,9 @@ TEST(Data_Read, BamRecordFunctions)
 
     {
         // s2 - FORWARD
-        MappedRead s2{Read{"Read", seq, QualityValues{quals}, SNR{1, 2, 3, 4}, qStart, qEnd},
-                      Strand::FORWARD, 100, Cigar::FromStdString(s2_cigar), 60};
+        MappedRead s2{
+            Read{"name/0/500_510", seq, QualityValues{quals}, SNR{1, 2, 3, 4}, qStart, qEnd},
+            Strand::FORWARD, 100, Cigar::FromStdString(s2_cigar), 60};
 
         EXPECT_EQ(Strand::FORWARD, s2.AlignedStrand());
         EXPECT_EQ(qStart, s2.QueryStart);
@@ -438,8 +453,9 @@ TEST(Data_Read, BamRecordFunctions)
 
     {
         // s2 - REVERSE
-        MappedRead s2_rev{Read{"Read", seq, QualityValues{quals}, SNR{1, 2, 3, 4}, qStart, qEnd},
-                          Strand::REVERSE, 100, Cigar::FromStdString(s2_cigar), 60};
+        MappedRead s2_rev{
+            Read{"name/0/500_510", seq, QualityValues{quals}, SNR{1, 2, 3, 4}, qStart, qEnd},
+            Strand::REVERSE, 100, Cigar::FromStdString(s2_cigar), 60};
 
         EXPECT_EQ(Strand::REVERSE, s2_rev.AlignedStrand());
         EXPECT_EQ(qStart, s2_rev.QueryStart);
@@ -452,8 +468,9 @@ TEST(Data_Read, BamRecordFunctions)
 
     {
         // s3 - FORWARD
-        MappedRead s3{Read{"Read", seq, QualityValues{quals}, SNR{1, 2, 3, 4}, qStart, qEnd},
-                      Strand::FORWARD, 100, Cigar::FromStdString(s3_cigar), 60};
+        MappedRead s3{
+            Read{"name/0/500_510", seq, QualityValues{quals}, SNR{1, 2, 3, 4}, qStart, qEnd},
+            Strand::FORWARD, 100, Cigar::FromStdString(s3_cigar), 60};
 
         EXPECT_EQ(Strand::FORWARD, s3.AlignedStrand());
         EXPECT_EQ(qStart, s3.QueryStart);
@@ -466,8 +483,9 @@ TEST(Data_Read, BamRecordFunctions)
 
     {
         // s3 - REVERSE
-        MappedRead s3_rev{Read{"Read", seq, QualityValues{quals}, SNR{1, 2, 3, 4}, qStart, qEnd},
-                          Strand::REVERSE, 100, Cigar::FromStdString(s3_cigar), 60};
+        MappedRead s3_rev{
+            Read{"name/0/500_510", seq, QualityValues{quals}, SNR{1, 2, 3, 4}, qStart, qEnd},
+            Strand::REVERSE, 100, Cigar::FromStdString(s3_cigar), 60};
 
         EXPECT_EQ(Strand::REVERSE, s3_rev.AlignedStrand());
         EXPECT_EQ(qStart, s3_rev.QueryStart);
@@ -499,8 +517,9 @@ TEST(Data_Read, BamRecordFunctions_Clip)
 
     {
         // s1 - FORWARD
-        MappedRead s1{Read{"Read", seq, QualityValues{quals}, SNR{1, 2, 3, 4}, qStart, qEnd},
-                      Strand::FORWARD, 100, Cigar::FromStdString(s1_cigar), 60};
+        MappedRead s1{
+            Read{"name/0/500_515", seq, QualityValues{quals}, SNR{1, 2, 3, 4}, qStart, qEnd},
+            Strand::FORWARD, 100, Cigar::FromStdString(s1_cigar), 60};
 
         EXPECT_EQ(Strand::FORWARD, s1.AlignedStrand());
         EXPECT_EQ(qStart, s1.QueryStart);     // 500
@@ -513,8 +532,9 @@ TEST(Data_Read, BamRecordFunctions_Clip)
 
     {
         // s1 - REVERSE
-        MappedRead s1_rev{Read{"Read", seq, QualityValues{quals}, SNR{1, 2, 3, 4}, qStart, qEnd},
-                          Strand::REVERSE, 100, Cigar::FromStdString(s1_cigar), 60};
+        MappedRead s1_rev{
+            Read{"name/0/500_515", seq, QualityValues{quals}, SNR{1, 2, 3, 4}, qStart, qEnd},
+            Strand::REVERSE, 100, Cigar::FromStdString(s1_cigar), 60};
 
         EXPECT_EQ(Strand::REVERSE, s1_rev.AlignedStrand());
         EXPECT_EQ(qStart, s1_rev.QueryStart);     // 500
@@ -527,8 +547,9 @@ TEST(Data_Read, BamRecordFunctions_Clip)
 
     {
         // s2 - FORWARD
-        MappedRead s2{Read{"Read", seq, QualityValues{quals}, SNR{1, 2, 3, 4}, qStart, qEnd},
-                      Strand::FORWARD, 100, Cigar::FromStdString(s2_cigar), 60};
+        MappedRead s2{
+            Read{"name/0/500_515", seq, QualityValues{quals}, SNR{1, 2, 3, 4}, qStart, qEnd},
+            Strand::FORWARD, 100, Cigar::FromStdString(s2_cigar), 60};
 
         EXPECT_EQ(Strand::FORWARD, s2.AlignedStrand());
         EXPECT_EQ(qStart, s2.QueryStart);     // 500
@@ -541,8 +562,9 @@ TEST(Data_Read, BamRecordFunctions_Clip)
 
     {
         // s2 - REVERSE
-        MappedRead s2_rev{Read{"Read", seq, QualityValues{quals}, SNR{1, 2, 3, 4}, qStart, qEnd},
-                          Strand::REVERSE, 100, Cigar::FromStdString(s2_cigar), 60};
+        MappedRead s2_rev{
+            Read{"name/0/500_515", seq, QualityValues{quals}, SNR{1, 2, 3, 4}, qStart, qEnd},
+            Strand::REVERSE, 100, Cigar::FromStdString(s2_cigar), 60};
 
         EXPECT_EQ(Strand::REVERSE, s2_rev.AlignedStrand());
         EXPECT_EQ(qStart, s2_rev.QueryStart);     // 500
@@ -555,8 +577,9 @@ TEST(Data_Read, BamRecordFunctions_Clip)
 
     {
         // s3 - FORWARD
-        MappedRead s3{Read{"Read", seq, QualityValues{quals}, SNR{1, 2, 3, 4}, qStart, qEnd},
-                      Strand::FORWARD, 100, Cigar::FromStdString(s3_cigar), 60};
+        MappedRead s3{
+            Read{"name/0/500_515", seq, QualityValues{quals}, SNR{1, 2, 3, 4}, qStart, qEnd},
+            Strand::FORWARD, 100, Cigar::FromStdString(s3_cigar), 60};
 
         EXPECT_EQ(Strand::FORWARD, s3.AlignedStrand());
         EXPECT_EQ(qStart, s3.QueryStart);     // 500
@@ -569,8 +592,9 @@ TEST(Data_Read, BamRecordFunctions_Clip)
 
     {
         // s3 - REVERSE
-        MappedRead s3_rev{Read{"Read", seq, QualityValues{quals}, SNR{1, 2, 3, 4}, qStart, qEnd},
-                          Strand::REVERSE, 100, Cigar::FromStdString(s3_cigar), 60};
+        MappedRead s3_rev{
+            Read{"name/0/500_515", seq, QualityValues{quals}, SNR{1, 2, 3, 4}, qStart, qEnd},
+            Strand::REVERSE, 100, Cigar::FromStdString(s3_cigar), 60};
 
         EXPECT_EQ(Strand::REVERSE, s3_rev.AlignedStrand());
         EXPECT_EQ(qStart, s3_rev.QueryStart);     // 500
@@ -595,13 +619,23 @@ TEST(Data_Read, can_set_query_start_and_end_from_id)
     const PacBio::Data::SNR snr{0.4, 0.4, 0.4, 0.4};
     const std::string seq{"GGTTAACCAA"};
     const PacBio::Data::Frames pw{3, 3, 3, 3, 3, 3, 3, 3, 3, 3};
+    const PacBio::Data::Frames ipd{3, 3, 3, 3, 3, 3, 3, 3, 3, 3};
     const std::string movie = "movie";
     const std::string chemistry = "chemistry";
 
     const PacBio::Data::Read read{
         PacBio::Data::ReadId{movie, holeNumber, {qStart, qEnd}},
-        seq, pw, boost::none, ctxtFlags, acc, snr, chemistry};
+        seq, pw, ipd, ctxtFlags, acc, snr, chemistry};
     EXPECT_EQ(qStart, read.QueryStart);
     EXPECT_EQ(qEnd, read.QueryEnd);
 }
+
+TEST(Data_ReadId, can_set_movie_and_interval_from_read_name)
+{
+    const PacBio::Data::ReadId id{"m54001_160623_195125/553/3100_11230"};
+    EXPECT_EQ("m54001_160623_195125", id.MovieName);
+    EXPECT_EQ(553, id.HoleNumber);
+    EXPECT_EQ(PacBio::Data::Interval(3100, 11230), *id.ZmwInterval);
+}
+
 // clang-format on
