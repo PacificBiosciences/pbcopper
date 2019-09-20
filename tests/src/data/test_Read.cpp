@@ -581,3 +581,27 @@ TEST(Data_Read, BamRecordFunctions_Clip)
         EXPECT_EQ(111, s3_rev.ReferenceEnd());    // RefStart + 8= + 3D
     }
 }
+
+// clang-format off
+TEST(Data_Read, can_set_query_start_and_end_from_id)
+{
+    const int32_t holeNumber = 77;
+    const PacBio::Data::Position qStart = 1000;
+    const PacBio::Data::Position qEnd = 1010;
+    const PacBio::Data::LocalContextFlags ctxtFlags =
+        PacBio::Data::LocalContextFlags::ADAPTER_BEFORE |
+        PacBio::Data::LocalContextFlags::ADAPTER_AFTER;
+    const PacBio::Data::Accuracy acc = 0.95f;
+    const PacBio::Data::SNR snr{0.4, 0.4, 0.4, 0.4};
+    const std::string seq{"GGTTAACCAA"};
+    const PacBio::Data::Frames pw{3, 3, 3, 3, 3, 3, 3, 3, 3, 3};
+    const std::string movie = "movie";
+    const std::string chemistry = "chemistry";
+
+    const PacBio::Data::Read read{
+        PacBio::Data::ReadId{movie, holeNumber, {qStart, qEnd}},
+        seq, pw, boost::none, ctxtFlags, acc, snr, chemistry};
+    EXPECT_EQ(qStart, read.QueryStart);
+    EXPECT_EQ(qEnd, read.QueryEnd);
+}
+// clang-format on

@@ -28,6 +28,10 @@ Read::Read(Data::ReadId id, std::string seq, Frames pw, LocalContextFlags flags,
     : Read{std::move(id),    std::move(seq),          std::move(pw),  boost::none,
            std::move(flags), std::move(readAccuracy), std::move(snr), std::move(model)}
 {
+    if (Id.ZmwInterval) {
+        QueryStart = Id.ZmwInterval->Start();
+        QueryEnd = Id.ZmwInterval->End();
+    }
 }
 
 Read::Read(Data::ReadId id, std::string seq, Frames pw, boost::optional<Frames> ipd,
@@ -42,6 +46,11 @@ Read::Read(Data::ReadId id, std::string seq, Frames pw, boost::optional<Frames> 
     , Model{std::move(model)}
     , FullLength{Flags & Data::ADAPTER_BEFORE && Flags & Data::ADAPTER_AFTER}
 {
+    if (Id.ZmwInterval) {
+        QueryStart = Id.ZmwInterval->Start();
+        QueryEnd = Id.ZmwInterval->End();
+    }
+
     if (PulseWidth.size() != Seq.size()) {
         throw std::invalid_argument("[pbcopper] read (name=" + std::string(Id) +
                                     ") ERROR: features PW/seq are of mismatched length: " +
