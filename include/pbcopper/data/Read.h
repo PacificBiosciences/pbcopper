@@ -26,11 +26,6 @@ namespace Data {
 /// A Read contains the name, sequence, covariates, SNR, and associated model.
 struct Read
 {
-    // old unanimity-era constructor
-    [[deprecated("Use the ctor with the ipd argument")]] Read(Data::ReadId id, std::string seq,
-                                                              Frames pw, LocalContextFlags flags,
-                                                              Accuracy readAccuracy, SNR snr,
-                                                              std::string model);
     Read(Data::ReadId id, std::string seq, Frames pw, boost::optional<Frames> ipd,
          LocalContextFlags flags, Accuracy readAccuracy, SNR snr, std::string model);
     Read(const std::string& name, std::string seq, QualityValues qualities, SNR snr);
