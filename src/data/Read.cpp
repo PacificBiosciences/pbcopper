@@ -23,17 +23,6 @@ static_assert(std::is_nothrow_move_assignable<Read>::value ==
                   std::is_nothrow_move_assignable<std::string>::value,
               "");
 
-Read::Read(Data::ReadId id, std::string seq, Frames pw, LocalContextFlags flags,
-           Accuracy readAccuracy, SNR snr, std::string model)
-    : Read{std::move(id),    std::move(seq),          std::move(pw),  boost::none,
-           std::move(flags), std::move(readAccuracy), std::move(snr), std::move(model)}
-{
-    if (Id.ZmwInterval) {
-        QueryStart = Id.ZmwInterval->Start();
-        QueryEnd = Id.ZmwInterval->End();
-    }
-}
-
 Read::Read(Data::ReadId id, std::string seq, Frames pw, boost::optional<Frames> ipd,
            LocalContextFlags flags, Accuracy readAccuracy, SNR snr, std::string model)
     : Id{std::move(id)}
