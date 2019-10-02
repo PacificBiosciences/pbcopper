@@ -138,11 +138,13 @@ static_assert(std::is_copy_constructible<MappedRead>::value,
 static_assert(std::is_copy_assignable<MappedRead>::value,
               "MappedRead& operator=(const MappedRead&) is not = default");
 
+#ifndef __INTEL_COMPILER
 static_assert(std::is_nothrow_move_constructible<MappedRead>::value,
               "MappedRead(MappedRead&&) is not = noexcept");
 static_assert(std::is_nothrow_move_assignable<MappedRead>::value ==
                   std::is_nothrow_move_assignable<Read>::value,
               "");
+#endif
 
 MappedRead::MappedRead(Read read) noexcept : Read{std::move(read)} {}
 
