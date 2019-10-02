@@ -17,11 +17,13 @@ static_assert(std::is_copy_constructible<MultiToolInterface>::value,
 static_assert(std::is_copy_assignable<MultiToolInterface>::value,
               "MultiToolInterface& operator=(const MultiToolInterface&) is not = default");
 
+#ifndef __INTEL_COMPILER
 static_assert(std::is_nothrow_move_constructible<MultiToolInterface>::value,
               "MultiToolInterface(MultiToolInterface&&) is not = noexcept");
 static_assert(std::is_nothrow_move_assignable<MultiToolInterface>::value ==
                   std::is_nothrow_move_assignable<internal::MultiToolInterfaceData>::value,
               "");
+#endif
 
 MultiToolInterface::MultiToolInterface(std::string name, std::string description,
                                        std::string version)

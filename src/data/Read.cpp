@@ -18,10 +18,12 @@ static_assert(std::is_copy_constructible<Read>::value, "Read(const Read&) is not
 static_assert(std::is_copy_assignable<Read>::value,
               "Read& operator=(const Read&) is not = default");
 
+#ifndef __INTEL_COMPILER
 static_assert(std::is_nothrow_move_constructible<Read>::value, "Read(Read&&) is not = noexcept");
 static_assert(std::is_nothrow_move_assignable<Read>::value ==
                   std::is_nothrow_move_assignable<std::string>::value,
               "");
+#endif
 
 Read::Read(Data::ReadId id, std::string seq, Frames pw, boost::optional<Frames> ipd,
            LocalContextFlags flags, Accuracy readAccuracy, SNR snr, std::string model)

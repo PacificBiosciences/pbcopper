@@ -30,8 +30,8 @@ struct InterfaceData
         : appName_{std::move(appName)}
         , appDescription_{std::move(appDescription)}
         , appVersion_{std::move(appVersion)}
-        , helpOption_{std::move(help)}
-        , versionOption_{std::move(version)}
+        , helpOption_(std::move(help))        // icc 17 hack
+        , versionOption_(std::move(version))  // icc 17 hack
         , numThreadsOption_{std::move(numThreads)}
         , logFileOption_{std::move(logFile)}
         , logLevelOption_{std::move(logLevel)}

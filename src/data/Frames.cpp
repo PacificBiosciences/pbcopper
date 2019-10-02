@@ -107,10 +107,12 @@ static_assert(std::is_copy_constructible<Frames>::value, "Frames(const Frames&) 
 static_assert(std::is_copy_assignable<Frames>::value,
               "Frames& operator=(const Frames&) is not = default");
 
+#ifndef __INTEL_COMPILER
 static_assert(std::is_nothrow_move_constructible<Frames>::value,
               "Frames(Frames&&) is not = noexcept");
 static_assert(std::is_nothrow_move_assignable<Frames>::value,
               "Frames& operator=(Frames&&) is not = noexcept");
+#endif
 
 Frames::Frames(std::vector<uint16_t> frames) noexcept : std::vector<uint16_t>{std::move(frames)} {}
 

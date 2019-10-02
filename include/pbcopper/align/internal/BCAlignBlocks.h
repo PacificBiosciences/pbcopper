@@ -41,7 +41,9 @@ struct AlignInput
 class BandedGlobalAlignBlock
 {
 public:
-    BandedGlobalAlignBlock(const BandedChainAlignConfig& config) : config_{config} {}
+    BandedGlobalAlignBlock(const BandedChainAlignConfig& config) : config_(config)  // icc 17 hack
+    {
+    }
 
 public:
     ///
@@ -102,7 +104,9 @@ private:
 class StandardGlobalAlignBlock
 {
 public:
-    StandardGlobalAlignBlock(const BandedChainAlignConfig& config) : config_{config} {}
+    StandardGlobalAlignBlock(const BandedChainAlignConfig& config) : config_(config)  // icc 17 hack
+    {
+    }
 
 public:
     ///
