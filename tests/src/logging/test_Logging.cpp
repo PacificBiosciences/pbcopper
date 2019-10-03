@@ -79,9 +79,9 @@ TEST(Logging_Logger, can_write_message_only_custom_field_config)
             config.Fields = Logging::LogField::NONE;
 
             Logging::Logger logger(s, config);
-            PBLOGGER_INFO(logger) << LoggingTests::infoMsg;
+            PBLOGGER_WARN(logger) << LoggingTests::warnMsg;
         }
-        EXPECT_EQ(">|> *** Application INFO ***\n", s.str());
+        EXPECT_EQ(">|> *** Application WARNING ***\n", s.str());
     }
     {
         std::ostringstream s;
@@ -90,9 +90,9 @@ TEST(Logging_Logger, can_write_message_only_custom_field_config)
             config.Fields = Logging::LogField::LOG_LEVEL;
 
             Logging::Logger logger(s, config);
-            PBLOGGER_INFO(logger) << LoggingTests::infoMsg;
+            PBLOGGER_WARN(logger) << LoggingTests::warnMsg;
         }
-        EXPECT_EQ(">|> INFO -|- *** Application INFO ***\n", s.str());
+        EXPECT_EQ(">|> WARN -|- *** Application WARNING ***\n", s.str());
     }
     {
         std::ostringstream s;
@@ -118,9 +118,9 @@ TEST(Logging_Logger, can_use_custom_delimiter)
         config.Delimiter = " :: ";
 
         Logging::Logger logger(s, config);
-        PBLOGGER_INFO(logger) << LoggingTests::infoMsg;
+        PBLOGGER_WARN(logger) << LoggingTests::warnMsg;
     }
-    EXPECT_EQ(">|> INFO :: *** Application INFO ***\n", s.str());
+    EXPECT_EQ(">|> WARN :: *** Application WARNING ***\n", s.str());
 }
 
 TEST(Logging_Logger, trace_level_is_a_noop_in_release_mode)

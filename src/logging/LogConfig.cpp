@@ -5,7 +5,7 @@
 namespace PacBio {
 namespace Logging {
 
-LogConfig::LogConfig() : LogConfig{LogLevel::INFO} {}
+LogConfig::LogConfig() : LogConfig{LogLevel::WARN} {}
 
 LogConfig::LogConfig(const LogLevel level)
     : Level{level}, Header{">|> "}, Delimiter{" -|- "}, Fields{LogField::DEFAULT}

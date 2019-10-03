@@ -107,6 +107,7 @@ Interface& Interface::DefaultLogLevel(Logging::LogLevel level)
     // Error if client is setting default log level, when that option has been disabled.
     assert(data_.logLevelOption_);
     data_.logLevelOption_->defaultValue = level.ToString();
+    data_.logConfig_.Level = level;
     return *this;
 }
 
