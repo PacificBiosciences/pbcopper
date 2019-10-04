@@ -13,6 +13,7 @@
 #include <pbcopper/cli2/Tool.h>
 #include <pbcopper/cli2/internal/MultiToolInterfaceData.h>
 #include <pbcopper/cli2/internal/OptionData.h>
+#include <pbcopper/logging/LogConfig.h>
 
 namespace PacBio {
 namespace CLI_v2 {
@@ -24,14 +25,22 @@ public:
                        std::string version = std::string{});
 
 public:
-    MultiToolInterface& AddTool(const Tool& tool);
+    MultiToolInterface& AddTool(Tool tool);
 
-    MultiToolInterface& AddTools(const std::vector<Tool>& tools);
+    MultiToolInterface& AddTools(std::vector<Tool> tools);
 
     ///
     /// Set help display footer text.
     ///
     MultiToolInterface& HelpFooter(std::string footer);
+
+    ///
+    /// Set logging configuration for application.
+    ///
+    /// This config overrides individual tool settings. To set per-tool
+    /// configs, use their interfaces and do not use this method.
+    ///
+    MultiToolInterface& LogConfig(Logging::LogConfig config);
 
 public:
     ///
@@ -54,20 +63,20 @@ public:
     ///
     bool HasTool(const std::string& toolName) const;
 
+    ///
+    /// \return help display footer text.
+    ///
+    const std::string& HelpFooter() const;
+
     /// \internal
     /// \return (translated) help option.
     ///
     const internal::OptionData& HelpOption() const;
 
-    /// \internal
-    /// \return (translated) help option.
     ///
-    const internal::OptionData& VersionOption() const;
-
+    /// \return (optional) log configuration
     ///
-    /// \return help display footer text.
-    ///
-    const std::string& HelpFooter() const;
+    const boost::optional<Logging::LogConfig>& LogConfig() const;
 
     ///
     /// \return tool for provided name
@@ -78,6 +87,11 @@ public:
     /// \return multi-interface's sub-tools
     ///
     const std::vector<Tool>& Tools() const;
+
+    /// \internal
+    /// \return (translated) help option.
+    ///
+    const internal::OptionData& VersionOption() const;
 
 private:
     internal::MultiToolInterfaceData data_;

@@ -668,4 +668,58 @@ TEST(CLI2_CLI, no_throw_on_disabled_log_level_option_in_setup)
     EXPECT_NO_THROW(PacBio::CLI_v2::Run(args, i, runner););
 }
 
+TEST(CLI2_CLI, multitoolinterface_can_override_subtool_log_config)
+{
+    auto refineRunner = [](const PacBio::CLI_v2::Results& results) {
+        EXPECT_EQ(PacBio::Logging::LogLevel::DEBUG, results.LogLevel());
+        return EXIT_SUCCESS;
+    };
+
+    PacBio::CLI_v2::MultiToolInterface i{"isoseq3", "De Novo Transcript Reconstruction", "3.1.2"};
+    const auto& refineInterface = CLI_v2_CLITests::MakeRefineInterface();
+    i.AddTools({{"refine",    refineInterface,  refineRunner},
+                {"cluster",   CLI_v2_CLITests::MakeClusterInterface(),   &CLI_v2_CLITests::ClusterRunner},
+                {"polish",    CLI_v2_CLITests::MakePolishInterface(),    &CLI_v2_CLITests::PolishRunner},
+                {"summarize", CLI_v2_CLITests::MakeSummarizeInterface(), &CLI_v2_CLITests::SummarizeRunner}});
+
+    PacBio::Logging::LogConfig config{PacBio::Logging::LogLevel::DEBUG};
+    i.LogConfig(config);
+
+    EXPECT_EQ(PacBio::Logging::LogLevel::WARN, refineInterface.DefaultLogLevel());
+    EXPECT_EQ(PacBio::Logging::LogLevel::DEBUG, i.LogConfig()->Level);
+
+    const std::vector<std::string> args {
+        "isoseq3", "refine", "--test", "--count", "10"
+    };
+    const int result = PacBio::CLI_v2::Run(args, i);
+    EXPECT_EQ(EXIT_SUCCESS, result);
+}
+
+TEST(CLI2_CLI, command_line_log_level_overrides_interface_configs)
+{
+    auto refineRunner = [](const PacBio::CLI_v2::Results& results) {
+        EXPECT_EQ(PacBio::Logging::LogLevel::TRACE, results.LogLevel());
+        return EXIT_SUCCESS;
+    };
+
+    PacBio::CLI_v2::MultiToolInterface i{"isoseq3", "De Novo Transcript Reconstruction", "3.1.2"};
+    const auto& refineInterface = CLI_v2_CLITests::MakeRefineInterface();
+    i.AddTools({{"refine",    refineInterface,  refineRunner},
+                {"cluster",   CLI_v2_CLITests::MakeClusterInterface(),   &CLI_v2_CLITests::ClusterRunner},
+                {"polish",    CLI_v2_CLITests::MakePolishInterface(),    &CLI_v2_CLITests::PolishRunner},
+                {"summarize", CLI_v2_CLITests::MakeSummarizeInterface(), &CLI_v2_CLITests::SummarizeRunner}});
+
+    PacBio::Logging::LogConfig config{PacBio::Logging::LogLevel::DEBUG};
+    i.LogConfig(config);
+
+    EXPECT_EQ(PacBio::Logging::LogLevel::WARN, refineInterface.DefaultLogLevel());
+    EXPECT_EQ(PacBio::Logging::LogLevel::DEBUG, i.LogConfig()->Level);
+
+    const std::vector<std::string> args {
+        "isoseq3", "refine", "--test", "--count", "10", "--log-level", "TRACE"
+    };
+    const int result = PacBio::CLI_v2::Run(args, i);
+    EXPECT_EQ(EXIT_SUCCESS, result);
+}
+
 // clang-format on

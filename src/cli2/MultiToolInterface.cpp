@@ -2,6 +2,7 @@
 
 #include <cassert>
 #include <type_traits>
+#include <utility>
 
 #include <pbcopper/cli2/internal/BuiltinOptions.h>
 #include <pbcopper/cli2/internal/InterfaceData.h>
@@ -33,16 +34,18 @@ MultiToolInterface::MultiToolInterface(std::string name, std::string description
 {
 }
 
-MultiToolInterface& MultiToolInterface::AddTool(const Tool& tool)
+MultiToolInterface& MultiToolInterface::AddTool(Tool tool)
 {
-    data_.tools_.emplace_back(tool);
+    // ensure new subtools use the multi-tool's config
+    if (data_.logConfig_) tool.interface.LogConfig(data_.logConfig_.get());
+    data_.tools_.emplace_back(std::move(tool));
     return *this;
 }
 
-MultiToolInterface& MultiToolInterface::AddTools(const std::vector<Tool>& tools)
+MultiToolInterface& MultiToolInterface::AddTools(std::vector<Tool> tools)
 {
-    for (const auto& tool : tools)
-        AddTool(tool);
+    for (auto&& tool : tools)
+        AddTool(std::move(tool));
     return *this;
 }
 
@@ -68,6 +71,20 @@ const std::string& MultiToolInterface::HelpFooter() const { return data_.helpFoo
 MultiToolInterface& MultiToolInterface::HelpFooter(std::string footer)
 {
     data_.helpFooter_ = std::move(footer);
+    return *this;
+}
+
+const boost::optional<Logging::LogConfig>& MultiToolInterface::LogConfig() const
+{
+    return data_.logConfig_;
+}
+
+MultiToolInterface& MultiToolInterface::LogConfig(Logging::LogConfig config)
+{
+    // ensure any current subtools use the new multi-tool config
+    data_.logConfig_ = config;
+    for (auto& tool : data_.tools_)
+        tool.interface.LogConfig(config);
     return *this;
 }
 
