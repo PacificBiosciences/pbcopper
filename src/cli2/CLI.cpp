@@ -22,6 +22,16 @@ using VersionHelpPrinter = PacBio::CLI_v2::internal::VersionPrinter;
 namespace PacBio {
 namespace CLI_v2 {
 
+bool LogLevelIsUserProvided(const Interface& interface, const Results& results)
+{
+    const auto& logLevelOption = interface.LogLevelOption();
+    if (!logLevelOption) return false;
+
+    assert(!logLevelOption->names.empty());
+    const auto& logLevelResult = results[Builtin::LogLevel];
+    return logLevelResult.IsUserProvided();
+}
+
 int Run(int argc, char* argv[], const Interface& interface, const ResultsHandler& handler)
 {
     return Run(std::vector<std::string>{argv, argv + argc}, interface, handler);
@@ -62,14 +72,22 @@ int Run(const std::vector<std::string>& args, const Interface& interface,
     //
     // Initialize logging
     //
-    // Use application-provided config (i.e. fields), but give priority to
-    // command line-provided log settings.
+    // Setup logging configuration. Priority is given in the following (decreasing) order:
+    //  * command line-provided options
+    //  * multi-tool interface config
+    //  * interface config
     //
-    // If 'log-level' or 'log-file' were not set or were disabled as command
-    // line options, use the default.
+    // If 'log-level' or 'log-file' were set via command line, use it. Otherwise,
+    // use the application's default config provided.
+    //
+    // Also ensures that the Results object passed to the application runner
+    // reflects the actual, active log level.
     //
     Logging::LogConfig logConfig = interface.LogConfig();
-    if (interface.LogLevelOption()) logConfig.Level = results.LogLevel();
+    if (LogLevelIsUserProvided(interface, results))
+        logConfig.Level = results.LogLevel();
+    else
+        results.AddObservedValue("log-level", logConfig.Level.ToString(), SetByMode::DEFAULT);
 
     const auto logger = [&]() {
         if (interface.LogFileOption()) {

@@ -80,8 +80,6 @@ OptionValue ValueFromString(const OptionData& option, const std::string valueStr
 void EnsureOptionValue(const std::string& valueString, const std::string& optionName,
                        const OptionValueType optionType)
 {
-    assert(!valueString.empty());
-
     // value string does not begin with a dash, treat as option value
     if (valueString.find(token_dash) != 0) return;
 

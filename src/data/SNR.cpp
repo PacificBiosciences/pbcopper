@@ -67,5 +67,10 @@ SNR ClampSNR(const SNR& val, const SNR& lo, const SNR& hi)
         boost::algorithm::clamp(val.G, lo.G, hi.G), boost::algorithm::clamp(val.T, lo.T, hi.T)};
 }
 
+std::ostream& operator<<(std::ostream& os, const SNR& snr)
+{
+    return os << "SNR(A=" << snr.A << ", C=" << snr.C << ", G=" << snr.G << ", T=" << snr.T << ')';
+}
+
 }  // namespace Data
 }  // namespace PacBio

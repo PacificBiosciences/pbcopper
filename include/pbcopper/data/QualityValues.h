@@ -6,6 +6,7 @@
 #include <pbcopper/PbcopperConfig.h>
 
 #include <cstdint>
+#include <ostream>
 #include <string>
 #include <vector>
 
@@ -119,6 +120,8 @@ public:
 
     /// \}
 };
+
+std::ostream& operator<<(std::ostream& os, const QualityValues& qualityvalues);
 
 }  // namespace Data
 }  // namespace PacBio

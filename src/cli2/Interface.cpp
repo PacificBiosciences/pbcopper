@@ -24,11 +24,13 @@ static_assert(std::is_copy_constructible<Interface>::value,
 static_assert(std::is_copy_assignable<Interface>::value,
               "Interface& operator=(const Interface&) is not = default");
 
+#ifndef __INTEL_COMPILER
 static_assert(std::is_nothrow_move_constructible<Interface>::value,
               "Interface(Interface&&) is not = noexcept");
 static_assert(std::is_nothrow_move_assignable<Interface>::value ==
                   std::is_nothrow_move_assignable<internal::InterfaceData>::value,
               "");
+#endif
 
 Interface::Interface(std::string name, std::string description, std::string version)
     : data_{std::move(name),
@@ -105,6 +107,7 @@ Interface& Interface::DefaultLogLevel(Logging::LogLevel level)
     // Error if client is setting default log level, when that option has been disabled.
     assert(data_.logLevelOption_);
     data_.logLevelOption_->defaultValue = level.ToString();
+    data_.logConfig_.Level = level;
     return *this;
 }
 

@@ -15,9 +15,11 @@ static_assert(std::is_copy_constructible<Cigar>::value, "Cigar(const Cigar&) is 
 static_assert(std::is_copy_assignable<Cigar>::value,
               "Cigar& operator=(const Cigar&) is not = default");
 
+#ifndef __INTEL_COMPILER
 static_assert(std::is_nothrow_move_constructible<Cigar>::value, "Cigar(Cigar&&) is not = noexcept");
 static_assert(std::is_nothrow_move_assignable<Cigar>::value,
               "Cigar& operator=(Cigar&&) is not = noexcept");
+#endif
 
 Cigar::Cigar(const std::string& cigarString) : std::vector<CigarOperation>{}
 {
@@ -56,6 +58,11 @@ size_t ReferenceLength(const Cigar& cigar)
         if (ConsumesReference(op.Type())) length += op.Length();
     }
     return length;
+}
+
+std::ostream& operator<<(std::ostream& os, const Cigar& cigar)
+{
+    return os << "Cigar(" << cigar.ToStdString() << ')';
 }
 
 }  // namespace Data
