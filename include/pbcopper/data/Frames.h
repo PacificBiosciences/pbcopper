@@ -107,11 +107,23 @@ public:
     /// \returns A const_iterator to the element past the end of the sequence.
     using std::vector<uint16_t>::cend;
 
+    /// \returns A const_iterator to the beginning of the reverse sequence.
+    using std::vector<uint16_t>::crbegin;
+
+    /// \returns A const_iterator to the element past the end of the reverse sequence.
+    using std::vector<uint16_t>::crend;
+
     /// \returns A (const_)iterator to the beginning of the sequence.
     using std::vector<uint16_t>::begin;
 
     /// \returns A (const_)iterator to the element past the end of the sequence.
     using std::vector<uint16_t>::end;
+
+    /// \returns A (const_)iterator to the beginning of the reverse sequence.
+    using std::vector<uint16_t>::rbegin;
+
+    /// \returns A (const_)iterator to the element past the end of the reverse sequence.
+    using std::vector<uint16_t>::rend;
 
     /// \returns The number of frame data points.
     using std::vector<uint16_t>::size;
@@ -127,6 +139,9 @@ public:
 
     /// Emulates std::vector::resize
     using std::vector<uint16_t>::resize;
+
+    /// Emulates std::vector::insert
+    using std::vector<uint16_t>::insert;
 
     /// \}
 
