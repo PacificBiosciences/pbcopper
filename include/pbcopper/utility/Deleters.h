@@ -22,6 +22,8 @@ struct FileDeleter
 struct FreeDeleter
 {
     void operator()(void* p) const;
+
+    void operator()(const void* p) const;
 };
 
 }  // namespace Utility
