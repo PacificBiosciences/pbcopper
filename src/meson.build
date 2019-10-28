@@ -96,6 +96,11 @@ pbcopper_cpp_sources = files([
   'reports/ReportPrinter.cpp',
   'reports/TaskReport.cpp',
 
+  # -------------
+  # third-party
+  # -------------
+  'third-party/edlib.cpp',
+
   # ---------
   # utility
   # ---------
