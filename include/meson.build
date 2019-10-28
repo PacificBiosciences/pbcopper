@@ -213,6 +213,7 @@ if not meson.is_subproject()
       'pbcopper/utility/Alarms.h',
       'pbcopper/utility/Deleters.h',
       'pbcopper/utility/FileUtils.h',
+      'pbcopper/utility/MemoryConsumption.h',
       'pbcopper/utility/MinMax.h',
       'pbcopper/utility/MoveAppend.h',
       'pbcopper/utility/PbcopperVersion.h',

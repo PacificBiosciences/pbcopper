@@ -106,6 +106,7 @@ pbcopper_cpp_sources = files([
   # ---------
   'utility/Alarms.cpp',
   'utility/Deleters.cpp',
+  'utility/MemoryConsumption.cpp',
   'utility/Stopwatch.cpp',
   'utility/StringUtils.cpp'])
 
