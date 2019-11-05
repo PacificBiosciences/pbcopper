@@ -64,7 +64,7 @@ pbcopper_test_cpp_sources = files([
   'src/reports/test_Report.cpp',
 
   # utility
-  'src/utility/test_Alarms.cpp',
+  'src/utility/test_Alarm.cpp',
   'src/utility/test_FileUtils.cpp',
   'src/utility/test_MinMax.cpp',
   'src/utility/test_Stopwatch.cpp',
