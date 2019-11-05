@@ -210,7 +210,7 @@ if not meson.is_subproject()
   # pbcopper/utility
   install_headers(
     files([
-      'pbcopper/utility/Alarms.h',
+      'pbcopper/utility/Alarm.h',
       'pbcopper/utility/Deleters.h',
       'pbcopper/utility/FileUtils.h',
       'pbcopper/utility/MemoryConsumption.h',
