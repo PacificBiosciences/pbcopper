@@ -15,5 +15,7 @@ void FileDeleter::operator()(std::FILE* fp) const
 
 void FreeDeleter::operator()(void* p) const { std::free(p); }
 
+void FreeDeleter::operator()(const void* p) const { operator()(const_cast<void*>(p)); }
+
 }  // namespace Utility
 }  // namespace PacBio

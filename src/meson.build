@@ -96,11 +96,17 @@ pbcopper_cpp_sources = files([
   'reports/ReportPrinter.cpp',
   'reports/TaskReport.cpp',
 
+  # -------------
+  # third-party
+  # -------------
+  'third-party/edlib.cpp',
+
   # ---------
   # utility
   # ---------
-  'utility/Alarms.cpp',
+  'utility/Alarm.cpp',
   'utility/Deleters.cpp',
+  'utility/MemoryConsumption.cpp',
   'utility/Stopwatch.cpp',
   'utility/StringUtils.cpp'])
 
