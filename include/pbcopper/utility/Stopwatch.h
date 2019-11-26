@@ -27,15 +27,15 @@ public:
 
 public:
     /// \returns the elapsed time (in nanoseconds) between tick tock.
-    float ElapsedNanoseconds() const;
+    double ElapsedNanoseconds() const;
     /// \returns the elapsed time (in milliseconds) between tick tock.
-    float ElapsedMilliseconds() const;
+    double ElapsedMilliseconds() const;
     /// \returns the elapsed time (in seconds) between tick tock.
-    float ElapsedSeconds() const;
+    double ElapsedSeconds() const;
 
     /// \returns the elapsed time (in user-provided units) between tick tock.
     template <typename TimeUnit>
-    float Elapsed() const;
+    double Elapsed() const;
 
     /// \returns the elapsed time (in string) between tick tock.
     std::string ElapsedTime() const;
