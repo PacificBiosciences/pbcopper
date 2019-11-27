@@ -2,6 +2,7 @@
 
 #include <cassert>
 #include <cstdlib>
+#include <exception>
 #include <fstream>
 #include <iostream>
 #include <string>
@@ -98,10 +99,18 @@ int Run(const std::vector<std::string>& args, const Interface& interface,
     }();
 
     Logging::Logger::Current(logger.get());
-    Logging::InstallSignalHandlers(*(logger.get()));
 
     // run application
-    return handler(results);
+    int result = EXIT_FAILURE;
+    try {
+        result = handler(results);
+    } catch (const std::exception& e) {
+        PBLOG_FATAL << "caught exception: \"" << e.what() << '"';
+    } catch (...) {
+        PBLOG_FATAL << "caught unknown exception type";
+    }
+
+    return result;
 }
 
 int Run(int argc, char* argv[], const MultiToolInterface& interface)

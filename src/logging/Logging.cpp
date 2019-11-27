@@ -4,79 +4,17 @@
 
 #include <cassert>
 #include <chrono>
-#include <csignal>
 #include <cstddef>
 #include <ctime>
 
 #include <iomanip>
 #include <iostream>
 #include <sstream>
-#include <stdexcept>
 
 #include <pbcopper/utility/Unused.h>
 
 namespace PacBio {
 namespace Logging {
-namespace {
-}  // namespace
-
-void InstallSignalHandlers(Logger& logger)
-{
-    using std::raise;
-    using std::signal;
-
-    static Logger& logger_ = logger;
-
-    // catch in-flight exceptions on terminate
-    std::set_terminate([]() {
-        if (auto eptr = std::current_exception()) {
-            try {
-                std::rethrow_exception(eptr);
-            } catch (const std::exception& e) {
-                PBLOGGER_FATAL(logger_) << "caught exception: \"" << e.what() << '"';
-            } catch (...) {
-                PBLOGGER_FATAL(logger_) << "caught unknown exception type";
-            }
-        }
-        // call the SIGABRT handler (below)
-        std::abort();
-    });
-
-    // register signal handlers that log and then re-raise as normal
-
-    signal(SIGABRT, [](int) {
-        {
-            PBLOGGER_FATAL(logger_) << "caught SIGABRT";
-        }
-        logger_.~Logger();
-        signal(SIGABRT, SIG_DFL);
-        raise(SIGABRT);
-    });
-    signal(SIGINT, [](int) {
-        {
-            PBLOGGER_FATAL(logger_) << "caught SIGINT";
-        }
-        logger_.~Logger();
-        signal(SIGINT, SIG_DFL);
-        raise(SIGINT);
-    });
-    signal(SIGSEGV, [](int) {
-        {
-            PBLOGGER_FATAL(logger_) << "caught SIGSEGV";
-        }
-        logger_.~Logger();
-        signal(SIGSEGV, SIG_DFL);
-        raise(SIGSEGV);
-    });
-    signal(SIGTERM, [](int) {
-        {
-            PBLOGGER_FATAL(logger_) << "caught SIGTERM";
-        }
-        logger_.~Logger();
-        signal(SIGTERM, SIG_DFL);
-        raise(SIGTERM);
-    });
-}
 
 // ---------
 // Logger
