@@ -100,17 +100,16 @@ int Run(const std::vector<std::string>& args, const Interface& interface,
 
     Logging::Logger::Current(logger.get());
 
-    // run application
-    int result = EXIT_FAILURE;
     try {
-        result = handler(results);
+        // run application
+        return handler(results);
     } catch (const std::exception& e) {
-        PBLOG_FATAL << "caught exception: \"" << e.what() << '"';
+        PBLOG_FATAL << interface.ApplicationName() << " ERROR: " << e.what();
     } catch (...) {
         PBLOG_FATAL << "caught unknown exception type";
     }
 
-    return result;
+    return EXIT_FAILURE;
 }
 
 int Run(int argc, char* argv[], const MultiToolInterface& interface)
@@ -166,8 +165,10 @@ int Run(const std::vector<std::string>& args, const MultiToolInterface& interfac
     }
 
     // no matching tool
-    throw std::runtime_error{"[pbcopper] command line ERROR: unknown tool '" + args.at(1) +
-                             "' requested"};
+    std::cerr << interface.ApplicationName()
+              << " ERROR: [pbcopper] command line ERROR: unknown tool '" + args.at(1) +
+                     "' requested\n";
+    return EXIT_FAILURE;
 }
 
 }  // namespace CLI_v2
