@@ -58,6 +58,16 @@ R"({
     "description" : "Use verbose output."
 })"};
 
+const Option Alarms{
+R"({
+    "names" : ["alarms"],
+    "description" : "Alarms JSON file for SL",
+    "type" : "file",
+    "default" : "",
+    "hidden" : true
+})"
+};
+
 } // namespace Builtin
 } // namespace CLI_v2
 } // namespace PacBio

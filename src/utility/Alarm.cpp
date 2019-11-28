@@ -4,6 +4,7 @@
 
 #include <fstream>
 #include <iostream>
+#include <utility>
 
 #include <boost/uuid/uuid.hpp>
 #include <boost/uuid/uuid_generators.hpp>
@@ -134,6 +135,39 @@ std::ostream& operator<<(std::ostream& out, const Alarm& alarm)
     alarm.Print(out);
     return out;
 }
+
+AlarmException::AlarmException(std::string sourceFilename, std::string functionName,
+                               int32_t lineNumber, std::string name, std::string message,
+                               std::string severity, std::string info,
+                               std::string exception) noexcept
+    : sourceFilename_{std::move(sourceFilename)}
+    , functionName_{std::move(functionName)}
+    , lineNumber_{lineNumber}
+    , name_{std::move(name)}
+    , message_{std::move(message)}
+    , severity_{std::move(severity)}
+    , info_{std::move(info)}
+    , exception_{std::move(exception)}
+{
+}
+
+// Debugging Info
+const char* AlarmException::SourceFilename() const noexcept { return sourceFilename_.c_str(); }
+
+const char* AlarmException::FunctionName() const noexcept { return functionName_.c_str(); }
+
+int32_t AlarmException::LineNumber() const noexcept { return lineNumber_; }
+
+// Used by Alarms API
+const char* AlarmException::Name() const noexcept { return name_.c_str(); }
+
+const char* AlarmException::Message() const noexcept { return message_.c_str(); }
+
+const char* AlarmException::Severity() const noexcept { return severity_.c_str(); }
+
+const char* AlarmException::Info() const noexcept { return info_.c_str(); }
+
+const char* AlarmException::Exception() const noexcept { return exception_.c_str(); }
 
 }  // namespace Utility
 }  // namespace PacBio

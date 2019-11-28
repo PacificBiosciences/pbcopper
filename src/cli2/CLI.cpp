@@ -14,6 +14,7 @@
 #include <pbcopper/cli2/internal/MultiToolInterfaceHelpPrinter.h>
 #include <pbcopper/cli2/internal/VersionPrinter.h>
 #include <pbcopper/logging/Logging.h>
+#include <pbcopper/utility/Alarm.h>
 
 using CommandLineParser = PacBio::CLI_v2::internal::CommandLineParser;
 using InterfaceHelpPrinter = PacBio::CLI_v2::internal::InterfaceHelpPrinter;
@@ -70,6 +71,8 @@ int Run(const std::vector<std::string>& args, const Interface& interface,
         return EXIT_SUCCESS;
     }
 
+    const std::string alarmsOutputFilename{results.AlarmsFile()};
+
     //
     // Initialize logging
     //
@@ -103,6 +106,20 @@ int Run(const std::vector<std::string>& args, const Interface& interface,
     try {
         // run application
         return handler(results);
+    } catch (const Utility::AlarmException& a) {
+        Logging::LogMessage(a.SourceFilename(), a.FunctionName(), a.LineNumber(),
+                            Logging::LogLevel::FATAL, Logging::Logger::Current())
+            << interface.ApplicationName() << " ERROR: " << a.Message();
+
+        if (!alarmsOutputFilename.empty()) {
+            std::ofstream alarmsOutput{alarmsOutputFilename};
+            if (alarmsOutput) {
+                Utility::Alarm alarm{a.Name(), a.Message(), a.Severity(), a.Info(), a.Exception()};
+                Utility::Alarm::WriteAlarms(alarmsOutput, {alarm});
+            } else {
+                PBLOG_FATAL << "Could not rewrite alarms JSON to " << alarmsOutputFilename;
+            }
+        }
     } catch (const std::exception& e) {
         PBLOG_FATAL << interface.ApplicationName() << " ERROR: " << e.what();
     } catch (...) {

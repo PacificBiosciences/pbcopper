@@ -143,6 +143,12 @@ size_t Results::NumThreads() const
     return std::min(requestedNumThreads, maxNumThreads);
 }
 
+std::string Results::AlarmsFile() const
+{
+    const auto& alarmsOpt = (*this)[Builtin::Alarms];
+    return alarmsOpt;
+}
+
 const std::vector<std::string>& Results::PositionalArguments() const { return posArgValues_; }
 
 Results& Results::PositionalArguments(const std::vector<internal::PositionalArgumentData>& posArgs)

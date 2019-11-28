@@ -26,7 +26,7 @@ struct InterfaceData
 {
     InterfaceData(std::string appName, std::string appDescription, std::string appVersion,
                   OptionData help, OptionData version, OptionData numThreads, OptionData logFile,
-                  OptionData logLevel)
+                  OptionData logLevel, OptionData alarms)
         : appName_{std::move(appName)}
         , appDescription_{std::move(appDescription)}
         , appVersion_{std::move(appVersion)}
@@ -35,6 +35,7 @@ struct InterfaceData
         , numThreadsOption_{std::move(numThreads)}
         , logFileOption_{std::move(logFile)}
         , logLevelOption_{std::move(logLevel)}
+        , alarmsOption_{std::move(alarms)}
     {
     }
 
@@ -51,6 +52,7 @@ struct InterfaceData
     boost::optional<internal::OptionData> numThreadsOption_;
     boost::optional<internal::OptionData> logFileOption_;
     boost::optional<internal::OptionData> logLevelOption_;
+    boost::optional<internal::OptionData> alarmsOption_;
 
     // default disabled
     boost::optional<internal::OptionData> verboseOption_ = boost::none;
