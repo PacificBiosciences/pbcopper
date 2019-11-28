@@ -67,6 +67,11 @@ public:
     size_t NumThreads() const;
 
     ///
+    /// \return requested alarms JSON file (empty string if not provided)
+    ///
+    std::string AlarmsFile() const;
+
+    ///
     /// \return full list of positional argument values
     ///
     const std::vector<std::string>& PositionalArguments() const;
