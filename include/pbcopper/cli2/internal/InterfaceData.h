@@ -36,7 +36,7 @@ struct InterfaceData
         , logFileOption_{std::move(logFile)}
         , logLevelOption_{std::move(logLevel)}
         , alarmsOption_{std::move(alarms)}
-        , exceptionPassthroughOption_{std::move(exceptionPassthrough)}
+        , exceptionPassthroughOption_(std::move(exceptionPassthrough))  // icc 17 hack
     {
     }
 
