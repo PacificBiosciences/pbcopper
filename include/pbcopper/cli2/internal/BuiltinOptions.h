@@ -68,6 +68,13 @@ R"({
 })"
 };
 
+const Option ExceptionPassthrough{
+R"({
+    "names" : ["allow-exceptions-passthrough"],
+    "description" : "Allow exceptions to trickle down to main().",
+    "hidden" : true
+})"};
+
 } // namespace Builtin
 } // namespace CLI_v2
 } // namespace PacBio

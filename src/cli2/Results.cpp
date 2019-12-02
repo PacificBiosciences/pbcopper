@@ -165,6 +165,13 @@ bool Results::Verbose() const
     return false;  // verbose option not enabled
 }
 
+bool Results::ExceptionPassthrough() const
+{
+    const auto found = results_.find("allow-exceptions-passthrough");
+    if (found != results_.cend()) return *(found->second.get());
+    return false;  // allow-exceptions-passthrough option not enabled
+}
+
 const Result& Results::operator[](const Option& opt) const
 {
     const auto optionNames = internal::OptionTranslator::OptionNames(opt);

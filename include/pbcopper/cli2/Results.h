@@ -82,6 +82,11 @@ public:
     bool Verbose() const;
 
     ///
+    /// \return true if --allow-exceptions-passthrough was passed for debugging
+    ///
+    bool ExceptionPassthrough() const;
+
+    ///
     /// \return value associated with option
     ///
     /// The lookup uses the same Option as defined in the application. Example:
