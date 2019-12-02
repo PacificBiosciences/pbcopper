@@ -72,6 +72,7 @@ int Run(const std::vector<std::string>& args, const Interface& interface,
     }
 
     const std::string alarmsOutputFilename{results.AlarmsFile()};
+    const bool allowExceptionsPassthrough{results.ExceptionPassthrough()};
 
     //
     // Initialize logging
@@ -103,27 +104,32 @@ int Run(const std::vector<std::string>& args, const Interface& interface,
 
     Logging::Logger::Current(logger.get());
 
-    try {
-        // run application
+    if (allowExceptionsPassthrough) {
         return handler(results);
-    } catch (const Utility::AlarmException& a) {
-        Logging::LogMessage(a.SourceFilename(), a.FunctionName(), a.LineNumber(),
-                            Logging::LogLevel::FATAL, Logging::Logger::Current())
-            << interface.ApplicationName() << " ERROR: " << a.Message();
+    } else {
+        try {
+            // run application
+            return handler(results);
+        } catch (const Utility::AlarmException& a) {
+            Logging::LogMessage(a.SourceFilename(), a.FunctionName(), a.LineNumber(),
+                                Logging::LogLevel::FATAL, Logging::Logger::Current())
+                << interface.ApplicationName() << " ERROR: " << a.Message();
 
-        if (!alarmsOutputFilename.empty()) {
-            std::ofstream alarmsOutput{alarmsOutputFilename};
-            if (alarmsOutput) {
-                Utility::Alarm alarm{a.Name(), a.Message(), a.Severity(), a.Info(), a.Exception()};
-                Utility::Alarm::WriteAlarms(alarmsOutput, {alarm});
-            } else {
-                PBLOG_FATAL << "Could not rewrite alarms JSON to " << alarmsOutputFilename;
+            if (!alarmsOutputFilename.empty()) {
+                std::ofstream alarmsOutput{alarmsOutputFilename};
+                if (alarmsOutput) {
+                    Utility::Alarm alarm{a.Name(), a.Message(), a.Severity(), a.Info(),
+                                         a.Exception()};
+                    Utility::Alarm::WriteAlarms(alarmsOutput, {alarm});
+                } else {
+                    PBLOG_FATAL << "Could not rewrite alarms JSON to " << alarmsOutputFilename;
+                }
             }
+        } catch (const std::exception& e) {
+            PBLOG_FATAL << interface.ApplicationName() << " ERROR: " << e.what();
+        } catch (...) {
+            PBLOG_FATAL << "caught unknown exception type";
         }
-    } catch (const std::exception& e) {
-        PBLOG_FATAL << interface.ApplicationName() << " ERROR: " << e.what();
-    } catch (...) {
-        PBLOG_FATAL << "caught unknown exception type";
     }
 
     return EXIT_FAILURE;
