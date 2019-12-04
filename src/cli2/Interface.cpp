@@ -40,7 +40,9 @@ Interface::Interface(std::string name, std::string description, std::string vers
             OptionTranslator::Translate(Builtin::Version),
             OptionTranslator::Translate(Builtin::NumThreads),
             OptionTranslator::Translate(Builtin::LogFile),
-            OptionTranslator::Translate(Builtin::LogLevel)}
+            OptionTranslator::Translate(Builtin::LogLevel),
+            OptionTranslator::Translate(Builtin::Alarms),
+            OptionTranslator::Translate(Builtin::ExceptionPassthrough)}
 {
     if (data_.appName_.empty()) {
         throw std::runtime_error{
@@ -208,10 +210,12 @@ std::vector<OptionData> Interface::Options() const
     // add builtins
     result.push_back(data_.helpOption_);
     result.push_back(data_.versionOption_);
+    result.push_back(data_.exceptionPassthroughOption_);
     if (data_.numThreadsOption_) result.push_back(data_.numThreadsOption_.get());
     if (data_.logLevelOption_) result.push_back(data_.logLevelOption_.get());
     if (data_.logFileOption_) result.push_back(data_.logFileOption_.get());
     if (data_.verboseOption_) result.push_back(data_.verboseOption_.get());
+    if (data_.alarmsOption_) result.push_back(data_.alarmsOption_.get());
     return result;
 }
 

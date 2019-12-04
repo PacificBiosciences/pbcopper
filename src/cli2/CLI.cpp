@@ -2,6 +2,7 @@
 
 #include <cassert>
 #include <cstdlib>
+#include <exception>
 #include <fstream>
 #include <iostream>
 #include <string>
@@ -13,6 +14,7 @@
 #include <pbcopper/cli2/internal/MultiToolInterfaceHelpPrinter.h>
 #include <pbcopper/cli2/internal/VersionPrinter.h>
 #include <pbcopper/logging/Logging.h>
+#include <pbcopper/utility/Alarm.h>
 
 using CommandLineParser = PacBio::CLI_v2::internal::CommandLineParser;
 using InterfaceHelpPrinter = PacBio::CLI_v2::internal::InterfaceHelpPrinter;
@@ -69,6 +71,9 @@ int Run(const std::vector<std::string>& args, const Interface& interface,
         return EXIT_SUCCESS;
     }
 
+    const std::string alarmsOutputFilename{results.AlarmsFile()};
+    const bool allowExceptionsPassthrough{results.ExceptionPassthrough()};
+
     //
     // Initialize logging
     //
@@ -98,10 +103,36 @@ int Run(const std::vector<std::string>& args, const Interface& interface,
     }();
 
     Logging::Logger::Current(logger.get());
-    Logging::InstallSignalHandlers(*(logger.get()));
 
-    // run application
-    return handler(results);
+    if (allowExceptionsPassthrough) {
+        return handler(results);
+    } else {
+        try {
+            // run application
+            return handler(results);
+        } catch (const Utility::AlarmException& a) {
+            Logging::LogMessage(a.SourceFilename(), a.FunctionName(), a.LineNumber(),
+                                Logging::LogLevel::FATAL, Logging::Logger::Current())
+                << interface.ApplicationName() << " ERROR: " << a.Message();
+
+            if (!alarmsOutputFilename.empty()) {
+                std::ofstream alarmsOutput{alarmsOutputFilename};
+                if (alarmsOutput) {
+                    Utility::Alarm alarm{a.Name(), a.Message(), a.Severity(), a.Info(),
+                                         a.Exception()};
+                    Utility::Alarm::WriteAlarms(alarmsOutput, {alarm});
+                } else {
+                    PBLOG_FATAL << "Could not rewrite alarms JSON to " << alarmsOutputFilename;
+                }
+            }
+        } catch (const std::exception& e) {
+            PBLOG_FATAL << interface.ApplicationName() << " ERROR: " << e.what();
+        } catch (...) {
+            PBLOG_FATAL << "caught unknown exception type";
+        }
+    }
+
+    return EXIT_FAILURE;
 }
 
 int Run(int argc, char* argv[], const MultiToolInterface& interface)
@@ -157,8 +188,10 @@ int Run(const std::vector<std::string>& args, const MultiToolInterface& interfac
     }
 
     // no matching tool
-    throw std::runtime_error{"[pbcopper] command line ERROR: unknown tool '" + args.at(1) +
-                             "' requested"};
+    std::cerr << interface.ApplicationName()
+              << " ERROR: [pbcopper] command line ERROR: unknown tool '" + args.at(1) +
+                     "' requested\n";
+    return EXIT_FAILURE;
 }
 
 }  // namespace CLI_v2

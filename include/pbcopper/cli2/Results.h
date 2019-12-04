@@ -67,6 +67,11 @@ public:
     size_t NumThreads() const;
 
     ///
+    /// \return requested alarms JSON file (empty string if not provided)
+    ///
+    std::string AlarmsFile() const;
+
+    ///
     /// \return full list of positional argument values
     ///
     const std::vector<std::string>& PositionalArguments() const;
@@ -75,6 +80,11 @@ public:
     /// \return true if verbosity is enabled & user-requested
     ///
     bool Verbose() const;
+
+    ///
+    /// \return true if --allow-exceptions-passthrough was passed for debugging
+    ///
+    bool ExceptionPassthrough() const;
 
     ///
     /// \return value associated with option

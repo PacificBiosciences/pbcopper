@@ -58,6 +58,23 @@ R"({
     "description" : "Use verbose output."
 })"};
 
+const Option Alarms{
+R"({
+    "names" : ["alarms"],
+    "description" : "Alarms JSON file for SL",
+    "type" : "file",
+    "default" : "",
+    "hidden" : true
+})"
+};
+
+const Option ExceptionPassthrough{
+R"({
+    "names" : ["allow-exceptions-passthrough"],
+    "description" : "Allow exceptions to trickle down to main().",
+    "hidden" : true
+})"};
+
 } // namespace Builtin
 } // namespace CLI_v2
 } // namespace PacBio

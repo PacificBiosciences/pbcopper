@@ -143,6 +143,12 @@ size_t Results::NumThreads() const
     return std::min(requestedNumThreads, maxNumThreads);
 }
 
+std::string Results::AlarmsFile() const
+{
+    const auto& alarmsOpt = (*this)[Builtin::Alarms];
+    return alarmsOpt;
+}
+
 const std::vector<std::string>& Results::PositionalArguments() const { return posArgValues_; }
 
 Results& Results::PositionalArguments(const std::vector<internal::PositionalArgumentData>& posArgs)
@@ -157,6 +163,13 @@ bool Results::Verbose() const
     const auto found = results_.find("verbose");
     if (found != results_.cend()) return *(found->second.get());
     return false;  // verbose option not enabled
+}
+
+bool Results::ExceptionPassthrough() const
+{
+    const auto found = results_.find("allow-exceptions-passthrough");
+    if (found != results_.cend()) return *(found->second.get());
+    return false;  // allow-exceptions-passthrough option not enabled
 }
 
 const Result& Results::operator[](const Option& opt) const
