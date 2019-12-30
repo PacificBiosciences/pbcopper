@@ -96,9 +96,10 @@ QualityValues QualityValues::FromFastq(const std::string& fastq) { return Qualit
 std::string QualityValues::Fastq() const
 {
     std::string result;
-    result.reserve(size());
+    result.resize(size());
+    int32_t counter = 0;
     for (const auto qv : *this)
-        result.push_back(qv.Fastq());
+        result[counter++] = qv.Fastq();
     return result;
 }
 
