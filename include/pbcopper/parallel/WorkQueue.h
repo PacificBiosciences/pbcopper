@@ -124,6 +124,9 @@ public:
     void Finalize()
     {
         FinalizeWorkers();
+        // One last notify in case a consumer exception occured and threads
+        // are still waiting in PopTask wait.
+        pushed.notify_all();
         // Wait for all threads to join and do not continue before all tasks
         // have been finished.
         for (auto& thread : threads)
@@ -141,6 +144,10 @@ private:
         {
             std::unique_lock<std::mutex> lk(m);
             pushed.wait(lk, [&task, this]() {
+                // If a consumer task threw an exception, this is the shortcut
+                // to escape
+                if (abort) return true;
+
                 if (head.empty() || tail.size() >= sz) return false;
 
                 if ((task = std::move(head.front()))) {
