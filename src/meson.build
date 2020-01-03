@@ -90,6 +90,15 @@ pbcopper_cpp_sources = files([
   'logging/LogMessage.cpp',
 
   # ---------
+  # pbmer
+  # ---------
+  'pbmer/Dbg.cpp',
+  'pbmer/DnaBit.cpp',
+  'pbmer/Kmer.cpp',
+  'pbmer/Mers.cpp',
+  'pbmer/Parser.cpp',
+
+  # ---------
   # reports
   # ---------
   'reports/Report.cpp',

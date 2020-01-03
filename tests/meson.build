@@ -57,6 +57,13 @@ pbcopper_test_cpp_sources = files([
   'src/parallel/test_FireAndForget.cpp',
   'src/parallel/test_FireAndForgetIndexed.cpp',
 
+  # pbmer
+  'src/pbmer/test_Dbg.cpp',
+  'src/pbmer/test_DnaBit.cpp',
+  'src/pbmer/test_Kmer.cpp',
+  'src/pbmer/test_Mers.cpp',
+  'src/pbmer/test_Parser.cpp',
+
   # qgram
   'src/qgram/test_Index.cpp',
 
