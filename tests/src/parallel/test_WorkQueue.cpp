@@ -123,3 +123,43 @@ TEST(Parallel_WorkQueue, exceptionFinalize)
     EXPECT_NO_THROW(workerThread.wait());
     EXPECT_ANY_THROW(workQueue.Finalize());
 }
+
+void WorkerThreadThrowException(PacBio::Parallel::WorkQueue<std::string>& queue,
+                                std::vector<std::string>* output)
+{
+    auto LambdaWorker = [&](std::string&& ps) {
+        output->emplace_back(std::move(ps));
+        throw std::runtime_error("consumer abort");
+    };
+
+    while (queue.ConsumeWith(LambdaWorker)) {
+    }
+}
+
+TEST(Parallel_WorkQueue, exceptionConsumer)
+{
+    static const size_t numThreads = 3;
+    PacBio::Parallel::WorkQueue<std::string> workQueue(numThreads, 1);
+    std::vector<std::string> output;
+    std::future<void> workerThread =
+        std::async(std::launch::async, WorkerThreadThrowException, std::ref(workQueue), &output);
+
+    auto Submit = [](std::string& input) {
+        input += "-done";
+        return input;
+    };
+
+    EXPECT_NO_THROW(workQueue.ProduceWith(Submit, std::string("a")));
+    EXPECT_NO_THROW(workQueue.ProduceWith(Submit, std::string("b")));
+
+    EXPECT_NO_THROW(workQueue.FinalizeWorkers());
+    EXPECT_NO_THROW(workerThread.wait());
+    std::string exceptionMsg;
+    try {
+        workQueue.Finalize();
+    } catch (std::runtime_error& e) {
+        exceptionMsg = e.what();
+    }
+    const std::string expectedError{"consumer abort"};
+    EXPECT_EQ(expectedError, exceptionMsg);
+}
