@@ -29,7 +29,7 @@ using Tool = PacBio::CLI_v2::Tool;
 namespace CLI_v2_InterfaceHelpPrinterTests {
 namespace Options {
 
-static const Option TargetDirectory
+const Option TargetDirectory
 {
 R"({
     "names" : ["t", "target-dir"],
@@ -39,7 +39,7 @@ R"({
 })"
 };
 
-static const Option Force
+const Option Force
 {
 R"({
     "names" : ["f", "force"],
@@ -48,7 +48,7 @@ R"({
 })"
 };
 
-static const Option Progress
+const Option Progress
 {
 R"({
     "names" : ["p"],
@@ -57,7 +57,7 @@ R"({
 })"
 };
 
-static const Option DryRun
+const Option DryRun
 {
 R"({
     "names" : ["n", "no-op"],
@@ -66,7 +66,7 @@ R"({
 })"
 };
 
-static const Option Timeout
+const Option Timeout
 {
 R"({
     "names" : ["timeout"],
@@ -76,7 +76,7 @@ R"({
 })"
 };
 
-static const Option Delta
+const Option Delta
 {
 R"({
     "names" : ["delta"],
@@ -86,7 +86,7 @@ R"({
 })"
 };
 
-static const Option Ploidy
+const Option Ploidy
 {
 R"({
     "names" : ["ploidy"],
@@ -97,7 +97,7 @@ R"({
 })"
 };
 
-static const Option Element
+const Option Element
 {
 R"({
     "names" : ["e", "element"],
@@ -109,7 +109,7 @@ R"({
 })"
 };
 
-static const PositionalArgument Source
+const PositionalArgument Source
 {
 R"({
     "name" : "source",
@@ -118,7 +118,7 @@ R"({
 })"
 };
 
-static const PositionalArgument Dest
+const PositionalArgument Dest
 {
 R"({
     "name" : "dest",
@@ -127,7 +127,7 @@ R"({
 })"
 };
 
-static const PositionalArgument OptionalStats
+const PositionalArgument OptionalStats
 {
 R"({
     "name" : "stats",
@@ -144,7 +144,7 @@ TEST(CLI2_InterfaceHelpPrinter, formats_usage)
 {
     const std::string expectedText{"Usage:\n  frobber [options]"};
 
-    Interface i{"frobber"};
+    const Interface i{"frobber"};
 
     InterfaceHelpPrinter help{i};
     const auto formattedText = help.Usage();
@@ -196,7 +196,7 @@ TEST(CLI2_InterfaceHelpPrinter, formats_description)
 
 TEST(CLI2_InterfaceHelpPrinter, formats_empty_description)
 {
-    const std::string expectedText{""};
+    const std::string expectedText;
 
     Interface i{"frobber", ""};
 
@@ -408,7 +408,7 @@ TEST(CLI2_InterfaceHelpPrinter, formats_option_with_wordwrapped_description)
 
 TEST(CLI2_InterfaceHelpPrinter, formats_empty_option_group)
 {
-    const std::string expectedText{""};
+    const std::string expectedText;
 
     Interface i{"frobber"};
     InterfaceHelpPrinter help{i, 80};

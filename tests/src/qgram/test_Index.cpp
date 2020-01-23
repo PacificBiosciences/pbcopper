@@ -1,6 +1,6 @@
-#include <pbcopper/qgram/Index.h>
-
 #include <gtest/gtest.h>
+
+#include <pbcopper/qgram/Index.h>
 
 TEST(QGram_Index, shape_throws_on_invalid_qgram_sizes)
 {
@@ -48,7 +48,7 @@ TEST(QGram_Index, shape_hashing)
 
 TEST(QGram_Index, homopolymer_hasher)
 {
-    typedef std::pair<uint64_t, bool> HashHit;
+    using HashHit = std::pair<uint64_t, bool>;
 
     // clang-format off
     const std::vector<HashHit> input
@@ -75,7 +75,7 @@ TEST(QGram_Index, homopolymer_hasher)
 
 TEST(QGram_Index, shape_hash_iteration)
 {
-    typedef std::pair<uint64_t, bool> HashHit;
+    using HashHit = std::pair<uint64_t, bool>;
 
     // clang-format off
     const std::vector<HashHit> input
@@ -95,7 +95,7 @@ TEST(QGram_Index, shape_hash_iteration)
     };
     // clang-format on
 
-    const std::string text = "AAAACACAGTTTGA";
+    const std::string text{"AAAACACAGTTTGA"};
 
     PacBio::QGram::internal::Shape shape{3, text};
     ASSERT_TRUE(input.size() <= text.size());
@@ -112,8 +112,8 @@ TEST(QGram_Index, index_construct)
 {
     auto check = [](const PacBio::QGram::internal::IndexImpl& index,
                     const uint32_t expectedQGramCount, const size_t expectedDirLength,
-                    const PacBio::QGram::internal::IndexImpl::HashLookup_t expectedHL,
-                    const PacBio::QGram::internal::IndexImpl::SuffixArray_t expectedSA) {
+                    const PacBio::QGram::internal::IndexImpl::HashLookup_t& expectedHL,
+                    const PacBio::QGram::internal::IndexImpl::SuffixArray_t& expectedSA) {
         const auto& sa = index.SuffixArray();
         const auto& dir = index.HashLookup();
 
@@ -128,7 +128,7 @@ TEST(QGram_Index, index_construct)
 
     {
         SCOPED_TRACE("single (short)");
-        PacBio::QGram::internal::IndexImpl index{3, {"CATGATTACATA"}};
+        const PacBio::QGram::internal::IndexImpl index{3, {"CATGATTACATA"}};
         check(index, 10, 65,
               PacBio::QGram::internal::IndexImpl::HashLookup_t{
                   0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 3, 4, 4,  4,  4,  6, 6,
@@ -139,7 +139,7 @@ TEST(QGram_Index, index_construct)
     }
     {
         SCOPED_TRACE("single (longer)");
-        PacBio::QGram::internal::IndexImpl index{3, {"CATGATTACATACATGATTACATA"}};
+        const PacBio::QGram::internal::IndexImpl index{3, {"CATGATTACATACATGATTACATA"}};
         check(index, 22, 65,
               PacBio::QGram::internal::IndexImpl::HashLookup_t{
                   0,  0,  0,  0,  0,  3,  3,  3,  3,  3,  3,  3,  3,  5,  5,  7,  9,
@@ -153,8 +153,8 @@ TEST(QGram_Index, index_construct)
     }
     {
         SCOPED_TRACE("multi - duplicate (short)");
-        const auto seqs = std::vector<std::string>{"CATGATTACATA", "CATGATTACATA"};
-        PacBio::QGram::internal::IndexImpl index{3, seqs};
+        const std::vector<std::string> seqs{"CATGATTACATA", "CATGATTACATA"};
+        const PacBio::QGram::internal::IndexImpl index{3, seqs};
         check(index, 20, 65,
               PacBio::QGram::internal::IndexImpl::HashLookup_t{
                   0,  0,  0,  0,  0,  2,  2,  2,  2,  2,  2,  2,  2,  4,  4,  6,  8,
@@ -168,9 +168,8 @@ TEST(QGram_Index, index_construct)
     }
     {
         SCOPED_TRACE("multi - duplicate (longer))");
-        const auto seqs =
-            std::vector<std::string>{"CATGATTACATACATGATTACATA", "CATGATTACATACATGATTACATA"};
-        PacBio::QGram::internal::IndexImpl index{3, seqs};
+        const std::vector<std::string> seqs{"CATGATTACATACATGATTACATA", "CATGATTACATACATGATTACATA"};
+        const PacBio::QGram::internal::IndexImpl index{3, seqs};
         check(index, 44, 65,
               PacBio::QGram::internal::IndexImpl::HashLookup_t{
                   0,  0,  0,  0,  0,  6,  6,  6,  6,  6,  6,  6,  6,  10, 10, 14, 18,
@@ -186,8 +185,8 @@ TEST(QGram_Index, index_construct)
     }
     {
         SCOPED_TRACE("multi - unique (short)");
-        const auto seqs = std::vector<std::string>{"CATGATTACATA", "TTAGATAACTTC"};
-        PacBio::QGram::internal::IndexImpl index{3, seqs};
+        const std::vector<std::string> seqs{"CATGATTACATA", "TTAGATAACTTC"};
+        const PacBio::QGram::internal::IndexImpl index{3, seqs};
         check(index, 20, 65,
               PacBio::QGram::internal::IndexImpl::HashLookup_t{
                   0,  0,  1,  1,  1,  2,  2,  2,  3,  4,  4,  4,  4,  6,  6,  7,  8,
@@ -200,9 +199,8 @@ TEST(QGram_Index, index_construct)
     }
     {
         SCOPED_TRACE("multi - unique (longer)");
-        const auto seqs =
-            std::vector<std::string>{"CATGATTACATACATGATTACATA", "TTAGATAACTTCTTAGATAACTTC"};
-        PacBio::QGram::internal::IndexImpl index{3, seqs};
+        const std::vector<std::string> seqs{"CATGATTACATACATGATTACATA", "TTAGATAACTTCTTAGATAACTTC"};
+        const PacBio::QGram::internal::IndexImpl index{3, seqs};
         check(index, 44, 65,
               PacBio::QGram::internal::IndexImpl::HashLookup_t{
                   0,  0,  2,  2,  2,  5,  5,  5,  7,  9,  9,  9,  9,  13, 13, 15, 17,
@@ -251,8 +249,8 @@ TEST(QGram_Index, index_copy)
     };
 
     const PacBio::QGram::Index idx{6, inputSeq};
-    const PacBio::QGram::Index idxCopy{idx};
-    const PacBio::QGram::Index idxAssign = idx;
+    const PacBio::QGram::Index& idxCopy{idx};
+    const PacBio::QGram::Index& idxAssign = idx;
 
     checkIndexHits(idx, query, expected);
     checkIndexHits(idxCopy, query, expected);
@@ -264,14 +262,16 @@ TEST(QGram_Index, index_hits_INTERNAL_from_shape_short_seq)
     const std::vector<PacBio::QGram::IndexHit> expected{{0, 0}, {0, 8}};
 
     const PacBio::QGram::internal::IndexImpl idx(3, {"CATGATTACATA"});
-    const std::string seq = "CAT";
+    const std::string seq{"CAT"};
     const auto q = idx.Size();
     auto shape = PacBio::QGram::internal::Shape{q, seq};
     const auto isHomopolymer = PacBio::QGram::internal::HpHasher{q};
     const auto end = PacBio::Utility::SafeSubtract(seq.size() + 1, q);
 
     for (uint32_t i = 0; i < end; ++i) {
-        if (isHomopolymer(shape.HashNext())) continue;
+        if (isHomopolymer(shape.HashNext())) {
+            continue;
+        }
         const auto hits = idx.Hits(shape, i);
         ASSERT_EQ(expected.size(), hits.size());
         for (size_t j = 0; j < hits.size(); ++j) {
@@ -284,20 +284,21 @@ TEST(QGram_Index, index_hits_INTERNAL_from_shape_short_seq)
 
 TEST(QGram_Index, index_hits_INTERNAL_from_shape_longer_seq)
 {
-    const std::vector<uint64_t> expected = {118, 119, 120, 121, 122, 123, 124, 125, 126, 127,
-                                            128, 129, 130, 131, 51,  132, 133, 134, 135, 266,
-                                            136, 137, 138, 139, 140, 141, 142, 143, 144, 145,
-                                            146, 147, 148, 149, 150, 151, 152, 153, 154};
-    const PacBio::QGram::internal::IndexImpl idx(
-        6, {"TCCAACTTAGGCATAAACCTGCATGCTACCTTGTCAGACCCACTCTGCACGAAGTAA"
-            "ATATGGGATGCGTCCGACCTGGCTCCTGGCGTTCCACGCCGCCACGTGTTCGTTAAC"
-            "TGTTGATTGGTGGCACATAAGTAATACCATGGTCCCTGAAATTCGGCTCAGTTACTT"
-            "CGAGCGTAATGTCTCAAATGGCGTAGAACGGCAATGACTGTTTGACACTAGGTGGTG"
-            "TTCAGTTCGGTAACGGAGAGTCTGTGCGGCATTCTTATTAATACATTTGAAACGCGC"
-            "CCAACTGACGCTAGGCAAGTCAGTGCAGGCTCCCGTGTTAGGATAAGGGTAAACATA"
-            "CAAGTCGATAGAAGATGGGTAGGGGCCTTCAATTCATCCAGCACTCTACGGTTCCTC"
-            "CGAGAGCAAGTAGGGCACCCTGTAGTTCGAAGGGGAACTATTTCGTGGGGCGAGCCC"
-            "ACACCGTCTCTTCTGCGGAAGACTTAACACGTTAGGGAGGTGGA"});
+    const std::vector<uint64_t> expected{118, 119, 120, 121, 122, 123, 124, 125, 126, 127,
+                                         128, 129, 130, 131, 51,  132, 133, 134, 135, 266,
+                                         136, 137, 138, 139, 140, 141, 142, 143, 144, 145,
+                                         146, 147, 148, 149, 150, 151, 152, 153, 154};
+    const PacBio::QGram::internal::IndexImpl idx{
+        6,
+        {"TCCAACTTAGGCATAAACCTGCATGCTACCTTGTCAGACCCACTCTGCACGAAGTAA"
+         "ATATGGGATGCGTCCGACCTGGCTCCTGGCGTTCCACGCCGCCACGTGTTCGTTAAC"
+         "TGTTGATTGGTGGCACATAAGTAATACCATGGTCCCTGAAATTCGGCTCAGTTACTT"
+         "CGAGCGTAATGTCTCAAATGGCGTAGAACGGCAATGACTGTTTGACACTAGGTGGTG"
+         "TTCAGTTCGGTAACGGAGAGTCTGTGCGGCATTCTTATTAATACATTTGAAACGCGC"
+         "CCAACTGACGCTAGGCAAGTCAGTGCAGGCTCCCGTGTTAGGATAAGGGTAAACATA"
+         "CAAGTCGATAGAAGATGGGTAGGGGCCTTCAATTCATCCAGCACTCTACGGTTCCTC"
+         "CGAGAGCAAGTAGGGCACCCTGTAGTTCGAAGGGGAACTATTTCGTGGGGCGAGCCC"
+         "ACACCGTCTCTTCTGCGGAAGACTTAACACGTTAGGGAGGTGGA"}};
 
     const std::string seq{"GATTGGTGGCACATAAGTAATACCATGGTCCCTGAAATTCGG"};
 
@@ -318,12 +319,12 @@ TEST(QGram_Index, index_hits_INTERNAL_from_shape_longer_seq)
 
 TEST(QGram_Index, index_hits_PUBLIC_API_from_seq)
 {
-    const std::vector<uint64_t> expected = {118, 119, 120, 121, 122, 123, 124, 125, 126, 127,
-                                            128, 129, 130, 131, 51,  132, 133, 134, 135, 266,
-                                            136, 137, 138, 139, 140, 141, 142, 143, 144, 145,
-                                            146, 147, 148, 149, 150, 151, 152, 153, 154};
+    const std::vector<uint64_t> expected{118, 119, 120, 121, 122, 123, 124, 125, 126, 127,
+                                         128, 129, 130, 131, 51,  132, 133, 134, 135, 266,
+                                         136, 137, 138, 139, 140, 141, 142, 143, 144, 145,
+                                         146, 147, 148, 149, 150, 151, 152, 153, 154};
 
-    const PacBio::QGram::Index idx(6,
+    const PacBio::QGram::Index idx{6,
                                    "TCCAACTTAGGCATAAACCTGCATGCTACCTTGTCAGACCCACTCTGCACGAAGTAA"
                                    "ATATGGGATGCGTCCGACCTGGCTCCTGGCGTTCCACGCCGCCACGTGTTCGTTAAC"
                                    "TGTTGATTGGTGGCACATAAGTAATACCATGGTCCCTGAAATTCGGCTCAGTTACTT"
@@ -332,7 +333,7 @@ TEST(QGram_Index, index_hits_PUBLIC_API_from_seq)
                                    "CCAACTGACGCTAGGCAAGTCAGTGCAGGCTCCCGTGTTAGGATAAGGGTAAACATA"
                                    "CAAGTCGATAGAAGATGGGTAGGGGCCTTCAATTCATCCAGCACTCTACGGTTCCTC"
                                    "CGAGAGCAAGTAGGGCACCCTGTAGTTCGAAGGGGAACTATTTCGTGGGGCGAGCCC"
-                                   "ACACCGTCTCTTCTGCGGAAGACTTAACACGTTAGGGAGGTGGA");
+                                   "ACACCGTCTCTTCTGCGGAAGACTTAACACGTTAGGGAGGTGGA"};
 
     const std::string seq{"GATTGGTGGCACATAAGTAATACCATGGTCCCTGAAATTCGG"};
 
@@ -348,7 +349,7 @@ TEST(QGram_Index, index_hits_PUBLIC_API_from_seq)
 
 TEST(QGram_Index, index_hits_PUBLIC_API_empty_hits_result_when_query_seq_is_too_short)
 {
-    const PacBio::QGram::Index idx(6,
+    const PacBio::QGram::Index idx{6,
                                    "TCCAACTTAGGCATAAACCTGCATGCTACCTTGTCAGACCCACTCTGCACGAAGTAA"
                                    "ATATGGGATGCGTCCGACCTGGCTCCTGGCGTTCCACGCCGCCACGTGTTCGTTAAC"
                                    "TGTTGATTGGTGGCACATAAGTAATACCATGGTCCCTGAAATTCGGCTCAGTTACTT"
@@ -357,11 +358,8 @@ TEST(QGram_Index, index_hits_PUBLIC_API_empty_hits_result_when_query_seq_is_too_
                                    "CCAACTGACGCTAGGCAAGTCAGTGCAGGCTCCCGTGTTAGGATAAGGGTAAACATA"
                                    "CAAGTCGATAGAAGATGGGTAGGGGCCTTCAATTCATCCAGCACTCTACGGTTCCTC"
                                    "CGAGAGCAAGTAGGGCACCCTGTAGTTCGAAGGGGAACTATTTCGTGGGGCGAGCCC"
-                                   "ACACCGTCTCTTCTGCGGAAGACTTAACACGTTAGGGAGGTGGA");
+                                   "ACACCGTCTCTTCTGCGGAAGACTTAACACGTTAGGGAGGTGGA"};
 
-    auto hits = idx.Hits("");
-    EXPECT_TRUE(hits.empty());
-
-    hits = idx.Hits("ACG");
-    EXPECT_TRUE(hits.empty());
+    EXPECT_TRUE(idx.Hits("").empty());
+    EXPECT_TRUE(idx.Hits("ACG").empty());
 }

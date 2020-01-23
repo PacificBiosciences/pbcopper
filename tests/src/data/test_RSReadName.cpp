@@ -1,6 +1,6 @@
-#include <pbcopper/data/RSReadName.h>
-
 #include <gtest/gtest.h>
+
+#include <pbcopper/data/RSReadName.h>
 
 TEST(Data_RSReadName, read_name_from_string)
 {
@@ -109,22 +109,18 @@ TEST(Data_RSReadName, ccs_read_name_from_parts)
 
 TEST(Data_RSReadName, compares_equal_if_printed_names_equal)
 {
-    const PacBio::Data::RSReadName r(
-        "m140415_143853_42175_c100635972550000001823121909121417_s1_p0/553/3100_11230");
-    const PacBio::Data::RSReadName r2(
-        "m140415_143853_42175_c100635972550000001823121909121417_s1_p0/553/3100_11230");
-    const PacBio::Data::RSReadName r3(
-        "m140415_143853_42175_c100635972550000001823121909121417_s1_p0/553/ccs");
-    const PacBio::Data::RSReadName r4(
-        "m140415_143853_42175_c100635972550000001823121909121417_s1_p0/222/3100_11230");
+    const PacBio::Data::RSReadName r{
+        "m140415_143853_42175_c100635972550000001823121909121417_s1_p0/553/3100_11230"};
+    const PacBio::Data::RSReadName r2{
+        "m140415_143853_42175_c100635972550000001823121909121417_s1_p0/553/3100_11230"};
+    const PacBio::Data::RSReadName r3{
+        "m140415_143853_42175_c100635972550000001823121909121417_s1_p0/553/ccs"};
+    const PacBio::Data::RSReadName r4{
+        "m140415_143853_42175_c100635972550000001823121909121417_s1_p0/222/3100_11230"};
 
-    EXPECT_TRUE(r == r2);
-    EXPECT_FALSE(r == r3);
-    EXPECT_FALSE(r == r4);
-
-    EXPECT_FALSE(r != r2);
-    EXPECT_TRUE(r != r3);
-    EXPECT_TRUE(r != r4);
+    EXPECT_EQ(r, r2);
+    EXPECT_NE(r, r3);
+    EXPECT_NE(r, r4);
 }
 
 TEST(Data_RSReadName, constructed_from_name_prints_expected_value_to_output_operator)
@@ -132,7 +128,7 @@ TEST(Data_RSReadName, constructed_from_name_prints_expected_value_to_output_oper
     const std::string name{
         "m140415_143853_42175_c100635972550000001823121909121417_s1_p0/553/3100_11230"};
 
-    const PacBio::Data::RSReadName r(name);
+    const PacBio::Data::RSReadName r{name};
     std::ostringstream s;
     s << r;
     EXPECT_EQ(name, s.str());

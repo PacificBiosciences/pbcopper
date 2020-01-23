@@ -1,6 +1,6 @@
-#include <pbcopper/json/JSON.h>
-
 #include <gtest/gtest.h>
+
+#include <pbcopper/json/JSON.h>
 
 TEST(JSON_Json, default_constructed_object_is_null)
 {

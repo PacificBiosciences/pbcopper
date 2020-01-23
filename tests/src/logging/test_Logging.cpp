@@ -1,11 +1,12 @@
-#include <pbcopper/logging/Logging.h>
-
 #include <sstream>
 #include <string>
 
-#include <gtest/gtest.h>
-#include <pbcopper/utility/StringUtils.h>
 #include <boost/algorithm/string/predicate.hpp>
+
+#include <gtest/gtest.h>
+
+#include <pbcopper/logging/Logging.h>
+#include <pbcopper/utility/StringUtils.h>
 
 using namespace PacBio;
 
@@ -29,10 +30,10 @@ static const std::string warnMsg = "*** Application WARNING ***";
 
 TEST(Logging_LogLevel, can_be_constructed_from_string)
 {
-    Logging::LogLevel info{"INFO"};
+    const Logging::LogLevel info{"INFO"};
     EXPECT_EQ(Logging::LogLevel::INFO, info);
 
-    Logging::LogLevel warn{"WARN"};
+    const Logging::LogLevel warn{"WARN"};
     EXPECT_EQ(Logging::LogLevel::WARN, warn);
 
     EXPECT_THROW(Logging::LogLevel(""), std::invalid_argument);
@@ -128,7 +129,7 @@ TEST(Logging_Logger, trace_level_is_a_noop_in_release_mode)
     std::ostringstream s;
     int x = 0;
     {
-        Logging::LogConfig config{Logging::LogLevel::TRACE};
+        const Logging::LogConfig config{Logging::LogLevel::TRACE};
         Logging::Logger logger(s, config);
 
         auto incremented = [](int& y) {

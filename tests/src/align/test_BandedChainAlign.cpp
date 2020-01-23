@@ -21,7 +21,7 @@ TEST(Align_BandedChainAlignment, can_generate_alignments_in_standard_block)
         const size_t tLen = 3;
         const size_t qLen = 3;
         const auto cigar = block.Align(t, tLen, q, qLen);
-        const auto align = Alignment{config, t, tLen, q, qLen, cigar};
+        const Alignment align{config, t, tLen, q, qLen, cigar};
         EXPECT_EQ("MMM", cigar);
         EXPECT_EQ(6, align.Score());
     }
@@ -31,7 +31,7 @@ TEST(Align_BandedChainAlignment, can_generate_alignments_in_standard_block)
         const size_t tLen = 3;
         const size_t qLen = 2;
         const auto cigar = block.Align(t, tLen, q, qLen);
-        const auto align = Alignment{config, t, tLen, q, qLen, cigar};
+        const Alignment align{config, t, tLen, q, qLen, cigar};
         EXPECT_EQ("MMD", cigar);
         EXPECT_EQ(4, align.Score());  // end-gaps free
     }
@@ -41,7 +41,7 @@ TEST(Align_BandedChainAlignment, can_generate_alignments_in_standard_block)
         const size_t tLen = 2;
         const size_t qLen = 3;
         const auto cigar = block.Align(t, tLen, q, qLen);
-        const auto align = Alignment{config, t, tLen, q, qLen, cigar};
+        const Alignment align{config, t, tLen, q, qLen, cigar};
         EXPECT_EQ("MMI", cigar);
         EXPECT_EQ(4, align.Score());  // end-gaps free
     }
@@ -51,7 +51,7 @@ TEST(Align_BandedChainAlignment, can_generate_alignments_in_standard_block)
         const size_t tLen = 2;
         const size_t qLen = 3;
         const auto cigar = block.Align(t, tLen, q, qLen);
-        const auto align = Alignment{config, t, tLen, q, qLen, cigar};
+        const Alignment align{config, t, tLen, q, qLen, cigar};
         EXPECT_EQ("MMI", cigar);
         EXPECT_EQ(4, align.Score());  // end-gaps free
     }
@@ -61,7 +61,7 @@ TEST(Align_BandedChainAlignment, can_generate_alignments_in_standard_block)
         const size_t tLen = 3;
         const size_t qLen = 2;
         const auto cigar = block.Align(t, tLen, q, qLen);
-        const auto align = Alignment{config, t, tLen, q, qLen, cigar};
+        const Alignment align{config, t, tLen, q, qLen, cigar};
         EXPECT_EQ("MMD", cigar);
         EXPECT_EQ(4, align.Score());  // end-gaps free
     }
@@ -71,7 +71,7 @@ TEST(Align_BandedChainAlignment, can_generate_alignments_in_standard_block)
         const size_t tLen = 2;
         const size_t qLen = 3;
         const auto cigar = block.Align(t, tLen, q, qLen);
-        const auto align = Alignment{config, t, tLen, q, qLen, cigar};
+        const Alignment align{config, t, tLen, q, qLen, cigar};
         EXPECT_EQ("IMM", cigar);
         EXPECT_EQ(4, align.Score());  // end-gaps free
     }
@@ -81,7 +81,7 @@ TEST(Align_BandedChainAlignment, can_generate_alignments_in_standard_block)
         const size_t tLen = 3;
         const size_t qLen = 2;
         const auto cigar = block.Align(t, tLen, q, qLen);
-        const auto align = Alignment{config, t, tLen, q, qLen, cigar};
+        const Alignment align{config, t, tLen, q, qLen, cigar};
         EXPECT_EQ("DMM", cigar);
         EXPECT_EQ(4, align.Score());  // end-gaps free
     }
@@ -91,7 +91,7 @@ TEST(Align_BandedChainAlignment, can_generate_alignments_in_standard_block)
         const size_t tLen = 7;
         const size_t qLen = 8;
         const auto cigar = block.Align(t, tLen, q, qLen);
-        const auto align = Alignment{config, t, tLen, q, qLen, cigar};
+        const Alignment align{config, t, tLen, q, qLen, cigar};
         EXPECT_EQ("MMIMMMMM", cigar);
         EXPECT_EQ(12, align.Score());
     }
@@ -99,7 +99,7 @@ TEST(Align_BandedChainAlignment, can_generate_alignments_in_standard_block)
 
 TEST(Align_BandedChainAlignment, standard_block_correctly_aligns_large_insertion)
 {
-    const std::string target =
+    const std::string target{
         "AACGATTTTATGATGGCATGTGACATGTATTTCCGTTGGGGGCATTTTAATAAGTGAGGA"
         "AGTGATAGGAAGTGACCAGATAATACATATATGTTCTGTACTCTCTTGCGCATTTTGATT"
         "GTTGACTGAGTAACCAGACAGTTGATGTGCACGATTTCCCCTCGCCCTAACAGACGTGGG"
@@ -116,9 +116,9 @@ TEST(Align_BandedChainAlignment, standard_block_correctly_aligns_large_insertion
         "CTTCTTTAAATATGGCGGTGAGGGGGGGATTCGAACCCCCGATACGTTGCCGTATACACA"
         "CTTTCCAGGCGTGCTCCTTCAGCCACTCGGACACCTCACCAAATTGTCGTTCCTGTCTTG"
         "CTGGAACGGGCGCTAATTTAGGGAAATCATGACCTGAGGTCAACAAACTTTTTGAAAAAA"
-        "TCGCGCGTTTATTCAAACTTCAATCAATGTGTGGTTTTAATAAGCGAAAT";
+        "TCGCGCGTTTATTCAAACTTCAATCAATGTGTGGTTTTAATAAGCGAAAT"};
 
-    const std::string query =
+    const std::string query{
         "AACGATTTTATGATGGCATGTGACATGTATTTCCGTTGGGGGCATTTTAATAAGTGAGGA"
         "AGTGATAGGAAGTGACCAGATAATACATATATGTTCTGTACTCTCTTGCGCATTTTGATT"
         "GTTGACTGAGTAACCAGACAGTTGATGTGCACGATTTCCCCTCGCCCTAACAGACGTGGG"
@@ -138,7 +138,7 @@ TEST(Align_BandedChainAlignment, standard_block_correctly_aligns_large_insertion
         "TCTTCTTTAAATATGGCGGTGAGGGGGGGATTCGAACCCCCGATACGTTGCCGTATACAC"
         "ACTTTCCAGGCGTGCTCCTTCAGCCACTCGGACACCTCACCAAATTGTCGTTCCTGTCTT"
         "GCTGGAACGGGCGCTAATTTAGGGAAATCATGACCTGAGGTCAACAAACTTTTTGAAAAA"
-        "ATCGCGCGTTTATTCAAACTTCAATCAATGTGTGGTTTTAATAAGCGAAAT";
+        "ATCGCGCGTTTATTCAAACTTCAATCAATGTGTGGTTTTAATAAGCGAAAT"};
 
     // "386=181I624="
     std::string expectedAlignment(386, 'M');
@@ -172,7 +172,7 @@ TEST(Align_BandedChainAlignment, can_generate_alignments_in_banded_block)
         const auto seed = PacBio::Align::Seed{0, 0, 8};
 
         const auto cigar = block.Align(t, q, seed);
-        const auto align = Alignment{config, t, tLen, q, qLen, cigar};
+        const Alignment align{config, t, tLen, q, qLen, cigar};
 
         EXPECT_EQ("MMMMMMMM", cigar);
         EXPECT_EQ(16, align.Score());
@@ -185,7 +185,7 @@ TEST(Align_BandedChainAlignment, can_generate_alignments_in_banded_block)
         const Seed seed{0, 0, 6, 4};
 
         const auto cigar = block.Align(t, q, seed);
-        const auto align = Alignment{config, t, tLen, q, qLen, cigar};
+        const Alignment align{config, t, tLen, q, qLen, cigar};
 
         // ATAGAT
         // AT-G-T
@@ -200,7 +200,7 @@ TEST(Align_BandedChainAlignment, can_generate_alignments_in_banded_block)
         const Seed seed{0, 0, 14, 16};  // no offset
 
         const auto cigar = block.Align(t, q, seed);
-        const auto align = Alignment{config, t, tLen, q, qLen, cigar};
+        const Alignment align{config, t, tLen, q, qLen, cigar};
 
         // Expected:
         // 2D4X4=1X3=4I
@@ -220,8 +220,8 @@ TEST(Align_BandedChainAlignment, can_stitch_cigars)
     const Config config = Config::Default();
 
     {  // simple
-        std::string global("MMMMM");
-        std::string local("MM");
+        std::string global{"MMMMM"};
+        std::string local{"MM"};
 
         Aligner a{config};
         a.StitchTranscripts(&global, std::move(local));
@@ -229,8 +229,8 @@ TEST(Align_BandedChainAlignment, can_stitch_cigars)
         EXPECT_EQ("MMMMMMM", global);
     }
     {  // different at edge
-        std::string global("MMMMMDDD");
-        std::string local("MMR");
+        std::string global{"MMMMMDDD"};
+        std::string local{"MMR"};
 
         Aligner a{config};
         a.StitchTranscripts(&global, std::move(local));
@@ -247,8 +247,8 @@ TEST(Align_BandedChainAlignment, can_generate_alignment_from_input_seeds)
     {
         Config config = Config::Default();
         config.bandExtend_ = 2;
-        const std::string target = "CGAATCCATCCCACACA";
-        const std::string query = "GGCGATNNNCATGGCACA";
+        const std::string target{"CGAATCCATCCCACACA"};
+        const std::string query{"GGCGATNNNCATGGCACA"};
         const auto seeds =
             std::vector<Seed>{Seed{0, 2, 5, 6}, Seed{6, 9, 9, 12}, Seed{11, 14, 17, 16}};
 

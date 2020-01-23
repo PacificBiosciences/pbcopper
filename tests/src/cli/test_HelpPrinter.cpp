@@ -1,9 +1,8 @@
-#include <pbcopper/cli/HelpPrinter.h>
-
 #include <vector>
 
 #include <gtest/gtest.h>
 
+#include <pbcopper/cli/HelpPrinter.h>
 #include <pbcopper/cli/Interface.h>
 
 TEST(CLI_HelpPrinter, prints_expected_help_output)

@@ -1,6 +1,6 @@
-#include <pbcopper/align/Seeds.h>
-
 #include <gtest/gtest.h>
+
+#include <pbcopper/align/Seeds.h>
 
 TEST(Align_Seed, construct_from_begin_positions_and_length)
 {
@@ -73,7 +73,7 @@ TEST(Align_Seed, check_combineable)
 TEST(Align_Seeds, default_construct)
 {
     {
-        PacBio::Align::Seeds seeds;
+        const PacBio::Align::Seeds seeds;
         EXPECT_EQ(seeds.begin(), seeds.end());
         EXPECT_EQ(0, seeds.size());
     }

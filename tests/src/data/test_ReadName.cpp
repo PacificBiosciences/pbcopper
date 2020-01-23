@@ -1,6 +1,6 @@
-#include <pbcopper/data/ReadName.h>
-
 #include <gtest/gtest.h>
+
+#include <pbcopper/data/ReadName.h>
 
 TEST(Data_ReadName, read_name_from_string)
 {
@@ -10,7 +10,7 @@ TEST(Data_ReadName, read_name_from_string)
     const PacBio::Data::Position queryEnd = 11230;
     const PacBio::Data::Interval queryInterval{queryStart, queryEnd};
 
-    const PacBio::Data::ReadName readName("m54001_160623_195125/553/3100_11230");
+    const PacBio::Data::ReadName readName{"m54001_160623_195125/553/3100_11230"};
 
     EXPECT_EQ(movieName, readName.MovieName().ToStdString());
     EXPECT_EQ(zmw, readName.Zmw());
@@ -30,7 +30,7 @@ TEST(Data_ReadName, ccs_read_name_from_string)
     const PacBio::Data::Position queryEnd = 11230;
     const PacBio::Data::Interval queryInterval{queryStart, queryEnd};
 
-    const PacBio::Data::ReadName readName("m54001_160623_195125/553/ccs");
+    const PacBio::Data::ReadName readName{"m54001_160623_195125/553/ccs"};
 
     EXPECT_EQ(movieName, readName.MovieName().ToStdString());
     EXPECT_EQ(zmw, readName.Zmw());
@@ -106,25 +106,21 @@ TEST(Data_ReadName, ccs_read_name_from_parts)
 
 TEST(Data_ReadName, compares_equal_if_printed_names_equal)
 {
-    const PacBio::Data::ReadName r("m54001_160623_195125/553/3100_11230");
-    const PacBio::Data::ReadName r2("m54001_160623_195125/553/3100_11230");
-    const PacBio::Data::ReadName r3("m54001_160623_195125/553/ccs");
-    const PacBio::Data::ReadName r4("m54001_160623_195125/222/3100_11230");
+    const PacBio::Data::ReadName r{"m54001_160623_195125/553/3100_11230"};
+    const PacBio::Data::ReadName r2{"m54001_160623_195125/553/3100_11230"};
+    const PacBio::Data::ReadName r3{"m54001_160623_195125/553/ccs"};
+    const PacBio::Data::ReadName r4{"m54001_160623_195125/222/3100_11230"};
 
-    EXPECT_TRUE(r == r2);
-    EXPECT_FALSE(r == r3);
-    EXPECT_FALSE(r == r4);
-
-    EXPECT_FALSE(r != r2);
-    EXPECT_TRUE(r != r3);
-    EXPECT_TRUE(r != r4);
+    EXPECT_EQ(r, r2);
+    EXPECT_NE(r, r3);
+    EXPECT_NE(r, r4);
 }
 
 TEST(Data_ReadName, constructed_from_name_prints_expected_value_to_output_operator)
 {
     const std::string name{"m54001_160623_195125/553/3100_11230"};
 
-    const PacBio::Data::ReadName r(name);
+    const PacBio::Data::ReadName r{name};
     std::ostringstream s;
     s << r;
     EXPECT_EQ(name, s.str());

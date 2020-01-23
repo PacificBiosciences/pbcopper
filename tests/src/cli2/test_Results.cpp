@@ -27,7 +27,7 @@ using SetByMode = PacBio::CLI_v2::SetByMode;
 
 namespace CLI_v2_ResultsTests {
 
-static const Option Force
+const Option Force
 {
 R"({
     "names" : ["f", "force"],
@@ -36,7 +36,7 @@ R"({
 })"
 };
 
-static const Option Timeout
+const Option Timeout
 {
 R"({
     "names" : ["timeout"],
@@ -46,7 +46,7 @@ R"({
 })"
 };
 
-static const Option Zshort
+const Option Zshort
 {
 R"({
     "names" : ["Z"],
@@ -55,7 +55,7 @@ R"({
 })"
 };
 
-static const Option Yshort
+const Option Yshort
 {
 R"({
     "names" : ["Y"],
@@ -65,7 +65,7 @@ R"({
 })"
 };
 
-static const Option UnsignedTimeout
+const Option UnsignedTimeout
 {
 R"({
     "names" : ["u-timeout"],
@@ -75,7 +75,7 @@ R"({
 })"
 };
 
-static const Option Delta
+const Option Delta
 {
 R"({
     "names" : ["delta"],
@@ -85,7 +85,7 @@ R"({
 })"
 };
 
-static const Option DoubleDelta
+const Option DoubleDelta
 {
 R"({
     "names" : ["double-delta"],
@@ -95,7 +95,7 @@ R"({
 })"
 };
 
-static const Option Ploidy
+const Option Ploidy
 {
 R"({
     "names" : ["ploidy"],
@@ -106,7 +106,7 @@ R"({
 })"
 };
 
-static const Option Int8{
+const Option Int8{
 R"({
     "names" : ["int8"],
     "description" : "int8_t",
@@ -115,7 +115,7 @@ R"({
 })"
 };
 
-static const Option UInt8{
+const Option UInt8{
 R"({
     "names" : ["uint8"],
     "description" : "uint8_t",
@@ -124,7 +124,7 @@ R"({
 })"
 };
 
-static const Option Int16{
+const Option Int16{
 R"({
     "names" : ["int16"],
     "description" : "int16_t",
@@ -133,7 +133,7 @@ R"({
 })"
 };
 
-static const Option UInt16{
+const Option UInt16{
 R"({
     "names" : ["uint16"],
     "description" : "uint16_t",
@@ -142,7 +142,7 @@ R"({
 })"
 };
 
-static const Option Int32{
+const Option Int32{
 R"({
     "names" : ["int32"],
     "description" : "int32_t",
@@ -151,7 +151,7 @@ R"({
 })"
 };
 
-static const Option UInt32{
+const Option UInt32{
 R"({
     "names" : ["uint32"],
     "description" : "uint32_t",
@@ -160,7 +160,7 @@ R"({
 })"
 };
 
-static const Option Int64{
+const Option Int64{
 R"({
     "names" : ["int64"],
     "description" : "int64_t",
@@ -169,7 +169,7 @@ R"({
 })"
 };
 
-static const Option UInt64{
+const Option UInt64{
 R"({
     "names" : ["uint64"],
     "description" : "uint64_t",
@@ -178,7 +178,7 @@ R"({
 })"
 };
 
-static const PositionalArgument Source
+const PositionalArgument Source
 {
 R"({
     "name" : "source",
@@ -187,7 +187,7 @@ R"({
 })"
 };
 
-static const PositionalArgument Dest
+const PositionalArgument Dest
 {
 R"({
     "name" : "dest",
@@ -196,7 +196,7 @@ R"({
 })"
 };
 
-} // CLI_v2_ResultsTests
+}  // namespace CLI_v2_ResultsTests
 
 TEST(CLI2_Result, can_construct_from_basic_types)
 {
@@ -270,7 +270,7 @@ TEST(CLI2_Results, can_fetch_positional_args_via_pos_arg_object)
 {
     struct Settings
     {
-        Settings(const Results& results)
+        explicit Settings(const Results& results)
             : source(results[CLI_v2_ResultsTests::Source])
             , dest(results[CLI_v2_ResultsTests::Dest])
         { }
@@ -299,7 +299,7 @@ TEST(CLI2_Results, can_add_and_fetch_option_values)
 {
     struct Settings
     {
-        Settings(const Results& results)
+        explicit Settings(const Results& results)
             : force(results[CLI_v2_ResultsTests::Force])
             , timeout(results[CLI_v2_ResultsTests::Timeout])
             , uTimeout(results[CLI_v2_ResultsTests::UnsignedTimeout])
@@ -388,7 +388,7 @@ TEST(CLI2_Results, can_add_and_fetch_options_and_pos_args)
 {
     struct Settings
     {
-        Settings(const Results& results)
+        explicit Settings(const Results& results)
             : force(results[CLI_v2_ResultsTests::Force])
             , timeout(results[CLI_v2_ResultsTests::Timeout])
             , delta(results[CLI_v2_ResultsTests::Delta])

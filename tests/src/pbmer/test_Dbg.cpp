@@ -4,23 +4,23 @@
 
 TEST(Dbg_AddKmers, check_throw_kmer_too_big)
 {
-    const PacBio::Pbmer::Parser parser{31};
     const std::string td1{"ACGACCCTGAGCCCCCAGAGTCATCTAAAAAAATTCTCTCCTCT"};
+
+    const PacBio::Pbmer::Parser parser{31};
     PacBio::Pbmer::Mers m{parser.Parse(td1)};
 
     PacBio::Pbmer::Dbg dg{31};
-
     EXPECT_EQ(dg.AddKmers(m, 1), -1);
 }
 
 TEST(Dbg_AddKmers, check_throw_wrong_width)
 {
-    const PacBio::Pbmer::Parser parser{16};
     const std::string td1{"ACGACCCTGAGCCCCCAGAGTCATCTAAAAAAATTCTCTCCTCT"};
+
+    const PacBio::Pbmer::Parser parser{16};
     PacBio::Pbmer::Mers m{parser.Parse(td1)};
 
     PacBio::Pbmer::Dbg dg{16};
-
     EXPECT_EQ(dg.AddKmers(m, 1), -2);
 }
 
@@ -51,200 +51,176 @@ TEST(Dbg_Dump, check_dump)
 
 TEST(Dbg_ValidateLoad, check_load)
 {
-    const PacBio::Pbmer::Parser parser{3};
     const std::string td1{"ATCGCT"};
     const std::string td2{"ATCGAT"};
 
+    const PacBio::Pbmer::Parser parser{3};
     PacBio::Pbmer::Mers m1{parser.Parse(td1)};
     PacBio::Pbmer::Mers m2{parser.Parse(td2)};
 
     PacBio::Pbmer::Dbg dg{3};
-
     dg.AddKmers(m1, 1);
     dg.AddKmers(m2, 2);
-
     dg.BuildEdges();
+
     EXPECT_TRUE(dg.ValidateLoad());
 }
 
 TEST(Dbg_ValidateEdges, check_edge)
 {
-    const PacBio::Pbmer::Parser parser{7};
     //SNV                         (X)
     const std::string td1{"ATGGAAGTCGCGGAACAAATC"};
     const std::string td2{"ATGGAAGTGGCGGAACAAATC"};
 
+    const PacBio::Pbmer::Parser parser{7};
     PacBio::Pbmer::Mers m1{parser.Parse(td1)};
     PacBio::Pbmer::Mers m2{parser.Parse(td2)};
 
     PacBio::Pbmer::Dbg dg{7};
-
     dg.AddKmers(m1, 1);
     dg.AddKmers(m2, 2);
-
     dg.BuildEdges();
-    //dg.WriteGraph("kmer_graph.dot");
+
     EXPECT_TRUE(dg.ValidateEdges());
 }
 
 TEST(Dbg_FrequencyFilterNodes, empty)
 {
-
-    const PacBio::Pbmer::Parser parser{7};
     //SNV                         (X)
     const std::string td1{"ATGGAAGTCGCGGAACAAATC"};
     const std::string td2{"ATGGAAGTGGCGGAACAAATC"};
 
+    const PacBio::Pbmer::Parser parser{7};
     PacBio::Pbmer::Mers m1{parser.Parse(td1)};
     PacBio::Pbmer::Mers m2{parser.Parse(td2)};
 
     PacBio::Pbmer::Dbg dg{7};
-
     dg.AddKmers(m1, 1);
     dg.AddKmers(m2, 2);
-
     dg.BuildEdges();
-
     dg.FrequencyFilterNodes(10);
+
     EXPECT_EQ(dg.NNodes(), 0);
 }
 
 TEST(Dbg_FrequencyFilterNodes, one_left)
 {
-
-    const PacBio::Pbmer::Parser parser{7};
     //SNV                         (X)
     const std::string td1{"ATGGAAGTCGCGGAACAAATC"};
     const std::string td2{"ATGGAAGTGGCGGAACAAATC"};
     const std::string td3{"ATGGAAG"};
 
+    const PacBio::Pbmer::Parser parser{7};
     PacBio::Pbmer::Mers m1{parser.Parse(td1)};
     PacBio::Pbmer::Mers m2{parser.Parse(td2)};
     PacBio::Pbmer::Mers m3{parser.Parse(td3)};
 
     PacBio::Pbmer::Dbg dg{7};
-
     dg.AddKmers(m1, 1);
     dg.AddKmers(m2, 2);
     dg.AddKmers(m3, 3);
-
     dg.BuildEdges();
     dg.FrequencyFilterNodes(3);
+
     EXPECT_EQ(dg.NNodes(), 1);
 }
 
 TEST(Dbg_GetNBreadth, bubble_found)
 {
-    const PacBio::Pbmer::Parser parser{7};
     //SNV                         (X)
     const std::string td1{"ATGGAAGTCGCGGAACAAATC"};
     const std::string td2{"ATGGAAGTGGCGGAACAAATC"};
 
+    const PacBio::Pbmer::Parser parser{7};
     PacBio::Pbmer::Mers m1{parser.Parse(td1)};
     PacBio::Pbmer::Mers m2{parser.Parse(td2)};
 
     PacBio::Pbmer::Dbg dg{7};
-
     dg.AddKmers(m1, 1);
     dg.AddKmers(m2, 2);
-
     dg.BuildEdges();
-    auto bubbles = dg.GetBubbles();
-    dg.WriteGraph("bubble_forward.dot");
 
+    const auto bubbles = dg.GetBubbles();
     EXPECT_EQ(bubbles.size(), 2);
 }
 
 TEST(Dbg_GetNBreadth, node_count_correct)
 {
-    const PacBio::Pbmer::Parser parser{7};
     //SNV                         (X)
     const std::string td1{"ATGGAAGTCGCGGAACAAATC"};
     const std::string td2{"GATTTGTTCCGCGACTTCCAT"};
     //ATGGAAGTGGCGGAACAAATC
 
+    const PacBio::Pbmer::Parser parser{7};
     PacBio::Pbmer::Mers m1{parser.Parse(td1)};
     PacBio::Pbmer::Mers m2{parser.Parse(td2)};
 
     PacBio::Pbmer::Dbg dg{7};
-
     dg.AddKmers(m1, 1);
     dg.AddKmers(m2, 2);
-
     dg.BuildEdges();
-    auto bubbles = dg.GetBubbles();
 
+    const auto bubbles = dg.GetBubbles();
     EXPECT_EQ(dg.NNodes(), 15);
     EXPECT_EQ(bubbles.size(), 0);
 }
 
 TEST(Dbg_GetNBreadth, bubble_found_rc_first)
 {
-    const PacBio::Pbmer::Parser parser{7};
     //SNV                         (X)
     const std::string td1{"GATTTGTTCCGCCACTTCCAT"};
     const std::string td2{"ATGGAAGTCGCGGAACAAATC"};
     //ATGGAAGTGGCGGAACAAATC
 
+    const PacBio::Pbmer::Parser parser{7};
     PacBio::Pbmer::Mers m1{parser.Parse(td1)};
     PacBio::Pbmer::Mers m2{parser.Parse(td2)};
 
     PacBio::Pbmer::Dbg dg{7};
-
     dg.AddKmers(m1, 1);
     dg.AddKmers(m2, 2);
-
-    std::cerr << "INFO " << dg.NNodes() << "\n";
     dg.BuildEdges();
-    auto bubbles = dg.GetBubbles();
-    dg.WriteGraph("bubble_rc_first.dot");
 
+    const auto bubbles = dg.GetBubbles();
     EXPECT_EQ(bubbles.size(), 2);
 }
 
 TEST(Dbg_GetNBreadth, bubble_found_rc)
 {
-    const PacBio::Pbmer::Parser parser{7};
     //SNV                         (X)
     const std::string td1{"ATGGAAGTCGCGGAACAAATC"};
     const std::string td2{"GATTTGTTCCGCCACTTCCAT"};
     //ATGGAAGTGGCGGAACAAATC
 
+    const PacBio::Pbmer::Parser parser{7};
     PacBio::Pbmer::Mers m1{parser.Parse(td1)};
     PacBio::Pbmer::Mers m2{parser.Parse(td2)};
 
     PacBio::Pbmer::Dbg dg{7};
-
     dg.AddKmers(m1, 1);
     dg.AddKmers(m2, 2);
-
-    std::cerr << "INFO " << dg.NNodes() << "\n";
     dg.BuildEdges();
-    auto bubbles = dg.GetBubbles();
-    dg.WriteGraph("bubble_rc.dot");
 
+    const auto bubbles = dg.GetBubbles();
     EXPECT_EQ(bubbles.size(), 2);
 }
 
 TEST(Dbg_GetBubbles, mismatch_found)
 {
-    const PacBio::Pbmer::Parser parser{15};
     //mismatch                                        (X)
     const std::string td1{"GGCAGTTGATGCTTTAAAGTAATCCAATGTAGAATTCGAATTTTTTTTGT"};
     const std::string td2{"GGCAGTTGATGCTTTAAAGTAATCCAATTTAGAATTCGAATTTTTTTTGT"};
 
+    const PacBio::Pbmer::Parser parser{15};
     PacBio::Pbmer::Mers m1{parser.Parse(td1)};
     PacBio::Pbmer::Mers m2{parser.Parse(td2)};
 
     PacBio::Pbmer::Dbg dg{15};
-
     dg.AddKmers(m1, 1);
     dg.AddKmers(m2, 2);
-
     dg.BuildEdges();
-    auto bubbles = dg.GetBubbles();
-    //dg.WriteGraph("kmer_graph_mismatch.dot");
 
+    const auto bubbles = dg.GetBubbles();
     EXPECT_EQ(bubbles.size(), 2);
 }
 
@@ -283,136 +259,120 @@ TEST(Dbg_GetBubbles, indel_found)
 
 TEST(Dbg_GetBubbles, indel_found2)
 {
-    const PacBio::Pbmer::Parser parser{15};
     //del                                  (X)
     const std::string td1{"GTGCCAGCTTCGAAAAAACCTTTAAAAAATAATACATATAAATTTCAACT"};
     const std::string td2{"GTGCCAGCTTCGAAAAACCTTTAAAAAATAATACATATAAATTTCAACT"};
 
+    const PacBio::Pbmer::Parser parser{15};
     PacBio::Pbmer::Mers m1{parser.Parse(td1)};
     PacBio::Pbmer::Mers m2{parser.Parse(td2)};
 
     PacBio::Pbmer::Dbg dg{15};
-
     dg.AddKmers(m1, 1);
     dg.AddKmers(m2, 2);
-
     dg.BuildEdges();
-    auto bubbles = dg.GetBubbles();
-    dg.WriteGraph("kmer_graph_indel2.dot");
 
     // this is a failing test
+    const auto bubbles = dg.GetBubbles();
     EXPECT_EQ(bubbles.size(), 2);
 }
 
 TEST(Dbg_GetBubbles, no_bubble)
 {
-    const PacBio::Pbmer::Parser parser{7};
     //SNV                         (X)
     const std::string td1{"ATGGAAGTGGCGGAACAAATC"};
     const std::string td2{"ATGGAAGTGGCGGAACAAATC"};
 
+    const PacBio::Pbmer::Parser parser{7};
     PacBio::Pbmer::Mers m1{parser.Parse(td1)};
     PacBio::Pbmer::Mers m2{parser.Parse(td2)};
 
     PacBio::Pbmer::Dbg dg{7};
-
     dg.AddKmers(m1, 1);
     dg.AddKmers(m2, 2);
-
     dg.BuildEdges();
 
-    auto bubbles = dg.GetBubbles();
-
+    const auto bubbles = dg.GetBubbles();
     EXPECT_EQ(bubbles.size(), 0);
 }
 
 TEST(Dbg_SpurRemoval, spur_found)
 {
-    const PacBio::Pbmer::Parser parser{7};
     //SNV                         (X)
     const std::string td1{"ATGGAAGTCGCT"};
     const std::string td2{"ATGGAAGTAGC"};
 
+    const PacBio::Pbmer::Parser parser{7};
     PacBio::Pbmer::Mers m1{parser.Parse(td1)};
     PacBio::Pbmer::Mers m2{parser.Parse(td2)};
 
     PacBio::Pbmer::Dbg dg{7};
-
     dg.AddKmers(m1, 1);
     dg.AddKmers(m2, 2);
-
     dg.BuildEdges();
-    auto spurCount = dg.RemoveSpurs(10);
 
+    const auto spurCount = dg.RemoveSpurs(10);
     EXPECT_EQ(spurCount, 1);
 }
 
 TEST(Dbg_SpurRemoval, spur_not_removed)
 {
-    const PacBio::Pbmer::Parser parser{7};
     //SNV                         (X)
     const std::string td1{"ATGGAAGTCGCT"};
     const std::string td2{"ATGGAAGTAGC"};
 
+    const PacBio::Pbmer::Parser parser{7};
     PacBio::Pbmer::Mers m1{parser.Parse(td1)};
     PacBio::Pbmer::Mers m2{parser.Parse(td2)};
 
     PacBio::Pbmer::Dbg dg{7};
-
     dg.AddKmers(m1, 1);
     dg.AddKmers(m2, 2);
-
     dg.BuildEdges();
-    auto spurCount = dg.RemoveSpurs(0);
 
+    const auto spurCount = dg.RemoveSpurs(0);
     EXPECT_EQ(spurCount, 0);
 }
 
 TEST(Dbg_SpurRemoval, no_spur)
 {
-    const PacBio::Pbmer::Parser parser{7};
     //SNV                         (X)
     const std::string td1{"ATGGAAGTCGCT"};
     const std::string td2{"ATGGAAGTCGCT"};
 
+    const PacBio::Pbmer::Parser parser{7};
     PacBio::Pbmer::Mers m1{parser.Parse(td1)};
     PacBio::Pbmer::Mers m2{parser.Parse(td2)};
 
     PacBio::Pbmer::Dbg dg{7};
-
     dg.AddKmers(m1, 1);
     dg.AddKmers(m2, 2);
-
     dg.BuildEdges();
-    auto spurCount = dg.RemoveSpurs(10);
 
+    const auto spurCount = dg.RemoveSpurs(10);
     EXPECT_EQ(spurCount, 0);
 }
 
 TEST(Dbg_SpurRemoval, spur_bubble_cleanup)
 {
-    const PacBio::Pbmer::Parser parser{7};
     //SNV                         (X)
     const std::string td1{"ATGGAAGTCGCGGAACAAATC"};
     const std::string td2{"ATGGAAGTGGCGGAACAAATC"};
     const std::string td3{"ATGGAAGTGA"};
 
+    const PacBio::Pbmer::Parser parser{7};
     PacBio::Pbmer::Mers m1{parser.Parse(td1)};
     PacBio::Pbmer::Mers m2{parser.Parse(td2)};
     PacBio::Pbmer::Mers m3{parser.Parse(td3)};
 
     PacBio::Pbmer::Dbg dg{7};
-
     dg.AddKmers(m1, 1);
     dg.AddKmers(m2, 2);
     dg.AddKmers(m3, 3);
-
     dg.BuildEdges();
-    // dg.WriteGraph("spur_bubble.dot");
 
-    auto spurCount = dg.RemoveSpurs(1);
-    auto bubbles = dg.GetBubbles();
-
+    const auto spurCount = dg.RemoveSpurs(1);
+    const auto bubbles = dg.GetBubbles();
     EXPECT_EQ(spurCount, 1);
     EXPECT_EQ(bubbles.size(), 2);
 }
@@ -427,20 +387,15 @@ TEST(Dbg_GetBubbles, double_bubble_rc)
         "AAGCCGGACT"};
 
     const PacBio::Pbmer::Parser parser{21};
-
     PacBio::Pbmer::Mers m1{parser.Parse(td1)};
     PacBio::Pbmer::Mers m2{parser.Parse(td2)};
 
     PacBio::Pbmer::Dbg dg{21};
-
     dg.AddKmers(m1, 1);
     dg.AddKmers(m2, 2);
-
     dg.BuildEdges();
 
-    dg.WriteGraph("odd_topo.dot");
-    auto bubbles = dg.GetBubbles();
-
+    const auto bubbles = dg.GetBubbles();
     EXPECT_EQ(bubbles.size(), 4);
 }
 
@@ -455,7 +410,6 @@ TEST(Dbg_GetBubbles, complex_snv)
     const std::string td7{"TGAACAAGTCACAAAAAACAGAGATAATTTAAAATGAAC"};
 
     const PacBio::Pbmer::Parser parser{19};
-
     PacBio::Pbmer::Mers m1{parser.Parse(td1)};
     PacBio::Pbmer::Mers m2{parser.Parse(td2)};
     PacBio::Pbmer::Mers m3{parser.Parse(td3)};
@@ -465,7 +419,6 @@ TEST(Dbg_GetBubbles, complex_snv)
     PacBio::Pbmer::Mers m7{parser.Parse(td7)};
 
     PacBio::Pbmer::Dbg dg{19};
-
     dg.AddKmers(m1, 1);
     dg.AddKmers(m2, 2);
     dg.AddKmers(m3, 3);
@@ -473,12 +426,9 @@ TEST(Dbg_GetBubbles, complex_snv)
     dg.AddKmers(m5, 5);
     dg.AddKmers(m6, 6);
     dg.AddKmers(m7, 7);
-
     dg.BuildEdges();
 
-    dg.WriteGraph("complex_snv.dot");
-    auto bubbles = dg.GetBubbles();
-
+    const auto bubbles = dg.GetBubbles();
     EXPECT_EQ(bubbles.size(), 2);
 }
 
