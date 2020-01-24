@@ -13,7 +13,7 @@ using namespace PacBio::Data;
 
 TEST(Data_Read, ClipRead)
 {
-    const std::string seq = "AACCGTTAGC";
+    const std::string seq{"AACCGTTAGC"};
     const QualityValues quals = QualityValues::FromFastq("0123456789");
     const SNR snr{0.9, 0.9, 0.9, 0.9};
     const Position qStart = 500;
@@ -29,7 +29,7 @@ TEST(Data_Read, ClipRead)
     Read read{"name/0/500_510", seq, quals, snr, qStart, qEnd, pw, ipd};
     internal::ClipRead(read, clipResult, clipStart, clipEnd);
 
-    const std::string expectedSeq = "CCGTTAG";
+    const std::string expectedSeq{"CCGTTAG"};
     const QualityValues expectedQuals = QualityValues::FromFastq("2345678");
     const SNR expectedSnr{0.9, 0.9, 0.9, 0.9};
     const Position expectedQStart = 502;
@@ -51,7 +51,7 @@ TEST(Data_Read, ClipRead)
 
 TEST(Data_Read, ClipMappedRead)
 {
-    const std::string seq = "AACCGTTAGC";
+    const std::string seq{"AACCGTTAGC"};
     const QualityValues quals = QualityValues::FromFastq("0123456789");
     const SNR snr{0.9, 0.9, 0.9, 0.9};
     const Position qStart = 500;
@@ -75,7 +75,7 @@ TEST(Data_Read, ClipMappedRead)
                     mapQV};
     internal::ClipMappedRead(read, clipResult);
 
-    const std::string expectedSeq = "CCGTT";
+    const std::string expectedSeq{"CCGTT"};
     const QualityValues expectedQuals = QualityValues::FromFastq("23456");
     const SNR expectedSnr{0.9, 0.9, 0.9, 0.9};
     const Position expectedQStart = 502;
@@ -118,7 +118,7 @@ TEST(Data_Read, ClipToReferenceOutsideAlignedRegion)
     const Cigar cigar{"7="};
     const uint8_t mapQV = 99;
 
-    const std::string expectedSeq{""};
+    const std::string expectedSeq;
     const QualityValues expectedQuals{""};
     const SNR expectedSnr{0.9, 0.9, 0.9, 0.9};
     const Position expectedQStart = -1;
@@ -394,21 +394,21 @@ TEST(Data_Read, BamRecordFunctions)
 {
     const Position qStart = 500;
     const Position qEnd = 510;
-    const std::string seq = "AACCGTTAGC";
-    const std::string quals = "?]?]?]?]?*";
+    const std::string seq{"AACCGTTAGC"};
+    const std::string quals{"?]?]?]?]?*"};
     const std::vector<uint8_t> frames = {10, 10, 20, 20, 30, 40, 40, 10, 30, 20};
 
-    const std::string seq_rev = "GCTAACGGTT";
-    const std::string quals_rev = "*?]?]?]?]?";
+    const std::string seq_rev{"GCTAACGGTT"};
+    const std::string quals_rev{"*?]?]?]?]?"};
     const std::vector<uint8_t> frames_rev = {20, 30, 10, 40, 40, 30, 20, 20, 10, 10};
 
-    const std::string s1_cigar = "10=";
-    const std::string s2_cigar = "5=3D5=";
-    const std::string s3_cigar = "4=1D2I2D4=";
+    const std::string s1_cigar{"10="};
+    const std::string s2_cigar{"5=3D5="};
+    const std::string s3_cigar{"4=1D2I2D4="};
 
     {
         // s1 - FORWARD
-        MappedRead s1{
+        const MappedRead s1{
             Read{"name/0/500_510", seq, QualityValues{quals}, SNR{1, 2, 3, 4}, qStart, qEnd},
             Strand::FORWARD, 100, Cigar::FromStdString(s1_cigar), 60};
 
@@ -423,7 +423,7 @@ TEST(Data_Read, BamRecordFunctions)
 
     {
         // s1 - REVERSE
-        MappedRead s1_rev{
+        const MappedRead s1_rev{
             Read{"name/0/500_510", seq, QualityValues{quals}, SNR{1, 2, 3, 4}, qStart, qEnd},
             Strand::REVERSE, 100, Cigar::FromStdString(s1_cigar), 60};
 
@@ -438,7 +438,7 @@ TEST(Data_Read, BamRecordFunctions)
 
     {
         // s2 - FORWARD
-        MappedRead s2{
+        const MappedRead s2{
             Read{"name/0/500_510", seq, QualityValues{quals}, SNR{1, 2, 3, 4}, qStart, qEnd},
             Strand::FORWARD, 100, Cigar::FromStdString(s2_cigar), 60};
 
@@ -453,7 +453,7 @@ TEST(Data_Read, BamRecordFunctions)
 
     {
         // s2 - REVERSE
-        MappedRead s2_rev{
+        const MappedRead s2_rev{
             Read{"name/0/500_510", seq, QualityValues{quals}, SNR{1, 2, 3, 4}, qStart, qEnd},
             Strand::REVERSE, 100, Cigar::FromStdString(s2_cigar), 60};
 
@@ -468,7 +468,7 @@ TEST(Data_Read, BamRecordFunctions)
 
     {
         // s3 - FORWARD
-        MappedRead s3{
+        const MappedRead s3{
             Read{"name/0/500_510", seq, QualityValues{quals}, SNR{1, 2, 3, 4}, qStart, qEnd},
             Strand::FORWARD, 100, Cigar::FromStdString(s3_cigar), 60};
 
@@ -483,7 +483,7 @@ TEST(Data_Read, BamRecordFunctions)
 
     {
         // s3 - REVERSE
-        MappedRead s3_rev{
+        const MappedRead s3_rev{
             Read{"name/0/500_510", seq, QualityValues{quals}, SNR{1, 2, 3, 4}, qStart, qEnd},
             Strand::REVERSE, 100, Cigar::FromStdString(s3_cigar), 60};
 
@@ -501,23 +501,23 @@ TEST(Data_Read, BamRecordFunctions_Clip)
 {
     const Position qStart = 500;
     const Position qEnd = 515;
-    const std::string seq = "TTAACCGTTAGCAAA";
-    const std::string quals = "--?]?]?]?]?*+++";
+    const std::string seq{"TTAACCGTTAGCAAA"};
+    const std::string quals{"--?]?]?]?]?*+++"};
     const std::vector<uint8_t> frames = {40, 40, 10, 10, 20, 20, 30, 40,
                                          40, 10, 30, 20, 10, 10, 10};
 
-    const std::string seq_rev = "TTTGCTAACGGTTAA";
-    const std::string quals_rev = "+++*?]?]?]?]?--";
+    const std::string seq_rev{"TTTGCTAACGGTTAA"};
+    const std::string quals_rev{"+++*?]?]?]?]?--"};
     const std::vector<uint8_t> frames_rev = {10, 10, 10, 20, 30, 10, 40, 40,
                                              30, 20, 20, 10, 10, 40, 40};
 
-    const std::string s1_cigar = "2S10=3S";
-    const std::string s2_cigar = "2S5=3D5=3S";
-    const std::string s3_cigar = "2S4=1D2I2D4=3S";
+    const std::string s1_cigar{"2S10=3S"};
+    const std::string s2_cigar{"2S5=3D5=3S"};
+    const std::string s3_cigar{"2S4=1D2I2D4=3S"};
 
     {
         // s1 - FORWARD
-        MappedRead s1{
+        const MappedRead s1{
             Read{"name/0/500_515", seq, QualityValues{quals}, SNR{1, 2, 3, 4}, qStart, qEnd},
             Strand::FORWARD, 100, Cigar::FromStdString(s1_cigar), 60};
 
@@ -532,7 +532,7 @@ TEST(Data_Read, BamRecordFunctions_Clip)
 
     {
         // s1 - REVERSE
-        MappedRead s1_rev{
+        const MappedRead s1_rev{
             Read{"name/0/500_515", seq, QualityValues{quals}, SNR{1, 2, 3, 4}, qStart, qEnd},
             Strand::REVERSE, 100, Cigar::FromStdString(s1_cigar), 60};
 
@@ -547,7 +547,7 @@ TEST(Data_Read, BamRecordFunctions_Clip)
 
     {
         // s2 - FORWARD
-        MappedRead s2{
+        const MappedRead s2{
             Read{"name/0/500_515", seq, QualityValues{quals}, SNR{1, 2, 3, 4}, qStart, qEnd},
             Strand::FORWARD, 100, Cigar::FromStdString(s2_cigar), 60};
 
@@ -562,7 +562,7 @@ TEST(Data_Read, BamRecordFunctions_Clip)
 
     {
         // s2 - REVERSE
-        MappedRead s2_rev{
+        const MappedRead s2_rev{
             Read{"name/0/500_515", seq, QualityValues{quals}, SNR{1, 2, 3, 4}, qStart, qEnd},
             Strand::REVERSE, 100, Cigar::FromStdString(s2_cigar), 60};
 
@@ -577,7 +577,7 @@ TEST(Data_Read, BamRecordFunctions_Clip)
 
     {
         // s3 - FORWARD
-        MappedRead s3{
+        const MappedRead s3{
             Read{"name/0/500_515", seq, QualityValues{quals}, SNR{1, 2, 3, 4}, qStart, qEnd},
             Strand::FORWARD, 100, Cigar::FromStdString(s3_cigar), 60};
 
@@ -592,7 +592,7 @@ TEST(Data_Read, BamRecordFunctions_Clip)
 
     {
         // s3 - REVERSE
-        MappedRead s3_rev{
+        const MappedRead s3_rev{
             Read{"name/0/500_515", seq, QualityValues{quals}, SNR{1, 2, 3, 4}, qStart, qEnd},
             Strand::REVERSE, 100, Cigar::FromStdString(s3_cigar), 60};
 
@@ -615,13 +615,13 @@ TEST(Data_Read, can_set_query_start_and_end_from_id)
     const PacBio::Data::LocalContextFlags ctxtFlags =
         PacBio::Data::LocalContextFlags::ADAPTER_BEFORE |
         PacBio::Data::LocalContextFlags::ADAPTER_AFTER;
-    const PacBio::Data::Accuracy acc = 0.95f;
+    const PacBio::Data::Accuracy acc = 0.95F;
     const PacBio::Data::SNR snr{0.4, 0.4, 0.4, 0.4};
     const std::string seq{"GGTTAACCAA"};
     const PacBio::Data::Frames pw{3, 3, 3, 3, 3, 3, 3, 3, 3, 3};
     const PacBio::Data::Frames ipd{3, 3, 3, 3, 3, 3, 3, 3, 3, 3};
-    const std::string movie = "movie";
-    const std::string chemistry = "chemistry";
+    const std::string movie{"movie"};
+    const std::string chemistry{"chemistry"};
 
     const PacBio::Data::Read read{
         PacBio::Data::ReadId{movie, holeNumber, {qStart, qEnd}},

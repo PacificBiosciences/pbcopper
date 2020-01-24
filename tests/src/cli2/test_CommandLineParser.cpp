@@ -18,7 +18,7 @@ using PositionalArgument = PacBio::CLI_v2::PositionalArgument;
 namespace CLI_v2_CommandLineParserTests {
 namespace Options {
 
-static const Option TargetDirectory
+const Option TargetDirectory
 {
 R"({
     "names" : ["t", "target-dir"],
@@ -28,7 +28,7 @@ R"({
 })"
 };
 
-static const Option Force
+const Option Force
 {
 R"({
     "names" : ["f", "force"],
@@ -37,7 +37,7 @@ R"({
 })"
 };
 
-static const Option Progress
+const Option Progress
 {
 R"({
     "names" : ["p"],
@@ -46,7 +46,7 @@ R"({
 })"
 };
 
-static const Option DryRun
+const Option DryRun
 {
 R"({
     "names" : ["n", "no-op"],
@@ -55,7 +55,7 @@ R"({
 })"
 };
 
-static const Option Timeout
+const Option Timeout
 {
 R"({
     "names" : ["timeout"],
@@ -65,7 +65,7 @@ R"({
 })"
 };
 
-static const Option Delta
+const Option Delta
 {
 R"({
     "names" : ["delta"],
@@ -75,7 +75,7 @@ R"({
 })"
 };
 
-static const Option Ploidy
+const Option Ploidy
 {
 R"({
     "names" : ["ploidy"],
@@ -86,7 +86,7 @@ R"({
 })"
 };
 
-static const Option Element
+const Option Element
 {
 R"({
     "names" : ["e", "element"],
@@ -97,7 +97,7 @@ R"({
 })"
 };
 
-static const Option ToolContractOnly
+const Option ToolContractOnly
 {
 R"({
     "names" : ["tc-only"],
@@ -107,7 +107,7 @@ R"({
 })"
 };
 
-static const PositionalArgument Source
+const PositionalArgument Source
 {
 R"({
     "name" : "source",
@@ -116,7 +116,7 @@ R"({
 })"
 };
 
-static const PositionalArgument Dest
+const PositionalArgument Dest
 {
 R"({
     "name" : "dest",

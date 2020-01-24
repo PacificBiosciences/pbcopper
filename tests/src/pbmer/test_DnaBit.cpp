@@ -6,7 +6,7 @@ TEST(DnaBit_cmp, check_eq_positive)
 {
     const PacBio::Pbmer::DnaBit k1{2862426843, 0, 16};
     const PacBio::Pbmer::DnaBit k2{2862426843, 0, 16};
-    EXPECT_TRUE(k1 == k2);
+    EXPECT_EQ(k1, k2);
 }
 
 TEST(DnaBit_cmp, check_eq_negative)
@@ -14,36 +14,36 @@ TEST(DnaBit_cmp, check_eq_negative)
     const PacBio::Pbmer::DnaBit k1{2862426843, 0, 16};
     const PacBio::Pbmer::DnaBit k2{2862426843, 1, 16};
     const PacBio::Pbmer::DnaBit k3{2862426841, 0, 16};
-    EXPECT_FALSE(k1 == k2);
-    EXPECT_FALSE(k1 == k3);
+    EXPECT_NE(k1, k2);
+    EXPECT_NE(k1, k3);
 }
 
 TEST(DnaBit_cmp, check_lt)
 {
     const PacBio::Pbmer::DnaBit k1{2862426841, 0, 16};
     const PacBio::Pbmer::DnaBit k2{2862426843, 0, 16};
-    EXPECT_TRUE(k1 < k2);
+    EXPECT_LT(k1, k2);
 }
 
 TEST(DnaBit_cmp, check_gt)
 {
     const PacBio::Pbmer::DnaBit k1{2862426841, 0, 16};
     const PacBio::Pbmer::DnaBit k2{2862426843, 0, 16};
-    EXPECT_TRUE(k2 > k1);
+    EXPECT_GT(k2, k1);
 }
 
 TEST(DnaBit_cmp, check_lt_eq)
 {
     const PacBio::Pbmer::DnaBit k1{2862426841, 0, 16};
     const PacBio::Pbmer::DnaBit k2{2862426841, 0, 16};
-    EXPECT_TRUE(k1 <= k2);
+    EXPECT_LE(k1, k2);
 }
 
 TEST(DnaBit_cmp, check_gt_eq)
 {
     const PacBio::Pbmer::DnaBit k1{2862426841, 0, 16};
     const PacBio::Pbmer::DnaBit k2{2862426841, 0, 16};
-    EXPECT_TRUE(k1 >= k2);
+    EXPECT_GE(k1, k2);
 }
 
 TEST(DnaBit_str, check_string)

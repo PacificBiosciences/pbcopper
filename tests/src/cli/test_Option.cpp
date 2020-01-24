@@ -1,6 +1,6 @@
-#include <pbcopper/cli/Option.h>
-
 #include <gtest/gtest.h>
+
+#include <pbcopper/cli/Option.h>
 
 TEST(CLI_Option, minimal_ctor_single_alias)
 {

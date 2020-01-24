@@ -1,6 +1,7 @@
-#include <gtest/gtest.h>
 
 #include <iostream>
+
+#include <gtest/gtest.h>
 
 #include <pbcopper/pbmer/Mers.h>
 #include <pbcopper/pbmer/Parser.h>
@@ -14,9 +15,10 @@ TEST(Pbmer_Parser, parser_throws_if_dna_shorter_than_kmer)
 
 TEST(Pbmer_Parser, test_stub_for_parsing_normal_dna)
 {
-    const PacBio::Pbmer::Parser parser{16};
     const std::string td1{"ACGACCCTGAGCCCCCAGAGTCATCTAAAAAAATTCTCTCCTCT"};
-    PacBio::Pbmer::Mers m{parser.Parse(td1)};
+
+    const PacBio::Pbmer::Parser parser{16};
+    const PacBio::Pbmer::Mers m{parser.Parse(td1)};
 
     EXPECT_EQ(m.forward.size(), m.reverse.size());
     EXPECT_EQ(0, m.minimizers.size());
