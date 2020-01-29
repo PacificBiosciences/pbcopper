@@ -33,18 +33,18 @@ TEST(CLI2_OptionValue, throws_on_invalid_type_string)
 
 TEST(CLI2_OptionValue, equality_comparable)
 {
-    int x = 4;
-    int y = 7;
+    const int x = 4;
+    const int y = 7;
     EXPECT_EQ(OptionValue{x}, OptionValue{x});
     EXPECT_NE(OptionValue{x}, OptionValue{y});
 
-    std::string s{"foo"};
+    const std::string s{"foo"};
     EXPECT_EQ(OptionValue{s}, OptionValue{s});
     EXPECT_NE(OptionValue{s}, OptionValue{x});
     EXPECT_NE(OptionValue{s}, OptionValue{y});
 
     // types must match (here signed vs unsigned)
-    unsigned int u = 4;
+    const unsigned int u = 4;
     EXPECT_NE(OptionValue{x}, OptionValue{u});
 }
 

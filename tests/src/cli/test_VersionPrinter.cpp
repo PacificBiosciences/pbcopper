@@ -1,11 +1,10 @@
-#include <pbcopper/cli/VersionPrinter.h>
-
 #include <sstream>
 #include <string>
 
 #include <gtest/gtest.h>
 
 #include <pbcopper/cli/Interface.h>
+#include <pbcopper/cli/VersionPrinter.h>
 
 TEST(CLI_VersionPrinter, prints_expected_version_output)
 {

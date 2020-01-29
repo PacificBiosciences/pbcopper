@@ -93,7 +93,7 @@ TEST(CLI2_OptionTranslator, creates_basic_integer_option_data_from_text)
 
     const auto optionData = OptionTranslator::Translate(testOption);
 
-    const auto names = optionData.names;
+    const auto& names = optionData.names;
     ASSERT_EQ(1u, names.size());
     EXPECT_EQ("test", names[0]);
 
@@ -143,7 +143,7 @@ TEST(CLI2_OptionTranslator, creates_basic_float_option_data_from_text)
 
     const auto optionData = OptionTranslator::Translate(testOption);
 
-    const auto names = optionData.names;
+    const auto& names = optionData.names;
     ASSERT_EQ(1u, names.size());
     EXPECT_EQ("test", names[0]);
 
@@ -170,7 +170,7 @@ TEST(CLI2_OptionTranslator, creates_basic_boolean_option_data_from_text)
 
     const auto optionData = OptionTranslator::Translate(testOption);
 
-    const auto names = optionData.names;
+    const auto& names = optionData.names;
     ASSERT_EQ(1u, names.size());
     EXPECT_EQ("test", names[0]);
 
@@ -198,7 +198,7 @@ TEST(CLI2_OptionTranslator, creates_basic_string_option_data_from_text)
 
     const auto optionData = OptionTranslator::Translate(testOption);
 
-    const auto names = optionData.names;
+    const auto& names = optionData.names;
     ASSERT_EQ(1u, names.size());
     EXPECT_EQ("test", names[0]);
 
@@ -226,7 +226,7 @@ TEST(CLI2_OptionTranslator, creates_basic_file_option_data_from_text)
 
     const auto optionData = OptionTranslator::Translate(testOption);
 
-    const auto names = optionData.names;
+    const auto& names = optionData.names;
     ASSERT_EQ(1u, names.size());
     EXPECT_EQ("test", names[0]);
 
@@ -254,7 +254,7 @@ TEST(CLI2_OptionTranslator, creates_basic_dir_option_data_from_text)
 
     const auto optionData = OptionTranslator::Translate(testOption);
 
-    const auto names = optionData.names;
+    const auto& names = optionData.names;
     ASSERT_EQ(1u, names.size());
     EXPECT_EQ("test", names[0]);
 

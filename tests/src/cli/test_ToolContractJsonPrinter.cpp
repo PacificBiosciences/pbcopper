@@ -1,8 +1,7 @@
-#include <pbcopper/cli/toolcontract/JsonPrinter.h>
-
 #include <gtest/gtest.h>
 
 #include <pbcopper/cli/Interface.h>
+#include <pbcopper/cli/toolcontract/JsonPrinter.h>
 #include <pbcopper/utility/PbcopperVersion.h>
 
 namespace ToolContractJsonPrinterTests {

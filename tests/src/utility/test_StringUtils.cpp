@@ -1,21 +1,20 @@
 
+#include <algorithm>
 
 #include <gtest/gtest.h>
-#include <pbcopper/utility/StringUtils.h>
 
-// clang-format off
+#include <pbcopper/utility/StringUtils.h>
 
 namespace StringUtilsTests {
 
-void checkWrappedLines(const std::string& input, const std::vector<std::string>& expected, const size_t maxColumns)
+void checkWrappedLines(const std::string& input, const std::vector<std::string>& expected,
+                       const size_t maxColumns)
 {
     const auto lines = PacBio::Utility::WordWrappedLines(input, maxColumns);
-    ASSERT_EQ(expected.size(), lines.size());
-    for (size_t i = 0; i < expected.size(); ++i)
-        EXPECT_EQ(expected.at(i), lines.at(i));
+    EXPECT_TRUE(std::equal(lines.cbegin(), lines.cend(), expected.cbegin()));
 }
 
-} // namespace StringUtilsTests
+}  // namespace StringUtilsTests
 
 TEST(Utility_StringUtils, word_wrapping_empty_string_yields_empty_result)
 {
@@ -27,16 +26,17 @@ TEST(Utility_StringUtils, word_wrapping_empty_string_yields_empty_result)
 TEST(Utility_StringUtils, word_wrapping_shorter_than_max_yields_one_line)
 {
     const std::string input{"Short description."};
-    const std::vector<std::string> expected {
-        "Short description."
-    };
+    const std::vector<std::string> expected{"Short description."};
     StringUtilsTests::checkWrappedLines(input, expected, 80);
 }
 
 TEST(Utility_StringUtils, word_wrapping_longer_than_max_yields_wrapped_line)
 {
+    //
     // NOTE(DB): You MUST keep clang-format off here. It messes up the line breaks
     //           we're testing.
+    //
+    // clang-format off
 
     const std::string input{
         "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."};
@@ -69,6 +69,8 @@ TEST(Utility_StringUtils, word_wrapping_longer_than_max_yields_wrapped_line)
         };
         StringUtilsTests::checkWrappedLines(input, expected, 80);
     }
+
+    // clang-format on
 }
 
 TEST(Utility_StringUtils, si_string_to_int_throws_on_empty_input)
@@ -118,5 +120,3 @@ TEST(Utility_StringUtils, converts_si_string_to_negative_int)
     EXPECT_EQ(-60000000000, PacBio::Utility::SIStringToInt("-60G"));
     EXPECT_EQ(-60000000000, PacBio::Utility::SIStringToInt("-60g"));
 }
-
-// clang-format on

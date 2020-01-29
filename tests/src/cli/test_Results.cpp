@@ -1,6 +1,6 @@
-#include <pbcopper/cli/Results.h>
-
 #include <gtest/gtest.h>
+
+#include <pbcopper/cli/Results.h>
 
 namespace ResultsTests {
 

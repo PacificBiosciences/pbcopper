@@ -1,8 +1,9 @@
-#include <pbcopper/utility/Stopwatch.h>
 
 #include <thread>
 
 #include <gtest/gtest.h>
+
+#include <pbcopper/utility/Stopwatch.h>
 
 //
 // using float compares and 'fuzzy' compares to allow for inherent wiggle room
@@ -48,7 +49,7 @@ TEST(Utility_Stopwatch, determines_elapsed_time_in_user_precision)
 
     PacBio::Utility::Stopwatch s;
     std::this_thread::sleep_for(std::chrono::milliseconds(3));
-    auto elapsed = s.Elapsed<std::chrono::microseconds>();
+    const auto elapsed = s.Elapsed<std::chrono::microseconds>();
     ASSERT_LE(3000, elapsed);
     ASSERT_LE(elapsed, 30000);
 }
@@ -59,20 +60,19 @@ TEST(Utility_Stopwatch, determines_elapsed_time_since_reset)
     std::this_thread::sleep_for(std::chrono::milliseconds(3));
     s.Reset();
     std::this_thread::sleep_for(std::chrono::milliseconds(3));
-    auto elapsed = s.ElapsedMilliseconds();
+    const auto elapsed = s.ElapsedMilliseconds();
     ASSERT_FLOAT_EQ(3, elapsed);
 }
 
-TEST(Utility_Stopwatch, TestPrettyPrintNanoseconds)
+TEST(Utility_Stopwatch, can_pretty_print_time)
 {
-    const std::string x = PacBio::Utility::Stopwatch::PrettyPrintNanoseconds(
-        std::chrono::duration_cast<std::chrono::nanoseconds>(std::chrono::hours(4)).count());
-    const std::string y = PacBio::Utility::Stopwatch::PrettyPrintNanoseconds(
-        std::chrono::duration_cast<std::chrono::nanoseconds>(std::chrono::hours(4 * 24)).count());
-    const std::string z = PacBio::Utility::Stopwatch::PrettyPrintNanoseconds(
-        std::chrono::duration_cast<std::chrono::nanoseconds>(std::chrono::hours(4 * 24 + 1))
-            .count());
-    EXPECT_EQ(x, "4h ");
-    EXPECT_EQ(y, "4d ");
-    EXPECT_EQ(z, "4d 1h ");
+    auto prettyPrintHours = [](int hours) {
+        return PacBio::Utility::Stopwatch::PrettyPrintNanoseconds(
+            std::chrono::duration_cast<std::chrono::nanoseconds>(std::chrono::hours(hours))
+                .count());
+    };
+
+    EXPECT_EQ("4h ", prettyPrintHours(4));
+    EXPECT_EQ("4d ", prettyPrintHours(4 * 24));
+    EXPECT_EQ("4d 1h ", prettyPrintHours(4 * 24 + 1));
 }

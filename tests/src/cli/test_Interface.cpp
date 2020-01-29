@@ -1,22 +1,22 @@
-#include <pbcopper/cli/Interface.h>
-
 #include <gtest/gtest.h>
+
+#include <pbcopper/cli/Interface.h>
 
 namespace InterfaceTests {
 
-static inline std::string AppName()
+static std::string AppName()
 {
     static const std::string appName{"frobber"};
     return appName;
 }
 
-static inline std::string AppDescription()
+static std::string AppDescription()
 {
     static const std::string appDesc{"does the frobbing"};
     return appDesc;
 }
 
-static inline std::string AppVersion()
+static std::string AppVersion()
 {
     static const std::string appVersion{"3.14"};
     return appVersion;
@@ -194,7 +194,7 @@ TEST(CLI_Interface, add_group)
 
     cl.AddGroup("group2", {{"opt_id3", {"p"}, "progress"}});
 
-    const auto groups = cl.Groups();
+    const auto& groups = cl.Groups();
     EXPECT_EQ(2, groups.size());
     EXPECT_EQ("group1", groups.at(0));
     EXPECT_EQ("group2", groups.at(1));
