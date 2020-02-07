@@ -48,18 +48,14 @@ bool IsFalseBoolean(const std::string& s)
 OptionValue ValueFromString(const OptionData& option, const std::string valueString)
 {
     switch (option.type) {
-        case OptionValueType::INT: {
-            const int64_t v = std::strtoll(valueString.c_str(), nullptr, 10);
-            return OptionValue{v};
-        }
+        case OptionValueType::INT:
+            return OptionValue{PacBio::Utility::SIStringToInt(valueString)};
 
-        case OptionValueType::UINT: {
-            const uint64_t v = std::strtoull(valueString.c_str(), nullptr, 10);
-            return OptionValue{v};
-        }
+        case OptionValueType::UINT:
+            return OptionValue{PacBio::Utility::SIStringToUInt(valueString)};
 
         case OptionValueType::FLOAT:
-            return OptionValue{std::strtod(valueString.c_str(), nullptr)};
+            return OptionValue{PacBio::Utility::SIStringToDouble(valueString)};
 
         case OptionValueType::STRING:
         case OptionValueType::FILE:

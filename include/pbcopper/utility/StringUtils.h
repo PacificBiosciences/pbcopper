@@ -34,6 +34,22 @@ std::string Join(const std::vector<std::string>& input, const char separator);
 int64_t SIStringToInt(const std::string& input);
 
 ///
+/// Converts a string with (optional) SI multiplier suffixes (e.g. "20k", "100M")
+/// to its unsigned integer representation.
+///
+/// \throws if input is empty or invalid format
+///
+uint64_t SIStringToUInt(const std::string& input);
+
+///
+/// Converts a string with (optional) SI multiplier suffixes (e.g. "2.5k", "100M")
+/// to its double representation.
+///
+/// \throws if input is empty or invalid format
+///
+double SIStringToDouble(const std::string& input);
+
+///
 /// Returns the list of 'words' from a string, separated by a char delimiter
 ///
 std::vector<std::string> Split(const std::string& line, const char delim = '\t');
