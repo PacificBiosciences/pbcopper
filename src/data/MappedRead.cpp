@@ -6,6 +6,7 @@
 
 #include <algorithm>
 #include <numeric>
+#include <stdexcept>
 #include <type_traits>
 
 #include <pbcopper/data/Clipping.h>
@@ -15,6 +16,14 @@
 namespace PacBio {
 namespace Data {
 namespace {
+
+struct InvalidMappedReadException : public std::runtime_error
+{
+    InvalidMappedReadException(std::string reason)
+        : std::runtime_error{"[pbcopper] mapped read ERROR: " + reason}
+    {
+    }
+};
 
 template <class InputIt, class Size, class OutputIt>
 OutputIt Move_N(InputIt first, Size count, OutputIt result)
@@ -129,11 +138,13 @@ static_assert(std::is_copy_constructible<MappedRead>::value,
 static_assert(std::is_copy_assignable<MappedRead>::value,
               "MappedRead& operator=(const MappedRead&) is not = default");
 
+#ifndef __INTEL_COMPILER
 static_assert(std::is_nothrow_move_constructible<MappedRead>::value,
               "MappedRead(MappedRead&&) is not = noexcept");
 static_assert(std::is_nothrow_move_assignable<MappedRead>::value ==
                   std::is_nothrow_move_assignable<Read>::value,
               "");
+#endif
 
 MappedRead::MappedRead(Read read) noexcept : Read{std::move(read)} {}
 
@@ -173,7 +184,7 @@ MappedRead::MappedRead(Read read, PacBio::Data::Strand strand, Position template
                     break;
 
                 default:
-                    throw std::runtime_error{"Encountered unknown CIGAR operation!"};
+                    throw InvalidMappedReadException{"encountered unrecognized CIGAR operation"};
             }
         }
     }
@@ -279,8 +290,8 @@ Frames MappedRead::AlignedPulseWidth(Orientation orientation, GapBehavior gapBeh
 Position MappedRead::AlignedStart() const
 {
     if (QueryStart == UnmappedPosition)
-        throw std::runtime_error{"MappedRead contains unmapped query start position"};
-    if (Strand == Strand::UNMAPPED) throw std::runtime_error{"MappedRead contains unmapped strand"};
+        throw InvalidMappedReadException{"contains unmapped query start position"};
+    if (Strand == Strand::UNMAPPED) throw InvalidMappedReadException{"contains unmapped strand"};
 
     Position startOffset = QueryStart;
     const Position seqLength = Seq.length();
@@ -311,8 +322,8 @@ Position MappedRead::AlignedStart() const
 Position MappedRead::AlignedEnd() const
 {
     if (QueryEnd == UnmappedPosition)
-        throw std::runtime_error{"MappedRead contains unmapped query end position"};
-    if (Strand == Strand::UNMAPPED) throw std::runtime_error{"MappedRead contains unmapped strand"};
+        throw InvalidMappedReadException{"contains unmapped query end position"};
+    if (Strand == Strand::UNMAPPED) throw InvalidMappedReadException{"contains unmapped strand"};
 
     Position endOffset = QueryEnd;
     const Position seqLength = Seq.length();
@@ -343,14 +354,14 @@ Position MappedRead::AlignedEnd() const
 Position MappedRead::ReferenceStart() const
 {
     if (TemplateStart == UnmappedPosition)
-        throw std::runtime_error{"MappedRead contains unmapped template start position"};
+        throw InvalidMappedReadException{"contains unmapped template start position"};
     return TemplateStart;
 }
 
 Position MappedRead::ReferenceEnd() const
 {
     if (TemplateEnd == UnmappedPosition)
-        throw std::runtime_error{"MappedRead contains unmapped template end position"};
+        throw InvalidMappedReadException{"contains unmapped template end position"};
     return TemplateEnd;
 }
 
@@ -371,22 +382,23 @@ size_t MappedRead::NumMismatches() const
 
 std::ostream& operator<<(std::ostream& os, const MappedRead& mr)
 {
-    os << "MappedRead(Read(\"" << mr.Id << "\", \"" << mr.Seq << "\", \"" << mr.Model << "\"), ";
+    os << "MappedRead(" << static_cast<const Read&>(mr) << ", RefId=" << mr.RefId << ", Strand=";
     switch (mr.Strand) {
         case Strand::FORWARD:
-            os << "StrandType_FORWARD, ";
+            os << "FORWARD";
             break;
         case Strand::REVERSE:
-            os << "StrandType_REVERSE, ";
+            os << "REVERSE";
             break;
         case Strand::UNMAPPED:
-            os << "StrandType_UNMAPPED, ";
+            os << "UNMAPPED";
             break;
         default:
-            throw std::runtime_error{"Unsupported Strand"};
+            throw InvalidMappedReadException{"encountered unrecognized strand"};
     }
-    os << mr.TemplateStart << ", " << mr.TemplateEnd << ", ";
-    os << mr.PinStart << ", " << mr.PinEnd << ')';
+    os << ", TemplateStart=" << mr.TemplateStart << ", TemplateEnd=" << mr.TemplateEnd
+       << ", PinStart=" << mr.PinStart << ", PinEnd=" << mr.PinEnd << ", Cigar=" << mr.Cigar
+       << ", MapQuality=" << int{mr.MapQuality} << ')';
     return os;
 }
 

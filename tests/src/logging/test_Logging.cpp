@@ -1,11 +1,12 @@
-#include <pbcopper/logging/Logging.h>
-
 #include <sstream>
 #include <string>
 
-#include <gtest/gtest.h>
-#include <pbcopper/utility/StringUtils.h>
 #include <boost/algorithm/string/predicate.hpp>
+
+#include <gtest/gtest.h>
+
+#include <pbcopper/logging/Logging.h>
+#include <pbcopper/utility/StringUtils.h>
 
 using namespace PacBio;
 
@@ -29,10 +30,10 @@ static const std::string warnMsg = "*** Application WARNING ***";
 
 TEST(Logging_LogLevel, can_be_constructed_from_string)
 {
-    Logging::LogLevel info{"INFO"};
+    const Logging::LogLevel info{"INFO"};
     EXPECT_EQ(Logging::LogLevel::INFO, info);
 
-    Logging::LogLevel warn{"WARN"};
+    const Logging::LogLevel warn{"WARN"};
     EXPECT_EQ(Logging::LogLevel::WARN, warn);
 
     EXPECT_THROW(Logging::LogLevel(""), std::invalid_argument);
@@ -79,9 +80,9 @@ TEST(Logging_Logger, can_write_message_only_custom_field_config)
             config.Fields = Logging::LogField::NONE;
 
             Logging::Logger logger(s, config);
-            PBLOGGER_INFO(logger) << LoggingTests::infoMsg;
+            PBLOGGER_WARN(logger) << LoggingTests::warnMsg;
         }
-        EXPECT_EQ(">|> *** Application INFO ***\n", s.str());
+        EXPECT_EQ(">|> *** Application WARNING ***\n", s.str());
     }
     {
         std::ostringstream s;
@@ -90,9 +91,9 @@ TEST(Logging_Logger, can_write_message_only_custom_field_config)
             config.Fields = Logging::LogField::LOG_LEVEL;
 
             Logging::Logger logger(s, config);
-            PBLOGGER_INFO(logger) << LoggingTests::infoMsg;
+            PBLOGGER_WARN(logger) << LoggingTests::warnMsg;
         }
-        EXPECT_EQ(">|> INFO -|- *** Application INFO ***\n", s.str());
+        EXPECT_EQ(">|> WARN -|- *** Application WARNING ***\n", s.str());
     }
     {
         std::ostringstream s;
@@ -118,9 +119,9 @@ TEST(Logging_Logger, can_use_custom_delimiter)
         config.Delimiter = " :: ";
 
         Logging::Logger logger(s, config);
-        PBLOGGER_INFO(logger) << LoggingTests::infoMsg;
+        PBLOGGER_WARN(logger) << LoggingTests::warnMsg;
     }
-    EXPECT_EQ(">|> INFO :: *** Application INFO ***\n", s.str());
+    EXPECT_EQ(">|> WARN :: *** Application WARNING ***\n", s.str());
 }
 
 TEST(Logging_Logger, trace_level_is_a_noop_in_release_mode)
@@ -128,7 +129,7 @@ TEST(Logging_Logger, trace_level_is_a_noop_in_release_mode)
     std::ostringstream s;
     int x = 0;
     {
-        Logging::LogConfig config{Logging::LogLevel::TRACE};
+        const Logging::LogConfig config{Logging::LogLevel::TRACE};
         Logging::Logger logger(s, config);
 
         auto incremented = [](int& y) {

@@ -7,6 +7,7 @@
 
 #include <cstddef>
 #include <cstdint>
+#include <ostream>
 #include <vector>
 
 namespace PacBio {
@@ -94,17 +95,35 @@ public:
     /// \name STL Compatbility
     /// \{
 
+    /// \returns Type of the underlying const_iterator.
+    using std::vector<uint16_t>::const_iterator;
+
+    /// \returns Type of the underlying iterator.
+    using std::vector<uint16_t>::iterator;
+
     /// \returns A const_iterator to the beginning of the sequence.
     using std::vector<uint16_t>::cbegin;
 
     /// \returns A const_iterator to the element past the end of the sequence.
     using std::vector<uint16_t>::cend;
 
+    /// \returns A const_iterator to the beginning of the reverse sequence.
+    using std::vector<uint16_t>::crbegin;
+
+    /// \returns A const_iterator to the element past the end of the reverse sequence.
+    using std::vector<uint16_t>::crend;
+
     /// \returns A (const_)iterator to the beginning of the sequence.
     using std::vector<uint16_t>::begin;
 
     /// \returns A (const_)iterator to the element past the end of the sequence.
     using std::vector<uint16_t>::end;
+
+    /// \returns A (const_)iterator to the beginning of the reverse sequence.
+    using std::vector<uint16_t>::rbegin;
+
+    /// \returns A (const_)iterator to the element past the end of the reverse sequence.
+    using std::vector<uint16_t>::rend;
 
     /// \returns The number of frame data points.
     using std::vector<uint16_t>::size;
@@ -121,6 +140,9 @@ public:
     /// Emulates std::vector::resize
     using std::vector<uint16_t>::resize;
 
+    /// Emulates std::vector::insert
+    using std::vector<uint16_t>::insert;
+
     /// \}
 
 public:
@@ -136,6 +158,8 @@ public:
 
     /// \}
 };
+
+std::ostream& operator<<(std::ostream& os, const Frames& frames);
 
 }  // namespace Data
 }  // namespace PacBio

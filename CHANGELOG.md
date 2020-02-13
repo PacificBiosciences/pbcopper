@@ -2,7 +2,14 @@
 
 ## Active
 
-## [1.3.0] - 2019-07-11
+## [1.4.0] - 2019-11-05
+
+### Added
+ - Consolidated & cleanup of core data structures shared between pbcopper/unanimity/pbbam
+ - CLI_v2 now maintains logger setup & lifetime
+ - Alarms API
+
+## [1.3.0] - 2019-06-11
 
 ### Added
  - Alignment algorithms from unanimity (local alignment, semi-global, affine, etc)

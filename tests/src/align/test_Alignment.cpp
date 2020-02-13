@@ -11,14 +11,15 @@
 #include <pbcopper/align/LocalAlignment.h>
 #include <pbcopper/align/PairwiseAlignment.h>
 
-// fwd declarations
 namespace PacBio {
 namespace Align {
 namespace internal {
+
 bool Rewrite2L(std::string* target, std::string* query, std::string* transcript, size_t i);
 bool Rewrite3L(std::string* target, std::string* query, std::string* transcript, size_t i);
 bool Rewrite2R(std::string* target, std::string* query, std::string* transcript, size_t i);
 bool Rewrite3R(std::string* target, std::string* query, std::string* transcript, size_t i);
+
 }  // namespace internal
 }  // namespace Align
 }  // namespace PacBio
@@ -27,7 +28,7 @@ using PairwiseAlignment = PacBio::Align::PairwiseAlignment;  // NOLINT
 
 TEST(Align_PairwiseAlignment, calculates_metrics_from_input_aligned_sequences)
 {
-    PairwiseAlignment a("GATC", "GA-C");
+    const PairwiseAlignment a{"GATC", "GA-C"};
     EXPECT_EQ("GATC", a.Target());
     EXPECT_EQ("GA-C", a.Query());
     EXPECT_EQ(4, a.Length());
@@ -38,7 +39,7 @@ TEST(Align_PairwiseAlignment, calculates_metrics_from_input_aligned_sequences)
     EXPECT_FLOAT_EQ(0.75, a.Accuracy());
     EXPECT_EQ("MMDM", a.Transcript());
 
-    PairwiseAlignment a2("GATTA-CA", "CA-TAACA");
+    const PairwiseAlignment a2{"GATTA-CA", "CA-TAACA"};
     EXPECT_EQ("RMDMMIMM", a2.Transcript());
     EXPECT_FLOAT_EQ(5. / 8, a2.Accuracy());
     EXPECT_EQ(1, a2.Mismatches());
@@ -127,7 +128,10 @@ TEST(Align_PairwiseAlignment, check_justify_internals)
 {
     using namespace PacBio::Align::internal;
 
-    std::string t, q, x;
+    std::string t;
+    std::string q;
+    std::string x;
+
     // Rewrite2L
     {
         t = "ACCT";
@@ -339,7 +343,7 @@ TEST(Align_PairwiseAlignment, can_left_and_right_justify_alignments)
 
     // deletion
     {
-        PairwiseAlignment a = PairwiseAlignment("AAAAAA", "AAA-AA");
+        PairwiseAlignment a{"AAAAAA", "AAA-AA"};
 
         a.Justify(LRType::LEFT);
         EXPECT_EQ("AAAAAA", a.Target());
@@ -354,7 +358,7 @@ TEST(Align_PairwiseAlignment, can_left_and_right_justify_alignments)
 
     // insertion
     {
-        PairwiseAlignment a = PairwiseAlignment("A-AAAA", "AAAAAA");
+        PairwiseAlignment a{"A-AAAA", "AAAAAA"};
 
         a.Justify(LRType::LEFT);
         EXPECT_EQ("-AAAAA", a.Target());
@@ -369,7 +373,7 @@ TEST(Align_PairwiseAlignment, can_left_and_right_justify_alignments)
 
     // interruption in homopolymer
     {
-        PairwiseAlignment a = PairwiseAlignment("GATTTACA", "GAGT-ACA");
+        PairwiseAlignment a{"GATTTACA", "GAGT-ACA"};
 
         a.Justify(LRType::LEFT);
         EXPECT_EQ("GATTTACA", a.Target());
@@ -384,7 +388,7 @@ TEST(Align_PairwiseAlignment, can_left_and_right_justify_alignments)
 
     // double bases, adjacent
     {
-        PairwiseAlignment a = PairwiseAlignment("AAAAAA", "AAA--A");
+        PairwiseAlignment a{"AAAAAA", "AAA--A"};
 
         a.Justify(LRType::LEFT);
         EXPECT_EQ("AAAAAA", a.Target());
@@ -399,7 +403,7 @@ TEST(Align_PairwiseAlignment, can_left_and_right_justify_alignments)
 
     // double bases, separated
     {
-        PairwiseAlignment a = PairwiseAlignment("AAAAAA", "A-AA-A");
+        PairwiseAlignment a{"AAAAAA", "A-AA-A"};
 
         a.Justify(LRType::LEFT);
         EXPECT_EQ("AAAAAA", a.Target());
@@ -414,7 +418,7 @@ TEST(Align_PairwiseAlignment, can_left_and_right_justify_alignments)
 
     // intervening insertion
     {
-        PairwiseAlignment a = PairwiseAlignment("A----A", "AATAAA");
+        PairwiseAlignment a{"A----A", "AATAAA"};
 
         a.Justify(LRType::LEFT);
         EXPECT_EQ("----AA", a.Target());
@@ -429,7 +433,7 @@ TEST(Align_PairwiseAlignment, can_left_and_right_justify_alignments)
 
     // intervening match
     {
-        PairwiseAlignment a = PairwiseAlignment("A-T--A", "AATAAA");
+        PairwiseAlignment a{"A-T--A", "AATAAA"};
 
         a.Justify(LRType::LEFT);
         EXPECT_EQ("-AT--A", a.Target());
@@ -564,10 +568,10 @@ TEST(Align_AffineAlignment, can_generate_IUPAC_aware_alignments)
 
 TEST(Align_LinearAlignment, can_generate_basic_linear_alignments)
 {
-    PacBio::Align::AlignParams params{2, -1, -2, -2};
-    PacBio::Align::AlignConfig config{params, PacBio::Align::AlignMode::GLOBAL};
+    const PacBio::Align::AlignParams params{2, -1, -2, -2};
+    const PacBio::Align::AlignConfig config{params, PacBio::Align::AlignMode::GLOBAL};
 
-    int score, peerScore;
+    int score = 0;
     std::unique_ptr<PairwiseAlignment> a{PacBio::Align::AlignLinear("GATTACA", "GATTACA", &score)};
     EXPECT_EQ("GATTACA", a->Target());
     EXPECT_EQ("GATTACA", a->Query());
@@ -636,6 +640,7 @@ TEST(Align_LinearAlignment, can_generate_basic_linear_alignments)
         "TTTCTGTATATAATCTCCGCGAGTGTCTGCCGCCC";
 
     a.reset(PacBio::Align::AlignLinear(ref, read, &score));
+    int peerScore = 0;
     std::unique_ptr<PairwiseAlignment> peerAlignment{
         PacBio::Align::Align(ref, read, &peerScore, config)};
     EXPECT_EQ(score, peerScore);
@@ -662,11 +667,10 @@ TEST(LinearAlignmentTests, SemiglobalTests)
 
 TEST(Align_LocalAlignment, can_generate_basic_local_alignments)
 {
-    const std::string target = "CAGCCTTTCTGACCCGGAAATCAAAATAGGCACAACAAA";
-    const std::string query = "CTGAGCCGGTAAATC";
+    const std::string target{"CAGCCTTTCTGACCCGGAAATCAAAATAGGCACAACAAA"};
+    const std::string query{"CTGAGCCGGTAAATC"};
 
     const auto a = PacBio::Align::LocalAlign(target, query);
-
     EXPECT_EQ(8, a.TargetBegin());
     EXPECT_EQ(21, a.TargetEnd());
     EXPECT_EQ(0, a.QueryBegin());
@@ -679,8 +683,8 @@ TEST(Align_LocalAlignment, can_generate_basic_local_alignments)
 
 TEST(Align_SemiGlobalAlignment, can_generate_basic_semiglobal_alignments)
 {
-    const std::string target = "CAGCCTTTCTGACCCGGAAATCAAAATAGGCACAACAAA";
-    const std::string query = "CTGAGCCGGTAAATC";
+    const std::string target{"CAGCCTTTCTGACCCGGAAATCAAAATAGGCACAACAAA"};
+    const std::string query{"CTGAGCCGGTAAATC"};
     const PacBio::Align::AlignConfig cfg{PacBio::Align::AlignParams::Default(),
                                          PacBio::Align::AlignMode::SEMIGLOBAL};
 

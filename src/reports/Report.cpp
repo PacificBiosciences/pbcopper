@@ -71,8 +71,8 @@ const std::string& BaseReportElement::Id() const { return id_; }
 // Column
 // --------
 
-Column::Column(std::string id_, std::vector<ReportValue> values, std::string header)
-    : BaseReportElement{id_}, header_{std::move(header)}, values_{std::move(values)}
+Column::Column(std::string id, std::vector<ReportValue> values, std::string header)
+    : BaseReportElement{id}, header_{std::move(header)}, values_{std::move(values)}
 {
 }
 

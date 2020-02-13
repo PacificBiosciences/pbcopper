@@ -8,12 +8,12 @@ using namespace PacBio;
 
 TEST(Data_Accuracy, ClampValues)
 {
-    Data::Accuracy a_zero{0.0};
-    Data::Accuracy a_neg{-0.5};
-    Data::Accuracy a_min{0.0};
-    Data::Accuracy a_normal{0.9};
-    Data::Accuracy a_max{1.0};
-    Data::Accuracy a_tooLarge{1.1};
+    const Data::Accuracy a_zero{0.0};
+    const Data::Accuracy a_neg{-0.5};
+    const Data::Accuracy a_min{0.0};
+    const Data::Accuracy a_normal{0.9};
+    const Data::Accuracy a_max{1.0};
+    const Data::Accuracy a_tooLarge{1.1};
 
     EXPECT_FLOAT_EQ(0.0, a_zero);
     EXPECT_FLOAT_EQ(0.0, a_neg);

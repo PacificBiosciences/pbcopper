@@ -5,6 +5,7 @@
 
 #include <pbcopper/PbcopperConfig.h>
 
+#include <ostream>
 #include <string>
 #include <vector>
 
@@ -37,6 +38,8 @@ public:
     ///
     static Cigar FromStdString(const std::string& stdString);
 
+    static Cigar FromCStr(const char* str);
+
     /// \brief Creates an empty Cigar.
     Cigar() = default;
 
@@ -44,6 +47,8 @@ public:
     ///
     /// \param [in] cigarString   SAM/BAM formatted CIGAR data
     ///
+    Cigar(const char* str);
+
     Cigar(const std::string& cigarString);
 
     Cigar(std::vector<CigarOperation> cigar);
@@ -70,6 +75,8 @@ public:
 /// \return size_t
 ///
 size_t ReferenceLength(const Cigar& cigar);
+
+std::ostream& operator<<(std::ostream& os, const Cigar& cigar);
 
 }  // namespace Data
 }  // namespace PacBio

@@ -1,5 +1,4 @@
 // Author: Armin Töpfer
-#include <pbcopper/parallel/FireAndForgetIndexed.h>
 
 #include <atomic>
 #include <chrono>
@@ -11,6 +10,8 @@
 
 #include <gtest/gtest.h>
 
+#include <pbcopper/parallel/FireAndForgetIndexed.h>
+
 TEST(Parallel_FireAndForgetIndexed, strings)
 {
     static const size_t numThreads = 3;
@@ -19,7 +20,7 @@ TEST(Parallel_FireAndForgetIndexed, strings)
     size_t extra = 0;
     std::vector<size_t> vec;
     auto finish = [&](size_t index) { ++vec[index]; };
-    PacBio::Parallel::FireAndForgetIndexed faf(numThreads, 1, finish);
+    PacBio::Parallel::FireAndForgetIndexed faf{numThreads, 1, finish};
 
     for (size_t i = 0; i < numThreads; ++i) {
         vec.emplace_back(i);
@@ -50,14 +51,14 @@ TEST(Parallel_FireAndForgetIndexed, exceptionFinalize)
     static const size_t numThreads = 3;
     std::vector<size_t> vec(numThreads);
     auto finish = [&](size_t index) { ++vec[index]; };
-    PacBio::Parallel::FireAndForgetIndexed faf(numThreads, 1, finish);
+    PacBio::Parallel::FireAndForgetIndexed faf{numThreads, 1, finish};
 
     auto SubmitSleep = [&vec](size_t index, size_t data) {
         std::this_thread::sleep_for(std::chrono::milliseconds(10));
         vec[index] += data;
     };
     auto SubmitExc = [&vec](size_t index, size_t data) {
-        throw std::runtime_error("fafi abort");
+        throw std::runtime_error{"fafi abort"};
         vec[index] += data;
     };
     EXPECT_NO_THROW(faf.ProduceWith(SubmitSleep, 1));
@@ -78,14 +79,14 @@ TEST(Parallel_FireAndForgetIndexed, exceptionProduceWith)
     static const size_t numThreads = 3;
     std::vector<size_t> vec(numThreads);
     auto finish = [&](size_t index) { ++vec[index]; };
-    PacBio::Parallel::FireAndForgetIndexed faf(numThreads, 1, finish);
+    PacBio::Parallel::FireAndForgetIndexed faf{numThreads, 1, finish};
 
     auto SubmitSleep = [&vec](size_t index, size_t data) {
         std::this_thread::sleep_for(std::chrono::milliseconds(10));
         vec[index] += data;
     };
     auto SubmitExc = [&vec](size_t index, size_t data) {
-        throw std::runtime_error("fafi abort");
+        throw std::runtime_error{"fafi abort"};
         vec[index] += data;
     };
     auto Submit = [&vec](size_t index, size_t data) { vec[index] += data; };
@@ -108,10 +109,10 @@ TEST(Parallel_FireAndForgetIndexed, exceptionFinish)
     static const size_t numThreads = 3;
     std::vector<size_t> vec(numThreads);
     auto finish = [&](size_t index) {
-        throw std::runtime_error("finish abort");
+        throw std::runtime_error{"finish abort"};
         ++vec[index];
     };
-    PacBio::Parallel::FireAndForgetIndexed faf(numThreads, 1, finish);
+    PacBio::Parallel::FireAndForgetIndexed faf{numThreads, 1, finish};
 
     auto Submit = [&vec](size_t index, size_t data) { vec[index] += data; };
     EXPECT_NO_THROW(faf.ProduceWith(Submit, 1));

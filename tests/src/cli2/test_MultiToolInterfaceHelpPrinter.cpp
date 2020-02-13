@@ -65,7 +65,6 @@ Interface MakeSummarizeInterface()
 
 int SummarizeRunner(const PacBio::CLI_v2::Results&)
 {
-    std::cerr << "SummarizeRunner\n";
     return EXIT_SUCCESS;
 }
 

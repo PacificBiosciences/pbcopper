@@ -1,5 +1,4 @@
 // Author: Armin Töpfer
-#include <pbcopper/parallel/WorkQueue.h>
 
 #include <atomic>
 #include <chrono>
@@ -8,6 +7,8 @@
 #include <vector>
 
 #include <gtest/gtest.h>
+
+#include <pbcopper/parallel/WorkQueue.h>
 
 void WorkerThread(PacBio::Parallel::WorkQueue<std::string>& queue, std::vector<std::string>* output)
 {
@@ -21,7 +22,7 @@ TEST(Parallel_WorkQueue, strings)
 {
     static const size_t numThreads = 3;
     static const size_t numElements = 10000;
-    PacBio::Parallel::WorkQueue<std::string> workQueue(numThreads);
+    PacBio::Parallel::WorkQueue<std::string> workQueue{numThreads};
 
     std::vector<std::string> output;
     output.reserve(numElements);
@@ -46,9 +47,7 @@ TEST(Parallel_WorkQueue, strings)
 
     EXPECT_EQ(expected.size(), numElements);
     EXPECT_EQ(output.size(), numElements);
-
-    for (size_t i = 0; i < expected.size(); ++i)
-        EXPECT_EQ(expected.at(i), output.at(i));
+    EXPECT_EQ(expected, output);
 }
 
 void WorkerThreadException(PacBio::Parallel::WorkQueue<std::string>& queue,
@@ -67,7 +66,7 @@ void WorkerThreadException(PacBio::Parallel::WorkQueue<std::string>& queue,
 TEST(Parallel_WorkQueue, exceptionProduceWith)
 {
     static const size_t numThreads = 3;
-    PacBio::Parallel::WorkQueue<std::string> workQueue(numThreads, 1);
+    PacBio::Parallel::WorkQueue<std::string> workQueue{numThreads, 1};
     std::vector<std::string> output;
     std::future<void> workerThread =
         std::async(std::launch::async, WorkerThreadException, std::ref(workQueue), &output);
@@ -79,16 +78,16 @@ TEST(Parallel_WorkQueue, exceptionProduceWith)
 
     auto SubmitExc = [](std::string& input) {
         input += "-done";
-        throw std::runtime_error("faf abort");
+        throw std::runtime_error{"faf abort"};
         return input;
     };
 
-    EXPECT_NO_THROW(workQueue.ProduceWith(Submit, std::string("a")));
-    EXPECT_NO_THROW(workQueue.ProduceWith(Submit, std::string("b")));
-    EXPECT_NO_THROW(workQueue.ProduceWith(Submit, std::string("c")));
-    EXPECT_NO_THROW(workQueue.ProduceWith(SubmitExc, std::string("0")));
+    EXPECT_NO_THROW(workQueue.ProduceWith(Submit, std::string{"a"}));
+    EXPECT_NO_THROW(workQueue.ProduceWith(Submit, std::string{"b"}));
+    EXPECT_NO_THROW(workQueue.ProduceWith(Submit, std::string{"c"}));
+    EXPECT_NO_THROW(workQueue.ProduceWith(SubmitExc, std::string{"0"}));
     std::this_thread::sleep_for(std::chrono::milliseconds(10));
-    EXPECT_ANY_THROW(workQueue.ProduceWith(Submit, std::string("1")));
+    EXPECT_ANY_THROW(workQueue.ProduceWith(Submit, std::string{"1"}));
 
     EXPECT_NO_THROW(workQueue.FinalizeWorkers());
     EXPECT_NO_THROW(workerThread.wait());
@@ -98,7 +97,7 @@ TEST(Parallel_WorkQueue, exceptionProduceWith)
 TEST(Parallel_WorkQueue, exceptionFinalize)
 {
     static const size_t numThreads = 3;
-    PacBio::Parallel::WorkQueue<std::string> workQueue(numThreads, 1);
+    PacBio::Parallel::WorkQueue<std::string> workQueue{numThreads, 1};
     std::vector<std::string> output;
     std::future<void> workerThread =
         std::async(std::launch::async, WorkerThreadException, std::ref(workQueue), &output);
@@ -110,16 +109,56 @@ TEST(Parallel_WorkQueue, exceptionFinalize)
 
     auto SubmitExc = [](std::string& input) {
         input += "-done";
-        throw std::runtime_error("faf abort");
+        throw std::runtime_error{"faf abort"};
         return input;
     };
 
-    EXPECT_NO_THROW(workQueue.ProduceWith(Submit, std::string("a")));
-    EXPECT_NO_THROW(workQueue.ProduceWith(Submit, std::string("b")));
-    EXPECT_NO_THROW(workQueue.ProduceWith(Submit, std::string("c")));
-    EXPECT_NO_THROW(workQueue.ProduceWith(SubmitExc, std::string("0")));
+    EXPECT_NO_THROW(workQueue.ProduceWith(Submit, std::string{"a"}));
+    EXPECT_NO_THROW(workQueue.ProduceWith(Submit, std::string{"b"}));
+    EXPECT_NO_THROW(workQueue.ProduceWith(Submit, std::string{"c"}));
+    EXPECT_NO_THROW(workQueue.ProduceWith(SubmitExc, std::string{"0"}));
 
     EXPECT_NO_THROW(workQueue.FinalizeWorkers());
     EXPECT_NO_THROW(workerThread.wait());
     EXPECT_ANY_THROW(workQueue.Finalize());
+}
+
+void WorkerThreadThrowException(PacBio::Parallel::WorkQueue<std::string>& queue,
+                                std::vector<std::string>* output)
+{
+    auto LambdaWorker = [&](std::string&& ps) {
+        output->emplace_back(std::move(ps));
+        throw std::runtime_error{"consumer abort"};
+    };
+
+    while (queue.ConsumeWith(LambdaWorker)) {
+    }
+}
+
+TEST(Parallel_WorkQueue, exceptionConsumer)
+{
+    static const size_t numThreads = 3;
+    PacBio::Parallel::WorkQueue<std::string> workQueue{numThreads, 1};
+    std::vector<std::string> output;
+    std::future<void> workerThread =
+        std::async(std::launch::async, WorkerThreadThrowException, std::ref(workQueue), &output);
+
+    auto Submit = [](std::string& input) {
+        input += "-done";
+        return input;
+    };
+
+    EXPECT_NO_THROW(workQueue.ProduceWith(Submit, std::string{"a"}));
+    EXPECT_NO_THROW(workQueue.ProduceWith(Submit, std::string{"b"}));
+
+    EXPECT_NO_THROW(workQueue.FinalizeWorkers());
+    EXPECT_NO_THROW(workerThread.wait());
+    std::string exceptionMsg;
+    try {
+        workQueue.Finalize();
+    } catch (std::runtime_error& e) {
+        exceptionMsg = e.what();
+    }
+    const std::string expectedError{"consumer abort"};
+    EXPECT_EQ(expectedError, exceptionMsg);
 }

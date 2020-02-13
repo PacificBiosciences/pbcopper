@@ -109,8 +109,6 @@ private:
 #define PBLOG_TRACE PBLOG_LEVEL(LogLevel::TRACE)
 #endif
 
-void InstallSignalHandlers(Logger& logger = Logger::Current());
-
 }  // namespace Logging
 }  // namespace PacBio
 

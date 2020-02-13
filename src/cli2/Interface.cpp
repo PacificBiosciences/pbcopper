@@ -24,11 +24,13 @@ static_assert(std::is_copy_constructible<Interface>::value,
 static_assert(std::is_copy_assignable<Interface>::value,
               "Interface& operator=(const Interface&) is not = default");
 
+#ifndef __INTEL_COMPILER
 static_assert(std::is_nothrow_move_constructible<Interface>::value,
               "Interface(Interface&&) is not = noexcept");
 static_assert(std::is_nothrow_move_assignable<Interface>::value ==
                   std::is_nothrow_move_assignable<internal::InterfaceData>::value,
               "");
+#endif
 
 Interface::Interface(std::string name, std::string description, std::string version)
     : data_{std::move(name),
@@ -38,7 +40,9 @@ Interface::Interface(std::string name, std::string description, std::string vers
             OptionTranslator::Translate(Builtin::Version),
             OptionTranslator::Translate(Builtin::NumThreads),
             OptionTranslator::Translate(Builtin::LogFile),
-            OptionTranslator::Translate(Builtin::LogLevel)}
+            OptionTranslator::Translate(Builtin::LogLevel),
+            OptionTranslator::Translate(Builtin::Alarms),
+            OptionTranslator::Translate(Builtin::ExceptionPassthrough)}
 {
     if (data_.appName_.empty()) {
         throw std::runtime_error{
@@ -105,6 +109,7 @@ Interface& Interface::DefaultLogLevel(Logging::LogLevel level)
     // Error if client is setting default log level, when that option has been disabled.
     assert(data_.logLevelOption_);
     data_.logLevelOption_->defaultValue = level.ToString();
+    data_.logConfig_.Level = level;
     return *this;
 }
 
@@ -205,10 +210,12 @@ std::vector<OptionData> Interface::Options() const
     // add builtins
     result.push_back(data_.helpOption_);
     result.push_back(data_.versionOption_);
+    result.push_back(data_.exceptionPassthroughOption_);
     if (data_.numThreadsOption_) result.push_back(data_.numThreadsOption_.get());
     if (data_.logLevelOption_) result.push_back(data_.logLevelOption_.get());
     if (data_.logFileOption_) result.push_back(data_.logFileOption_.get());
     if (data_.verboseOption_) result.push_back(data_.verboseOption_.get());
+    if (data_.alarmsOption_) result.push_back(data_.alarmsOption_.get());
     return result;
 }
 

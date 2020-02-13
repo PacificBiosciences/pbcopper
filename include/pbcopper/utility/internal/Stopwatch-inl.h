@@ -11,7 +11,7 @@ namespace Utility {
 inline Stopwatch::Stopwatch() { Reset(); }
 
 template <typename TimeUnit>
-float Stopwatch::Elapsed() const
+double Stopwatch::Elapsed() const
 {
     if (frozen_) {
         return std::chrono::duration_cast<TimeUnit>(tock_ - tick_).count();
@@ -21,9 +21,12 @@ float Stopwatch::Elapsed() const
     }
 }
 
-inline float Stopwatch::ElapsedNanoseconds() const { return Elapsed<std::chrono::nanoseconds>(); }
-inline float Stopwatch::ElapsedMilliseconds() const { return Elapsed<std::chrono::milliseconds>(); }
-inline float Stopwatch::ElapsedSeconds() const { return Elapsed<std::chrono::seconds>(); }
+inline double Stopwatch::ElapsedNanoseconds() const { return Elapsed<std::chrono::nanoseconds>(); }
+inline double Stopwatch::ElapsedMilliseconds() const
+{
+    return Elapsed<std::chrono::milliseconds>();
+}
+inline double Stopwatch::ElapsedSeconds() const { return Elapsed<std::chrono::seconds>(); }
 
 inline std::string Stopwatch::ElapsedTime() const
 {

@@ -2,6 +2,7 @@
 
 #include <cassert>
 #include <cstdlib>
+#include <exception>
 #include <fstream>
 #include <iostream>
 #include <string>
@@ -13,6 +14,7 @@
 #include <pbcopper/cli2/internal/MultiToolInterfaceHelpPrinter.h>
 #include <pbcopper/cli2/internal/VersionPrinter.h>
 #include <pbcopper/logging/Logging.h>
+#include <pbcopper/utility/Alarm.h>
 
 using CommandLineParser = PacBio::CLI_v2::internal::CommandLineParser;
 using InterfaceHelpPrinter = PacBio::CLI_v2::internal::InterfaceHelpPrinter;
@@ -21,6 +23,16 @@ using VersionHelpPrinter = PacBio::CLI_v2::internal::VersionPrinter;
 
 namespace PacBio {
 namespace CLI_v2 {
+
+bool LogLevelIsUserProvided(const Interface& interface, const Results& results)
+{
+    const auto& logLevelOption = interface.LogLevelOption();
+    if (!logLevelOption) return false;
+
+    assert(!logLevelOption->names.empty());
+    const auto& logLevelResult = results[Builtin::LogLevel];
+    return logLevelResult.IsUserProvided();
+}
 
 int Run(int argc, char* argv[], const Interface& interface, const ResultsHandler& handler)
 {
@@ -59,17 +71,28 @@ int Run(const std::vector<std::string>& args, const Interface& interface,
         return EXIT_SUCCESS;
     }
 
+    const std::string alarmsOutputFilename{results.AlarmsFile()};
+    const bool allowExceptionsPassthrough{results.ExceptionPassthrough()};
+
     //
     // Initialize logging
     //
-    // Use application-provided config (i.e. fields), but give priority to
-    // command line-provided log settings.
+    // Setup logging configuration. Priority is given in the following (decreasing) order:
+    //  * command line-provided options
+    //  * multi-tool interface config
+    //  * interface config
     //
-    // If 'log-level' or 'log-file' were not set or were disabled as command
-    // line options, use the default.
+    // If 'log-level' or 'log-file' were set via command line, use it. Otherwise,
+    // use the application's default config provided.
+    //
+    // Also ensures that the Results object passed to the application runner
+    // reflects the actual, active log level.
     //
     Logging::LogConfig logConfig = interface.LogConfig();
-    if (interface.LogLevelOption()) logConfig.Level = results.LogLevel();
+    if (LogLevelIsUserProvided(interface, results))
+        logConfig.Level = results.LogLevel();
+    else
+        results.AddObservedValue("log-level", logConfig.Level.ToString(), SetByMode::DEFAULT);
 
     const auto logger = [&]() {
         if (interface.LogFileOption()) {
@@ -80,10 +103,36 @@ int Run(const std::vector<std::string>& args, const Interface& interface,
     }();
 
     Logging::Logger::Current(logger.get());
-    Logging::InstallSignalHandlers(*(logger.get()));
 
-    // run application
-    return handler(results);
+    if (allowExceptionsPassthrough) {
+        return handler(results);
+    } else {
+        try {
+            // run application
+            return handler(results);
+        } catch (const Utility::AlarmException& a) {
+            Logging::LogMessage(a.SourceFilename(), a.FunctionName(), a.LineNumber(),
+                                Logging::LogLevel::FATAL, Logging::Logger::Current())
+                << interface.ApplicationName() << " ERROR: " << a.Message();
+
+            if (!alarmsOutputFilename.empty()) {
+                std::ofstream alarmsOutput{alarmsOutputFilename};
+                if (alarmsOutput) {
+                    Utility::Alarm alarm{a.Name(), a.Message(), a.Severity(), a.Info(),
+                                         a.Exception()};
+                    Utility::Alarm::WriteAlarms(alarmsOutput, {alarm});
+                } else {
+                    PBLOG_FATAL << "Could not rewrite alarms JSON to " << alarmsOutputFilename;
+                }
+            }
+        } catch (const std::exception& e) {
+            PBLOG_FATAL << interface.ApplicationName() << " ERROR: " << e.what();
+        } catch (...) {
+            PBLOG_FATAL << "caught unknown exception type";
+        }
+    }
+
+    return EXIT_FAILURE;
 }
 
 int Run(int argc, char* argv[], const MultiToolInterface& interface)
@@ -139,7 +188,10 @@ int Run(const std::vector<std::string>& args, const MultiToolInterface& interfac
     }
 
     // no matching tool
-    throw std::runtime_error{"unknown tool: " + args.at(1)};
+    std::cerr << interface.ApplicationName()
+              << " ERROR: [pbcopper] command line ERROR: unknown tool '" + args.at(1) +
+                     "' requested\n";
+    return EXIT_FAILURE;
 }
 
 }  // namespace CLI_v2

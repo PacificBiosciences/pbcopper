@@ -1,12 +1,14 @@
 #include <pbcopper/cli2/Results.h>
 
 #include <algorithm>
+#include <sstream>
 #include <stdexcept>
 #include <thread>
 
 #include <pbcopper/cli2/internal/BuiltinOptions.h>
 #include <pbcopper/cli2/internal/OptionTranslator.h>
 #include <pbcopper/cli2/internal/PositionalArgumentTranslator.h>
+#include <pbcopper/utility/StringUtils.h>
 
 namespace PacBio {
 namespace CLI_v2 {
@@ -50,6 +52,63 @@ Results& Results::AddObservedValue(const std::string& name, OptionValue value,
     return *this;
 }
 
+std::string Results::EffectiveCommandLine() const
+{
+    std::ostringstream out;
+
+    // application name
+    const auto tokens = PacBio::Utility::Split(inputCommandLine_, ' ');
+    const auto& appName = tokens.front();
+    out << appName;
+
+    // Options can have multiple names ("h", "help"). Limit to unique
+    // result entries, keeping the longest name.
+    std::unordered_map<std::shared_ptr<Result>, std::string> values;
+    for (const auto& entry : results_) {
+        const auto& name = entry.first;
+        const auto& value = entry.second;
+
+        auto found = values.find(value);
+        if (found == values.cend())
+            values.insert({value, name});
+        else {
+            if (found->second.length() < name.length()) found->second = name;
+        }
+    }
+
+    // Option parameter output
+    for (const auto& entry : values) {
+        const auto* result = entry.first.get();
+        const auto& name = entry.second;
+        const auto typeIndex = result->which();
+
+        const bool shortOption = (name.size() == 1);
+        const std::string dashStyle = (shortOption ? " -" : " --");
+
+        // print enabled switches
+        if (typeIndex == 9) {
+            const bool isSet = *result;
+            if (isSet) out << dashStyle << name;
+        }
+
+        // print non-empty string parameters
+        else if (typeIndex == 10) {
+            const std::string stringValue = *result;
+            if (!stringValue.empty()) out << dashStyle << name << '=' << stringValue;
+        }
+
+        // for all numeric types
+        else
+            out << dashStyle << name << '=' << *result;
+    }
+
+    //  Positional arg output
+    for (const auto& posArg : posArgValues_)
+        out << ' ' << posArg;
+
+    return out.str();
+}
+
 const std::string& Results::InputCommandLine() const { return inputCommandLine_; }
 
 Results& Results::InputCommandLine(std::string cmdLine)
@@ -84,6 +143,12 @@ size_t Results::NumThreads() const
     return std::min(requestedNumThreads, maxNumThreads);
 }
 
+std::string Results::AlarmsFile() const
+{
+    const auto& alarmsOpt = (*this)[Builtin::Alarms];
+    return alarmsOpt;
+}
+
 const std::vector<std::string>& Results::PositionalArguments() const { return posArgValues_; }
 
 Results& Results::PositionalArguments(const std::vector<internal::PositionalArgumentData>& posArgs)
@@ -98,6 +163,13 @@ bool Results::Verbose() const
     const auto found = results_.find("verbose");
     if (found != results_.cend()) return *(found->second.get());
     return false;  // verbose option not enabled
+}
+
+bool Results::ExceptionPassthrough() const
+{
+    const auto found = results_.find("allow-exceptions-passthrough");
+    if (found != results_.cend()) return *(found->second.get());
+    return false;  // allow-exceptions-passthrough option not enabled
 }
 
 const Result& Results::operator[](const Option& opt) const

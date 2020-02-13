@@ -6,23 +6,39 @@
 #include <sstream>
 #include <string>
 
+#include <pbcopper/data/ReadName.h>
+
 namespace PacBio {
 namespace Data {
 
+ReadId::ReadId(const std::string& readName) : ReadName{readName}
+{
+    if (!readName.empty()) {
+        Data::ReadName rName{readName};
+        MovieName = rName.MovieName().ToStdString();
+        HoleNumber = static_cast<size_t>(rName.Zmw());
+        ZmwInterval = rName.QueryInterval();
+    }
+}
+
 ReadId::ReadId(const std::string& movieName, size_t holeNumber)
-    : MovieName(movieName), HoleNumber{holeNumber}, ZmwInterval{boost::none}
+    : MovieName{movieName}, HoleNumber{holeNumber}, ZmwInterval{boost::none}
 {
 }
-ReadId::ReadId(const std::string& readName) : ReadName(readName) {}
+
+ReadId::ReadId(const std::string& movieName, size_t holeNumber, const Interval& interval)
+    : MovieName{movieName}, HoleNumber{holeNumber}, ZmwInterval{interval}
+{
+}
 
 ReadId::ReadId(const std::shared_ptr<std::string>& movieName, size_t holeNumber)
-    : MovieName(*movieName), HoleNumber{holeNumber}, ZmwInterval{boost::none}
+    : ReadId{*movieName, holeNumber}
 {
 }
 
 ReadId::ReadId(const std::shared_ptr<std::string>& movieName, size_t holeNumber,
                const Interval& interval)
-    : MovieName(*movieName), HoleNumber{holeNumber}, ZmwInterval(interval)
+    : ReadId{*movieName, holeNumber, interval}
 {
 }
 

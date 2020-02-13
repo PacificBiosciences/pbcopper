@@ -1,4 +1,7 @@
+#include <cassert>
+
 #include <string>
+#include <utility>
 #include <vector>
 
 #include <gtest/gtest.h>
@@ -81,8 +84,8 @@ void CheckAlignedSequence(const std::string& cigar,
                        const Cigar& newCigar,
                        const Strand newStrand)
     {
-        Read r{"", newSeq, QualityValues{}, baseSNR};
-        MappedRead mr{r};
+        Read r{"", std::move(newSeq), QualityValues{}, baseSNR};
+        MappedRead mr{std::move(r)};
         mr.Cigar = newCigar;
         mr.Strand = newStrand;
         return mr;
@@ -109,7 +112,7 @@ void CheckAlignedQualities(const std::string& cigar,
                        const Strand newStrand)
     {
         Read r{"", "", newQuals, baseSNR};
-        MappedRead mr{r};
+        MappedRead mr{std::move(r)};
         mr.Cigar = newCigar;
         mr.Strand = newStrand;
         return mr;
@@ -138,7 +141,7 @@ void CheckAlignedFrames(const std::string& cigar,
         Read r{"", "", QualityValues{}, baseSNR};
         r.IPD = newFrames;
         r.PulseWidth = newFrames;
-        MappedRead mr{r};
+        MappedRead mr{std::move(r)};
         mr.Cigar = newCigar;
         mr.Strand = newStrand;
         return mr;
@@ -171,7 +174,7 @@ TEST(Data_MappedRead, unmapped_strand_returns_input_sequence)
     const std::string seq{"GATTACA"};
 
     PacBio::Data::Read r{"", seq, {}, MappedReadTests::baseSNR};
-    PacBio::Data::MappedRead mr{r};
+    PacBio::Data::MappedRead mr{std::move(r)};
     mr.Cigar = {"7="};
     mr.Strand = PacBio::Data::Strand::UNMAPPED;
     EXPECT_EQ(seq, mr.AlignedSequence());
@@ -182,7 +185,7 @@ TEST(Data_MappedRead, empty_cigar_returns_input_sequence)
     const std::string seq{"GATTACA"};
 
     PacBio::Data::Read r{"", seq, {}, MappedReadTests::baseSNR};
-    PacBio::Data::MappedRead mr{r};
+    PacBio::Data::MappedRead mr{std::move(r)};
     mr.Strand = PacBio::Data::Strand::FORWARD;
     EXPECT_EQ(seq, mr.AlignedSequence());
 }
@@ -322,7 +325,7 @@ TEST(Data_MappedRead, unmapped_strand_returns_input_qualities)
     const PacBio::Data::QualityValues quals{"@@@@@@@"};
 
     PacBio::Data::Read r{"", "", quals, MappedReadTests::baseSNR};
-    PacBio::Data::MappedRead mr{r};
+    PacBio::Data::MappedRead mr{std::move(r)};
     mr.Cigar = {"7="};
     mr.Strand = PacBio::Data::Strand::UNMAPPED;
     EXPECT_EQ(quals, mr.AlignedQualities());
@@ -478,7 +481,7 @@ TEST(Data_MappedRead, unmapped_strand_returns_input_frames)
     PacBio::Data::Read r{"", "", {}, MappedReadTests::baseSNR};
     r.IPD = frames;
     r.PulseWidth = frames;
-    PacBio::Data::MappedRead mr{r};
+    PacBio::Data::MappedRead mr{std::move(r)};
     mr.Cigar = {"7="};
     mr.Strand = PacBio::Data::Strand::UNMAPPED;
 
@@ -493,7 +496,7 @@ TEST(Data_MappedRead, empty_cigar_returns_input_frames)
     PacBio::Data::Read r{"", "", {}, MappedReadTests::baseSNR};
     r.IPD = frames;
     r.PulseWidth = frames;
-    PacBio::Data::MappedRead mr{r};
+    PacBio::Data::MappedRead mr{std::move(r)};
     mr.Strand = PacBio::Data::Strand::FORWARD;
 
     EXPECT_EQ(frames, mr.AlignedIPD());

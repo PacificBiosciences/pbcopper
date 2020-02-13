@@ -16,10 +16,12 @@ static_assert(std::is_copy_constructible<QualityValues>::value,
 static_assert(std::is_copy_assignable<QualityValues>::value,
               "QualityValues& operator=(const QualityValues&) is not = default");
 
+#ifndef __INTEL_COMPILER
 static_assert(std::is_nothrow_move_constructible<QualityValues>::value,
               "QualityValues(QualityValues&&) is not = noexcept");
 static_assert(std::is_nothrow_move_assignable<QualityValues>::value,
               "QualityValues& operator=(QualityValues&&) is not = noexcept");
+#endif
 
 QualityValues::QualityValues(const std::string& fastqString) : std::vector<QualityValue>{}
 {
@@ -94,9 +96,10 @@ QualityValues QualityValues::FromFastq(const std::string& fastq) { return Qualit
 std::string QualityValues::Fastq() const
 {
     std::string result;
-    result.reserve(size());
+    result.resize(size());
+    int32_t counter = 0;
     for (const auto qv : *this)
-        result.push_back(qv.Fastq());
+        result[counter++] = qv.Fastq();
     return result;
 }
 
@@ -108,6 +111,11 @@ bool QualityValues::operator==(const std::string& fastq) const
 bool QualityValues::operator!=(const std::string& fastq) const
 {
     return *this != QualityValues(fastq);
+}
+
+std::ostream& operator<<(std::ostream& os, const QualityValues& qualityvalues)
+{
+    return os << "QualityValues(Fastq=" << qualityvalues.Fastq() << ')';
 }
 
 }  // namespace Data

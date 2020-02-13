@@ -8,8 +8,6 @@
 
 using VersionPrinter = PacBio::CLI_v2::internal::VersionPrinter;
 
-// clang-format off
-
 namespace CLI_v2_VersionPrinterTests {
 
 void Check(const VersionPrinter& version)
@@ -26,7 +24,7 @@ void Check(const VersionPrinter& version)
     EXPECT_EQ(expectedText, out.str());
 }
 
-} // namespace VersionPrinterTests
+}  // namespace CLI_v2_VersionPrinterTests
 
 TEST(CLI2_VersionPrinter, prints_application_name_and_version)
 {
@@ -39,5 +37,3 @@ TEST(CLI2_VersionPrinter, prints_multitool_name_and_version)
     const PacBio::CLI_v2::MultiToolInterface i{"frobber", "Frob all the things", "2.0"};
     CLI_v2_VersionPrinterTests::Check(VersionPrinter{i});
 }
-
-// clang-format on

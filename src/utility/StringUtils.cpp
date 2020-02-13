@@ -36,13 +36,13 @@ int64_t SIStringToInt(const std::string& input)
 {
     if (input.empty()) {
         throw std::runtime_error{
-            "[pbcopper] string utility ERROR: cannot convert empty string to integer."};
+            "[pbcopper] string utility ERROR: cannot convert empty string to number."};
     }
 
     const auto suffix = input.back();
-    if (!std::isalpha(suffix)) return std::stoi(input);
+    if (!std::isalpha(suffix)) return std::stoll(input);
 
-    int64_t result = std::stoi(input.substr(0, input.size() - 1));
+    int64_t result = std::stoll(input.substr(0, input.size() - 1));
     switch (suffix) {
         case 'K':
         case 'k':
@@ -59,7 +59,73 @@ int64_t SIStringToInt(const std::string& input)
         default:
             std::ostringstream msg;
             msg << "[pbcopper] string utility ERROR: cannot convert string '" << input
-                << "' to integer, suffix '" << suffix << "' is not a recognized multipler.";
+                << "' to number, suffix '" << suffix << "' is not a recognized multipler.";
+            throw std::runtime_error{msg.str()};
+    }
+    return result;
+}
+
+uint64_t SIStringToUInt(const std::string& input)
+{
+    if (input.empty()) {
+        throw std::runtime_error{
+            "[pbcopper] string utility ERROR: cannot convert empty string to number."};
+    }
+
+    const auto suffix = input.back();
+    if (!std::isalpha(suffix)) return std::stoull(input);
+
+    uint64_t result = std::stoull(input.substr(0, input.size() - 1));
+    switch (suffix) {
+        case 'K':
+        case 'k':
+            result *= 1000;
+            break;
+        case 'M':
+        case 'm':
+            result *= (1000 * 1000);
+            break;
+        case 'G':
+        case 'g':
+            result *= (1000 * 1000 * 1000);
+            break;
+        default:
+            std::ostringstream msg;
+            msg << "[pbcopper] string utility ERROR: cannot convert string '" << input
+                << "' to number, suffix '" << suffix << "' is not a recognized multipler.";
+            throw std::runtime_error{msg.str()};
+    }
+    return result;
+}
+
+double SIStringToDouble(const std::string& input)
+{
+    if (input.empty()) {
+        throw std::runtime_error{
+            "[pbcopper] string utility ERROR: cannot convert empty string to number."};
+    }
+
+    const auto suffix = input.back();
+    if (!std::isalpha(suffix)) return std::stod(input);
+
+    double result = std::stod(input.substr(0, input.size() - 1));
+    switch (suffix) {
+        case 'K':
+        case 'k':
+            result *= 1000.;
+            break;
+        case 'M':
+        case 'm':
+            result *= (1000. * 1000.);
+            break;
+        case 'G':
+        case 'g':
+            result *= (1000. * 1000. * 1000.);
+            break;
+        default:
+            std::ostringstream msg;
+            msg << "[pbcopper] string utility ERROR: cannot convert string '" << input
+                << "' to number, suffix '" << suffix << "' is not a recognized multipler.";
             throw std::runtime_error{msg.str()};
     }
     return result;

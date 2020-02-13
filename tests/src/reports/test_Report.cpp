@@ -1,15 +1,13 @@
 // Author: Nat Echols
 
-#include <gtest/gtest.h>
-#include <pbcopper/reports/Report.h>
-
 #include <sstream>
 #include <string>
 #include <vector>
 
-#include <pbcopper/utility/PbcopperVersion.h>
+#include <gtest/gtest.h>
 
-// clang-format off
+#include <pbcopper/reports/Report.h>
+#include <pbcopper/utility/PbcopperVersion.h>
 
 using namespace PacBio;
 using namespace PacBio::Reports;
@@ -23,11 +21,9 @@ Report MakeReport()
     const double baz_value = 0.75;
 
     Report report{"isoseq3_flnca", "Report isoseq3"};
-    report.Attributes({
-        {"foo", foo_value, "Foo Title"},
-        {"bar", bar_value, "Bar Title"},
-        {"baz", baz_value, "Baz Title"}
-    });
+    report.Attributes({{"foo", foo_value, "Foo Title"},
+                       {"bar", bar_value, "Bar Title"},
+                       {"baz", baz_value, "Baz Title"}});
     report.Uuid("testable_uuid");
 
     Table table{"table1"};
@@ -39,6 +35,7 @@ Report MakeReport()
 
 }  // namespace ReportsTests
 
+// clang-format off
 TEST(Reports_Report, can_print_pbreport)
 {
     std::string expectedText{R"({
@@ -106,10 +103,16 @@ TEST(Reports_Report, can_print_summary)
     report.PrintSummary(s);
     EXPECT_EQ(expectedText, s.str());
 }
-
+// clang-format on
 
 TEST(Reports_Report, can_write_task_report)
 {
-    TaskReport(16, 100, 0).Print("task-report.json");
+    const TaskReport report{16, 100, 0};
+    std::ostringstream s;
+    report.Print(s);
+
+    EXPECT_NE(s.str().find("Task Report"), std::string::npos);
+    EXPECT_NE(s.str().find("Number of cores/slots"), std::string::npos);
+    EXPECT_NE(s.str().find("Run time (seconds)"), std::string::npos);
+    EXPECT_NE(s.str().find("Exit code"), std::string::npos);
 }
-// clang-format on

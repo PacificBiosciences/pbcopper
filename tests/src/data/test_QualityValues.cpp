@@ -96,8 +96,9 @@ TEST(Data_QualityValues, can_be_constructed_from_fastq_string)
     EXPECT_EQ(fastqString.size(), qvs.size());
 
     ASSERT_EQ(expected.size(), qvs.size());
-    for (size_t i = 0; i < fastqString.size(); ++i)
+    for (size_t i = 0; i < fastqString.size(); ++i) {
         EXPECT_EQ(expected.at(i), qvs.at(i));
+    }
 }
 
 // clang-format on

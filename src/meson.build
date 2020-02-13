@@ -90,16 +90,32 @@ pbcopper_cpp_sources = files([
   'logging/LogMessage.cpp',
 
   # ---------
+  # pbmer
+  # ---------
+  'pbmer/Dbg.cpp',
+  'pbmer/DnaBit.cpp',
+  'pbmer/Kmer.cpp',
+  'pbmer/Mers.cpp',
+  'pbmer/Parser.cpp',
+
+  # ---------
   # reports
   # ---------
   'reports/Report.cpp',
   'reports/ReportPrinter.cpp',
   'reports/TaskReport.cpp',
 
+  # -------------
+  # third-party
+  # -------------
+  'third-party/edlib.cpp',
+
   # ---------
   # utility
   # ---------
+  'utility/Alarm.cpp',
   'utility/Deleters.cpp',
+  'utility/MemoryConsumption.cpp',
   'utility/Stopwatch.cpp',
   'utility/StringUtils.cpp'])
 

@@ -201,11 +201,19 @@ if not meson.is_subproject()
       'pbcopper/qgram/internal/Index-inl.h']),
     subdir : 'pbcopper/qgram/internal')
 
+  # pbcopper/third-party
+  install_headers(
+    files([
+      'pbcopper/third-party/edlib.h']),
+    subdir : 'pbcopper/third-party')
+
   # pbcopper/utility
   install_headers(
     files([
+      'pbcopper/utility/Alarm.h',
       'pbcopper/utility/Deleters.h',
       'pbcopper/utility/FileUtils.h',
+      'pbcopper/utility/MemoryConsumption.h',
       'pbcopper/utility/MinMax.h',
       'pbcopper/utility/MoveAppend.h',
       'pbcopper/utility/PbcopperVersion.h',

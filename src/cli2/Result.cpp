@@ -92,5 +92,13 @@ Result::operator uint64_t() const
 
 size_t Result::which() const { return data_.which(); }
 
+const OptionValue& Result::RawValue() const { return data_; }
+
+std::ostream& operator<<(std::ostream& out, const Result& result)
+{
+    out << result.RawValue();
+    return out;
+}
+
 }  // namespace CLI_v2
 }  // namespace PacBio

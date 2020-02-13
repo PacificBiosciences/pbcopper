@@ -1,13 +1,14 @@
-#include <pbcopper/cli/CLI.h>
-
 #include <cstdio>
+
 #include <fstream>
 #include <iostream>
 #include <vector>
 
 #include <gtest/gtest.h>
 
+#include <pbcopper/cli/CLI.h>
 #include <pbcopper/json/JSON.h>
+
 #include "OStreamRedirector.h"
 
 namespace CLITests {

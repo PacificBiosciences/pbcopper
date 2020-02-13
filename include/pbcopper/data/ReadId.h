@@ -22,10 +22,12 @@ struct ReadId
     boost::optional<Interval> ZmwInterval;
     std::string ReadName;
 
-    ReadId(const std::shared_ptr<std::string>& movieName, size_t holeNumber);
-    ReadId(const std::string& movieName, size_t holeNumber);
     ReadId(const std::string& readName);
 
+    ReadId(const std::string& movieName, size_t holeNumber);
+    ReadId(const std::string& movieName, size_t holeNumber, const Interval& interval);
+
+    ReadId(const std::shared_ptr<std::string>& movieName, size_t holeNumber);
     ReadId(const std::shared_ptr<std::string>& movieName, size_t holeNumber,
            const Interval& interval);
 

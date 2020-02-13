@@ -57,6 +57,13 @@ pbcopper_test_cpp_sources = files([
   'src/parallel/test_FireAndForget.cpp',
   'src/parallel/test_FireAndForgetIndexed.cpp',
 
+  # pbmer
+  'src/pbmer/test_Dbg.cpp',
+  'src/pbmer/test_DnaBit.cpp',
+  'src/pbmer/test_Kmer.cpp',
+  'src/pbmer/test_Mers.cpp',
+  'src/pbmer/test_Parser.cpp',
+
   # qgram
   'src/qgram/test_Index.cpp',
 
@@ -64,6 +71,7 @@ pbcopper_test_cpp_sources = files([
   'src/reports/test_Report.cpp',
 
   # utility
+  'src/utility/test_Alarm.cpp',
   'src/utility/test_FileUtils.cpp',
   'src/utility/test_MinMax.cpp',
   'src/utility/test_Stopwatch.cpp',

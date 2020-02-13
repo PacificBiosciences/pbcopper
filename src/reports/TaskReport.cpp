@@ -17,7 +17,7 @@ TaskReport::TaskReport(int nproc, double runTime, int exitCode)
 #if defined(_POSIX_VERSION)
     char hostname_[255];
     int rc = gethostname(hostname_, 255);
-    if (rc != 0) throw std::runtime_error("gethostname() failed");
+    if (rc != 0) throw std::runtime_error{"[pbcopper] reports ERROR: gethostname() failed"};
     std::string hostname(hostname_);
 #else
     std::string hostname = "unknown";
@@ -36,5 +36,6 @@ void TaskReport::Print(std::ostream& out, const std::string& prefix) const
 {
     report_.Print(out, prefix);
 }
-}
-}
+
+}  // namespace Reports
+}  // namespace PacBio

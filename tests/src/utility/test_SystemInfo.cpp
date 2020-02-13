@@ -1,11 +1,11 @@
-#include <pbcopper/utility/SystemInfo.h>
-
 #include <gtest/gtest.h>
+
+#include <pbcopper/utility/SystemInfo.h>
 
 namespace SystemInfoTests {
 
 // one sort of 'manual' endianness check - not used by the library
-static inline bool isLittleEndian()
+static bool isLittleEndian()
 {
     static const int i = 1;
     static const char* c = reinterpret_cast<const char*>(&i);

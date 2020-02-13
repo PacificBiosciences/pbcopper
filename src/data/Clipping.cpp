@@ -230,7 +230,7 @@ ClipResult::~ClipResult() = default;
 ClipToReferenceConfig::ClipToReferenceConfig(const ClipToQueryConfig& queryConfig,
                                              Position originalTEnd, Position targetTStart,
                                              Position targetTEnd, bool exciseFlankingInserts)
-    : ClipToQueryConfig{queryConfig}
+    : ClipToQueryConfig(queryConfig)  // icc 17 hack
     , original_tEnd_{originalTEnd}
     , target_tStart_{targetTStart}
     , target_tEnd_{targetTEnd}

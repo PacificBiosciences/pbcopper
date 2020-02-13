@@ -1,5 +1,4 @@
 // Author: Armin Töpfer
-#include <pbcopper/parallel/FireAndForget.h>
 
 #include <chrono>
 #include <iostream>
@@ -10,11 +9,13 @@
 
 #include <gtest/gtest.h>
 
+#include <pbcopper/parallel/FireAndForget.h>
+
 TEST(Parallel_FireAndForget, strings)
 {
     static const size_t numThreads = 3;
     static const size_t numElements = 10000;
-    PacBio::Parallel::FireAndForget faf(numThreads);
+    PacBio::Parallel::FireAndForget faf{numThreads};
 
     std::atomic_int waiting{0};
     auto Submit = [&waiting](std::string& input) {
@@ -45,7 +46,7 @@ TEST(Parallel_FireAndForget, strings)
 TEST(Parallel_FireAndForget, exceptionFinalize)
 {
     static const size_t numThreads = 3;
-    PacBio::Parallel::FireAndForget faf(numThreads, 1);
+    PacBio::Parallel::FireAndForget faf{numThreads, 1};
 
     std::atomic_int counter{0};
     auto SubmitSleep = [&counter]() {
@@ -69,7 +70,7 @@ TEST(Parallel_FireAndForget, exceptionFinalize)
 TEST(Parallel_FireAndForget, exceptionProduceWith)
 {
     static const size_t numThreads = 3;
-    PacBio::Parallel::FireAndForget faf(numThreads, 1);
+    PacBio::Parallel::FireAndForget faf{numThreads, 1};
 
     std::atomic_int counter{0};
     auto SubmitSleep = [&counter]() {
@@ -78,7 +79,7 @@ TEST(Parallel_FireAndForget, exceptionProduceWith)
     };
     auto Submit = [&counter]() { ++counter; };
     auto SubmitExc = [&counter]() {
-        throw std::runtime_error("faf abort");
+        throw std::runtime_error{"faf abort"};
         ++counter;
     };
 

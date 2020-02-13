@@ -22,7 +22,7 @@ Json VariantToJson(const PacBio::Reports::ReportValue& value)
         case 4 : return Json::boolean_t{boost::get<bool>(value)};
         case 5 : return Json::string_t{boost::get<std::string>(value)};
         default:
-            throw std::runtime_error{"[pbcopper] reports ERROR invalid report value type"};
+            throw std::runtime_error{"[pbcopper] reports ERROR: invalid report value type"};
     }
 }
 // clang-format on

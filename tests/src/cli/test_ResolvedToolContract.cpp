@@ -1,9 +1,9 @@
-#include <pbcopper/cli/toolcontract/ResolvedToolContract.h>
-
 #include <sstream>
 #include <string>
 
 #include <gtest/gtest.h>
+
+#include <pbcopper/cli/toolcontract/ResolvedToolContract.h>
 
 TEST(CLI_ResolvedToolContract, read_basic_RTC)
 {

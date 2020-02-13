@@ -15,28 +15,33 @@ static_assert(std::is_copy_constructible<Cigar>::value, "Cigar(const Cigar&) is 
 static_assert(std::is_copy_assignable<Cigar>::value,
               "Cigar& operator=(const Cigar&) is not = default");
 
+#ifndef __INTEL_COMPILER
 static_assert(std::is_nothrow_move_constructible<Cigar>::value, "Cigar(Cigar&&) is not = noexcept");
 static_assert(std::is_nothrow_move_assignable<Cigar>::value,
               "Cigar& operator=(Cigar&&) is not = noexcept");
+#endif
 
-Cigar::Cigar(const std::string& cigarString) : std::vector<CigarOperation>{}
+Cigar::Cigar(const char* str) : std::vector<CigarOperation>{}
 {
     size_t numberStart = 0;
-    const size_t numChars = cigarString.size();
-    for (size_t i = 0; i < numChars; ++i) {
-        const char c = cigarString.at(i);
-        if (!isdigit(c)) {
+    size_t i = 0;
+    for (const char *c = str; *c; ++i, ++c) {
+        if (!std::isdigit(*c)) {
             const size_t distance = i - numberStart;
-            const uint32_t length = stoul(cigarString.substr(numberStart, distance));
-            push_back(CigarOperation(c, length));
+            const uint32_t length = std::stoul(std::string{str, numberStart, distance});
+            push_back(CigarOperation(*c, length));
             numberStart = i + 1;
         }
     }
 }
 
+Cigar::Cigar(const std::string& cigarString) : Cigar{cigarString.c_str()} {}
+
 Cigar::Cigar(std::vector<CigarOperation> cigar) : std::vector<CigarOperation>{std::move(cigar)} {}
 
-Cigar Cigar::FromStdString(const std::string& stdString) { return Cigar(stdString); }
+Cigar Cigar::FromStdString(const std::string& stdString) { return Cigar(stdString.c_str()); }
+
+Cigar Cigar::FromCStr(const char* str) { return Cigar(str); }
 
 std::string Cigar::ToStdString() const
 {
@@ -56,6 +61,11 @@ size_t ReferenceLength(const Cigar& cigar)
         if (ConsumesReference(op.Type())) length += op.Length();
     }
     return length;
+}
+
+std::ostream& operator<<(std::ostream& os, const Cigar& cigar)
+{
+    return os << "Cigar(" << cigar.ToStdString() << ')';
 }
 
 }  // namespace Data

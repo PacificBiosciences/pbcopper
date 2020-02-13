@@ -18,7 +18,7 @@ using PositionalArgument = PacBio::CLI_v2::PositionalArgument;
 namespace CLI_v2_CommandLineParserTests {
 namespace Options {
 
-static const Option TargetDirectory
+const Option TargetDirectory
 {
 R"({
     "names" : ["t", "target-dir"],
@@ -28,7 +28,7 @@ R"({
 })"
 };
 
-static const Option Force
+const Option Force
 {
 R"({
     "names" : ["f", "force"],
@@ -37,7 +37,7 @@ R"({
 })"
 };
 
-static const Option Progress
+const Option Progress
 {
 R"({
     "names" : ["p"],
@@ -46,7 +46,7 @@ R"({
 })"
 };
 
-static const Option DryRun
+const Option DryRun
 {
 R"({
     "names" : ["n", "no-op"],
@@ -55,7 +55,7 @@ R"({
 })"
 };
 
-static const Option Timeout
+const Option Timeout
 {
 R"({
     "names" : ["timeout"],
@@ -65,7 +65,7 @@ R"({
 })"
 };
 
-static const Option Delta
+const Option Delta
 {
 R"({
     "names" : ["delta"],
@@ -75,7 +75,7 @@ R"({
 })"
 };
 
-static const Option Ploidy
+const Option Ploidy
 {
 R"({
     "names" : ["ploidy"],
@@ -86,7 +86,7 @@ R"({
 })"
 };
 
-static const Option Element
+const Option Element
 {
 R"({
     "names" : ["e", "element"],
@@ -97,7 +97,7 @@ R"({
 })"
 };
 
-static const Option ToolContractOnly
+const Option ToolContractOnly
 {
 R"({
     "names" : ["tc-only"],
@@ -107,7 +107,7 @@ R"({
 })"
 };
 
-static const PositionalArgument Source
+const PositionalArgument Source
 {
 R"({
     "name" : "source",
@@ -116,7 +116,7 @@ R"({
 })"
 };
 
-static const PositionalArgument Dest
+const PositionalArgument Dest
 {
 R"({
     "name" : "dest",
@@ -729,6 +729,56 @@ TEST(CLI2_CommandLineParser, does_not_allow_negative_value_for_string_option)
         const std::string msg{e.what()};
         EXPECT_TRUE(msg.find("negative value -42 is not allowed for option 'x'") != std::string::npos);
     }
+}
+
+TEST(CLI2_CommandLineParser, can_interpret_numerics_with_suffix)
+{
+    const Option UIntOption{
+    R"({
+        "names" : ["x"],
+        "description" : "x",
+        "type" : "unsigned int",
+        "default" : 0
+    })"};
+    const Option IntOption{
+    R"({
+        "names" : ["yoink"],
+        "description" : "y",
+        "type" : "int",
+        "default" : 0
+    })"};
+    const Option FloatOption{
+    R"({
+        "names" : ["z"],
+        "description" : "z",
+        "type" : "float",
+        "default" : 0.0
+    })"};
+
+    Interface i {
+        "frobber",
+        "Frobb your files in a most delightful, nobbly way",
+        "3.14"
+    };
+    i.AddOption(UIntOption)
+     .AddOption(IntOption)
+     .AddOption(FloatOption);
+
+    const CommandLineParser parser{i};
+    const auto results = parser.Parse({
+        "frobber",
+        "-x", "42K",
+        "--yoink=300m",
+        "-z", "3.14G"
+    });
+
+    const uint64_t x = results[UIntOption];
+    const int64_t y = results[IntOption];
+    const double z = results[FloatOption];
+
+    EXPECT_EQ(x, 42'000);
+    EXPECT_EQ(y, 300'000'000);
+    EXPECT_EQ(z, 3'140'000'000);
 }
 
 // clang-format on
