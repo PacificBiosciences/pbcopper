@@ -21,6 +21,11 @@ namespace PacBio {
 namespace CLI_v2 {
 namespace internal {
 
+// tag for overloads
+struct ShowHiddenOptions
+{
+};
+
 ///
 /// Generates help display.
 ///
@@ -29,6 +34,9 @@ class InterfaceHelpPrinter
 public:
     explicit InterfaceHelpPrinter(Interface interface);
     InterfaceHelpPrinter(Interface interface, const size_t maxColumn);
+
+    InterfaceHelpPrinter(Interface interface, ShowHiddenOptions showHidden);
+    InterfaceHelpPrinter(Interface interface, const size_t maxColumn, ShowHiddenOptions showHidden);
 
     ///
     /// Prints formatted text to output stream
@@ -64,6 +72,7 @@ private:
     HelpMetrics metrics_;
     Interface interface_;
     std::string text_;
+    bool showHiddenOptions_ = false;
 };
 
 std::ostream& operator<<(std::ostream& os, const InterfaceHelpPrinter& printer);
