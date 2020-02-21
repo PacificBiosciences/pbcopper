@@ -146,13 +146,7 @@ Interface& Interface::Example(std::string example)
     return *this;
 }
 
-bool Interface::HasRequiredPosArgs() const
-{
-    for (const auto& posArg : data_.positionalArgs_) {
-        if (posArg.required) return true;
-    }
-    return false;
-}
+bool Interface::HasRequiredPosArgs() const { return NumRequiredPosArgs() > 0; }
 
 const std::string& Interface::HelpFooter() const { return data_.footer_; }
 
@@ -196,6 +190,15 @@ Results Interface::MakeDefaultResults() const
     }
     results.PositionalArguments(PositionalArguments());
     return results;
+}
+
+size_t Interface::NumRequiredPosArgs() const
+{
+    size_t count = 0;
+    for (const auto& posArg : data_.positionalArgs_) {
+        if (posArg.required) ++count;
+    }
+    return count;
 }
 
 std::vector<OptionData> Interface::Options() const
