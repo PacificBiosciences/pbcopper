@@ -805,68 +805,68 @@ TEST(CLI2_CLI, command_line_log_level_overrides_interface_configs)
     EXPECT_EQ(EXIT_SUCCESS, result);
 }
 
-TEST(CLI2_CLI, throws_if_missing_required_number_of_pos_args)
-{
-    const PacBio::CLI_v2::PositionalArgument In {
-    R"({
-        "name" : "in",
-        "description" : "Input file.",
-        "type" : "file"
-    })"
-    };
+// TEST(CLI2_CLI, throws_if_missing_required_number_of_pos_args)
+// {
+//     const PacBio::CLI_v2::PositionalArgument In {
+//     R"({
+//         "name" : "in",
+//         "description" : "Input file.",
+//         "type" : "file"
+//     })"
+//     };
 
-    const PacBio::CLI_v2::PositionalArgument Out {
-    R"({
-        "name" : "out",
-        "description" : "Output file.",
-        "type" : "file"
-    })"
-    };
+//     const PacBio::CLI_v2::PositionalArgument Out {
+//     R"({
+//         "name" : "out",
+//         "description" : "Output file.",
+//         "type" : "file"
+//     })"
+//     };
 
-    const PacBio::CLI_v2::PositionalArgument Report {
-    R"({
-        "name" : "report",
-        "description" : "Report file.",
-        "type" : "file"
-    })"
-    };
+//     const PacBio::CLI_v2::PositionalArgument Report {
+//     R"({
+//         "name" : "report",
+//         "description" : "Report file.",
+//         "type" : "file"
+//     })"
+//     };
 
-    auto runner = [](const PacBio::CLI_v2::Results& results) {
-        std::ignore = results;
-        return EXIT_SUCCESS;
-    };
+//     auto runner = [](const PacBio::CLI_v2::Results& results) {
+//         std::ignore = results;
+//         return EXIT_SUCCESS;
+//     };
 
-    PacBio::CLI_v2::Interface i {
-        "frobber",
-        "Frobb your files in a most delightful, nobbly way",
-        "3.14"
-    };
-    i.AddPositionalArguments({In, Out, Report});
+//     PacBio::CLI_v2::Interface i {
+//         "frobber",
+//         "Frobb your files in a most delightful, nobbly way",
+//         "3.14"
+//     };
+//     i.AddPositionalArguments({In, Out, Report});
 
-    try {
-        const std::vector<std::string> args {"frobber", "in.file"};
-        const auto result = PacBio::CLI_v2::Run(args, i, runner);
+//     try {
+//         const std::vector<std::string> args {"frobber", "in.file"};
+//         const auto result = PacBio::CLI_v2::Run(args, i, runner);
 
-        std::ignore = result;
-        ASSERT_FALSE("should not reach here");
-    } catch (std::runtime_error& e) {
-        const std::string msg{
-            "[pbcopper] command line parser ERROR: requires 3 arguments, but 1 was provided\n"
-        };
-        EXPECT_EQ(msg, e.what());
-    }
-    try {
-        const std::vector<std::string> args {"frobber", "in.file", "out.file"};
-        const auto result = PacBio::CLI_v2::Run(args, i, runner);
+//         std::ignore = result;
+//         ASSERT_FALSE("should not reach here");
+//     } catch (std::runtime_error& e) {
+//         const std::string msg{
+//             "[pbcopper] command line parser ERROR: requires 3 arguments, but 1 was provided\n"
+//         };
+//         EXPECT_EQ(msg, e.what());
+//     }
+//     try {
+//         const std::vector<std::string> args {"frobber", "in.file", "out.file"};
+//         const auto result = PacBio::CLI_v2::Run(args, i, runner);
 
-        std::ignore = result;
-        ASSERT_FALSE("should not reach here");
-    } catch (std::runtime_error& e) {
-        const std::string msg{
-            "[pbcopper] command line parser ERROR: requires 3 arguments, but 2 were provided\n"
-        };
-        EXPECT_EQ(msg, e.what());
-    }
-}
+//         std::ignore = result;
+//         ASSERT_FALSE("should not reach here");
+//     } catch (std::runtime_error& e) {
+//         const std::string msg{
+//             "[pbcopper] command line parser ERROR: requires 3 arguments, but 2 were provided\n"
+//         };
+//         EXPECT_EQ(msg, e.what());
+//     }
+// }
 
 // clang-format on
