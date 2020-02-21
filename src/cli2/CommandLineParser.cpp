@@ -159,6 +159,21 @@ Results CommandLineParser::Parse(const std::vector<std::string>& arguments) cons
         args.pop_front();
     }
 
+    // ensure minimum number of  positional args
+    const size_t minimumNumPosArgs = interface_.NumRequiredPosArgs();
+    if (minimumNumPosArgs > 0) {
+        const size_t foundNumPosArgs = results.PositionalArguments().size();
+        if (foundNumPosArgs < minimumNumPosArgs) {
+            std::ostringstream msg;
+            msg << "requires " << minimumNumPosArgs;
+            msg << (minimumNumPosArgs == 1 ? " argument" : " arguments");
+            msg << ", but " << foundNumPosArgs;
+            msg << (foundNumPosArgs == 1 ? " was" : " were");
+            msg << " provided";
+            throw CommandLineParserException{msg.str()};
+        }
+    }
+
     return results;
 }
 
