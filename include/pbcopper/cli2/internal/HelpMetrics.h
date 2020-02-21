@@ -29,11 +29,13 @@ class HelpMetrics
 public:
     static size_t TestingFixedWidth;
 
-    static std::string OptionNames(const OptionData& option);
+    static std::string OptionNames(const OptionData& option, const bool showHidden = false);
 
-    explicit HelpMetrics(const Interface& interface);
+    explicit HelpMetrics(const Interface& interface, const bool showHidden = false);
+    HelpMetrics(const Interface& interface, const size_t explicitMaxColumn,
+                const bool showHidden = false);
+
     explicit HelpMetrics(const MultiToolInterface& interface);
-    HelpMetrics(const Interface& interface, const size_t explicitMaxColumn);
     HelpMetrics(const MultiToolInterface& interface, const size_t explicitMaxColumn);
 
     void Calculate(const Interface& interface);
@@ -47,6 +49,7 @@ public:
     size_t maxNameLength = 0;
     size_t maxTypeLength = 0;
     size_t maxColumn = 79;
+    bool showHiddenOptions = false;
 };
 
 }  // namespace internal

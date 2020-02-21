@@ -31,9 +31,25 @@ InterfaceHelpPrinter::InterfaceHelpPrinter(Interface interface, const size_t max
     MakeHelpText();
 }
 
+InterfaceHelpPrinter::InterfaceHelpPrinter(Interface interface, ShowHiddenOptions /* showHidden */)
+    : metrics_{interface, true}, interface_{std::move(interface)}, showHiddenOptions_{true}
+{
+    MakeHelpText();
+}
+
+InterfaceHelpPrinter::InterfaceHelpPrinter(Interface interface, const size_t maxColumn,
+                                           ShowHiddenOptions /* showHidden */)
+    : metrics_{interface, maxColumn, true}
+    , interface_{std::move(interface)}
+    , showHiddenOptions_{true}
+{
+    MakeHelpText();
+}
+
 std::string InterfaceHelpPrinter::Choices(const OptionData& option)
 {
-    if (option.isHidden || option.choices.empty() || option.isChoicesHidden) return {};
+    if (option.isHidden && !showHiddenOptions_) return {};
+    if (option.choices.empty() || option.isChoicesHidden) return {};
 
     std::ostringstream out;
     for (const auto& choice : option.choices) {
@@ -167,7 +183,7 @@ std::string InterfaceHelpPrinter::OptionGroup(const OptionGroupData& group)
     if (!group.name.empty()) out << group.name << ":\n";
 
     for (const OptionData& option : group.options) {
-        if (!option.isHidden) out << Option(option) << '\n';
+        if (!option.isHidden || showHiddenOptions_) out << Option(option) << '\n';
     }
     return out.str();
 }

@@ -62,21 +62,23 @@ std::string DisplayName(const OptionValueType type)
 //
 size_t HelpMetrics::TestingFixedWidth = 0;
 
-HelpMetrics::HelpMetrics(const Interface& interface)
+HelpMetrics::HelpMetrics(const Interface& interface, const bool showHidden)
+    : showHiddenOptions{showHidden}
 {
     maxColumn = AdjustedMaxColumn(maxColumn);
+    Calculate(interface);
+}
+
+HelpMetrics::HelpMetrics(const Interface& interface, const size_t explicitMaxColumn,
+                         const bool showHidden)
+    : maxColumn{explicitMaxColumn}, showHiddenOptions{showHidden}
+{
     Calculate(interface);
 }
 
 HelpMetrics::HelpMetrics(const MultiToolInterface& interface)
 {
     maxColumn = AdjustedMaxColumn(maxColumn);
-    Calculate(interface);
-}
-
-HelpMetrics::HelpMetrics(const Interface& interface, const size_t explicitMaxColumn)
-    : maxColumn{explicitMaxColumn}
-{
     Calculate(interface);
 }
 
@@ -151,9 +153,9 @@ std::string HelpMetrics::HelpEntry(std::string name, std::string type,
     return out.str();
 }
 
-std::string HelpMetrics::OptionNames(const OptionData& option)
+std::string HelpMetrics::OptionNames(const OptionData& option, const bool showHidden)
 {
-    if (option.isHidden) return {};
+    if (option.isHidden && !showHidden) return {};
 
     std::ostringstream optionOutput;
     auto first = true;
@@ -176,9 +178,9 @@ std::string HelpMetrics::OptionNames(const OptionData& option)
 
 void HelpMetrics::UpdateForOption(const OptionData& option)
 {
-    if (option.isHidden) return;
+    if (option.isHidden && !showHiddenOptions) return;
 
-    auto optionNamesText = OptionNames(option);
+    auto optionNamesText = OptionNames(option, true);
     auto optionDisplayText = DisplayName(option.type);
     maxNameLength = std::max(maxNameLength, optionNamesText.size());
     maxTypeLength = std::max(maxTypeLength, optionDisplayText.size());
