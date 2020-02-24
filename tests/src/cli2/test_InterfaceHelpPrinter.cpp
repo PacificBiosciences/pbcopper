@@ -22,7 +22,6 @@ using OptionValue = PacBio::CLI_v2::OptionValue;
 using OptionValueType = PacBio::CLI_v2::OptionValueType;
 using PositionalArgument = PacBio::CLI_v2::PositionalArgument;
 using PositionalArgumentTranslator = PacBio::CLI_v2::internal::PositionalArgumentTranslator;
-using ShowHiddenOptions = PacBio::CLI_v2::internal::ShowHiddenOptions;
 using Tool = PacBio::CLI_v2::Tool;
 
 // clang-format off
@@ -107,40 +106,6 @@ R"({
     "type" : "string",
     "default" : "fire",
     "choices" : ["earth", "wind", "fire", "water"]
-})"
-};
-
-const Option Hidden_Cutoff
-{
-R"({
-    "names" : ["cutoff-n"],
-    "description" : "Hidden cutoff value.",
-    "hidden" : true,
-    "type" : "integer",
-    "default" : 5000
-})"
-};
-
-const Option Hidden_Score
-{
-R"({
-    "names" : ["min-score"],
-    "description" : "Hidden minimum score.",
-    "hidden" : true,
-    "type" : "float",
-    "default" : 0.01
-})"
-};
-
-const Option Hidden_Mode
-{
-R"({
-    "names" : ["mode"],
-    "description" : "Experimental mode for things.",
-    "hidden" : true,
-    "type" : "string",
-    "default" : "standard",
-    "choices" : ["standard", "foo", "bar", "baz"]
 })"
 };
 
@@ -750,100 +715,6 @@ TEST(CLI2_InterfaceHelpPrinter, can_enable_verbose_option)
     InterfaceHelpPrinter help{i, 80};
     const auto formattedText = help.Options();
     EXPECT_EQ(expectedText, formattedText);
-}
-
-TEST(CLI2_InterfaceHelpPrinter, can_show_hidden_options)
-{
-    const std::string expectedNormalText{R"(frobber - Frobb your files in a most delightful, nobbly way
-
-Usage:
-  frobber [options] <source> <dest>
-
-  source            FILE   Source file to copy.
-  dest              DIR    Destination directory. Essentially where we want to
-                           drop things, but really just making a long
-                           description.
-
-Output Options:
-  -p                       Show progress during copy.
-  -f,--force               Overwrite things.
-
-Algorithm Options:
-  --delta           FLOAT  Some delta for things. [0.01]
-
-  -h,--help                Show this help and exit.
-  --version                Show application version and exit.
-  -j,--num-threads  INT    Number of threads to use, 0 means autodetection. [0]
-  --log-level       STR    Set log level. Valid choices: (TRACE, DEBUG, INFO,
-                           WARN, FATAL). [WARN]
-  --log-file        FILE   Log to a file, instead of stderr.
-
-)"};
-
-    const std::string expectedHiddenText{R"(frobber - Frobb your files in a most delightful, nobbly way
-
-Usage:
-  frobber [options] <source> <dest>
-
-  source            FILE   Source file to copy.
-  dest              DIR    Destination directory. Essentially where we want to
-                           drop things, but really just making a long
-                           description.
-
-Output Options:
-  -p                       Show progress during copy.
-  -f,--force               Overwrite things.
-
-Algorithm Options:
-  --cutoff-n        INT    Hidden cutoff value. [5000]
-  --delta           FLOAT  Some delta for things. [0.01]
-  --min-score       FLOAT  Hidden minimum score. [0.01]
-  --mode            STR    Experimental mode for things. Valid choices:
-                           (standard, foo, bar, baz). [standard]
-
-  -h,--help                Show this help and exit.
-  --version                Show application version and exit.
-  -j,--num-threads  INT    Number of threads to use, 0 means autodetection. [0]
-  --log-level       STR    Set log level. Valid choices: (TRACE, DEBUG, INFO,
-                           WARN, FATAL). [WARN]
-  --log-file        FILE   Log to a file, instead of stderr.
-
-)"};
-
-    Interface i {
-        "frobber",
-        "Frobb your files in a most delightful, nobbly way",
-        "3.14"
-    };
-
-    i.AddOptionGroup("Output Options", {
-        CLI_v2_InterfaceHelpPrinterTests::Options::Progress,
-        CLI_v2_InterfaceHelpPrinterTests::Options::Force
-    });
-    i.AddOptionGroup("Algorithm Options",{
-        CLI_v2_InterfaceHelpPrinterTests::Options::Hidden_Cutoff,
-        CLI_v2_InterfaceHelpPrinterTests::Options::Delta,
-        CLI_v2_InterfaceHelpPrinterTests::Options::Hidden_Score,
-        CLI_v2_InterfaceHelpPrinterTests::Options::Hidden_Mode
-    });
-
-    i.AddPositionalArguments({
-        CLI_v2_InterfaceHelpPrinterTests::Options::Source,
-        CLI_v2_InterfaceHelpPrinterTests::Options::Dest
-    });
-
-    {   // normal help display
-        const InterfaceHelpPrinter help{i, 80};
-        std::ostringstream out;
-        help.Print(out);
-        EXPECT_EQ(expectedNormalText, out.str());
-    }
-    {   // include hidden options
-        const InterfaceHelpPrinter help{i, 80, ShowHiddenOptions{}};
-        std::ostringstream out;
-        help.Print(out);
-        EXPECT_EQ(expectedHiddenText, out.str());
-    }
 }
 
 // clang-format on
