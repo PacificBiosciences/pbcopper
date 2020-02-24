@@ -25,20 +25,18 @@ namespace internal {
 struct InterfaceData
 {
     InterfaceData(std::string appName, std::string appDescription, std::string appVersion,
-                  OptionData help, OptionData version, OptionData showAllHelp,
-                  OptionData exceptionPassthrough, OptionData numThreads, OptionData logFile,
-                  OptionData logLevel, OptionData alarms)
+                  OptionData help, OptionData version, OptionData numThreads, OptionData logFile,
+                  OptionData logLevel, OptionData alarms, OptionData exceptionPassthrough)
         : appName_{std::move(appName)}
         , appDescription_{std::move(appDescription)}
         , appVersion_{std::move(appVersion)}
-        , helpOption_(std::move(help))                                  // icc 17 hack
-        , versionOption_(std::move(version))                            // icc 17 hack
-        , showAllHelpOption_(std::move(showAllHelp))                    // icc 17 hack
-        , exceptionPassthroughOption_(std::move(exceptionPassthrough))  // icc 17 hack
+        , helpOption_(std::move(help))        // icc 17 hack
+        , versionOption_(std::move(version))  // icc 17 hack
         , numThreadsOption_{std::move(numThreads)}
         , logFileOption_{std::move(logFile)}
         , logLevelOption_{std::move(logLevel)}
         , alarmsOption_{std::move(alarms)}
+        , exceptionPassthroughOption_(std::move(exceptionPassthrough))  // icc 17 hack
     {
     }
 
@@ -49,17 +47,16 @@ struct InterfaceData
     std::string example_;
     std::string footer_;
 
-    // always active
+    // default enabled
     OptionData helpOption_;
     OptionData versionOption_;
-    OptionData showAllHelpOption_;
-    OptionData exceptionPassthroughOption_;
-
-    // default enabled
     boost::optional<internal::OptionData> numThreadsOption_;
     boost::optional<internal::OptionData> logFileOption_;
     boost::optional<internal::OptionData> logLevelOption_;
     boost::optional<internal::OptionData> alarmsOption_;
+
+    // always active
+    internal::OptionData exceptionPassthroughOption_;
 
     // default disabled
     boost::optional<internal::OptionData> verboseOption_ = boost::none;

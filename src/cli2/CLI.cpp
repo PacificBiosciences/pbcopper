@@ -19,7 +19,6 @@
 using CommandLineParser = PacBio::CLI_v2::internal::CommandLineParser;
 using InterfaceHelpPrinter = PacBio::CLI_v2::internal::InterfaceHelpPrinter;
 using MultiToolInterfaceHelpPrinter = PacBio::CLI_v2::internal::MultiToolInterfaceHelpPrinter;
-using ShowHiddenOptions = PacBio::CLI_v2::internal::ShowHiddenOptions;
 using VersionHelpPrinter = PacBio::CLI_v2::internal::VersionPrinter;
 
 namespace PacBio {
@@ -57,13 +56,6 @@ int Run(const std::vector<std::string>& args, const Interface& interface,
     // parse command line args
     CommandLineParser parser{interface};
     Results results = parser.Parse(args);
-
-    // "show-all" help
-    if (results[Builtin::ShowAllHelp]) {
-        const InterfaceHelpPrinter help{interface, ShowHiddenOptions{}};
-        std::cout << help;
-        return EXIT_SUCCESS;
-    }
 
     // help
     if (results[Builtin::Help]) {

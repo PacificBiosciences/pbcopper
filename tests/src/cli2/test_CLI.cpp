@@ -41,40 +41,6 @@ R"({
 })"
 };
 
-const PacBio::CLI_v2::Option Hidden_Cutoff
-{
-R"({
-    "names" : ["cutoff-n"],
-    "description" : "Hidden cutoff value.",
-    "hidden" : true,
-    "type" : "integer",
-    "default" : 5000
-})"
-};
-
-const PacBio::CLI_v2::Option Hidden_Score
-{
-R"({
-    "names" : ["min-score"],
-    "description" : "Hidden minimum score.",
-    "hidden" : true,
-    "type" : "float",
-    "default" : 0.01
-})"
-};
-
-const PacBio::CLI_v2::Option Hidden_Mode
-{
-R"({
-    "names" : ["mode"],
-    "description" : "Experimental mode for things.",
-    "hidden" : true,
-    "type" : "string",
-    "default" : "standard",
-    "choices" : ["standard", "foo", "bar", "baz"]
-})"
-};
-
 const PacBio::CLI_v2::PositionalArgument Source
 {
 R"({
@@ -203,56 +169,6 @@ TEST(CLI2_CLI, can_print_help)
     UNUSED(redirect);
 
     const PacBio::CLI_v2::Interface i{"frobber", "Frob all the things.", "v3.1"};
-    const int result = PacBio::CLI_v2::Run(args, i, runner);
-
-    EXPECT_EQ(EXIT_SUCCESS, result);
-    EXPECT_EQ(expectedText, s.str());
-}
-
-TEST(CLI2_CLI, can_print_hidden_help)
-{
-    PacBio::CLI_v2::internal::HelpMetrics::TestingFixedWidth = 80;
-
-    const std::string expectedText{
-"frobber - Frob all the things.\n"
-"\n"
-"Usage:\n"
-"  frobber [options]\n"
-"\n"
-"Hidden Options:\n"
-"  --cutoff-n        INT    Hidden cutoff value. [5000]\n"
-"  --min-score       FLOAT  Hidden minimum score. [0.01]\n"
-"  --mode            STR    Experimental mode for things. Valid choices:\n"
-"                           (standard, foo, bar, baz). [standard]\n"
-"\n"
-"  -h,--help                Show this help and exit.\n"
-"  --version                Show application version and exit.\n"
-"  -j,--num-threads  INT    Number of threads to use, 0 means autodetection. [0]\n"
-"  --log-level       STR    Set log level. Valid choices: (TRACE, DEBUG, INFO,\n"
-"                           WARN, FATAL). [WARN]\n"
-"  --log-file        FILE   Log to a file, instead of stderr.\n"
-"\n"
-};
-
-    const std::vector<std::string> args {
-        "frobber", "--show-all-help"
-    };
-    auto runner = [](const PacBio::CLI_v2::Results&)
-    {
-        return EXIT_SUCCESS;
-    };
-
-    std::ostringstream s;
-    tests::CoutRedirect redirect(s.rdbuf());
-    UNUSED(redirect);
-
-    PacBio::CLI_v2::Interface i{"frobber", "Frob all the things.", "v3.1"};
-    i.AddOptionGroup("Hidden Options",{
-        CLI_v2_CLITests::Hidden_Cutoff,
-        CLI_v2_CLITests::Hidden_Score,
-        CLI_v2_CLITests::Hidden_Mode
-    });
-
     const int result = PacBio::CLI_v2::Run(args, i, runner);
 
     EXPECT_EQ(EXIT_SUCCESS, result);
