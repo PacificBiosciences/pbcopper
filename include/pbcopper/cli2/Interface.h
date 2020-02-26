@@ -168,6 +168,11 @@ public:
     ///
     const Logging::LogConfig& LogConfig() const;
 
+    ///
+    /// \return number of positional arguments that are required
+    ///
+    size_t NumRequiredPosArgs() const;
+
     /// \internal
     /// \return "flattened" list of all registered options (grouping is ignored)
     ///
