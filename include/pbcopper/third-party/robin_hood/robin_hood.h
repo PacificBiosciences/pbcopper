@@ -31,6 +31,9 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+// (DB)
+// clang-format off
+
 #ifndef ROBIN_HOOD_H_INCLUDED
 #define ROBIN_HOOD_H_INCLUDED
 
@@ -491,7 +494,11 @@ private:
 
     // Called when no memory is available (mHead == 0).
     // Don't inline this slow path.
+#ifdef __INTEL_COMPILER
+    T* performAllocation()
+#else
     ROBIN_HOOD(NOINLINE) T* performAllocation()
+#endif
     {
         size_t const numElementsToAlloc = calcNumElementsToAlloc();
 
@@ -1325,7 +1332,11 @@ private:
         // we don't retry, fail if overflowing
         // don't need to check max num elements
         if (0 == mMaxNumElementsAllowed && !try_increase_info()) {
-            throwOverflowError();
+#ifdef __INTEL_COMPILER
+            throw std::overflow_error("robin_hood::map overflow");
+#else
+             throwOverflowError();
+#endif
         }
 
         size_t idx;
@@ -1802,7 +1813,11 @@ public:
             newSize *= 2;
         }
         if (ROBIN_HOOD_UNLIKELY(newSize == 0)) {
-            throwOverflowError();
+#ifdef __INTEL_COMPILER
+            throw std::overflow_error("robin_hood::map overflow");
+#else
+             throwOverflowError();
+#endif
         }
 
         rehashPowerOfTwo(newSize);
@@ -1882,7 +1897,11 @@ public:
         auto const total = static_cast<size_t>(total64);
 
         if (ROBIN_HOOD_UNLIKELY(static_cast<uint64_t>(total) != total64)) {
-            throwOverflowError();
+#ifdef __INTEL_COMPILER
+            throw std::overflow_error("robin_hood::map overflow");
+#else
+             throwOverflowError();
+#endif
         }
         return total;
 #endif
@@ -2103,7 +2122,11 @@ private:
                                                         (static_cast<double>(mMask) + 1)));
         // it seems we have a really bad hash function! don't try to resize again
         if (mNumElements * 2 < calcMaxNumElementsAllowed(mMask + 1)) {
-            throwOverflowError();
+#ifdef __INTEL_COMPILER
+            throw std::overflow_error("robin_hood::map overflow");
+#else
+             throwOverflowError();
+#endif
         }
 
         rehashPowerOfTwo((mMask + 1) * 2);
@@ -2171,3 +2194,6 @@ using unordered_map =
 }  // namespace robin_hood
 
 #endif
+
+// (DB)
+// clang-format on

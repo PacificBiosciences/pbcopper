@@ -24,40 +24,17 @@ inline bool FileExists(const std::string& path)
 
 inline std::string FileExtension(const std::string& path)
 {
-    size_t fileStart = path.find_last_of("/");
-
-    if (fileStart == std::string::npos) fileStart = 0;
-
-    // increment beyond the '/'
-    ++fileStart;
-
-    size_t extStart = path.substr(fileStart, path.length() - fileStart).find_last_of(".");
-
-    if (extStart == std::string::npos) return "";
-
-    // increment beyond '.'
-    ++extStart;
-
-    auto suffix = path.substr(fileStart + extStart, path.length() - fileStart - extStart);
-    std::transform(suffix.begin(), suffix.end(), suffix.begin(), ::tolower);
-    return suffix;
+    const auto lastDot = path.rfind('.');
+    if (lastDot == std::string::npos) return std::string{};
+    return path.substr(lastDot + 1);
 }
 
 inline std::string FilePrefix(const std::string& path)
 {
-    size_t fileStart = path.find_last_of("/");
-
-    if (fileStart == std::string::npos) fileStart = -1;
-
-    // increment beyond the '/'
-    ++fileStart;
-
-    size_t extStart = path.substr(fileStart, path.length() - fileStart).find_first_of(".");
-
-    if (extStart == std::string::npos) return "";
-
-    auto suffix = path.substr(fileStart, extStart);
-    return suffix;
+    const auto lastSlash = path.rfind('/');
+    const auto filename = (lastSlash == std::string::npos ? path : path.substr(lastSlash + 1));
+    const auto firstDot = filename.find('.');
+    return filename.substr(0, firstDot);
 }
 
 }  // namespace Utility
