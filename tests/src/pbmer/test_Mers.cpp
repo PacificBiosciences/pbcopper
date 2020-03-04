@@ -1,4 +1,3 @@
-
 #include <iostream>
 #include <unordered_set>
 
@@ -8,24 +7,11 @@
 #include <pbcopper/pbmer/Mers.h>
 #include <pbcopper/pbmer/Parser.h>
 
-namespace Pbmer_MersTests {
-
-void CheckKmers(const std::vector<PacBio::Pbmer::Kmer>& kmers1,
-                const std::vector<PacBio::Pbmer::Kmer>& kmers2)
-{
-    ASSERT_EQ(kmers1.size(), kmers2.size());
-    for (unsigned int i = 0; i < kmers1.size(); i++) {
-        EXPECT_EQ(kmers1.at(i).mer, kmers2.at(kmers2.size() - i - 1).mer);
-    }
-}
-
-}  // namespace Pbmer_MersTests
-
 TEST(Pbmer_Mers, test_hash)
 {
-    const std::string td1{"ACGACCCTGAGCCCCCAGAGTCATCTAAAAAAATTCTCTCCTCT"};
 
     const PacBio::Pbmer::Parser parser{16};
+    const std::string td1{"ACGACCCTGAGCCCCCAGAGTCATCTAAAAAAATTCTCTCCTCT"};
     PacBio::Pbmer::Mers m{parser.Parse(td1)};
 
     /* A few useful examples
@@ -58,9 +44,9 @@ TEST(Pbmer_Mers, test_hash)
 
 TEST(Pbmer_Mers, test_minimizer_logic_f_short)
 {
-    const std::string td1{"ACGACCCTGAGC"};
 
     const PacBio::Pbmer::Parser parser{6};
+    const std::string td1{"ACGACCCTGAGC"};
     PacBio::Pbmer::Mers m{parser.Parse(td1)};
 
     //Michael Roberts et al 2014. figure 1.
@@ -86,9 +72,9 @@ TEST(Pbmer_Mers, test_minimizer_logic_f_short)
 
 TEST(Pbmer_Mers, test_minimizer_logic_f_long)
 {
-    const std::string td1{"ACGACCCTGAGCACTAC"};
 
     const PacBio::Pbmer::Parser parser{6};
+    const std::string td1{"ACGACCCTGAGCACTAC"};
     PacBio::Pbmer::Mers m{parser.Parse(td1)};
 
     //Michael Roberts et al 2014. figure 1.
@@ -119,9 +105,9 @@ TEST(Pbmer_Mers, test_minimizer_logic_f_long)
 
 TEST(Pbmer_Mers, test_minimizer_logic_r_long)
 {
-    const std::string td1{"ACGACCCTGAGCACTAC"};
 
     const PacBio::Pbmer::Parser parser{6};
+    const std::string td1{"ACGACCCTGAGCACTAC"};
     PacBio::Pbmer::Mers m{parser.Parse(td1)};
 
     //Michael Roberts et al 2014. figure 1.
@@ -152,9 +138,9 @@ TEST(Pbmer_Mers, test_minimizer_logic_r_long)
 
 TEST(Pbmer_Mers, test_minimizer_logic_r_short)
 {
-    const std::string td1{"ACGACCCTGAGC"};
 
     const PacBio::Pbmer::Parser parser{6};
+    const std::string td1{"ACGACCCTGAGC"};
     PacBio::Pbmer::Mers m{parser.Parse(td1)};
 
     //Michael Roberts et al 2014. figure 1.
@@ -180,9 +166,9 @@ TEST(Pbmer_Mers, test_minimizer_logic_r_short)
 
 TEST(Pbmer_Mers, test_minimizers_size)
 {
-    const std::string td1{"ACGACCCTGAGCCCCCAGAGTCATCTAAAAAAATTCTCTCCTCT"};
 
     const PacBio::Pbmer::Parser parser{16};
+    const std::string td1{"ACGACCCTGAGCCCCCAGAGTCATCTAAAAAAATTCTCTCCTCT"};
     PacBio::Pbmer::Mers m{parser.Parse(td1)};
 
     m.HashKmers();
@@ -193,9 +179,9 @@ TEST(Pbmer_Mers, test_minimizers_size)
 
 TEST(Pbmer_Mers, test_minimizer_logic_window_too_long)
 {
-    const std::string td1{"ACGACCCTGAGC"};
 
     const PacBio::Pbmer::Parser parser{6};
+    const std::string td1{"ACGACCCTGAGC"};
     PacBio::Pbmer::Mers m{parser.Parse(td1)};
 
     m.HashKmers();
@@ -218,10 +204,10 @@ TEST(Pbmer_Mers, test_minimizer_logic_window_too_long)
 
 TEST(Pbmer_Mers, test_nmps_matching)
 {
-    const std::string td1{"ACGACCCTGAGCCCCCAGAGTCATCTAAAAAAATTCTCTCAACGCTCTCT"};
-    const std::string td2{"AGAGAGCGTTGAGAGAATTTTTTTAGATGACTCTGGGGGCTCAGGGTCGT"};
 
     const PacBio::Pbmer::Parser parser{16};
+    const std::string td1{"ACGACCCTGAGCCCCCAGAGTCATCTAAAAAAATTCTCTCAACGCTCTCT"};
+    const std::string td2{"AGAGAGCGTTGAGAGAATTTTTTTAGATGACTCTGGGGGCTCAGGGTCGT"};
     PacBio::Pbmer::Mers m1{parser.Parse(td1)};
     PacBio::Pbmer::Mers m2{parser.Parse(td2)};
 
@@ -233,23 +219,25 @@ TEST(Pbmer_Mers, test_nmps_matching)
     m2.WindowMin(3);
     m2.WindowMin(2);
 
-    const auto nmps1 = m1.BuildNMPs();
-    const auto nmps2 = m2.BuildNMPs();
+    std::vector<PacBio::Pbmer::Kmer> nmps1 = m1.BuildNMPs();
+    std::vector<PacBio::Pbmer::Kmer> nmps2 = m2.BuildNMPs();
 
     EXPECT_EQ(9, nmps1.size());
     EXPECT_EQ(9, nmps2.size());
 
-    Pbmer_MersTests::CheckKmers(nmps1, nmps2);
+    for (unsigned int i = 0; i < nmps1.size(); i++) {
+        EXPECT_EQ(nmps1.at(i).mer, nmps2.at(nmps2.size() - i - 1).mer);
+    }
 }
 
 // checking that no minimizer == nmp. It is possible, but more likely a problem
 // during hashing or nmp generation
 TEST(Pbmer_Mers, test_nmps_hashing)
 {
-    const std::string td1{"ACGACCCTGAGCCCCCAGAGTCATCTAAAAAAATTCTCTCAACGCTCTCT"};
-    const std::string td2{"AGAGAGCGTTGAGAGAATTTTTTTAGATGACTCTGGGGGCTCAGGGTCGT"};
 
     const PacBio::Pbmer::Parser parser{16};
+    const std::string td1{"ACGACCCTGAGCCCCCAGAGTCATCTAAAAAAATTCTCTCAACGCTCTCT"};
+    const std::string td2{"AGAGAGCGTTGAGAGAATTTTTTTAGATGACTCTGGGGGCTCAGGGTCGT"};
     PacBio::Pbmer::Mers m1{parser.Parse(td1)};
     PacBio::Pbmer::Mers m2{parser.Parse(td2)};
 
@@ -261,14 +249,8 @@ TEST(Pbmer_Mers, test_nmps_hashing)
     m2.WindowMin(3);
     m2.WindowMin(2);
 
-    const auto nmps1 = m1.BuildNMPs();
-    const auto nmps2 = m2.BuildNMPs();
-
-    EXPECT_EQ(9, nmps1.size());
-    EXPECT_EQ(9, nmps2.size());
-    Pbmer_MersTests::CheckKmers(nmps1, nmps2);
-
     std::unordered_set<uint64_t> mins;
+
     for (const auto& x : m1.minimizers) {
         mins.insert(x.mer);
     }
@@ -276,7 +258,14 @@ TEST(Pbmer_Mers, test_nmps_hashing)
         mins.insert(x.mer);
     }
 
+    std::vector<PacBio::Pbmer::Kmer> nmps1 = m1.BuildNMPs();
+    std::vector<PacBio::Pbmer::Kmer> nmps2 = m2.BuildNMPs();
+
+    EXPECT_EQ(9, nmps1.size());
+    EXPECT_EQ(9, nmps2.size());
+
     for (unsigned int i = 0; i < nmps1.size(); i++) {
+        EXPECT_EQ(nmps1.at(i).mer, nmps2.at(nmps2.size() - i - 1).mer);
         EXPECT_EQ(mins.find(nmps1.at(i).mer), mins.end());
         EXPECT_EQ(mins.find(nmps2.at(i).mer), mins.end());
     }
@@ -284,25 +273,27 @@ TEST(Pbmer_Mers, test_nmps_hashing)
 
 TEST(Pbmer_Mers, test_minimizer_lexsmaller)
 {
-    const std::string td1{"ACGACCCTGAGCCCCCAGAGTCATCTAAAAAAATTCTCTCAACGCTCTCT"};
-    const std::string td2{"AGAGAGCGTTGAGAGAATTTTTTTAGATGACTCTGGGGGCTCAGGGTCGT"};
 
     const PacBio::Pbmer::Parser parser{16};
+    const std::string td1{"ACGACCCTGAGCCCCCAGAGTCATCTAAAAAAATTCTCTCAACGCTCTCT"};
+    const std::string td2{"AGAGAGCGTTGAGAGAATTTTTTTAGATGACTCTGGGGGCTCAGGGTCGT"};
 
     PacBio::Pbmer::Mers m1{parser.Parse(td1)};
     PacBio::Pbmer::Mers m2{parser.Parse(td2)};
     m1.HashKmers();
     m2.HashKmers();
 
-    Pbmer_MersTests::CheckKmers(m1.minimizers, m2.minimizers);
+    for (unsigned int i = 0; i < m1.minimizers.size(); ++i) {
+        EXPECT_EQ(m1.minimizers[i].mer, m2.minimizers[m2.minimizers.size() - i - 1].mer);
+    }
 }
 
 TEST(Pbmer_Mers, test_minimizer_strands_k2)
 {
-    const std::string td1{"ACGACCCTGAGCCCCCAGAGTCATCTAAAAAAATTCTCTCAACGCTCTCT"};
-    const std::string td2{"AGAGAGCGTTGAGAGAATTTTTTTAGATGACTCTGGGGGCTCAGGGTCGT"};
 
     const PacBio::Pbmer::Parser parser{16};
+    const std::string td1{"ACGACCCTGAGCCCCCAGAGTCATCTAAAAAAATTCTCTCAACGCTCTCT"};
+    const std::string td2{"AGAGAGCGTTGAGAGAATTTTTTTAGATGACTCTGGGGGCTCAGGGTCGT"};
     PacBio::Pbmer::Mers m1{parser.Parse(td1)};
     PacBio::Pbmer::Mers m2{parser.Parse(td2)};
 
@@ -312,15 +303,19 @@ TEST(Pbmer_Mers, test_minimizer_strands_k2)
     m2.HashKmers();
     m2.WindowMin(2);
 
-    Pbmer_MersTests::CheckKmers(m1.minimizers, m2.minimizers);
+    EXPECT_EQ(m1.minimizers.size(), m2.minimizers.size());
+
+    for (unsigned int i = 0; i < m1.minimizers.size(); ++i) {
+        EXPECT_EQ(m1.minimizers[i].mer, m2.minimizers[m2.minimizers.size() - i - 1].mer);
+    }
 }
 
 TEST(Pbmer_Mers, test_minimizer_strands_k1)
 {
-    const std::string td1{"ACGACCCTGAGCCCCCAGAGTCATCTAAAAAAATTCTCTCAACGCTCTCT"};
-    const std::string td2{"AGAGAGCGTTGAGAGAATTTTTTTAGATGACTCTGGGGGCTCAGGGTCGT"};
 
     const PacBio::Pbmer::Parser parser{16};
+    const std::string td1{"ACGACCCTGAGCCCCCAGAGTCATCTAAAAAAATTCTCTCAACGCTCTCT"};
+    const std::string td2{"AGAGAGCGTTGAGAGAATTTTTTTAGATGACTCTGGGGGCTCAGGGTCGT"};
     PacBio::Pbmer::Mers m1{parser.Parse(td1)};
     PacBio::Pbmer::Mers m2{parser.Parse(td2)};
 
@@ -330,15 +325,19 @@ TEST(Pbmer_Mers, test_minimizer_strands_k1)
     m2.HashKmers();
     m2.WindowMin(1);
 
-    Pbmer_MersTests::CheckKmers(m1.minimizers, m2.minimizers);
+    EXPECT_EQ(m1.minimizers.size(), m2.minimizers.size());
+
+    for (unsigned int i = 0; i < m1.minimizers.size(); ++i) {
+        EXPECT_EQ(m1.minimizers[i].mer, m2.minimizers[m2.minimizers.size() - i - 1].mer);
+    }
 }
 
 TEST(Pbmer_Mers, test_minimizer_strands_k10)
 {
-    const std::string td1{"ACGACCCTGAGCCCCCAGAGTCATCTAAAAAAATTCTCTCAACGCTCTCT"};
-    const std::string td2{"AGAGAGCGTTGAGAGAATTTTTTTAGATGACTCTGGGGGCTCAGGGTCGT"};
 
     const PacBio::Pbmer::Parser parser{16};
+    const std::string td1{"ACGACCCTGAGCCCCCAGAGTCATCTAAAAAAATTCTCTCAACGCTCTCT"};
+    const std::string td2{"AGAGAGCGTTGAGAGAATTTTTTTAGATGACTCTGGGGGCTCAGGGTCGT"};
     PacBio::Pbmer::Mers m1{parser.Parse(td1)};
     PacBio::Pbmer::Mers m2{parser.Parse(td2)};
 
@@ -348,18 +347,19 @@ TEST(Pbmer_Mers, test_minimizer_strands_k10)
     m2.HashKmers();
     m2.WindowMin(10);
 
-    Pbmer_MersTests::CheckKmers(m1.minimizers, m2.minimizers);
+    EXPECT_EQ(m1.minimizers.size(), m2.minimizers.size());
+
+    for (unsigned int i = 0; i < m1.minimizers.size(); ++i) {
+        EXPECT_EQ(m1.minimizers[i].mer, m2.minimizers[m2.minimizers.size() - i - 1].mer);
+    }
 }
 
 TEST(Pbmer_Mers, test_palindom)
 {
-    const std::string td1{"TCAAACTTTTTGAAATTTCAAAAAGTTTGA"};
-
     const PacBio::Pbmer::Parser parser{6};
+    const std::string td1{"TCAAACTTTTTGAAATTTCAAAAAGTTTGA"};
     PacBio::Pbmer::Mers m1{parser.Parse(td1)};
-
     m1.HashKmers();
     m1.WindowMin(3);
-
     EXPECT_GT(m1.minimizers.size(), 0);
 }
