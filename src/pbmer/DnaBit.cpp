@@ -130,6 +130,68 @@ DnaBit DnaBit::LexSmallerEq(void) const
     return *this;
 }
 
+uint8_t DnaBit::LongestDiNucRun() const
+{
+    if (msize <= 1) {
+        return 0;
+    }
+    if (msize <= 3) {
+        return 1;
+    }
+
+    uint8_t runLength = 0;
+    uint8_t tmpRun = 1;
+
+    // four bit mask
+    constexpr uint8_t mask = 0b1111;
+    uint8_t i = 0;
+    uint64_t tmp1 = 0;
+    uint64_t tmp2 = 0;
+    uint8_t upperBound = (msize * 2) - 4;
+
+    //first frame
+    while (i <= upperBound) {
+        tmp1 = mer;
+        tmp2 = mer;
+
+        tmp1 = (tmp1 >> i);
+        tmp2 = (tmp2 >> (i + 4));
+
+        if ((tmp1 & mask) == (tmp2 & mask)) {
+            ++tmpRun;
+            if (tmpRun > runLength) {
+                runLength = tmpRun;
+            }
+        } else {
+            tmpRun = 0;
+        }
+        i += 4;
+    }
+
+    tmpRun = 1;
+
+    //second frame
+    while (i <= upperBound) {
+        tmp1 = (mer >> 2);
+        tmp2 = (mer >> 2);
+
+        tmp1 = (tmp1 >> i);
+        tmp2 = (tmp2 >> (i + 4));
+
+        if ((tmp1 & mask) == (tmp2 & mask)) {
+            ++tmpRun;
+            if (tmpRun > runLength) {
+                runLength = tmpRun;
+            }
+        } else {
+            tmpRun = 0;
+        }
+        i += 4;
+    }
+
+    return runLength;
+}
+
 void DnaBit::PrependBase(const uint8_t b)
 {
     mer = (uint64_t(b % 4) << 2 * (msize - 1)) | (mer >> 2);
