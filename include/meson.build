@@ -189,7 +189,7 @@ if not meson.is_subproject()
       'pbcopper/pbmer/Kmer.h',
       'pbcopper/pbmer/Mers.h',
       'pbcopper/pbmer/Parser.h']),
-    subdir : 'pbcopper/parallel')
+    subdir : 'pbcopper/pbmer')
 
   # pbcopper/reports
   install_headers(
