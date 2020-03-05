@@ -22,7 +22,7 @@ uint64_t Mix64Masked(uint64_t key, uint8_t kmerSize);
 class DnaBit
 {
 public:
-    // 32 DNA bases are packed into a uint64
+    // 32 DNA bases are packed into a uint64 (<<), empty slots are on the left.
     uint64_t mer = 0;
     // Strand and size (in bp; bits = 2*bp).
     // Keeping the mer size in the class makes life a lot easier.
@@ -47,6 +47,11 @@ public:
     /// \return the hashed smaller kmer (forward/reverse).
     ///
     DnaBit LexSmallerEq() const;
+
+    ///
+    /// Count the longest di nuclotide run (AA,AT,AC,...)
+    ///
+    uint8_t LongestDiNucRun() const;
 
     ///
     /// \return the kmer as a printable string;
