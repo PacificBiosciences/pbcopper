@@ -160,7 +160,7 @@ TEST(Pbmer_DnaBit, bin_pack_unpack)
     EXPECT_EQ(k1, k2);
 }
 
-TEST(Pbmer_DnaBit, dinuc_a)
+TEST(Pbmer_DnaBit, dinuc_homopolymer)
 {
     PacBio::Pbmer::DnaBit k1{20753, 0, 16};
     //1.2.3.4.
@@ -168,7 +168,7 @@ TEST(Pbmer_DnaBit, dinuc_a)
     EXPECT_EQ(k1.LongestDiNucRun(), 4);
 }
 
-TEST(Pbmer_DnaBit, dinuc_b)
+TEST(Pbmer_DnaBit, dinuc_short_homopolymer)
 {
     PacBio::Pbmer::DnaBit k1{2862426841, 0, 16};
     k1.ReverseComp();
@@ -177,7 +177,7 @@ TEST(Pbmer_DnaBit, dinuc_b)
     EXPECT_EQ(k1.LongestDiNucRun(), 2);
 }
 
-TEST(Pbmer_DnaBit, dinuc_c)
+TEST(Pbmer_DnaBit, dinuc_ta_run)
 {
     PacBio::Pbmer::DnaBit k1{3355443, 0, 16};
     //       6.5.4.3.2.1
@@ -185,7 +185,7 @@ TEST(Pbmer_DnaBit, dinuc_c)
     EXPECT_EQ(k1.LongestDiNucRun(), 6);
 }
 
-TEST(Pbmer_DnaBit, dinuc_d)
+TEST(Pbmer_DnaBit, dinuc_three_mer)
 {
     PacBio::Pbmer::DnaBit k1{0, 0, 3};
     //  1.1
@@ -193,7 +193,7 @@ TEST(Pbmer_DnaBit, dinuc_d)
     EXPECT_EQ(k1.LongestDiNucRun(), 1);
 }
 
-TEST(Pbmer_DnaBit, dinuc_e)
+TEST(Pbmer_DnaBit, dinuc_two_mers)
 {
     PacBio::Pbmer::DnaBit k1{0, 0, 2};
     //  1.
@@ -201,7 +201,7 @@ TEST(Pbmer_DnaBit, dinuc_e)
     EXPECT_EQ(k1.LongestDiNucRun(), 1);
 }
 
-TEST(Pbmer_DnaBit, dinuc_f)
+TEST(Pbmer_DnaBit, dinuc_two_mer_otherbase)
 {
     PacBio::Pbmer::DnaBit k1{3, 0, 2};
     EXPECT_EQ(k1.LongestDiNucRun(), 1);
