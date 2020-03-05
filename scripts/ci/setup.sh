@@ -3,6 +3,7 @@ set -vex
 
 export BUILD_NUMBER="0"
 export ENABLED_TESTS="true"
+export SHOULD_INSTALL="false"
 
 case "${GCC_VERSION}" in
   RHEL)
@@ -31,6 +32,7 @@ case "${GCC_VERSION}" in
       develop-release-off-false|master-release-off-false)
         export PREFIX_ARG="/mnt/software/p/pbcopper/${bamboo_planRepository_branchName}"
         export BUILD_NUMBER="${bamboo_globalBuildNumber:-0}"
+        export SHOULD_INSTALL="${INSTALL_IMAGE:-false}"
         ;;
     esac
 

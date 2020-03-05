@@ -5,11 +5,6 @@ set -vex
 # INSTALL #
 ###########
 
-if [[ ${_install_image} != true ]]; then
-  echo "Not installing image (branch: ${bamboo_planRepository_branchName}), returning."
-  return 0
-fi
-
 if [[ ${PREFIX_ARG} ]]; then
   ## Cleaning out old installation from /mnt/software
   rm -rf "${PREFIX_ARG}"/*
