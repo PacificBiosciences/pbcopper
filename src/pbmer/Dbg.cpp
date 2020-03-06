@@ -26,7 +26,7 @@ struct RadixTraits_128
 
 Dbg::Dbg(uint8_t k, uint32_t nr) : kmerSize_{k}, nReads_{nr} {}
 
-int Dbg::AddKmers(std::vector<BI>& kmers, uint32_t minFreqCutoff)
+void Dbg::AddKmers(std::vector<BI>& kmers, uint32_t minFreqCutoff)
 {
     kx::radix_sort(kmers.begin(), kmers.end(), RadixTraits_128());
     size_t start_i = 0;
@@ -55,7 +55,6 @@ int Dbg::AddKmers(std::vector<BI>& kmers, uint32_t minFreqCutoff)
             end_i = start_i;
         }
     }
-    return 1;
 }
 
 int Dbg::AddKmers(const PacBio::Pbmer::Mers& m, const uint32_t rid)
@@ -83,6 +82,133 @@ int Dbg::AddKmers(const PacBio::Pbmer::Mers& m, const uint32_t rid)
     return 1;
 }
 
+void Dbg::AddVerifedKmerPairs(std::vector<DnaBit>& bits, const uint32_t rid)
+{
+
+    for (size_t i = 0; i < bits.size(); ++i) {
+        bits[i].MakeLexSmaller();
+    }
+
+    auto edges = BuildVerifiedEdges(bits);
+
+    for (size_t i = 0; i < bits.size(); ++i) {
+
+        if (dbg_.find(bits[i].mer) != dbg_.end()) {
+            dbg_.at(bits[i].mer).AddLoad(rid);
+        } else {
+
+            DbgNode eg{bits[i], 0};
+            eg.readIds2_.resize(nReads_);
+
+            eg.AddLoad(rid);
+
+            dbg_.emplace(bits[i].mer, std::move(eg));
+        }
+        dbg_.at(bits[i].mer).SetEdges(edges[i]);
+    }
+}
+
+uint8_t SetRevEdge(const DnaBit& a, const DnaBit& b)
+{
+    uint8_t c = (a.strand << 1) | (b.strand);
+    uint8_t es = 1;
+
+    DnaBit newNib = a;
+
+    switch (c) {
+        case 0: {
+            es <<= (b.GetFirstBaseIdx() + 0);
+            newNib.PrependBase(b.GetFirstBaseIdx());
+            break;
+        }
+        case 1: {
+            es <<= (b.GetFirstBaseRCIdx() + 0);
+            newNib.PrependBase(b.GetFirstBaseRCIdx());
+            newNib = newNib.LexSmallerEq();
+            break;
+        }
+        case 2: {
+            es <<= (b.GetLastBaseRCIdx() + 4);
+            newNib.AppendBase(b.GetLastBaseRCIdx());
+            newNib = newNib.LexSmallerEq();
+            break;
+        }
+        case 3: {
+            es <<= (b.GetLastBaseIdx() + 4);
+            newNib.AppendBase(b.GetLastBaseIdx());
+            break;
+        }
+
+        default: {
+            break;
+        }
+    }
+    if (a.mer == newNib.mer) return 0;
+    return es;
+}
+
+uint8_t SetForEdge(const DnaBit& a, const DnaBit& b)
+{
+    uint8_t c = (a.strand << 1) | (b.strand);
+    uint8_t es = 1;
+
+    DnaBit newNib = a;
+
+    switch (c) {
+        case 0: {
+            es <<= (b.GetLastBaseIdx() + 4);
+            newNib.AppendBase(b.GetLastBaseIdx());
+            break;
+        }
+        case 1: {
+            es <<= (b.GetLastBaseRCIdx() + 4);
+            newNib.AppendBase(b.GetLastBaseRCIdx());
+            newNib = newNib.LexSmallerEq();
+            break;
+        }
+        case 2: {
+            es <<= (b.GetFirstBaseRCIdx() + 0);
+            newNib.PrependBase(b.GetFirstBaseRCIdx());
+            newNib = newNib.LexSmallerEq();
+            break;
+        }
+        case 3: {
+            es <<= (b.GetFirstBaseIdx() + 0);
+            newNib.PrependBase(b.GetFirstBaseIdx());
+            break;
+        }
+
+        default: {
+            break;
+        }
+    }
+
+    if (a.mer == newNib.mer) return 0;
+    return es;
+}
+
+std::vector<uint8_t> Dbg::BuildVerifiedEdges(const std::vector<PacBio::Pbmer::DnaBit>& bits)
+{
+
+    std::vector<uint8_t> edges;
+    edges.reserve(bits.size());
+    for (size_t i = 0; i < bits.size(); ++i) {
+        edges.push_back(0);
+    }
+
+    // set back edges
+    for (size_t i = 1; i < bits.size(); ++i) {
+        edges[i] |= SetRevEdge(bits[i], bits[i - 1]);
+    }
+
+    // set forward edges
+    for (size_t i = 0; i < bits.size() - 1; ++i) {
+        edges[i] |= SetForEdge(bits[i], bits[i + 1]);
+    }
+
+    return edges;
+}
+
 void Dbg::BuildEdges()
 {
     for (auto x = dbg_.begin(); x != dbg_.end(); ++x) {
@@ -108,7 +234,7 @@ void Dbg::BuildEdges()
 
             if (dbg_.find(niby.mer) != dbg_.end()) {
                 //setting the edges
-                x->second.SetEdges((uint8_t(1) << ((y & 3) + (y & 4))));
+                x->second.SetEdges((uint8_t(1) << y));
             }
         }
     }
@@ -141,6 +267,47 @@ void Dbg::FrequencyFilterNodes(unsigned long n)
         dbg_.erase(x);
     }
 }
+
+void Dbg::FrequencyFilterNodes2(unsigned long n)
+{
+
+    std::vector<uint64_t> toRemove;
+
+    for (auto x = dbg_.begin(); x != dbg_.end(); ++x) {
+        if (x->second.readIds2_.count() < n) {
+            toRemove.push_back(x->first);
+        }
+    }
+    for (const auto x : toRemove) {
+        dbg_.erase(x);
+    }
+
+    uint64_t lexSmall = 0;
+
+    for (auto x = dbg_.begin(); x != dbg_.end(); ++x) {
+        for (uint8_t y = 0; y < 8; ++y) {
+            if (((1 << y) & x->second.edges_) == 0) continue;
+            DnaBit niby = x->second.dna_;
+            // pre-prending base
+            if (y <= 3) {
+                niby.PrependBase(y);
+            }
+            // appending base
+            else {
+                niby.AppendBase(y);
+            }
+
+            // generate new lex smallest
+            lexSmall = niby.LexSmallerEq64();
+
+            if (dbg_.find(lexSmall) == dbg_.end()) {
+                uint8_t turnOff = ~(uint8_t(1) << y);
+                x->second.edges_ &= turnOff;
+            }
+        }
+    }
+}
+
 BubbleInfo Dbg::GetBubbles() const
 {
     // returned container describing which reads traverse which forks
@@ -298,6 +465,16 @@ std::string Dbg::Graph2StringDot()
 }
 
 size_t Dbg::NNodes() const { return dbg_.size(); }
+
+size_t Dbg::NEdges() const
+{
+    size_t edgeCount = 0;
+
+    for (auto x = dbg_.begin(); x != dbg_.end(); ++x) {
+        edgeCount += x->second.TotalEdgeCount();
+    }
+    return edgeCount;
+}
 
 bool Dbg::OneIntermediateNode(uint64_t n1, uint64_t n2, uint64_t* shared) const
 {
