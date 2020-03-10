@@ -64,7 +64,9 @@ public:
     ///
     int AddKmers(const PacBio::Pbmer::Mers& m, const uint32_t rid);
 
-    int AddKmers(std::vector<BI>& kmers, uint32_t minFreqCutoff);
+    void AddKmers(std::vector<BI>& kmers, uint32_t minFreqCutoff);
+
+    void AddVerifedKmerPairs(std::vector<PacBio::Pbmer::DnaBit>& bits, const uint32_t rid);
 
     ///
     /// Iterates over node kmers and checks for all possible out/in bases
@@ -73,9 +75,20 @@ public:
     void BuildEdges();
 
     ///
+    /// Iterates over node kmers and checks for all possible out/in bases
+    /// {A, C, G, T} and sets the out/in edges based on neighbors.
+    ///
+    std::vector<uint8_t> BuildVerifiedEdges(const std::vector<PacBio::Pbmer::DnaBit>& bits);
+
+    ///
     /// \return number of nodes in the graph
     ///
     size_t NNodes() const;
+
+    ///
+    /// \return number of edges
+    ///
+    size_t NEdges() const;
 
     ///
     /// Resets all the edges to zero, meaning no outgoing/incoming edges.
@@ -95,6 +108,8 @@ public:
     /// \param n    read count per kmer to filter on
     ///
     void FrequencyFilterNodes(unsigned long n);
+
+    void FrequencyFilterNodes2(unsigned long n);
 
     ///
     /// Checks that each node has at least one read id.

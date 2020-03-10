@@ -130,6 +130,22 @@ DnaBit DnaBit::LexSmallerEq(void) const
     return *this;
 }
 
+uint64_t DnaBit::LexSmallerEq64() const
+{
+    uint64_t rc = ReverseComp64(mer, msize);
+    if (Mix64Masked(rc, msize) <= Mix64Masked(mer, msize)) {
+        return rc;
+    }
+    return mer;
+}
+
+void DnaBit::MakeLexSmaller()
+{
+    DnaBit test = *this;
+    test.ReverseComp();
+    if (test <= *this) *this = test;
+}
+
 uint8_t DnaBit::LongestDiNucRun() const
 {
     if (msize <= 1) {

@@ -44,9 +44,19 @@ public:
     bool operator!=(DnaBit const& b) const;
 
     ///
-    /// \return the hashed smaller kmer (forward/reverse).
+    /// \return the hashed smaller DnaBit (forward/reverse).
     ///
     DnaBit LexSmallerEq() const;
+
+    ///
+    /// \return the hashed smaller uint64_t (forward/reverse).
+    ///
+    uint64_t LexSmallerEq64() const;
+
+    ///
+    /// \places the hashed smaller kmer (forward/reverse).
+    ///
+    void MakeLexSmaller();
 
     ///
     /// Count the longest di nuclotide run (AA,AT,AC,...)

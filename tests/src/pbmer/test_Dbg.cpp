@@ -193,6 +193,52 @@ TEST(Pbmer_Dbg, test_topo_five_kmers_add_many)
     EXPECT_EQ(seen, expected);
 }
 
+TEST(Pbmer_Dbg, test_topo_five_kmers_add_verifed_edges)
+{
+    const PacBio::Pbmer::Parser parser{3};
+    const std::string td1{"CATACCT"};
+    std::vector<PacBio::Pbmer::DnaBit> m1 = parser.ParseDnaBit(td1);
+
+    PacBio::Pbmer::Dbg dg{3, 1};
+
+    dg.AddVerifedKmerPairs(m1, 1);
+
+    EXPECT_EQ(dg.NNodes(), 5);
+
+    std::string expected = R"(digraph DBGraph {
+    GGT [fillcolor=red, style="rounded,filled", shape=diamond]
+    CCT [fillcolor=grey, style="rounded,filled", shape=ellipse]
+    GTA [fillcolor=red, style="rounded,filled", shape=diamond]
+    ATG [fillcolor=red, style="rounded,filled", shape=diamond]
+    TAT [fillcolor=red, style="rounded,filled", shape=diamond]
+    GGT -> GTA;
+    GGT -> CCT;
+    CCT -> GGT;
+    GTA -> TAT;
+    GTA -> GGT;
+    ATG -> TAT;
+    TAT -> ATG;
+    TAT -> GTA;
+})";
+
+    std::string seen = dg.Graph2StringDot();
+
+    EXPECT_EQ(seen, expected);
+}
+
+TEST(Pbmer_Dbg, can_validate_verified_edges)
+{
+    const PacBio::Pbmer::Parser parser{7};
+    const std::string td1{"CATACCAGCTTCCACAGACGGACGACAGATTGCAT"};
+    std::vector<PacBio::Pbmer::DnaBit> m1 = parser.ParseDnaBit(td1);
+
+    PacBio::Pbmer::Dbg dg{7, 1};
+
+    dg.AddVerifedKmerPairs(m1, 1);
+
+    EXPECT_EQ(dg.ValidateEdges(), true);
+}
+
 TEST(Pbmer_Dbg, can_validate_load)
 {
     const PacBio::Pbmer::Parser parser{3};
