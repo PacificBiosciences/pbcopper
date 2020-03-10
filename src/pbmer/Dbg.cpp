@@ -190,11 +190,7 @@ uint8_t SetForEdge(const DnaBit& a, const DnaBit& b)
 std::vector<uint8_t> Dbg::BuildVerifiedEdges(const std::vector<PacBio::Pbmer::DnaBit>& bits)
 {
 
-    std::vector<uint8_t> edges;
-    edges.reserve(bits.size());
-    for (size_t i = 0; i < bits.size(); ++i) {
-        edges.push_back(0);
-    }
+    std::vector<uint8_t> edges(bits.size(), 0);
 
     // set back edges
     for (size_t i = 1; i < bits.size(); ++i) {
