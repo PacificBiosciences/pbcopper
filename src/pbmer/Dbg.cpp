@@ -68,7 +68,7 @@ int Dbg::AddKmers(const PacBio::Pbmer::Mers& m, const uint32_t rid)
         DnaBit niby{x.mer, static_cast<uint8_t>(x.strand == Data::Strand::FORWARD ? 0 : 1),
                     kmerSize_};
 
-        niby = niby.LexSmallerEq();
+        niby.MakeLexSmaller();
 
         if (dbg_.find(niby.mer) != dbg_.end()) {
             dbg_.at(niby.mer).AddLoad(rid);
@@ -124,13 +124,13 @@ uint8_t SetRevEdge(const DnaBit& a, const DnaBit& b)
         case 1: {
             es <<= (b.GetFirstBaseRCIdx() + 0);
             newNib.PrependBase(b.GetFirstBaseRCIdx());
-            newNib = newNib.LexSmallerEq();
+            newNib.MakeLexSmaller();
             break;
         }
         case 2: {
             es <<= (b.GetLastBaseRCIdx() + 4);
             newNib.AppendBase(b.GetLastBaseRCIdx());
-            newNib = newNib.LexSmallerEq();
+            newNib.MakeLexSmaller();
             break;
         }
         case 3: {
@@ -163,13 +163,13 @@ uint8_t SetForEdge(const DnaBit& a, const DnaBit& b)
         case 1: {
             es <<= (b.GetLastBaseRCIdx() + 4);
             newNib.AppendBase(b.GetLastBaseRCIdx());
-            newNib = newNib.LexSmallerEq();
+            newNib.MakeLexSmaller();
             break;
         }
         case 2: {
             es <<= (b.GetFirstBaseRCIdx() + 0);
             newNib.PrependBase(b.GetFirstBaseRCIdx());
-            newNib = newNib.LexSmallerEq();
+            newNib.MakeLexSmaller();
             break;
         }
         case 3: {
@@ -222,7 +222,7 @@ void Dbg::BuildEdges()
             }
 
             // generate new lex smallest
-            niby = niby.LexSmallerEq();
+            niby.MakeLexSmaller();
 
             // this is a self loop
             // TODO validate this should not be skipped.
