@@ -4,18 +4,17 @@
 #include <iostream>
 #include <sstream>
 #include <string>
+#include <tuple>
 #include <vector>
 
 #include <pbcopper/cli2/CLI.h>
 #include <pbcopper/cli2/Option.h>
 #include <pbcopper/cli2/PositionalArgument.h>
 #include <pbcopper/cli2/Results.h>
-#include <pbcopper/utility/Unused.h>
-
 #include <pbcopper/cli2/internal/HelpMetrics.h>
 #include <pbcopper/cli2/internal/InterfaceHelpPrinter.h>
+#include <pbcopper/utility/OStreamRedirect.h>
 
-#include "../../include/OStreamRedirector.h"
 #include "PbcopperTestData.h"
 
 // clang-format off
@@ -126,8 +125,8 @@ TEST(CLI2_CLI, can_print_version)
     };
 
     std::ostringstream s;
-    tests::CoutRedirect redirect(s.rdbuf());
-    UNUSED(redirect);
+    PacBio::Utility::CoutRedirect redirect{s.rdbuf()};
+    std::ignore = redirect;
 
     const PacBio::CLI_v2::Interface i{"frobber", "Frob all the things", "v3.1"};
     const int result = PacBio::CLI_v2::Run(args, i, runner);
@@ -165,8 +164,8 @@ TEST(CLI2_CLI, can_print_help)
     };
 
     std::ostringstream s;
-    tests::CoutRedirect redirect(s.rdbuf());
-    UNUSED(redirect);
+    PacBio::Utility::CoutRedirect redirect{s.rdbuf()};
+    std::ignore = redirect;
 
     const PacBio::CLI_v2::Interface i{"frobber", "Frob all the things.", "v3.1"};
     const int result = PacBio::CLI_v2::Run(args, i, runner);
@@ -253,8 +252,8 @@ Typical workflow:
     };
 
     std::ostringstream s;
-    tests::CoutRedirect redirect(s.rdbuf());
-    UNUSED(redirect);
+    PacBio::Utility::CoutRedirect redirect{s.rdbuf()};
+    std::ignore = redirect;
 
     const int result = PacBio::CLI_v2::Run(args, i);
     EXPECT_EQ(EXIT_SUCCESS, result);
@@ -294,8 +293,8 @@ Usage:
     };
 
     std::ostringstream s;
-    tests::CoutRedirect redirect(s.rdbuf());
-    UNUSED(redirect);
+    PacBio::Utility::CoutRedirect redirect{s.rdbuf()};
+    std::ignore = redirect;
 
     const int result = PacBio::CLI_v2::Run(args, i);
     EXPECT_EQ(EXIT_SUCCESS, result);
@@ -334,8 +333,8 @@ TEST(CLI2_CLI, can_run_from_command_line_args)
     i.AddOption(MaxNumLines);
 
     std::ostringstream s;
-    tests::CoutRedirect redirect(s.rdbuf());
-    UNUSED(redirect);
+    PacBio::Utility::CoutRedirect redirect{s.rdbuf()};
+    std::ignore = redirect;
 
     const int result = PacBio::CLI_v2::Run(args, i, runner);
     EXPECT_EQ(EXIT_SUCCESS, result);
@@ -393,8 +392,8 @@ TEST(CLI2_CLI, correctly_interprets_implicit_empty_strings)
     });
 
     std::ostringstream s;
-    tests::CoutRedirect redirect(s.rdbuf());
-    UNUSED(redirect);
+    PacBio::Utility::CoutRedirect redirect{s.rdbuf()};
+    std::ignore = redirect;
 
     const int result = PacBio::CLI_v2::Run(args, i, runner);
     EXPECT_EQ(EXIT_SUCCESS, result);
@@ -413,8 +412,8 @@ TEST(CLI2_CLI, can_run_multitoolinterface_subtool_from_command_line_args)
     };
 
     std::ostringstream s;
-    tests::CoutRedirect redirect(s.rdbuf());
-    UNUSED(redirect);
+    PacBio::Utility::CoutRedirect redirect{s.rdbuf()};
+    std::ignore = redirect;
 
     const int result = PacBio::CLI_v2::Run(args, i);
     EXPECT_EQ(EXIT_SUCCESS, result);
@@ -445,8 +444,8 @@ TEST(CLI2_CLI, can_fetch_default_log_level_and_log_file_from_results)
     const auto defaultLogLevel = i.DefaultLogLevel();
 
     std::ostringstream s;
-    tests::CoutRedirect redirect(s.rdbuf());
-    UNUSED(redirect);
+    PacBio::Utility::CoutRedirect redirect{s.rdbuf()};
+    std::ignore = redirect;
 
     auto runner = [&defaultLogLevel](const PacBio::CLI_v2::Results& results)
     {
@@ -485,8 +484,8 @@ TEST(CLI2_CLI, can_fetch_overriden_default_log_level_from_results)
     i.DefaultLogLevel(defaultLogLevel);
 
     std::ostringstream s;
-    tests::CoutRedirect redirect(s.rdbuf());
-    UNUSED(redirect);
+    PacBio::Utility::CoutRedirect redirect{s.rdbuf()};
+    std::ignore = redirect;
 
     auto runner = [&MaxNumLines, &defaultLogLevel](const PacBio::CLI_v2::Results& results)
     {
@@ -518,8 +517,8 @@ TEST(CLI2_CLI, can_fetch_log_level_from_results)
     PacBio::CLI_v2::Interface i{"frobber", "Frob all the things.", "v3.1"};
 
     std::ostringstream s;
-    tests::CoutRedirect redirect(s.rdbuf());
-    UNUSED(redirect);
+    PacBio::Utility::CoutRedirect redirect{s.rdbuf()};
+    std::ignore = redirect;
 
     const int result = PacBio::CLI_v2::Run(args, i, runner);
     EXPECT_EQ(EXIT_SUCCESS, result);
@@ -539,8 +538,8 @@ TEST(CLI2_CLI, can_fetch_log_file_from_results)
     PacBio::CLI_v2::Interface i{"frobber", "Frob all the things.", "v3.1"};
 
     std::ostringstream s;
-    tests::CoutRedirect redirect(s.rdbuf());
-    UNUSED(redirect);
+    PacBio::Utility::CoutRedirect redirect{s.rdbuf()};
+    std::ignore = redirect;
 
     const int result = PacBio::CLI_v2::Run(args, i, runner);
     EXPECT_EQ(EXIT_SUCCESS, result);
@@ -561,8 +560,8 @@ TEST(CLI2_CLI, verbosity_is_true_if_enabled_and_user_requested)
     i.EnableVerboseOption();
 
     std::ostringstream s;
-    tests::CoutRedirect redirect(s.rdbuf());
-    UNUSED(redirect);
+    PacBio::Utility::CoutRedirect redirect{s.rdbuf()};
+    std::ignore = redirect;
 
     const int result = PacBio::CLI_v2::Run(args, i, runner);
     EXPECT_EQ(EXIT_SUCCESS, result);
@@ -583,8 +582,8 @@ TEST(CLI2_CLI, verbosity_is_false_if_enabled_but_not_user_requested)
     i.EnableVerboseOption();
 
     std::ostringstream s;
-    tests::CoutRedirect redirect(s.rdbuf());
-    UNUSED(redirect);
+    PacBio::Utility::CoutRedirect redirect{s.rdbuf()};
+    std::ignore = redirect;
 
     const int result = PacBio::CLI_v2::Run(args, i, runner);
     EXPECT_EQ(EXIT_SUCCESS, result);
@@ -604,8 +603,8 @@ TEST(CLI2_CLI, verbosity_is_false_if_not_enabled)
     PacBio::CLI_v2::Interface i{"frobber", "Frob all the things.", "v3.1"};
 
     std::ostringstream s;
-    tests::CoutRedirect redirect(s.rdbuf());
-    UNUSED(redirect);
+    PacBio::Utility::CoutRedirect redirect{s.rdbuf()};
+    std::ignore = redirect;
 
     const int result = PacBio::CLI_v2::Run(args, i, runner);
     EXPECT_EQ(EXIT_SUCCESS, result);
@@ -624,8 +623,8 @@ TEST(CLI2_CLI, can_run_tool_with_optional_pos_args)
     i.AddPositionalArgument(CLI_v2_CLITests::Source);
 
     std::ostringstream s;
-    tests::CoutRedirect redirect(s.rdbuf());
-    UNUSED(redirect);
+    PacBio::Utility::CoutRedirect redirect{s.rdbuf()};
+    std::ignore = redirect;
 
     const int result = PacBio::CLI_v2::Run(args, i, runner);
     EXPECT_EQ(EXIT_SUCCESS, result);
@@ -643,8 +642,8 @@ TEST(CLI2_CLI, no_throw_on_disabled_log_file_option_in_setup)
     i.DisableLogFileOption();
 
     std::ostringstream s;
-    tests::CoutRedirect redirect(s.rdbuf());
-    UNUSED(redirect);
+    PacBio::Utility::CoutRedirect redirect{s.rdbuf()};
+    std::ignore = redirect;
 
     EXPECT_NO_THROW(PacBio::CLI_v2::Run(args, i, runner););
 }
@@ -661,8 +660,8 @@ TEST(CLI2_CLI, no_throw_on_disabled_log_level_option_in_setup)
     i.DisableLogLevelOption();
 
     std::ostringstream s;
-    tests::CoutRedirect redirect(s.rdbuf());
-    UNUSED(redirect);
+    PacBio::Utility::CoutRedirect redirect{s.rdbuf()};
+    std::ignore = redirect;
 
     EXPECT_NO_THROW(PacBio::CLI_v2::Run(args, i, runner););
 }
