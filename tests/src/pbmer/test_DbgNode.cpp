@@ -11,7 +11,8 @@ TEST(Pbmer_DbgNode, can_iterate_over_one_a_dnabits)
     eg.SetEdges(2);
     int count = 0;
     for (const auto& i : eg) {
-        if (i.mer) ++count;
+        (void)i;
+        ++count;
     }
     EXPECT_EQ(count, 1);
 }
@@ -23,7 +24,8 @@ TEST(Pbmer_DbgNode, can_iterate_over_one_b_dnabits)
     eg.SetEdges(1);
     int count = 0;
     for (const auto& i : eg) {
-        if (i.mer) ++count;
+        (void)i;
+        ++count;
     }
     EXPECT_EQ(count, 1);
 }
@@ -38,7 +40,8 @@ TEST(Pbmer_DbgNode, can_iterate_over_one_c_dnabits)
     eg.SetEdges(128);
     int count = 0;
     for (const auto& i : eg) {
-        if (i.mer) ++count;
+        (void)i;
+        ++count;
     }
     EXPECT_EQ(count, 1);
 }
@@ -54,7 +57,8 @@ TEST(Pbmer_DbgNode, can_iterate_over_two_a_dnabits)
     eg.SetEdges(129);
     int count = 0;
     for (const auto& i : eg) {
-        if (i.mer) ++count;
+        (void)i;
+        ++count;
     }
     EXPECT_EQ(count, 2);
 }
@@ -66,7 +70,8 @@ TEST(Pbmer_DbgNode, can_iterate_over_two_b_dnabits)
     eg.SetEdges(5);
     int count = 0;
     for (const auto& i : eg) {
-        if (i.mer) ++count;
+        (void)i;
+        ++count;
     }
     EXPECT_EQ(count, 2);
 }
@@ -78,7 +83,8 @@ TEST(Pbmer_DbgNode, can_iterate_over_three_a_dnabits)
     eg.SetEdges(7);
     int count = 0;
     for (const auto& i : eg) {
-        if (i.mer) ++count;
+        (void)i;
+        ++count;
     }
     EXPECT_EQ(count, 3);
 }
