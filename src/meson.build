@@ -93,6 +93,7 @@ pbcopper_cpp_sources = files([
   # pbmer
   # ---------
   'pbmer/Dbg.cpp',
+  'pbmer/DbgNode.cpp',
   'pbmer/DnaBit.cpp',
   'pbmer/Kmer.cpp',
   'pbmer/Mers.cpp',

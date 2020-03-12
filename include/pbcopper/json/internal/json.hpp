@@ -27,6 +27,9 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE  OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
+// (DB)
+// clang-format off
+
 #ifndef INCLUDE_NLOHMANN_JSON_HPP_
 #define INCLUDE_NLOHMANN_JSON_HPP_
 
@@ -45,6 +48,7 @@ SOFTWARE.
 #include <memory> // unique_ptr
 #include <numeric> // accumulate
 #include <string> // string, stoi, to_string
+#include <type_traits>
 #include <utility> // declval, forward, move, pair, swap
 #include <vector> // vector
 
@@ -12692,6 +12696,22 @@ class serializer
         }
     }
 
+    // (DB): is_negative() helpers for icpc workaround
+    template<typename NumberType,
+             typename std::enable_if_t<
+                 std::is_unsigned<NumberType>::value, int> = 0>
+    bool is_negative_number(NumberType)
+    {
+        return false;
+    }
+    template<typename NumberType,
+             typename std::enable_if_t<
+                 std::is_signed<NumberType>::value, int> = 0>
+    bool is_negative_number(NumberType x)
+    {
+        return x < 0;
+    }
+
     /*!
     @brief dump an integer
 
@@ -12733,7 +12753,9 @@ class serializer
         // use a pointer to fill the buffer
         auto buffer_ptr = number_buffer.begin();
 
-        const bool is_negative = std::is_same<NumberType, number_integer_t>::value and not(x >= 0); // see issue #755
+        // (DB)
+        const bool is_negative = is_negative_number(x);
+
         number_unsigned_t abs_value;
 
         unsigned int n_chars;
@@ -21030,3 +21052,6 @@ inline nlohmann::json::json_pointer operator "" _json_pointer(const char* s, std
 
 
 #endif  // INCLUDE_NLOHMANN_JSON_HPP_
+
+// (DB)
+// clang-format on

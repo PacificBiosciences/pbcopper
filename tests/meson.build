@@ -59,6 +59,7 @@ pbcopper_test_cpp_sources = files([
 
   # pbmer
   'src/pbmer/test_Dbg.cpp',
+  'src/pbmer/test_DbgNode.cpp',
   'src/pbmer/test_DnaBit.cpp',
   'src/pbmer/test_Kmer.cpp',
   'src/pbmer/test_Mers.cpp',

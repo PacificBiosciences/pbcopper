@@ -22,7 +22,6 @@ foreach cflag: [
   '-Wduplicated-branches',
   '-Wlogical-op',
   '-Wrestrict',
-  '-Wuseless-cast',
   '-Wdouble-promotion',
   '-Wshadow',
   '-Wformat=1']

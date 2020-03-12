@@ -10,6 +10,9 @@ type module >& /dev/null || . /mnt/software/Modules/current/init/bash
 
 module purge
 
+[[ ${GCC_VERSION} == ICC ]] && module use /pbi/dept/primary/modulefiles
+module use /mnt/software/modulefiles
+
 module load meson
 module load ninja
 
@@ -31,7 +34,7 @@ source scripts/ci/setup.sh
 source scripts/ci/build.sh
 source scripts/ci/test.sh
 
-if [[ ${BUILD_NUMBER} == 0 ]]; then
+if [[ ${BUILD_NUMBER} == 0 || ${SHOULD_INSTALL} != true ]]; then
   echo "Not installing anything (branch: ${bamboo_planRepository_branchName}), exiting."
   exit 0
 fi

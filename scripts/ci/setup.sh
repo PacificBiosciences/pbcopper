@@ -3,6 +3,7 @@ set -vex
 
 export BUILD_NUMBER="0"
 export ENABLED_TESTS="true"
+export SHOULD_INSTALL="false"
 
 case "${GCC_VERSION}" in
   RHEL)
@@ -17,11 +18,21 @@ case "${GCC_VERSION}" in
     module load gtest
     ;;
 
+  ICC)
+    module load devtoolset/6
+    module load composer_xe/2017.4.196
+    module load gtest/gcc48
+
+    CC="icc"
+    CXX="icpc"
+    ;;
+
   *)
     case "${bamboo_planRepository_branchName}-${BUILDTYPE:-release}-${ENABLED_UNITY_BUILD:-off}-${ENABLED_COVERAGE:-false}" in
       develop-release-off-false|master-release-off-false)
         export PREFIX_ARG="/mnt/software/p/pbcopper/${bamboo_planRepository_branchName}"
         export BUILD_NUMBER="${bamboo_globalBuildNumber:-0}"
+        export SHOULD_INSTALL="${INSTALL_IMAGE:-false}"
         ;;
     esac
 
@@ -32,8 +43,8 @@ esac
 
 module load ccache
 
-export CC="ccache gcc"
-export CXX="ccache g++"
+export CC="ccache ${CC:-gcc}"
+export CXX="ccache ${CXX:-g++}"
 export CCACHE_BASEDIR="${PWD}"
 
 if [[ -z ${bamboo_planRepository_branchName+x} ]]; then

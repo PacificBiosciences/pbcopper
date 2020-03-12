@@ -180,6 +180,17 @@ if not meson.is_subproject()
       'pbcopper/parallel/WorkQueue.h']),
     subdir : 'pbcopper/parallel')
 
+  # pbcopper/pbmer
+  install_headers(
+    files([
+      'pbcopper/pbmer/Dbg.h',
+      'pbcopper/pbmer/DbgNode.h',
+      'pbcopper/pbmer/DnaBit.h',
+      'pbcopper/pbmer/Kmer.h',
+      'pbcopper/pbmer/Mers.h',
+      'pbcopper/pbmer/Parser.h']),
+    subdir : 'pbcopper/pbmer')
+
   # pbcopper/reports
   install_headers(
     files([
@@ -206,6 +217,18 @@ if not meson.is_subproject()
     files([
       'pbcopper/third-party/edlib.h']),
     subdir : 'pbcopper/third-party')
+
+  # pbcopper/third-party/kxsort
+  install_headers(
+    files([
+      'pbcopper/third-party/kxsort/kxsort.h']),
+    subdir : 'pbcopper/third-party/kxsort')
+
+  # pbcopper/third-party/robin_hood
+  install_headers(
+    files([
+      'pbcopper/third-party/robin_hood/robin_hood.h']),
+    subdir : 'pbcopper/third-party/robin_hood')
 
   # pbcopper/utility
   install_headers(
