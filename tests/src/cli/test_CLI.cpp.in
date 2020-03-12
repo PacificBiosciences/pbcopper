@@ -8,8 +8,7 @@
 
 #include <pbcopper/cli/CLI.h>
 #include <pbcopper/json/JSON.h>
-
-#include "OStreamRedirector.h"
+#include <pbcopper/utility/OStreamRedirect.h>
 
 namespace CLITests {
 
@@ -303,8 +302,8 @@ TEST(CLI_Runner, emits_tool_contract_when_requested_from_command_line)
 
     // redirect cout to our catcher
     std::ostringstream s;
-    ::tests::CoutRedirect redirect(s.rdbuf());
-    (void)redirect;
+    PacBio::Utility::CoutRedirect redirect{s.rdbuf()};
+    std::ignore = redirect;
 
     // set up tool contract emitted from main CLI entry
     const std::vector<std::string> args{CLITests::appName(), "--emit-tool-contract"};
