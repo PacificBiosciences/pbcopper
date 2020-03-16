@@ -124,6 +124,16 @@ DnaBit DnaBit::LexSmallerEq(void) const
 {
     DnaBit rc = *this;
     rc.ReverseComp();
+    if (rc.mer <= mer) {
+        return rc;
+    }
+    return *this;
+}
+
+DnaBit DnaBit::LexSmallerEqHashed(void) const
+{
+    DnaBit rc = *this;
+    rc.ReverseComp();
     if (rc <= *this) {
         return rc;
     }
@@ -133,6 +143,15 @@ DnaBit DnaBit::LexSmallerEq(void) const
 uint64_t DnaBit::LexSmallerEq64() const
 {
     uint64_t rc = ReverseComp64(mer, msize);
+    if (rc < mer) {
+        return rc;
+    }
+    return mer;
+}
+
+uint64_t DnaBit::LexSmallerEq64Hashed() const
+{
+    uint64_t rc = ReverseComp64(mer, msize);
     if (Mix64Masked(rc, msize) <= Mix64Masked(mer, msize)) {
         return rc;
     }
@@ -140,6 +159,15 @@ uint64_t DnaBit::LexSmallerEq64() const
 }
 
 void DnaBit::MakeLexSmaller()
+{
+    uint64_t rc = ReverseComp64(mer, msize);
+    if (rc <= mer) {
+        mer = rc;
+        strand = !strand;
+    }
+}
+
+void DnaBit::MakeLexSmallerHashed()
 {
     DnaBit test = *this;
     test.ReverseComp();
