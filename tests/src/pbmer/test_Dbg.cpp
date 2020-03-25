@@ -77,11 +77,11 @@ TEST(Pbmer_Dbg, test_topo_three_kmers_add_many)
     std::string expected = R"(digraph DBGraph {
     ATG [fillcolor=red, style="rounded,filled", shape=diamond]
     CTA [fillcolor=red, style="rounded,filled", shape=diamond]
-    TAT [fillcolor=red, style="rounded,filled", shape=diamond]
-    ATG -> TAT;
-    CTA -> TAT;
-    TAT -> ATG;
-    TAT -> CTA;
+    ATA [fillcolor=grey, style="rounded,filled", shape=ellipse]
+    ATG -> ATA;
+    CTA -> ATA;
+    ATA -> CTA;
+    ATA -> ATG;
 })";
 
     std::string seen = dg.Graph2StringDot();
@@ -104,11 +104,11 @@ TEST(Pbmer_Dbg, test_topo_three_kmers)
     std::string expected = R"(digraph DBGraph {
     ATG [fillcolor=red, style="rounded,filled", shape=diamond]
     CTA [fillcolor=red, style="rounded,filled", shape=diamond]
-    TAT [fillcolor=red, style="rounded,filled", shape=diamond]
-    ATG -> TAT;
-    CTA -> TAT;
-    TAT -> ATG;
-    TAT -> CTA;
+    ATA [fillcolor=grey, style="rounded,filled", shape=ellipse]
+    ATG -> ATA;
+    CTA -> ATA;
+    ATA -> CTA;
+    ATA -> ATG;
 })";
 
     std::string seen = dg.Graph2StringDot();
@@ -129,19 +129,19 @@ TEST(Pbmer_Dbg, test_topo_five_kmers)
     dg.BuildEdges();
 
     std::string expected = R"(digraph DBGraph {
-    GGT [fillcolor=red, style="rounded,filled", shape=diamond]
-    CCT [fillcolor=grey, style="rounded,filled", shape=ellipse]
+    ACC [fillcolor=grey, style="rounded,filled", shape=ellipse]
+    AGG [fillcolor=red, style="rounded,filled", shape=diamond]
     GTA [fillcolor=red, style="rounded,filled", shape=diamond]
     ATG [fillcolor=red, style="rounded,filled", shape=diamond]
-    TAT [fillcolor=red, style="rounded,filled", shape=diamond]
-    GGT -> GTA;
-    GGT -> CCT;
-    CCT -> GGT;
-    GTA -> TAT;
-    GTA -> GGT;
-    ATG -> TAT;
-    TAT -> ATG;
-    TAT -> GTA;
+    ATA [fillcolor=grey, style="rounded,filled", shape=ellipse]
+    ACC -> AGG;
+    ACC -> GTA;
+    AGG -> ACC;
+    GTA -> ATA;
+    GTA -> ACC;
+    ATG -> ATA;
+    ATA -> GTA;
+    ATA -> ATG;
 })";
 
     std::string seen = dg.Graph2StringDot();
@@ -174,19 +174,19 @@ TEST(Pbmer_Dbg, test_topo_five_kmers_add_many)
     dg.BuildEdges();
 
     std::string expected = R"(digraph DBGraph {
-    GGT [fillcolor=red, style="rounded,filled", shape=diamond]
-    CCT [fillcolor=grey, style="rounded,filled", shape=ellipse]
+    ACC [fillcolor=grey, style="rounded,filled", shape=ellipse]
+    AGG [fillcolor=red, style="rounded,filled", shape=diamond]
     GTA [fillcolor=red, style="rounded,filled", shape=diamond]
     ATG [fillcolor=red, style="rounded,filled", shape=diamond]
-    TAT [fillcolor=red, style="rounded,filled", shape=diamond]
-    GGT -> GTA;
-    GGT -> CCT;
-    CCT -> GGT;
-    GTA -> TAT;
-    GTA -> GGT;
-    ATG -> TAT;
-    TAT -> ATG;
-    TAT -> GTA;
+    ATA [fillcolor=grey, style="rounded,filled", shape=ellipse]
+    ACC -> AGG;
+    ACC -> GTA;
+    AGG -> ACC;
+    GTA -> ATA;
+    GTA -> ACC;
+    ATG -> ATA;
+    ATA -> GTA;
+    ATA -> ATG;
 })";
 
     std::string seen = dg.Graph2StringDot();
@@ -206,23 +206,22 @@ TEST(Pbmer_Dbg, test_topo_five_kmers_add_verifed_edges)
     EXPECT_EQ(dg.NNodes(), 5);
 
     std::string expected = R"(digraph DBGraph {
-    GGT [fillcolor=red, style="rounded,filled", shape=diamond]
-    CCT [fillcolor=grey, style="rounded,filled", shape=ellipse]
+    ACC [fillcolor=grey, style="rounded,filled", shape=ellipse]
+    AGG [fillcolor=red, style="rounded,filled", shape=diamond]
     GTA [fillcolor=red, style="rounded,filled", shape=diamond]
     ATG [fillcolor=red, style="rounded,filled", shape=diamond]
-    TAT [fillcolor=red, style="rounded,filled", shape=diamond]
-    GGT -> GTA;
-    GGT -> CCT;
-    CCT -> GGT;
-    GTA -> TAT;
-    GTA -> GGT;
-    ATG -> TAT;
-    TAT -> ATG;
-    TAT -> GTA;
+    ATA [fillcolor=grey, style="rounded,filled", shape=ellipse]
+    ACC -> AGG;
+    ACC -> GTA;
+    AGG -> ACC;
+    GTA -> ATA;
+    GTA -> ACC;
+    ATG -> ATA;
+    ATA -> GTA;
+    ATA -> ATG;
 })";
 
     std::string seen = dg.Graph2StringDot();
-
     EXPECT_EQ(seen, expected);
 }
 
@@ -526,33 +525,33 @@ TEST(Pbmer_Dbg, SpurRemoval_spur_found)
     auto spurCount = dg.RemoveSpurs(1);
 
     std::string expected = R"(digraph DBGraph {
+    ACTTCCA [fillcolor=red, style="rounded,filled", shape=diamond]
     GGAAGTA [fillcolor=grey, style="rounded,filled", shape=ellipse]
     CTACTTC [fillcolor=red, style="rounded,filled", shape=diamond]
-    AGTCGCT [fillcolor=grey, style="rounded,filled", shape=ellipse]
+    AGCGACT [fillcolor=red, style="rounded,filled", shape=diamond]
     CGACTTC [fillcolor=red, style="rounded,filled", shape=diamond]
     AAGTCGC [fillcolor=grey, style="rounded,filled", shape=ellipse]
-    GGAAGTC [fillcolor=grey, style="rounded,filled", shape=ellipse]
     AAGTAGC [fillcolor=grey, style="rounded,filled", shape=ellipse]
-    TGGAAGT [fillcolor=grey, style="rounded,filled", shape=ellipse]
+    GACTTCC [fillcolor=red, style="rounded,filled", shape=diamond]
+    ACTTCCA -> GGAAGTA;
+    ACTTCCA -> GACTTCC;
     GGAAGTA -> CTACTTC;
-    GGAAGTA -> TGGAAGT;
+    GGAAGTA -> ACTTCCA;
     CTACTTC -> GGAAGTA;
     CTACTTC -> AAGTAGC;
-    AGTCGCT -> AAGTCGC;
-    CGACTTC -> GGAAGTC;
+    AGCGACT -> AAGTCGC;
+    CGACTTC -> GACTTCC;
     CGACTTC -> AAGTCGC;
-    AAGTCGC -> AGTCGCT;
+    AAGTCGC -> AGCGACT;
     AAGTCGC -> CGACTTC;
-    GGAAGTC -> CGACTTC;
-    GGAAGTC -> TGGAAGT;
     AAGTAGC -> CTACTTC;
-    TGGAAGT -> GGAAGTC;
-    TGGAAGT -> GGAAGTA;
+    GACTTCC -> ACTTCCA;
+    GACTTCC -> CGACTTC;
 })";
 
     std::string seen = dg.Graph2StringDot();
-    EXPECT_EQ(seen, expected);
 
+    EXPECT_EQ(seen, expected);
     EXPECT_EQ(spurCount, 1);
 }
 

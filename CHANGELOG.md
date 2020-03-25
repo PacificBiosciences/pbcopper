@@ -2,6 +2,23 @@
 
 ## Active
 
+## [1.5.0] - 2020-03-12
+
+### Added
+ - pbmer API - DeBruijn graph & kmers
+ - AlarmException for generating JSON alarms
+ - Allow SI suffixes in command line arguments
+ - std::ostream redirection utilities
+
+### Changed
+ - Double-precision in Stopwatch
+
+### Fixed
+ - WorkQueue deadlock if exception was thrown in consumer task
+
+### Removed
+ - InstallSignalHandlers() from logging
+
 ## [1.4.0] - 2019-11-05
 
 ### Added
