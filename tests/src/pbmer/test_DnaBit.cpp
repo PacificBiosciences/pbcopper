@@ -3,6 +3,7 @@
 #include <gtest/gtest.h>
 
 #include <pbcopper/pbmer/DnaBit.h>
+#include <pbcopper/pbmer/Parser.h>
 
 TEST(Pbmer_DnaBit, cmp_check_eq_positive)
 {
@@ -160,15 +161,16 @@ TEST(Pbmer_DnaBit, bin_pack_unpack)
     EXPECT_EQ(k1, k2);
 }
 
-TEST(Pbmer_DnaBit, dinuc_homopolymer)
+TEST(Pbmer_DnaBit, correct_dinuc_count_homopolymer_long)
 {
     PacBio::Pbmer::DnaBit k1{20753, 0, 16};
     //1.2.3.4.
     //AAAAAAAACCACACAC
+    std::cerr << k1.KmerToStr() << "\n";
     EXPECT_EQ(k1.LongestDiNucRun(), 4);
 }
 
-TEST(Pbmer_DnaBit, dinuc_short_homopolymer)
+TEST(Pbmer_DnaBit, correct_dinuc_count_homopolymer_short)
 {
     PacBio::Pbmer::DnaBit k1{2862426841, 0, 16};
     k1.ReverseComp();
@@ -177,7 +179,7 @@ TEST(Pbmer_DnaBit, dinuc_short_homopolymer)
     EXPECT_EQ(k1.LongestDiNucRun(), 2);
 }
 
-TEST(Pbmer_DnaBit, dinuc_ta_run)
+TEST(Pbmer_DnaBit, correct_dinuc_count_ta_run)
 {
     PacBio::Pbmer::DnaBit k1{3355443, 0, 16};
     //       6.5.4.3.2.1
@@ -185,7 +187,7 @@ TEST(Pbmer_DnaBit, dinuc_ta_run)
     EXPECT_EQ(k1.LongestDiNucRun(), 6);
 }
 
-TEST(Pbmer_DnaBit, dinuc_three_mer)
+TEST(Pbmer_DnaBit, correct_dinuc_count_three_mer)
 {
     PacBio::Pbmer::DnaBit k1{0, 0, 3};
     //  1.1
@@ -193,7 +195,7 @@ TEST(Pbmer_DnaBit, dinuc_three_mer)
     EXPECT_EQ(k1.LongestDiNucRun(), 1);
 }
 
-TEST(Pbmer_DnaBit, dinuc_two_mers)
+TEST(Pbmer_DnaBit, correct_dinuc_count_two_mers)
 {
     PacBio::Pbmer::DnaBit k1{0, 0, 2};
     //  1.
@@ -201,20 +203,28 @@ TEST(Pbmer_DnaBit, dinuc_two_mers)
     EXPECT_EQ(k1.LongestDiNucRun(), 1);
 }
 
-TEST(Pbmer_DnaBit, dinuc_two_mer_otherbase)
+TEST(Pbmer_DnaBit, correct_dinuc_count_two_mer_otherbase)
 {
     PacBio::Pbmer::DnaBit k1{3, 0, 2};
     EXPECT_EQ(k1.LongestDiNucRun(), 1);
 }
 
-TEST(Pbmer_DnaBit, dinuc_one)
+TEST(Pbmer_DnaBit, correct_dinuc_count_one)
 {
     PacBio::Pbmer::DnaBit k1{3, 0, 1};
     EXPECT_EQ(k1.LongestDiNucRun(), 0);
 }
 
-TEST(Pbmer_DnaBit, dinuc_zero)
+TEST(Pbmer_DnaBit, correct_dinuc_count_zero)
 {
     PacBio::Pbmer::DnaBit k1{0, 0, 0};
     EXPECT_EQ(k1.LongestDiNucRun(), 0);
+}
+
+TEST(Pbmer_DnaBit, correct_dinuc_long_kmer)
+{
+    const std::string kmerstr = "TCAGAGCGCTGTGAGACAGCACTCTGA";
+    const PacBio::Pbmer::Parser parser{static_cast<uint8_t>(27)};
+    std::vector<PacBio::Pbmer::DnaBit> one = parser.ParseDnaBit(kmerstr);
+    EXPECT_EQ(int(one.front().LongestDiNucRun()), 2);
 }

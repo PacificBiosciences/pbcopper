@@ -194,7 +194,7 @@ uint8_t DnaBit::LongestDiNucRun() const
     uint8_t upperBound = (msize * 2) - 4;
 
     //first frame
-    while (i <= upperBound) {
+    while (i < upperBound) {
         tmp1 = mer;
         tmp2 = mer;
 
@@ -207,7 +207,7 @@ uint8_t DnaBit::LongestDiNucRun() const
                 runLength = tmpRun;
             }
         } else {
-            tmpRun = 0;
+            tmpRun = 1;
         }
         i += 4;
     }
@@ -215,7 +215,7 @@ uint8_t DnaBit::LongestDiNucRun() const
     tmpRun = 1;
 
     //second frame
-    while (i <= upperBound) {
+    while (i < upperBound) {
         tmp1 = (mer >> 2);
         tmp2 = (mer >> 2);
 
@@ -228,7 +228,7 @@ uint8_t DnaBit::LongestDiNucRun() const
                 runLength = tmpRun;
             }
         } else {
-            tmpRun = 0;
+            tmpRun = 1;
         }
         i += 4;
     }
