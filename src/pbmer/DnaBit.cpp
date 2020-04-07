@@ -252,5 +252,25 @@ void DnaBit::ReverseComp(void)
     strand = !strand;
 }
 
+std::string DnaBitVec2String(const std::vector<DnaBit>& bits)
+{
+
+    std::string rv;
+    if (bits.empty()) return rv;
+    rv += bits.front().KmerToStr();
+    if (bits.size() == 1) return rv;
+    const uint8_t lastStrand = bits.front().strand;
+    for (size_t i = 1; i < bits.size(); ++i) {
+        DnaBit d = bits[i];
+        if (d.strand != lastStrand) {
+            d.ReverseComp();
+        }
+        if (!d.KmerToStr().empty()) {
+            rv += d.KmerToStr().back();
+        }
+    }
+    return rv;
+}
+
 }  // namespace Pbmer
 }  // namespace PacBio
