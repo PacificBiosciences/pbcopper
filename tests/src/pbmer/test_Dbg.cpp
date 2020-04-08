@@ -339,7 +339,7 @@ TEST(Pbmer_Dbg, GetNBreadth_bubble_found)
 
     dg.BuildEdges();
     auto bubbles = dg.GetBubbles();
-    EXPECT_EQ(bubbles.size(), 2);
+    EXPECT_EQ(bubbles.size(), 1);
 }
 
 TEST(Pbmer_Dbg, GetNBreadth_node_count_correct)
@@ -384,7 +384,7 @@ TEST(Pbmer_Dbg, GetNBreadth_bubble_found_rc_first)
     dg.BuildEdges();
     auto bubbles = dg.GetBubbles();
 
-    EXPECT_EQ(bubbles.size(), 2);
+    EXPECT_EQ(bubbles.size(), 1);
 }
 
 TEST(Pbmer_Dbg, GetNBreadth_bubble_found_rc)
@@ -406,7 +406,7 @@ TEST(Pbmer_Dbg, GetNBreadth_bubble_found_rc)
     dg.BuildEdges();
     auto bubbles = dg.GetBubbles();
 
-    EXPECT_EQ(bubbles.size(), 2);
+    EXPECT_EQ(bubbles.size(), 1);
 }
 
 TEST(Pbmer_Dbg, GetBubbles_mismatch_found)
@@ -427,7 +427,7 @@ TEST(Pbmer_Dbg, GetBubbles_mismatch_found)
     dg.BuildEdges();
     auto bubbles = dg.GetBubbles();
 
-    EXPECT_EQ(bubbles.size(), 2);
+    EXPECT_EQ(bubbles.size(), 1);
 }
 /*
 This is de bruijn graph has a complicated topology.Leave as a stretch
@@ -481,7 +481,7 @@ TEST(Pbmer_Dbg, GetBubbles_indel_found2)
     dg.BuildEdges();
     auto bubbles = dg.GetBubbles();
 
-    EXPECT_EQ(bubbles.size(), 2);
+    EXPECT_EQ(bubbles.size(), 1);
 }
 
 TEST(Pbmer_Dbg, GetBubbles_no_bubble)
@@ -623,7 +623,7 @@ TEST(Pbmer_Dbg, SpurRemoval_spur_bubble_cleanup)
     auto bubbles = dg.GetBubbles();
 
     EXPECT_EQ(spurCount, 1);
-    EXPECT_EQ(bubbles.size(), 2);
+    EXPECT_EQ(bubbles.size(), 1);
 }
 
 TEST(Pbmer_Dbg, GetBubbles_double_bubble_rc)
@@ -651,7 +651,7 @@ TEST(Pbmer_Dbg, GetBubbles_double_bubble_rc)
 
     auto bubbles = dg.GetBubbles();
 
-    EXPECT_EQ(bubbles.size(), 4);
+    EXPECT_EQ(bubbles.size(), 2);
 }
 
 TEST(Pbmer_Dbg, GetBubbles_complex_snv)
@@ -688,5 +688,5 @@ TEST(Pbmer_Dbg, GetBubbles_complex_snv)
 
     auto bubbles = dg.GetBubbles();
 
-    EXPECT_EQ(bubbles.size(), 2);
+    EXPECT_EQ(bubbles.size(), 1);
 }

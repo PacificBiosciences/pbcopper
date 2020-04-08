@@ -22,25 +22,24 @@
 namespace PacBio {
 namespace Pbmer {
 
-/*      BubbleInfo
+// simple structure that returns the bubble sequences and readIds across the paths
+struct BubbleInfo
+{
+    // sequence of left path
+    std::string LSeq;
+    // sequence of right path
+    std::string RSeq;
+    // count of kmers along left paths
+    uint32_t LKmerCount;
+    // count of kmers along right path
+    uint32_t RKmerCount;
 
-    std::string:
-        KMER + "L" or KMER + "R"
+    // READID, KMER_COUNT
+    std::vector<std::tuple<uint32_t, int>> LData;
+    std::vector<std::tuple<uint32_t, int>> RData;
+};
 
-        The KMER is the head of the bubble (e.i `Y` fork).
-        The L and R suffix describe which branch of the bubble.
-
-    std::vector<std::tuple<uint32_t, int, int>>>
-       READID, KMER_COUNT, PATH_LENGTH
-
-       READID documents which reads are in the path.
-       KMER_COUNT documents the number of kmers for a given read over the paths
-       PATH_LENGTH documents the length of a given path. For example,
-       if KMER_COUNT/PATH_LENGTH == 1, then you know the read completely spans
-       the path.
- */
-
-using BubbleInfo = std::map<std::string, std::vector<std::tuple<uint32_t, int, int>>>;
+using Bubbles = std::vector<BubbleInfo>;
 
 class Dbg
 {
@@ -148,7 +147,7 @@ public:
     ///
     /// \return simple bubbles
     ///
-    BubbleInfo GetBubbles() const;
+    Bubbles GetBubbles() const;
 
     ////
     /// Removes simple spurs (out edge == 2) from graph. Ties are not resolved.
