@@ -239,6 +239,7 @@ if not meson.is_subproject()
       'pbcopper/utility/MemoryConsumption.h',
       'pbcopper/utility/MinMax.h',
       'pbcopper/utility/MoveAppend.h',
+      'pbcopper/utility/MoveInsert.h',
       'pbcopper/utility/OStreamRedirect.h',
       'pbcopper/utility/PbcopperVersion.h',
       'pbcopper/utility/SafeSubtract.h',
