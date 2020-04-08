@@ -8,16 +8,12 @@
 #include <cstdint>
 
 #include <string>
+#include <vector>
 
 namespace PacBio {
 namespace Pbmer {
 
 __extension__ using BI = __int128;
-
-// This should remain a function, it has a lot of general utility.
-uint64_t ReverseComp64(const uint64_t mer, uint8_t kmerSize);
-// This should remain a function, it has a lot of general utility.
-uint64_t Mix64Masked(uint64_t key, uint8_t kmerSize);
 
 class DnaBit
 {
@@ -134,6 +130,19 @@ public:
     ///
     void Bin2DnaBit(BI bin);
 };
+
+// This should remain a function, it has a lot of general utility.
+uint64_t ReverseComp64(const uint64_t mer, uint8_t kmerSize);
+// This should remain a function, it has a lot of general utility.
+uint64_t Mix64Masked(uint64_t key, uint8_t kmerSize);
+
+///
+/// Turn path to a DNA string.
+///
+/// \param bits    vector - DnaBit
+///
+/// \return a string of dna
+std::string DnaBitVec2String(const std::vector<DnaBit>& bits);
 
 }  // namespace Pbmer
 }  // namespace PacBio

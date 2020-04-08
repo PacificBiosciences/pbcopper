@@ -194,7 +194,7 @@ uint8_t DnaBit::LongestDiNucRun() const
     uint8_t upperBound = (msize * 2) - 4;
 
     //first frame
-    while (i <= upperBound) {
+    while (i < upperBound) {
         tmp1 = mer;
         tmp2 = mer;
 
@@ -207,7 +207,7 @@ uint8_t DnaBit::LongestDiNucRun() const
                 runLength = tmpRun;
             }
         } else {
-            tmpRun = 0;
+            tmpRun = 1;
         }
         i += 4;
     }
@@ -215,7 +215,7 @@ uint8_t DnaBit::LongestDiNucRun() const
     tmpRun = 1;
 
     //second frame
-    while (i <= upperBound) {
+    while (i < upperBound) {
         tmp1 = (mer >> 2);
         tmp2 = (mer >> 2);
 
@@ -228,7 +228,7 @@ uint8_t DnaBit::LongestDiNucRun() const
                 runLength = tmpRun;
             }
         } else {
-            tmpRun = 0;
+            tmpRun = 1;
         }
         i += 4;
     }
@@ -250,6 +250,26 @@ void DnaBit::ReverseComp(void)
 {
     mer = ReverseComp64(mer, msize);
     strand = !strand;
+}
+
+std::string DnaBitVec2String(const std::vector<DnaBit>& bits)
+{
+
+    std::string rv;
+    if (bits.empty()) return rv;
+    rv += bits.front().KmerToStr();
+    if (bits.size() == 1) return rv;
+    const uint8_t lastStrand = bits.front().strand;
+    for (size_t i = 1; i < bits.size(); ++i) {
+        DnaBit d = bits[i];
+        if (d.strand != lastStrand) {
+            d.ReverseComp();
+        }
+        if (!d.KmerToStr().empty()) {
+            rv += d.KmerToStr().back();
+        }
+    }
+    return rv;
 }
 
 }  // namespace Pbmer
