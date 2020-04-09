@@ -304,10 +304,10 @@ void Dbg::FrequencyFilterNodes2(unsigned long n)
     }
 }
 
-BubbleInfo Dbg::GetBubbles() const
+Bubbles Dbg::GetBubbles() const
 {
     // returned container describing which reads traverse which forks
-    BubbleInfo result;
+    Bubbles result;
 
     // keeping track of read id counts over linear paths
     // these variables are reused
@@ -341,13 +341,13 @@ BubbleInfo Dbg::GetBubbles() const
         std::vector<DnaBit> left;
         std::vector<DnaBit> right;
 
-        bool bubble = false;
+        bool hasBubble = false;
 
         // Comparing all linear paths to check if they converge. The first
         // two paths to converge are considered a bubble. subsequent bubbles are
         // ignored.
         for (size_t i = 0; i < path_info.size(); ++i) {
-            bubble = false;
+            hasBubble = false;
             for (size_t j = 0; j < path_info.size(); ++j) {
                 s1 = std::get<0>(path_info[i]);
                 s2 = std::get<0>(path_info[j]);
@@ -361,15 +361,15 @@ BubbleInfo Dbg::GetBubbles() const
                     right = GetLinearPath(s2);
                     // set the used incoming node so we don't get 2x n bubbles
                     used_branch_node.insert(shared);
-                    bubble = true;
+                    hasBubble = true;
                     break;
                 }
             }
             // only keep the first valid bubble
-            if (bubble) break;
+            if (hasBubble) break;
         }
 
-        if (!bubble) {
+        if (!hasBubble) {
             continue;
         }
         // reuse the same temp data struct.
@@ -387,18 +387,20 @@ BubbleInfo Dbg::GetBubbles() const
             }
         }
 
-        std::string lk = x->second.dna_.KmerToStr() + "L";
-        std::string rk = x->second.dna_.KmerToStr() + "R";
-
-        assert(result.find(lk) == result.end());
+        BubbleInfo bubble;
+        bubble.LSeq = DnaBitVec2String(left);
+        bubble.RSeq = DnaBitVec2String(right);
+        bubble.LKmerCount = left.size();
+        bubble.RKmerCount = right.size();
 
         for (const auto& kv : left_reads) {
-            result[lk].push_back(std::make_tuple(kv.first, kv.second, left.size()));
+            bubble.LData.push_back(std::make_tuple(kv.first, kv.second));
         }
 
         for (const auto& kv : right_reads) {
-            result[rk].push_back(std::make_tuple(kv.first, kv.second, right.size()));
+            bubble.RData.push_back(std::make_tuple(kv.first, kv.second));
         }
+        result.emplace_back(std::move(bubble));
     }
     return result;
 }
@@ -544,8 +546,6 @@ bool Dbg::ValidateEdges() const
             }
         }
     }
-
-    //std::cerr << "N failed: " << count << "\n";
     return valid;
 }
 
