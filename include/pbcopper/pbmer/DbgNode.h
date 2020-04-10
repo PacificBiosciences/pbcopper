@@ -25,15 +25,23 @@ public:
     ///
     /// \param d    dna class
     /// \param o    out edges
+    /// \param n    number of read ids;
     ///
-    DbgNode(const DnaBit& d, uint8_t o);
+    DbgNode(const DnaBit& d, uint8_t o, uint32_t n);
 
     ///
-    /// Adds a read id to the readIds_ variable.
+    /// \brief Adds a read id to the readIds_ variable. Read ids are one based.
     ///
     /// \param rid  read id
     ///
     bool AddLoad(uint32_t rid);
+
+    ///
+    /// \brief Finds the first read Id set.
+    ///
+    /// \returns zero if no read ids are set. Read ids are one based.
+
+    size_t GetFirstRId();
 
     ///
     /// \brief Uses a bit field to set out edges, possibilities {bit0:A, bit2:C,
@@ -125,6 +133,7 @@ public:
 private:
     DnaBit dna_;
     uint8_t edges_;
+    // ReadIds must be one based - internally they are converted.
     boost::dynamic_bitset<> readIds2_;
     friend class Dbg;
 };

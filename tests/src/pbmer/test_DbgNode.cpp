@@ -7,7 +7,7 @@
 TEST(Pbmer_DbgNode, can_iterate_over_one_a_dnabits)
 {
     PacBio::Pbmer::DnaBit niby;
-    PacBio::Pbmer::DbgNode eg{niby, 0};
+    PacBio::Pbmer::DbgNode eg{niby, 0, 0};
     eg.SetEdges(2);
     int count = 0;
     for (const auto& i : eg) {
@@ -20,7 +20,7 @@ TEST(Pbmer_DbgNode, can_iterate_over_one_a_dnabits)
 TEST(Pbmer_DbgNode, can_iterate_over_one_b_dnabits)
 {
     PacBio::Pbmer::DnaBit niby;
-    PacBio::Pbmer::DbgNode eg{niby, 0};
+    PacBio::Pbmer::DbgNode eg{niby, 0, 0};
     eg.SetEdges(1);
     int count = 0;
     for (const auto& i : eg) {
@@ -36,7 +36,7 @@ TEST(Pbmer_DbgNode, can_iterate_over_one_c_dnabits)
     niby.strand = 0;
     niby.msize = 4;
     niby.mer = 2;
-    PacBio::Pbmer::DbgNode eg{niby, 0};
+    PacBio::Pbmer::DbgNode eg{niby, 0, 0};
     eg.SetEdges(128);
     int count = 0;
     for (const auto& i : eg) {
@@ -53,7 +53,7 @@ TEST(Pbmer_DbgNode, can_iterate_over_two_a_dnabits)
     niby.msize = 4;
     niby.mer = 2;
 
-    PacBio::Pbmer::DbgNode eg{niby, 0};
+    PacBio::Pbmer::DbgNode eg{niby, 0, 0};
     eg.SetEdges(129);
     int count = 0;
     for (const auto& i : eg) {
@@ -66,7 +66,7 @@ TEST(Pbmer_DbgNode, can_iterate_over_two_a_dnabits)
 TEST(Pbmer_DbgNode, can_iterate_over_two_b_dnabits)
 {
     PacBio::Pbmer::DnaBit niby;
-    PacBio::Pbmer::DbgNode eg{niby, 0};
+    PacBio::Pbmer::DbgNode eg{niby, 0, 0};
     eg.SetEdges(5);
     int count = 0;
     for (const auto& i : eg) {
@@ -79,7 +79,7 @@ TEST(Pbmer_DbgNode, can_iterate_over_two_b_dnabits)
 TEST(Pbmer_DbgNode, can_iterate_over_three_a_dnabits)
 {
     PacBio::Pbmer::DnaBit niby;
-    PacBio::Pbmer::DbgNode eg{niby, 0};
+    PacBio::Pbmer::DbgNode eg{niby, 0, 0};
     eg.SetEdges(7);
     int count = 0;
     for (const auto& i : eg) {
@@ -132,4 +132,27 @@ TEST(Pbmer_DbgNode, can_iterate_over_three_node_a)
 
     dg.BuildEdges();
     EXPECT_EQ(dg.ValidateEdges(), true);
+}
+
+TEST(Pbmer_DbgNode, can_round_trip_readId)
+{
+    PacBio::Pbmer::DnaBit niby;
+    PacBio::Pbmer::DbgNode eg{niby, 0, 1};
+    eg.AddLoad(1);
+    EXPECT_EQ(eg.GetFirstRId(), 1);
+}
+
+TEST(Pbmer_DbgNode, can_round_trip_none)
+{
+    PacBio::Pbmer::DnaBit niby;
+    PacBio::Pbmer::DbgNode eg{niby, 0, 1};
+    EXPECT_EQ(eg.GetFirstRId(), 0);
+}
+
+TEST(Pbmer_DbgNode, can_round_trip_readId_two)
+{
+    PacBio::Pbmer::DnaBit niby;
+    PacBio::Pbmer::DbgNode eg{niby, 0, 2};
+    eg.AddLoad(2);
+    EXPECT_EQ(eg.GetFirstRId(), 2);
 }
