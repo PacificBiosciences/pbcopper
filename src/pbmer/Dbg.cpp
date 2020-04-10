@@ -387,13 +387,18 @@ Bubbles Dbg::GetBubbles() const
         right_reads.clear();
 
         for (auto const& l : left) {
-            for (size_t i = 0; i < dbg_.at(l.mer).readIds2_.size(); ++i) {
-                if (dbg_.at(l.mer).readIds2_[i] != 0) ++left_reads[i + 1];
+            size_t i = dbg_.at(l.mer).readIds2_.find_first();
+            while (i != dbg_.at(l.mer).readIds2_.npos) {
+                ++left_reads[i + 1];
+                i = dbg_.at(l.mer).readIds2_.find_next(i);
             }
         }
+
         for (auto const& r : right) {
-            for (size_t i = 0; i < dbg_.at(r.mer).readIds2_.size(); ++i) {
-                if (dbg_.at(r.mer).readIds2_[i] != 0) ++right_reads[i + 1];
+            size_t i = dbg_.at(r.mer).readIds2_.find_first();
+            while (i != dbg_.at(r.mer).readIds2_.npos) {
+                ++right_reads[i + 1];
+                i = dbg_.at(r.mer).readIds2_.find_next(i);
             }
         }
 
@@ -413,7 +418,7 @@ Bubbles Dbg::GetBubbles() const
         result.emplace_back(std::move(bubble));
     }
     return result;
-}
+}  // namespace Pbmer
 
 std::vector<DnaBit> Dbg::GetLinearPath(uint64_t x) const { return GetLinearPath(dbg_.at(x).dna_); }
 
