@@ -2,6 +2,11 @@
 
 ## Active
 
+## [1.6.0] - 2020-04-10
+
+### Removed
+ - CLI version 1 (pbcopper/cli/*)
+
 ## [1.5.0] - 2020-03-12
 
 ### Added
