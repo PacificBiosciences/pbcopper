@@ -27,23 +27,6 @@ pbcopper_cpp_sources = files([
   'align/cssw/ssw_cpp.cpp',
 
   # -------
-  # cli
-  # -------
-  'cli/CLI.cpp',
-  'cli/HelpPrinter.cpp',
-  'cli/Interface.cpp',
-  'cli/Option.cpp',
-  'cli/Parser.cpp',
-  'cli/Results.cpp',
-  'cli/VersionPrinter.cpp',
-
-  # ------------------
-  # cli/toolcontract
-  # ------------------
-  'cli/toolcontract/JsonPrinter.cpp',
-  'cli/toolcontract/ResolvedToolContract.cpp',
-
-  # -------
   # cli2
   # -------
 

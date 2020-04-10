@@ -1,7 +1,7 @@
 project(
   'pbcopper',
   ['cpp', 'c'],
-  version : '1.5.0',
+  version : '1.6.0',
   default_options : [
     'buildtype=release',
     'warning_level=3',
@@ -57,11 +57,6 @@ subdir('src')
 ##########
 
 if not meson.is_subproject()
-  # examples
-  if get_option('build-examples')
-    subdir('examples')
-  endif
-
   # documentation
   if get_option('build-docs')
     subdir('docs')

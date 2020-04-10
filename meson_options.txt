@@ -1,3 +1,2 @@
-option('build-examples', type : 'boolean', value : true,  description : 'Build pbcopper examples')
-option('build-docs',     type : 'boolean', value : false, description : 'Build pbcopper docs')
-option('tests',          type : 'boolean', value : true,  description : 'Enable dependencies required for testing')
+option('build-docs', type : 'boolean', value : false, description : 'Build pbcopper docs')
+option('tests',      type : 'boolean', value : true,  description : 'Enable dependencies required for testing')
