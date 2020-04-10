@@ -57,11 +57,6 @@ subdir('src')
 ##########
 
 if not meson.is_subproject()
-  # examples
-  if get_option('build-examples')
-    subdir('examples')
-  endif
-
   # documentation
   if get_option('build-docs')
     subdir('docs')
