@@ -264,13 +264,23 @@ void Dbg::FrequencyFilterNodes(unsigned long n)
     }
 }
 
-void Dbg::FrequencyFilterNodes2(unsigned long n)
+void Dbg::FrequencyFilterNodes2(unsigned long n) { Dbg::FrequencyFilterNodes2(n, false); }
+
+void Dbg::FrequencyFilterNodes2(unsigned long n, bool gt)
 {
 
     std::vector<uint64_t> toRemove;
 
+    auto filterDirection = [&](const auto count) {
+        if (gt) {
+            return (count > n);
+        } else {
+            return (count < n);
+        }
+    };
+
     for (auto x = dbg_.begin(); x != dbg_.end(); ++x) {
-        if (x->second.readIds2_.count() < n) {
+        if (filterDirection(x->second.readIds2_.count())) {
             toRemove.push_back(x->first);
         }
     }

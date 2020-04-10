@@ -111,6 +111,11 @@ public:
     void FrequencyFilterNodes2(unsigned long n);
 
     ///
+    /// \param gt   greater than filter or less than filter
+    ///
+    void FrequencyFilterNodes2(unsigned long n, bool gt);
+
+    ///
     /// Checks that each node has at least one read id.
     ///
     /// \return true if all nodes are okay
