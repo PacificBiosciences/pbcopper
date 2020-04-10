@@ -41,7 +41,12 @@ public:
     ///
     /// \returns zero if no read ids are set. Read ids are one based.
 
-    size_t GetFirstRId();
+    size_t GetFirstRId() const;
+
+    ///
+    /// \returns Returns the uint64_t packed kmer;
+    ///
+    uint64_t GetKmer() const;
 
     ///
     /// \brief Uses a bit field to set out edges, possibilities {bit0:A, bit2:C,

@@ -156,3 +156,10 @@ TEST(Pbmer_DbgNode, can_round_trip_readId_two)
     eg.AddLoad(2);
     EXPECT_EQ(eg.GetFirstRId(), 2);
 }
+
+TEST(Pbmer_DbgNode, can_get_kmer)
+{
+    const PacBio::Pbmer::DnaBit niby{2862426841, 0, 16};
+    PacBio::Pbmer::DbgNode eg{niby, 0, 0};
+    EXPECT_EQ(eg.GetKmer(), 2862426841);
+}

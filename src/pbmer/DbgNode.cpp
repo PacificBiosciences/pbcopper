@@ -48,11 +48,13 @@ bool DbgNode::AddLoad(uint32_t rid)
     readIds2_[rid - 1] = 1;
     return true;
 }
-size_t DbgNode::GetFirstRId()
+size_t DbgNode::GetFirstRId() const
 {
     if (readIds2_.none()) return 0;
     return readIds2_.find_first() + 1;
 }
+
+uint64_t DbgNode::GetKmer() const { return dna_.mer; }
 
 int DbgNode::LeftEdgeCount() const
 {
