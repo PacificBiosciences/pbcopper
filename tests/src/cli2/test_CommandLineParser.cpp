@@ -781,4 +781,64 @@ TEST(CLI2_CommandLineParser, can_interpret_numerics_with_suffix)
     EXPECT_EQ(z, 3'140'000'000);
 }
 
+TEST(CLI2_CommandLineParser, can_interpret_dash_option_value)
+{
+    const PacBio::CLI_v2::PositionalArgument Input {
+    R"({
+        "name" : "input",
+        "description" : "Input file(s)."
+    })"};
+
+    const PacBio::CLI_v2::PositionalArgument StatsFile {
+    R"({
+        "name" : "stats",
+        "description" : "Stats file."
+    })"};
+
+    const PacBio::CLI_v2::Option OutputPrefix {
+    R"({
+        "names" : ["o", "output"],
+        "description" : [
+            "Prefix of output filenames, '-' implies streaming. Streaming not supported ",
+            "with compression nor with split_barcodes"
+        ],
+        "type" : "string"
+    })"};
+
+    const PacBio::CLI_v2::Option CompressionLevel {
+    R"({
+        "names" : ["c"],
+        "description" : "Gzip compression level [1-9]",
+        "type" : "int",
+        "default" : 1
+    })"};
+
+    PacBio::CLI_v2::Interface i{"app", "desc", "0.0"};
+    i.DisableLogLevelOption()
+     .DisableLogFileOption()
+     .DisableNumThreadsOption();
+
+    i.AddPositionalArguments({Input, StatsFile});
+    i.AddOptionGroup("Options", {OutputPrefix, CompressionLevel});
+
+    const CommandLineParser parser{i};
+    const auto results = parser.Parse({
+        "app",
+        "input.bam",
+        "-o", "-",
+        "-c", "7",
+        "stats.txt"
+    });
+
+    const std::string inputFile = results[Input];
+    const std::string statsFile = results[StatsFile];
+    const std::string outputPrefix = results[OutputPrefix];
+    const int compressionLevel = results[CompressionLevel];
+
+    EXPECT_EQ("input.bam", inputFile);
+    EXPECT_EQ("stats.txt", statsFile);
+    EXPECT_EQ("-", outputPrefix);
+    EXPECT_EQ(7, compressionLevel);
+}
+
 // clang-format on

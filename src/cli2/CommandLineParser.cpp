@@ -79,11 +79,22 @@ void EnsureOptionValue(const std::string& valueString, const std::string& option
     // value string does not begin with a dash, treat as option value
     if (valueString.find(token_dash) != 0) return;
 
-    // value string begins with dash, may be either a new option or a valid negative value
+    // value string begins with dash - may be either a new option, bare '-', or a
+    // valid negative value
     else {
 
-        // not a number, e.g. "-X", we're definitely missing our expected value
-        if (!std::isdigit(valueString.at(1)))
+        // bare '-' value may be OK for string-like options, but not numerical ones
+        if (valueString.size() == 1) {
+            if (IsStringLike(optionType))
+                return;
+            else {
+                throw CommandLineParserException{
+                    "single dash value '-' is not allowed for option '" + optionName + "'"};
+            }
+        }
+
+        // next character is not a number, e.g. "-X", we're definitely missing our expected value
+        else if (!std::isdigit(valueString.at(1)))
             throw CommandLineParserException{"value is missing for option '" + optionName + "'"};
 
         // next token looks like a negative number, but is not valid
