@@ -298,6 +298,74 @@ TEST(Pbmer_Dbg, FrequencyFilterNodes_empty)
     EXPECT_EQ(dg.NNodes(), 0);
 }
 
+TEST(Pbmer_Dbg, FrequencyFilterNodes2_empty)
+{
+
+    const PacBio::Pbmer::Parser parser{7};
+    //SNV                         (X)
+    const std::string td1{"ATGGAAGTCGCGGAACAAATC"};
+    const std::string td2{"ATGGAAGTGGCGGAACAAATC"};
+
+    PacBio::Pbmer::Mers m1{parser.Parse(td1)};
+    PacBio::Pbmer::Mers m2{parser.Parse(td2)};
+
+    PacBio::Pbmer::Dbg dg{7, 2};
+
+    dg.AddKmers(m1, 1);
+    dg.AddKmers(m2, 2);
+
+    dg.BuildEdges();
+
+    dg.FrequencyFilterNodes2(10);
+    EXPECT_EQ(dg.NNodes(), 0);
+}
+
+TEST(Pbmer_Dbg, FrequencyFilterNodes2_gt1)
+{
+
+    const PacBio::Pbmer::Parser parser{7};
+    //SNV                         (X)
+    const std::string td1{"ATGGAAGTCGCGGAACAAATC"};
+    const std::string td2{"ATGGAAGTGGCGGAACAAATC"};
+
+    PacBio::Pbmer::Mers m1{parser.Parse(td1)};
+    PacBio::Pbmer::Mers m2{parser.Parse(td2)};
+
+    PacBio::Pbmer::Dbg dg{7, 2};
+
+    dg.AddKmers(m1, 1);
+    dg.AddKmers(m2, 2);
+
+    dg.BuildEdges();
+
+    dg.FrequencyFilterNodes2(0, true);
+    EXPECT_EQ(dg.NNodes(), 0);
+}
+
+TEST(Pbmer_Dbg, FrequencyFilterNodes2_gt1_lt2)
+{
+
+    const PacBio::Pbmer::Parser parser{7};
+    //SNV                         (X)
+    const std::string td1{"ATGGAAGTCGCGGAACAAATC"};
+    const std::string td2{"ATGGAAGTGGCGGAACAAATC"};
+
+    PacBio::Pbmer::Mers m1{parser.Parse(td1)};
+    PacBio::Pbmer::Mers m2{parser.Parse(td2)};
+
+    PacBio::Pbmer::Dbg dg{7, 2};
+
+    dg.AddKmers(m1, 1);
+    dg.AddKmers(m2, 2);
+
+    dg.BuildEdges();
+
+    dg.FrequencyFilterNodes2(1, true);
+    dg.FrequencyFilterNodes2(1, false);
+    // 22 nodes 8 of which span the bubble path;
+    EXPECT_EQ(dg.NNodes(), 14);
+}
+
 TEST(Pbmer_Dbg, FrequencyFilterNodes_one_left)
 {
 
