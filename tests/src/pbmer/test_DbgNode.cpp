@@ -139,14 +139,14 @@ TEST(Pbmer_DbgNode, can_round_trip_readId)
     PacBio::Pbmer::DnaBit niby;
     PacBio::Pbmer::DbgNode eg{niby, 0, 1};
     eg.AddLoad(1);
-    EXPECT_EQ(eg.GetFirstRId(), 1);
+    EXPECT_EQ(eg.FirstRId(), 1);
 }
 
 TEST(Pbmer_DbgNode, can_round_trip_none)
 {
     PacBio::Pbmer::DnaBit niby;
     PacBio::Pbmer::DbgNode eg{niby, 0, 1};
-    EXPECT_EQ(eg.GetFirstRId(), 0);
+    EXPECT_EQ(eg.FirstRId(), 0);
 }
 
 TEST(Pbmer_DbgNode, can_round_trip_readId_two)
@@ -154,12 +154,19 @@ TEST(Pbmer_DbgNode, can_round_trip_readId_two)
     PacBio::Pbmer::DnaBit niby;
     PacBio::Pbmer::DbgNode eg{niby, 0, 2};
     eg.AddLoad(2);
-    EXPECT_EQ(eg.GetFirstRId(), 2);
+    EXPECT_EQ(eg.FirstRId(), 2);
 }
 
 TEST(Pbmer_DbgNode, can_get_kmer)
 {
     const PacBio::Pbmer::DnaBit niby{2862426841, 0, 16};
     PacBio::Pbmer::DbgNode eg{niby, 0, 0};
-    EXPECT_EQ(eg.GetKmer(), 2862426841);
+    EXPECT_EQ(eg.Kmer(), 2862426841);
+}
+
+TEST(Pbmer_DbgNode, can_get_empty_kmer)
+{
+    const PacBio::Pbmer::DnaBit niby;
+    PacBio::Pbmer::DbgNode eg{niby, 0, 0};
+    EXPECT_EQ(eg.Kmer(), 0);
 }
