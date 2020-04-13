@@ -180,10 +180,22 @@ public:
 
 private:
     // the whole graph structure and colors are stored here.
-    robin_hood::unordered_map<uint64_t, DbgNode> dbg_;
+    using rh = robin_hood::unordered_map<uint64_t, DbgNode>;
+    rh dbg_;
     // kmer size up to 32
     uint8_t kmerSize_;
     uint32_t nReads_;
+
+public:
+    using iterator = rh::iterator;
+    using const_iterator = rh::const_iterator;
+
+    iterator begin() { return dbg_.begin(); }
+    iterator end() { return dbg_.end(); }
+    const_iterator begin() const { return dbg_.begin(); }
+    const_iterator end() const { return dbg_.end(); }
+    const_iterator cbegin() const { return dbg_.cbegin(); }
+    const_iterator cend() const { return dbg_.cend(); }
 };
 
 }  // namespace Pbmer

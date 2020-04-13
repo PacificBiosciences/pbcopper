@@ -38,13 +38,23 @@ constexpr const std::array<uint8_t, 256> clzLookup{
 
 }  // namespace
 
-DbgNode::DbgNode(const DnaBit& d, uint8_t o) : dna_{d}, edges_{o} {}
+DbgNode::DbgNode(const DnaBit& d, uint8_t o, uint32_t n) : dna_{d}, edges_{o}
+{
+    readIds2_.resize(n);
+}
 
 bool DbgNode::AddLoad(uint32_t rid)
 {
     readIds2_[rid - 1] = 1;
     return true;
 }
+size_t DbgNode::FirstRId() const
+{
+    if (readIds2_.none()) return 0;
+    return readIds2_.find_first() + 1;
+}
+
+uint64_t DbgNode::Kmer() const { return dna_.mer; }
 
 int DbgNode::LeftEdgeCount() const
 {

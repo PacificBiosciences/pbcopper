@@ -40,8 +40,7 @@ void Dbg::AddKmers(std::vector<BI>& kmers, uint32_t minFreqCutoff)
             if ((end_i - start_i) >= minFreqCutoff) {
                 DnaBit db;
                 db.Bin2DnaBit(kmers[start_i]);
-                DbgNode eg{db, 0};
-                eg.readIds2_.resize(nReads_);
+                DbgNode eg{db, 0, nReads_};
 
                 for (auto i = start_i; i <= end_i; ++i) {
                     uint32_t v = static_cast<uint32_t>(kmers[i]);
@@ -73,8 +72,7 @@ int Dbg::AddKmers(const PacBio::Pbmer::Mers& m, const uint32_t rid)
         if (dbg_.find(niby.mer) != dbg_.end()) {
             dbg_.at(niby.mer).AddLoad(rid);
         } else {
-            DbgNode eg{niby, 0};
-            eg.readIds2_.resize(nReads_);
+            DbgNode eg{niby, 0, nReads_};
             eg.AddLoad(rid);
             dbg_.emplace(niby.mer, std::move(eg));
         }
@@ -97,8 +95,7 @@ void Dbg::AddVerifedKmerPairs(std::vector<DnaBit>& bits, const uint32_t rid)
             dbg_.at(bits[i].mer).AddLoad(rid);
         } else {
 
-            DbgNode eg{bits[i], 0};
-            eg.readIds2_.resize(nReads_);
+            DbgNode eg{bits[i], 0, nReads_};
 
             eg.AddLoad(rid);
 
