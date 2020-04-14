@@ -2,6 +2,9 @@
 
 ## Active
 
+### Fixed
+ - ReadId from CCS read names
+
 ## [1.6.0] - 2020-04-10
 
 ### Removed

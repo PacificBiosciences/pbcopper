@@ -630,12 +630,20 @@ TEST(Data_Read, can_set_query_start_and_end_from_id)
     EXPECT_EQ(qEnd, read.QueryEnd);
 }
 
-TEST(Data_ReadId, can_set_movie_and_interval_from_read_name)
+TEST(Data_ReadId, can_create_from_subread_name)
 {
     const PacBio::Data::ReadId id{"m54001_160623_195125/553/3100_11230"};
     EXPECT_EQ("m54001_160623_195125", id.MovieName);
     EXPECT_EQ(553, id.HoleNumber);
     EXPECT_EQ(PacBio::Data::Interval(3100, 11230), *id.ZmwInterval);
+}
+
+TEST(Data_ReadId, can_create_from_ccs_read_name)
+{
+    const PacBio::Data::ReadId id{"m54001_160623_195125/553/ccs"};
+    EXPECT_EQ("m54001_160623_195125", id.MovieName);
+    EXPECT_EQ(553, id.HoleNumber);
+    EXPECT_FALSE(id.ZmwInterval.is_initialized());
 }
 
 // clang-format on
