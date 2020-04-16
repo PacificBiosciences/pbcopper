@@ -2,6 +2,9 @@
 
 ## Active
 
+### Added
+ - PartitionElements utility
+
 ### Fixed
  - ReadId from CCS read names
 
