@@ -34,50 +34,6 @@ if not meson.is_subproject()
       'pbcopper/align/internal/BCAlignImpl.h']),
     subdir : 'pbcopper/align/internal')
 
-  # pbcopper/cli
-  install_headers(
-    files([
-      'pbcopper/cli/CLI.h',
-      'pbcopper/cli/HelpPrinter.h',
-      'pbcopper/cli/Interface.h',
-      'pbcopper/cli/Option.h',
-      'pbcopper/cli/OptionFlags.h',
-      'pbcopper/cli/Parser.h',
-      'pbcopper/cli/PositionalArg.h',
-      'pbcopper/cli/Results.h',
-      'pbcopper/cli/SingleDashMode.h',
-      'pbcopper/cli/VersionPrinter.h']),
-    subdir : 'pbcopper/cli')
-
-  # pbcopper/cli/internal
-  install_headers(
-    files([
-      'pbcopper/cli/internal/Option-inl.h']),
-    subdir : 'pbcopper/cli/internal')
-
-  # pbcopper/cli/toolcontract
-  install_headers(
-    files([
-      'pbcopper/cli/toolcontract/Config.h',
-      'pbcopper/cli/toolcontract/Driver.h',
-      'pbcopper/cli/toolcontract/InputFileType.h',
-      'pbcopper/cli/toolcontract/JsonPrinter.h',
-      'pbcopper/cli/toolcontract/OutputFileType.h',
-      'pbcopper/cli/toolcontract/ResolvedToolContract.h',
-      'pbcopper/cli/toolcontract/ResourceType.h',
-      'pbcopper/cli/toolcontract/Task.h',
-      'pbcopper/cli/toolcontract/TaskType.h']),
-    subdir : 'pbcopper/cli/toolcontract')
-
-  # pbcopper/cli/toolcontract/internal
-  install_headers(
-    files([
-      'pbcopper/cli/toolcontract/internal/Driver-inl.h',
-      'pbcopper/cli/toolcontract/internal/InputFileType-inl.h',
-      'pbcopper/cli/toolcontract/internal/OutputFileType-inl.h',
-      'pbcopper/cli/toolcontract/internal/Task-inl.h']),
-    subdir : 'pbcopper/cli/toolcontract/internal')
-
   # pbcopper/cli2
   install_headers(
     files([
@@ -239,7 +195,9 @@ if not meson.is_subproject()
       'pbcopper/utility/MemoryConsumption.h',
       'pbcopper/utility/MinMax.h',
       'pbcopper/utility/MoveAppend.h',
+      'pbcopper/utility/MoveInsert.h',
       'pbcopper/utility/OStreamRedirect.h',
+      'pbcopper/utility/PartitionElements.h',
       'pbcopper/utility/PbcopperVersion.h',
       'pbcopper/utility/SafeSubtract.h',
       'pbcopper/utility/SequenceUtils.h',

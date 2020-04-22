@@ -40,8 +40,7 @@ void Dbg::AddKmers(std::vector<BI>& kmers, uint32_t minFreqCutoff)
             if ((end_i - start_i) >= minFreqCutoff) {
                 DnaBit db;
                 db.Bin2DnaBit(kmers[start_i]);
-                DbgNode eg{db, 0};
-                eg.readIds2_.resize(nReads_);
+                DbgNode eg{db, 0, nReads_};
 
                 for (auto i = start_i; i <= end_i; ++i) {
                     uint32_t v = static_cast<uint32_t>(kmers[i]);
@@ -73,8 +72,7 @@ int Dbg::AddKmers(const PacBio::Pbmer::Mers& m, const uint32_t rid)
         if (dbg_.find(niby.mer) != dbg_.end()) {
             dbg_.at(niby.mer).AddLoad(rid);
         } else {
-            DbgNode eg{niby, 0};
-            eg.readIds2_.resize(nReads_);
+            DbgNode eg{niby, 0, nReads_};
             eg.AddLoad(rid);
             dbg_.emplace(niby.mer, std::move(eg));
         }
@@ -97,8 +95,7 @@ void Dbg::AddVerifedKmerPairs(std::vector<DnaBit>& bits, const uint32_t rid)
             dbg_.at(bits[i].mer).AddLoad(rid);
         } else {
 
-            DbgNode eg{bits[i], 0};
-            eg.readIds2_.resize(nReads_);
+            DbgNode eg{bits[i], 0, nReads_};
 
             eg.AddLoad(rid);
 
@@ -264,13 +261,23 @@ void Dbg::FrequencyFilterNodes(unsigned long n)
     }
 }
 
-void Dbg::FrequencyFilterNodes2(unsigned long n)
+void Dbg::FrequencyFilterNodes2(unsigned long n) { Dbg::FrequencyFilterNodes2(n, false); }
+
+void Dbg::FrequencyFilterNodes2(unsigned long n, bool gt)
 {
 
     std::vector<uint64_t> toRemove;
 
+    auto filterDirection = [&](const auto count) {
+        if (gt) {
+            return (count > n);
+        } else {
+            return (count < n);
+        }
+    };
+
     for (auto x = dbg_.begin(); x != dbg_.end(); ++x) {
-        if (x->second.readIds2_.count() < n) {
+        if (filterDirection(x->second.readIds2_.count())) {
             toRemove.push_back(x->first);
         }
     }
@@ -304,10 +311,10 @@ void Dbg::FrequencyFilterNodes2(unsigned long n)
     }
 }
 
-BubbleInfo Dbg::GetBubbles() const
+Bubbles Dbg::GetBubbles() const
 {
     // returned container describing which reads traverse which forks
-    BubbleInfo result;
+    Bubbles result;
 
     // keeping track of read id counts over linear paths
     // these variables are reused
@@ -341,13 +348,13 @@ BubbleInfo Dbg::GetBubbles() const
         std::vector<DnaBit> left;
         std::vector<DnaBit> right;
 
-        bool bubble = false;
+        bool hasBubble = false;
 
         // Comparing all linear paths to check if they converge. The first
         // two paths to converge are considered a bubble. subsequent bubbles are
         // ignored.
         for (size_t i = 0; i < path_info.size(); ++i) {
-            bubble = false;
+            hasBubble = false;
             for (size_t j = 0; j < path_info.size(); ++j) {
                 s1 = std::get<0>(path_info[i]);
                 s2 = std::get<0>(path_info[j]);
@@ -361,15 +368,15 @@ BubbleInfo Dbg::GetBubbles() const
                     right = GetLinearPath(s2);
                     // set the used incoming node so we don't get 2x n bubbles
                     used_branch_node.insert(shared);
-                    bubble = true;
+                    hasBubble = true;
                     break;
                 }
             }
             // only keep the first valid bubble
-            if (bubble) break;
+            if (hasBubble) break;
         }
 
-        if (!bubble) {
+        if (!hasBubble) {
             continue;
         }
         // reuse the same temp data struct.
@@ -377,31 +384,38 @@ BubbleInfo Dbg::GetBubbles() const
         right_reads.clear();
 
         for (auto const& l : left) {
-            for (size_t i = 0; i < dbg_.at(l.mer).readIds2_.size(); ++i) {
-                if (dbg_.at(l.mer).readIds2_[i] != 0) ++left_reads[i + 1];
+            size_t i = dbg_.at(l.mer).readIds2_.find_first();
+            while (i != dbg_.at(l.mer).readIds2_.npos) {
+                ++left_reads[i + 1];
+                i = dbg_.at(l.mer).readIds2_.find_next(i);
             }
         }
+
         for (auto const& r : right) {
-            for (size_t i = 0; i < dbg_.at(r.mer).readIds2_.size(); ++i) {
-                if (dbg_.at(r.mer).readIds2_[i] != 0) ++right_reads[i + 1];
+            size_t i = dbg_.at(r.mer).readIds2_.find_first();
+            while (i != dbg_.at(r.mer).readIds2_.npos) {
+                ++right_reads[i + 1];
+                i = dbg_.at(r.mer).readIds2_.find_next(i);
             }
         }
 
-        std::string lk = x->second.dna_.KmerToStr() + "L";
-        std::string rk = x->second.dna_.KmerToStr() + "R";
-
-        assert(result.find(lk) == result.end());
+        BubbleInfo bubble;
+        bubble.LSeq = DnaBitVec2String(left);
+        bubble.RSeq = DnaBitVec2String(right);
+        bubble.LKmerCount = left.size();
+        bubble.RKmerCount = right.size();
 
         for (const auto& kv : left_reads) {
-            result[lk].push_back(std::make_tuple(kv.first, kv.second, left.size()));
+            bubble.LData.push_back(std::make_tuple(kv.first, kv.second));
         }
 
         for (const auto& kv : right_reads) {
-            result[rk].push_back(std::make_tuple(kv.first, kv.second, right.size()));
+            bubble.RData.push_back(std::make_tuple(kv.first, kv.second));
         }
+        result.emplace_back(std::move(bubble));
     }
     return result;
-}
+}  // namespace Pbmer
 
 std::vector<DnaBit> Dbg::GetLinearPath(uint64_t x) const { return GetLinearPath(dbg_.at(x).dna_); }
 
@@ -544,8 +558,6 @@ bool Dbg::ValidateEdges() const
             }
         }
     }
-
-    //std::cerr << "N failed: " << count << "\n";
     return valid;
 }
 

@@ -233,7 +233,6 @@ TEST(Pbmer_DnaBit, DnaBitVec2String)
     const std::string kmerstr = "TCAGAGCGCTGTGAGATTTAAACAGCACTCTGA";
     const PacBio::Pbmer::Parser parser{static_cast<uint8_t>(27)};
     std::vector<PacBio::Pbmer::DnaBit> kms = parser.ParseDnaBit(kmerstr);
-    std::cerr << kms.size() << "\n";
     EXPECT_EQ(PacBio::Pbmer::DnaBitVec2String(kms), kmerstr);
 }
 

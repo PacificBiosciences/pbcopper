@@ -155,7 +155,7 @@ OptionData OptionTranslator::Translate(const Option& option)
         const auto choices = root.find("choices");
         if (choices != root.cend())
         {
-            for (const auto choice : *choices)
+            for (const auto& choice : *choices)
                 result.choices.emplace_back(MakeOptionValue(choice, result.type));
         }
 

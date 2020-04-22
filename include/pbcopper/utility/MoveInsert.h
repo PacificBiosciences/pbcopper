@@ -1,7 +1,7 @@
-// Author: Armin Töpfer, Derek Barnett
+// Author: Derek Barnett
 
-#ifndef PBCOPPER_UTILITY_MOVEAPPEND_H
-#define PBCOPPER_UTILITY_MOVEAPPEND_H
+#ifndef PBCOPPER_UTILITY_MOVEINSERT_H
+#define PBCOPPER_UTILITY_MOVEINSERT_H
 
 #include <pbcopper/PbcopperConfig.h>
 
@@ -11,39 +11,33 @@
 namespace PacBio {
 namespace Utility {
 
-/// \brief Appends contents of 'src' container to 'dst' sequential container
+/// \brief Inserts contents of 'src' container into 'dst' associative container
 ///        using move semantics.
-///
-/// \note Current implementation does support deque/list sequences.
 ///
 /// \param[in]      src  Input container that will be empty after execution
 /// \param[in,out]  dst  Output container that will be appended to
 ///
 template <typename T, typename U>
-auto MoveAppend(T&& src, U& dst)
+inline void MoveInsert(T&& src, U& dst) noexcept
 {
-    dst.reserve(dst.size() + src.size());
-    std::move(src.begin(), src.end(), std::back_inserter(dst));
+    std::move(src.begin(), src.end(), std::insert_iterator<U>(dst, dst.end()));
     src.clear();
 }
 
-/// \brief Appends contents of 'src' container to 'dst' sequential container
+/// \brief Inserts contents of 'src' container into 'dst' associative container
 ///        using move semantics.
-///
-/// \note Current implementation does support deque/list sequences.
 ///
 /// \param[in]      src  Input container that will be empty after execution
 /// \param[in,out]  dst  Output container that will be appended to
 ///
 template <typename T>
-auto MoveAppend(T&& src, T& dst)
+inline void MoveInsert(T&& src, T& dst) noexcept
 {
     // can short-circuit 'move' into empty dst when types are same
     if (dst.empty()) {
         dst = std::move(src);
     } else {
-        dst.reserve(dst.size() + src.size());
-        std::move(src.begin(), src.end(), std::back_inserter(dst));
+        std::move(src.begin(), src.end(), std::insert_iterator<T>(dst, dst.end()));
         src.clear();
     }
 }
@@ -51,4 +45,4 @@ auto MoveAppend(T&& src, T& dst)
 }  // namespace Utility
 }  // namespace PacBio
 
-#endif  // PBCOPPER_UTILITY_MOVEAPPEND_H
+#endif  // PBCOPPER_UTILITY_MOVEINSERT_H
