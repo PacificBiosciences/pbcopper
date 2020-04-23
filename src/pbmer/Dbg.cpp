@@ -368,6 +368,7 @@ Bubbles Dbg::GetBubbles() const
                     right = GetLinearPath(s2);
                     // set the used incoming node so we don't get 2x n bubbles
                     used_branch_node.insert(shared);
+                    used_branch_node.insert(x->second.dna_.mer);
                     hasBubble = true;
                     break;
                 }

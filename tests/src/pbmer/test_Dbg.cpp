@@ -494,8 +494,11 @@ TEST(Pbmer_Dbg, GetBubbles_mismatch_found)
 
     dg.BuildEdges();
     auto bubbles = dg.GetBubbles();
-
     EXPECT_EQ(bubbles.size(), 1);
+    //reverse comp
+    EXPECT_EQ(bubbles[0].LSeq, "AAATTCGAATTCTACATTGGATTACTTTA");
+    //reverse comp
+    EXPECT_EQ(bubbles[0].RSeq, "AAATTCGAATTCTAAATTGGATTACTTTA");
 }
 /*
 This is de bruijn graph has a complicated topology.Leave as a stretch
