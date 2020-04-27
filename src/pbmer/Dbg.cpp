@@ -9,8 +9,6 @@
 #include <sstream>
 #include <unordered_set>
 
-#include <pbcopper/third-party/kxsort/kxsort.h>
-
 namespace PacBio {
 namespace Pbmer {
 
