@@ -63,8 +63,6 @@ public:
     ///
     int AddKmers(const PacBio::Pbmer::Mers& m, const uint32_t rid);
 
-    void AddKmers(std::vector<BI>& kmers, uint32_t minFreqCutoff);
-
     void AddVerifedKmerPairs(std::vector<PacBio::Pbmer::DnaBit>& bits, const uint32_t rid);
 
     ///

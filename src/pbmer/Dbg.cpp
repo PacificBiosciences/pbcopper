@@ -9,52 +9,10 @@
 #include <sstream>
 #include <unordered_set>
 
-#include <pbcopper/third-party/kxsort/kxsort.h>
-
 namespace PacBio {
 namespace Pbmer {
-namespace {
-
-struct RadixTraits_128
-{
-    static const int nBytes = 8;  // only do 8 rounds
-    int kth_byte(const BI& x, int k) { return (x >> 64) >> (k * 8) & 0x0FF; }
-    bool compare(const BI& x, const BI& y) { return (x >> 64) < (y >> 64); }
-};
-
-}  // namespace
 
 Dbg::Dbg(uint8_t k, uint32_t nr) : kmerSize_{k}, nReads_{nr} {}
-
-void Dbg::AddKmers(std::vector<BI>& kmers, uint32_t minFreqCutoff)
-{
-    kx::radix_sort(kmers.begin(), kmers.end(), RadixTraits_128());
-    size_t start_i = 0;
-    size_t end_i = 0;
-
-    while (end_i < kmers.size()) {
-        ++end_i;
-        if ((kmers[start_i] >> 64) != (kmers[end_i] >> 64)) {
-            --end_i;
-
-            if ((end_i - start_i) >= minFreqCutoff) {
-                DnaBit db;
-                db.Bin2DnaBit(kmers[start_i]);
-                DbgNode eg{db, 0, nReads_};
-
-                for (auto i = start_i; i <= end_i; ++i) {
-                    uint32_t v = static_cast<uint32_t>(kmers[i]);
-                    // converting from one base index to zero
-                    eg.readIds2_[v - 1] = 1;
-                }
-                dbg_.emplace(db.mer, std::move(eg));
-            }
-
-            start_i = end_i + 1;
-            end_i = start_i;
-        }
-    }
-}
 
 int Dbg::AddKmers(const PacBio::Pbmer::Mers& m, const uint32_t rid)
 {
