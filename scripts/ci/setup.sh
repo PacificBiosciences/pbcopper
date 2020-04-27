@@ -27,6 +27,14 @@ case "${GCC_VERSION}" in
     CXX="icpc"
     ;;
 
+  clang)
+    module load gtest/gcc48
+
+    source /opt/rh/llvm-toolset-6.0/enable
+    CC="clang"
+    CXX="clang++"
+    ;;
+
   *)
     case "${bamboo_planRepository_branchName}-${BUILDTYPE:-release}-${ENABLED_UNITY_BUILD:-off}-${ENABLED_COVERAGE:-false}" in
       develop-release-off-false|master-release-off-false)
