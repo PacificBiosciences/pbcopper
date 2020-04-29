@@ -18,9 +18,9 @@ case "${GCC_VERSION}" in
     module load gtest
     ;;
 
-  ICC)
+  ICC*)
     module load devtoolset/6
-    module load composer_xe/2017.4.196
+    module load composer_xe/${GCC_VERSION#ICC}
     module load gtest/gcc48
 
     CC="icc"
