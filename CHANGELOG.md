@@ -4,6 +4,7 @@
 
 ### Added
  - PartitionElements utility
+ - Version printing callbacks for CLI
 
 ### Fixed
  - ReadId from CCS read names

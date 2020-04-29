@@ -11,6 +11,7 @@
 #include <vector>
 
 #include <pbcopper/cli2/Tool.h>
+#include <pbcopper/cli2/VersionPrinterCallback.h>
 #include <pbcopper/cli2/internal/MultiToolInterfaceData.h>
 #include <pbcopper/cli2/internal/OptionData.h>
 #include <pbcopper/logging/LogConfig.h>
@@ -41,6 +42,11 @@ public:
     /// configs, use their interfaces and do not use this method.
     ///
     MultiToolInterface& LogConfig(Logging::LogConfig config);
+
+    ///
+    /// Register callback for custom version display.
+    ///
+    MultiToolInterface& RegisterVersionPrinter(MultiToolVersionPrinterCallback printer);
 
 public:
     ///
@@ -92,6 +98,11 @@ public:
     /// \return (translated) help option.
     ///
     const internal::OptionData& VersionOption() const;
+
+    /// \internal
+    /// Print version information
+    ///
+    void PrintVersion() const;
 
 private:
     internal::MultiToolInterfaceData data_;
