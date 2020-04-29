@@ -6,7 +6,6 @@
 #include <pbcopper/PbcopperConfig.h>
 
 #include <iosfwd>
-#include <string>
 
 namespace PacBio {
 namespace CLI_v2 {
@@ -16,26 +15,14 @@ class MultiToolInterface;
 
 namespace internal {
 
-///
-/// Generates version display.
-///
-class VersionPrinter
+struct VersionPrinter
 {
-public:
-    explicit VersionPrinter(const Interface& i);
-    explicit VersionPrinter(const MultiToolInterface& i);
+    static void Print(const Interface& interface);
+    static void Print(const Interface& interface, std::ostream& out);
 
-    ///
-    /// Prints version text to output stream
-    ///
-    void Print(std::ostream& out) const;
-
-private:
-    std::string appName_;
-    std::string appVersion_;
+    static void Print(const MultiToolInterface& interface);
+    static void Print(const MultiToolInterface& interface, std::ostream& out);
 };
-
-std::ostream& operator<<(std::ostream& out, const VersionPrinter& version);
 
 }  // namespace internal
 }  // namespace CLI_v2

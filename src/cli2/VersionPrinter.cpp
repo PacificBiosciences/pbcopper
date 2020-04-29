@@ -9,22 +9,18 @@ namespace PacBio {
 namespace CLI_v2 {
 namespace internal {
 
-VersionPrinter::VersionPrinter(const Interface& i)
-    : appName_{i.ApplicationName()}, appVersion_{i.ApplicationVersion()}
+void VersionPrinter::Print(const Interface& interface) { Print(interface, std::cout); }
+
+void VersionPrinter::Print(const Interface& interface, std::ostream& out)
 {
+    out << interface.ApplicationName() << ' ' << interface.ApplicationVersion() << '\n';
 }
 
-VersionPrinter::VersionPrinter(const MultiToolInterface& i)
-    : appName_{i.ApplicationName()}, appVersion_{i.ApplicationVersion()}
-{
-}
+void VersionPrinter::Print(const MultiToolInterface& interface) { Print(interface, std::cout); }
 
-void VersionPrinter::Print(std::ostream& out) const { out << appName_ << " " << appVersion_; }
-
-std::ostream& operator<<(std::ostream& out, const VersionPrinter& version)
+void VersionPrinter::Print(const MultiToolInterface& interface, std::ostream& out)
 {
-    version.Print(out);
-    return out;
+    out << interface.ApplicationName() << ' ' << interface.ApplicationVersion() << '\n';
 }
 
 }  // namespace internal
