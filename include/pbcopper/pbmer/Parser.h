@@ -52,7 +52,7 @@ public:
     std::string RLE(const std::string& dna) const;
 
     ///
-    /// Simple destructive, in-place run length encoding
+    /// Simple destructive, in-place, run length encoding
     ///
     void RLE(std::string& dna) const;
 

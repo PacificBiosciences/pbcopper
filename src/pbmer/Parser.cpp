@@ -3,6 +3,7 @@
 
 #include <cassert>
 
+#include <algorithm>
 #include <array>
 #include <stdexcept>
 #include <vector>
@@ -21,8 +22,8 @@ Mers Parser::Parse(const std::string& dna) const
         throw std::runtime_error{"[pbmer] parsing ERROR: DNA sequence shorter than kmer size."};
 
     Mers kms{kmerSize_};
-    Kmer forward{Data::Strand::FORWARD};
-    Kmer reverse{Data::Strand::REVERSE};
+    Kmer forwardKmer{Data::Strand::FORWARD};
+    Kmer reverseKmer{Data::Strand::REVERSE};
 
     uint8_t c;
     // Counters to keep track of position and sizes of things
@@ -41,25 +42,25 @@ Mers Parser::Parse(const std::string& dna) const
         // If an unknown character is seen (c < 4) advance the window, set lk = 0,
         // and reset the kmer.
         if (c < 4) {
-            // building forward and reverse kmers by adding shiftin onto the kmers.
-            forward.mer = (forward.mer << 2 | c) & mask_;
-            reverse.mer = (reverse.mer >> 2) | (3ull ^ c) << shift1_;
+            // building forwardKmer and reverseKmer kmers by adding shiftin onto the kmers.
+            forwardKmer.mer = (forwardKmer.mer << 2 | c) & mask_;
+            reverseKmer.mer = (reverseKmer.mer >> 2) | (3ull ^ c) << shift1_;
             ++lk;
         } else {
             // unknown base, reset
             lk = 0;
             i += kmerSize_;
-            forward.mer = 0;
-            reverse.mer = 0;
-            forward.pos += kmerSize_;
-            reverse.pos += kmerSize_;
+            forwardKmer.mer = 0;
+            reverseKmer.mer = 0;
+            forwardKmer.pos += kmerSize_;
+            reverseKmer.pos += kmerSize_;
         }
         if (lk >= kmerSize_) {
             n += 2;
-            kms.AddKmer(forward);
-            kms.AddKmer(reverse);
-            ++forward.pos;
-            ++reverse.pos;
+            kms.AddKmer(forwardKmer);
+            kms.AddKmer(reverseKmer);
+            ++forwardKmer.pos;
+            ++reverseKmer.pos;
         }
         ++i;
     }
@@ -74,9 +75,9 @@ std::vector<DnaBit> Parser::ParseDnaBit(const std::string& dna) const
 
     std::vector<DnaBit> kms;
     kms.reserve(dna.size() - kmerSize_ + 1);
-    DnaBit forward;
-    forward.strand = 0;
-    forward.msize = kmerSize_;
+    DnaBit forwardKmer;
+    forwardKmer.strand = 0;
+    forwardKmer.msize = kmerSize_;
 
     uint8_t c;
     // Counters to keep track of position and sizes of things
@@ -95,18 +96,18 @@ std::vector<DnaBit> Parser::ParseDnaBit(const std::string& dna) const
         // If an unknown chracter is seen (c < 4) advance the window, set lk = 0,
         // and reset the kmer.
         if (c < 4) {
-            // building forward kmer
-            forward.mer = (forward.mer << 2 | c) & mask_;
+            // building forwardKmer kmer
+            forwardKmer.mer = (forwardKmer.mer << 2 | c) & mask_;
             ++lk;
         } else {
             // unknown base, reset
             lk = 0;
             i += kmerSize_;
-            forward.mer = 0;
+            forwardKmer.mer = 0;
         }
         if (lk >= kmerSize_) {
             n += 2;
-            kms.emplace_back(forward);
+            kms.emplace_back(forwardKmer);
         }
         ++i;
     }
@@ -119,9 +120,9 @@ void Parser::ParseDnaBit(const std::string& dna, std::vector<DnaBit>& kms) const
     if (dna.size() < kmerSize_)
         throw std::runtime_error{"[pbmer] parsing ERROR: DNA sequence shorter than kmer size."};
 
-    DnaBit forward;
-    forward.strand = 0;
-    forward.msize = kmerSize_;
+    DnaBit forwardKmer;
+    forwardKmer.strand = 0;
+    forwardKmer.msize = kmerSize_;
 
     uint8_t c;
     // Counters to keep track of position and sizes of things
@@ -140,18 +141,18 @@ void Parser::ParseDnaBit(const std::string& dna, std::vector<DnaBit>& kms) const
         // If an unknown chracter is seen (c < 4) advance the window, set lk = 0,
         // and reset the kmer.
         if (c < 4) {
-            // building forward kmer
-            forward.mer = (forward.mer << 2 | c) & mask_;
+            // building forwardKmer kmer
+            forwardKmer.mer = (forwardKmer.mer << 2 | c) & mask_;
             ++lk;
         } else {
             // unknown base, reset
             lk = 0;
             i += kmerSize_;
-            forward.mer = 0;
+            forwardKmer.mer = 0;
         }
         if (lk >= kmerSize_) {
             n += 2;
-            kms.emplace_back(forward);
+            kms.emplace_back(forwardKmer);
         }
         ++i;
     }

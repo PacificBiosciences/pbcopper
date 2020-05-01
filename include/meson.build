@@ -149,12 +149,17 @@ if not meson.is_subproject()
   # pbcopper/pbmer
   install_headers(
     files([
+      'pbcopper/pbmer/Bubble.h',
       'pbcopper/pbmer/Dbg.h',
       'pbcopper/pbmer/DbgNode.h',
       'pbcopper/pbmer/DnaBit.h',
       'pbcopper/pbmer/Kmer.h',
       'pbcopper/pbmer/Mers.h',
-      'pbcopper/pbmer/Parser.h']),
+      'pbcopper/pbmer/Parser.h',
+      'pbcopper/pbmer/SparseHaplotype.h',
+      'pbcopper/pbmer/KFGraph.h',
+      'pbcopper/pbmer/KFNode.h',
+      ]),
     subdir : 'pbcopper/pbmer')
 
   # pbcopper/reports
