@@ -202,6 +202,7 @@ if not meson.is_subproject()
       'pbcopper/utility/PbcopperVersion.h',
       'pbcopper/utility/SafeSubtract.h',
       'pbcopper/utility/SequenceUtils.h',
+      'pbcopper/utility/Ssize.h',
       'pbcopper/utility/Stopwatch.h',
       'pbcopper/utility/StringUtils.h',
       'pbcopper/utility/Unused.h']),
