@@ -62,6 +62,7 @@ pbcopper_test_cpp_sources = files([
   'src/utility/test_MoveInsert.cpp',
   'src/utility/test_OStreamRedirect.cpp',
   'src/utility/test_PartitionElements.cpp',
+  'src/utility/test_Ssize.cpp',
   'src/utility/test_Stopwatch.cpp',
   'src/utility/test_StringUtils.cpp',
 ])
