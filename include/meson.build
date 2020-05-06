@@ -204,7 +204,6 @@ if not meson.is_subproject()
       'pbcopper/utility/SequenceUtils.h',
       'pbcopper/utility/Stopwatch.h',
       'pbcopper/utility/StringUtils.h',
-      'pbcopper/utility/SystemInfo.h',
       'pbcopper/utility/Unused.h']),
     subdir : 'pbcopper/utility')
 
@@ -213,7 +212,7 @@ if not meson.is_subproject()
     files([
       'pbcopper/utility/internal/FileUtils-inl.h',
       'pbcopper/utility/internal/Stopwatch-inl.h',
-      'pbcopper/utility/internal/SystemInfo-inl.h']),
+    ]),
     subdir : 'pbcopper/utility/internal')
 endif
 

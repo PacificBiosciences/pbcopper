@@ -64,7 +64,6 @@ pbcopper_test_cpp_sources = files([
   'src/utility/test_PartitionElements.cpp',
   'src/utility/test_Stopwatch.cpp',
   'src/utility/test_StringUtils.cpp',
-  'src/utility/test_SystemInfo.cpp'
 ])
 
 # find GoogleTest
