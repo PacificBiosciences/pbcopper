@@ -50,45 +50,6 @@ TEST(Pbmer_Dbg, check_dump)
     EXPECT_EQ(1, 1);
 }
 
-TEST(Pbmer_Dbg, test_topo_three_kmers_add_many)
-{
-    const PacBio::Pbmer::Parser parser{3};
-    const std::string td1{"CATAG"};
-    std::vector<PacBio::Pbmer::DnaBit> m1 = parser.ParseDnaBit(td1);
-    std::vector<PacBio::Pbmer::BI> kmers_to_load;
-
-    for (auto& niby : m1) {
-
-        niby = niby.LexSmallerEq();
-
-        auto load = niby.DnaBit2Bin();
-        load |= 1;
-
-        kmers_to_load.emplace_back(load);
-    }
-
-    PacBio::Pbmer::Dbg dg{3, 1};
-    dg.AddKmers(kmers_to_load, 0);
-
-    EXPECT_EQ(dg.NNodes(), 3);
-
-    dg.BuildEdges();
-
-    std::string expected = R"(digraph DBGraph {
-    ATG [fillcolor=red, style="rounded,filled", shape=diamond]
-    CTA [fillcolor=red, style="rounded,filled", shape=diamond]
-    ATA [fillcolor=grey, style="rounded,filled", shape=ellipse]
-    ATG -> ATA;
-    CTA -> ATA;
-    ATA -> CTA;
-    ATA -> ATG;
-})";
-
-    std::string seen = dg.Graph2StringDot();
-    EXPECT_EQ(dg.ValidateEdges(), true);
-    EXPECT_EQ(seen, expected);
-}
-
 TEST(Pbmer_Dbg, test_topo_three_kmers)
 {
     const PacBio::Pbmer::Parser parser{3};
@@ -123,51 +84,6 @@ TEST(Pbmer_Dbg, test_topo_five_kmers)
     PacBio::Pbmer::Mers m1{parser.Parse(td1)};
     PacBio::Pbmer::Dbg dg{3, 1};
     dg.AddKmers(m1, 1);
-
-    EXPECT_EQ(dg.NNodes(), 5);
-
-    dg.BuildEdges();
-
-    std::string expected = R"(digraph DBGraph {
-    ACC [fillcolor=grey, style="rounded,filled", shape=ellipse]
-    AGG [fillcolor=red, style="rounded,filled", shape=diamond]
-    GTA [fillcolor=red, style="rounded,filled", shape=diamond]
-    ATG [fillcolor=red, style="rounded,filled", shape=diamond]
-    ATA [fillcolor=grey, style="rounded,filled", shape=ellipse]
-    ACC -> AGG;
-    ACC -> GTA;
-    AGG -> ACC;
-    GTA -> ATA;
-    GTA -> ACC;
-    ATG -> ATA;
-    ATA -> GTA;
-    ATA -> ATG;
-})";
-
-    std::string seen = dg.Graph2StringDot();
-    EXPECT_EQ(seen, expected);
-}
-
-TEST(Pbmer_Dbg, test_topo_five_kmers_add_many)
-{
-    const PacBio::Pbmer::Parser parser{3};
-    const std::string td1{"CATACCT"};
-    std::vector<PacBio::Pbmer::DnaBit> m1 = parser.ParseDnaBit(td1);
-
-    std::vector<PacBio::Pbmer::BI> kmers_to_load;
-
-    for (auto& niby : m1) {
-
-        niby = niby.LexSmallerEq();
-
-        auto load = niby.DnaBit2Bin();
-        load |= 1;
-
-        kmers_to_load.emplace_back(load);
-    }
-
-    PacBio::Pbmer::Dbg dg{3, 1};
-    dg.AddKmers(kmers_to_load, 0);
 
     EXPECT_EQ(dg.NNodes(), 5);
 
@@ -494,8 +410,11 @@ TEST(Pbmer_Dbg, GetBubbles_mismatch_found)
 
     dg.BuildEdges();
     auto bubbles = dg.GetBubbles();
-
     EXPECT_EQ(bubbles.size(), 1);
+    //reverse comp
+    EXPECT_EQ(bubbles[0].LSeq, "AAATTCGAATTCTACATTGGATTACTTTA");
+    //reverse comp
+    EXPECT_EQ(bubbles[0].RSeq, "AAATTCGAATTCTAAATTGGATTACTTTA");
 }
 /*
 This is de bruijn graph has a complicated topology.Leave as a stretch

@@ -47,7 +47,8 @@ if not meson.is_subproject()
       'pbcopper/cli2/Result.h',
       'pbcopper/cli2/Results.h',
       'pbcopper/cli2/ResultsHandler.h',
-      'pbcopper/cli2/Tool.h'
+      'pbcopper/cli2/Tool.h',
+      'pbcopper/cli2/VersionPrinterCallback.h',
       ]),
     subdir : 'pbcopper/cli2')
 

@@ -727,7 +727,7 @@ static size_t hash_bytes(void const* ptr, size_t const len) noexcept
     h ^= h >> r;
     h *= m;
     h ^= h >> r;
-    return static_cast<size_t>(h);
+    return h;
 }
 
 inline size_t hash_int(uint64_t obj) noexcept

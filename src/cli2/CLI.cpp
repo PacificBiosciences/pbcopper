@@ -19,7 +19,6 @@
 using CommandLineParser = PacBio::CLI_v2::internal::CommandLineParser;
 using InterfaceHelpPrinter = PacBio::CLI_v2::internal::InterfaceHelpPrinter;
 using MultiToolInterfaceHelpPrinter = PacBio::CLI_v2::internal::MultiToolInterfaceHelpPrinter;
-using VersionHelpPrinter = PacBio::CLI_v2::internal::VersionPrinter;
 
 namespace PacBio {
 namespace CLI_v2 {
@@ -66,8 +65,7 @@ int Run(const std::vector<std::string>& args, const Interface& interface,
 
     // version
     if (results[Builtin::Version]) {
-        const VersionHelpPrinter version{interface};
-        std::cout << version << '\n';
+        interface.PrintVersion();
         return EXIT_SUCCESS;
     }
 
@@ -181,8 +179,7 @@ int Run(const std::vector<std::string>& args, const MultiToolInterface& interfac
             std::cout << help;
             return EXIT_SUCCESS;
         } else if (arg == "--version") {
-            const VersionHelpPrinter version{interface};
-            std::cout << version << '\n';
+            interface.PrintVersion();
             return EXIT_SUCCESS;
         }
     }

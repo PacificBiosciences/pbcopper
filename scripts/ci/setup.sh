@@ -18,13 +18,21 @@ case "${GCC_VERSION}" in
     module load gtest
     ;;
 
-  ICC)
+  ICC*)
     module load devtoolset/6
-    module load composer_xe/2017.4.196
+    module load composer_xe/${GCC_VERSION#ICC}
     module load gtest/gcc48
 
     CC="icc"
     CXX="icpc"
+    ;;
+
+  clang)
+    module load gtest/gcc48
+
+    source /opt/rh/llvm-toolset-6.0/enable
+    CC="clang"
+    CXX="clang++"
     ;;
 
   *)

@@ -13,19 +13,6 @@ using OptionTranslator = PacBio::CLI_v2::internal::OptionTranslator;
 namespace PacBio {
 namespace CLI_v2 {
 
-static_assert(std::is_copy_constructible<MultiToolInterface>::value,
-              "MultiToolInterface(const MultiToolInterface&) is not = default");
-static_assert(std::is_copy_assignable<MultiToolInterface>::value,
-              "MultiToolInterface& operator=(const MultiToolInterface&) is not = default");
-
-#ifndef __INTEL_COMPILER
-static_assert(std::is_nothrow_move_constructible<MultiToolInterface>::value,
-              "MultiToolInterface(MultiToolInterface&&) is not = noexcept");
-static_assert(std::is_nothrow_move_assignable<MultiToolInterface>::value ==
-                  std::is_nothrow_move_assignable<internal::MultiToolInterfaceData>::value,
-              "");
-#endif
-
 MultiToolInterface::MultiToolInterface(std::string name, std::string description,
                                        std::string version)
     : data_{std::move(name), std::move(description), std::move(version),
@@ -89,6 +76,15 @@ MultiToolInterface& MultiToolInterface::LogConfig(Logging::LogConfig config)
 }
 
 const internal::OptionData& MultiToolInterface::HelpOption() const { return data_.helpOption_; }
+
+void MultiToolInterface::PrintVersion() const { data_.versionPrinter_(*this); }
+
+MultiToolInterface& MultiToolInterface::RegisterVersionPrinter(
+    MultiToolVersionPrinterCallback printer)
+{
+    data_.versionPrinter_ = printer;
+    return *this;
+}
 
 const Tool& MultiToolInterface::ToolFor(const std::string& toolName) const
 {

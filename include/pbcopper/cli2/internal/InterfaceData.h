@@ -11,8 +11,10 @@
 #include <boost/optional.hpp>
 
 #include <pbcopper/cli2/PositionalArgument.h>
+#include <pbcopper/cli2/VersionPrinterCallback.h>
 #include <pbcopper/cli2/internal/OptionData.h>
 #include <pbcopper/cli2/internal/PositionalArgumentData.h>
+#include <pbcopper/cli2/internal/VersionPrinter.h>
 #include <pbcopper/logging/LogConfig.h>
 
 namespace PacBio {
@@ -38,6 +40,10 @@ struct InterfaceData
         , alarmsOption_{std::move(alarms)}
         , exceptionPassthroughOption_(std::move(exceptionPassthrough))  // icc 17 hack
     {
+        // default version printer
+        versionPrinter_ = [](const Interface& interface) {
+            internal::VersionPrinter::Print(interface);
+        };
     }
 
     std::string appName_;
@@ -65,6 +71,8 @@ struct InterfaceData
 
     std::vector<OptionGroupData> optionGroups_;
     std::vector<PositionalArgumentData> positionalArgs_;
+
+    VersionPrinterCallback versionPrinter_;
 };
 
 }  // namespace internal
