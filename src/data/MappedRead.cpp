@@ -148,7 +148,7 @@ static_assert(std::is_nothrow_move_assignable<MappedRead>::value ==
 
 MappedRead::MappedRead(Read read) noexcept : Read{std::move(read)} {}
 
-MappedRead::MappedRead(Read read, enum Strand strand, size_t templateStart, size_t templateEnd,
+MappedRead::MappedRead(Read read, enum Strand strand, Position templateStart, Position templateEnd,
                        bool pinStart, bool pinEnd) noexcept
     : Read{std::move(read)}
     , Strand{strand}
@@ -367,9 +367,9 @@ Position MappedRead::ReferenceEnd() const
 
 Strand MappedRead::AlignedStrand() const { return Strand; }
 
-size_t MappedRead::NumMismatches() const
+int32_t MappedRead::NumMismatches() const
 {
-    size_t result = 0;
+    int32_t result = 0;
 
     for (const auto& op : Cigar) {
         const auto type = op.Type();

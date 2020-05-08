@@ -66,7 +66,7 @@ bool Interval::Overlaps(const Interval& other) const
 
 bool Interval::IsValid() const { return !boost::icl::is_empty(data_); }
 
-size_t Interval::Length() const { return boost::icl::length(data_); }
+Data::Position Interval::Length() const { return boost::icl::length(data_); }
 
 Position Interval::Start() const { return data_.lower(); }
 
