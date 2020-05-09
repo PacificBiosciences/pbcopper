@@ -28,6 +28,7 @@ pbcopper_test_cpp_sources = files([
   'src/data/test_ReadName.cpp',
   'src/data/test_RSMovieName.cpp',
   'src/data/test_RSReadName.cpp',
+  'src/data/test_SNR.cpp',
 
   # JSON
   'src/json/test_JSON.cpp',

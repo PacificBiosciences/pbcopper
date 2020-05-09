@@ -5,7 +5,6 @@
 
 #include <pbcopper/PbcopperConfig.h>
 
-#include <cstddef>
 #include <ostream>
 #include <vector>
 
@@ -18,28 +17,27 @@ namespace Data {
 /// Stores nucleotide-wise signal to noise ratios.
 struct SNR
 {
-    double A;
-    double C;
-    double G;
-    double T;
+    float A;
+    float C;
+    float G;
+    float T;
 
-    SNR(double a, double c, double g, double t);
-    SNR(const std::vector<double>& snrs);
-    SNR(const std::vector<float>& snrs);
-    SNR(const double (&snrs)[4]);
+    SNR(float a, float c, float g, float t) noexcept;
+    SNR(const std::vector<float>& snrs) noexcept;
+    SNR(const float (&snrs)[4]) noexcept;
 
     operator std::vector<float>() const;
 
-    const double& operator[](const size_t i) const;
-    double& operator[](const size_t i);
+    const float& operator[](const int i) const noexcept;
+    float& operator[](const int i) noexcept;
 
-    bool operator==(const SNR& other) const;
-    bool operator!=(const SNR& other) const;
+    bool operator==(const SNR& other) const noexcept;
+    bool operator!=(const SNR& other) const noexcept;
 
-    double Minimum() const;
+    float Minimum() const noexcept;
 };
 
-SNR ClampSNR(const SNR& val, const SNR& min, const SNR& max);
+SNR ClampSNR(const SNR& val, const SNR& min, const SNR& max) noexcept;
 
 std::ostream& operator<<(std::ostream& os, const SNR& snr);
 
