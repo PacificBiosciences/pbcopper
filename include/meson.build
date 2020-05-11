@@ -7,6 +7,7 @@ if not meson.is_subproject()
   # pbcopper
   install_headers(
     files([
+      'pbcopper/LibraryInfo.h',
       'pbcopper/PbcopperConfig.h']),
     subdir : 'pbcopper')
 
@@ -118,6 +119,14 @@ if not meson.is_subproject()
     files([
       'pbcopper/json/internal/json.hpp']),
     subdir : 'pbcopper/json/internal')
+
+  # pbcopper/library
+  install_headers(
+    files([
+      'pbcopper/library/Bundle.h',
+      'pbcopper/library/Info.h',
+    ]),
+    subdir : 'pbcopper/library')
 
   # pbcopper/logging
   install_headers(

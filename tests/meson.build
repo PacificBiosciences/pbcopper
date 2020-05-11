@@ -33,6 +33,9 @@ pbcopper_test_cpp_sources = files([
   # JSON
   'src/json/test_JSON.cpp',
 
+  # library
+  'src/library/test_Library.cpp',
+
   # logging
   'src/logging/test_Logging.cpp',
 
