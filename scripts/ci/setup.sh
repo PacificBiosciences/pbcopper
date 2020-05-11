@@ -6,16 +6,16 @@ export ENABLED_TESTS="true"
 export SHOULD_INSTALL="false"
 
 case "${GCC_VERSION}" in
-  RHEL)
+  next)
+    module load gcc/8.1.0
+    module load gtest
+    ;;
+
+  PA)
     module load gtest/gcc48
 
     # load SCL GCC
     source /opt/rh/devtoolset-6/enable
-    ;;
-
-  next)
-    module load gcc/8.1.0
-    module load gtest
     ;;
 
   ICC*)
