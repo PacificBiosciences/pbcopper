@@ -3,6 +3,7 @@
 #include <pbcopper/data/Interval.h>
 
 #include <sstream>
+#include <vector>
 
 #include <boost/algorithm/string.hpp>
 #include <boost/lexical_cast.hpp>
