@@ -17,7 +17,7 @@ module load meson
 module load ninja
 
 # use the same boost version as PA (avoid ODR explosions), TAK-705
-[[ ${GCC_VERSION} == ICC2017* ]] && PA_BOOST_VERSION="/1.58"
+[[ ${GCC_VERSION} == ICC2017* || ${GCC_VERSION} == PA ]] && PA_BOOST_VERSION="/1.58"
 module load boost${PA_BOOST_VERSION}
 
 module load doxygen
