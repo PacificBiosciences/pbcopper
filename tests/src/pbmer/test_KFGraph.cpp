@@ -138,8 +138,6 @@ TEST(Pbmer_KFGraph, find_bubble)
     g.AddSeq(m1, 1, "A");
     g.AddSeq(m2, 2, "B");
 
-    std::cerr << g.Graph2StringDot() << "\n";
-
     auto bubbles = g.FindBubbles();
     EXPECT_EQ(bubbles.size(), 1);
 }
