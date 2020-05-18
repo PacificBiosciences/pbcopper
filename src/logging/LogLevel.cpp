@@ -12,6 +12,7 @@ LogLevel LogLevelFromString(const std::string& level)
 {
     if (level == "TRACE") return LogLevel::TRACE;
     if (level == "DEBUG") return LogLevel::DEBUG;
+    if (level == "VERBOSE") return LogLevel::VERBOSE;
     if (level == "INFO") return LogLevel::INFO;
     if (level == "NOTICE") return LogLevel::NOTICE;
     if (level == "ERROR") return LogLevel::ERROR;
@@ -35,6 +36,8 @@ std::string LogLevel::ToString() const
             return "TRACE";
         case LogLevel::DEBUG:
             return "DEBUG";
+        case LogLevel::VERBOSE:
+            return "VERBOSE";
         case LogLevel::INFO:
             return "INFO";
         case LogLevel::NOTICE:

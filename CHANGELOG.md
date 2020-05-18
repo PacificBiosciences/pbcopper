@@ -6,6 +6,8 @@
  - PartitionElements utility
  - Version printing callbacks for CLI
  - Ssize utility
+ - Knock-first graph
+ - VERBOSE log level
 
 ### Fixed
  - ReadId from CCS read names
