@@ -8,6 +8,7 @@
  - Ssize utility
  - Knock-first graph
  - VERBOSE log level
+ - Dagcon API
 
 ### Fixed
  - ReadId from CCS read names

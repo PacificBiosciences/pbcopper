@@ -16,6 +16,10 @@ pbcopper_test_cpp_sources = files([
   'src/cli2/test_VersionPrinter.cpp',
 
   # data
+  'src/dagcon/test_Alignment.cpp',
+  'src/dagcon/test_AlignmentGraph.cpp',
+
+  # data
   'src/data/test_Accuracy.cpp',
   'src/data/test_Cigar.cpp',
   'src/data/test_Frames.cpp',
