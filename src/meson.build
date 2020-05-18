@@ -81,7 +81,10 @@ pbcopper_cpp_sources = files([
   'pbmer/DbgNode.cpp',
   'pbmer/DnaBit.cpp',
   'pbmer/Kmer.cpp',
+  'pbmer/KFGraph.cpp',
+  'pbmer/KFNode.cpp',
   'pbmer/Mers.cpp',
+  'pbmer/SparseHaplotype.cpp',
   'pbmer/Parser.cpp',
 
   # ---------

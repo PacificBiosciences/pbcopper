@@ -40,6 +40,16 @@ public:
     bool operator!=(DnaBit const& b) const;
 
     ///
+    /// \return the hashed kmer
+    ///
+    uint64_t HashedKmer() const;
+
+    ///
+    /// \return the rc hashed kmer
+    ///
+    uint64_t RCHashedKmer() const;
+
+    ///
     /// \return the smaller DnaBit (forward/reverse).
     ///
     DnaBit LexSmallerEq() const;
@@ -100,25 +110,25 @@ public:
     /// Get the first idx
     /// \note see constexpr const std::array<char, 8> bases in cpp
     ///
-    uint8_t GetFirstBaseIdx() const;
+    uint8_t FirstBaseIdx() const;
 
     ///
     /// Get the last idx
     /// \note see constexpr const std::array<char, 8> bases in cpp
     ///
-    uint8_t GetLastBaseIdx() const;
+    uint8_t LastBaseIdx() const;
 
     ///
     /// Get the first idx
     /// \note see constexpr const std::array<char, 8> bases in cpp
     ///
-    uint8_t GetFirstBaseRCIdx() const;
+    uint8_t FirstBaseRCIdx() const;
 
     ///
     /// Get the last idx
     /// \note see constexpr const std::array<char, 8> bases in cpp
     ///
-    uint8_t GetLastBaseRCIdx() const;
+    uint8_t LastBaseRCIdx() const;
 
     ///
     /// Pack a DnaBit to an int128

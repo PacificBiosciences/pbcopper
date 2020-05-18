@@ -10,6 +10,21 @@
 namespace PacBio {
 namespace Pbmer {
 
+// https://gist.github.com/badboy/6267743
+// This is a multiplication method for hashing. Minimap2 uses this function, but
+// this function does not mask, no constraining the bitrange.
+uint64_t Hash64shift(uint64_t key)
+{
+    key = (~key) + (key << 21);  // key = (key << 21) - key - 1;
+    key = key ^ (key >> 24);
+    key = (key + (key << 3)) + (key << 8);  // key * 265
+    key = key ^ (key >> 14);
+    key = (key + (key << 2)) + (key << 4);  // key * 21
+    key = key ^ (key >> 28);
+    key = key + (key << 31);
+    return key;
+}
+
 uint64_t Mix64Masked(const uint64_t key, const uint8_t kmerSize)
 {
     uint64_t res = key;
@@ -89,15 +104,19 @@ BI DnaBit::DnaBit2Bin() const
     return rv;
 }
 
-uint8_t DnaBit::GetFirstBaseIdx() const
+uint8_t DnaBit::FirstBaseIdx() const
 {
     return static_cast<uint8_t>(((mer >> ((2 * msize) - 2)) & 3));
 }
-uint8_t DnaBit::GetFirstBaseRCIdx() const { return 3 & ~GetLastBaseIdx(); }
+uint8_t DnaBit::FirstBaseRCIdx() const { return 3 & ~LastBaseIdx(); }
 
-uint8_t DnaBit::GetLastBaseIdx() const { return static_cast<uint8_t>(mer & 3); }
+uint8_t DnaBit::LastBaseIdx() const { return static_cast<uint8_t>(mer & 3); }
 
-uint8_t DnaBit::GetLastBaseRCIdx() const { return 3 & ~GetFirstBaseIdx(); }
+uint8_t DnaBit::LastBaseRCIdx() const { return 3 & ~FirstBaseIdx(); }
+
+uint64_t DnaBit::HashedKmer() const { return Hash64shift(mer); }
+
+uint64_t DnaBit::RCHashedKmer() const { return Mix64Masked(ReverseComp64(mer, msize), msize); }
 
 std::string DnaBit::KmerToStr(void) const
 {

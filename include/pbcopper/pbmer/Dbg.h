@@ -13,6 +13,7 @@
 #include <tuple>
 #include <vector>
 
+#include <pbcopper/pbmer/Bubble.h>
 #include <pbcopper/pbmer/DbgNode.h>
 #include <pbcopper/pbmer/DnaBit.h>
 #include <pbcopper/pbmer/Mers.h>
@@ -21,25 +22,6 @@
 
 namespace PacBio {
 namespace Pbmer {
-
-// simple structure that returns the bubble sequences and readIds across the paths
-struct BubbleInfo
-{
-    // sequence of left path
-    std::string LSeq;
-    // sequence of right path
-    std::string RSeq;
-    // count of kmers along left paths
-    uint32_t LKmerCount;
-    // count of kmers along right path
-    uint32_t RKmerCount;
-
-    // READID, KMER_COUNT
-    std::vector<std::tuple<uint32_t, int>> LData;
-    std::vector<std::tuple<uint32_t, int>> RData;
-};
-
-using Bubbles = std::vector<BubbleInfo>;
 
 class Dbg
 {
@@ -139,18 +121,18 @@ public:
     ///
     /// \return nodes in the path including the starting node
     ///
-    std::vector<DnaBit> GetLinearPath(const DnaBit& niby) const;
+    std::vector<DnaBit> LinearPath(const DnaBit& niby) const;
 
     ///
     /// \brief Get the linear path vector
     ///
     /// \param x  the starting point of the search (lex smaller kmer) - uint64_t
-    std::vector<DnaBit> GetLinearPath(uint64_t x) const;
+    std::vector<DnaBit> LinearPath(uint64_t x) const;
 
     ///
     /// \return simple bubbles
     ///
-    Bubbles GetBubbles() const;
+    Bubbles FindBubbles() const;
 
     ////
     /// Removes simple spurs (out edge == 2) from graph. Ties are not resolved.
