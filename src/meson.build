@@ -31,7 +31,6 @@ pbcopper_cpp_sources = files([
   # -------
   # cli2
   # -------
-
   'cli2/CLI.cpp',
   'cli2/CommandLineParser.cpp',
   'cli2/HelpMetrics.cpp',
@@ -46,6 +45,12 @@ pbcopper_cpp_sources = files([
   'cli2/Result.cpp',
   'cli2/Results.cpp',
   'cli2/VersionPrinter.cpp',
+
+  # -------
+  # dagcon
+  # -------
+  'dagcon/Alignment.cpp',
+  'dagcon/AlignmentGraph.cpp',
 
   # -------
   # data

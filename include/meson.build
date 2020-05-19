@@ -70,6 +70,14 @@ if not meson.is_subproject()
       'pbcopper/cli2/internal/VersionPrinter.h',]),
     subdir : 'pbcopper/cli2/internal')
 
+  # pbcopper/dagcon
+  install_headers(
+    files([
+      'pbcopper/dagcon/Alignment.h',
+      'pbcopper/dagcon/AlignmentGraph.h',
+    ]),
+    subdir : 'pbcopper/dagcon')
+
   # pbcopper/data
   install_headers(
     files([
