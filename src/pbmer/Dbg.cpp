@@ -72,25 +72,25 @@ uint8_t SetRevEdge(const DnaBit& a, const DnaBit& b)
 
     switch (c) {
         case 0: {
-            es <<= (b.GetFirstBaseIdx() + 0);
-            newNib.PrependBase(b.GetFirstBaseIdx());
+            es <<= (b.FirstBaseIdx() + 0);
+            newNib.PrependBase(b.FirstBaseIdx());
             break;
         }
         case 1: {
-            es <<= (b.GetFirstBaseRCIdx() + 0);
-            newNib.PrependBase(b.GetFirstBaseRCIdx());
+            es <<= (b.FirstBaseRCIdx() + 0);
+            newNib.PrependBase(b.FirstBaseRCIdx());
             newNib.MakeLexSmaller();
             break;
         }
         case 2: {
-            es <<= (b.GetLastBaseRCIdx() + 4);
-            newNib.AppendBase(b.GetLastBaseRCIdx());
+            es <<= (b.LastBaseRCIdx() + 4);
+            newNib.AppendBase(b.LastBaseRCIdx());
             newNib.MakeLexSmaller();
             break;
         }
         case 3: {
-            es <<= (b.GetLastBaseIdx() + 4);
-            newNib.AppendBase(b.GetLastBaseIdx());
+            es <<= (b.LastBaseIdx() + 4);
+            newNib.AppendBase(b.LastBaseIdx());
             break;
         }
 
@@ -111,25 +111,25 @@ uint8_t SetForEdge(const DnaBit& a, const DnaBit& b)
 
     switch (c) {
         case 0: {
-            es <<= (b.GetLastBaseIdx() + 4);
-            newNib.AppendBase(b.GetLastBaseIdx());
+            es <<= (b.LastBaseIdx() + 4);
+            newNib.AppendBase(b.LastBaseIdx());
             break;
         }
         case 1: {
-            es <<= (b.GetLastBaseRCIdx() + 4);
-            newNib.AppendBase(b.GetLastBaseRCIdx());
+            es <<= (b.LastBaseRCIdx() + 4);
+            newNib.AppendBase(b.LastBaseRCIdx());
             newNib.MakeLexSmaller();
             break;
         }
         case 2: {
-            es <<= (b.GetFirstBaseRCIdx() + 0);
-            newNib.PrependBase(b.GetFirstBaseRCIdx());
+            es <<= (b.FirstBaseRCIdx() + 0);
+            newNib.PrependBase(b.FirstBaseRCIdx());
             newNib.MakeLexSmaller();
             break;
         }
         case 3: {
-            es <<= (b.GetFirstBaseIdx() + 0);
-            newNib.PrependBase(b.GetFirstBaseIdx());
+            es <<= (b.FirstBaseIdx() + 0);
+            newNib.PrependBase(b.FirstBaseIdx());
             break;
         }
 
@@ -269,7 +269,7 @@ void Dbg::FrequencyFilterNodes2(unsigned long n, bool gt)
     }
 }
 
-Bubbles Dbg::GetBubbles() const
+Bubbles Dbg::FindBubbles() const
 {
     // returned container describing which reads traverse which forks
     Bubbles result;
@@ -297,7 +297,7 @@ Bubbles Dbg::GetBubbles() const
         // loop over neighboring nodes collecting the start and end node of
         // linear paths. I.E. looping over all linear paths coming out of a node.
         for (auto& out : x->second) {
-            auto linear_path = GetLinearPath(out);
+            auto linear_path = LinearPath(out);
             if (linear_path.empty()) continue;
             path_info.push_back(std::make_tuple(out.mer, linear_path.back().mer));
         }
@@ -322,8 +322,8 @@ Bubbles Dbg::GetBubbles() const
                 // check if the paths converge on a common neighboring node.
                 if (OneIntermediateNode(e1, e2, &shared)) {
                     // the paths are not stored in the first loop, maybe the should?
-                    left = GetLinearPath(s1);
-                    right = GetLinearPath(s2);
+                    left = LinearPath(s1);
+                    right = LinearPath(s2);
                     // set the used incoming node so we don't get 2x n bubbles
                     used_branch_node.insert(shared);
                     used_branch_node.insert(x->second.dna_.mer);
@@ -365,20 +365,20 @@ Bubbles Dbg::GetBubbles() const
         bubble.RKmerCount = right.size();
 
         for (const auto& kv : left_reads) {
-            bubble.LData.push_back(std::make_tuple(kv.first, kv.second));
+            bubble.LData.push_back(std::make_pair(kv.first, kv.second));
         }
 
         for (const auto& kv : right_reads) {
-            bubble.RData.push_back(std::make_tuple(kv.first, kv.second));
+            bubble.RData.push_back(std::make_pair(kv.first, kv.second));
         }
         result.emplace_back(std::move(bubble));
     }
     return result;
 }  // namespace Pbmer
 
-std::vector<DnaBit> Dbg::GetLinearPath(uint64_t x) const { return GetLinearPath(dbg_.at(x).dna_); }
+std::vector<DnaBit> Dbg::LinearPath(uint64_t x) const { return LinearPath(dbg_.at(x).dna_); }
 
-std::vector<DnaBit> Dbg::GetLinearPath(const DnaBit& niby) const
+std::vector<DnaBit> Dbg::LinearPath(const DnaBit& niby) const
 {
     std::vector<DnaBit> result;
 
@@ -474,7 +474,7 @@ int Dbg::RemoveSpurs(unsigned int maxLength)
         if (nodeIter->second.TotalEdgeCount() != 1) continue;
 
         // Including tip node in the linear path.
-        auto linear_path = GetLinearPath(nodeIter->second.dna_.mer);
+        auto linear_path = LinearPath(nodeIter->second.dna_.mer);
 
         if (linear_path.size() > maxLength) {
             continue;

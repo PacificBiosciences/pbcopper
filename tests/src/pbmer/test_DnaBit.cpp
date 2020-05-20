@@ -60,8 +60,8 @@ TEST(Pbmer_DnaBit, str_first_base_idx_a)
     const std::array<char, 8> bases{'A', 'C', 'G', 'T', 'A', 'C', 'G', 'T'};
     //"GGGGGCTCAGGGTCGC"
     const PacBio::Pbmer::DnaBit k1{2862426841, 0, 16};
-    EXPECT_EQ(2, k1.GetFirstBaseIdx());
-    EXPECT_EQ('G', bases[k1.GetFirstBaseIdx()]);
+    EXPECT_EQ(2, k1.FirstBaseIdx());
+    EXPECT_EQ('G', bases[k1.FirstBaseIdx()]);
 }
 
 TEST(Pbmer_DnaBit, str_first_base_idx_b)
@@ -69,8 +69,8 @@ TEST(Pbmer_DnaBit, str_first_base_idx_b)
     const std::array<char, 8> bases{'A', 'C', 'G', 'T', 'A', 'C', 'G', 'T'};
     //"AGGGGGCTCAGGGTCG"
     const PacBio::Pbmer::DnaBit k1{2862426841 >> 2, 0, 16};
-    EXPECT_EQ(0, k1.GetFirstBaseIdx());
-    EXPECT_EQ('A', bases[k1.GetFirstBaseIdx()]);
+    EXPECT_EQ(0, k1.FirstBaseIdx());
+    EXPECT_EQ('A', bases[k1.FirstBaseIdx()]);
 }
 
 TEST(Pbmer_DnaBit, str_last_base_idx_a)
@@ -78,8 +78,8 @@ TEST(Pbmer_DnaBit, str_last_base_idx_a)
     //"GGGGGCTCAGGGTCGC"
     const std::array<char, 8> bases{'A', 'C', 'G', 'T', 'A', 'C', 'G', 'T'};
     const PacBio::Pbmer::DnaBit k1{2862426841, 0, 16};
-    EXPECT_EQ(1, k1.GetLastBaseIdx());
-    EXPECT_EQ('C', bases[k1.GetLastBaseIdx()]);
+    EXPECT_EQ(1, k1.LastBaseIdx());
+    EXPECT_EQ('C', bases[k1.LastBaseIdx()]);
 }
 
 TEST(Pbmer_DnaBit, str_last_base_idx_b)
@@ -87,8 +87,8 @@ TEST(Pbmer_DnaBit, str_last_base_idx_b)
     const std::array<char, 8> bases{'A', 'C', 'G', 'T', 'A', 'C', 'G', 'T'};
     //"GGGGGCTCAGGGTCGC"
     const PacBio::Pbmer::DnaBit k1{2862426840, 0, 16};
-    EXPECT_EQ(0, k1.GetLastBaseIdx());
-    EXPECT_EQ('A', bases[k1.GetLastBaseIdx()]);
+    EXPECT_EQ(0, k1.LastBaseIdx());
+    EXPECT_EQ('A', bases[k1.LastBaseIdx()]);
 }
 
 TEST(Pbmer_DnaBit, str_first_base_rc_idx_a)
@@ -96,8 +96,8 @@ TEST(Pbmer_DnaBit, str_first_base_rc_idx_a)
     const std::array<char, 8> bases{'A', 'C', 'G', 'T', 'A', 'C', 'G', 'T'};
     //"GGGGGCTCAGGGTCGC"
     const PacBio::Pbmer::DnaBit k1{2862426841, 0, 16};
-    EXPECT_EQ(2, k1.GetFirstBaseRCIdx());
-    EXPECT_EQ('G', bases[k1.GetFirstBaseRCIdx()]);
+    EXPECT_EQ(2, k1.FirstBaseRCIdx());
+    EXPECT_EQ('G', bases[k1.FirstBaseRCIdx()]);
 }
 
 TEST(Pbmer_DnaBit, str_last_base_rc_idx_a)
@@ -105,8 +105,8 @@ TEST(Pbmer_DnaBit, str_last_base_rc_idx_a)
     const std::array<char, 8> bases{'A', 'C', 'G', 'T', 'A', 'C', 'G', 'T'};
     //"GGGGGCTCAGGGTCGC"
     const PacBio::Pbmer::DnaBit k1{2862426841, 0, 16};
-    EXPECT_EQ(1, k1.GetLastBaseRCIdx());
-    EXPECT_EQ('C', bases[k1.GetLastBaseRCIdx()]);
+    EXPECT_EQ(1, k1.LastBaseRCIdx());
+    EXPECT_EQ('C', bases[k1.LastBaseRCIdx()]);
 }
 
 TEST(Pbmer_DnaBit, rc_check_rc)

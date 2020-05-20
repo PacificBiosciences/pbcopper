@@ -322,7 +322,7 @@ TEST(Pbmer_Dbg, GetNBreadth_bubble_found)
     dg.AddKmers(m2, 2);
 
     dg.BuildEdges();
-    auto bubbles = dg.GetBubbles();
+    auto bubbles = dg.FindBubbles();
     EXPECT_EQ(bubbles.size(), 1);
 }
 
@@ -343,7 +343,7 @@ TEST(Pbmer_Dbg, GetNBreadth_node_count_correct)
     dg.AddKmers(m2, 2);
 
     dg.BuildEdges();
-    auto bubbles = dg.GetBubbles();
+    auto bubbles = dg.FindBubbles();
 
     EXPECT_EQ(dg.NNodes(), 15);
     EXPECT_EQ(bubbles.size(), 0);
@@ -366,7 +366,7 @@ TEST(Pbmer_Dbg, GetNBreadth_bubble_found_rc_first)
     dg.AddKmers(m2, 2);
 
     dg.BuildEdges();
-    auto bubbles = dg.GetBubbles();
+    auto bubbles = dg.FindBubbles();
 
     EXPECT_EQ(bubbles.size(), 1);
 }
@@ -388,12 +388,12 @@ TEST(Pbmer_Dbg, GetNBreadth_bubble_found_rc)
     dg.AddKmers(m2, 2);
 
     dg.BuildEdges();
-    auto bubbles = dg.GetBubbles();
+    auto bubbles = dg.FindBubbles();
 
     EXPECT_EQ(bubbles.size(), 1);
 }
 
-TEST(Pbmer_Dbg, GetBubbles_mismatch_found)
+TEST(Pbmer_Dbg, Bubbles_mismatch_found)
 {
     const PacBio::Pbmer::Parser parser{15};
     //mismatch                                        (X)
@@ -409,7 +409,7 @@ TEST(Pbmer_Dbg, GetBubbles_mismatch_found)
     dg.AddKmers(m2, 2);
 
     dg.BuildEdges();
-    auto bubbles = dg.GetBubbles();
+    auto bubbles = dg.FindBubbles();
     EXPECT_EQ(bubbles.size(), 1);
     //reverse comp
     EXPECT_EQ(bubbles[0].LSeq, "AAATTCGAATTCTACATTGGATTACTTTA");
@@ -425,7 +425,7 @@ This is de bruijn graph has a complicated topology.Leave as a stretch
     : TTCCAGTGCGGGAGG-- ----------CACTGCTAGCATAGCCGGTAATC(1949 - 1986)
 
 
-TEST(Dbg_GetBubbles, indel_found)
+TEST(Dbg_Bubbles, indel_found)
 {
     const PacBio::Pbmer::Parser parser{15};
     //del                                (X)
@@ -441,7 +441,7 @@ TEST(Dbg_GetBubbles, indel_found)
     dg.AddKmers(m2, 2);
 
     dg.BuildEdges();
-    auto bubbles = dg.GetBubbles();
+    auto bubbles = dg.FindBubbles();
     dg.WriteGraph("kmer_graph_indel.dot");
 
     // this is a failing test
@@ -450,7 +450,7 @@ TEST(Dbg_GetBubbles, indel_found)
 
     */
 
-TEST(Pbmer_Dbg, GetBubbles_indel_found2)
+TEST(Pbmer_Dbg, Bubbles_indel_found2)
 {
     const PacBio::Pbmer::Parser parser{15};
     //del                                  (X)
@@ -466,12 +466,12 @@ TEST(Pbmer_Dbg, GetBubbles_indel_found2)
     dg.AddKmers(m2, 2);
 
     dg.BuildEdges();
-    auto bubbles = dg.GetBubbles();
+    auto bubbles = dg.FindBubbles();
 
     EXPECT_EQ(bubbles.size(), 1);
 }
 
-TEST(Pbmer_Dbg, GetBubbles_no_bubble)
+TEST(Pbmer_Dbg, Bubbles_no_bubble)
 {
     const PacBio::Pbmer::Parser parser{7};
     //SNV                         (X)
@@ -488,7 +488,7 @@ TEST(Pbmer_Dbg, GetBubbles_no_bubble)
 
     dg.BuildEdges();
 
-    auto bubbles = dg.GetBubbles();
+    auto bubbles = dg.FindBubbles();
 
     EXPECT_EQ(bubbles.size(), 0);
 }
@@ -607,13 +607,13 @@ TEST(Pbmer_Dbg, SpurRemoval_spur_bubble_cleanup)
     dg.BuildEdges();
 
     auto spurCount = dg.RemoveSpurs(1);
-    auto bubbles = dg.GetBubbles();
+    auto bubbles = dg.FindBubbles();
 
     EXPECT_EQ(spurCount, 1);
     EXPECT_EQ(bubbles.size(), 1);
 }
 
-TEST(Pbmer_Dbg, GetBubbles_double_bubble_rc)
+TEST(Pbmer_Dbg, Bubbles_double_bubble_rc)
 {
     const std::string td1{
         "AGTCCGGCTTCGGAGCGGGATCAGGAGCGGTGGCCGCTGGGAATACCAATGGCCACAGCACCACCTCCAGTAGCAGCACTCATCTG"
@@ -636,12 +636,12 @@ TEST(Pbmer_Dbg, GetBubbles_double_bubble_rc)
 
     dg.BuildEdges();
 
-    auto bubbles = dg.GetBubbles();
+    auto bubbles = dg.FindBubbles();
 
     EXPECT_EQ(bubbles.size(), 2);
 }
 
-TEST(Pbmer_Dbg, GetBubbles_complex_snv)
+TEST(Pbmer_Dbg, Bubbles_complex_snv)
 {
     const std::string td1{"TGAACAAGTCACAAAAAAAAAAGATAATTTAAATGAAC"};
     const std::string td2{"TGAACAAGTCACAAAAAACAGAGATATTTAAAATGAAC"};
@@ -673,7 +673,7 @@ TEST(Pbmer_Dbg, GetBubbles_complex_snv)
 
     dg.BuildEdges();
 
-    auto bubbles = dg.GetBubbles();
+    auto bubbles = dg.FindBubbles();
 
     EXPECT_EQ(bubbles.size(), 1);
 }

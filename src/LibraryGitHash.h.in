@@ -1,0 +1,14 @@
+// Author: Derek Barnett
+
+#ifndef PBCOPPER_LIBRARY_GITHASH_H
+#define PBCOPPER_LIBRARY_GITHASH_H
+
+namespace PacBio {
+namespace Pbcopper {
+
+constexpr const char LibraryGitSha1[] = "@COPPER_GIT_SHA1@";
+
+}  // namespace Pbcopper
+}  // namespace PacBio
+
+#endif  // PBCOPPER_LIBRARY_GITHASH_H

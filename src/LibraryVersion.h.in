@@ -1,0 +1,14 @@
+// Author: Derek Barnett
+
+#ifndef PBCOPPER_LIBRARY_VERION_H
+#define PBCOPPER_LIBRARY_VERION_H
+
+namespace PacBio {
+namespace Pbcopper {
+
+constexpr const char ReleaseVersion[] = "@pbcopper_VERSION@";
+
+}  // namespace Pbcopper
+}  // namespace PacBio
+
+#endif  // PBCOPPER_LIBRARY_VERION_H

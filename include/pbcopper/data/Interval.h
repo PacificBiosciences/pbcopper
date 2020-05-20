@@ -7,8 +7,6 @@
 
 #include <pbcopper/data/Position.h>
 
-#include <cstddef>
-
 #define BOOST_ICL_USE_STATIC_BOUNDED_INTERVALS
 #include <boost/icl/discrete_interval.hpp>
 #include <boost/icl/interval_traits.hpp>
@@ -113,7 +111,7 @@ public:
     bool IsValid() const;
 
     /// \returns interval length
-    size_t Length() const;
+    Data::Position Length() const;
 
     /// \}
 

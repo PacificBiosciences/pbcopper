@@ -28,9 +28,13 @@ pbcopper_test_cpp_sources = files([
   'src/data/test_ReadName.cpp',
   'src/data/test_RSMovieName.cpp',
   'src/data/test_RSReadName.cpp',
+  'src/data/test_SNR.cpp',
 
   # JSON
   'src/json/test_JSON.cpp',
+
+  # library
+  'src/library/test_Library.cpp',
 
   # logging
   'src/logging/test_Logging.cpp',
@@ -44,6 +48,7 @@ pbcopper_test_cpp_sources = files([
   'src/pbmer/test_Dbg.cpp',
   'src/pbmer/test_DbgNode.cpp',
   'src/pbmer/test_DnaBit.cpp',
+  'src/pbmer/test_KFGraph.cpp',
   'src/pbmer/test_Kmer.cpp',
   'src/pbmer/test_Mers.cpp',
   'src/pbmer/test_Parser.cpp',
@@ -62,9 +67,9 @@ pbcopper_test_cpp_sources = files([
   'src/utility/test_MoveInsert.cpp',
   'src/utility/test_OStreamRedirect.cpp',
   'src/utility/test_PartitionElements.cpp',
+  'src/utility/test_Ssize.cpp',
   'src/utility/test_Stopwatch.cpp',
   'src/utility/test_StringUtils.cpp',
-  'src/utility/test_SystemInfo.cpp'
 ])
 
 # find GoogleTest

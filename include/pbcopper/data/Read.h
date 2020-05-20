@@ -51,7 +51,7 @@ struct Read
     std::string Model;
     bool FullLength = false;
 
-    size_t Length() const;
+    int32_t Length() const;
     std::string FullName() const;
 
     Read ClipTo(const int32_t begin, const int32_t end) const;

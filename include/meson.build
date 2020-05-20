@@ -7,6 +7,7 @@ if not meson.is_subproject()
   # pbcopper
   install_headers(
     files([
+      'pbcopper/LibraryInfo.h',
       'pbcopper/PbcopperConfig.h']),
     subdir : 'pbcopper')
 
@@ -119,6 +120,14 @@ if not meson.is_subproject()
       'pbcopper/json/internal/json.hpp']),
     subdir : 'pbcopper/json/internal')
 
+  # pbcopper/library
+  install_headers(
+    files([
+      'pbcopper/library/Bundle.h',
+      'pbcopper/library/Info.h',
+    ]),
+    subdir : 'pbcopper/library')
+
   # pbcopper/logging
   install_headers(
     files([
@@ -140,12 +149,17 @@ if not meson.is_subproject()
   # pbcopper/pbmer
   install_headers(
     files([
+      'pbcopper/pbmer/Bubble.h',
       'pbcopper/pbmer/Dbg.h',
       'pbcopper/pbmer/DbgNode.h',
       'pbcopper/pbmer/DnaBit.h',
       'pbcopper/pbmer/Kmer.h',
       'pbcopper/pbmer/Mers.h',
-      'pbcopper/pbmer/Parser.h']),
+      'pbcopper/pbmer/Parser.h',
+      'pbcopper/pbmer/SparseHaplotype.h',
+      'pbcopper/pbmer/KFGraph.h',
+      'pbcopper/pbmer/KFNode.h',
+      ]),
     subdir : 'pbcopper/pbmer')
 
   # pbcopper/reports
@@ -202,9 +216,9 @@ if not meson.is_subproject()
       'pbcopper/utility/PbcopperVersion.h',
       'pbcopper/utility/SafeSubtract.h',
       'pbcopper/utility/SequenceUtils.h',
+      'pbcopper/utility/Ssize.h',
       'pbcopper/utility/Stopwatch.h',
       'pbcopper/utility/StringUtils.h',
-      'pbcopper/utility/SystemInfo.h',
       'pbcopper/utility/Unused.h']),
     subdir : 'pbcopper/utility')
 
@@ -213,7 +227,7 @@ if not meson.is_subproject()
     files([
       'pbcopper/utility/internal/FileUtils-inl.h',
       'pbcopper/utility/internal/Stopwatch-inl.h',
-      'pbcopper/utility/internal/SystemInfo-inl.h']),
+    ]),
     subdir : 'pbcopper/utility/internal')
 endif
 

@@ -5,9 +5,15 @@
 ### Added
  - PartitionElements utility
  - Version printing callbacks for CLI
+ - Ssize utility
+ - Knock-first graph
+ - VERBOSE log level
 
 ### Fixed
  - ReadId from CCS read names
+
+### Removed
+ - Unused SystemInfo utility
 
 ## [1.6.0] - 2020-04-10
 
