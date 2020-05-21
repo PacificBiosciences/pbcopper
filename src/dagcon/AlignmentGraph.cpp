@@ -17,7 +17,7 @@
 #include <pbcopper/utility/Ssize.h>
 
 namespace PacBio {
-namespace Dagcon {
+namespace Dagcon2 {
 
 AlignmentGraph::AlignmentGraph(const std::string& backbone) : backboneLength_{backbone.length()}
 {
@@ -570,5 +570,5 @@ bool AlignmentGraph::DanglingNodes()
     return false;
 }
 
-}  // namespace Dagcon
+}  // namespace Dagcon2
 }  // namespace PacBio
