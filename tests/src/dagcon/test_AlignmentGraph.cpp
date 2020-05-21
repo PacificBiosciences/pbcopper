@@ -38,11 +38,11 @@ TEST(Dagcon_AlignmentGraph, can_generate_raw_consensus)
 
     const std::string backbone{"ATATTAGGC"};
     Dagcon::AlignmentGraph ag{backbone};
-    ag.AddAln(algs[0]);
-    ag.AddAln(algs[1]);
-    ag.AddAln(algs[2]);
-    ag.AddAln(algs[3]);
-    ag.AddAln(algs[4]);
+    ag.AddAlignment(algs[0]);
+    ag.AddAlignment(algs[1]);
+    ag.AddAlignment(algs[2]);
+    ag.AddAlignment(algs[3]);
+    ag.AddAlignment(algs[4]);
     ag.MergeNodes();
 
     const std::string expected = "ATATAGCCGGC";
@@ -57,7 +57,7 @@ TEST(Dagcon_AlignmentGraph, dangling_nodes)
     a.Query  = "CCGCGG-G-A-T";
 
     Dagcon::AlignmentGraph ag{12};
-    ag.AddAln(a);
+    ag.AddAlignment(a);
     EXPECT_FALSE(ag.DanglingNodes());
 }
 

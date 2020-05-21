@@ -10,8 +10,7 @@
 #include <string>
 #include <vector>
 
-#include <boost/format.hpp>
-#include <boost/graph/graphviz.hpp>
+#include <boost/range/iterator_range.hpp>
 #include <boost/utility/value_init.hpp>
 
 #include <pbcopper/dagcon/Alignment.h>
@@ -20,71 +19,53 @@
 namespace PacBio {
 namespace Dagcon {
 
-AlignmentGraph::AlignmentGraph(const std::string& backbone)
-    : backboneLength_{Utility::Ssize(backbone)}
+AlignmentGraph::AlignmentGraph(const std::string& backbone) : backboneLength_{backbone.length()}
 {
-    // initialize the graph structure with the backbone length + enter/exit
-    // vertex
-    const size_t backboneLength = backbone.length();
-    graph_ = G(backboneLength + 2);
-    for (size_t i = 0; i < backboneLength + 1; i++)
+    // initialize the graph structure with the backbone length + enter/exit vertex
+    graph_ = GraphType{backboneLength_ + 2};
+    for (size_t i = 0; i < backboneLength_ + 1; ++i)
         boost::add_edge(i, i + 1, graph_);
 
-    VtxIter curr;
-    VtxIter last;
+    VertexIterator curr;
+    VertexIterator last;
     boost::tie(curr, last) = boost::vertices(graph_);
 
-    enterVtx_ = *curr++;
-    graph_[enterVtx_].Base = '^';
-    graph_[enterVtx_].Backbone = true;
-    for (size_t i = 0; i < backboneLength; ++i, ++curr) {
-        VtxDesc v = *curr;
+    // enter vertex
+    enterVertex_ = *curr;
+    graph_[enterVertex_].Base = '^';
+    graph_[enterVertex_].Backbone = true;
+    ++curr;
+
+    // internal vertices
+    for (size_t i = 0; i < backboneLength_; ++i) {
+        VertexIndex v = *curr;
         graph_[v].Backbone = true;
         graph_[v].Weight = 1;
         graph_[v].Base = backbone[i];
         bbMap_[v] = v;
+        ++curr;
     }
-    exitVtx_ = *curr;
-    graph_[exitVtx_].Base = '$';
-    graph_[exitVtx_].Backbone = true;
+
+    // ext vertex
+    exitVertex_ = *curr;
+    graph_[exitVertex_].Base = '$';
+    graph_[exitVertex_].Backbone = true;
 }
 
-AlignmentGraph::AlignmentGraph(const size_t backboneLength) : backboneLength_(backboneLength)
+AlignmentGraph::AlignmentGraph(const size_t backboneLength)
+    : AlignmentGraph{std::string(backboneLength, 'N')}
 {
-    graph_ = G(backboneLength + 2);
-    for (size_t i = 0; i < backboneLength + 1; i++)
-        boost::add_edge(i, i + 1, graph_);
-
-    VtxIter curr;
-    VtxIter last;
-    boost::tie(curr, last) = boost::vertices(graph_);
-
-    enterVtx_ = *curr++;
-    graph_[enterVtx_].Base = '^';
-    graph_[enterVtx_].Backbone = true;
-    for (size_t i = 0; i < backboneLength; ++i, ++curr) {
-        VtxDesc v = *curr;
-        graph_[v].Backbone = true;
-        graph_[v].Weight = 1;
-        graph_[v].Deleted = false;
-        graph_[v].Base = 'N';
-        bbMap_[v] = v;
-    }
-    exitVtx_ = *curr;
-    graph_[exitVtx_].Base = '$';
-    graph_[exitVtx_].Backbone = true;
 }
 
-void AlignmentGraph::AddAln(Alignment& alignment, bool useLocalMerge)
+void AlignmentGraph::AddAlignment(Alignment& alignment, bool useLocalMerge)
 {
     const IndexMap index = boost::get(boost::vertex_index, graph_);
-
     // tracks the position on the backbone
     uint32_t bbPos = alignment.Start;
-    VtxDesc prevVtx = enterVtx_;
+    VertexIndex prevVtx = enterVertex_;
 
     if (useLocalMerge) {
-        prevVtx = (alignment.Start <= 1) ? enterVtx_ : index[alignment.Start - 1];
+        prevVtx = (alignment.Start <= 1) ? enterVertex_ : index[alignment.Start - 1];
     }
 
     for (size_t i = 0; i < alignment.Query.length(); i++) {
@@ -93,7 +74,7 @@ void AlignmentGraph::AddAln(Alignment& alignment, bool useLocalMerge)
         assert(queryBase != '.');
         assert(targetBase != '.');
 
-        VtxDesc currVtx = index[bbPos];
+        VertexIndex currVtx = index[bbPos];
         // match
         if (queryBase == targetBase) {
             graph_[bbMap_[currVtx]].Coverage++;
@@ -116,7 +97,7 @@ void AlignmentGraph::AddAln(Alignment& alignment, bool useLocalMerge)
             // query insertion
         } else if (queryBase != '-' && targetBase == '-') {
             // create new node and edge
-            VtxDesc newVtx = boost::add_vertex(graph_);
+            const VertexIndex newVtx = boost::add_vertex(graph_);
             graph_[newVtx].Base = queryBase;
             graph_[newVtx].Weight++;
             graph_[newVtx].Backbone = false;
@@ -127,23 +108,20 @@ void AlignmentGraph::AddAln(Alignment& alignment, bool useLocalMerge)
         }
     }
 
-    AddEdge(prevVtx, exitVtx_);
+    AddEdge(prevVtx, exitVertex_);
 
     if (useLocalMerge) {
-        prevVtx = (alignment.End < backboneLength_) ? index[alignment.Start + 1] : exitVtx_;
+        prevVtx = (alignment.End < backboneLength_) ? index[alignment.Start + 1] : exitVertex_;
     }
 }
 
-void AlignmentGraph::AddEdge(VtxDesc u, VtxDesc v)
+void AlignmentGraph::AddEdge(VertexIndex u, VertexIndex v)
 {
     // Check if edge exists with prev node.  If it does, increment edge counter,
     // otherwise add a new edge.
     bool edgeExists = false;
-    InEdgeIter ii;
-    InEdgeIter ie;
-    boost::tie(ii, ie) = boost::in_edges(v, graph_);
-    for (; ii != ie; ++ii) {
-        const EdgeDesc e = *ii;
+
+    for (const auto& e : boost::make_iterator_range(boost::in_edges(v, graph_))) {
         if (boost::source(e, graph_) == u) {
             // increment edge count
             graph_[e].Count++;
@@ -159,31 +137,24 @@ void AlignmentGraph::AddEdge(VtxDesc u, VtxDesc v)
 
 void AlignmentGraph::MergeNodes()
 {
-    std::queue<VtxDesc> seedNodes;
-    seedNodes.push(enterVtx_);
+    std::queue<VertexIndex> seedNodes;
+    seedNodes.push(enterVertex_);
 
     while (true) {
         if (seedNodes.empty()) break;
 
-        const VtxDesc u = seedNodes.front();
+        const VertexIndex u = seedNodes.front();
         seedNodes.pop();
         MergeInNodes(u);
         MergeOutNodes(u);
 
-        OutEdgeIter oi;
-        OutEdgeIter oe;
-        boost::tie(oi, oe) = boost::out_edges(u, graph_);
-        for (; oi != oe; ++oi) {
-            const EdgeDesc e = *oi;
+        for (const auto& e : boost::make_iterator_range(boost::out_edges(u, graph_))) {
             graph_[e].Visited = true;
-            const VtxDesc v = boost::target(e, graph_);
 
             int notVisited = 0;
-            InEdgeIter ii;
-            InEdgeIter ie;
-            boost::tie(ii, ie) = boost::in_edges(v, graph_);
-            for (; ii != ie; ++ii) {
-                if (graph_[*ii].Visited == false) notVisited++;
+            const VertexIndex v = boost::target(e, graph_);
+            for (const auto& inEdge : boost::make_iterator_range(boost::in_edges(v, graph_))) {
+                if (graph_[inEdge].Visited == false) ++notVisited;
             }
 
             // move onto the boost::target node after we visit all incoming edges for
@@ -193,16 +164,12 @@ void AlignmentGraph::MergeNodes()
     }
 }
 
-void AlignmentGraph::MergeInNodes(VtxDesc node)
+void AlignmentGraph::MergeInNodes(VertexIndex n)
 {
-    std::map<char, std::vector<VtxDesc>> nodeGroups;
+    std::map<char, std::vector<VertexIndex>> nodeGroups;
 
-    // Group neighboring nodes by base
-    InEdgeIter ii;
-    InEdgeIter ie;
-    boost::tie(ii, ie) = boost::in_edges(node, graph_);
-    for (; ii != ie; ++ii) {
-        const VtxDesc& inNode = boost::source(*ii, graph_);
+    for (const auto& inEdge : boost::make_iterator_range(boost::in_edges(n, graph_))) {
+        const VertexIndex inNode = boost::source(inEdge, graph_);
         if (out_degree(inNode, graph_) == 1) {
             nodeGroups[graph_[inNode].Base].push_back(inNode);
         }
@@ -214,20 +181,20 @@ void AlignmentGraph::MergeInNodes(VtxDesc node)
         if (nodes.size() <= 1) continue;
 
         auto ni = nodes.cbegin();
-        const VtxDesc an = *ni++;
-
-        OutEdgeIter anoi;
-        OutEdgeIter anoe;
-        boost::tie(anoi, anoe) = boost::out_edges(an, graph_);
+        const VertexIndex an = *ni++;
 
         // Accumulate out edge information
         // IS: This iterates over all alternate nodes with the same base.
         // It only looks at the initial iterator position instead of having
         // another loop from oi to oe. This is fine because there is exactly
         // 1 out edge for each of these nodes.
+        OutEdgeIterator anoi;
+        OutEdgeIterator anoe;
+        boost::tie(anoi, anoe) = boost::out_edges(an, graph_);
         for (; ni != nodes.cend(); ++ni) {
-            OutEdgeIter oi;
-            OutEdgeIter oe;
+
+            OutEdgeIterator oi;
+            OutEdgeIterator oe;
             boost::tie(oi, oe) = boost::out_edges(*ni, graph_);
 
             graph_[*anoi].Count += graph_[*oi].Count;  // IS: This sums the EDGE counts.
@@ -238,29 +205,25 @@ void AlignmentGraph::MergeInNodes(VtxDesc node)
         ni = nodes.cbegin();
         ++ni;
         for (; ni != nodes.cend(); ++ni) {
-            const VtxDesc vtx = *ni;
+            const VertexIndex vtx = *ni;
+            for (const auto& newEdge : boost::make_iterator_range(boost::in_edges(vtx, graph_))) {
+                const VertexIndex n1 = boost::source(newEdge, graph_);
 
-            InEdgeIter newii;
-            InEdgeIter newie;
-            boost::tie(newii, newie) = boost::in_edges(vtx, graph_);
-            for (; newii != newie; ++newii) {
-                const VtxDesc n1 = boost::source(*newii, graph_);
-
-                EdgeDesc e;
+                EdgeIndex e;
                 bool exists;
                 boost::tie(e, exists) = edge(n1, an, graph_);
                 if (exists) {
 #if __GNUC__ >= 6
 #pragma GCC diagnostic ignored "-Wnull-dereference"
 #endif
-                    graph_[e].Count += graph_[*newii].Count;
+                    graph_[e].Count += graph_[newEdge].Count;
 #if __GNUC__ >= 6
 #pragma GCC diagnostic pop
 #endif
                 } else {
                     const auto p = boost::add_edge(n1, an, graph_);
-                    graph_[p.first].Count = graph_[*newii].Count;
-                    graph_[p.first].Visited = graph_[*newii].Visited;
+                    graph_[p.first].Count = graph_[newEdge].Count;
+                    graph_[p.first].Visited = graph_[newEdge].Visited;
                 }
             }
             MarkForReaper(vtx);
@@ -269,15 +232,12 @@ void AlignmentGraph::MergeInNodes(VtxDesc node)
     }
 }
 
-void AlignmentGraph::MergeOutNodes(VtxDesc node)
+void AlignmentGraph::MergeOutNodes(VertexIndex n)
 {
-    std::map<char, std::vector<VtxDesc>> nodeGroups;
+    std::map<char, std::vector<VertexIndex>> nodeGroups;
 
-    OutEdgeIter oi;
-    OutEdgeIter oe;
-    boost::tie(oi, oe) = boost::out_edges(node, graph_);
-    for (; oi != oe; ++oi) {
-        const VtxDesc outNode = boost::target(*oi, graph_);
+    for (const auto& outEdge : boost::make_iterator_range(boost::out_edges(n, graph_))) {
+        const VertexIndex outNode = boost::target(outEdge, graph_);
         if (in_degree(outNode, graph_) == 1) {
             nodeGroups[graph_[outNode].Base].push_back(outNode);
         }
@@ -285,53 +245,47 @@ void AlignmentGraph::MergeOutNodes(VtxDesc node)
 
     for (const auto& kvp : nodeGroups) {
         const auto& nodes = kvp.second;
-        // for (auto kvp = nodeGroups.cbegin(); kvp != nodeGroups.end(); ++kvp) {
-        // std::vector<VtxDesc> nodes = (*kvp).second;
         if (nodes.size() <= 1) continue;
 
-        auto ni = nodes.cbegin();
-        const VtxDesc an = *ni++;
+        auto nodeIter = nodes.cbegin();
+        const VertexIndex an = *nodeIter;
+        ++nodeIter;
 
         // Accumulate inner edge information
-        InEdgeIter anii;
-        InEdgeIter anie;
+        InEdgeIterator anii;
+        InEdgeIterator anie;
         boost::tie(anii, anie) = boost::in_edges(an, graph_);
-        for (; ni != nodes.cend(); ++ni) {
-            InEdgeIter ii;
-            InEdgeIter ie;
-            boost::tie(ii, ie) = boost::in_edges(*ni, graph_);
-
+        for (; nodeIter != nodes.cend(); ++nodeIter) {
+            InEdgeIterator ii;
+            InEdgeIterator ie;
+            boost::tie(ii, ie) = boost::in_edges(*nodeIter, graph_);
             graph_[*anii].Count += graph_[*ii].Count;
-            graph_[an].Weight += graph_[*ni].Weight;
+            graph_[an].Weight += graph_[*nodeIter].Weight;
         }
 
         // Accumulate and merge outer edge information
-        ni = nodes.cbegin();
-        ++ni;
-        for (; ni != nodes.cend(); ++ni) {
-            const VtxDesc vtx = *ni;
+        nodeIter = nodes.cbegin();
+        ++nodeIter;
+        for (; nodeIter != nodes.cend(); ++nodeIter) {
+            VertexIndex vtx = *nodeIter;
+            for (const auto& newEdge : boost::make_iterator_range(boost::out_edges(vtx, graph_))) {
+                const VertexIndex n2 = boost::target(newEdge, graph_);
 
-            OutEdgeIter newoi;
-            OutEdgeIter newoe;
-            boost::tie(newoi, newoe) = boost::out_edges(vtx, graph_);
-            for (; newoi != newoe; ++newoi) {
-                const VtxDesc n2 = boost::target(*newoi, graph_);
-
-                EdgeDesc e;
+                EdgeIndex e;
                 bool exists;
                 boost::tie(e, exists) = edge(an, n2, graph_);
                 if (exists) {
 #if __GNUC__ >= 6
 #pragma GCC diagnostic ignored "-Wnull-dereference"
 #endif
-                    graph_[e].Count += graph_[*newoi].Count;
+                    graph_[e].Count += graph_[newEdge].Count;
 #if __GNUC__ >= 6
 #pragma GCC diagnostic pop
 #endif
                 } else {
                     const auto p = boost::add_edge(an, n2, graph_);
-                    graph_[p.first].Count = graph_[*newoi].Count;
-                    graph_[p.first].Visited = graph_[*newoi].Visited;
+                    graph_[p.first].Count = graph_[newEdge].Count;
+                    graph_[p.first].Visited = graph_[newEdge].Visited;
                 }
             }
             MarkForReaper(vtx);
@@ -339,7 +293,7 @@ void AlignmentGraph::MergeOutNodes(VtxDesc node)
     }
 }
 
-void AlignmentGraph::MarkForReaper(VtxDesc node)
+void AlignmentGraph::MarkForReaper(VertexIndex node)
 {
     graph_[node].Deleted = true;
     clear_vertex(node, graph_);
@@ -350,18 +304,15 @@ void AlignmentGraph::ReapNodes()
 {
     int reapCount = 0;
     std::sort(reaperBag_.begin(), reaperBag_.end());
-    for (const auto& curr : reaperBag_) {
-        assert(graph_[curr].Backbone == false);
-        remove_vertex(curr - reapCount, graph_);
+    for (auto& node : reaperBag_) {
+        assert(graph_[node].Backbone == false);
+        remove_vertex(node - reapCount, graph_);
         ++reapCount;
     }
 }
 
 std::string AlignmentGraph::Consensus(int minWeight)
 {
-    // get the best scoring path
-    const auto& path = BestPath();
-
     // consensus sequence
     std::string cns;
 
@@ -371,8 +322,8 @@ std::string AlignmentGraph::Consensus(int minWeight)
     int length = 0;
     int idx = 0;
     bool metWeight = false;
-    for (const auto& n : path) {
-        if ((n.Base == graph_[enterVtx_].Base) || (n.Base == graph_[exitVtx_].Base)) {
+    for (const auto& n : BestPath()) {
+        if (n.Base == graph_[enterVertex_].Base || n.Base == graph_[exitVertex_].Base) {
             continue;
         }
 
@@ -406,9 +357,6 @@ void AlignmentGraph::Consensus(std::vector<ConsensusResult>& seqs, int minWeight
 {
     seqs.clear();
 
-    // get the best scoring path
-    const auto path = BestPath();
-
     // consensus sequence
     std::string cns;
 
@@ -416,8 +364,8 @@ void AlignmentGraph::Consensus(std::vector<ConsensusResult>& seqs, int minWeight
     int offs = 0;
     int idx = 0;
     bool metWeight = false;
-    for (const auto& n : path) {
-        if ((n.Base == graph_[enterVtx_].Base) || (n.Base == graph_[exitVtx_].Base)) {
+    for (const auto& n : BestPath()) {
+        if (n.Base == graph_[enterVertex_].Base || n.Base == graph_[exitVertex_].Base) {
             continue;
         }
 
@@ -455,7 +403,7 @@ void AlignmentGraph::ConsensusWithMinFlankCoverage(std::vector<ConsensusResult>&
 
     // get the best scoring path
     const auto path = BestPath();
-    const int64_t pathLength = Utility::Ssize(path);
+    const auto pathLength = Utility::Ssize(path);
     if (pathLength == 0) {
         return;
     }
@@ -468,9 +416,10 @@ void AlignmentGraph::ConsensusWithMinFlankCoverage(std::vector<ConsensusResult>&
             break;
         }
     }
+
     auto endNode = path.end();
     int64_t numClippedBack = 0;
-    for (int64_t i = Utility::Ssize(path) - 1; i >= 0; --i, ++numClippedBack) {
+    for (int64_t i = pathLength - 1; i >= 0; --i, ++numClippedBack) {
         if (path[i].Coverage >= minFlankCoverage) {
             break;
         }
@@ -488,13 +437,10 @@ void AlignmentGraph::ConsensusWithMinFlankCoverage(std::vector<ConsensusResult>&
     int offs = 0;
     int idx = 0;
     bool metWeight = false;
-
     auto curr = startNode;
     for (; curr != endNode; ++curr) {
         const AlignmentNode& n = *curr;
-        if ((n.Base == graph_[enterVtx_].Base) || (n.Base == graph_[exitVtx_].Base)) {
-            continue;
-        }
+        if (n.Base == graph_[enterVertex_].Base || n.Base == graph_[exitVertex_].Base) continue;
 
         cns += n.Base;
 
@@ -523,39 +469,34 @@ void AlignmentGraph::ConsensusWithMinFlankCoverage(std::vector<ConsensusResult>&
 
 std::vector<AlignmentNode> AlignmentGraph::BestPath()
 {
-    EdgeIter ei;
-    EdgeIter ee;
-    boost::tie(ei, ee) = edges(graph_);
-    for (; ei != ee; ++ei)
-        graph_[*ei].Visited = false;
+    for (const auto& edge : boost::make_iterator_range(edges(graph_))) {
+        graph_[edge].Visited = false;
+    }
 
-    std::map<VtxDesc, EdgeDesc> bestNodeScoreEdge;
-    std::map<VtxDesc, float> nodeScore;
-    std::queue<VtxDesc> seedNodes;
+    std::map<VertexIndex, EdgeIndex> bestNodeScoreEdge;
+    std::map<VertexIndex, float> nodeScore;
+    std::queue<VertexIndex> seedNodes;
 
     // start at the end and make our way backwards
-    seedNodes.push(exitVtx_);
-    nodeScore[exitVtx_] = 0.0f;
+    seedNodes.push(exitVertex_);
+    nodeScore[exitVertex_] = 0.0f;
 
     while (true) {
-        if (seedNodes.size() == 0) break;
+        if (seedNodes.empty()) break;
 
-        const VtxDesc n = seedNodes.front();
+        const VertexIndex n = seedNodes.front();
         seedNodes.pop();
 
         bool bestEdgeFound = false;
         float bestScore = -FLT_MAX;
-        EdgeDesc bestEdgeD = boost::initialized_value;
+        EdgeIndex bestEdgeD = boost::initialized_value;
 
-        OutEdgeIter oi;
-        OutEdgeIter oe;
-        boost::tie(oi, oe) = boost::out_edges(n, graph_);
-        for (; oi != oe; ++oi) {
-            const EdgeDesc& outEdgeD = *oi;
-            const VtxDesc outNodeD = boost::target(outEdgeD, graph_);
+        for (const auto& outEdgeD : boost::make_iterator_range(boost::out_edges(n, graph_))) {
+            const VertexIndex outNodeD = boost::target(outEdgeD, graph_);
             const AlignmentNode& outNode = graph_[outNodeD];
-            float newScore;
+
             float score = nodeScore[outNodeD];
+            float newScore = 0.0f;
             if (outNode.Backbone && outNode.Weight == 1) {
                 newScore = score - 10.0f;
             } else {
@@ -575,20 +516,14 @@ std::vector<AlignmentNode> AlignmentGraph::BestPath()
             bestNodeScoreEdge[n] = bestEdgeD;
         }
 
-        InEdgeIter ii;
-        InEdgeIter ie;
-        boost::tie(ii, ie) = boost::in_edges(n, graph_);
-        for (; ii != ie; ++ii) {
-            const EdgeDesc& inEdge = *ii;
+        for (const auto& inEdge : boost::make_iterator_range(boost::in_edges(n, graph_))) {
             graph_[inEdge].Visited = true;
-            const VtxDesc inNode = boost::source(inEdge, graph_);
+            const VertexIndex inNode = boost::source(inEdge, graph_);
             int notVisited = 0;
 
-            OutEdgeIter newoi;
-            OutEdgeIter newoe;
-            boost::tie(newoi, newoe) = boost::out_edges(inNode, graph_);
-            for (; newoi != newoe; ++newoi) {
-                if (graph_[*newoi].Visited == false) notVisited++;
+            for (const auto& newOutEdge :
+                 boost::make_iterator_range(boost::out_edges(inNode, graph_))) {
+                if (graph_[newOutEdge].Visited == false) notVisited++;
             }
 
             // move onto the target node after we visit all incoming edges for
@@ -598,15 +533,15 @@ std::vector<AlignmentNode> AlignmentGraph::BestPath()
     }
 
     // construct the final best path
-    VtxDesc prev = enterVtx_;
-    VtxDesc next;
+    VertexIndex prev = enterVertex_;
+    VertexIndex next;
     std::vector<AlignmentNode> bpath;
     while (true) {
         bpath.push_back(graph_[prev]);
         if (bestNodeScoreEdge.count(prev) == 0) {
             break;
         } else {
-            const EdgeDesc& bestOutEdge = bestNodeScoreEdge[prev];
+            const EdgeIndex bestOutEdge = bestNodeScoreEdge[prev];
             graph_[prev].BestOutEdge = bestOutEdge;
             next = boost::target(bestOutEdge, graph_);
             graph_[next].BestInEdge = bestOutEdge;
@@ -617,28 +552,18 @@ std::vector<AlignmentNode> AlignmentGraph::BestPath()
     return bpath;
 }
 
-void AlignmentGraph::PrintGraph(std::ostream& out)
-{
-    ReapNodes();
-    boost::write_graphviz(out, graph_, make_label_writer(get(&AlignmentNode::Base, graph_)),
-                          make_label_writer(get(&AlignmentEdge::Count, graph_)));
-}
-
 bool AlignmentGraph::DanglingNodes()
 {
-    VtxIter curr;
-    VtxIter last;
-    boost::tie(curr, last) = boost::vertices(graph_);
-    for (; curr != last; ++curr) {
-        if (graph_[*curr].Deleted) continue;
-        if ((graph_[*curr].Base == graph_[enterVtx_].Base) ||
-            (graph_[*curr].Base == graph_[exitVtx_].Base)) {
+    for (const auto& vertex : boost::make_iterator_range(boost::vertices(graph_))) {
+        if (graph_[vertex].Deleted) continue;
+        if (graph_[vertex].Base == graph_[enterVertex_].Base ||
+            graph_[vertex].Base == graph_[exitVertex_].Base) {
             continue;
         }
 
-        const auto indeg = out_degree(*curr, graph_);
-        const auto outdeg = in_degree(*curr, graph_);
-        if ((outdeg > 0) && (indeg > 0)) continue;
+        const int indeg = out_degree(vertex, graph_);
+        const int outdeg = in_degree(vertex, graph_);
+        if (outdeg > 0 && indeg > 0) continue;
 
         return true;
     }
