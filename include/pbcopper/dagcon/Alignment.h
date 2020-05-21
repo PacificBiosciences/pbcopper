@@ -62,13 +62,13 @@ struct Alignment
 /// Allow optional gap pushing, some aligners may not need it and I'd like
 /// to get rid of it anyway.
 ///
-Alignment NormalizeGaps(const Alignment& alignment, bool push = true);
+void NormalizeGaps(Alignment& alignment, bool push = true);
 
 ///
 /// Trim \p length bases from each of end of \p alignment 's target sequence,
 /// along with the appropriate query bases.
 ///
-void TrimAlignment(Alignment& alignment, int length = 50);
+void TrimAlignment(Alignment& alignment, int trimLength = 50);
 
 }  // namespace Dagcon
 }  // namespace PacBio

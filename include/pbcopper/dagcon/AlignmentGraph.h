@@ -27,8 +27,7 @@ struct Alignment;
 using graphTraits = boost::adjacency_list<boost::vecS, boost::vecS, boost::bidirectionalS>;
 
 ///
-/// Graph vertex property. An alignment node, which represents one base position
-/// in the alignment graph.
+/// Alignment node, representing one base position in the alignment graph.
 ///
 struct AlignmentNode
 {
@@ -56,7 +55,7 @@ struct AlignmentNode
 };
 
 ///
-/// Graph edge property. Represents an edge between alignment nodes.
+/// Edge between alignment nodes.
 ///
 struct AlignmentEdge
 {
@@ -67,20 +66,21 @@ struct AlignmentEdge
     bool Visited = false;
 };
 
-// Boost-related typedefs
-// XXX: listS, listS?
-using G = boost::adjacency_list<boost::vecS, boost::vecS, boost::bidirectionalS, AlignmentNode,
-                                AlignmentEdge>;
-using VtxDesc = boost::graph_traits<G>::vertex_descriptor;
-using VtxIter = boost::graph_traits<G>::vertex_iterator;
-using EdgeDesc = boost::graph_traits<G>::edge_descriptor;
-using EdgeIter = boost::graph_traits<G>::edge_iterator;
-using InEdgeIter = boost::graph_traits<G>::in_edge_iterator;
-using OutEdgeIter = boost::graph_traits<G>::out_edge_iterator;
-using IndexMap = boost::property_map<G, boost::vertex_index_t>::type;
+// clang-format off
+using GraphType = boost::adjacency_list<boost::vecS, boost::vecS,
+                                        boost::bidirectionalS,
+                                        AlignmentNode, AlignmentEdge>;
+using VertexIndex     = boost::graph_traits<GraphType>::vertex_descriptor;
+using VertexIterator  = boost::graph_traits<GraphType>::vertex_iterator;
+using EdgeIndex       = boost::graph_traits<GraphType>::edge_descriptor;
+using EdgeIterator    = boost::graph_traits<GraphType>::edge_iterator;
+using InEdgeIterator  = boost::graph_traits<GraphType>::in_edge_iterator;
+using OutEdgeIterator = boost::graph_traits<GraphType>::out_edge_iterator;
+using IndexMap        = boost::property_map<GraphType, boost::vertex_index_t>::type;
+// clang-format on
 
 ///
-/// Simple consensus interface datastructure
+/// Simple consensus interface data structure
 ///
 struct ConsensusResult
 {
@@ -105,27 +105,27 @@ public:
     ///
     /// \param backbone the reference sequence.
     ///
-    AlignmentGraph(const std::string& backbone);
+    explicit AlignmentGraph(const std::string& backbone);
 
-    /// Initialize graph to a given backbone length. Base information is filled
-    /// in as alignments are added.
+    /// Initialize graph to a given backbone length, filled with 'N'. Base
+    /// information is filled in as alignments are added.
     ///
     /// \param blen length of the reference sequence.
     ///
-    AlignmentGraph(const size_t backboneLength);
+    explicit AlignmentGraph(const size_t backboneLength);
 
     /// Add alignment to the graph.
     ///
     /// \param Alignment an alignment record (see Alignment.hpp)
     ///
-    void AddAln(Alignment& alignmnet, bool useLocalMerge = false);
+    void AddAlignment(Alignment& alignment, bool useLocalMerge = false);
 
     /// Adds a new or increments an existing edge between two aligned bases.
     ///
     /// \param u the 'from' vertex descriptor
     /// \param v the 'to' vertex descriptor
     ///
-    void AddEdge(VtxDesc u, VtxDesc v);
+    void AddEdge(VertexIndex u, VertexIndex v);
 
     /// Collapses degenerate nodes (vertices).  Must be called before
     /// consensus(). Calls mergeInNodes() followed by mergeOutNodes().
@@ -136,19 +136,19 @@ public:
     ///
     /// \param n the base node to merge around.
     ///
-    void MergeInNodes(VtxDesc node);
+    void MergeInNodes(VertexIndex n);
 
     /// Non-recursive merge of 'out' nodes.
     ///
     /// \param n the base node to merge around.
     ///
-    void MergeOutNodes(VtxDesc node);
+    void MergeOutNodes(VertexIndex n);
 
     /// Mark a given node for removal from graph. Doesn't not modify graph.
     ///
     /// \param n the node to remove.
     ///
-    void MarkForReaper(VtxDesc node);
+    void MarkForReaper(VertexIndex n);
 
     /// Removes the set of nodes that have been marked.  Modifies graph.
     /// Prohibitively expensive when using vecS as the vertex container.
@@ -179,21 +179,17 @@ public:
     ///
     std::vector<AlignmentNode> BestPath();
 
-    /// Emits the current graph, in dot format, to out stream.
-    ///
-    void PrintGraph(std::ostream& out);
-
     /// Locate nodes that are missing either in or out edges.
     ///
     bool DanglingNodes();
 
 private:
-    G graph_;
-    VtxDesc enterVtx_;
-    VtxDesc exitVtx_;
-    std::map<VtxDesc, VtxDesc> bbMap_;
-    std::vector<VtxDesc> reaperBag_;
-    int64_t backboneLength_;
+    GraphType graph_;
+    VertexIndex enterVertex_;
+    VertexIndex exitVertex_;
+    std::map<VertexIndex, VertexIndex> bbMap_;
+    std::vector<VertexIndex> reaperBag_;
+    uint64_t backboneLength_;
 };
 
 }  // namespace Dagcon

@@ -8,12 +8,11 @@
 namespace PacBio {
 namespace Dagcon {
 
-Alignment NormalizeGaps(const Alignment& alignment, bool push)
+void NormalizeGaps(Alignment& alignment, bool push)
 {
-    // XXX: optimize this
     assert(alignment.Query.length() == alignment.Target.length());
     const size_t queryLength = alignment.Query.length();
-    if (queryLength == 0) return alignment;
+    if (queryLength == 0) return;
 
     std::string qNorm;
     qNorm.reserve(queryLength + 100);
@@ -76,30 +75,24 @@ Alignment NormalizeGaps(const Alignment& alignment, bool push)
     assert(qNorm.length() == tNorm.length());
     assert(qNormLength == tNorm.length());
 
-    // generate the final, normalized alignment strings
-    Alignment finalNorm;
-    finalNorm.Id = alignment.Id;
-    finalNorm.SId = alignment.SId;
-    finalNorm.Start = alignment.Start;
-    finalNorm.TargetLength = alignment.TargetLength;
-    finalNorm.Strand = alignment.Strand;
-    for (size_t i = 0; i < qNormLength; i++) {
+    // update alignment sequence
+    alignment.Query.clear();
+    alignment.Target.clear();
+    for (size_t i = 0; i < qNormLength; ++i) {
         if (qNorm[i] != '-' || tNorm[i] != '-') {
-            finalNorm.Query += qNorm[i];
-            finalNorm.Target += tNorm[i];
+            alignment.Query += qNorm[i];
+            alignment.Target += tNorm[i];
         }
     }
-
-    return finalNorm;
 }
 
-void TrimAlignment(Alignment& alignment, int length)
+void TrimAlignment(Alignment& alignment, int trimLength)
 {
     const auto targetLength = alignment.Target.length();
 
     int lbases = 0;
     size_t lOffset = 0U;
-    while (lbases < length && lOffset < targetLength) {
+    while (lbases < trimLength && lOffset < targetLength) {
         if (alignment.Target[lOffset] != '-') {
             ++lbases;
         }
@@ -108,10 +101,10 @@ void TrimAlignment(Alignment& alignment, int length)
 
     int rbases = 0;
     size_t rOffset = targetLength;
-    while (rbases < length && rOffset > lOffset) {
+    while (rbases < trimLength && rOffset > lOffset) {
         --rOffset;
         if (alignment.Target[rOffset] != '-') {
-            rbases++;
+            ++rbases;
         }
     }
 

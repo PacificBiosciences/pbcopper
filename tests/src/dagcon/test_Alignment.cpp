@@ -9,10 +9,10 @@ using namespace PacBio;
 
 TEST(Dagcon_Alignment, can_normalize_gaps_on_empty_strings)
 {
-    const Dagcon::Alignment aln;
-    const auto norm = Dagcon::NormalizeGaps(aln);
-    EXPECT_TRUE(norm.Query.empty());
-    EXPECT_TRUE(norm.Target.empty());
+    Dagcon::Alignment aln;
+    Dagcon::NormalizeGaps(aln);
+    EXPECT_TRUE(aln.Query.empty());
+    EXPECT_TRUE(aln.Target.empty());
 }
 
 TEST(Dagcon_Alignment, can_normalize_gaps_on_simple_mismatch)
@@ -21,9 +21,9 @@ TEST(Dagcon_Alignment, can_normalize_gaps_on_simple_mismatch)
     aln.Query  = "CAC";
     aln.Target = "CGC";
 
-    const auto norm = Dagcon::NormalizeGaps(aln);
-    EXPECT_EQ("C-AC", norm.Query);
-    EXPECT_EQ("CG-C", norm.Target);
+    Dagcon::NormalizeGaps(aln);
+    EXPECT_EQ("C-AC", aln.Query);
+    EXPECT_EQ("CG-C", aln.Target);
 }
 
 TEST(Dagcon_Alignment, can_normalize_gaps_shifting_query)
@@ -32,9 +32,9 @@ TEST(Dagcon_Alignment, can_normalize_gaps_shifting_query)
     aln.Query  = "-C--CGT";
     aln.Target = "CCGAC-T";
 
-    const auto norm = Dagcon::NormalizeGaps(aln);
-    EXPECT_EQ("CCG--T", norm.Query);
-    EXPECT_EQ("CCGACT", norm.Target);
+    Dagcon::NormalizeGaps(aln);
+    EXPECT_EQ("CCG--T", aln.Query);
+    EXPECT_EQ("CCGACT", aln.Target);
 }
 
 TEST(Dagcon_Alignment, can_normalize_gaps_shifting_target)
@@ -43,9 +43,9 @@ TEST(Dagcon_Alignment, can_normalize_gaps_shifting_target)
     aln.Query  = "ATAT-AGCCGGC";
     aln.Target = "ATATTA---GGC";
 
-    const auto norm = Dagcon::NormalizeGaps(aln);
-    EXPECT_EQ("ATAT-AGCCGGC", norm.Query);
-    EXPECT_EQ("ATATTAG--G-C", norm.Target);
+    Dagcon::NormalizeGaps(aln);
+    EXPECT_EQ("ATAT-AGCCGGC", aln.Query);
+    EXPECT_EQ("ATATTAG--G-C", aln.Target);
 }
 
 TEST(Dagcon_Alignment, negative_or_zero_trim_yields_original_alignment)
