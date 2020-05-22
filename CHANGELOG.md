@@ -2,6 +2,8 @@
 
 ## Active
 
+## [1.7.0] - 2020-05-22
+
 ### Added
  - PartitionElements utility
  - Version printing callbacks for CLI
@@ -9,9 +11,17 @@
  - Knock-first graph
  - VERBOSE log level
  - Dagcon API
+ - LibraryInfo API
+
+### Changed
+ - Now using (signed) Data::Position in Data::Read.
+ - Data::SNR values changed from double to float.
 
 ### Fixed
  - ReadId from CCS read names
+ - More robust random number generators (for UUIDs).
+   * getrandom() requires Linux kernel 3.17+
+   * getentropy() requires glibc 2.25+
 
 ### Removed
  - Unused SystemInfo utility
