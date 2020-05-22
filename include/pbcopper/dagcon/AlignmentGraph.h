@@ -12,7 +12,7 @@
 #include <boost/graph/properties.hpp>
 
 namespace PacBio {
-namespace Dagcon2 {
+namespace Dagcon {
 
 /// Alignment graph representation and consensus caller.  Based on the original
 /// Python implementation, pbdagcon.  This class is modelled after its
@@ -192,7 +192,7 @@ private:
     uint64_t backboneLength_;
 };
 
-}  // namespace Dagcon2
+}  // namespace Dagcon
 }  // namespace PacBio
 
 #endif  // PBCOPPER_DAGCON_ALIGNMENTGRAPH_H

@@ -12,7 +12,7 @@ using namespace PacBio;
 
 TEST(Dagcon_AlignmentGraph, can_generate_raw_consensus)
 {
-    std::array<Dagcon2::Alignment, 5> algs;
+    std::array<Dagcon::Alignment, 5> algs;
 
     algs[0].Target = "ATATTA---GGC";
     algs[0].Query  = "ATAT-AGCCGGC";
@@ -37,7 +37,7 @@ TEST(Dagcon_AlignmentGraph, can_generate_raw_consensus)
     }
 
     const std::string backbone{"ATATTAGGC"};
-    Dagcon2::AlignmentGraph ag{backbone};
+    Dagcon::AlignmentGraph ag{backbone};
     ag.AddAlignment(algs[0]);
     ag.AddAlignment(algs[1]);
     ag.AddAlignment(algs[2]);
@@ -52,11 +52,11 @@ TEST(Dagcon_AlignmentGraph, can_generate_raw_consensus)
 
 TEST(Dagcon_AlignmentGraph, dangling_nodes)
 {
-    Dagcon2::Alignment a;
+    Dagcon::Alignment a;
     a.Target = "C-GCGGA-T-G-";
     a.Query  = "CCGCGG-G-A-T";
 
-    Dagcon2::AlignmentGraph ag{12};
+    Dagcon::AlignmentGraph ag{12};
     ag.AddAlignment(a);
     EXPECT_FALSE(ag.DanglingNodes());
 }

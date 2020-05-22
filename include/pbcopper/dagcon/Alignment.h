@@ -8,7 +8,7 @@
 #include <string>
 
 namespace PacBio {
-namespace Dagcon2 {
+namespace Dagcon {
 
 ///
 /// Super-simple alignment representation.  Represents an alignment between two
@@ -70,7 +70,7 @@ void NormalizeGaps(Alignment& alignment, bool push = true);
 ///
 void TrimAlignment(Alignment& alignment, int trimLength = 50);
 
-}  // namespace Dagcon2
+}  // namespace Dagcon
 }  // namespace PacBio
 
 #endif  // PBCOPPER_DAGCON_ALIGNMENT_H
