@@ -6,7 +6,7 @@
 #include <string>
 
 namespace PacBio {
-namespace Dagcon2 {
+namespace Dagcon {
 
 void NormalizeGaps(Alignment& alignment, bool push)
 {
@@ -113,5 +113,5 @@ void TrimAlignment(Alignment& alignment, int trimLength)
     alignment.Target = alignment.Target.substr(lOffset, rOffset - lOffset);
 }
 
-}  // namespace Dagcon2
+}  // namespace Dagcon
 }  // namespace PacBio
