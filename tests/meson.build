@@ -77,7 +77,10 @@ pbcopper_test_cpp_sources = files([
 ])
 
 # find GoogleTest
-pbcopper_gtest_dep = dependency('gtest_main', fallback : ['gtest', 'gtest_main_dep'])
+pbcopper_gtest_dep = dependency(
+  'gtest',
+  main : true,
+  fallback : ['gtest', 'gtest_main_dep'])
 
 pbcopper_PbcopperTestData_h_config = configuration_data()
 pbcopper_PbcopperTestData_h_config.set('Pbcopper_TestsDir', meson.current_source_dir())
