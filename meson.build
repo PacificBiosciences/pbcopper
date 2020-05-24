@@ -9,7 +9,7 @@ project(
     'c_std=c11',
     'b_ndebug=if-release'],
   license : 'BSD-3',
-  meson_version : '>= 0.46.0')
+  meson_version : '>= 0.52.0')
 
 ############
 # CXXFLAGS #
@@ -38,7 +38,7 @@ endforeach
 pbcopper_thread_dep = dependency('threads', required : true)
 
 # boost
-pbcopper_boost_dep = dependency('boost', required : true)
+pbcopper_boost_dep = dependency('boost', include_type : 'system', required : true)
 
 ###########
 # headers #
