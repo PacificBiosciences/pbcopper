@@ -27,7 +27,16 @@ public:
        \param id seq/read id
        \param nvars the number of variant sites
     */
-    SparseHaplotype(const std::string& name, uint32_t id, int32_t nvars);
+    SparseHaplotype(std::string name, uint32_t id, int32_t nvars);
+
+    /*!
+       \brief Constructor of SparseHaplotype
+       \param name seq/read name
+       \param id seq/read id
+       \param nvars the number of variant sites
+       \param seq a binary string "010101..."
+    */
+    SparseHaplotype(std::string name, uint32_t id, const std::string& seq);
 
 public:
     /*!
@@ -35,6 +44,14 @@ public:
        \param Bubbles from KFG.
     */
     void LoadVariants(const Bubbles& bubs);
+
+    void InitializeMembership(int32_t nClusters);
+
+    void InitializeMembership(int32_t nClusters, int prior);
+
+    void SetMembershipProb(int index, double val);
+
+    void SetCluster(int32_t index);
 
 public:
     /*!
@@ -44,16 +61,30 @@ public:
     int32_t ClusterId() const;
 
     /*!
-       \brief Convert the binary sequence of variant sites to a string e.g.: 0101010
-       \return string of binary characters.
+       \brief provides a printable string for the haplotype information
     */
-    std::string HapToStr() const;
+    std::string ToStr() const;
+
+    /*!
+       \brief Convert the binary sequence of variant sites to a string e.g.: 0101010
+    */
+    std::string HapStr() const;
+
+    const std::string& Name() const;
+
+    bool HasVar(int index) const;
 
     /*!
        \brief Get number of variants
        \return number of variants
     */
     int32_t NVariants() const;
+
+    /*!
+       \brief Get the membership fraction, the probability of haplotype being part of a cluster.
+       \param index the cluster to retrieve
+    */
+    double MembershipFraction(int index) const;
 
 private:
     std::string name_;

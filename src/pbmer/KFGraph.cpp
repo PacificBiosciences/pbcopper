@@ -235,7 +235,7 @@ Bubbles KFG::FindBubbles() const
 
         bool hasBubble = false;
 
-        if (!left.empty() && !right.empty()) {
+        if (!left.empty() && !right.empty() && !left.back().outEdges_.empty()) {
             if (left.back().outEdges_ == right.back().outEdges_) {
                 hasBubble = true;
             }
