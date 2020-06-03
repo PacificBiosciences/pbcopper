@@ -16,6 +16,10 @@ pbcopper_test_cpp_sources = files([
   'src/cli2/test_VersionPrinter.cpp',
 
   # data
+  'src/dagcon/test_Alignment.cpp',
+  'src/dagcon/test_AlignmentGraph.cpp',
+
+  # data
   'src/data/test_Accuracy.cpp',
   'src/data/test_Cigar.cpp',
   'src/data/test_Frames.cpp',
@@ -73,7 +77,10 @@ pbcopper_test_cpp_sources = files([
 ])
 
 # find GoogleTest
-pbcopper_gtest_dep = dependency('gtest_main', fallback : ['gtest', 'gtest_main_dep'])
+pbcopper_gtest_dep = dependency(
+  'gtest',
+  main : true,
+  fallback : ['gtest', 'gtest_main_dep'])
 
 pbcopper_PbcopperTestData_h_config = configuration_data()
 pbcopper_PbcopperTestData_h_config.set('Pbcopper_TestsDir', meson.current_source_dir())
