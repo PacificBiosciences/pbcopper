@@ -29,7 +29,7 @@ public:
     size_t bandExtend_;
 
 public:
-    static BandedChainAlignConfig Default(void);
+    static BandedChainAlignConfig Default();
 };
 
 ///
@@ -48,7 +48,7 @@ public:
     int64_t score_;
 
 public:
-    BandedChainAlignment(void) = default;
+    BandedChainAlignment() = default;
     BandedChainAlignment(const BandedChainAlignConfig& config, std::string target,
                          std::string query, const std::string& transcript);
     BandedChainAlignment(const BandedChainAlignConfig& config, const char* target,
@@ -56,8 +56,8 @@ public:
                          const std::string& transcript);
 
 public:
-    float Identity(void) const;
-    int64_t Score(void) const;
+    float Identity() const;
+    int64_t Score() const;
 };
 
 ///

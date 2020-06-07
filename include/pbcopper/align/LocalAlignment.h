@@ -26,14 +26,14 @@ public:
     LocalAlignment& operator=(LocalAlignment&&) = default;
 
 public:
-    int32_t TargetBegin(void) const { return targetBegin_; }
-    int32_t TargetEnd(void) const { return targetEnd_; }
-    int32_t QueryBegin(void) const { return queryBegin_; }
-    int32_t QueryEnd(void) const { return queryEnd_; }
-    int32_t NumMismatches(void) const { return mismatches_; }
-    uint16_t Score(void) const { return score_; }
-    std::vector<uint32_t> Cigar(void) const { return cigar_; }
-    std::string CigarString(void) const { return cigarString_; }
+    int32_t TargetBegin() const { return targetBegin_; }
+    int32_t TargetEnd() const { return targetEnd_; }
+    int32_t QueryBegin() const { return queryBegin_; }
+    int32_t QueryEnd() const { return queryEnd_; }
+    int32_t NumMismatches() const { return mismatches_; }
+    uint16_t Score() const { return score_; }
+    std::vector<uint32_t> Cigar() const { return cigar_; }
+    std::string CigarString() const { return cigarString_; }
 
 private:
     int32_t targetBegin_;
@@ -55,7 +55,7 @@ public:
     uint8_t GapExtendPenalty;
 
 public:
-    static LocalAlignConfig Default(void);
+    static LocalAlignConfig Default();
 };
 
 ///
