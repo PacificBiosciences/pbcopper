@@ -1,6 +1,8 @@
 #include <pbcopper/cli2/Result.h>
 
 #include <cassert>
+
+#include <ostream>
 #include <type_traits>
 
 namespace PacBio {

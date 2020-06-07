@@ -1,7 +1,7 @@
 #include <pbcopper/reports/Report.h>
 
 #include <exception>
-#include <fstream>
+#include <ostream>
 #include <string>
 
 #if defined(_POSIX_VERSION)
@@ -32,6 +32,7 @@ void TaskReport::Print(const std::string& fn, const std::string& prefix) const
 {
     report_.Print(fn, prefix);
 }
+
 void TaskReport::Print(std::ostream& out, const std::string& prefix) const
 {
     report_.Print(out, prefix);

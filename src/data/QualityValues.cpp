@@ -4,6 +4,7 @@
 
 #include <algorithm>
 #include <cassert>
+#include <ostream>
 #include <type_traits>
 
 #include <boost/algorithm/string.hpp>

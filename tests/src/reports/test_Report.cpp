@@ -84,7 +84,7 @@ TEST(Reports_Report, can_print_pbreport)
 })"};
     expectedText.replace(40, 4, PacBio::Utility::LibraryVersionString());
 
-    std::stringstream s;
+    std::ostringstream s;
     const auto report = ReportsTests::MakeReport();
     report.Print(s);
     EXPECT_EQ(expectedText, s.str());

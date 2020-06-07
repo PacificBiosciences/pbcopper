@@ -6,6 +6,7 @@
 
 #include <algorithm>
 #include <numeric>
+#include <ostream>
 #include <stdexcept>
 #include <type_traits>
 

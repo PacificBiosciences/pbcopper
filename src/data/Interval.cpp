@@ -2,6 +2,8 @@
 
 #include <pbcopper/data/Interval.h>
 
+#include <istream>
+#include <ostream>
 #include <sstream>
 #include <vector>
 

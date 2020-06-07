@@ -5,6 +5,7 @@
 
 #include <pbcopper/PbcopperConfig.h>
 
+#include <iosfwd>
 #include <type_traits>
 
 #include <pbcopper/data/CCSTag.h>

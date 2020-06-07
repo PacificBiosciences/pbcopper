@@ -3,7 +3,7 @@
 #ifndef PBCOPPER_DATA_MAPPEDREAD_H
 #define PBCOPPER_DATA_MAPPEDREAD_H
 
-#include <ostream>
+#include <iosfwd>
 
 #include <pbcopper/data/Cigar.h>
 #include <pbcopper/data/Orientation.h>

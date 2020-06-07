@@ -1,4 +1,3 @@
-
 #include <pbcopper/cli2/internal/OptionTranslator.h>
 
 #include <sstream>

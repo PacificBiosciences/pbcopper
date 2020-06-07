@@ -1,6 +1,7 @@
 #include <pbcopper/cli2/internal/VersionPrinter.h>
 
 #include <iostream>
+#include <ostream>
 
 #include <pbcopper/cli2/Interface.h>
 #include <pbcopper/cli2/MultiToolInterface.h>

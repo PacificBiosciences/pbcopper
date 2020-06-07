@@ -5,6 +5,8 @@
 
 #include <pbcopper/PbcopperConfig.h>
 
+#include <iosfwd>
+
 #include <pbcopper/data/Position.h>
 
 #define BOOST_ICL_USE_STATIC_BOUNDED_INTERVALS

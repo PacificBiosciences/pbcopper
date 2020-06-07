@@ -6,7 +6,8 @@
 #include <pbcopper/PbcopperConfig.h>
 
 #include <cstdint>
-#include <ostream>
+
+#include <iosfwd>
 #include <string>
 #include <vector>
 

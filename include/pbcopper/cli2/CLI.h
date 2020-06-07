@@ -5,7 +5,6 @@
 
 #include <pbcopper/PbcopperConfig.h>
 
-#include <iosfwd>
 #include <string>
 #include <vector>
 

@@ -4,6 +4,9 @@
 #define PBCOPPER_DATA_READNAMEBASE_INL_H
 
 #include <cassert>
+
+#include <istream>
+#include <ostream>
 #include <stdexcept>
 #include <type_traits>
 

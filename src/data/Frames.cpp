@@ -2,13 +2,15 @@
 
 #include <pbcopper/data/Frames.h>
 
-#include <algorithm>
 #include <cassert>
 #include <cmath>
 #include <cstddef>
 #include <cstdint>
+
+#include <algorithm>
 #include <limits>
 #include <mutex>
+#include <ostream>
 #include <type_traits>
 
 #include <boost/algorithm/string/join.hpp>

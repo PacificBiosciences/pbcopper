@@ -7,7 +7,8 @@
 
 #include <cstddef>
 #include <cstdint>
-#include <ostream>
+
+#include <iosfwd>
 #include <vector>
 
 namespace PacBio {

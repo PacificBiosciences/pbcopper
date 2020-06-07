@@ -5,6 +5,8 @@
 #include <cassert>
 #include <cstddef>
 #include <cstdint>
+
+#include <ostream>
 #include <sstream>
 #include <type_traits>
 

@@ -2,7 +2,7 @@
 
 #include <pbcopper/data/ReadId.h>
 
-#include <iostream>
+#include <ostream>
 #include <sstream>
 #include <string>
 

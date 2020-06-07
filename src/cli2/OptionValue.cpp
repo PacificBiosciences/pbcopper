@@ -1,7 +1,6 @@
-
 #include <pbcopper/cli2/OptionValue.h>
 
-#include <iostream>
+#include <ostream>
 #include <sstream>
 #include <stdexcept>
 #include <unordered_map>

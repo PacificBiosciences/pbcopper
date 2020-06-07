@@ -1,7 +1,6 @@
 // Author: Armin Töpfer
 
 #include <chrono>
-#include <iostream>
 #include <memory>
 #include <string>
 #include <thread>

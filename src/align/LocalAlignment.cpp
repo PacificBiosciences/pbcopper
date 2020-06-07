@@ -6,7 +6,6 @@
 
 #include <pbcopper/align/LocalAlignment.h>
 
-#include <iostream>
 #include <utility>
 
 #include "cssw/ssw_cpp.h"

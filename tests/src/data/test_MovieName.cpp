@@ -1,6 +1,6 @@
-#include <sstream>
-
 #include <gtest/gtest.h>
+
+#include <sstream>
 
 #include <pbcopper/data/MovieName.h>
 

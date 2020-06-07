@@ -1,4 +1,4 @@
-
+#include <ostream>
 #include <sstream>
 
 #include <gtest/gtest.h>

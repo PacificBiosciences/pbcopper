@@ -4,7 +4,9 @@
 #define PBCOPPER_DATA_MOVIENAME_INL_H
 
 #include <cassert>
-#include <iostream>
+
+#include <istream>
+#include <ostream>
 #include <stdexcept>
 
 #include <pbcopper/data/MovieName.h>

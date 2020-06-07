@@ -1,8 +1,7 @@
 #include <pbcopper/cli2/internal/InterfaceHelpPrinter.h>
 
 #include <algorithm>
-#include <iomanip>
-#include <iostream>
+#include <ostream>
 #include <sstream>
 
 #include <pbcopper/utility/StringUtils.h>

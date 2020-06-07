@@ -5,7 +5,6 @@
 #include <cassert>
 
 #include <algorithm>
-#include <iostream>
 
 #include <pbcopper/data/MappedRead.h>
 #include <pbcopper/data/Read.h>

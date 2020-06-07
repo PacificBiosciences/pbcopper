@@ -1,5 +1,7 @@
 #include <gtest/gtest.h>
 
+#include <sstream>
+
 #include <pbcopper/data/RSReadName.h>
 
 TEST(Data_RSReadName, read_name_from_string)
