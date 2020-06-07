@@ -27,7 +27,7 @@ struct PositionalArgumentData
 
     OptionValueType type = OptionValueType::STRING;
 
-    inline bool operator==(const PositionalArgumentData& other) const noexcept
+    bool operator==(const PositionalArgumentData& other) const noexcept
     {
         return name == other.name;
     }

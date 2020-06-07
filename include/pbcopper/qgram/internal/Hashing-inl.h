@@ -102,7 +102,7 @@ public:
         }
     }
 
-    inline bool operator()(const uint64_t h) const noexcept
+    bool operator()(const uint64_t h) const noexcept
     {
         return (h == hashes[0] || h == hashes[1] || h == hashes[2] || h == hashes[3]);
     }

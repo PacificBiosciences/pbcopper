@@ -34,7 +34,7 @@ struct OptionData
     std::vector<OptionValue> choices;
     bool isChoicesHidden = false;
 
-    inline bool operator==(const OptionData& other) const noexcept { return names == other.names; }
+    bool operator==(const OptionData& other) const noexcept { return names == other.names; }
 };
 
 ///
