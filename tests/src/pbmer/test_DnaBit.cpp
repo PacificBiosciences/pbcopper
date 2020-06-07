@@ -1,8 +1,9 @@
+#include <pbcopper/pbmer/DnaBit.h>
+
 #include <array>
 
 #include <gtest/gtest.h>
 
-#include <pbcopper/pbmer/DnaBit.h>
 #include <pbcopper/pbmer/Parser.h>
 
 TEST(Pbmer_DnaBit, cmp_check_eq_positive)

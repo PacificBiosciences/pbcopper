@@ -1,12 +1,13 @@
 // Author: Nat Echols
 
+#include <pbcopper/reports/Report.h>
+
 #include <sstream>
 #include <string>
 #include <vector>
 
 #include <gtest/gtest.h>
 
-#include <pbcopper/reports/Report.h>
 #include <pbcopper/utility/PbcopperVersion.h>
 
 using namespace PacBio;

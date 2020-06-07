@@ -1,4 +1,4 @@
-#include <gtest/gtest.h>
+#include <pbcopper/cli2/CLI.h>
 
 #include <iostream>
 #include <sstream>
@@ -6,7 +6,8 @@
 #include <tuple>
 #include <vector>
 
-#include <pbcopper/cli2/CLI.h>
+#include <gtest/gtest.h>
+
 #include <pbcopper/cli2/Option.h>
 #include <pbcopper/cli2/PositionalArgument.h>
 #include <pbcopper/cli2/Results.h>

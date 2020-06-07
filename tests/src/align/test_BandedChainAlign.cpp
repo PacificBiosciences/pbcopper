@@ -1,8 +1,9 @@
 // Author: Derek Barnett
 
+#include <pbcopper/align/BandedChainAlignment.h>
+
 #include <gtest/gtest.h>
 
-#include <pbcopper/align/BandedChainAlignment.h>
 #include <pbcopper/align/internal/BCAlignBlocks.h>
 #include <pbcopper/align/internal/BCAlignImpl.h>
 

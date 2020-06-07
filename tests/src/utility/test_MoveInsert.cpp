@@ -1,3 +1,5 @@
+#include <pbcopper/utility/MoveInsert.h>
+
 #include <map>
 #include <set>
 #include <unordered_map>
@@ -5,8 +7,6 @@
 #include <vector>
 
 #include <gtest/gtest.h>
-
-#include <pbcopper/utility/MoveInsert.h>
 
 namespace MoveInsertTests {
 

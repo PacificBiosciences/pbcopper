@@ -1,8 +1,8 @@
 // Author: Derek Barnett
 
-#include <gtest/gtest.h>
-
 #include <pbcopper/data/Accuracy.h>
+
+#include <gtest/gtest.h>
 
 using namespace PacBio;
 

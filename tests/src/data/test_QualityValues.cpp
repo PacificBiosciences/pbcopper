@@ -1,10 +1,10 @@
+#include <pbcopper/data/QualityValues.h>
+
 #include <limits>
 #include <string>
 #include <vector>
 
 #include <gtest/gtest.h>
-
-#include <pbcopper/data/QualityValues.h>
 
 using QualityValue = PacBio::Data::QualityValue;
 using QualityValues = PacBio::Data::QualityValues;

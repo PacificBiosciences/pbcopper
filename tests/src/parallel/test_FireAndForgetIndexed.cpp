@@ -1,5 +1,7 @@
 // Author: Armin Töpfer
 
+#include <pbcopper/parallel/FireAndForgetIndexed.h>
+
 #include <atomic>
 #include <chrono>
 #include <memory>
@@ -8,8 +10,6 @@
 #include <vector>
 
 #include <gtest/gtest.h>
-
-#include <pbcopper/parallel/FireAndForgetIndexed.h>
 
 TEST(Parallel_FireAndForgetIndexed, strings)
 {

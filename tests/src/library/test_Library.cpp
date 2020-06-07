@@ -1,10 +1,10 @@
+#include <pbcopper/library/Bundle.h>
+#include <pbcopper/library/Info.h>
+
 #include <ostream>
 #include <sstream>
 
 #include <gtest/gtest.h>
-
-#include <pbcopper/library/Bundle.h>
-#include <pbcopper/library/Info.h>
 
 using namespace PacBio;
 

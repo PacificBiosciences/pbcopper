@@ -1,9 +1,9 @@
+#include <pbcopper/pbmer/Parser.h>
 
 #include <gtest/gtest.h>
 
 #include <pbcopper/pbmer/DnaBit.h>
 #include <pbcopper/pbmer/Mers.h>
-#include <pbcopper/pbmer/Parser.h>
 
 TEST(Pbmer_Parser, parser_throws_if_dna_shorter_than_kmer)
 {

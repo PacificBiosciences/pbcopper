@@ -1,10 +1,10 @@
+#include <pbcopper/cli2/internal/CommandLineParser.h>
 
 #include <string>
 #include <vector>
 
 #include <gtest/gtest.h>
 
-#include <pbcopper/cli2/internal/CommandLineParser.h>
 #include <pbcopper/cli2/internal/OptionTranslator.h>
 
 using CommandLineParser = PacBio::CLI_v2::internal::CommandLineParser;

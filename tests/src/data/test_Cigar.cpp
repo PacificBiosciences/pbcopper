@@ -1,6 +1,6 @@
-#include <gtest/gtest.h>
-
 #include <pbcopper/data/Cigar.h>
+
+#include <gtest/gtest.h>
 
 using Cigar = PacBio::Data::Cigar;
 using CigarOperation = PacBio::Data::CigarOperation;

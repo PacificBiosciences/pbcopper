@@ -1,10 +1,10 @@
+#include <pbcopper/utility/MoveAppend.h>
+
 #include <set>
 #include <string>
 #include <vector>
 
 #include <gtest/gtest.h>
-
-#include <pbcopper/utility/MoveAppend.h>
 
 namespace MoveAppendTests {
 

@@ -1,6 +1,6 @@
-#include <gtest/gtest.h>
-
 #include <pbcopper/pbmer/KFGraph.h>
+
+#include <gtest/gtest.h>
 
 TEST(Pbmer_KFGraph, each_node_has_read_id)
 {

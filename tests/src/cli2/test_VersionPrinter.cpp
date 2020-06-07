@@ -1,3 +1,5 @@
+#include <pbcopper/cli2/internal/VersionPrinter.h>
+
 #include <sstream>
 #include <string>
 
@@ -5,7 +7,6 @@
 
 #include <pbcopper/cli2/Interface.h>
 #include <pbcopper/cli2/MultiToolInterface.h>
-#include <pbcopper/cli2/internal/VersionPrinter.h>
 
 using namespace PacBio;
 

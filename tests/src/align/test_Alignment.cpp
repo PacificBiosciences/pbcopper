@@ -1,15 +1,15 @@
 // Authors: David Alexander, Lance Hepler
 
-#include <algorithm>
-#include <memory>
-
-#include <gtest/gtest.h>
-
 #include <pbcopper/align/AffineAlignment.h>
 #include <pbcopper/align/AlignConfig.h>
 #include <pbcopper/align/LinearAlignment.h>
 #include <pbcopper/align/LocalAlignment.h>
 #include <pbcopper/align/PairwiseAlignment.h>
+
+#include <algorithm>
+#include <memory>
+
+#include <gtest/gtest.h>
 
 namespace PacBio {
 namespace Align {

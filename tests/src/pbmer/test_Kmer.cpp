@@ -1,6 +1,6 @@
-#include <gtest/gtest.h>
-
 #include <pbcopper/pbmer/Kmer.h>
+
+#include <gtest/gtest.h>
 
 TEST(Pbmer_Kmer, eq_check_overloaded_eqto_operation)
 {

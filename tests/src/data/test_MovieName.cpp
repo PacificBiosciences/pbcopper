@@ -1,8 +1,8 @@
-#include <gtest/gtest.h>
+#include <pbcopper/data/MovieName.h>
 
 #include <sstream>
 
-#include <pbcopper/data/MovieName.h>
+#include <gtest/gtest.h>
 
 namespace MovieNameTests {
 

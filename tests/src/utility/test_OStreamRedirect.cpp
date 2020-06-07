@@ -1,9 +1,9 @@
-#include <gtest/gtest.h>
+#include <pbcopper/utility/OStreamRedirect.h>
 
 #include <iostream>
 #include <sstream>
 
-#include <pbcopper/utility/OStreamRedirect.h>
+#include <gtest/gtest.h>
 
 TEST(Utility_OStreamRedirect, can_redirect_stdout)
 {

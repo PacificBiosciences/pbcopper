@@ -1,9 +1,9 @@
+#include <pbcopper/utility/PartitionElements.h>
+
 #include <tuple>
 #include <vector>
 
 #include <gtest/gtest.h>
-
-#include <pbcopper/utility/PartitionElements.h>
 
 using namespace PacBio;
 

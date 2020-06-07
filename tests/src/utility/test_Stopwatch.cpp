@@ -1,9 +1,8 @@
+#include <pbcopper/utility/Stopwatch.h>
 
 #include <thread>
 
 #include <gtest/gtest.h>
-
-#include <pbcopper/utility/Stopwatch.h>
 
 //
 // using float compares and 'fuzzy' compares to allow for inherent wiggle room

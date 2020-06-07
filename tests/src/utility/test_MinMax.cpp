@@ -1,7 +1,6 @@
+#include <pbcopper/utility/MinMax.h>
 
 #include <gtest/gtest.h>
-
-#include <pbcopper/utility/MinMax.h>
 
 TEST(Utility_MinMax, can_find_maximum_integer_from_two_args)
 {

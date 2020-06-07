@@ -1,6 +1,6 @@
-#include <gtest/gtest.h>
-
 #include <pbcopper/data/Interval.h>
+
+#include <gtest/gtest.h>
 
 TEST(Data_Interval, default_interval_contains_zeroes)
 {
