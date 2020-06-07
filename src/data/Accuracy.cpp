@@ -28,7 +28,7 @@ Accuracy::Accuracy(float accuracy)
 {
 }
 
-Accuracy::operator float() const { return accuracy_; }
+Accuracy::operator float() const noexcept { return accuracy_; }
 
 }  // namespace Data
 }  // namespace PacBio

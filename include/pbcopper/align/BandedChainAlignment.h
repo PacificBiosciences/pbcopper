@@ -55,9 +55,6 @@ public:
                          const size_t targetLen, const char* query, const size_t queryLen,
                          const std::string& transcript);
 
-    BandedChainAlignment(const BandedChainAlignment&) = default;
-    BandedChainAlignment& operator=(const BandedChainAlignment&) = default;
-
 public:
     float Identity(void) const;
     int64_t Score(void) const;

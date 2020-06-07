@@ -86,8 +86,8 @@ public:
     /// \name Comparison Operators
     /// \{
 
-    bool operator==(const Frames& other) const;
-    bool operator!=(const Frames& other) const;
+    bool operator==(const Frames& other) const noexcept;
+    bool operator!=(const Frames& other) const noexcept;
 
     /// \}
 

@@ -27,11 +27,11 @@ void Interval::Reset(const Interval& other)
     *this = other;
 }
 
-bool Interval::operator==(const Interval& other) const { return data_ == other.data_; }
+bool Interval::operator==(const Interval& other) const noexcept { return data_ == other.data_; }
 
-bool Interval::operator!=(const Interval& other) const { return !(data_ == other.data_); }
+bool Interval::operator!=(const Interval& other) const noexcept { return !(data_ == other.data_); }
 
-bool Interval::operator<(const Interval& other) const { return data_ < other.data_; }
+bool Interval::operator<(const Interval& other) const noexcept { return data_ < other.data_; }
 
 bool Interval::IsEmpty() const { return Length() == 0; }
 

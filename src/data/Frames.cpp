@@ -135,13 +135,13 @@ Frames& Frames::Data(std::vector<uint16_t> frames)
     return *this;
 }
 
-bool Frames::operator==(const Frames& other) const
+bool Frames::operator==(const Frames& other) const noexcept
 {
     return static_cast<const std::vector<uint16_t>&>(*this) ==
            static_cast<const std::vector<uint16_t>&>(other);
 }
 
-bool Frames::operator!=(const Frames& other) const { return !(*this == other); }
+bool Frames::operator!=(const Frames& other) const noexcept { return !(*this == other); }
 
 std::ostream& operator<<(std::ostream& os, const Frames& frames)
 {

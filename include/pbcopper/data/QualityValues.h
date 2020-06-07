@@ -74,7 +74,7 @@ public:
 
     QualityValues() = default;
 
-    QualityValues& operator=(std::vector<QualityValue> quals);
+    QualityValues& operator=(std::vector<QualityValue> quals) noexcept;
 
     /// \}
 
@@ -82,8 +82,8 @@ public:
     /// \name Comparison Operators
     /// \{
 
-    bool operator==(const std::string& other) const;
-    bool operator!=(const std::string& other) const;
+    bool operator==(const std::string& other) const noexcept;
+    bool operator!=(const std::string& other) const noexcept;
 
     /// \}
 

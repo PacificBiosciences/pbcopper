@@ -25,7 +25,7 @@ uint64_t Hash64shift(uint64_t key)
     return key;
 }
 
-uint64_t Mix64Masked(const uint64_t key, const uint8_t kmerSize)
+uint64_t Mix64Masked(const uint64_t key, const uint8_t kmerSize) noexcept
 {
     uint64_t res = key;
     res = (~res + (res << 21)) & ((1ull << 2 * kmerSize) - 1);  // key = (key << 21) - key - 1;
@@ -56,23 +56,23 @@ DnaBit::DnaBit() = default;
 
 DnaBit::DnaBit(uint64_t k, uint8_t t, uint8_t i) : mer{k}, strand{t}, msize{i} {}
 
-bool DnaBit::operator<(const DnaBit& b) const
+bool DnaBit::operator<(const DnaBit& b) const noexcept
 {
     return Mix64Masked(mer, msize) < Mix64Masked(b.mer, msize);
 }
 
-bool DnaBit::operator>(const DnaBit& b) const { return b < *this; }
+bool DnaBit::operator>(const DnaBit& b) const noexcept { return b < *this; }
 
-bool DnaBit::operator>=(const DnaBit& b) const { return !(*this < b); }
+bool DnaBit::operator>=(const DnaBit& b) const noexcept { return !(*this < b); }
 
-bool DnaBit::operator<=(const DnaBit& b) const { return !(*this > b); }
+bool DnaBit::operator<=(const DnaBit& b) const noexcept { return !(*this > b); }
 
-bool DnaBit::operator==(const DnaBit& b) const
+bool DnaBit::operator==(const DnaBit& b) const noexcept
 {
     return std::tie(mer, strand) == std::tie(b.mer, b.strand);
 }
 
-bool DnaBit::operator!=(const DnaBit& b) const { return !(*this == b); }
+bool DnaBit::operator!=(const DnaBit& b) const noexcept { return !(*this == b); }
 
 void DnaBit::AppendBase(const uint8_t b)
 {

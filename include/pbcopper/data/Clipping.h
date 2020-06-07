@@ -44,12 +44,6 @@ struct ClipResult
     ClipResult(size_t clipOffset, Position qStart, Position qEnd);
     ClipResult(size_t clipOffset, Position qStart, Position qEnd, Position refPos, Cigar cigar);
 
-    ClipResult(const ClipResult&);
-    ClipResult(ClipResult&&) noexcept;
-    ClipResult& operator=(const ClipResult&);
-    ClipResult& operator=(ClipResult&&) noexcept;
-    ~ClipResult();
-
     size_t clipOffset_;
     Position qStart_;
     Position qEnd_;

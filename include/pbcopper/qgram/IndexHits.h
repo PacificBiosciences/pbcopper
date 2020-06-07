@@ -66,7 +66,10 @@ public:
     const_iterator cend() const { return cbegin() + size(); }
     size_type size() const { return end_ - begin_; }
 
-    const_reference operator[](size_type pos) const { return *(source_->begin() + begin_ + pos); }
+    const_reference operator[](size_type pos) const noexcept
+    {
+        return *(source_->begin() + begin_ + pos);
+    }
 
     const_reference at(size_type pos) const
     {

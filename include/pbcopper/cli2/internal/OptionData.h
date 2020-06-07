@@ -34,10 +34,7 @@ struct OptionData
     std::vector<OptionValue> choices;
     bool isChoicesHidden = false;
 
-    inline bool operator==(const OptionData& other) const
-    {
-        return std::equal(names.cbegin(), names.cend(), other.names.cbegin());
-    }
+    inline bool operator==(const OptionData& other) const noexcept { return names == other.names; }
 };
 
 ///
@@ -65,7 +62,7 @@ namespace std {
 template <>
 struct hash<PacBio::CLI_v2::internal::OptionData>
 {
-    size_t operator()(const PacBio::CLI_v2::internal::OptionData& k) const
+    size_t operator()(const PacBio::CLI_v2::internal::OptionData& k) const noexcept
     {
         return std::hash<std::string>()(k.names[0]);
     }

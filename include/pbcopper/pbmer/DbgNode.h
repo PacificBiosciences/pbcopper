@@ -83,8 +83,8 @@ public:
         using iterator_category = std::input_iterator_tag;
 
         ~iterator_base();
-        bool operator==(const iterator_base& other) const;
-        bool operator!=(const iterator_base& other) const;
+        bool operator==(const iterator_base& other) const noexcept;
+        bool operator!=(const iterator_base& other) const noexcept;
 
     protected:
         iterator_base();
@@ -105,8 +105,8 @@ public:
 
         iterator();
         iterator(DbgNode& node);
-        DnaBit& operator*();
-        DnaBit* operator->();
+        DnaBit& operator*() noexcept;
+        DnaBit* operator->() noexcept;
         iterator& operator++();
         iterator operator++(int);
     };
@@ -119,8 +119,8 @@ public:
 
         const_iterator();
         const_iterator(const DbgNode& node);
-        const DnaBit& operator*() const;
-        const DnaBit* operator->() const;
+        const DnaBit& operator*() const noexcept;
+        const DnaBit* operator->() const noexcept;
         const_iterator& operator++();
         const_iterator operator++(int);
     };

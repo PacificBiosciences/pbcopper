@@ -34,7 +34,7 @@ public:
 
 public:
     /// \returns Accuracy as float primitive
-    operator float() const;
+    operator float() const noexcept;
 
 private:
     float accuracy_;

@@ -27,7 +27,10 @@ struct PositionalArgumentData
 
     OptionValueType type = OptionValueType::STRING;
 
-    inline bool operator==(const PositionalArgumentData& other) const { return name == other.name; }
+    inline bool operator==(const PositionalArgumentData& other) const noexcept
+    {
+        return name == other.name;
+    }
 };
 
 }  // namespace internal
@@ -39,7 +42,7 @@ namespace std {
 template <>
 struct hash<PacBio::CLI_v2::internal::PositionalArgumentData>
 {
-    size_t operator()(const PacBio::CLI_v2::internal::PositionalArgumentData& k) const
+    size_t operator()(const PacBio::CLI_v2::internal::PositionalArgumentData& k) const noexcept
     {
         return std::hash<std::string>()(k.name);
     }

@@ -60,8 +60,8 @@ public:
     bool IsCCS() const;
     std::string ToString() const;
 
-    bool operator==(const ReadNameBase<MovieNameType>& other) const;
-    bool operator<(const ReadNameBase<MovieNameType>& other) const;
+    bool operator==(const ReadNameBase<MovieNameType>& other) const noexcept;
+    bool operator<(const ReadNameBase<MovieNameType>& other) const noexcept;
 
     /// \}
 
@@ -78,7 +78,7 @@ private:
 // add'l comparison operators
 template <typename MovieNameType>
 inline bool operator!=(const ReadNameBase<MovieNameType>& lhs,
-                       const ReadNameBase<MovieNameType>& rhs);
+                       const ReadNameBase<MovieNameType>& rhs) noexcept;
 
 // I/O
 template <typename MovieNameType>

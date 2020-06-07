@@ -55,7 +55,7 @@ QualityValues::QualityValues(const QualityValues::const_iterator first,
     assign(first, last);
 }
 
-QualityValues& QualityValues::operator=(std::vector<QualityValue> quals)
+QualityValues& QualityValues::operator=(std::vector<QualityValue> quals) noexcept
 {
     std::vector<QualityValue>::operator=(std::move(quals));
     return *this;
@@ -103,12 +103,12 @@ std::string QualityValues::Fastq() const
     return result;
 }
 
-bool QualityValues::operator==(const std::string& fastq) const
+bool QualityValues::operator==(const std::string& fastq) const noexcept
 {
     return *this == QualityValues(fastq);
 }
 
-bool QualityValues::operator!=(const std::string& fastq) const
+bool QualityValues::operator!=(const std::string& fastq) const noexcept
 {
     return *this != QualityValues(fastq);
 }

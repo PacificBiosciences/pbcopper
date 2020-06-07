@@ -24,7 +24,6 @@ public:
     LocalAlignment(LocalAlignment&&) = default;
     LocalAlignment& operator=(const LocalAlignment&) = delete;
     LocalAlignment& operator=(LocalAlignment&&) = default;
-    ~LocalAlignment(void) = default;
 
 public:
     int32_t TargetBegin(void) const { return targetBegin_; }

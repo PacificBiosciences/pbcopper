@@ -99,6 +99,7 @@ inline PacBio::Data::Zmw ReadNameBase<MovieNameType>::Zmw() const
 
 template <typename MovieNameType>
 inline bool ReadNameBase<MovieNameType>::operator==(const ReadNameBase<MovieNameType>& other) const
+    noexcept
 {
     // simple int check first
     if (zmw_ != other.zmw_) return false;
@@ -121,6 +122,7 @@ inline bool ReadNameBase<MovieNameType>::operator==(const ReadNameBase<MovieName
 
 template <typename MovieNameType>
 inline bool ReadNameBase<MovieNameType>::operator<(const ReadNameBase<MovieNameType>& other) const
+    noexcept
 {
     // sort by:
     //   1 - movie name
@@ -221,7 +223,7 @@ inline std::string ReadNameBase<MovieNameType>::ToString() const
 
 template <typename MovieNameType>
 inline bool operator!=(const ReadNameBase<MovieNameType>& lhs,
-                       const ReadNameBase<MovieNameType>& rhs)
+                       const ReadNameBase<MovieNameType>& rhs) noexcept
 {
     return !(lhs == rhs);
 }

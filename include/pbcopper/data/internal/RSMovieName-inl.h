@@ -91,14 +91,17 @@ inline boost::string_ref RSMovieName::SMRTCellBarcode() const
 
 inline std::string RSMovieName::ToStdString() const { return movieName_; }
 
-inline bool operator==(const RSMovieName& lhs, const RSMovieName& rhs)
+inline bool operator==(const RSMovieName& lhs, const RSMovieName& rhs) noexcept
 {
     return lhs.ToStdString() == rhs.ToStdString();
 }
 
-inline bool operator!=(const RSMovieName& lhs, const RSMovieName& rhs) { return !(lhs == rhs); }
+inline bool operator!=(const RSMovieName& lhs, const RSMovieName& rhs) noexcept
+{
+    return !(lhs == rhs);
+}
 
-inline bool operator<(const RSMovieName& lhs, const RSMovieName& rhs)
+inline bool operator<(const RSMovieName& lhs, const RSMovieName& rhs) noexcept
 {
     return lhs.ToStdString() < rhs.ToStdString();
 }

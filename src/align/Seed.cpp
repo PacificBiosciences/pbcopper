@@ -6,6 +6,7 @@
 #include <cmath>
 
 #include <algorithm>
+#include <tuple>
 #include <type_traits>
 
 namespace PacBio {
@@ -167,18 +168,19 @@ Seed Seed::operator+(const Seed& other) const
     return s;
 }
 
-bool operator<(const Seed& lhs, const Seed& rhs)
+bool operator<(const Seed& lhs, const Seed& rhs) noexcept
 {
     return lhs.BeginDiagonal() < rhs.BeginDiagonal();
 }
 
-bool operator==(const Seed& lhs, const Seed& rhs)
+bool operator==(const Seed& lhs, const Seed& rhs) noexcept
 {
-    return lhs.BeginPositionH() == rhs.BeginPositionH() &&
-           lhs.BeginPositionV() == rhs.BeginPositionV() &&
-           lhs.EndPositionH() == rhs.EndPositionH() && lhs.EndPositionV() == rhs.EndPositionV() &&
-           lhs.LowerDiagonal() == rhs.LowerDiagonal() &&
-           lhs.UpperDiagonal() == rhs.UpperDiagonal() && lhs.Score() == rhs.Score();
+    return std::make_tuple(lhs.BeginPositionH(), lhs.BeginPositionV(), lhs.EndPositionH(),
+                           lhs.EndPositionV(), lhs.LowerDiagonal(), lhs.UpperDiagonal(),
+                           lhs.Score()) == std::make_tuple(rhs.BeginPositionH(),
+                                                           rhs.BeginPositionV(), rhs.EndPositionH(),
+                                                           rhs.EndPositionV(), rhs.LowerDiagonal(),
+                                                           rhs.UpperDiagonal(), rhs.Score());
 }
 
 }  // namespace Align

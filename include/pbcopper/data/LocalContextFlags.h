@@ -30,7 +30,8 @@ enum LocalContextFlags : uint8_t
 /// \returns a LocalContextFlags value containing the result of the bitwise-OR
 ///          operation of \p lhs and \p rhs.
 // constexpr is implicitly inline
-constexpr LocalContextFlags operator|(const LocalContextFlags lhs, const LocalContextFlags rhs)
+constexpr LocalContextFlags operator|(const LocalContextFlags lhs,
+                                      const LocalContextFlags rhs) noexcept
 {
     return static_cast<LocalContextFlags>(static_cast<int>(lhs) | static_cast<int>(rhs));
 }

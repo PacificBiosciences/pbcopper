@@ -70,9 +70,9 @@ private:
 /// \{
 
 // comparison operators
-inline bool operator==(const MovieName& lhs, const MovieName& rhs);
-inline bool operator!=(const MovieName& lhs, const MovieName& rhs);
-inline bool operator<(const MovieName& lhs, const MovieName& rhs);
+inline bool operator==(const MovieName& lhs, const MovieName& rhs) noexcept;
+inline bool operator!=(const MovieName& lhs, const MovieName& rhs) noexcept;
+inline bool operator<(const MovieName& lhs, const MovieName& rhs) noexcept;
 
 // I/O
 inline std::ostream& operator<<(std::ostream& os, const MovieName& movieName);

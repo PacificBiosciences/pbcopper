@@ -30,8 +30,8 @@ public:
     Kmer(Data::Strand s);
     Kmer(uint64_t k, uint32_t p, Data::Strand s);
 
-    bool operator==(Kmer const& b) const;
-    bool operator!=(Kmer const& b) const;
+    bool operator==(Kmer const& b) const noexcept;
+    bool operator!=(Kmer const& b) const noexcept;
 
     // hashes both kmers then return a bool evaluating a <= b
     void ReverseComp(uint8_t kmerSize);
