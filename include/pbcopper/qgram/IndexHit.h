@@ -57,7 +57,7 @@ private:
 /// \param[in] rhs
 /// \return true if the hits share the same sequence id & position
 ///
-inline bool operator==(const IndexHit& lhs, const IndexHit& rhs)
+inline bool operator==(const IndexHit& lhs, const IndexHit& rhs) noexcept
 {
     return std::make_tuple(lhs.Id(), lhs.Position()) == std::make_tuple(rhs.Id(), rhs.Position());
 }

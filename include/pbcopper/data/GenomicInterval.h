@@ -49,10 +49,10 @@ public:
     /// \{
 
     /// \returns true if same id & underlying interval
-    bool operator==(const GenomicInterval& other) const;
+    bool operator==(const GenomicInterval& other) const noexcept;
 
     /// \returns true if either ids or underlying intervals differ
-    bool operator!=(const GenomicInterval& other) const;
+    bool operator!=(const GenomicInterval& other) const noexcept;
 
     /// \}
 

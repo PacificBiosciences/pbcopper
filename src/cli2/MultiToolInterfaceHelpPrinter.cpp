@@ -1,7 +1,8 @@
 #include <pbcopper/cli2/internal/MultiToolInterfaceHelpPrinter.h>
 
 #include <iomanip>
-#include <iostream>
+#include <ios>
+#include <ostream>
 #include <sstream>
 
 #include <pbcopper/cli2/internal/OptionData.h>

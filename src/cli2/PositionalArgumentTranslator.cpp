@@ -1,10 +1,10 @@
 #include <pbcopper/cli2/internal/PositionalArgumentTranslator.h>
 
+#include <sstream>
+
 #include <pbcopper/cli2/PositionalArgument.h>
 #include <pbcopper/cli2/internal/PositionalArgumentData.h>
 #include <pbcopper/json/JSON.h>
-
-#include <sstream>
 
 using Json = PacBio::JSON::Json;
 using PositionalArgument = PacBio::CLI_v2::PositionalArgument;

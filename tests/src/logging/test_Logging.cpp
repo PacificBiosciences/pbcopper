@@ -1,3 +1,5 @@
+#include <pbcopper/logging/Logging.h>
+
 #include <sstream>
 #include <string>
 
@@ -5,7 +7,6 @@
 
 #include <gtest/gtest.h>
 
-#include <pbcopper/logging/Logging.h>
 #include <pbcopper/utility/StringUtils.h>
 
 using namespace PacBio;

@@ -6,6 +6,7 @@
 #include <pbcopper/PbcopperConfig.h>
 
 #include <cassert>
+
 #include <iosfwd>
 #include <stdexcept>
 #include <string>

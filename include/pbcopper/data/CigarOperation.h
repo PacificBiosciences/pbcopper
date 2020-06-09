@@ -113,10 +113,10 @@ public:
     /// \{
 
     /// \returns true if both CIGAR operation type & length match
-    bool operator==(const CigarOperation& other) const;
+    bool operator==(const CigarOperation& other) const noexcept;
 
     /// \returns true if either CIGAR operation type or length differ
-    bool operator!=(const CigarOperation& other) const;
+    bool operator!=(const CigarOperation& other) const noexcept;
 
     /// \}
 

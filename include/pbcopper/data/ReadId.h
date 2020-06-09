@@ -4,7 +4,8 @@
 #define PBCOPPER_DATA_READID_H
 
 #include <cstddef>
-#include <iostream>
+
+#include <iosfwd>
 #include <memory>
 #include <string>
 

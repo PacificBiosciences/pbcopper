@@ -1,3 +1,5 @@
+#include <pbcopper/cli2/internal/InterfaceHelpPrinter.h>
+
 #include <sstream>
 #include <string>
 #include <vector>
@@ -6,7 +8,6 @@
 
 #include <pbcopper/cli2/Interface.h>
 #include <pbcopper/cli2/MultiToolInterface.h>
-#include <pbcopper/cli2/internal/InterfaceHelpPrinter.h>
 #include <pbcopper/cli2/internal/OptionData.h>
 #include <pbcopper/cli2/internal/OptionTranslator.h>
 #include <pbcopper/cli2/internal/PositionalArgumentTranslator.h>

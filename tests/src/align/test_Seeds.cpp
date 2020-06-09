@@ -1,6 +1,6 @@
-#include <gtest/gtest.h>
-
 #include <pbcopper/align/Seeds.h>
+
+#include <gtest/gtest.h>
 
 TEST(Align_Seed, construct_from_begin_positions_and_length)
 {

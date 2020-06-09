@@ -1,7 +1,9 @@
 #include <pbcopper/cli2/internal/CommandLineParser.h>
 
 #include <cassert>
+
 #include <deque>
+#include <sstream>
 #include <stdexcept>
 #include <string>
 #include <vector>

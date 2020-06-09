@@ -1,10 +1,10 @@
+#include <pbcopper/cli2/internal/OptionTranslator.h>
 
 #include <gtest/gtest.h>
 
 #include <pbcopper/cli2/Option.h>
 #include <pbcopper/cli2/OptionValue.h>
 #include <pbcopper/cli2/internal/OptionData.h>
-#include <pbcopper/cli2/internal/OptionTranslator.h>
 #include <pbcopper/json/JSON.h>
 
 using Json = PacBio::JSON::Json;

@@ -1,7 +1,6 @@
+#include <pbcopper/dagcon/Alignment.h>
 
 #include <gtest/gtest.h>
-
-#include <pbcopper/dagcon/Alignment.h>
 
 using namespace PacBio;
 

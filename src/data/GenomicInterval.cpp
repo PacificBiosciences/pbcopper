@@ -81,12 +81,15 @@ GenomicInterval::GenomicInterval(const std::string& samtoolsRegionString)
     interval_ = Data::Interval(begin, end);
 }
 
-bool GenomicInterval::operator==(const GenomicInterval& other) const
+bool GenomicInterval::operator==(const GenomicInterval& other) const noexcept
 {
     return std::tie(name_, interval_) == std::tie(other.name_, other.interval_);
 }
 
-bool GenomicInterval::operator!=(const GenomicInterval& other) const { return !(*this == other); }
+bool GenomicInterval::operator!=(const GenomicInterval& other) const noexcept
+{
+    return !(*this == other);
+}
 
 bool GenomicInterval::ContainedBy(const GenomicInterval& other) const
 {

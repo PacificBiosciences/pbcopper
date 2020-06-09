@@ -31,7 +31,7 @@ public:
     LogLevel(const std::string& value);
 
 public:
-    operator int() const;
+    operator int() const noexcept;
     std::string ToString() const;
 
 private:

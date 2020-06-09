@@ -5,7 +5,8 @@
 
 #include <cstddef>
 #include <cstdint>
-#include <ostream>
+
+#include <iosfwd>
 #include <string>
 #include <tuple>
 #include <vector>

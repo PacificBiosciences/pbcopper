@@ -1,15 +1,14 @@
 // Author: Armin Töpfer
 
+#include <pbcopper/parallel/FireAndForget.h>
+
 #include <chrono>
-#include <iostream>
 #include <memory>
 #include <string>
 #include <thread>
 #include <vector>
 
 #include <gtest/gtest.h>
-
-#include <pbcopper/parallel/FireAndForget.h>
 
 TEST(Parallel_FireAndForget, strings)
 {

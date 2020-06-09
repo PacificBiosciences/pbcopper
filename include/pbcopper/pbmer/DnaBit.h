@@ -30,14 +30,14 @@ public:
     DnaBit(uint64_t k, uint8_t strand, uint8_t size);
 
     // Ignores strand, compares hashed kmer.
-    bool operator>(DnaBit const& b) const;
-    bool operator<(DnaBit const& b) const;
-    bool operator>=(DnaBit const& b) const;
-    bool operator<=(DnaBit const& b) const;
+    bool operator>(DnaBit const& b) const noexcept;
+    bool operator<(DnaBit const& b) const noexcept;
+    bool operator>=(DnaBit const& b) const noexcept;
+    bool operator<=(DnaBit const& b) const noexcept;
 
     // Checks strand, not hashed kmer.
-    bool operator==(DnaBit const& b) const;
-    bool operator!=(DnaBit const& b) const;
+    bool operator==(DnaBit const& b) const noexcept;
+    bool operator!=(DnaBit const& b) const noexcept;
 
     ///
     /// \return the hashed kmer
@@ -144,7 +144,7 @@ public:
 // This should remain a function, it has a lot of general utility.
 uint64_t ReverseComp64(const uint64_t mer, uint8_t kmerSize);
 // This should remain a function, it has a lot of general utility.
-uint64_t Mix64Masked(uint64_t key, uint8_t kmerSize);
+uint64_t Mix64Masked(uint64_t key, uint8_t kmerSize) noexcept;
 
 ///
 /// Turn path to a DNA string.

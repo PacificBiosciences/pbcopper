@@ -1,7 +1,6 @@
+#include <pbcopper/utility/FileUtils.h>
 
 #include <gtest/gtest.h>
-
-#include <pbcopper/utility/FileUtils.h>
 
 TEST(Utility_FileUtils, FileExists)
 {

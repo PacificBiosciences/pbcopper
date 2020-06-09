@@ -80,12 +80,12 @@ DbgNode::iterator_base::iterator_base(DbgNode& node) : node_{&node} { LoadNext()
 
 DbgNode::iterator_base::~iterator_base() = default;
 
-bool DbgNode::iterator_base::operator==(const iterator_base& other) const
+bool DbgNode::iterator_base::operator==(const iterator_base& other) const noexcept
 {
     return node_ == other.node_;
 }
 
-bool DbgNode::iterator_base::operator!=(const iterator_base& other) const
+bool DbgNode::iterator_base::operator!=(const iterator_base& other) const noexcept
 {
     return !(*this == other);
 }
@@ -117,8 +117,8 @@ void DbgNode::iterator_base::LoadNext()
 
 DbgNode::iterator::iterator() = default;
 DbgNode::iterator::iterator(DbgNode& node) : iterator_base{node} {}
-DnaBit& DbgNode::iterator::operator*() { return iterator_base::value_; }
-DnaBit* DbgNode::iterator::operator->() { return &(operator*()); }
+DnaBit& DbgNode::iterator::operator*() noexcept { return iterator_base::value_; }
+DnaBit* DbgNode::iterator::operator->() noexcept { return &(operator*()); }
 DbgNode::iterator& DbgNode::iterator::operator++()
 {
     LoadNext();
@@ -137,8 +137,8 @@ DbgNode::const_iterator::const_iterator(const DbgNode& node)
     : iterator_base{const_cast<DbgNode&>(node)}
 {
 }
-const DnaBit& DbgNode::const_iterator::operator*() const { return iterator_base::value_; }
-const DnaBit* DbgNode::const_iterator::operator->() const { return &(operator*()); }
+const DnaBit& DbgNode::const_iterator::operator*() const noexcept { return iterator_base::value_; }
+const DnaBit* DbgNode::const_iterator::operator->() const noexcept { return &(operator*()); }
 DbgNode::const_iterator& DbgNode::const_iterator::operator++()
 {
     LoadNext();

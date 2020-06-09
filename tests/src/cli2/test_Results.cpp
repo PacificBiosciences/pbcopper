@@ -1,4 +1,5 @@
-#include <sstream>
+#include <pbcopper/cli2/Results.h>
+
 #include <stdexcept>
 #include <string>
 #include <vector>
@@ -8,7 +9,6 @@
 #include <pbcopper/cli2/Interface.h>
 #include <pbcopper/cli2/Option.h>
 #include <pbcopper/cli2/PositionalArgument.h>
-#include <pbcopper/cli2/Results.h>
 #include <pbcopper/cli2/internal/CommandLineParser.h>
 #include <pbcopper/cli2/internal/OptionTranslator.h>
 #include <pbcopper/cli2/internal/PositionalArgumentTranslator.h>

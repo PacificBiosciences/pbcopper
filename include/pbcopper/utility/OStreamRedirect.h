@@ -6,6 +6,8 @@
 #include <pbcopper/PbcopperConfig.h>
 
 #include <iostream>
+#include <ostream>
+#include <streambuf>
 
 namespace PacBio {
 namespace Utility {

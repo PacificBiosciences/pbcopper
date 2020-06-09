@@ -6,7 +6,6 @@
 
 #include <pbcopper/align/LocalAlignment.h>
 
-#include <iostream>
 #include <utility>
 
 #include "cssw/ssw_cpp.h"
@@ -14,7 +13,7 @@
 namespace PacBio {
 namespace Align {
 
-static inline LocalAlignment FromSSW(StripedSmithWaterman::Alignment&& sswAl)
+static LocalAlignment FromSSW(StripedSmithWaterman::Alignment&& sswAl)
 {
     return LocalAlignment{
         sswAl.ref_begin,  sswAl.ref_end,  sswAl.query_begin,      sswAl.query_end,

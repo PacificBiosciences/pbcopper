@@ -3,7 +3,9 @@
 #include <pbcopper/data/Read.h>
 
 #include <cassert>
-#include <iomanip>
+
+#include <ios>
+#include <ostream>
 #include <stdexcept>
 #include <type_traits>
 #include <utility>

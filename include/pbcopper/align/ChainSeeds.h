@@ -62,7 +62,7 @@ bool VHCompare(const Seed& lhs, const Seed& rhs);
 ///
 /// \return  bool  Whether the left seed preceeds the right seed
 ///
-bool DiagonalCompare(const Seed& lhs, const Seed& rhs);
+bool DiagonalCompare(const Seed& lhs, const Seed& rhs) noexcept;
 
 /// Score the possible linkage of two seeds based on 3 criteria:
 ///     (A) The number of bases in the shortest seed
@@ -90,7 +90,7 @@ struct SDPHit : public Seed
     size_t Index;
 
     SDPHit(const Seed& seed, const size_t index);
-    bool operator<(const SDPHit& other) const;
+    bool operator<(const SDPHit& other) const noexcept;
 };
 
 /// Compare two seeds (SDPHits) according to their original indices in
@@ -117,7 +117,7 @@ struct SDPColumn
     size_t Column;
 
     SDPColumn(size_t column, const boost::optional<SDPHit> seed = boost::none);
-    bool operator<(const SDPColumn& other) const;
+    bool operator<(const SDPColumn& other) const noexcept;
 };
 
 ///
@@ -152,7 +152,7 @@ struct ChainHit
 class ChainHitCompare
 {
 public:
-    bool operator()(const ChainHit& lhs, const ChainHit& rhs) const;
+    bool operator()(const ChainHit& lhs, const ChainHit& rhs) const noexcept;
 };
 
 /// Though we expect to receive the Seeds we'll be chaining in a tree-like

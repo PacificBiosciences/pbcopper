@@ -5,6 +5,7 @@
 
 #include <pbcopper/PbcopperConfig.h>
 
+#include <iosfwd>
 #include <type_traits>
 
 #include <pbcopper/data/CCSTag.h>
@@ -60,8 +61,8 @@ public:
     bool IsCCS() const;
     std::string ToString() const;
 
-    bool operator==(const ReadNameBase<MovieNameType>& other) const;
-    bool operator<(const ReadNameBase<MovieNameType>& other) const;
+    bool operator==(const ReadNameBase<MovieNameType>& other) const noexcept;
+    bool operator<(const ReadNameBase<MovieNameType>& other) const noexcept;
 
     /// \}
 
@@ -77,15 +78,15 @@ private:
 
 // add'l comparison operators
 template <typename MovieNameType>
-inline bool operator!=(const ReadNameBase<MovieNameType>& lhs,
-                       const ReadNameBase<MovieNameType>& rhs);
+bool operator!=(const ReadNameBase<MovieNameType>& lhs,
+                const ReadNameBase<MovieNameType>& rhs) noexcept;
 
 // I/O
 template <typename MovieNameType>
-inline std::ostream& operator<<(std::ostream& os, const ReadNameBase<MovieNameType>& readName);
+std::ostream& operator<<(std::ostream& os, const ReadNameBase<MovieNameType>& readName);
 
 template <typename MovieNameType>
-inline std::istream& operator>>(std::istream& is, ReadNameBase<MovieNameType>& readName);
+std::istream& operator>>(std::istream& is, ReadNameBase<MovieNameType>& readName);
 
 }  // namespace internal
 }  // namespace Data

@@ -60,7 +60,7 @@ public:
     char Fastq() const;
 
     /// \returns the integer value of this QualityValue
-    operator uint8_t() const;
+    operator uint8_t() const noexcept;
 
     /// \}
 
