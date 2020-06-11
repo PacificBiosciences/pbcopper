@@ -4,6 +4,7 @@
 
 ### Added
  - Base64 encoding/decoding
+ - (Simplified) alarm file can be created for general exceptions
 
 ## [1.7.0] - 2020-05-22
 

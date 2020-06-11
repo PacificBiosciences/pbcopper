@@ -748,4 +748,33 @@ TEST(CLI2_CLI, can_use_custom_version_callback)
     EXPECT_EQ(EXIT_SUCCESS, result);
 }
 
+TEST(CLI2_CLI, creates_alarm_for_all_exceptions_when_given_alarm_file_arg) {
+
+    const std::string alarmFilename{PacBio::PbcopperTestsConfig::Generated_Dir + "/std_exception_alarm.json"};
+
+    const std::vector<std::string> args {"frobber", "--alarms", alarmFilename};
+    auto runner = [](const PacBio::CLI_v2::Results&)
+    {
+        throw std::runtime_error{"std exception from application"};
+        return 0;
+    };
+
+    std::ostringstream logOutput;
+    PacBio::Utility::CerrRedirect redirect{logOutput.rdbuf()};
+    std::ignore = redirect;
+
+    PacBio::CLI_v2::Interface i{"frobber", "Frob all the things.", "v3.1"};
+    const int result = PacBio::CLI_v2::Run(args, i, runner);
+    EXPECT_EQ(EXIT_FAILURE, result);
+
+    // check std::cerr logging
+    EXPECT_TRUE(logOutput.str().find("std exception from application") != std::string::npos);
+
+    // check alarm file
+    std::ifstream alarmFile{alarmFilename};
+    std::ostringstream alarmText;
+    alarmText << alarmFile.rdbuf();
+    EXPECT_TRUE(alarmText.str().find("std exception from application") != std::string::npos);
+}
+
 // clang-format on
