@@ -2,6 +2,9 @@
 
 ## Active
 
+### Added
+ - Base64 encoding/decoding
+
 ## [1.7.0] - 2020-05-22
 
 ### Added

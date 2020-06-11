@@ -102,12 +102,14 @@ pbcopper_cpp_sources = files([
   # -------------
   # third-party
   # -------------
-  'third-party/edlib.cpp',
+  'third-party/base64/base64.cpp',
+  'third-party/edlib/edlib.cpp',
 
   # ---------
   # utility
   # ---------
   'utility/Alarm.cpp',
+  'utility/Base64.cpp',
   'utility/Deleters.cpp',
   'utility/MemoryConsumption.cpp',
   'utility/Stopwatch.cpp',
