@@ -75,6 +75,7 @@ pbcopper_test_cpp_sources = files([
   'src/utility/test_Ssize.cpp',
   'src/utility/test_Stopwatch.cpp',
   'src/utility/test_StringUtils.cpp',
+  'src/utility/test_StringView.cpp',
 ])
 
 # find GoogleTest
