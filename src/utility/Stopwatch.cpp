@@ -2,6 +2,7 @@
 #include <pbcopper/utility/Stopwatch.h>
 
 #include <cassert>
+
 #include <sstream>
 #include <type_traits>
 

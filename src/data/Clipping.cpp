@@ -5,7 +5,6 @@
 #include <cassert>
 
 #include <algorithm>
-#include <iostream>
 
 #include <pbcopper/data/MappedRead.h>
 #include <pbcopper/data/Read.h>
@@ -216,16 +215,6 @@ ClipResult::ClipResult(size_t clipOffset, Position qStart, Position qEnd, Positi
     , cigar_{std::move(cigar)}
 {
 }
-
-ClipResult::ClipResult(const ClipResult&) = default;
-
-ClipResult::ClipResult(ClipResult&&) noexcept = default;
-
-ClipResult& ClipResult::operator=(const ClipResult&) = default;
-
-ClipResult& ClipResult::operator=(ClipResult&&) noexcept = default;
-
-ClipResult::~ClipResult() = default;
 
 ClipToReferenceConfig::ClipToReferenceConfig(const ClipToQueryConfig& queryConfig,
                                              Position originalTEnd, Position targetTStart,

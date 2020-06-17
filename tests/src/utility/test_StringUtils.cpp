@@ -1,9 +1,8 @@
+#include <pbcopper/utility/StringUtils.h>
 
 #include <algorithm>
 
 #include <gtest/gtest.h>
-
-#include <pbcopper/utility/StringUtils.h>
 
 namespace StringUtilsTests {
 

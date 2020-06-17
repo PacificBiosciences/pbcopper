@@ -1,10 +1,11 @@
+#include <pbcopper/dagcon/AlignmentGraph.h>
+
 #include <array>
 #include <memory>
 
 #include <gtest/gtest.h>
 
 #include <pbcopper/dagcon/Alignment.h>
-#include <pbcopper/dagcon/AlignmentGraph.h>
 
 using namespace PacBio;
 

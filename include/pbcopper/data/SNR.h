@@ -5,7 +5,7 @@
 
 #include <pbcopper/PbcopperConfig.h>
 
-#include <ostream>
+#include <iosfwd>
 #include <vector>
 
 namespace PacBio {

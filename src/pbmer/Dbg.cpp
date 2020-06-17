@@ -411,7 +411,7 @@ std::vector<DnaBit> Dbg::LinearPath(const DnaBit& niby) const
 
 std::string Dbg::Graph2StringDot()
 {
-    std::stringstream ss;
+    std::ostringstream ss;
     ss << "digraph DBGraph {\n";
     for (auto x = dbg_.begin(); x != dbg_.end(); ++x) {
         ss << "    " << x->second.dna_.KmerToStr();

@@ -1,9 +1,9 @@
+#include <pbcopper/cli2/internal/PositionalArgumentTranslator.h>
 
 #include <gtest/gtest.h>
 
 #include <pbcopper/cli2/PositionalArgument.h>
 #include <pbcopper/cli2/internal/PositionalArgumentData.h>
-#include <pbcopper/cli2/internal/PositionalArgumentTranslator.h>
 
 using PositionalArgument = PacBio::CLI_v2::PositionalArgument;
 using PositionalArgumentData = PacBio::CLI_v2::internal::PositionalArgumentData;

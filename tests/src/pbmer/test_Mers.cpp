@@ -1,10 +1,10 @@
-#include <iostream>
+#include <pbcopper/pbmer/Mers.h>
+
 #include <unordered_set>
 
 #include <gtest/gtest.h>
 
 #include <pbcopper/pbmer/Kmer.h>
-#include <pbcopper/pbmer/Mers.h>
 #include <pbcopper/pbmer/Parser.h>
 
 TEST(Pbmer_Mers, test_hash)

@@ -44,7 +44,7 @@ private:
 
     void AlignGapBlock(const PacBio::Align::Seed& nextSeed);
     void AlignGapBlock(const size_t hLength, const size_t vLength);
-    void AlignLastGapBlock(void);
+    void AlignLastGapBlock();
 
     void AlignSeedBlock(const PacBio::Align::Seed& seed);
 
@@ -53,7 +53,7 @@ private:
 
     std::vector<PacBio::Align::Seed> MergeSeeds(const std::vector<PacBio::Align::Seed>& seeds);
 
-    BandedChainAlignment Result(void);
+    BandedChainAlignment Result();
 
 private:
     const BandedChainAlignConfig& config_;

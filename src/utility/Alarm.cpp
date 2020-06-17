@@ -3,7 +3,7 @@
 #include <pbcopper/utility/Alarm.h>
 
 #include <fstream>
-#include <iostream>
+#include <ostream>
 #include <utility>
 
 #include <boost/uuid/uuid.hpp>

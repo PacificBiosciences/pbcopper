@@ -1,9 +1,8 @@
+#include <pbcopper/cli2/OptionValue.h>
 
 #include <stdexcept>
 
 #include <gtest/gtest.h>
-
-#include <pbcopper/cli2/OptionValue.h>
 
 using OptionValue = PacBio::CLI_v2::OptionValue;
 using OptionValueType = PacBio::CLI_v2::OptionValueType;

@@ -55,7 +55,7 @@ std::string LogLevel::ToString() const
     }
 }
 
-LogLevel::operator int() const { return value_; }
+LogLevel::operator int() const noexcept { return value_; }
 
 }  // namespace Logging
 }  // namespace PacBio

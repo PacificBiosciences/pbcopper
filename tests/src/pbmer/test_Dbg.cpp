@@ -1,6 +1,6 @@
-#include <gtest/gtest.h>
-
 #include <pbcopper/pbmer/Dbg.h>
+
+#include <gtest/gtest.h>
 
 TEST(Pbmer_Dbg, add_kmers_throws_if_kmer_too_big)
 {

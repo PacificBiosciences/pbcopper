@@ -4,6 +4,9 @@
 #define PBCOPPER_DATA_READNAMEBASE_INL_H
 
 #include <cassert>
+
+#include <istream>
+#include <ostream>
 #include <stdexcept>
 #include <type_traits>
 
@@ -15,7 +18,7 @@ namespace Data {
 namespace internal {
 
 template <typename MovieNameType>
-inline ReadNameBase<MovieNameType>::ReadNameBase(const std::string& name)
+ReadNameBase<MovieNameType>::ReadNameBase(const std::string& name)
 {
     auto copy = std::string{name};
     FromString(std::move(copy));
@@ -23,50 +26,49 @@ inline ReadNameBase<MovieNameType>::ReadNameBase(const std::string& name)
 }
 
 template <typename MovieNameType>
-inline ReadNameBase<MovieNameType>::ReadNameBase(std::string&& name)
+ReadNameBase<MovieNameType>::ReadNameBase(std::string&& name)
 {
     FromString(std::move(name));
     Check();
 }
 
 template <typename MovieNameType>
-inline ReadNameBase<MovieNameType>::ReadNameBase(const MovieNameType& movieName,
-                                                 const PacBio::Data::Zmw& zmw,
-                                                 const Interval& queryInterval)
+ReadNameBase<MovieNameType>::ReadNameBase(const MovieNameType& movieName,
+                                          const PacBio::Data::Zmw& zmw,
+                                          const Interval& queryInterval)
     : movieName_(movieName), zmw_(zmw), queryInterval_(new Interval{queryInterval})
 {
 }
 
 template <typename MovieNameType>
-inline ReadNameBase<MovieNameType>::ReadNameBase(const MovieNameType& movieName,
-                                                 const PacBio::Data::Zmw& zmw,
-                                                 const Position& queryStart,
-                                                 const Position& queryEnd)
+ReadNameBase<MovieNameType>::ReadNameBase(const MovieNameType& movieName,
+                                          const PacBio::Data::Zmw& zmw, const Position& queryStart,
+                                          const Position& queryEnd)
     : ReadNameBase<MovieNameType>(movieName, zmw, Interval(queryStart, queryEnd))
 {
 }
 
 template <typename MovieNameType>
-inline ReadNameBase<MovieNameType>::ReadNameBase(const MovieNameType& movieName,
-                                                 const PacBio::Data::Zmw& zmw, const CCSTag)
+ReadNameBase<MovieNameType>::ReadNameBase(const MovieNameType& movieName,
+                                          const PacBio::Data::Zmw& zmw, const CCSTag)
     : movieName_(movieName), zmw_(zmw), queryInterval_(nullptr)
 {
 }
 
 template <typename MovieNameType>
-inline bool ReadNameBase<MovieNameType>::IsCCS() const
+bool ReadNameBase<MovieNameType>::IsCCS() const
 {
     return !queryInterval_;
 }
 
 template <typename MovieNameType>
-inline MovieNameType ReadNameBase<MovieNameType>::MovieName() const
+MovieNameType ReadNameBase<MovieNameType>::MovieName() const
 {
     return movieName_;
 }
 
 template <typename MovieNameType>
-inline Interval ReadNameBase<MovieNameType>::QueryInterval() const
+Interval ReadNameBase<MovieNameType>::QueryInterval() const
 {
     if (IsCCS())
         throw std::runtime_error{
@@ -75,7 +77,7 @@ inline Interval ReadNameBase<MovieNameType>::QueryInterval() const
 }
 
 template <typename MovieNameType>
-inline Position ReadNameBase<MovieNameType>::QueryStart() const
+Position ReadNameBase<MovieNameType>::QueryStart() const
 {
     if (IsCCS())
         throw std::runtime_error{
@@ -84,7 +86,7 @@ inline Position ReadNameBase<MovieNameType>::QueryStart() const
 }
 
 template <typename MovieNameType>
-inline Position ReadNameBase<MovieNameType>::QueryEnd() const
+Position ReadNameBase<MovieNameType>::QueryEnd() const
 {
     if (IsCCS())
         throw std::runtime_error{"[pbcopper] read name ERROR: cannot get query end from CCS read"};
@@ -92,13 +94,14 @@ inline Position ReadNameBase<MovieNameType>::QueryEnd() const
 }
 
 template <typename MovieNameType>
-inline PacBio::Data::Zmw ReadNameBase<MovieNameType>::Zmw() const
+PacBio::Data::Zmw ReadNameBase<MovieNameType>::Zmw() const
 {
     return zmw_;
 }
 
 template <typename MovieNameType>
-inline bool ReadNameBase<MovieNameType>::operator==(const ReadNameBase<MovieNameType>& other) const
+bool ReadNameBase<MovieNameType>::operator==(const ReadNameBase<MovieNameType>& other) const
+    noexcept
 {
     // simple int check first
     if (zmw_ != other.zmw_) return false;
@@ -120,7 +123,7 @@ inline bool ReadNameBase<MovieNameType>::operator==(const ReadNameBase<MovieName
 }
 
 template <typename MovieNameType>
-inline bool ReadNameBase<MovieNameType>::operator<(const ReadNameBase<MovieNameType>& other) const
+bool ReadNameBase<MovieNameType>::operator<(const ReadNameBase<MovieNameType>& other) const noexcept
 {
     // sort by:
     //   1 - movie name
@@ -150,7 +153,7 @@ inline bool ReadNameBase<MovieNameType>::operator<(const ReadNameBase<MovieNameT
 }
 
 template <typename MovieNameType>
-inline void ReadNameBase<MovieNameType>::Check() const
+void ReadNameBase<MovieNameType>::Check() const
 {
     if (movieName_.ToStdString().empty())
         throw std::runtime_error{"[pbcopper] read name ERROR: movie name must not be empty"};
@@ -170,7 +173,7 @@ inline void ReadNameBase<MovieNameType>::Check() const
 }
 
 template <typename MovieNameType>
-inline void ReadNameBase<MovieNameType>::FromString(std::string&& name)
+void ReadNameBase<MovieNameType>::FromString(std::string&& name)
 {
     // ensure clean slate
     movieName_ = MovieNameType{};
@@ -195,7 +198,7 @@ inline void ReadNameBase<MovieNameType>::FromString(std::string&& name)
 }
 
 template <typename MovieNameType>
-inline std::string ReadNameBase<MovieNameType>::ToString() const
+std::string ReadNameBase<MovieNameType>::ToString() const
 {
     // ensure we're OK
     Check();
@@ -220,21 +223,21 @@ inline std::string ReadNameBase<MovieNameType>::ToString() const
 }
 
 template <typename MovieNameType>
-inline bool operator!=(const ReadNameBase<MovieNameType>& lhs,
-                       const ReadNameBase<MovieNameType>& rhs)
+bool operator!=(const ReadNameBase<MovieNameType>& lhs,
+                const ReadNameBase<MovieNameType>& rhs) noexcept
 {
     return !(lhs == rhs);
 }
 
 template <typename MovieNameType>
-inline std::ostream& operator<<(std::ostream& os, const ReadNameBase<MovieNameType>& readName)
+std::ostream& operator<<(std::ostream& os, const ReadNameBase<MovieNameType>& readName)
 {
     os << readName.ToString();
     return os;
 }
 
 template <typename MovieNameType>
-inline std::istream& operator>>(std::istream& is, ReadNameBase<MovieNameType>& readName)
+std::istream& operator>>(std::istream& is, ReadNameBase<MovieNameType>& readName)
 {
     std::string s;
     is >> s;

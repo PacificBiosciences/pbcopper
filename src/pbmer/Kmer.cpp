@@ -17,12 +17,12 @@ Kmer::Kmer(Data::Strand s) : strand{std::move(s)} {}
 
 Kmer::Kmer(uint64_t k, uint32_t p, Data::Strand s) : mer{k}, pos{p}, strand{std::move(s)} {}
 
-bool Kmer::operator==(const Kmer& b) const
+bool Kmer::operator==(const Kmer& b) const noexcept
 {
     return std::tie(mer, pos, strand) == std::tie(b.mer, b.pos, b.strand);
 }
 
-bool Kmer::operator!=(const Kmer& b) const { return !(*this == b); }
+bool Kmer::operator!=(const Kmer& b) const noexcept { return !(*this == b); }
 
 std::string Kmer::KmerToStr(uint8_t kmerSize) const
 {

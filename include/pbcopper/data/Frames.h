@@ -7,7 +7,8 @@
 
 #include <cstddef>
 #include <cstdint>
-#include <ostream>
+
+#include <iosfwd>
 #include <vector>
 
 namespace PacBio {
@@ -86,8 +87,8 @@ public:
     /// \name Comparison Operators
     /// \{
 
-    bool operator==(const Frames& other) const;
-    bool operator!=(const Frames& other) const;
+    bool operator==(const Frames& other) const noexcept;
+    bool operator!=(const Frames& other) const noexcept;
 
     /// \}
 

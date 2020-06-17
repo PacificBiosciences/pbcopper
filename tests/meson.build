@@ -65,6 +65,7 @@ pbcopper_test_cpp_sources = files([
 
   # utility
   'src/utility/test_Alarm.cpp',
+  'src/utility/test_Base64.cpp',
   'src/utility/test_FileUtils.cpp',
   'src/utility/test_MinMax.cpp',
   'src/utility/test_MoveAppend.cpp',
@@ -74,6 +75,7 @@ pbcopper_test_cpp_sources = files([
   'src/utility/test_Ssize.cpp',
   'src/utility/test_Stopwatch.cpp',
   'src/utility/test_StringUtils.cpp',
+  'src/utility/test_StringView.cpp',
 ])
 
 # find GoogleTest
@@ -112,6 +114,11 @@ test(
   pbcopper_clang_formatter,
   args : [
     '--all'],
+  workdir : meson.source_root())
+
+test(
+  'pbcopper EOF check',
+  pbcopper_eof_check,
   workdir : meson.source_root())
 
 test(

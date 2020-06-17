@@ -4,7 +4,6 @@
 #include <cassert>
 
 #include <deque>
-#include <iostream>
 #include <limits>
 #include <stdexcept>
 

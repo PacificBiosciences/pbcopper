@@ -1,9 +1,10 @@
+#include <pbcopper/data/Frames.h>
+
 #include <cstdint>
+
 #include <vector>
 
 #include <gtest/gtest.h>
-
-#include <pbcopper/data/Frames.h>
 
 using Frames = PacBio::Data::Frames;
 

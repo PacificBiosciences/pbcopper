@@ -4,7 +4,9 @@
 #define PBCOPPER_DATA_MOVIENAME_INL_H
 
 #include <cassert>
-#include <iostream>
+
+#include <istream>
+#include <ostream>
 #include <stdexcept>
 
 #include <pbcopper/data/MovieName.h>
@@ -61,14 +63,17 @@ inline boost::string_ref MovieName::RunStartTime() const
 
 inline std::string MovieName::ToStdString() const { return movieName_; }
 
-inline bool operator==(const MovieName& lhs, const MovieName& rhs)
+inline bool operator==(const MovieName& lhs, const MovieName& rhs) noexcept
 {
     return lhs.ToStdString() == rhs.ToStdString();
 }
 
-inline bool operator!=(const MovieName& lhs, const MovieName& rhs) { return !(lhs == rhs); }
+inline bool operator!=(const MovieName& lhs, const MovieName& rhs) noexcept
+{
+    return !(lhs == rhs);
+}
 
-inline bool operator<(const MovieName& lhs, const MovieName& rhs)
+inline bool operator<(const MovieName& lhs, const MovieName& rhs) noexcept
 {
     return lhs.ToStdString() < rhs.ToStdString();
 }

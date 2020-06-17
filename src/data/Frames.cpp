@@ -2,13 +2,15 @@
 
 #include <pbcopper/data/Frames.h>
 
-#include <algorithm>
 #include <cassert>
 #include <cmath>
 #include <cstddef>
 #include <cstdint>
+
+#include <algorithm>
 #include <limits>
 #include <mutex>
+#include <ostream>
 #include <type_traits>
 
 #include <boost/algorithm/string/join.hpp>
@@ -135,13 +137,13 @@ Frames& Frames::Data(std::vector<uint16_t> frames)
     return *this;
 }
 
-bool Frames::operator==(const Frames& other) const
+bool Frames::operator==(const Frames& other) const noexcept
 {
     return static_cast<const std::vector<uint16_t>&>(*this) ==
            static_cast<const std::vector<uint16_t>&>(other);
 }
 
-bool Frames::operator!=(const Frames& other) const { return !(*this == other); }
+bool Frames::operator!=(const Frames& other) const noexcept { return !(*this == other); }
 
 std::ostream& operator<<(std::ostream& os, const Frames& frames)
 {

@@ -1,7 +1,8 @@
+#include <pbcopper/pbmer/DbgNode.h>
+
 #include <gtest/gtest.h>
 
 #include <pbcopper/pbmer/Dbg.h>
-#include <pbcopper/pbmer/DbgNode.h>
 #include <pbcopper/pbmer/Parser.h>
 
 TEST(Pbmer_DbgNode, can_iterate_over_one_a_dnabits)

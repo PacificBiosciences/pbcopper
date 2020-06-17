@@ -84,11 +84,10 @@ public:
     template <typename F, typename... Args>
     void ProduceWith(F&& f, Args&&... args)
     {
-        using namespace std::placeholders;  // for _1, _2, _3...
-
         // Create a function taking Index, which delegates to
         // a function taking Index followed by args.
-        TPTask task{std::bind(std::forward<F>(f), _1, std::forward<Args>(args)...)};
+        TPTask task{
+            std::bind(std::forward<F>(f), std::placeholders::_1, std::forward<Args>(args)...)};
 
         {
             std::unique_lock<std::mutex> lk(m);

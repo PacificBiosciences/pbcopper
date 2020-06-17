@@ -102,12 +102,9 @@ public:
         }
     }
 
-    inline bool operator()(const uint64_t h) const
+    bool operator()(const uint64_t h) const noexcept
     {
-        if (h == hashes[0] || h == hashes[1] || h == hashes[2] || h == hashes[3]) {
-            return true;
-        }
-        return false;
+        return (h == hashes[0] || h == hashes[1] || h == hashes[2] || h == hashes[3]);
     }
 
 private:

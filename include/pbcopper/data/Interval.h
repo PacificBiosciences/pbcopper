@@ -5,6 +5,8 @@
 
 #include <pbcopper/PbcopperConfig.h>
 
+#include <iosfwd>
+
 #include <pbcopper/data/Position.h>
 
 #define BOOST_ICL_USE_STATIC_BOUNDED_INTERVALS
@@ -53,13 +55,13 @@ public:
     /// \{
 
     /// \returns true if both intervals share the same endpoints
-    bool operator==(const Interval& other) const;
+    bool operator==(const Interval& other) const noexcept;
 
     /// \returns true if either interval's endpoints differ
-    bool operator!=(const Interval& other) const;
+    bool operator!=(const Interval& other) const noexcept;
 
     /// \returns true if this can be ordered before other
-    bool operator<(const Interval& other) const;
+    bool operator<(const Interval& other) const noexcept;
 
     /// \}
 

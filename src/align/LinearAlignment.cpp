@@ -107,7 +107,7 @@ std::string OptimalTranscript(const std::string& target, int j1, int j2, const s
     std::cout << "Called OptimalTranscript("
               << "T[" << j1 << ".." << j2 << "], "
               << "Q[" << i1 << ".." << i2 << "])  " << target << ' ' << query << " (" << subtarget
-              << ", " << subquery << ')' << std::endl;
+              << ", " << subquery << ")\n";
 #endif
 
     std::string x;

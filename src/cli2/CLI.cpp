@@ -2,6 +2,7 @@
 
 #include <cassert>
 #include <cstdlib>
+
 #include <exception>
 #include <fstream>
 #include <iostream>
@@ -102,31 +103,42 @@ int Run(const std::vector<std::string>& args, const Interface& interface,
 
     Logging::Logger::Current(logger.get());
 
+    // bypass exception logging/alarm on exit, if requested
     if (allowExceptionsPassthrough) {
         return handler(results);
-    } else {
-        try {
-            // run application
-            return handler(results);
-        } catch (const Utility::AlarmException& a) {
-            Logging::LogMessage(a.SourceFilename(), a.FunctionName(), a.LineNumber(),
-                                Logging::LogLevel::FATAL, Logging::Logger::Current())
-                << interface.ApplicationName() << " ERROR: " << a.Message();
+    }
 
-            if (!alarmsOutputFilename.empty()) {
-                std::ofstream alarmsOutput{alarmsOutputFilename};
-                if (alarmsOutput) {
-                    Utility::Alarm alarm{a.Name(), a.Message(), a.Severity(), a.Info(),
-                                         a.Exception()};
-                    Utility::Alarm::WriteAlarms(alarmsOutput, {alarm});
-                } else {
-                    PBLOG_FATAL << "Could not rewrite alarms JSON to " << alarmsOutputFilename;
-                }
-            }
-        } catch (const std::exception& e) {
-            PBLOG_FATAL << interface.ApplicationName() << " ERROR: " << e.what();
-        } catch (...) {
-            PBLOG_FATAL << "caught unknown exception type";
+    auto printToAlarmFile = [&alarmsOutputFilename](const Utility::Alarm alarm) {
+        std::ofstream alarmsOutput{alarmsOutputFilename};
+        if (alarmsOutput) {
+            Utility::Alarm::WriteAlarms(alarmsOutput, {alarm});
+        } else {
+            PBLOG_FATAL << "Could not rewrite alarms JSON to " << alarmsOutputFilename;
+        }
+    };
+
+    // run application
+    try {
+        return handler(results);
+    } catch (const Utility::AlarmException& a) {
+        Logging::LogMessage(a.SourceFilename(), a.FunctionName(), a.LineNumber(),
+                            Logging::LogLevel::FATAL, Logging::Logger::Current())
+            << interface.ApplicationName() << " ERROR: " << a.Message();
+        if (!alarmsOutputFilename.empty()) {
+            printToAlarmFile(
+                Utility::Alarm{a.Name(), a.Message(), a.Severity(), a.Info(), a.Exception()});
+        }
+    } catch (const std::exception& e) {
+        PBLOG_FATAL << interface.ApplicationName() << " ERROR: " << e.what();
+        if (!alarmsOutputFilename.empty()) {
+            printToAlarmFile(Utility::Alarm{interface.ApplicationName(), e.what(), "FATAL", "",
+                                            "std::exception"});
+        }
+    } catch (...) {
+        PBLOG_FATAL << "caught unknown exception type";
+        if (!alarmsOutputFilename.empty()) {
+            printToAlarmFile(
+                Utility::Alarm{interface.ApplicationName(), "", "FATAL", "", "unknown exception"});
         }
     }
 

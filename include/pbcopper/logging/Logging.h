@@ -7,9 +7,9 @@
 
 #include <condition_variable>
 #include <fstream>
-#include <iostream>
 #include <memory>
 #include <mutex>
+#include <ostream>
 #include <queue>
 #include <string>
 #include <thread>

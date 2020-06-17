@@ -1,4 +1,3 @@
-
 #include <pbcopper/utility/Ssize.h>
 
 #include <vector>

@@ -213,6 +213,7 @@ if not meson.is_subproject()
   install_headers(
     files([
       'pbcopper/utility/Alarm.h',
+      'pbcopper/utility/Base64.h',
       'pbcopper/utility/Deleters.h',
       'pbcopper/utility/FileUtils.h',
       'pbcopper/utility/MemoryConsumption.h',
@@ -227,6 +228,7 @@ if not meson.is_subproject()
       'pbcopper/utility/Ssize.h',
       'pbcopper/utility/Stopwatch.h',
       'pbcopper/utility/StringUtils.h',
+      'pbcopper/utility/StringView.h',
       'pbcopper/utility/Unused.h']),
     subdir : 'pbcopper/utility')
 

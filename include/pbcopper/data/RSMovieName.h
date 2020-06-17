@@ -77,13 +77,13 @@ private:
 /// \{
 
 // comparison operators
-inline bool operator==(const RSMovieName& lhs, const RSMovieName& rhs);
-inline bool operator!=(const RSMovieName& lhs, const RSMovieName& rhs);
-inline bool operator<(const RSMovieName& lhs, const RSMovieName& rhs);
+bool operator==(const RSMovieName& lhs, const RSMovieName& rhs) noexcept;
+bool operator!=(const RSMovieName& lhs, const RSMovieName& rhs) noexcept;
+bool operator<(const RSMovieName& lhs, const RSMovieName& rhs) noexcept;
 
 // I/O
-inline std::ostream& operator<<(std::ostream& os, const RSMovieName& movieName);
-inline std::istream& operator>>(std::istream& is, RSMovieName& movieName);
+std::ostream& operator<<(std::ostream& os, const RSMovieName& movieName);
+std::istream& operator>>(std::istream& is, RSMovieName& movieName);
 
 /// \}
 

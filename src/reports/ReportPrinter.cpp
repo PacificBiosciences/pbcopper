@@ -1,6 +1,6 @@
 #include "ReportPrinter.h"
 
-#include <iostream>
+#include <ostream>
 
 #include <pbcopper/json/JSON.h>
 #include <pbcopper/reports/Report.h>

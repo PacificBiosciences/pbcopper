@@ -8,6 +8,7 @@
 #include <algorithm>
 #include <iterator>
 #include <stdexcept>
+#include <string>
 #include <vector>
 
 namespace PacBio {
@@ -106,8 +107,8 @@ inline std::vector<int> PartitionElementCounts(
 /// \return buckets containing elements from input data
 ///
 template <typename T>
-inline auto PartitionElements(const T& input, int maxNumBuckets,
-                              PartitionBehavior behavior = PartitionBehavior::KEEP_EMPTY)
+auto PartitionElements(const T& input, int maxNumBuckets,
+                       PartitionBehavior behavior = PartitionBehavior::KEEP_EMPTY)
 {
     const auto counts = PartitionElementCounts(input.size(), maxNumBuckets, behavior);
     const bool shrinkToFit{behavior == PartitionBehavior::DISCARD_EMPTY};
@@ -156,8 +157,8 @@ inline auto PartitionElements(const T& input, int maxNumBuckets,
 /// \return buckets containing elements from input data
 ///
 template <typename T>
-inline auto PartitionElements(T&& input, int maxNumBuckets,
-                              PartitionBehavior behavior = PartitionBehavior::KEEP_EMPTY)
+auto PartitionElements(T&& input, int maxNumBuckets,
+                       PartitionBehavior behavior = PartitionBehavior::KEEP_EMPTY)
 {
     const auto counts = PartitionElementCounts(input.size(), maxNumBuckets, behavior);
     const bool shrinkToFit{behavior == PartitionBehavior::DISCARD_EMPTY};

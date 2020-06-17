@@ -18,7 +18,7 @@ namespace Utility {
 /// \param[in,out]  dst  Output container that will be appended to
 ///
 template <typename T, typename U>
-inline void MoveInsert(T&& src, U& dst) noexcept
+void MoveInsert(T&& src, U& dst) noexcept
 {
     std::move(src.begin(), src.end(), std::insert_iterator<U>(dst, dst.end()));
     src.clear();
@@ -31,7 +31,7 @@ inline void MoveInsert(T&& src, U& dst) noexcept
 /// \param[in,out]  dst  Output container that will be appended to
 ///
 template <typename T>
-inline void MoveInsert(T&& src, T& dst) noexcept
+void MoveInsert(T&& src, T& dst) noexcept
 {
     // can short-circuit 'move' into empty dst when types are same
     if (dst.empty()) {
