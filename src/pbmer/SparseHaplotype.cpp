@@ -139,7 +139,11 @@ bool SparseHaplotype::HasVar(int index) const
     return (variants_[index] == 1);
 }
 
-double SparseHaplotype::MembershipFraction(int index) const { return fractionalMembership_[index]; }
+double SparseHaplotype::MembershipFraction(int index) const
+{
+    assert(index < static_cast<int>(fractionalMembership_.size()) && index >= 0);
+    return fractionalMembership_[index];
+}
 
 void SparseHaplotype::SetMembershipProb(int index, double val)
 {
