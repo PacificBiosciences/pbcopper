@@ -11,7 +11,8 @@
 #ifndef SSW_H
 #define SSW_H
 
-#include <emmintrin.h>
+#define SIMDE_ENABLE_NATIVE_ALIASES
+#include "simde/x86/sse2.h"
 #include <stdint.h>
 #include <stdio.h>
 #include <string.h>
