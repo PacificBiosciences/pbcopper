@@ -7,6 +7,9 @@
  - (Simplified) alarm file can be created for general exceptions
  - Utility::StringView as std::string_view look-a-like
 
+### Changed
+ - Accuracy explicitly allows -1, otherwise clamps to [0.0, 1.0]
+
 ## [1.7.0] - 2020-05-22
 
 ### Added
