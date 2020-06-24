@@ -10,6 +10,7 @@
 namespace PacBio {
 namespace Data {
 
+const float Accuracy::MINUS_ONE = -1.0f;
 const float Accuracy::MIN = 0.0f;
 const float Accuracy::MAX = 1.0f;
 
@@ -24,7 +25,9 @@ static_assert(std::is_nothrow_move_assignable<Accuracy>::value,
               "Accuracy& operator=(Accuracy&&) is not = noexcept");
 
 Accuracy::Accuracy(float accuracy)
-    : accuracy_{boost::algorithm::clamp(accuracy, Accuracy::MIN, Accuracy::MAX)}
+    : accuracy_{(accuracy == Accuracy::MINUS_ONE)
+                    ? Accuracy::MINUS_ONE
+                    : boost::algorithm::clamp(accuracy, Accuracy::MIN, Accuracy::MAX)}
 {
 }
 
