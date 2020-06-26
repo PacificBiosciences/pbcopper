@@ -26,7 +26,6 @@ namespace Parallel {
  * Each thread knows its own Index.
  * As a result, each task can use its Index to look into a predefined vector (user-controlled).
  * A 'finish' function is called for each thread after Finalize() pushes the sentinel onto the queue.
- 
  The 'finish' function is not really needed, but it's helpful for debugging. Or
  to summarize results / close output streams.
 
@@ -42,7 +41,7 @@ public:
 public:
     FireAndForgetIndexed(const size_t size, const size_t mul = 2,
                          TFunc finish = TFunc{[](Index) {}})
-        : exc{nullptr}, sz{size * mul}, abort{false}
+        : exc{nullptr}, sz{size * mul}, abort{false}, thrown{false}
     {
         for (Index index = 0; index < size; ++index) {
             threads.emplace_back(std::thread([this, finish, index]() {
@@ -58,6 +57,7 @@ public:
                             // Check for the return value / exception
                             task->get_future().get();
                         };
+                        task = PopTask();
                     } catch (...) {
                         std::lock_guard<std::mutex> g(m);
                         // If there is an exception, signal to abort queue
@@ -66,7 +66,6 @@ public:
                         exc = std::current_exception();
                         popped.notify_one();
                     }
-                    task = PopTask();
                 } while (!abort && task);  // Stop if there are no tasks or abort has been signaled
                 try {
                     if (!abort) finish(index);
@@ -81,6 +80,11 @@ public:
         }
     }
 
+    ~FireAndForgetIndexed() noexcept(false)
+    {
+        if (exc && !thrown) std::rethrow_exception(exc);
+    }
+
     template <typename F, typename... Args>
     void ProduceWith(F&& f, Args&&... args)
     {
@@ -91,9 +95,12 @@ public:
 
         {
             std::unique_lock<std::mutex> lk(m);
-            popped.wait(lk, [&task, this]() {
-                if (exc) std::rethrow_exception(exc);
+            if (exc) {
+                thrown = true;
+                std::rethrow_exception(exc);
+            }
 
+            popped.wait(lk, [&task, this]() {
                 if (head.size() < sz) {
                     head.emplace(std::move(task));
                     return true;
@@ -121,7 +128,10 @@ public:
             thread.join();
 
         // Is there a final exception, throw if so..
-        if (exc) std::rethrow_exception(exc);
+        if (exc) {
+            thrown = true;
+            std::rethrow_exception(exc);
+        }
     }
 
 private:
@@ -156,6 +166,7 @@ private:
     std::mutex m;
     size_t sz;
     std::atomic_bool abort;
+    std::atomic_bool thrown;
 };
 
 }  // namespace Parallel
