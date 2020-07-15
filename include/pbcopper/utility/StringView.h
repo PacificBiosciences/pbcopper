@@ -31,19 +31,20 @@ public:
 
     StringView(const std::string& str) noexcept : ptr_{str.data()}, len_(str.length()) {}
 
-    StringView(const char* str, const int32_t len) noexcept : ptr_{str}, len_{len}
+    PB_CUDA_HOST PB_CUDA_DEVICE StringView(const char* str, const int32_t len) noexcept
+        : ptr_{str}, len_{len}
     {
         BOOST_ASSERT_MSG(str, "Provided a null pointer");
     }
 
 public:
-    const char* Data() const noexcept { return ptr_; }
+    PB_CUDA_HOST PB_CUDA_DEVICE const char* Data() const noexcept { return ptr_; }
 
-    int32_t Size() const noexcept { return len_; }
+    PB_CUDA_HOST PB_CUDA_DEVICE int32_t Size() const noexcept { return len_; }
 
-    int32_t Length() const noexcept { return Size(); }
+    PB_CUDA_HOST PB_CUDA_DEVICE int32_t Length() const noexcept { return Size(); }
 
-    char operator[](const int32_t pos) const noexcept
+    PB_CUDA_HOST PB_CUDA_DEVICE char operator[](const int32_t pos) const noexcept
     {
         BOOST_ASSERT_MSG(pos >= 0, "Provided a negative index");
         BOOST_ASSERT_MSG(pos < Size(), "Provided an out-of-bounds index");
@@ -51,9 +52,10 @@ public:
         return ptr_[pos];
     }
 
-    char Back() const noexcept { return ptr_[Size() - 1]; }
+    PB_CUDA_HOST PB_CUDA_DEVICE char Back() const noexcept { return ptr_[Size() - 1]; }
 
-    StringView Substr(const int32_t pos, const int32_t newLength) const noexcept
+    PB_CUDA_HOST PB_CUDA_DEVICE StringView Substr(const int32_t pos, const int32_t newLength) const
+        noexcept
     {
         BOOST_ASSERT_MSG(pos <= Size(), "New pos is out of bounds");
 
