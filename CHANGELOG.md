@@ -9,6 +9,7 @@
 
 ### Changed
  - Accuracy explicitly allows -1, otherwise clamps to [0.0, 1.0]
+ - Fixed FaF and FaFI exception handling
 
 ## [1.7.0] - 2020-05-22
 
