@@ -46,9 +46,10 @@ public:
         for (Index index = 0; index < size; ++index) {
             threads.emplace_back(std::thread([this, finish, index]() {
                 // Get the first task per thread
-                TTask task = PopTask();
+                TTask task;
                 do {
                     try {
+                        task = PopTask();
                         // Check if queue should be aborted and
                         // if there is a task
                         if (!abort && task) {
@@ -57,7 +58,6 @@ public:
                             // Check for the return value / exception
                             task->get_future().get();
                         };
-                        task = PopTask();
                     } catch (...) {
                         std::lock_guard<std::mutex> g(m);
                         // If there is an exception, signal to abort queue

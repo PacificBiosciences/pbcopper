@@ -25,14 +25,14 @@ private:
 
 public:
     FireAndForget(const size_t size, const size_t mul = 2)
-        : exc{nullptr}, sz{size * mul}, abort{false}
+        : exc{nullptr}, sz{size * mul}, abort{false}, thrown{false}
     {
         for (size_t i = 0; i < size; ++i) {
             threads.emplace_back(std::thread([this]() {
-                // Get the first task per thread
-                TTask task = PopTask();
+                TTask task;
                 do {
                     try {
+                        task = PopTask();
                         // Check if queue should be aborted and
                         // if there is a task
                         if (!abort && task) {
@@ -49,10 +49,14 @@ public:
                         exc = std::current_exception();
                         popped.notify_one();
                     }
-                    task = PopTask();
                 } while (!abort && task);  // Stop if there are no tasks or abort has been signaled
             }));
         }
+    }
+
+    ~FireAndForget() noexcept(false)
+    {
+        if (exc && !thrown) std::rethrow_exception(exc);
     }
 
     template <typename F, typename... Args>
@@ -62,6 +66,11 @@ public:
 
         {
             std::unique_lock<std::mutex> lk(m);
+            if (exc) {
+                thrown = true;
+                std::rethrow_exception(exc);
+            }
+
             popped.wait(lk, [&task, this]() {
                 if (exc) std::rethrow_exception(exc);
 
@@ -92,7 +101,10 @@ public:
             thread.join();
 
         // Is there a final exception, throw if so..
-        if (exc) std::rethrow_exception(exc);
+        if (exc) {
+            thrown = true;
+            std::rethrow_exception(exc);
+        }
     }
 
 private:
@@ -125,6 +137,7 @@ private:
     std::mutex m;
     size_t sz;
     std::atomic_bool abort;
+    std::atomic_bool thrown;
 };
 
 }  // namespace Parallel
