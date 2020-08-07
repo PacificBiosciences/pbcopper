@@ -44,6 +44,37 @@ TEST(Data_ReadName, ccs_read_name_from_string)
     EXPECT_THROW(readName.QueryStart(), std::runtime_error);
 }
 
+TEST(Data_ReadName, ccs_bystrand_read_name_from_string)
+{
+    const std::string movieName{"m54001_160623_195125"};
+    const PacBio::Data::Zmw zmw = 553;
+    const PacBio::Data::Position queryStart = 3100;
+    const PacBio::Data::Position queryEnd = 11230;
+    const PacBio::Data::Interval queryInterval{queryStart, queryEnd};
+
+    const PacBio::Data::ReadName readNameFwd{"m54001_160623_195125/553/ccs/fwd"};
+
+    EXPECT_EQ(movieName, readNameFwd.MovieName().ToStdString());
+    EXPECT_EQ(zmw, readNameFwd.Zmw());
+
+    EXPECT_TRUE(readNameFwd.IsCCS());
+
+    EXPECT_THROW(readNameFwd.QueryEnd(), std::runtime_error);
+    EXPECT_THROW(readNameFwd.QueryInterval(), std::runtime_error);
+    EXPECT_THROW(readNameFwd.QueryStart(), std::runtime_error);
+
+    const PacBio::Data::ReadName readNameRev{"m54001_160623_195125/553/ccs/rev"};
+
+    EXPECT_EQ(movieName, readNameRev.MovieName().ToStdString());
+    EXPECT_EQ(zmw, readNameRev.Zmw());
+
+    EXPECT_TRUE(readNameRev.IsCCS());
+
+    EXPECT_THROW(readNameRev.QueryEnd(), std::runtime_error);
+    EXPECT_THROW(readNameRev.QueryInterval(), std::runtime_error);
+    EXPECT_THROW(readNameRev.QueryStart(), std::runtime_error);
+}
+
 TEST(Data_ReadName, read_name_from_parts_with_query_interval)
 {
     const std::string movieName{"m54001_160623_195125"};
