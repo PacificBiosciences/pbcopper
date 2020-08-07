@@ -183,7 +183,10 @@ void ReadNameBase<MovieNameType>::FromString(std::string&& name)
     // parse name parts
     if (name.empty()) return;
     auto parts = PacBio::Utility::Split(name, '/');
-    if (parts.size() != 3) return;
+
+    // most PB record names have 3 components, with the exception
+    // of by-strand CCS, which has an additional 'fwd/rev' component
+    if ((parts.size() < 3) || (parts.size() > 4)) return;
 
     // rip out & store name parts
     movieName_ = MovieNameType{std::move(parts.at(0))};
