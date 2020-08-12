@@ -102,6 +102,9 @@ public:
     /// \returns Type of the underlying iterator.
     using std::vector<uint16_t>::iterator;
 
+    /// \returns Type of the actual elements (uint16_t).
+    using std::vector<uint16_t>::value_type;
+
     /// \returns A const_iterator to the beginning of the sequence.
     using std::vector<uint16_t>::cbegin;
 
@@ -135,8 +138,14 @@ public:
     /// Clears all frames.
     using std::vector<uint16_t>::clear;
 
+    /// Emulates std::vector::push_back
+    using std::vector<uint16_t>::push_back;
+
     /// Emulates std::vector::emplace_back
     using std::vector<uint16_t>::emplace_back;
+
+    /// Emulates std::vector::reserve
+    using std::vector<uint16_t>::reserve;
 
     /// Emulates std::vector::resize
     using std::vector<uint16_t>::resize;
