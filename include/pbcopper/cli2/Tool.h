@@ -11,11 +11,18 @@
 namespace PacBio {
 namespace CLI_v2 {
 
+enum class ToolVisibility
+{
+    VISIBLE,
+    HIDDEN
+};
+
 struct Tool
 {
     std::string name;
     Interface interface;
     ResultsHandler runner;
+    ToolVisibility visibility = ToolVisibility::VISIBLE;
 };
 
 }  // namespace CLI_v2

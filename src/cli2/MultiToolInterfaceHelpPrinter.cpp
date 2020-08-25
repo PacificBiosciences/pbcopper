@@ -46,6 +46,7 @@ void MultiToolInterfaceHelpPrinter::MakeHelpText()
 
     const auto& tools = interface_.Tools();
     for (const auto& tool : tools) {
+        if (tool.visibility == ToolVisibility::HIDDEN) continue;
         const auto& i = tool.interface;
         result << "  " << std::setw(10) << std::left << tool.name << " "
                << i.ApplicationDescription() << '\n';
@@ -56,6 +57,7 @@ void MultiToolInterfaceHelpPrinter::MakeHelpText()
     if (hasExamples) {
         result << "Examples:\n";
         for (const auto& tool : tools) {
+            if (tool.visibility == ToolVisibility::HIDDEN) continue;
             const auto& example = tool.interface.Example();
             if (!example.empty()) {
                 result << "  " << example << '\n';
