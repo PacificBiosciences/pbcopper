@@ -6,6 +6,7 @@
  - Base64 encoding/decoding
  - (Simplified) alarm file can be created for general exceptions
  - Utility::StringView as std::string_view look-a-like
+ - Support for hidden CLI subtools
 
 ### Changed
  - Accuracy explicitly allows -1, otherwise clamps to [0.0, 1.0]
