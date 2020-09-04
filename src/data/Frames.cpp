@@ -129,7 +129,7 @@ std::vector<uint8_t> Frames::Encode(const std::vector<uint16_t>& frames)
     return FramesToCode(frames);
 }
 
-std::vector<uint8_t> Frames::Encode() const { return Frames::Encode(*this); }
+std::vector<uint8_t> Frames::Encode(FrameCodec /*unused*/) const { return Frames::Encode(*this); }
 
 Frames& Frames::Data(std::vector<uint16_t> frames)
 {

@@ -11,6 +11,8 @@
 #include <iosfwd>
 #include <vector>
 
+#include <pbcopper/data/FrameCodec.h>
+
 namespace PacBio {
 namespace Data {
 
@@ -79,7 +81,7 @@ public:
     /// \{
 
     /// \returns Frame data in (lossy, 8-bit) encoded form.
-    std::vector<uint8_t> Encode() const;
+    std::vector<uint8_t> Encode(FrameCodec codec = FrameCodec::V1) const;
 
     /// \}
 
