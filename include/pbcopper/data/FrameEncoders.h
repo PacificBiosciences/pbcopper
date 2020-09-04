@@ -81,8 +81,8 @@ private:
     template <typename T>
     struct EncoderImpl : public EncoderInterface
     {
-        EncoderImpl(T codec) : EncoderInterface{}, codec_{std::move(codec)} {}
-        EncoderImpl(const EncoderImpl& other) : EncoderInterface{}, codec_{other.codec_} {}
+        EncoderImpl(T codec) : EncoderInterface{}, codec_(std::move(codec)) {}
+        EncoderImpl(const EncoderImpl& other) : EncoderInterface{}, codec_(other.codec_) {}
         EncoderImpl* Clone() const override { return new EncoderImpl(*this); }
         std::vector<uint8_t> Encode(const std::vector<uint16_t>& rawFrames) const override
         {
