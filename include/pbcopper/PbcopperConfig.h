@@ -79,4 +79,11 @@
 
 #endif
 
+/// Switch for warnings on deprecated APIs
+#ifdef PACBIO_NODEPRECATED_API
+#define PBCOPPER_DEPRECATED [[deprecated("see header for recommended alternative")]]
+#else
+#define PBCOPPER_DEPRECATED
+#endif
+
 #endif  // PBCOPPER_PBCOPPERCONFIG_H
