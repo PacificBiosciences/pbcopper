@@ -14,6 +14,7 @@ enum class FrameCodec
 {
     RAW,
     V1,
+    V2,
 };
 
 }  // namespace Data

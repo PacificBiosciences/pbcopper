@@ -6,6 +6,7 @@
 #include <pbcopper/PbcopperConfig.h>
 
 #include <memory>
+#include <string>
 
 #include <pbcopper/data/Frames.h>
 
@@ -23,6 +24,7 @@ public:
 
     std::vector<uint8_t> Encode(const std::vector<uint16_t>& rawFrames) const;
     Frames Decode(const std::vector<uint8_t>& encodedFrames) const;
+    std::string Name() const;
 };
 
 struct V2FrameEncoder
@@ -32,6 +34,9 @@ public:
 
     std::vector<uint8_t> Encode(const std::vector<uint16_t>& rawFrames) const;
     Frames Decode(const std::vector<uint8_t>& encodedFrames) const;
+    std::string Name() const;
+
+    int MantissaBits() const;
 
 private:
     int mantissaBits_;
@@ -69,6 +74,8 @@ public:
         return self_->Decode(encodedFrames);
     }
 
+    std::string Name() const { return self_->Name(); }
+
 private:
     struct EncoderInterface
     {
@@ -76,6 +83,7 @@ private:
         virtual EncoderInterface* Clone() const = 0;
         virtual std::vector<uint8_t> Encode(const std::vector<uint16_t>& rawFrames) const = 0;
         virtual Frames Decode(const std::vector<uint8_t>& encodedFrames) const = 0;
+        virtual std::string Name() const = 0;
     };
 
     template <typename T>
@@ -92,6 +100,8 @@ private:
         {
             return codec_.Decode(encodedFrames);
         }
+        std::string Name() const override { return codec_.Name(); }
+
         T codec_;
     };
 

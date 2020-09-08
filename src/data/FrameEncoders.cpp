@@ -98,6 +98,8 @@ std::vector<uint8_t> V1FrameEncoder::Encode(const std::vector<uint16_t>& rawFram
     return encoded;
 }
 
+std::string V1FrameEncoder::Name() const { return "CodecV1"; }
+
 // ----------------
 // V2 frame codec
 // ----------------
@@ -136,6 +138,10 @@ std::vector<uint8_t> V2FrameEncoder::Encode(const std::vector<uint16_t>& rawFram
         });
     return encoded;
 }
+
+int V2FrameEncoder::MantissaBits() const { return mantissaBits_; }
+
+std::string V2FrameEncoder::Name() const { return "CodecV2/" + std::to_string(mantissaBits_); }
 
 }  // namespace Data
 }  // namespace PacBio
