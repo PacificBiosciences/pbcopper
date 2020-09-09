@@ -86,6 +86,8 @@ if not meson.is_subproject()
       'pbcopper/data/Cigar.h',
       'pbcopper/data/CigarOperation.h',
       'pbcopper/data/Clipping.h',
+      'pbcopper/data/FrameCodec.h',
+      'pbcopper/data/FrameEncoders.h',
       'pbcopper/data/Frames.h',
       'pbcopper/data/GenomicInterval.h',
       'pbcopper/data/Interval.h',

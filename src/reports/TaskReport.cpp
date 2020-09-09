@@ -11,7 +11,7 @@
 namespace PacBio {
 namespace Reports {
 
-TaskReport::TaskReport(int nproc, double runTime, int exitCode)
+TaskReport::TaskReport(int nproc, double runTime, int exitCode, int64_t peakRss)
     : report_{"workflow_task", "Task Report"}
 {
 #if defined(_POSIX_VERSION)
@@ -22,10 +22,12 @@ TaskReport::TaskReport(int nproc, double runTime, int exitCode)
 #else
     std::string hostname = "unknown";
 #endif
+    double peakRssGb = peakRss / 1024.0 / 1024.0 / 1024.0;
     report_.Attributes({{"host", hostname, "Hostname"},
                         {"nproc", nproc, "Number of cores/slots"},
                         {"run_time", runTime, "Run time (seconds)"},
-                        {"exit_code", exitCode, "Exit code"}});
+                        {"exit_code", exitCode, "Exit code"},
+                        {"peak_rss", peakRssGb, "Peak RSS (GB)"}});
 }
 
 void TaskReport::Print(const std::string& fn, const std::string& prefix) const

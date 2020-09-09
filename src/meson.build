@@ -59,6 +59,7 @@ pbcopper_cpp_sources = files([
   'data/Cigar.cpp',
   'data/CigarOperation.cpp',
   'data/Clipping.cpp',
+  'data/FrameEncoders.cpp',
   'data/Frames.cpp',
   'data/GenomicInterval.cpp',
   'data/Interval.cpp',

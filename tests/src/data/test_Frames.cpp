@@ -1,3 +1,4 @@
+#include <pbcopper/data/FrameEncoders.h>
 #include <pbcopper/data/Frames.h>
 
 #include <cstdint>
@@ -46,4 +47,15 @@ TEST(Data_Frames, can_encode_frames_from_raw_data)
     const Frames f{FramesTests::RawFrames};
     const auto e = f.Encode();
     ASSERT_EQ(FramesTests::EncodedFrames, e);
+}
+
+TEST(Data_FrameEncoder, can_default_initialize)
+{
+    // make sure icpc (legacy) compilation works with this construct... sigh...
+    struct TestInitialize
+    {
+        PacBio::Data::FrameEncoder v1 = PacBio::Data::V1FrameEncoder{};
+        PacBio::Data::FrameEncoder v2 = PacBio::Data::V1FrameEncoder{};
+    };
+    EXPECT_TRUE(true);
 }
