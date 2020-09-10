@@ -162,3 +162,36 @@ TEST(Parallel_WorkQueue, exceptionConsumer)
     const std::string expectedError{"consumer abort"};
     EXPECT_EQ(expectedError, exceptionMsg);
 }
+
+TEST(Parallel_WorkQueue, exceptionProduceWithCannotEscapeDestructor)
+{
+    static const size_t numThreads = 3;
+    bool caughtException = false;
+    try {
+        PacBio::Parallel::WorkQueue<std::string> workQueue{numThreads, 1};
+        std::vector<std::string> output;
+        std::future<void> workerThread =
+            std::async(std::launch::async, WorkerThreadException, std::ref(workQueue), &output);
+
+        auto SubmitExc = [](std::string& in) {
+            throw std::runtime_error{"encountered error"};
+            return in;
+        };
+
+        //
+        // TAG-4730: WorkQueue was (often) failing to throw exceptions from its
+        //           workers, swallowing them at program exit. This test ensures
+        //           that exceptions are _always_ propagated: whether during
+        //           WorkQueue's normal execution/finalize, or at the very latest,
+        //           from its destructor.
+        //
+        EXPECT_NO_THROW(workQueue.ProduceWith(SubmitExc, std::string{"2"}));
+        workQueue.Finalize();
+        workerThread.wait();
+
+    } catch (const std::exception& e) {
+        caughtException = true;
+    }
+
+    EXPECT_TRUE(caughtException);
+}
