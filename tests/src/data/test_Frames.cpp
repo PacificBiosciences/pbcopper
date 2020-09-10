@@ -59,3 +59,12 @@ TEST(Data_FrameEncoder, can_default_initialize)
     };
     EXPECT_TRUE(true);
 }
+
+TEST(Data_FrameEncoder, decode_throws_if_out_of_range)
+{
+    PacBio::Data::V2FrameEncoder v2{3, 3};
+    EXPECT_THROW({ auto x = v2.Decode({64}); }, std::runtime_error);
+    EXPECT_NO_THROW({ auto x = v2.Decode({0}); });
+    EXPECT_NO_THROW({ auto x = v2.Decode({1}); });
+    EXPECT_NO_THROW({ auto x = v2.Decode({63}); });
+}
