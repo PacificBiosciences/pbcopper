@@ -104,8 +104,8 @@ std::string V1FrameEncoder::Name() const { return "CodecV1"; }
 // V2 frame codec
 // ----------------
 
-V2FrameEncoder::V2FrameEncoder(int mantissaBits)
-    : mantissaBits_{mantissaBits}, base_(std::pow(2, mantissaBits_))
+V2FrameEncoder::V2FrameEncoder(int exponentBits, int mantissaBits)
+    : exponentBits_{exponentBits}, mantissaBits_{mantissaBits}, base_(std::pow(2, mantissaBits_))
 {
 }
 
@@ -115,6 +115,11 @@ Frames V2FrameEncoder::Decode(const std::vector<uint8_t>& encodedFrames) const
     decoded.reserve(encodedFrames.size());
     std::transform(encodedFrames.cbegin(), encodedFrames.cend(), std::back_inserter(decoded),
                    [&](uint8_t x) -> uint16_t {
+                       const bool valid = ((x & ((1 << (exponentBits_ + mantissaBits_)) - 1)) == x);
+                       if (!valid) {
+                           throw std::runtime_error{"[pbcopper] invalid frame encoding ERROR: " +
+                                                    std::to_string(x) + " is out of range"};
+                       }
                        const uint8_t mantissa = x & static_cast<uint8_t>((base_ - 1));
                        const uint8_t exponent = (x ^ mantissa) >> mantissaBits_;
                        return (base_ * (std::pow(2, exponent) - 1)) +
@@ -134,14 +139,23 @@ std::vector<uint8_t> V2FrameEncoder::Encode(const std::vector<uint16_t>& rawFram
             const int exponent = std::log2(x / base_ + 1);
             const int mantissa =
                 (x - base_ * (static_cast<uint8_t>(std::pow(2, exponent)) - 1)) >> exponent;
-            return (exponent << mantissaBits_) | mantissa;
+            const uint8_t result = (exponent << mantissaBits_) | mantissa;
+            const bool valid = ((result & ((1 << (exponentBits_ + mantissaBits_)) - 1)) == result);
+            if (!valid) {
+                throw std::runtime_error{"[pbcopper] invalid frame encoding ERROR: " +
+                                         std::to_string(result) + " is out of range"};
+            }
+            return result;
         });
     return encoded;
 }
 
 int V2FrameEncoder::MantissaBits() const { return mantissaBits_; }
 
-std::string V2FrameEncoder::Name() const { return "CodecV2/" + std::to_string(mantissaBits_); }
+std::string V2FrameEncoder::Name() const
+{
+    return "CodecV2/" + std::to_string(exponentBits_) + '/' + std::to_string(mantissaBits_);
+}
 
 }  // namespace Data
 }  // namespace PacBio

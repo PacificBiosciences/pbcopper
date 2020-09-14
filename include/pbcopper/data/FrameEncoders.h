@@ -30,15 +30,17 @@ public:
 struct V2FrameEncoder
 {
 public:
-    V2FrameEncoder(int mantissaBits);
+    V2FrameEncoder(int exponentBits, int mantissaBits);
 
     std::vector<uint8_t> Encode(const std::vector<uint16_t>& rawFrames) const;
     Frames Decode(const std::vector<uint8_t>& encodedFrames) const;
     std::string Name() const;
 
+    int ExponentBits() const;
     int MantissaBits() const;
 
 private:
+    int exponentBits_;
     int mantissaBits_;
     int base_;
 };
