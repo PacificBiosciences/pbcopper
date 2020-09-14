@@ -2,6 +2,8 @@
 
 #include <pbcopper/pbmer/DnaBit.h>
 
+#include <cassert>
+
 #include <array>
 #include <tuple>
 
@@ -41,6 +43,8 @@ uint64_t Mix64Masked(const uint64_t key, const uint8_t kmerSize) noexcept
 // thanks to https://www.biostars.org/p/113640/ <- and a slight mod!
 uint64_t ReverseComp64(const uint64_t mer, const uint8_t kmerSize)
 {
+    assert((0 < kmerSize) && (kmerSize <= 32));
+
     uint64_t res = ~mer;
 
     res = ((res >> 2 & 0x3333333333333333) | (res & 0x3333333333333333) << 2);
@@ -262,6 +266,7 @@ void DnaBit::PrependBase(const uint8_t b)
 
 void DnaBit::PrependBase(const char b)
 {
+    assert(msize > 0);
     mer = (uint64_t(AsciiToDna[b]) << 2 * (msize - 1)) | (mer >> 2);
 }
 
