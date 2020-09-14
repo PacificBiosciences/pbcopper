@@ -12,7 +12,11 @@ namespace PacBio {
 namespace Pbmer {
 
 Parser::Parser(uint8_t kmerSize)
-    : kmerSize_{kmerSize}, mask_{(1ull << 2 * kmerSize) - 1}, shift1_{2ull * (kmerSize - 1)}
+    : kmerSize_{kmerSize}
+    , mask_{(kmerSize <= 32)
+                ? 0xFFFFFFFF'FFFFFFFFULL >> (64 - 2 * kmerSize)
+                : throw std::runtime_error{"[pbmer] parsing ERROR: kmerSize larger than 32."}}
+    , shift1_{2ull * (kmerSize - 1)}
 {
 }
 
