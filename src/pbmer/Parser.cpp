@@ -5,6 +5,7 @@
 
 #include <algorithm>
 #include <array>
+#include <limits>
 #include <stdexcept>
 #include <vector>
 
@@ -13,9 +14,10 @@ namespace Pbmer {
 
 Parser::Parser(uint8_t kmerSize)
     : kmerSize_{kmerSize}
-    , mask_{(kmerSize <= 32)
-                ? 0xFFFFFFFF'FFFFFFFFULL >> (64 - 2 * kmerSize)
-                : throw std::runtime_error{"[pbmer] parsing ERROR: kmerSize larger than 32."}}
+    , mask_{((0 < kmerSize) && (kmerSize <= 32))
+                ? std::numeric_limits<decltype(mask_)>::max() >> (64 - 2 * kmerSize)
+                : throw std::invalid_argument{"[pbmer] parsing ERROR: kmerSize must be in the "
+                                              "range [1, 32]."}}
     , shift1_{2ull * (kmerSize - 1)}
 {
 }
