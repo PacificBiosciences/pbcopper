@@ -3,7 +3,9 @@
 #include <pbcopper/data/Read.h>
 
 #include <cassert>
-#include <iomanip>
+
+#include <ios>
+#include <ostream>
 #include <stdexcept>
 #include <type_traits>
 #include <utility>
@@ -102,7 +104,7 @@ Read Read::ClipTo(const int32_t begin, const int32_t end) const
     return copy;
 }
 
-size_t Read::Length() const { return Seq.length(); }
+int32_t Read::Length() const { return Seq.length(); }
 
 std::string Read::FullName() const { return Id; }
 

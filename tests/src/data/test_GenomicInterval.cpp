@@ -1,10 +1,10 @@
 // Author: Derek Barnett
 
+#include <pbcopper/data/GenomicInterval.h>
+
 #include <string>
 
 #include <gtest/gtest.h>
-
-#include <pbcopper/data/GenomicInterval.h>
 
 using namespace PacBio;
 

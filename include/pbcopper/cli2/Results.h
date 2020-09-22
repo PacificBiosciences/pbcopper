@@ -7,6 +7,7 @@
 
 #include <memory>
 #include <string>
+#include <type_traits>
 #include <unordered_map>
 #include <vector>
 
@@ -36,7 +37,8 @@ public:
     Results(const Results&) = delete;
     Results(Results&&) noexcept = default;
     Results& operator=(const Result&) = delete;
-    Results& operator=(Results&&) noexcept = default;
+    Results& operator=(Results&&) noexcept(std::is_nothrow_move_assignable<std::string>::value) =
+        default;
 
 public:
     ///

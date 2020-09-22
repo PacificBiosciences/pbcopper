@@ -1,16 +1,15 @@
 // Author: Armin Töpfer
 
+#include <pbcopper/parallel/FireAndForgetIndexed.h>
+
 #include <atomic>
 #include <chrono>
-#include <iostream>
 #include <memory>
 #include <string>
 #include <thread>
 #include <vector>
 
 #include <gtest/gtest.h>
-
-#include <pbcopper/parallel/FireAndForgetIndexed.h>
 
 TEST(Parallel_FireAndForgetIndexed, strings)
 {

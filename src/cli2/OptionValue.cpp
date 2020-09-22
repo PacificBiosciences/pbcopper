@@ -1,7 +1,6 @@
-
 #include <pbcopper/cli2/OptionValue.h>
 
-#include <iostream>
+#include <ostream>
 #include <sstream>
 #include <stdexcept>
 #include <unordered_map>
@@ -16,7 +15,7 @@ namespace {
 class BoolConverter : public boost::static_visitor<bool>
 {
 public:
-    bool operator()(bool x) const { return x; }
+    bool operator()(bool x) const noexcept { return x; }
 
     // anything else always throws
     template <typename T>
@@ -31,7 +30,7 @@ public:
 class DoubleConverter : public boost::static_visitor<double>
 {
 public:
-    double operator()(double x) const { return x; }
+    double operator()(double x) const noexcept { return x; }
 
     // anything else always throws
     template <typename T>
@@ -46,10 +45,10 @@ public:
 class Int64Converter : public boost::static_visitor<int64_t>
 {
 public:
-    int64_t operator()(int8_t x) const { return static_cast<int64_t>(x); }
-    int64_t operator()(int16_t x) const { return static_cast<int64_t>(x); }
-    int64_t operator()(int32_t x) const { return static_cast<int64_t>(x); }
-    int64_t operator()(int64_t x) const { return x; }
+    int64_t operator()(int8_t x) const noexcept { return x; }
+    int64_t operator()(int16_t x) const noexcept { return x; }
+    int64_t operator()(int32_t x) const noexcept { return x; }
+    int64_t operator()(int64_t x) const noexcept { return x; }
 
     // anything else always throws
     template <typename T>
@@ -64,10 +63,10 @@ public:
 class UInt64Converter : public boost::static_visitor<uint64_t>
 {
 public:
-    uint64_t operator()(uint8_t x) const { return static_cast<uint64_t>(x); }
-    uint64_t operator()(uint16_t x) const { return static_cast<uint64_t>(x); }
-    uint64_t operator()(uint32_t x) const { return static_cast<uint64_t>(x); }
-    uint64_t operator()(uint64_t x) const { return x; }
+    uint64_t operator()(uint8_t x) const noexcept { return x; }
+    uint64_t operator()(uint16_t x) const noexcept { return x; }
+    uint64_t operator()(uint32_t x) const noexcept { return x; }
+    uint64_t operator()(uint64_t x) const noexcept { return x; }
 
     // anything else always throws
     template <typename T>

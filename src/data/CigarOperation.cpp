@@ -66,12 +66,15 @@ CigarOperation::CigarOperation(CigarOperationType op, uint32_t length) : type_{o
             "instead."};
 }
 
-bool CigarOperation::operator==(const CigarOperation& other) const
+bool CigarOperation::operator==(const CigarOperation& other) const noexcept
 {
     return std::tie(type_, length_) == std::tie(other.type_, other.length_);
 }
 
-bool CigarOperation::operator!=(const CigarOperation& other) const { return !(*this == other); }
+bool CigarOperation::operator!=(const CigarOperation& other) const noexcept
+{
+    return !(*this == other);
+}
 
 char CigarOperation::Char() const { return CigarOperation::TypeToChar(type_); }
 

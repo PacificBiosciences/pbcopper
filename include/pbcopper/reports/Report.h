@@ -8,6 +8,7 @@
 #include <pbcopper/PbcopperConfig.h>
 
 #include <cstddef>
+
 #include <iosfwd>
 #include <string>
 #include <vector>
@@ -143,7 +144,7 @@ private:
 class TaskReport
 {
 public:
-    TaskReport(int nproc, double runTime, int exitCode);
+    TaskReport(int nproc, double runTime, int exitCode, int64_t peakRss);
 
     void Print(const std::string& fn, const std::string& prefix = "") const;
     void Print(std::ostream& out, const std::string& prefix = "") const;

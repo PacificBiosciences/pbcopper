@@ -1,12 +1,13 @@
 // Author: Nat Echols
 
+#include <pbcopper/reports/Report.h>
+
 #include <sstream>
 #include <string>
 #include <vector>
 
 #include <gtest/gtest.h>
 
-#include <pbcopper/reports/Report.h>
 #include <pbcopper/utility/PbcopperVersion.h>
 
 using namespace PacBio;
@@ -84,7 +85,7 @@ TEST(Reports_Report, can_print_pbreport)
 })"};
     expectedText.replace(40, 4, PacBio::Utility::LibraryVersionString());
 
-    std::stringstream s;
+    std::ostringstream s;
     const auto report = ReportsTests::MakeReport();
     report.Print(s);
     EXPECT_EQ(expectedText, s.str());
@@ -107,7 +108,7 @@ TEST(Reports_Report, can_print_summary)
 
 TEST(Reports_Report, can_write_task_report)
 {
-    const TaskReport report{16, 100, 0};
+    const TaskReport report{16, 100, 0, 4096};
     std::ostringstream s;
     report.Print(s);
 
@@ -115,4 +116,5 @@ TEST(Reports_Report, can_write_task_report)
     EXPECT_NE(s.str().find("Number of cores/slots"), std::string::npos);
     EXPECT_NE(s.str().find("Run time (seconds)"), std::string::npos);
     EXPECT_NE(s.str().find("Exit code"), std::string::npos);
+    EXPECT_NE(s.str().find("Peak RSS (GB)"), std::string::npos);
 }

@@ -47,19 +47,17 @@ inline bool IsIupacPartialMatch(char iupacCode, char b)
 }
 
 template <typename C>
-inline float MatchScore(char t, char q, float matchScore, float mismatchScore,
-                        float partialMatchScore);
+float MatchScore(char t, char q, float matchScore, float mismatchScore, float partialMatchScore);
 
 template <>
-inline float MatchScore<Standard>(char t, char q, float matchScore, float mismatchScore,
-                                  float /*unused*/)
+float MatchScore<Standard>(char t, char q, float matchScore, float mismatchScore, float /*unused*/)
 {
     return (t == q ? matchScore : mismatchScore);
 }
 
 template <>
-inline float MatchScore<IupacAware>(char t, char q, float matchScore, float mismatchScore,
-                                    float partialMatchScore)
+float MatchScore<IupacAware>(char t, char q, float matchScore, float mismatchScore,
+                             float partialMatchScore)
 {
     if (t == q) {
         return matchScore;

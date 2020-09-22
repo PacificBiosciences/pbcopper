@@ -3,7 +3,7 @@
 #ifndef PBCOPPER_DATA_MAPPEDREAD_H
 #define PBCOPPER_DATA_MAPPEDREAD_H
 
-#include <ostream>
+#include <iosfwd>
 
 #include <pbcopper/data/Cigar.h>
 #include <pbcopper/data/Orientation.h>
@@ -30,7 +30,7 @@ enum class SoftClipBehavior
 struct MappedRead : public Read
 {
     MappedRead(Read read) noexcept;
-    MappedRead(Read read, enum Strand strand, size_t templateStart, size_t templateEnd,
+    MappedRead(Read read, enum Strand strand, Position templateStart, Position templateEnd,
                bool pinStart = false, bool pinEnd = false) noexcept;
     MappedRead(Read read, enum Strand strand, Position templateStart, Cigar cigar, uint8_t mapQV);
     MappedRead(Read read, enum Strand strand, Position templateStart, Position templateEnd,
@@ -69,7 +69,7 @@ struct MappedRead : public Read
                              GapBehavior gapBehavior = GapBehavior::IGNORE,
                              SoftClipBehavior softClipBehavior = SoftClipBehavior::KEEP) const;
 
-    size_t NumMismatches() const;
+    int32_t NumMismatches() const;
 };
 
 ///

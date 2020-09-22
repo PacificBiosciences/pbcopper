@@ -1,3 +1,5 @@
+#include <pbcopper/cli2/internal/MultiToolInterfaceHelpPrinter.h>
+
 #include <sstream>
 #include <string>
 #include <vector>
@@ -8,7 +10,6 @@
 #include <pbcopper/cli2/MultiToolInterface.h>
 #include <pbcopper/cli2/internal/HelpMetrics.h>
 #include <pbcopper/cli2/internal/InterfaceHelpPrinter.h>
-#include <pbcopper/cli2/internal/MultiToolInterfaceHelpPrinter.h>
 
 using HelpMetrics = PacBio::CLI_v2::internal::HelpMetrics;
 using Interface = PacBio::CLI_v2::Interface;

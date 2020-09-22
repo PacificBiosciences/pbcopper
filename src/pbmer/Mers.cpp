@@ -1,18 +1,16 @@
 // Authors: Chris Dunn, Zev Kronenberg, Derek Barnett
+#include <pbcopper/pbmer/Mers.h>
 
 #include <cassert>
+
 #include <deque>
-#include <iostream>
 #include <limits>
 #include <stdexcept>
-#include <unordered_set>
-
-#include <pbcopper/pbmer/Mers.h>
 
 namespace PacBio {
 namespace Pbmer {
 
-Mers::Mers(const uint8_t kmerSizeArg) : kmerSize{kmerSizeArg} {}
+Mers::Mers(const uint8_t kSize) : kmerSize{kSize} {}
 
 void Mers::AddKmer(const Kmer& k)
 {
@@ -20,53 +18,6 @@ void Mers::AddKmer(const Kmer& k)
         forward.emplace_back(k);
     } else {
         reverse.emplace_back(k);
-    }
-}
-
-uint64_t Mers::Mix64Masked(uint64_t key, const uint64_t mask)
-{
-    key = (~key + (key << 21)) & mask;  // key = (key << 21) - key - 1;
-    key = key ^ (key >> 24);
-    key = ((key + (key << 3)) + (key << 8)) & mask;  // key * 265
-    key = key ^ (key >> 14);
-    key = ((key + (key << 2)) + (key << 4)) & mask;  // key * 21
-    key = key ^ (key >> 28);
-    key = (key + (key << 31)) & mask;
-    return key;
-}
-
-void Mers::HashKmers()
-{
-    hashed_ = true;
-    level_ = 0;
-    const uint64_t mask = (1ull << 2 * kmerSize) - 1;
-
-    for (auto& f : forward)
-        f.mer = Mix64Masked(f.mer, mask);
-
-    for (auto& r : reverse)
-        r.mer = Mix64Masked(r.mer, mask);
-
-    // clear minimizers in case a user wants to recompute
-    minimizers.clear();
-
-    // Minimizing by position meaning we to traverse the reverse sequence backwards.
-    auto itf = forward.cbegin();
-    auto itr = reverse.cbegin();
-
-    for (; itf != forward.cend();) {
-        if (itf->mer == itr->mer) {
-            ++itf;
-            ++itr;
-            continue;
-        }
-        if (itf->mer < itr->mer) {
-            minimizers.emplace_back(*itf);
-        } else {
-            minimizers.emplace_back(*itr);
-        }
-        ++itf;
-        ++itr;
     }
 }
 
@@ -144,6 +95,83 @@ void Mers::AWWindowMin(unsigned int winSize)
 }
 
 #endif
+
+std::vector<Kmer> Mers::BuildNMPs() const
+{
+
+    if (kmerSize > 16) throw std::runtime_error{"[pbmer] Mers ERROR: Kmer must be <= 16 bp."};
+
+    // no mask because we are merging to minimizers up to 32 bits.
+    const uint64_t mask = ~uint64_t(0);
+
+    std::vector<Kmer> nmps;
+
+    uint64_t minA;
+    uint64_t minB;
+
+    for (size_t i = 1; i < minimizers.size(); ++i) {
+        Kmer nm{minimizers[i].mer, 0, Data::Strand::FORWARD};
+        minA = minimizers[i - 1].mer;
+        minB = nm.mer;
+        if (minA <= minB) {
+            nm.mer = (minA << 32) | minB;
+        } else {
+            nm.mer = (minB << 32) | minA;
+        }
+        nm.mer = Mix64Masked(nm.mer, mask);
+
+        nmps.push_back(nm);
+    }
+
+    return nmps;
+}
+
+void Mers::HashKmers()
+{
+    hashed_ = true;
+    level_ = 0;
+    const uint64_t mask = (1ull << 2 * kmerSize) - 1;
+
+    for (auto& f : forward)
+        f.mer = Mix64Masked(f.mer, mask);
+
+    for (auto& r : reverse)
+        r.mer = Mix64Masked(r.mer, mask);
+
+    // clear minimizers in case a user wants to recompute
+    minimizers.clear();
+
+    // Minimizing by position meaning we to traverse the reverse sequence backwards.
+    auto itf = forward.cbegin();
+    auto itr = reverse.cbegin();
+
+    for (; itf != forward.cend();) {
+        if (itf->mer == itr->mer) {
+            ++itf;
+            ++itr;
+            continue;
+        }
+        if (itf->mer < itr->mer) {
+            minimizers.emplace_back(*itf);
+        } else {
+            minimizers.emplace_back(*itr);
+        }
+        ++itf;
+        ++itr;
+    }
+}
+
+uint64_t Mers::Mix64Masked(uint64_t key, const uint64_t mask)
+{
+    key = (~key + (key << 21)) & mask;  // key = (key << 21) - key - 1;
+    key = key ^ (key >> 24);
+    key = ((key + (key << 3)) + (key << 8)) & mask;  // key * 265
+    key = key ^ (key >> 14);
+    key = ((key + (key << 2)) + (key << 4)) & mask;  // key * 21
+    key = key ^ (key >> 28);
+    key = (key + (key << 31)) & mask;
+    return key;
+}
 
 void Mers::WindowMin(unsigned int winSize)
 {
@@ -235,36 +263,6 @@ void Mers::WindowMin(unsigned int winSize)
 
     // loading up minimizers to return;
     minimizers = std::move(newMins);
-}
-
-std::vector<Kmer> Mers::BuildNMPs() const
-{
-
-    if (kmerSize > 16) throw std::runtime_error{"[pbmer] Mers ERROR: Kmer must be <= 16 bp."};
-
-    // no mask because we are merging to minimizers up to 32 bits.
-    const uint64_t mask = ~uint64_t(0);
-
-    std::vector<Kmer> nmps;
-
-    uint64_t minA;
-    uint64_t minB;
-
-    for (size_t i = 1; i < minimizers.size(); ++i) {
-        Kmer nm{minimizers[i].mer, 0, Data::Strand::FORWARD};
-        minA = minimizers[i - 1].mer;
-        minB = nm.mer;
-        if (minA <= minB) {
-            nm.mer = (minA << 32) | minB;
-        } else {
-            nm.mer = (minB << 32) | minA;
-        }
-        nm.mer = Mix64Masked(nm.mer, mask);
-
-        nmps.push_back(nm);
-    }
-
-    return nmps;
 }
 
 }  // namespace Pbmer

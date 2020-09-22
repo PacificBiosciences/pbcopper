@@ -15,14 +15,15 @@ public:
     {
         TRACE = 0,
         DEBUG = 1,
-        INFO = 2,
-        NOTICE = 3,
-        WARN = 4,
-        ERROR = 5,
-        CRITICAL = 6,
-        FATAL = 7,
+        VERBOSE = 2,
+        INFO = 3,
+        NOTICE = 4,
+        WARN = 5,
+        ERROR = 6,
+        CRITICAL = 7,
+        FATAL = 8,
 
-        MAX_LOG_LEVEL = 8
+        MAX_LOG_LEVEL = 9,
     };
 
 public:
@@ -30,7 +31,7 @@ public:
     LogLevel(const std::string& value);
 
 public:
-    operator int() const;
+    operator int() const noexcept;
     std::string ToString() const;
 
 private:

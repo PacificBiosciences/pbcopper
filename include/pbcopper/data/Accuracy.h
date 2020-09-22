@@ -10,13 +10,14 @@ namespace Data {
 
 /// \brief The Accuracy class represents the expected accuracy of a BamRecord.
 ///
-/// Values are clamped to fall within [0,1].
+/// Values are clamped to fall within [0,1] or -1 as a special case for unpolished CCS reads.
 ///
 class Accuracy
 {
 public:
-    static const float MIN;  ///< Minimum valid accuracy value [0.0]
-    static const float MAX;  ///< Maximum valid accuracy value [1.0]
+    static const float MINUS_ONE;  ///< Unpolished accuracy value [-1.0]
+    static const float MIN;        ///< Minimum valid accuracy value [0.0]
+    static const float MAX;        ///< Maximum valid accuracy value [1.0]
 
 public:
     /// \name Constructors & Related Methods
@@ -34,7 +35,7 @@ public:
 
 public:
     /// \returns Accuracy as float primitive
-    operator float() const;
+    operator float() const noexcept;
 
 private:
     float accuracy_;

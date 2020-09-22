@@ -3,18 +3,36 @@ set -vex
 
 export BUILD_NUMBER="0"
 export ENABLED_TESTS="true"
+export SHOULD_INSTALL="false"
 
 case "${GCC_VERSION}" in
-  RHEL)
+  next)
+    module load gcc/8.1.0
+    module load gtest
+    ;;
+
+  PA)
     module load gtest/gcc48
 
     # load SCL GCC
     source /opt/rh/devtoolset-6/enable
     ;;
 
-  next)
-    module load gcc/8.1.0
-    module load gtest
+  ICC*)
+    module load devtoolset/6
+    module load composer_xe/${GCC_VERSION#ICC}
+    module load gtest/gcc48
+
+    CC="icc"
+    CXX="icpc"
+    ;;
+
+  clang)
+    module load gtest/gcc48
+
+    source /opt/rh/llvm-toolset-6.0/enable
+    CC="clang"
+    CXX="clang++"
     ;;
 
   *)
@@ -22,6 +40,7 @@ case "${GCC_VERSION}" in
       develop-release-off-false|master-release-off-false)
         export PREFIX_ARG="/mnt/software/p/pbcopper/${bamboo_planRepository_branchName}"
         export BUILD_NUMBER="${bamboo_globalBuildNumber:-0}"
+        export SHOULD_INSTALL="${INSTALL_IMAGE:-false}"
         ;;
     esac
 
@@ -32,9 +51,15 @@ esac
 
 module load ccache
 
-export CC="ccache gcc"
-export CXX="ccache g++"
+export CC="ccache ${CC:-gcc}"
+export CXX="ccache ${CXX:-g++}"
 export CCACHE_BASEDIR="${PWD}"
+
+if [[ ${GCC_VERSION} != ICC* ]]; then
+  # without -fno-sanitize-recover=all UBSAN failures won't abort the program
+  export CFLAGS="${CFLAGS} -fno-sanitize-recover=all"
+  export CXXFLAGS="${CXXFLAGS} -fno-sanitize-recover=all"
+fi
 
 if [[ -z ${bamboo_planRepository_branchName+x} ]]; then
   : #pass

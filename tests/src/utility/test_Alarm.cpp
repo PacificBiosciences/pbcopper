@@ -1,12 +1,12 @@
 // Author: Nathaniel Echols, Derek Barnett
 
+#include <pbcopper/utility/Alarm.h>
+
 #include <sstream>
 #include <string>
 #include <vector>
 
 #include <gtest/gtest.h>
-
-#include <pbcopper/utility/Alarm.h>
 
 // clang-format off
 TEST(Utility_Alarm, can_write_single_alarm)

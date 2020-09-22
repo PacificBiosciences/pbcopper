@@ -2,8 +2,9 @@
 
 #include <array>
 #include <fstream>
-#include <iostream>
+#include <ostream>
 #include <stdexcept>
+#include <utility>
 
 #include <boost/uuid/uuid.hpp>
 #include <boost/uuid/uuid_generators.hpp>
@@ -72,7 +73,7 @@ const std::string& BaseReportElement::Id() const { return id_; }
 // --------
 
 Column::Column(std::string id, std::vector<ReportValue> values, std::string header)
-    : BaseReportElement{id}, header_{std::move(header)}, values_{std::move(values)}
+    : BaseReportElement{id}, header_{std::move(header)}, values_(std::move(values))
 {
 }
 

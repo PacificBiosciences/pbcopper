@@ -10,10 +10,16 @@ type module >& /dev/null || . /mnt/software/Modules/current/init/bash
 
 module purge
 
+[[ ${GCC_VERSION} == ICC* ]] && module use /pbi/dept/primary/modulefiles
+module use /mnt/software/modulefiles
+
 module load meson
 module load ninja
 
-module load boost
+# use the same boost version as PA (avoid ODR explosions), TAK-705
+[[ ${GCC_VERSION} == ICC2017* || ${GCC_VERSION} == PA ]] && PA_BOOST_VERSION="/1.58"
+module load boost${PA_BOOST_VERSION}
+
 module load doxygen
 
 
@@ -31,7 +37,7 @@ source scripts/ci/setup.sh
 source scripts/ci/build.sh
 source scripts/ci/test.sh
 
-if [[ ${BUILD_NUMBER} == 0 ]]; then
+if [[ ${BUILD_NUMBER} == 0 || ${SHOULD_INSTALL} != true ]]; then
   echo "Not installing anything (branch: ${bamboo_planRepository_branchName}), exiting."
   exit 0
 fi

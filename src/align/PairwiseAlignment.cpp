@@ -9,6 +9,8 @@
 #include <utility>
 #include <vector>
 
+#include <boost/assert.hpp>
+#include <boost/container/flat_set.hpp>
 #include <boost/numeric/ublas/matrix.hpp>
 
 #include <pbcopper/utility/MinMax.h>
@@ -299,6 +301,22 @@ PairwiseAlignment* Align(const std::string& target, const std::string& query, in
             "[pbcopper] pairwise alignment ERROR: only GLOBAL and SEMIGLOBAL alignments supported "
             "at present"};
     }
+
+#ifndef NDEBUG
+    // we can only align IUPAC bases, not gaps or any other characters
+    const static boost::container::flat_set<char> validBases{
+        'A', 'B', 'C', 'D', 'G', 'H', 'K', 'M', 'N', 'R', 'S', 'T', 'V', 'W', 'Y',
+        'a', 'b', 'c', 'd', 'g', 'h', 'k', 'm', 'n', 'r', 's', 't', 'v', 'w', 'y'};
+
+    for (char c : target) {
+        BOOST_ASSERT_MSG(validBases.find(c) != validBases.cend(),
+                         "target contains non-IUPAC bases");
+    }
+
+    for (char c : query) {
+        BOOST_ASSERT_MSG(validBases.find(c) != validBases.cend(), "query contains non-IUPAC bases");
+    }
+#endif
 
     int I = query.length();
     int J = target.length();

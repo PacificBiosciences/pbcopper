@@ -4,21 +4,22 @@
 
 #include <algorithm>
 #include <limits>
+#include <tuple>
 
 namespace PacBio {
 namespace Align {
 
 SDPHit::SDPHit(const Seed& seed, const size_t index) : Seed{seed}, Index{index} {}
 
-bool SDPHit::operator<(const SDPHit& other) const { return DiagonalCompare(*this, other); }
+bool SDPHit::operator<(const SDPHit& other) const noexcept { return DiagonalCompare(*this, other); }
 
 SDPColumn::SDPColumn(size_t column, const boost::optional<SDPHit> seed) : Seed{seed}, Column{column}
 {
 }
 
-bool SDPColumn::operator<(const SDPColumn& other) const { return Column < other.Column; }
+bool SDPColumn::operator<(const SDPColumn& other) const noexcept { return Column < other.Column; }
 
-bool ChainHitCompare::operator()(const ChainHit& lhs, const ChainHit& rhs) const
+bool ChainHitCompare::operator()(const ChainHit& lhs, const ChainHit& rhs) const noexcept
 {
     return lhs.score > rhs.score;
 }
@@ -57,14 +58,10 @@ bool VHCompare(const Seed& lhs, const Seed& rhs)
     return false;
 }
 
-bool DiagonalCompare(const Seed& lhs, const Seed& rhs)
+bool DiagonalCompare(const Seed& lhs, const Seed& rhs) noexcept
 {
-    const auto leftD = lhs.BeginDiagonal();
-    const auto rightD = rhs.BeginDiagonal();
-
-    if (leftD == rightD) return lhs.BeginPositionH() < rhs.BeginPositionH();
-
-    return leftD < rightD;
+    return std::make_tuple(lhs.BeginDiagonal(), lhs.BeginPositionH()) <
+           std::make_tuple(rhs.BeginDiagonal(), rhs.BeginPositionH());
 }
 
 long LinkScore(const Seed& lhs, const Seed& rhs, const ChainSeedsConfig& config)

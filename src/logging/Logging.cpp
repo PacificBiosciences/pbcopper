@@ -3,13 +3,12 @@
 #include <pbcopper/logging/Logging.h>
 
 #include <cassert>
-#include <chrono>
 #include <cstddef>
 #include <ctime>
 
-#include <iomanip>
+#include <chrono>
 #include <iostream>
-#include <sstream>
+#include <ostream>
 
 #include <pbcopper/utility/Unused.h>
 

@@ -204,7 +204,7 @@ private:
 /// \param rhs seed
 /// \return true if \p lhs compares less-than \p rhs
 ///
-bool operator<(const Seed& lhs, const Seed& rhs);
+bool operator<(const Seed& lhs, const Seed& rhs) noexcept;
 
 ///
 /// \brief Default equality comparison.
@@ -215,7 +215,7 @@ bool operator<(const Seed& lhs, const Seed& rhs);
 /// \param rhs seed
 /// \return true if seeds are equal
 ///
-bool operator==(const Seed& lhs, const Seed& rhs);
+bool operator==(const Seed& lhs, const Seed& rhs) noexcept;
 
 }  // namespace Align
 }  // namespace PacBio

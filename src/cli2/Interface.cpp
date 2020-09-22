@@ -19,19 +19,6 @@ using PositionalArgumentTranslator = PacBio::CLI_v2::internal::PositionalArgumen
 namespace PacBio {
 namespace CLI_v2 {
 
-static_assert(std::is_copy_constructible<Interface>::value,
-              "Interface(const Interface&) is not = default");
-static_assert(std::is_copy_assignable<Interface>::value,
-              "Interface& operator=(const Interface&) is not = default");
-
-#ifndef __INTEL_COMPILER
-static_assert(std::is_nothrow_move_constructible<Interface>::value,
-              "Interface(Interface&&) is not = noexcept");
-static_assert(std::is_nothrow_move_assignable<Interface>::value ==
-                  std::is_nothrow_move_assignable<internal::InterfaceData>::value,
-              "");
-#endif
-
 Interface::Interface(std::string name, std::string description, std::string version)
     : data_{std::move(name),
             std::move(description),
@@ -145,13 +132,7 @@ Interface& Interface::Example(std::string example)
     return *this;
 }
 
-bool Interface::HasRequiredPosArgs() const
-{
-    for (const auto& posArg : data_.positionalArgs_) {
-        if (posArg.required) return true;
-    }
-    return false;
-}
+bool Interface::HasRequiredPosArgs() const { return NumRequiredPosArgs() > 0; }
 
 const std::string& Interface::HelpFooter() const { return data_.footer_; }
 
@@ -197,6 +178,15 @@ Results Interface::MakeDefaultResults() const
     return results;
 }
 
+size_t Interface::NumRequiredPosArgs() const
+{
+    size_t count = 0;
+    for (const auto& posArg : data_.positionalArgs_) {
+        if (posArg.required) ++count;
+    }
+    return count;
+}
+
 std::vector<OptionData> Interface::Options() const
 {
     std::vector<OptionData> result;
@@ -224,6 +214,14 @@ const std::vector<OptionGroupData>& Interface::OptionGroups() const { return dat
 const std::vector<PositionalArgumentData>& Interface::PositionalArguments() const
 {
     return data_.positionalArgs_;
+}
+
+void Interface::PrintVersion() const { data_.versionPrinter_(*this); }
+
+Interface& Interface::RegisterVersionPrinter(VersionPrinterCallback printer)
+{
+    data_.versionPrinter_ = printer;
+    return *this;
 }
 
 const boost::optional<internal::OptionData>& Interface::VerboseOption() const

@@ -2,6 +2,62 @@
 
 ## Active
 
+### Added
+ - Base64 encoding/decoding
+ - (Simplified) alarm file can be created for general exceptions
+ - Utility::StringView as std::string_view look-a-like
+ - Support for hidden CLI subtools
+
+### Changed
+ - Accuracy explicitly allows -1, otherwise clamps to [0.0, 1.0]
+ - Fixed FaF and FaFI exception handling
+
+## [1.7.0] - 2020-05-22
+
+### Added
+ - PartitionElements utility
+ - Version printing callbacks for CLI
+ - Ssize utility
+ - Knock-first graph
+ - VERBOSE log level
+ - Dagcon API
+ - LibraryInfo API
+
+### Changed
+ - Now using (signed) Data::Position in Data::Read.
+ - Data::SNR values changed from double to float.
+
+### Fixed
+ - ReadId from CCS read names
+ - More robust random number generators (for UUIDs).
+   * getrandom() requires Linux kernel 3.17+
+   * getentropy() requires glibc 2.25+
+
+### Removed
+ - Unused SystemInfo utility
+
+## [1.6.0] - 2020-04-10
+
+### Removed
+ - CLI version 1 (pbcopper/cli/*)
+
+## [1.5.0] - 2020-03-12
+
+### Added
+ - pbmer API - DeBruijn graph & kmers
+ - AlarmException for generating JSON alarms
+ - Allow SI suffixes in command line arguments
+ - std::ostream redirection utilities
+
+### Changed
+ - Double-precision in Stopwatch
+
+### Fixed
+ - WorkQueue deadlock if exception was thrown in consumer task
+
+### Removed
+ - InstallSignalHandlers() from logging
+
 ## [1.4.0] - 2019-11-05
 
 ### Added

@@ -7,6 +7,7 @@ if not meson.is_subproject()
   # pbcopper
   install_headers(
     files([
+      'pbcopper/LibraryInfo.h',
       'pbcopper/PbcopperConfig.h']),
     subdir : 'pbcopper')
 
@@ -34,50 +35,6 @@ if not meson.is_subproject()
       'pbcopper/align/internal/BCAlignImpl.h']),
     subdir : 'pbcopper/align/internal')
 
-  # pbcopper/cli
-  install_headers(
-    files([
-      'pbcopper/cli/CLI.h',
-      'pbcopper/cli/HelpPrinter.h',
-      'pbcopper/cli/Interface.h',
-      'pbcopper/cli/Option.h',
-      'pbcopper/cli/OptionFlags.h',
-      'pbcopper/cli/Parser.h',
-      'pbcopper/cli/PositionalArg.h',
-      'pbcopper/cli/Results.h',
-      'pbcopper/cli/SingleDashMode.h',
-      'pbcopper/cli/VersionPrinter.h']),
-    subdir : 'pbcopper/cli')
-
-  # pbcopper/cli/internal
-  install_headers(
-    files([
-      'pbcopper/cli/internal/Option-inl.h']),
-    subdir : 'pbcopper/cli/internal')
-
-  # pbcopper/cli/toolcontract
-  install_headers(
-    files([
-      'pbcopper/cli/toolcontract/Config.h',
-      'pbcopper/cli/toolcontract/Driver.h',
-      'pbcopper/cli/toolcontract/InputFileType.h',
-      'pbcopper/cli/toolcontract/JsonPrinter.h',
-      'pbcopper/cli/toolcontract/OutputFileType.h',
-      'pbcopper/cli/toolcontract/ResolvedToolContract.h',
-      'pbcopper/cli/toolcontract/ResourceType.h',
-      'pbcopper/cli/toolcontract/Task.h',
-      'pbcopper/cli/toolcontract/TaskType.h']),
-    subdir : 'pbcopper/cli/toolcontract')
-
-  # pbcopper/cli/toolcontract/internal
-  install_headers(
-    files([
-      'pbcopper/cli/toolcontract/internal/Driver-inl.h',
-      'pbcopper/cli/toolcontract/internal/InputFileType-inl.h',
-      'pbcopper/cli/toolcontract/internal/OutputFileType-inl.h',
-      'pbcopper/cli/toolcontract/internal/Task-inl.h']),
-    subdir : 'pbcopper/cli/toolcontract/internal')
-
   # pbcopper/cli2
   install_headers(
     files([
@@ -91,7 +48,8 @@ if not meson.is_subproject()
       'pbcopper/cli2/Result.h',
       'pbcopper/cli2/Results.h',
       'pbcopper/cli2/ResultsHandler.h',
-      'pbcopper/cli2/Tool.h'
+      'pbcopper/cli2/Tool.h',
+      'pbcopper/cli2/VersionPrinterCallback.h',
       ]),
     subdir : 'pbcopper/cli2')
 
@@ -112,6 +70,14 @@ if not meson.is_subproject()
       'pbcopper/cli2/internal/VersionPrinter.h',]),
     subdir : 'pbcopper/cli2/internal')
 
+  # pbcopper/dagcon
+  install_headers(
+    files([
+      'pbcopper/dagcon/Alignment.h',
+      'pbcopper/dagcon/AlignmentGraph.h',
+    ]),
+    subdir : 'pbcopper/dagcon')
+
   # pbcopper/data
   install_headers(
     files([
@@ -120,6 +86,8 @@ if not meson.is_subproject()
       'pbcopper/data/Cigar.h',
       'pbcopper/data/CigarOperation.h',
       'pbcopper/data/Clipping.h',
+      'pbcopper/data/FrameCodec.h',
+      'pbcopper/data/FrameEncoders.h',
       'pbcopper/data/Frames.h',
       'pbcopper/data/GenomicInterval.h',
       'pbcopper/data/Interval.h',
@@ -162,6 +130,14 @@ if not meson.is_subproject()
       'pbcopper/json/internal/json.hpp']),
     subdir : 'pbcopper/json/internal')
 
+  # pbcopper/library
+  install_headers(
+    files([
+      'pbcopper/library/Bundle.h',
+      'pbcopper/library/Info.h',
+    ]),
+    subdir : 'pbcopper/library')
+
   # pbcopper/logging
   install_headers(
     files([
@@ -179,6 +155,22 @@ if not meson.is_subproject()
       'pbcopper/parallel/FireAndForgetIndexed.h',
       'pbcopper/parallel/WorkQueue.h']),
     subdir : 'pbcopper/parallel')
+
+  # pbcopper/pbmer
+  install_headers(
+    files([
+      'pbcopper/pbmer/Bubble.h',
+      'pbcopper/pbmer/Dbg.h',
+      'pbcopper/pbmer/DbgNode.h',
+      'pbcopper/pbmer/DnaBit.h',
+      'pbcopper/pbmer/Kmer.h',
+      'pbcopper/pbmer/Mers.h',
+      'pbcopper/pbmer/Parser.h',
+      'pbcopper/pbmer/SparseHaplotype.h',
+      'pbcopper/pbmer/KFGraph.h',
+      'pbcopper/pbmer/KFNode.h',
+      ]),
+    subdir : 'pbcopper/pbmer')
 
   # pbcopper/reports
   install_headers(
@@ -207,21 +199,38 @@ if not meson.is_subproject()
       'pbcopper/third-party/edlib.h']),
     subdir : 'pbcopper/third-party')
 
+  # pbcopper/third-party/kxsort
+  install_headers(
+    files([
+      'pbcopper/third-party/kxsort/kxsort.h']),
+    subdir : 'pbcopper/third-party/kxsort')
+
+  # pbcopper/third-party/robin_hood
+  install_headers(
+    files([
+      'pbcopper/third-party/robin_hood/robin_hood.h']),
+    subdir : 'pbcopper/third-party/robin_hood')
+
   # pbcopper/utility
   install_headers(
     files([
       'pbcopper/utility/Alarm.h',
+      'pbcopper/utility/Base64.h',
       'pbcopper/utility/Deleters.h',
       'pbcopper/utility/FileUtils.h',
       'pbcopper/utility/MemoryConsumption.h',
       'pbcopper/utility/MinMax.h',
       'pbcopper/utility/MoveAppend.h',
+      'pbcopper/utility/MoveInsert.h',
+      'pbcopper/utility/OStreamRedirect.h',
+      'pbcopper/utility/PartitionElements.h',
       'pbcopper/utility/PbcopperVersion.h',
       'pbcopper/utility/SafeSubtract.h',
       'pbcopper/utility/SequenceUtils.h',
+      'pbcopper/utility/Ssize.h',
       'pbcopper/utility/Stopwatch.h',
       'pbcopper/utility/StringUtils.h',
-      'pbcopper/utility/SystemInfo.h',
+      'pbcopper/utility/StringView.h',
       'pbcopper/utility/Unused.h']),
     subdir : 'pbcopper/utility')
 
@@ -230,7 +239,7 @@ if not meson.is_subproject()
     files([
       'pbcopper/utility/internal/FileUtils-inl.h',
       'pbcopper/utility/internal/Stopwatch-inl.h',
-      'pbcopper/utility/internal/SystemInfo-inl.h']),
+    ]),
     subdir : 'pbcopper/utility/internal')
 endif
 

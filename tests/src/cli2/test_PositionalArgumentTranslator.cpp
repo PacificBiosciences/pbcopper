@@ -1,9 +1,9 @@
+#include <pbcopper/cli2/internal/PositionalArgumentTranslator.h>
 
 #include <gtest/gtest.h>
 
 #include <pbcopper/cli2/PositionalArgument.h>
 #include <pbcopper/cli2/internal/PositionalArgumentData.h>
-#include <pbcopper/cli2/internal/PositionalArgumentTranslator.h>
 
 using PositionalArgument = PacBio::CLI_v2::PositionalArgument;
 using PositionalArgumentData = PacBio::CLI_v2::internal::PositionalArgumentData;
@@ -13,7 +13,7 @@ using PositionalArgumentTranslator = PacBio::CLI_v2::internal::PositionalArgumen
 
 TEST(CLI2_PositionalArgumentTranslator, throws_on_empty_text)
 {
-    const PositionalArgument testArg;
+    const PositionalArgument testArg{}; // (DB): leave these braces, because icpc
     EXPECT_THROW(PositionalArgumentTranslator::Translate(testArg), std::runtime_error);
 }
 

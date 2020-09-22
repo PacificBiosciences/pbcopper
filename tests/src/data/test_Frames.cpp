@@ -1,9 +1,11 @@
+#include <pbcopper/data/FrameEncoders.h>
+#include <pbcopper/data/Frames.h>
+
 #include <cstdint>
+
 #include <vector>
 
 #include <gtest/gtest.h>
-
-#include <pbcopper/data/Frames.h>
 
 using Frames = PacBio::Data::Frames;
 
@@ -45,4 +47,24 @@ TEST(Data_Frames, can_encode_frames_from_raw_data)
     const Frames f{FramesTests::RawFrames};
     const auto e = f.Encode();
     ASSERT_EQ(FramesTests::EncodedFrames, e);
+}
+
+TEST(Data_FrameEncoder, can_default_initialize)
+{
+    // make sure icpc (legacy) compilation works with this construct... sigh...
+    struct TestInitialize
+    {
+        PacBio::Data::FrameEncoder v1 = PacBio::Data::V1FrameEncoder{};
+        PacBio::Data::FrameEncoder v2 = PacBio::Data::V1FrameEncoder{};
+    };
+    EXPECT_TRUE(true);
+}
+
+TEST(Data_FrameEncoder, decode_throws_if_out_of_range)
+{
+    PacBio::Data::V2FrameEncoder v2{3, 3};
+    EXPECT_THROW({ auto x = v2.Decode({64}); }, std::runtime_error);
+    EXPECT_NO_THROW({ auto x = v2.Decode({0}); });
+    EXPECT_NO_THROW({ auto x = v2.Decode({1}); });
+    EXPECT_NO_THROW({ auto x = v2.Decode({63}); });
 }

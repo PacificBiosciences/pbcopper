@@ -1,3 +1,5 @@
+#include <pbcopper/data/MappedRead.h>
+
 #include <cassert>
 
 #include <string>
@@ -5,8 +7,6 @@
 #include <vector>
 
 #include <gtest/gtest.h>
-
-#include <pbcopper/data/MappedRead.h>
 
 // clang-format off
 

@@ -3,261 +3,204 @@
 #include <pbcopper/pbmer/Dbg.h>
 
 #include <cassert>
-#include <deque>
+
 #include <fstream>
 #include <iostream>
-#include <iterator>
+#include <sstream>
 #include <unordered_set>
 
 namespace PacBio {
 namespace Pbmer {
 
-constexpr const std::array<char, 4> bases{'A', 'C', 'G', 'T'};
+Dbg::Dbg(uint8_t k, uint32_t nr) : kmerSize_{k}, nReads_{nr} {}
 
-DbgNode::DbgNode(const DnaBit& d, uint8_t o, uint8_t i, int32_t l)
-    : dna_{d}, inEdges_{i}, outEdges_{o}, readIds_{l}
-{
-}
-
-void DbgNode::SetOutEdges(uint8_t o) { outEdges_ |= o; }
-void DbgNode::SetInEdges(uint8_t i) { inEdges_ |= i; }
-
-void DbgNode::AddLoad(int32_t rid) { readIds_.insert(rid); }
-
-// -------------------------------------------
-// iteration of DnaBits over node
-
-DbgNode::iterator_base::iterator_base() = default;
-
-DbgNode::iterator_base::iterator_base(DbgNode& node) : node_{&node} { LoadNext(); }
-
-DbgNode::iterator_base::~iterator_base() = default;
-
-bool DbgNode::iterator_base::operator==(const iterator_base& other) const
-{
-    return node_ == other.node_;
-}
-
-bool DbgNode::iterator_base::operator!=(const iterator_base& other) const
-{
-    return !(*this == other);
-}
-
-void DbgNode::iterator_base::LoadNext()
-{
-    assert(node_);
-    assert(index_ <= 4);
-
-    while (index_ < 4) {
-        if (node_->outEdges_.test(index_)) {
-            DnaBit niby = node_->dna_;
-            if (niby.strand) {
-                niby.PrependBase(bases[index_]);
-            } else {
-                niby.AppendBase(bases[index_]);
-            }
-            value_ = niby.LexSmallerEq();
-            ++index_;
-            return;
-        }
-        ++index_;
-    }
-
-    // not found
-    if (index_ == 4) node_ = nullptr;
-}
-
-DbgNode::iterator::iterator() = default;
-DbgNode::iterator::iterator(DbgNode& node) : iterator_base{node} {}
-DnaBit& DbgNode::iterator::operator*() { return iterator_base::value_; }
-DnaBit* DbgNode::iterator::operator->() { return &(operator*()); }
-DbgNode::iterator& DbgNode::iterator::operator++()
-{
-    LoadNext();
-    return *this;
-}
-
-DbgNode::iterator DbgNode::iterator::operator++(int)
-{
-    DbgNode::iterator result(*this);
-    ++(*this);
-    return result;
-}
-
-DbgNode::const_iterator::const_iterator() = default;
-DbgNode::const_iterator::const_iterator(const DbgNode& node)
-    : iterator_base{const_cast<DbgNode&>(node)}
-{
-}
-const DnaBit& DbgNode::const_iterator::operator*() const { return iterator_base::value_; }
-const DnaBit* DbgNode::const_iterator::operator->() const { return &(operator*()); }
-DbgNode::const_iterator& DbgNode::const_iterator::operator++()
-{
-    LoadNext();
-    return *this;
-}
-
-DbgNode::const_iterator DbgNode::const_iterator::operator++(int)
-{
-    const_iterator result(*this);
-    ++(*this);
-    return result;
-}
-
-DbgNode::const_iterator DbgNode::begin() const { return const_iterator{*this}; }
-DbgNode::const_iterator DbgNode::cbegin() const { return const_iterator{*this}; }
-DbgNode::iterator DbgNode::begin() { return iterator{*this}; }
-
-DbgNode::const_iterator DbgNode::end() const { return const_iterator{}; }
-DbgNode::const_iterator DbgNode::cend() const { return const_iterator{}; }
-DbgNode::iterator DbgNode::end() { return iterator{}; }
-
-// -------------------------------------------
-
-Dbg::Dbg(uint8_t k) : kmerSize_{k} {}
-
-size_t Dbg::NNodes() const { return dbg_.size(); }
-
-int Dbg::AddKmers(const PacBio::Pbmer::Mers& m, const int32_t rid)
+int Dbg::AddKmers(const PacBio::Pbmer::Mers& m, const uint32_t rid)
 {
     // cover the cases where the kmers are not suitable for the Dbg.
-    if ((m.kmerSize >= 30)) return -1;
+    if ((m.kmerSize > 31)) return -1;
 
     if ((m.kmerSize % 2) == 0) return -2;
-
-    bool toFlip = false;
 
     for (auto const& x : m.forward) {
         DnaBit niby{x.mer, static_cast<uint8_t>(x.strand == Data::Strand::FORWARD ? 0 : 1),
                     kmerSize_};
 
-        if (toFlip) {
-            niby.strand = !niby.strand;
-        }
+        niby.MakeLexSmaller();
 
-        niby = niby.LexSmallerEq();
-
-        auto got = dbg_.find(niby.mer);
-        if (got != dbg_.end()) {
-            if (got.value().dna_.strand != niby.strand) {
-                toFlip = !toFlip;
-            }
-
-            got.value().AddLoad(rid);
+        if (dbg_.find(niby.mer) != dbg_.end()) {
+            dbg_.at(niby.mer).AddLoad(rid);
         } else {
-            DbgNode eg{niby, 0, 0, rid};
-            dbg_.emplace(niby.mer, eg);
+            DbgNode eg{niby, 0, nReads_};
+            eg.AddLoad(rid);
+            dbg_.emplace(niby.mer, std::move(eg));
         }
     }
     return 1;
 }
 
-void Dbg::ResetEdges()
+void Dbg::AddVerifedKmerPairs(std::vector<DnaBit>& bits, const uint32_t rid)
 {
-    for (auto x = dbg_.begin(); x != dbg_.end(); ++x) {
-        x.value().outEdges_.reset();
-        x.value().inEdges_.reset();
+
+    for (size_t i = 0; i < bits.size(); ++i) {
+        bits[i].MakeLexSmaller();
     }
+
+    auto edges = BuildVerifiedEdges(bits);
+
+    for (size_t i = 0; i < bits.size(); ++i) {
+
+        if (dbg_.find(bits[i].mer) != dbg_.end()) {
+            dbg_.at(bits[i].mer).AddLoad(rid);
+        } else {
+
+            DbgNode eg{bits[i], 0, nReads_};
+
+            eg.AddLoad(rid);
+
+            dbg_.emplace(bits[i].mer, std::move(eg));
+        }
+        dbg_.at(bits[i].mer).SetEdges(edges[i]);
+    }
+}
+
+uint8_t SetRevEdge(const DnaBit& a, const DnaBit& b)
+{
+    uint8_t c = (a.strand << 1) | (b.strand);
+    uint8_t es = 1;
+
+    DnaBit newNib = a;
+
+    switch (c) {
+        case 0: {
+            es <<= (b.FirstBaseIdx() + 0);
+            newNib.PrependBase(b.FirstBaseIdx());
+            break;
+        }
+        case 1: {
+            es <<= (b.FirstBaseRCIdx() + 0);
+            newNib.PrependBase(b.FirstBaseRCIdx());
+            newNib.MakeLexSmaller();
+            break;
+        }
+        case 2: {
+            es <<= (b.LastBaseRCIdx() + 4);
+            newNib.AppendBase(b.LastBaseRCIdx());
+            newNib.MakeLexSmaller();
+            break;
+        }
+        case 3: {
+            es <<= (b.LastBaseIdx() + 4);
+            newNib.AppendBase(b.LastBaseIdx());
+            break;
+        }
+
+        default: {
+            break;
+        }
+    }
+    if (a.mer == newNib.mer) return 0;
+    return es;
+}
+
+uint8_t SetForEdge(const DnaBit& a, const DnaBit& b)
+{
+    uint8_t c = (a.strand << 1) | (b.strand);
+    uint8_t es = 1;
+
+    DnaBit newNib = a;
+
+    switch (c) {
+        case 0: {
+            es <<= (b.LastBaseIdx() + 4);
+            newNib.AppendBase(b.LastBaseIdx());
+            break;
+        }
+        case 1: {
+            es <<= (b.LastBaseRCIdx() + 4);
+            newNib.AppendBase(b.LastBaseRCIdx());
+            newNib.MakeLexSmaller();
+            break;
+        }
+        case 2: {
+            es <<= (b.FirstBaseRCIdx() + 0);
+            newNib.PrependBase(b.FirstBaseRCIdx());
+            newNib.MakeLexSmaller();
+            break;
+        }
+        case 3: {
+            es <<= (b.FirstBaseIdx() + 0);
+            newNib.PrependBase(b.FirstBaseIdx());
+            break;
+        }
+
+        default: {
+            break;
+        }
+    }
+
+    if (a.mer == newNib.mer) return 0;
+    return es;
+}
+
+std::vector<uint8_t> Dbg::BuildVerifiedEdges(const std::vector<PacBio::Pbmer::DnaBit>& bits)
+{
+
+    std::vector<uint8_t> edges(bits.size(), 0);
+
+    // set back edges
+    for (size_t i = 1; i < bits.size(); ++i) {
+        edges[i] |= SetRevEdge(bits[i], bits[i - 1]);
+    }
+
+    // set forward edges
+    for (size_t i = 0; i < bits.size() - 1; ++i) {
+        edges[i] |= SetForEdge(bits[i], bits[i + 1]);
+    }
+
+    return edges;
 }
 
 void Dbg::BuildEdges()
 {
     for (auto x = dbg_.begin(); x != dbg_.end(); ++x) {
-        // outgoing edges
-        for (const auto& y : bases) {
+        // all 8 possible edges
+        for (uint8_t y = 0; y < 8; ++y) {
 
-            DnaBit niby = x.value().dna_;
-
-            int last_base = 0;
-            if (niby.strand) {
+            DnaBit niby = x->second.dna_;
+            // pre-prending base
+            if (y <= 3) {
                 niby.PrependBase(y);
-                last_base = AsciiToDna[y];
-            } else {
+            }
+            // appending base
+            else {
                 niby.AppendBase(y);
-                last_base = niby.mer & 3;
             }
 
-            niby = niby.LexSmallerEq();
+            // generate new lex smallest
+            niby.MakeLexSmaller();
 
-            auto got = dbg_.find(niby.mer);
-            if (got != dbg_.end()) {
-                //using the last nibble in the mer to set out edges by a shift
-                // & 3 gets the last base
-                x.value().SetOutEdges((uint8_t(1) << (last_base & 3)));
-            }
-        }
+            // this is a self loop
+            // TODO validate this should not be skipped.
+            if (x->second.dna_.mer == niby.mer) continue;
 
-        for (const auto& y : bases) {
-            DnaBit niby = x.value().dna_;
-
-            int last_base = 0;
-            if (niby.strand) {
-
-                niby.AppendBase(y);
-                last_base = niby.mer & 3;
-
-            } else {
-                niby.PrependBase(y);
-                last_base = AsciiToDna[y];
-            }
-
-            niby = niby.LexSmallerEq();
-
-            auto got = dbg_.find(niby.mer);
-            if (got != dbg_.end()) {
-                //using the last nibble in the mer to set in edges by a shift
-                // 2*(msize-1) gets the first base
-                x.value().SetInEdges((uint8_t(1) << (last_base & 3)));
+            if (dbg_.find(niby.mer) != dbg_.end()) {
+                //setting the edges
+                x->second.SetEdges((uint8_t(1) << y));
             }
         }
     }
 }
 
-void Dbg::WriteGraph(std::string fn)
+void Dbg::DumpNodes() const
 {
-    std::ofstream outfile;
-    outfile.open(fn);
-
-    outfile << "digraph DBGraph {\n";
     for (auto x = dbg_.begin(); x != dbg_.end(); ++x) {
-        outfile << "    " << x.value().dna_.KmerToStr();
-        if (x.value().dna_.strand) {
-            outfile << " [fillcolor=red, style=\"rounded,filled\", shape=diamond]\n";
-        } else {
-            outfile << " [fillcolor=grey, style=\"rounded,filled\", shape=ellipse]\n";
-        }
+        std::cout << "    " << x->second.dna_.KmerToStr() << " n out:" << x->second.TotalEdgeCount()
+                  << " e val: " << static_cast<int>(x->second.edges_)
+                  << " n ids: " << x->second.readIds2_.count()
+                  << " n left eg: " << x->second.LeftEdgeCount()
+                  << " n right eg: " << x->second.RightEdgeCount()
+                  << " n total eg: " << x->second.TotalEdgeCount() << "\n";
     }
-    for (auto x = dbg_.begin(); x != dbg_.end(); ++x) {
-        for (const auto& y : x.value()) {
-            const DnaBit niby = y;
-
-            outfile << "    " << x.value().dna_.KmerToStr() << " -> " << niby.KmerToStr() << ";\n";
-        }
-    }
-    outfile << "}";
-    outfile.close();
-}
-
-bool Dbg::ValidateLoad() const
-{
-    for (const auto& x : dbg_) {
-        if (x.second.readIds_.size() == 0) return false;
-    }
-    return true;
-}
-
-bool Dbg::ValidateEdges() const
-{
-
-    for (auto x = dbg_.begin(); x != dbg_.end(); ++x) {
-        for (const auto& y : x.value()) {
-            auto got = dbg_.find(y.mer);
-            if (got == dbg_.end()) {
-                return false;
-            }
-        }
-    }
-    return true;
 }
 
 void Dbg::FrequencyFilterNodes(unsigned long n)
@@ -267,7 +210,7 @@ void Dbg::FrequencyFilterNodes(unsigned long n)
     std::vector<uint64_t> toRemove;
 
     for (auto x = dbg_.begin(); x != dbg_.end(); ++x) {
-        if (x.value().readIds_.size() < n) {
+        if (x->second.readIds2_.count() < n) {
             toRemove.push_back(x->first);
         }
     }
@@ -276,94 +219,270 @@ void Dbg::FrequencyFilterNodes(unsigned long n)
     }
 }
 
-void Dbg::DumpNodes() const
+void Dbg::FrequencyFilterNodes2(unsigned long n) { Dbg::FrequencyFilterNodes2(n, false); }
+
+void Dbg::FrequencyFilterNodes2(unsigned long n, bool gt)
 {
+
+    std::vector<uint64_t> toRemove;
+
+    auto filterDirection = [&](const auto count) {
+        if (gt) {
+            return (count > n);
+        } else {
+            return (count < n);
+        }
+    };
+
     for (auto x = dbg_.begin(); x != dbg_.end(); ++x) {
-        std::cout << "    " << x.value().dna_.KmerToStr() << " n in:" << x.value().inEdges_.count()
-                  << " n out:" << x.value().outEdges_.count() << "\n";
+        if (filterDirection(x->second.readIds2_.count())) {
+            toRemove.push_back(x->first);
+        }
+    }
+    for (const auto x : toRemove) {
+        dbg_.erase(x);
+    }
+
+    uint64_t lexSmall = 0;
+
+    for (auto x = dbg_.begin(); x != dbg_.end(); ++x) {
+        for (uint8_t y = 0; y < 8; ++y) {
+            if (((1 << y) & x->second.edges_) == 0) continue;
+            DnaBit niby = x->second.dna_;
+            // pre-prending base
+            if (y <= 3) {
+                niby.PrependBase(y);
+            }
+            // appending base
+            else {
+                niby.AppendBase(y);
+            }
+
+            // generate new lex smallest
+            lexSmall = niby.LexSmallerEq64();
+
+            if (dbg_.find(lexSmall) == dbg_.end()) {
+                uint8_t turnOff = ~(uint8_t(1) << y);
+                x->second.edges_ &= turnOff;
+            }
+        }
     }
 }
 
-std::vector<uint64_t> Dbg::GetLinearPath(const DnaBit& niby, uint64_t& hit) const
+Bubbles Dbg::FindBubbles() const
 {
-    // deque is used for the breadth first
-    std::deque<uint64_t> to_visit;
-    // return value - node keys in the path
-    std::vector<uint64_t> result;
-    // lookup for which nodes we've seen
-    std::unordered_set<uint64_t> seen;
+    // returned container describing which reads traverse which forks
+    Bubbles result;
 
-    // first node goes into the structures
-    to_visit.push_back(niby.mer);
-    seen.insert(niby.mer);
-    result.push_back(niby.mer);
+    // keeping track of read id counts over linear paths
+    // these variables are reused
+    robin_hood::unordered_map<uint32_t, int> left_reads;
+    robin_hood::unordered_map<uint32_t, int> right_reads;
 
-    // keep going while there are nodes in the deque
-    while (!to_visit.empty()) {
-        // looping over out edges, looking foward to the next nodes.
-        for (const auto& y : dbg_.at(to_visit.front())) {
-            // Next node's out degree > 1 : path is no longer linear.
-            if (dbg_.at(y.mer).outEdges_.count() > 1) {
-                break;
+    // keep track of the used head/tails of bubbles.
+    std::unordered_set<uint64_t> used_branch_node;
+
+    // reused variables
+    uint64_t s1, s2, e1, e2, shared;
+
+    for (auto x = dbg_.begin(); x != dbg_.end(); ++x) {
+
+        // this node is already part of a bubble and should be ignored.
+        if (used_branch_node.find(x->second.dna_.mer) != used_branch_node.end()) continue;
+
+        // valid bubbles contain 3 or more paths
+        if (x->second.TotalEdgeCount() < 3) continue;
+        std::vector<std::tuple<uint64_t, uint64_t>> path_info;
+
+        // loop over neighboring nodes collecting the start and end node of
+        // linear paths. I.E. looping over all linear paths coming out of a node.
+        for (auto& out : x->second) {
+            auto linear_path = LinearPath(out);
+            if (linear_path.empty()) continue;
+            path_info.push_back(std::make_tuple(out.mer, linear_path.back().mer));
+        }
+
+        // The left and right path of a bubble.
+        std::vector<DnaBit> left;
+        std::vector<DnaBit> right;
+
+        bool hasBubble = false;
+
+        // Comparing all linear paths to check if they converge. The first
+        // two paths to converge are considered a bubble. subsequent bubbles are
+        // ignored.
+        for (size_t i = 0; i < path_info.size(); ++i) {
+            hasBubble = false;
+            for (size_t j = 0; j < path_info.size(); ++j) {
+                s1 = std::get<0>(path_info[i]);
+                s2 = std::get<0>(path_info[j]);
+                e1 = std::get<1>(path_info[i]);
+                e2 = std::get<1>(path_info[j]);
+
+                // check if the paths converge on a common neighboring node.
+                if (OneIntermediateNode(e1, e2, &shared)) {
+                    // the paths are not stored in the first loop, maybe the should?
+                    left = LinearPath(s1);
+                    right = LinearPath(s2);
+                    // set the used incoming node so we don't get 2x n bubbles
+                    used_branch_node.insert(shared);
+                    used_branch_node.insert(x->second.dna_.mer);
+                    hasBubble = true;
+                    break;
+                }
             }
-            // Next node's in degree > 1 : path is no longer linear.
-            // The merging fork is marked for downstream bubble detection.
-            if (dbg_.at(y.mer).inEdges_.count() > 1) {
-                hit = dbg_.at(y.mer).dna_.mer;
-                break;
-            }
-            // node passes
-            if (seen.find(y.mer) == seen.end()) {
-                to_visit.push_back(y.mer);
-                seen.insert(y.mer);
-                result.push_back(y.mer);
+            // only keep the first valid bubble
+            if (hasBubble) break;
+        }
+
+        if (!hasBubble) {
+            continue;
+        }
+        // reuse the same temp data struct.
+        left_reads.clear();
+        right_reads.clear();
+
+        for (auto const& l : left) {
+            size_t i = dbg_.at(l.mer).readIds2_.find_first();
+            while (i != dbg_.at(l.mer).readIds2_.npos) {
+                ++left_reads[i + 1];
+                i = dbg_.at(l.mer).readIds2_.find_next(i);
             }
         }
-        to_visit.pop_front();
+
+        for (auto const& r : right) {
+            size_t i = dbg_.at(r.mer).readIds2_.find_first();
+            while (i != dbg_.at(r.mer).readIds2_.npos) {
+                ++right_reads[i + 1];
+                i = dbg_.at(r.mer).readIds2_.find_next(i);
+            }
+        }
+
+        BubbleInfo bubble;
+        bubble.LSeq = DnaBitVec2String(left);
+        bubble.RSeq = DnaBitVec2String(right);
+        bubble.LKmerCount = left.size();
+        bubble.RKmerCount = right.size();
+
+        for (const auto& kv : left_reads) {
+            bubble.LData.push_back(std::make_pair(kv.first, kv.second));
+        }
+
+        for (const auto& kv : right_reads) {
+            bubble.RData.push_back(std::make_pair(kv.first, kv.second));
+        }
+        result.emplace_back(std::move(bubble));
+    }
+    return result;
+}  // namespace Pbmer
+
+std::vector<DnaBit> Dbg::LinearPath(uint64_t x) const { return LinearPath(dbg_.at(x).dna_); }
+
+std::vector<DnaBit> Dbg::LinearPath(const DnaBit& niby) const
+{
+    std::vector<DnaBit> result;
+
+    if (dbg_.at(niby.mer).TotalEdgeCount() > 2) {
+        return result;
+    }
+
+    // lookup for which nodes we've seen to prevent loops
+    std::unordered_set<uint64_t> seen;
+
+    uint64_t past = niby.mer;
+
+    while (1) {
+        if (seen.find(past) != seen.end()) {
+            break;
+        }
+        seen.insert(past);
+        result.push_back(dbg_.at(past).dna_);
+        for (const auto& y : dbg_.at(past)) {
+            if (dbg_.at(y.mer).TotalEdgeCount() > 2) {
+                continue;
+            }
+            if (seen.find(y.mer) == seen.end()) {
+                past = y.mer;
+            }
+        }
     }
     return result;
 }
 
-/* This method only copes with outgoing spurs */
+std::string Dbg::Graph2StringDot()
+{
+    std::ostringstream ss;
+    ss << "digraph DBGraph {\n";
+    for (auto x = dbg_.begin(); x != dbg_.end(); ++x) {
+        ss << "    " << x->second.dna_.KmerToStr();
+        if (x->second.dna_.strand) {
+            ss << " [fillcolor=red, style=\"rounded,filled\", shape=diamond]\n";
+        } else {
+            ss << " [fillcolor=grey, style=\"rounded,filled\", shape=ellipse]\n";
+        }
+    }
+    for (auto x = dbg_.begin(); x != dbg_.end(); ++x) {
+        for (const auto& y : x->second) {
+            const DnaBit niby = y;
+
+            ss << "    " << x->second.dna_.KmerToStr() << " -> " << niby.KmerToStr() << ";\n";
+        }
+    }
+    ss << "}";
+
+    return ss.str();
+}
+
+size_t Dbg::NNodes() const { return dbg_.size(); }
+
+size_t Dbg::NEdges() const
+{
+    size_t edgeCount = 0;
+
+    for (auto x = dbg_.begin(); x != dbg_.end(); ++x) {
+        edgeCount += x->second.TotalEdgeCount();
+    }
+    return edgeCount;
+}
+
+bool Dbg::OneIntermediateNode(uint64_t n1, uint64_t n2, uint64_t* shared) const
+{
+    std::unordered_set<uint64_t> seen;
+    if (n1 == n2) {
+        return false;
+    }
+    for (const auto& nout : dbg_.at(n1)) {
+        seen.insert(nout.mer);
+    }
+    for (const auto& nout : dbg_.at(n2)) {
+        if (seen.find(nout.mer) != seen.end()) {
+            *shared = nout.mer;
+            return true;
+        }
+    }
+    return false;
+}
+
 int Dbg::RemoveSpurs(unsigned int maxLength)
 {
     int nSpurs = 0;
-    uint64_t e1, e2;
 
     std::unordered_set<uint64_t> toDelete;
 
-    for (auto x = dbg_.begin(); x != dbg_.end(); ++x) {
-        // one out edge cannot have a spur.
-        if (x.value().outEdges_.count() != 2) continue;
-        auto first_edge = x.value().begin();
-        auto second_edge = ++(x.value().begin());
+    for (auto nodeIter = dbg_.begin(); nodeIter != dbg_.end(); ++nodeIter) {
+        // Starting at tip nodes with a degree of one.
+        if (nodeIter->second.TotalEdgeCount() != 1) continue;
 
-        assert(first_edge->mer != second_edge->mer);
+        // Including tip node in the linear path.
+        auto linear_path = LinearPath(nodeIter->second.dna_.mer);
 
-        e1 = 0;
-        e2 = 0;
-
-        auto left = GetLinearPath(*first_edge, e1);
-        auto right = GetLinearPath(*second_edge, e2);
-
-        // one of the paths ends at an in-edge - not a simple spur
-        if ((e1 > 0) && (e2 > 0)) {
+        if (linear_path.size() > maxLength) {
             continue;
         }
-        // putative spur is too long and shouldn't be filtered.
-        if (left.size() > maxLength && right.size() > maxLength) {
-            continue;
+        for (const auto x : linear_path) {
+            toDelete.insert(x.mer);
         }
 
-        if (left.size() <= right.size()) {
-            for (const auto l : left) {
-                toDelete.insert(l);
-            }
-        } else {
-            for (const auto r : right) {
-                toDelete.insert(r);
-            }
-        }
         ++nSpurs;
     }
     for (const auto x : toDelete) {
@@ -376,73 +495,46 @@ int Dbg::RemoveSpurs(unsigned int maxLength)
     return nSpurs;
 }
 
-BubbleInfo Dbg::GetBubbles() const
+void Dbg::ResetEdges()
 {
+    for (auto x = dbg_.begin(); x != dbg_.end(); ++x) {
+        x->second.edges_ = 0;
+    }
+}
+
+bool Dbg::ValidateEdges() const
+{
+    bool valid = true;
     int count = 0;
-    uint64_t e1, e2;
-
-    // returned container describing which reads traverse which forks.
-    BubbleInfo result;
-
-    std::map<int32_t, int> left_reads;
-    std::map<int32_t, int> right_reads;
 
     for (auto x = dbg_.begin(); x != dbg_.end(); ++x) {
-        // two out edges are required at fork
-        if (x.value().outEdges_.count() != 2) continue;
-        auto first_edge = x.value().begin();
-        auto second_edge = ++(x.value().begin());
+        for (const auto& y : x->second) {
+            auto got = dbg_.find(y.mer);
+            if (got == dbg_.end()) {
+                ++count;
 
-        assert(first_edge->mer != second_edge->mer);
-
-        e1 = 0;
-        e2 = 0;
-
-        auto left = GetLinearPath(*first_edge, e1);
-        auto right = GetLinearPath(*second_edge, e2);
-
-        // both nodes don't have an in-degree > 0
-        if ((e1 + e2) == 0) {
-            continue;
-        }
-        // in degree do not agree
-        if (e1 != e2) {
-            continue;
-        }
-        // not a simple bubble.
-        else {
-            ++count;
-        }
-
-        // reuse the same temp data struct.
-        left_reads.clear();
-        right_reads.clear();
-
-        for (auto const& l : left) {
-            for (auto const& lid : dbg_.at(l).readIds_) {
-                ++left_reads[lid];
+                valid = false;
             }
-        }
-        for (auto const& r : right) {
-            for (auto const& rid : dbg_.at(r).readIds_) {
-                ++right_reads[rid];
-            }
-        }
-
-        std::string lk = x.value().dna_.KmerToStr() + "L";
-        std::string rk = x.value().dna_.KmerToStr() + "R";
-
-        assert(result.find(lk) == result.end());
-
-        for (const auto& kv : left_reads) {
-            result[lk].push_back(std::make_tuple(kv.first, kv.second, left.size()));
-        }
-
-        for (const auto& kv : right_reads) {
-            result[rk].push_back(std::make_tuple(kv.first, kv.second, right.size()));
         }
     }
-    return result;
+    return valid;
+}
+
+bool Dbg::ValidateLoad() const
+{
+    for (const auto& x : dbg_) {
+        if (x.second.readIds2_.count() == 0) return false;
+    }
+    return true;
+}
+
+void Dbg::WriteGraph(std::string fn)
+{
+    std::ofstream outfile;
+    outfile.open(fn);
+    outfile << Dbg::Graph2StringDot();
+
+    outfile.close();
 }
 
 }  // namespace Pbmer

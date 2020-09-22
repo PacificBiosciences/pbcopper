@@ -5,9 +5,9 @@
 
 #include <pbcopper/PbcopperConfig.h>
 
-#include <pbcopper/data/Position.h>
+#include <iosfwd>
 
-#include <cstddef>
+#include <pbcopper/data/Position.h>
 
 #define BOOST_ICL_USE_STATIC_BOUNDED_INTERVALS
 #include <boost/icl/discrete_interval.hpp>
@@ -55,13 +55,13 @@ public:
     /// \{
 
     /// \returns true if both intervals share the same endpoints
-    bool operator==(const Interval& other) const;
+    bool operator==(const Interval& other) const noexcept;
 
     /// \returns true if either interval's endpoints differ
-    bool operator!=(const Interval& other) const;
+    bool operator!=(const Interval& other) const noexcept;
 
     /// \returns true if this can be ordered before other
-    bool operator<(const Interval& other) const;
+    bool operator<(const Interval& other) const noexcept;
 
     /// \}
 
@@ -113,7 +113,7 @@ public:
     bool IsValid() const;
 
     /// \returns interval length
-    size_t Length() const;
+    Data::Position Length() const;
 
     /// \}
 

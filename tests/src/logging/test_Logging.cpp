@@ -1,3 +1,5 @@
+#include <pbcopper/logging/Logging.h>
+
 #include <sstream>
 #include <string>
 
@@ -5,7 +7,6 @@
 
 #include <gtest/gtest.h>
 
-#include <pbcopper/logging/Logging.h>
 #include <pbcopper/utility/StringUtils.h>
 
 using namespace PacBio;
@@ -22,9 +23,9 @@ using namespace PacBio;
 namespace LoggingTests {
 
 static const std::string debugMsg{"*** Application DEBUG ***"};
+static const std::string verboseMsg{"*** Application VERBOSE ***"};
 static const std::string infoMsg{"*** Application INFO ***"};
-static const std::string noticeMsg = "*** Application NOTE ***";
-static const std::string warnMsg = "*** Application WARNING ***";
+static const std::string warnMsg{"*** Application WARNING ***"};
 
 }  // namespace LoggingTests
 
@@ -55,10 +56,24 @@ TEST(Logging_Logger, writes_normal_info_message_to_output_stream)
     {
         Logging::Logger logger{s, Logging::LogLevel::INFO};
         PBLOGGER_INFO(logger) << LoggingTests::infoMsg;
+        PBLOGGER_VERBOSE(logger) << LoggingTests::verboseMsg;
     }
 
     const std::string result = s.str();
     EXPECT_NE(std::string::npos, result.find(LoggingTests::infoMsg));
+    EXPECT_EQ(std::string::npos, result.find(LoggingTests::verboseMsg));  // not written
+}
+
+TEST(Logging_Logger, writes_normal_verbose_message_to_output_stream)
+{
+    std::ostringstream s;
+    {
+        Logging::Logger logger{s, Logging::LogLevel::VERBOSE};
+        PBLOGGER_VERBOSE(logger) << LoggingTests::verboseMsg;
+    }
+
+    const std::string result = s.str();
+    EXPECT_NE(std::string::npos, result.find(LoggingTests::verboseMsg));
 }
 
 TEST(Logging_Logger, ignores_lower_level_messages)
@@ -67,6 +82,7 @@ TEST(Logging_Logger, ignores_lower_level_messages)
     {
         Logging::Logger logger{s, Logging::LogLevel::INFO};
         PBLOGGER_DEBUG(logger) << LoggingTests::debugMsg;
+        PBLOGGER_VERBOSE(logger) << LoggingTests::verboseMsg;
     }
     EXPECT_TRUE(s.str().empty());
 }

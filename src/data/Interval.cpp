@@ -2,7 +2,10 @@
 
 #include <pbcopper/data/Interval.h>
 
+#include <istream>
+#include <ostream>
 #include <sstream>
+#include <vector>
 
 #include <boost/algorithm/string.hpp>
 #include <boost/lexical_cast.hpp>
@@ -26,11 +29,11 @@ void Interval::Reset(const Interval& other)
     *this = other;
 }
 
-bool Interval::operator==(const Interval& other) const { return data_ == other.data_; }
+bool Interval::operator==(const Interval& other) const noexcept { return data_ == other.data_; }
 
-bool Interval::operator!=(const Interval& other) const { return !(data_ == other.data_); }
+bool Interval::operator!=(const Interval& other) const noexcept { return !(data_ == other.data_); }
 
-bool Interval::operator<(const Interval& other) const { return data_ < other.data_; }
+bool Interval::operator<(const Interval& other) const noexcept { return data_ < other.data_; }
 
 bool Interval::IsEmpty() const { return Length() == 0; }
 
@@ -66,7 +69,7 @@ bool Interval::Overlaps(const Interval& other) const
 
 bool Interval::IsValid() const { return !boost::icl::is_empty(data_); }
 
-size_t Interval::Length() const { return boost::icl::length(data_); }
+Data::Position Interval::Length() const { return boost::icl::length(data_); }
 
 Position Interval::Start() const { return data_.lower(); }
 

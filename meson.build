@@ -1,7 +1,7 @@
 project(
   'pbcopper',
   ['cpp', 'c'],
-  version : '1.4.0',
+  version : '1.7.0',
   default_options : [
     'buildtype=release',
     'warning_level=3',
@@ -9,7 +9,7 @@ project(
     'c_std=c11',
     'b_ndebug=if-release'],
   license : 'BSD-3',
-  meson_version : '>= 0.46.0')
+  meson_version : '>= 0.52.0')
 
 ############
 # CXXFLAGS #
@@ -22,7 +22,6 @@ foreach cflag: [
   '-Wduplicated-branches',
   '-Wlogical-op',
   '-Wrestrict',
-  '-Wuseless-cast',
   '-Wdouble-promotion',
   '-Wshadow',
   '-Wformat=1']
@@ -39,7 +38,7 @@ endforeach
 pbcopper_thread_dep = dependency('threads', required : true)
 
 # boost
-pbcopper_boost_dep = dependency('boost', required : true)
+pbcopper_boost_dep = dependency('boost', include_type : 'system', required : true)
 
 ###########
 # headers #
@@ -58,11 +57,6 @@ subdir('src')
 ##########
 
 if not meson.is_subproject()
-  # examples
-  if get_option('build-examples')
-    subdir('examples')
-  endif
-
   # documentation
   if get_option('build-docs')
     subdir('docs')
@@ -71,6 +65,7 @@ if not meson.is_subproject()
   # tests
   if get_option('tests')
     pbcopper_clang_formatter = find_program('tools/check-formatting')
+    pbcopper_eof_check = find_program('tools/check-eof')
     subdir('tests')
   endif
 endif

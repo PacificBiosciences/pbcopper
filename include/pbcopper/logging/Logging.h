@@ -7,9 +7,9 @@
 
 #include <condition_variable>
 #include <fstream>
-#include <iostream>
 #include <memory>
 #include <mutex>
+#include <ostream>
 #include <queue>
 #include <string>
 #include <thread>
@@ -69,17 +69,19 @@ private:
 #define PBLOGGER_LEVEL(lg, lvl) \
     PacBio::Logging::LogMessage(__FILE__, __func__, __LINE__, PacBio::Logging::lvl, (lg))
 
+// clang-format off
 //
 // Log message with desired log level & provided logger. TRACE level messages
 // are disabled in Release mode.
 //
-#define PBLOGGER_DEBUG(lg) PBLOGGER_LEVEL(lg, LogLevel::DEBUG)
-#define PBLOGGER_INFO(lg) PBLOGGER_LEVEL(lg, LogLevel::INFO)
-#define PBLOGGER_NOTICE(lg) PBLOGGER_LEVEL(lg, LogLevel::NOTICE)
-#define PBLOGGER_WARN(lg) PBLOGGER_LEVEL(lg, LogLevel::WARN)
-#define PBLOGGER_ERROR(lg) PBLOGGER_LEVEL(lg, LogLevel::ERROR)
+#define PBLOGGER_DEBUG(lg)    PBLOGGER_LEVEL(lg, LogLevel::DEBUG)
+#define PBLOGGER_VERBOSE(lg)  PBLOGGER_LEVEL(lg, LogLevel::VERBOSE)
+#define PBLOGGER_INFO(lg)     PBLOGGER_LEVEL(lg, LogLevel::INFO)
+#define PBLOGGER_NOTICE(lg)   PBLOGGER_LEVEL(lg, LogLevel::NOTICE)
+#define PBLOGGER_WARN(lg)     PBLOGGER_LEVEL(lg, LogLevel::WARN)
+#define PBLOGGER_ERROR(lg)    PBLOGGER_LEVEL(lg, LogLevel::ERROR)
 #define PBLOGGER_CRITICAL(lg) PBLOGGER_LEVEL(lg, LogLevel::CRITICAL)
-#define PBLOGGER_FATAL(lg) PBLOGGER_LEVEL(lg, LogLevel::FATAL)
+#define PBLOGGER_FATAL(lg)    PBLOGGER_LEVEL(lg, LogLevel::FATAL)
 
 #ifdef NDEBUG
 #define PBLOGGER_TRACE(lg) \
@@ -94,13 +96,14 @@ private:
 //
 #define PBLOG_LEVEL(lvl) PBLOGGER_LEVEL(PacBio::Logging::Logger::Current(), lvl)
 
-#define PBLOG_DEBUG PBLOG_LEVEL(LogLevel::DEBUG)
-#define PBLOG_INFO PBLOG_LEVEL(LogLevel::INFO)
-#define PBLOG_NOTICE PBLOG_LEVEL(LogLevel::NOTICE)
-#define PBLOG_WARN PBLOG_LEVEL(LogLevel::WARN)
-#define PBLOG_ERROR PBLOG_LEVEL(LogLevel::ERROR)
+#define PBLOG_DEBUG    PBLOG_LEVEL(LogLevel::DEBUG)
+#define PBLOG_VERBOSE  PBLOG_LEVEL(LogLevel::VERBOSE)
+#define PBLOG_INFO     PBLOG_LEVEL(LogLevel::INFO)
+#define PBLOG_NOTICE   PBLOG_LEVEL(LogLevel::NOTICE)
+#define PBLOG_WARN     PBLOG_LEVEL(LogLevel::WARN)
+#define PBLOG_ERROR    PBLOG_LEVEL(LogLevel::ERROR)
 #define PBLOG_CRITICAL PBLOG_LEVEL(LogLevel::CRITICAL)
-#define PBLOG_FATAL PBLOG_LEVEL(LogLevel::FATAL)
+#define PBLOG_FATAL    PBLOG_LEVEL(LogLevel::FATAL)
 
 #ifdef NDEBUG
 #define PBLOG_TRACE \
@@ -108,6 +111,8 @@ private:
 #else
 #define PBLOG_TRACE PBLOG_LEVEL(LogLevel::TRACE)
 #endif
+
+// clang-format on
 
 }  // namespace Logging
 }  // namespace PacBio

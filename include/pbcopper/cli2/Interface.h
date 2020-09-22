@@ -17,6 +17,7 @@
 #include <pbcopper/cli2/OptionGroup.h>
 #include <pbcopper/cli2/PositionalArgument.h>
 #include <pbcopper/cli2/Results.h>
+#include <pbcopper/cli2/VersionPrinterCallback.h>
 #include <pbcopper/cli2/internal/InterfaceData.h>
 #include <pbcopper/logging/Logging.h>
 
@@ -123,6 +124,11 @@ public:
     ///
     Interface& LogConfig(const Logging::LogConfig& config);
 
+    ///
+    /// Register callback for custom version display.
+    ///
+    Interface& RegisterVersionPrinter(VersionPrinterCallback printer);
+
 public:
     ///
     /// \return application's description
@@ -168,6 +174,11 @@ public:
     ///
     const Logging::LogConfig& LogConfig() const;
 
+    ///
+    /// \return number of positional arguments that are required
+    ///
+    size_t NumRequiredPosArgs() const;
+
     /// \internal
     /// \return "flattened" list of all registered options (grouping is ignored)
     ///
@@ -211,6 +222,11 @@ public:
     /// \return (translated) version option.
     ///
     const internal::OptionData& VersionOption() const;
+
+    /// \internal
+    /// Print version information
+    ///
+    void PrintVersion() const;
 
 public:
     ///
