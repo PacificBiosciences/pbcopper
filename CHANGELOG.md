@@ -2,11 +2,14 @@
 
 ## Active
 
+## [1.8.0] - 2020-09-23
+
 ### Added
  - Base64 encoding/decoding
  - (Simplified) alarm file can be created for general exceptions
  - Utility::StringView as std::string_view look-a-like
  - Support for hidden CLI subtools
+ - Support for alternate frame codecs
 
 ### Changed
  - Accuracy explicitly allows -1, otherwise clamps to [0.0, 1.0]
