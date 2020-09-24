@@ -5,6 +5,7 @@
 
 #include <algorithm>
 #include <array>
+#include <limits>
 #include <stdexcept>
 #include <vector>
 
@@ -12,7 +13,12 @@ namespace PacBio {
 namespace Pbmer {
 
 Parser::Parser(uint8_t kmerSize)
-    : kmerSize_{kmerSize}, mask_{(1ull << 2 * kmerSize) - 1}, shift1_{2ull * (kmerSize - 1)}
+    : kmerSize_{kmerSize}
+    , mask_{((0 < kmerSize) && (kmerSize <= 32))
+                ? std::numeric_limits<decltype(mask_)>::max() >> (64 - 2 * kmerSize)
+                : throw std::invalid_argument{"[pbmer] parsing ERROR: kmerSize must be in the "
+                                              "range [1, 32]."}}
+    , shift1_{2ull * (kmerSize - 1)}
 {
 }
 

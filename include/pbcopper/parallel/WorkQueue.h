@@ -32,7 +32,7 @@ private:
 
 public:
     WorkQueue(const size_t size, const size_t mul = 2)
-        : exc{nullptr}, sz{size * mul}, abort{false}, workersFinalized{false}
+        : exc{nullptr}, sz{size * mul}, abort{false}, thrown{false}, workersFinalized{false}
     {
         for (size_t i = 0; i < size; ++i) {
             threads.emplace_back(std::thread([this]() {
@@ -53,6 +53,11 @@ public:
         }
     }
 
+    ~WorkQueue() noexcept(false)
+    {
+        if (exc && !thrown) std::rethrow_exception(exc);
+    }
+
     template <typename F, typename... Args>
     void ProduceWith(F&& f, Args&&... args)
     {
@@ -61,7 +66,10 @@ public:
         {
             std::unique_lock<std::mutex> lk(m);
             popped.wait(lk, [&task, this]() {
-                if (exc) std::rethrow_exception(exc);
+                if (exc) {
+                    thrown = true;
+                    std::rethrow_exception(exc);
+                }
 
                 if (head.size() < sz) {
                     head.emplace_back(std::move(task));
@@ -133,7 +141,10 @@ public:
             thread.join();
 
         // Is there a final exception, throw if so..
-        if (exc) std::rethrow_exception(exc);
+        if (exc) {
+            thrown = true;
+            std::rethrow_exception(exc);
+        }
     }
 
 private:
@@ -174,6 +185,7 @@ private:
     std::mutex m;
     size_t sz;
     std::atomic_bool abort;
+    std::atomic_bool thrown;
     std::atomic_bool workersFinalized;
 };
 }  // namespace Parallel
