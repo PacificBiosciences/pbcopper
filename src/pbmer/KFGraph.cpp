@@ -4,10 +4,14 @@
 
 #include <cassert>
 
+#include <algorithm>
 #include <fstream>
 #include <iostream>
+#include <set>
 #include <sstream>
 #include <unordered_set>
+
+#include <pbcopper/utility/MoveAppend.h>
 
 namespace PacBio {
 namespace Pbmer {
@@ -282,55 +286,6 @@ Bubbles KFG::FindBubbles() const
     return result;
 }
 
-std::string KFG::DumpUtg() const
-{
-    std::ostringstream ss;
-
-    std::unordered_set<uint64_t> seen;
-    uint32_t i = 0;
-    for (const auto& node : kfg_) {
-        if (seen.find(node.first) != seen.end()) continue;
-        if (node.second.InEdgeCount() != 0) continue;
-        for (const auto& o : node.second) {
-            auto lp = LinearPath(o);
-
-            if (!lp.empty()) {
-                for (const auto& s : lp) {
-                    seen.insert(s.Key());
-                }
-                auto dna = Vec2String(lp);
-                ss << ">" << i << "_" << node.first << " round:1"
-                   << "from:" << node.first << "\n";
-                ss << dna << "\n";
-                ++i;
-            }
-        }
-        seen.insert(node.first);
-    }
-
-    for (const auto& node : kfg_) {
-        if (seen.find(node.first) != seen.end()) continue;
-        if (node.second.OutEdgeCount() < 2 && node.second.InEdgeCount() < 2) continue;
-        for (const auto& o : node.second) {
-            auto lp = LinearPath(o);
-
-            if (!lp.empty()) {
-                for (const auto& s : lp) {
-                    seen.insert(s.Key());
-                }
-                auto dna = Vec2String(lp);
-                ss << ">" << i << "_" << node.first << " round:2"
-                   << "from:" << node.first << "\n";
-                ss << dna << "\n";
-                ++i;
-            }
-        }
-        seen.insert(node.first);
-    }
-
-    return ss.str();
-}
-
 std::string KFG::Graph2StringDot() const
 {
     std::ostringstream ss;
@@ -351,19 +306,19 @@ std::string KFG::Graph2StringDot() const
     return ss.str();
 }
 
-void KFG::WriteUtg(std::string fn) const
-{
-    std::ofstream outfile;
-    outfile.open(fn);
-    outfile << DumpUtg();
-    outfile.close();
-}
-
 void KFG::WriteDot(std::string fn) const
 {
     std::ofstream outfile;
     outfile.open(fn);
     outfile << Graph2StringDot();
+    outfile.close();
+}
+
+void KFG::WriteUtgsGFA(std::string fn) const
+{
+    std::ofstream outfile;
+    outfile.open(fn);
+    outfile << DumpGFAUtgs();
     outfile.close();
 }
 
@@ -384,6 +339,106 @@ void KFG::DumpHeader() const
     for (const auto& i : nameToId_) {
         std::cerr << i.first << " " << i.second << "\n";
     }
+}
+
+bool KFG::NextUtg(uint64_t currentNode, std::unordered_set<uint64_t>& seen,
+                  std::vector<std::string>& segments, std::vector<std::string>& links) const
+{
+    if (seen.find(currentNode) != seen.end()) {
+        return false;
+    }
+
+    std::vector<KFNode> fullPath;
+
+    // first node is a branch node, but we need to include the branch node
+    std::vector<KFNode> linearPath = LinearPath(currentNode);
+
+    Utility::MoveAppend(linearPath, fullPath);
+
+    if (fullPath.empty()) {
+        fullPath.push_back(kfg_.at(currentNode));
+    }
+
+    // We need to get the branch node.
+    if (fullPath.back().OutEdgeCount() == 1) {
+        uint64_t tail = (*fullPath.back().outEdges_.begin());
+        if (tail != fullPath.back().Key() && seen.find(fullPath.back().Key()) == seen.end())
+            fullPath.push_back(kfg_.at(tail));
+    }
+
+    for (const auto p : fullPath) {
+        seen.insert(p.Key());
+    }
+
+    auto seq = Vec2String(fullPath);
+
+    if (fullPath.front().InEdgeCount() != 0) {
+
+        auto start = seq.size() - fullPath.size();
+
+        seq = seq.substr(start, fullPath.size());
+    }
+
+    double KmerCovSum = 0;
+    for (const auto n : fullPath) {
+        KmerCovSum += n.SeqCount();
+    }
+
+    std::stringstream segLine;
+
+    segLine << "S\t" << currentNode << "\t" << seq << "\tKC:i:" << fullPath.size()
+            << "\tLN:i:" << seq.size() << "\tRC:i:" << KmerCovSum << "\n";
+
+    segments.push_back(segLine.str());
+
+    for (const auto& nn : fullPath.back()) {
+
+        std::stringstream linkLine;
+        linkLine << "L\t" << currentNode << "\t+\t" << nn << "\t+\t*\n";
+        links.push_back(linkLine.str());
+
+        NextUtg(nn, seen, segments, links);
+    }
+
+    return true;
+}
+
+std::string KFG::DumpGFAUtgs() const
+{
+    std::unordered_set<uint64_t> seen;
+
+    std::vector<std::string> segments;
+    std::vector<std::string> links;
+
+    std::set<uint64_t> keys;
+
+    //maintain an order for testing and consistency
+    for (const auto& node : kfg_) {
+        keys.insert(node.first);
+    }
+
+    for (const auto& k : keys) {
+        if (seen.find(k) != seen.end()) continue;
+        auto node = kfg_.at(k);
+        if (node.InEdgeCount() != 0) continue;
+        NextUtg(node.Key(), seen, segments, links);
+    }
+
+    std::ostringstream ss;
+    ss << "H\tVN:Z:1.0\n";
+
+    std::sort(segments.begin(), segments.end());
+    std::sort(links.begin(), links.end());
+
+    for (const auto& seg : segments) {
+        ss << seg;
+    }
+
+    for (const auto& lnk : links) {
+        ss << lnk;
+    }
+
+    return ss.str();
 }
 
 std::unordered_map<std::string, uint32_t> KFG::Header() const { return nameToId_; }

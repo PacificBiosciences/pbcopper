@@ -150,7 +150,7 @@ This topology is not possible to find with a de bruijn graph.
       : TTCCAGTGCGGGAGG------------CACTGCTAGCATAGCCGGTAATC(1949 - 1986)
 */
 
-TEST(Dbg_Bubbles, indel_found)
+TEST(Pbmer_KFGraph, indel_found)
 {
     const PacBio::Pbmer::Parser parser{15};
     //del                                (X)
@@ -167,4 +167,92 @@ TEST(Dbg_Bubbles, indel_found)
 
     auto bubbles = g.FindBubbles();
     EXPECT_EQ(bubbles.size(), 1);
+}
+
+TEST(Pbmer_KFGraph, expected_GFA)
+{
+    const PacBio::Pbmer::Parser parser{15};
+    //del                                (X)
+    const std::string td1{"TTCCAGTGCGGGAGGAGGAGGAGGAGGCACTGCTAGCATAGCCGGTAATC"};
+    const std::string td2{"TTCCAGTGCGGGAGGCACTGCTAGCATAGCCGGTAATC"};
+
+    std::vector<PacBio::Pbmer::DnaBit> m1 = parser.ParseDnaBit(td1);
+    std::vector<PacBio::Pbmer::DnaBit> m2 = parser.ParseDnaBit(td2);
+
+    PacBio::Pbmer::KFG g{15, 2};
+
+    g.AddSeq(m1, 1, "A");
+    g.AddSeq(m2, 2, "B");
+
+    std::string expected = R"(H	VN:Z:1.0
+S	11205503064534538081	ATAGCCGGTAATC	KC:i:13	LN:i:13	RC:i:26
+S	16273463927145580620	CACTGCTAGC	KC:i:10	LN:i:10	RC:i:11
+S	4268400356317211862	AGGAGGAGGAGGCACTGCTAGC	KC:i:22	LN:i:22	RC:i:23
+S	9657151653063332195	TTCCAGTGCGGGAGG	KC:i:1	LN:i:15	RC:i:2
+L	16273463927145580620	+	11205503064534538081	+	*
+L	4268400356317211862	+	11205503064534538081	+	*
+L	9657151653063332195	+	16273463927145580620	+	*
+L	9657151653063332195	+	4268400356317211862	+	*
+)";
+
+    auto seen = g.DumpGFAUtgs();
+
+    EXPECT_EQ(seen, expected);
+}
+
+TEST(Pbmer_KFGraph, expected_GFA_linear)
+{
+    const PacBio::Pbmer::Parser parser{15};
+
+    const std::string td1{"TTCCAGTGCGGGAGGAGGAGGAGGAGGCACTGCTAGCATAGCCGGTAATC"};
+    const std::string td2{"TTCCAGTGCGGGAGGAGGAGGAGGAGGCACTGCTAGCATAGCCGGTAATC"};
+
+    std::vector<PacBio::Pbmer::DnaBit> m1 = parser.ParseDnaBit(td1);
+    std::vector<PacBio::Pbmer::DnaBit> m2 = parser.ParseDnaBit(td2);
+
+    PacBio::Pbmer::KFG g{15, 2};
+
+    g.AddSeq(m1, 1, "A");
+    g.AddSeq(m2, 2, "B");
+
+    auto seen = g.DumpGFAUtgs();
+
+    std::string expected = R"(H	VN:Z:1.0
+S	9657151653063332195	TTCCAGTGCGGGAGGAGGAGGAGGAGGCACTGCTAGCATAGCCGGTAATC	KC:i:36	LN:i:50	RC:i:72
+)";
+
+    EXPECT_EQ(seen, expected);
+}
+
+TEST(Pbmer_KFGraph, tail_diff)
+{
+    const PacBio::Pbmer::Parser parser{15};
+
+    //       TTCCAGTGCGGGAGGAGGAGGAGGAGGCACTGCTAGCATAGCCGGTAAT
+    // one:  TTCCAGTGCGGGAGGAGGAGGAGGAGGCACTGCTAGCATAGCCGGTAA
+    // two:                                                  T
+    // three:                                                C
+
+    const std::string td1{"TTCCAGTGCGGGAGGAGGAGGAGGAGGCACTGCTAGCATAGCCGGTAATT"};
+    const std::string td2{"TTCCAGTGCGGGAGGAGGAGGAGGAGGCACTGCTAGCATAGCCGGTAATC"};
+
+    std::vector<PacBio::Pbmer::DnaBit> m1 = parser.ParseDnaBit(td1);
+    std::vector<PacBio::Pbmer::DnaBit> m2 = parser.ParseDnaBit(td2);
+
+    PacBio::Pbmer::KFG g{15, 2};
+
+    g.AddSeq(m1, 1, "A");
+    g.AddSeq(m2, 2, "B");
+
+    auto seen = g.DumpGFAUtgs();
+
+    std::string expected = R"(H	VN:Z:1.0
+S	12648310277698350581	C	KC:i:1	LN:i:1	RC:i:1
+S	5024143364061459383	T	KC:i:1	LN:i:1	RC:i:1
+S	9657151653063332195	TTCCAGTGCGGGAGGAGGAGGAGGAGGCACTGCTAGCATAGCCGGTAAT	KC:i:35	LN:i:49	RC:i:70
+L	9657151653063332195	+	12648310277698350581	+	*
+L	9657151653063332195	+	5024143364061459383	+	*
+)";
+
+    EXPECT_EQ(seen, expected);
 }
