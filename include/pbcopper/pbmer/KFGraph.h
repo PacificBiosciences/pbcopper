@@ -67,9 +67,9 @@ public:
     void DumpHeader() const;
 
     /*!
-      \brief dump unitig string. These sequences break at variant positions. This function is still under development.
+      \brief dump unitigs to GFA string.
     */
-    std::string DumpUtg() const;
+    std::string DumpGFAUtgs() const;
 
     /*!
        \brief Get a list of bubbles (a struct defined in Bubble.h)
@@ -168,9 +168,16 @@ public:
     void WriteDot(std::string fn) const;
 
     /*!
-       \brief write the unitigs to a file - see DumpUtg()
+       \brief write the unitigs to a GFA, there are kmer length overlaps on the unitigs.
     */
-    void WriteUtg(std::string fn) const;
+    void WriteUtgsGFA(std::string fn) const;
+
+private:
+    /*!
+       \brief the recursive function to generate unitigs
+    */
+    bool NextUtg(uint64_t currentNode, std::unordered_set<uint64_t>& seen,
+                 std::vector<std::string>& segments, std::vector<std::string>& links) const;
 
 private:
     // the whole graph structure and colors are stored here.

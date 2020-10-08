@@ -40,9 +40,10 @@ public:
     int MantissaBits() const;
 
 private:
-    int exponentBits_;
-    int mantissaBits_;
-    int base_;
+    const int exponentBits_;
+    const int mantissaBits_;
+    const int base_;
+    const uint8_t max_;
 };
 
 // ---------------------

@@ -3,6 +3,7 @@
 
 #include <cstdint>
 
+#include <numeric>
 #include <vector>
 
 #include <gtest/gtest.h>
@@ -67,4 +68,79 @@ TEST(Data_FrameEncoder, decode_throws_if_out_of_range)
     EXPECT_NO_THROW({ auto x = v2.Decode({0}); });
     EXPECT_NO_THROW({ auto x = v2.Decode({1}); });
     EXPECT_NO_THROW({ auto x = v2.Decode({63}); });
+}
+
+TEST(Data_FrameEncoder, v2_encoder_produces_expected_values)
+{
+    std::vector<uint16_t> input(240);
+    std::iota(input.begin(), input.end(), 0);
+
+    const std::vector<uint8_t> expectedEncoded{
+        // 0 - 15
+        0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15,
+        // 16 - 31
+        16, 16, 17, 17, 18, 18, 19, 19, 20, 20, 21, 21, 22, 22, 23, 23,
+        // 32 - 47
+        24, 24, 25, 25, 26, 26, 27, 27, 28, 28, 29, 29, 30, 30, 31, 31,
+        // 48 - 63
+        32, 32, 32, 32, 33, 33, 33, 33, 34, 34, 34, 34, 35, 35, 35, 35,
+        // 64 - 79
+        36, 36, 36, 36, 37, 37, 37, 37, 38, 38, 38, 38, 39, 39, 39, 39,
+        // 80 - 95
+        40, 40, 40, 40, 41, 41, 41, 41, 42, 42, 42, 42, 43, 43, 43, 43,
+        // 96 - 111
+        44, 44, 44, 44, 45, 45, 45, 45, 46, 46, 46, 46, 47, 47, 47, 47,
+        // 112 - 127
+        48, 48, 48, 48, 48, 48, 48, 48, 49, 49, 49, 49, 49, 49, 49, 49,
+        // 128 - 143
+        50, 50, 50, 50, 50, 50, 50, 50, 51, 51, 51, 51, 51, 51, 51, 51,
+        // 144 - 159
+        52, 52, 52, 52, 52, 52, 52, 52, 53, 53, 53, 53, 53, 53, 53, 53,
+        // 160 - 175
+        54, 54, 54, 54, 54, 54, 54, 54, 55, 55, 55, 55, 55, 55, 55, 55,
+        // 176 - 191
+        56, 56, 56, 56, 56, 56, 56, 56, 57, 57, 57, 57, 57, 57, 57, 57,
+        // 192 - 207
+        58, 58, 58, 58, 58, 58, 58, 58, 59, 59, 59, 59, 59, 59, 59, 59,
+        // 208 - 223
+        60, 60, 60, 60, 60, 60, 60, 60, 61, 61, 61, 61, 61, 61, 61, 61,
+        // 224 - 239
+        62, 62, 62, 62, 62, 62, 62, 62, 63, 63, 63, 63, 63, 63, 63, 63,
+    };
+
+    PacBio::Data::V2FrameEncoder v2{2, 4};
+    const auto encoded = v2.Encode(input);
+    EXPECT_EQ(encoded.size(), expectedEncoded.size());
+    EXPECT_EQ(encoded, expectedEncoded);
+}
+
+TEST(Data_FrameEncoder, v2_encoder_clamps_to_max)
+{
+    const std::vector<uint16_t> outOfRange{240, 256, 400};
+    const std::vector<uint8_t> clamped{63, 63, 63};
+
+    PacBio::Data::V2FrameEncoder v2{2, 4};
+    const auto encoded = v2.Encode(outOfRange);
+    EXPECT_EQ(clamped, encoded);
+}
+
+TEST(Data_FrameEncoder, v2_decoder_produces_expected_values)
+{
+    std::vector<uint8_t> input(64);
+    std::iota(input.begin(), input.end(), 0);
+
+    const std::vector<uint16_t> expectedDecoded{
+        0,   1,   2,   3,   4,   5,   6,   7,   8,   9,   10,  11,  12,  13,  14,  15,
+        16,  18,  20,  22,  24,  26,  28,  30,  32,  34,  36,  38,  40,  42,  44,  46,
+        48,  52,  56,  60,  64,  68,  72,  76,  80,  84,  88,  92,  96,  100, 104, 108,
+        112, 120, 128, 136, 144, 152, 160, 168, 176, 184, 192, 200, 208, 216, 224, 232,
+    };
+
+    PacBio::Data::V2FrameEncoder v2{2, 4};
+    const auto decoded = v2.Decode(input);
+    EXPECT_EQ(decoded.Data(), expectedDecoded);
+
+    // out-of-range
+    std::vector<uint8_t> outOfRange{64, 65, 66};
+    EXPECT_THROW(v2.Decode(outOfRange), std::runtime_error);
 }
