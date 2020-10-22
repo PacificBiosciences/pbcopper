@@ -70,5 +70,55 @@ std::ostream& operator<<(std::ostream& os, const Cigar& cigar)
     return os << "Cigar(" << cigar.ToStdString() << ')';
 }
 
+/// http://bitbucket.pacificbiosciences.com:7990/projects/SAT/repos/pbmm2/browse/src/MM2Helper.cpp#980
+CigarBaseCounts CigarOpsCalculator(const Cigar& cigar)
+{
+
+    CigarBaseCounts results = {};
+
+    for (const auto& c : cigar) {
+        int32_t len = c.Length();
+        switch (c.Type()) {
+            case Data::CigarOperationType::INSERTION:
+                results.InsertionBases += len;
+                ++results.InsertionEvents;
+                break;
+            case Data::CigarOperationType::DELETION:
+                results.DeletionBases += len;
+                ++results.DeletionEvents;
+                break;
+            case Data::CigarOperationType::SEQUENCE_MISMATCH:
+                results.MismatchBases += len;
+                ++results.MismatchEvents;
+                break;
+            case Data::CigarOperationType::REFERENCE_SKIP:
+                break;
+            case Data::CigarOperationType::SEQUENCE_MATCH:
+            case Data::CigarOperationType::ALIGNMENT_MATCH:
+                results.MatchBases += len;
+                ++results.MatchEvents;
+                break;
+            case Data::CigarOperationType::PADDING:
+            case Data::CigarOperationType::SOFT_CLIP:
+            case Data::CigarOperationType::HARD_CLIP:
+                break;
+            case Data::CigarOperationType::UNKNOWN_OP:
+            default:
+                throw std::runtime_error("UNKNOWN CIGAR OPERATION");
+                break;
+        }
+    }
+
+    results.NumAlignedBases = results.MatchBases + results.InsertionBases + results.MismatchBases;
+    results.Identity =
+        100.0 * results.MatchBases / (results.MatchBases + results.MismatchBases +
+                                      results.DeletionBases + results.InsertionBases);
+    results.GapCompressedIdentity =
+        100.0 * results.MatchBases / (results.MatchBases + results.MismatchBases +
+                                      results.DeletionEvents + results.InsertionEvents);
+
+    return results;
+}
+
 }  // namespace Data
 }  // namespace PacBio
