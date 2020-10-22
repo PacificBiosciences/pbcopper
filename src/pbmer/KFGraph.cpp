@@ -366,7 +366,7 @@ bool KFG::NextUtg(uint64_t currentNode, std::unordered_set<uint64_t>& seen,
             fullPath.push_back(kfg_.at(tail));
     }
 
-    for (const auto p : fullPath) {
+    for (const auto& p : fullPath) {
         seen.insert(p.Key());
     }
 
@@ -380,7 +380,7 @@ bool KFG::NextUtg(uint64_t currentNode, std::unordered_set<uint64_t>& seen,
     }
 
     double KmerCovSum = 0;
-    for (const auto n : fullPath) {
+    for (const auto& n : fullPath) {
         KmerCovSum += n.SeqCount();
     }
 

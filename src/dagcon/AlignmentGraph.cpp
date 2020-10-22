@@ -121,7 +121,7 @@ void AlignmentGraph::AddEdge(VertexIndex u, VertexIndex v)
     // otherwise add a new edge.
     bool edgeExists = false;
 
-    for (const auto& e : boost::make_iterator_range(boost::in_edges(v, graph_))) {
+    for (const auto e : boost::make_iterator_range(boost::in_edges(v, graph_))) {
         if (boost::source(e, graph_) == u) {
             // increment edge count
             graph_[e].Count++;
@@ -148,12 +148,12 @@ void AlignmentGraph::MergeNodes()
         MergeInNodes(u);
         MergeOutNodes(u);
 
-        for (const auto& e : boost::make_iterator_range(boost::out_edges(u, graph_))) {
+        for (const auto e : boost::make_iterator_range(boost::out_edges(u, graph_))) {
             graph_[e].Visited = true;
 
             int notVisited = 0;
             const VertexIndex v = boost::target(e, graph_);
-            for (const auto& inEdge : boost::make_iterator_range(boost::in_edges(v, graph_))) {
+            for (const auto inEdge : boost::make_iterator_range(boost::in_edges(v, graph_))) {
                 if (graph_[inEdge].Visited == false) ++notVisited;
             }
 
@@ -168,7 +168,7 @@ void AlignmentGraph::MergeInNodes(VertexIndex n)
 {
     std::map<char, std::vector<VertexIndex>> nodeGroups;
 
-    for (const auto& inEdge : boost::make_iterator_range(boost::in_edges(n, graph_))) {
+    for (const auto inEdge : boost::make_iterator_range(boost::in_edges(n, graph_))) {
         const VertexIndex inNode = boost::source(inEdge, graph_);
         if (out_degree(inNode, graph_) == 1) {
             nodeGroups[graph_[inNode].Base].push_back(inNode);
@@ -206,7 +206,7 @@ void AlignmentGraph::MergeInNodes(VertexIndex n)
         ++ni;
         for (; ni != nodes.cend(); ++ni) {
             const VertexIndex vtx = *ni;
-            for (const auto& newEdge : boost::make_iterator_range(boost::in_edges(vtx, graph_))) {
+            for (const auto newEdge : boost::make_iterator_range(boost::in_edges(vtx, graph_))) {
                 const VertexIndex n1 = boost::source(newEdge, graph_);
 
                 EdgeIndex e;
@@ -236,7 +236,7 @@ void AlignmentGraph::MergeOutNodes(VertexIndex n)
 {
     std::map<char, std::vector<VertexIndex>> nodeGroups;
 
-    for (const auto& outEdge : boost::make_iterator_range(boost::out_edges(n, graph_))) {
+    for (const auto outEdge : boost::make_iterator_range(boost::out_edges(n, graph_))) {
         const VertexIndex outNode = boost::target(outEdge, graph_);
         if (in_degree(outNode, graph_) == 1) {
             nodeGroups[graph_[outNode].Base].push_back(outNode);
@@ -268,7 +268,7 @@ void AlignmentGraph::MergeOutNodes(VertexIndex n)
         ++nodeIter;
         for (; nodeIter != nodes.cend(); ++nodeIter) {
             VertexIndex vtx = *nodeIter;
-            for (const auto& newEdge : boost::make_iterator_range(boost::out_edges(vtx, graph_))) {
+            for (const auto newEdge : boost::make_iterator_range(boost::out_edges(vtx, graph_))) {
                 const VertexIndex n2 = boost::target(newEdge, graph_);
 
                 EdgeIndex e;
@@ -469,7 +469,7 @@ void AlignmentGraph::ConsensusWithMinFlankCoverage(std::vector<ConsensusResult>&
 
 std::vector<AlignmentNode> AlignmentGraph::BestPath()
 {
-    for (const auto& edge : boost::make_iterator_range(edges(graph_))) {
+    for (const auto edge : boost::make_iterator_range(edges(graph_))) {
         graph_[edge].Visited = false;
     }
 
@@ -491,7 +491,7 @@ std::vector<AlignmentNode> AlignmentGraph::BestPath()
         float bestScore = -FLT_MAX;
         EdgeIndex bestEdgeD = boost::initialized_value;
 
-        for (const auto& outEdgeD : boost::make_iterator_range(boost::out_edges(n, graph_))) {
+        for (const auto outEdgeD : boost::make_iterator_range(boost::out_edges(n, graph_))) {
             const VertexIndex outNodeD = boost::target(outEdgeD, graph_);
             const AlignmentNode& outNode = graph_[outNodeD];
 
@@ -516,12 +516,12 @@ std::vector<AlignmentNode> AlignmentGraph::BestPath()
             bestNodeScoreEdge[n] = bestEdgeD;
         }
 
-        for (const auto& inEdge : boost::make_iterator_range(boost::in_edges(n, graph_))) {
+        for (const auto inEdge : boost::make_iterator_range(boost::in_edges(n, graph_))) {
             graph_[inEdge].Visited = true;
             const VertexIndex inNode = boost::source(inEdge, graph_);
             int notVisited = 0;
 
-            for (const auto& newOutEdge :
+            for (const auto newOutEdge :
                  boost::make_iterator_range(boost::out_edges(inNode, graph_))) {
                 if (graph_[newOutEdge].Visited == false) notVisited++;
             }
@@ -554,7 +554,7 @@ std::vector<AlignmentNode> AlignmentGraph::BestPath()
 
 bool AlignmentGraph::DanglingNodes()
 {
-    for (const auto& vertex : boost::make_iterator_range(boost::vertices(graph_))) {
+    for (const auto vertex : boost::make_iterator_range(boost::vertices(graph_))) {
         if (graph_[vertex].Deleted) continue;
         if (graph_[vertex].Base == graph_[enterVertex_].Base ||
             graph_[vertex].Base == graph_[exitVertex_].Base) {
