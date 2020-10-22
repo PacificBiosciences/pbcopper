@@ -479,7 +479,7 @@ int Dbg::RemoveSpurs(unsigned int maxLength)
         if (linear_path.size() > maxLength) {
             continue;
         }
-        for (const auto x : linear_path) {
+        for (const auto& x : linear_path) {
             toDelete.insert(x.mer);
         }
 
