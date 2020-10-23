@@ -149,4 +149,51 @@ TEST(Data_Cigar, can_create_string_from_multi_op_cigar)
     EXPECT_EQ("100=2D34I6=6X6=", cigar.ToStdString());
 }
 
+TEST(Data_CigarOpsCalculator, can_count_base_events){
+ const Cigar cigar = Cigar::FromStdString("5=1X2D3I");
+ const auto results = CigarOpsCalculator(cigar);
+
+ EXPECT_EQ(results.DeletionBases, 2);
+ EXPECT_EQ(results.InsertionBases, 3);
+ EXPECT_EQ(results.MatchBases, 5);
+ EXPECT_EQ(results.MismatchBases, 1);
+
+
+}
+
+// this tests the number of operations is correct, not base counts
+TEST(Data_CigarOpsCalculator, can_count_cigar_opts){
+ const Cigar cigar = Cigar::FromStdString("1X2=2X2D2I1D1=1X1=1X");
+ const auto results = CigarOpsCalculator(cigar);
+
+ EXPECT_EQ(results.DeletionEvents, 2);
+ EXPECT_EQ(results.InsertionEvents, 1);
+ EXPECT_EQ(results.MatchEvents, 3);
+ EXPECT_EQ(results.MismatchEvents, 4);
+}
+
+TEST(Data_CigarOpsCalculator, can_calculate_identity){
+ const Cigar cigar = Cigar::FromStdString("100=10D100=");
+ const auto results = CigarOpsCalculator(cigar);
+
+ // 200/210
+ EXPECT_NEAR(results.Identity, 95.2381, 0.01 );
+}
+
+TEST(Data_CigarOpsCalculator, can_calculate_gap_compressed_identity_with_deletions){
+ const Cigar cigar = Cigar::FromStdString("100=10D100=");
+ const auto results = CigarOpsCalculator(cigar);
+
+ // 200/201
+ EXPECT_NEAR(results.GapCompressedIdentity, 99.50249, 0.01);
+}
+
+TEST(Data_CigarOpsCalculator, can_calculate_gap_compressed_identity_with_insertions){
+ const Cigar cigar = Cigar::FromStdString("100=10I100=");
+ const auto results = CigarOpsCalculator(cigar);
+
+ // 200/201
+ EXPECT_NEAR(results.GapCompressedIdentity, 99.50249, 0.01);
+}
+
 // clang-format on

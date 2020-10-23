@@ -68,6 +68,30 @@ public:
     /// \}
 };
 
+/// https://confluence.pacificbiosciences.com/pages/viewpage.action?spaceKey=SL&title=Concordance%2C+Identity%2C+and+SMRT+Link+Reports
+struct CigarBaseCounts
+{
+    int DeletionBases;
+    int DeletionEvents;
+    int InsertionBases;
+    int InsertionEvents;
+    int MatchBases;
+    int MatchEvents;
+    int MismatchBases;
+    int MismatchEvents;
+    int NumAlignedBases;
+    double GapCompressedIdentity;
+    double Identity;
+};
+
+///
+/// \brief
+///
+/// \param cigar
+/// \return CigarBaseCounts, which includes identity calculations
+///
+CigarBaseCounts CigarOpsCalculator(const Cigar& cigar);
+
 ///
 /// \brief
 ///
