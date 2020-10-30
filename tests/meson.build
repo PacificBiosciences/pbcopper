@@ -25,6 +25,7 @@ pbcopper_test_cpp_sources = files([
   'src/data/test_Frames.cpp',
   'src/data/test_GenomicInterval.cpp',
   'src/data/test_Interval.cpp',
+  'src/data/test_IntervalTree.cpp',
   'src/data/test_MappedRead.cpp',
   'src/data/test_MovieName.cpp',
   'src/data/test_QualityValues.cpp',
