@@ -173,6 +173,16 @@ if not meson.is_subproject()
       ]),
     subdir : 'pbcopper/pbmer')
 
+  # pbcopper/poa
+  install_headers(
+    files([
+      'pbcopper/poa/PoaConsensus.h',
+      'pbcopper/poa/PoaGraph.h',
+      'pbcopper/poa/RangeFinder.h',
+      'pbcopper/poa/SparsePoa.h',
+    ]),
+    subdir : 'pbcopper/poa')
+
   # pbcopper/reports
   install_headers(
     files([

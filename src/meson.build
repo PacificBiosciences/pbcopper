@@ -95,6 +95,17 @@ pbcopper_cpp_sources = files([
   'pbmer/Parser.cpp',
 
   # ---------
+  # poa
+  # ---------
+  'poa/PoaAlignmentMatrix.cpp',
+  'poa/PoaConsensus.cpp',
+  'poa/PoaGraph.cpp',
+  'poa/PoaGraphImpl.cpp',
+  'poa/PoaGraphTraversals.cpp',
+  'poa/RangeFinder.cpp',
+  'poa/SparsePoa.cpp',
+
+  # ---------
   # reports
   # ---------
   'reports/Report.cpp',
