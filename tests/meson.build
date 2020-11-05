@@ -25,6 +25,7 @@ pbcopper_test_cpp_sources = files([
   'src/data/test_Frames.cpp',
   'src/data/test_GenomicInterval.cpp',
   'src/data/test_Interval.cpp',
+  'src/data/test_IntervalTree.cpp',
   'src/data/test_MappedRead.cpp',
   'src/data/test_MovieName.cpp',
   'src/data/test_QualityValues.cpp',
@@ -56,6 +57,10 @@ pbcopper_test_cpp_sources = files([
   'src/pbmer/test_Kmer.cpp',
   'src/pbmer/test_Mers.cpp',
   'src/pbmer/test_Parser.cpp',
+
+  # poa
+  'src/poa/test_PoaConsensus.cpp',
+  'src/poa/test_SparsePoa.cpp',
 
   # qgram
   'src/qgram/test_Index.cpp',
@@ -128,4 +133,5 @@ test(
     '--gtest_output=xml:' + join_paths(meson.build_root(), 'pbcopper-gtest-unittests.xml')],
   env : [
     'ARGS=-V',
-    'VERBOSE=1'])
+    'VERBOSE=1'],
+  timeout : 300)    # debug unit tests on PoaConsensus can be *slow*

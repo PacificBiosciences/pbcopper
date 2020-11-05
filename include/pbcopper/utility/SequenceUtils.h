@@ -11,10 +11,12 @@
 #include <cstdint>
 #include <string>
 
+#include <pbcopper/utility/StringView.h>
+
 namespace PacBio {
 namespace Utility {
 
-inline char Complement(const char character)
+inline char Complement(const char base)
 {
     constexpr const std::array<char, 256> lookupTable{
         {/*   0 -   7: */ 0,   0,   0,   0,   0,   0,   0,   0,
@@ -53,7 +55,11 @@ inline char Complement(const char character)
          /* 240 - 247: */ 0,   0,   0,   0,   0,   0,   0,   0,
          /* 248 - 255: */ 0,   0,   0,   0,   0,   0,   0,   0}};
 
-    return lookupTable[static_cast<unsigned char>(character)];
+    const char result = lookupTable[static_cast<int>(base)];
+
+    if (result == 0) throw std::invalid_argument(base + std::string{" is an invalid base!"});
+
+    return result;
 }
 
 template <typename T>
@@ -117,6 +123,14 @@ inline std::string ReverseComplemented(const std::string& input)
     std::string result = input;
     ReverseComplement(result);
     return result;
+}
+
+inline Utility::StringView ReverseComplement(const Utility::StringView input, char* output)
+{
+    const int32_t strLen = input.Length();
+    for (int32_t i = 0; i < strLen; ++i)
+        output[i] = Complement(input[strLen - 1 - i]);
+    return {output, strLen};
 }
 
 }  // namespace Utility

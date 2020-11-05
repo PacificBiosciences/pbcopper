@@ -91,6 +91,7 @@ if not meson.is_subproject()
       'pbcopper/data/Frames.h',
       'pbcopper/data/GenomicInterval.h',
       'pbcopper/data/Interval.h',
+      'pbcopper/data/IntervalTree.h',
       'pbcopper/data/LocalContextFlags.h',
       'pbcopper/data/MappedRead.h',
       'pbcopper/data/MovieName.h',
@@ -171,6 +172,16 @@ if not meson.is_subproject()
       'pbcopper/pbmer/KFNode.h',
       ]),
     subdir : 'pbcopper/pbmer')
+
+  # pbcopper/poa
+  install_headers(
+    files([
+      'pbcopper/poa/PoaConsensus.h',
+      'pbcopper/poa/PoaGraph.h',
+      'pbcopper/poa/RangeFinder.h',
+      'pbcopper/poa/SparsePoa.h',
+    ]),
+    subdir : 'pbcopper/poa')
 
   # pbcopper/reports
   install_headers(

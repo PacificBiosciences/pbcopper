@@ -63,6 +63,7 @@ pbcopper_cpp_sources = files([
   'data/Frames.cpp',
   'data/GenomicInterval.cpp',
   'data/Interval.cpp',
+  'data/IntervalTree.cpp',
   'data/MappedRead.cpp',
   'data/MovieName.cpp',
   'data/QualityValue.cpp',
@@ -92,6 +93,17 @@ pbcopper_cpp_sources = files([
   'pbmer/Mers.cpp',
   'pbmer/SparseHaplotype.cpp',
   'pbmer/Parser.cpp',
+
+  # ---------
+  # poa
+  # ---------
+  'poa/PoaAlignmentMatrix.cpp',
+  'poa/PoaConsensus.cpp',
+  'poa/PoaGraph.cpp',
+  'poa/PoaGraphImpl.cpp',
+  'poa/PoaGraphTraversals.cpp',
+  'poa/RangeFinder.cpp',
+  'poa/SparsePoa.cpp',
 
   # ---------
   # reports
