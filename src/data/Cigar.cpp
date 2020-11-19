@@ -8,7 +8,10 @@
 
 #include <ostream>
 #include <sstream>
+#include <stdexcept>
 #include <type_traits>
+
+#include <pbcopper/utility/SequenceUtils.h>
 
 namespace PacBio {
 namespace Data {
@@ -118,6 +121,110 @@ CigarBaseCounts CigarOpsCalculator(const Cigar& cigar)
                                       results.DeletionEvents + results.InsertionEvents);
 
     return results;
+}
+
+bool ConvertCigarToM5(const std::string& ref, const std::string& query, bool qReversed,
+                      const Data::Cigar& cigar, std::string& retRefAln, std::string& retQueryAln)
+{
+    return ConvertCigarToM5(ref, query, 0, ref.size(), 0, query.size(), qReversed, cigar, retRefAln,
+                            retQueryAln);
+}
+
+bool ConvertCigarToM5(const std::string& ref, const std::string& query, const int32_t rStart,
+                      const int32_t rEnd, const int32_t qStart, const int32_t qEnd,
+                      const bool qReversed, const Data::Cigar& cigar, std::string& retRefAln,
+                      std::string& retQueryAln)
+{
+    std::ostringstream rss;
+    std::ostringstream qss;
+
+    retRefAln.clear();
+    retQueryAln.clear();
+
+    // Calculate the query and reference length from the CIGAR
+    // to check for sanity.
+    int32_t calcRefLen = 0;
+    int32_t calcQueryLen = 0;
+    for (const auto& cigarOp : cigar) {
+        const auto op = cigarOp.Type();
+        switch (op) {
+            case CigarOperationType::ALIGNMENT_MATCH:
+            case CigarOperationType::SEQUENCE_MATCH:
+            case CigarOperationType::SEQUENCE_MISMATCH: {
+                calcRefLen += cigarOp.Length();
+                calcQueryLen += cigarOp.Length();
+                break;
+            }
+            case Data::CigarOperationType::INSERTION:
+            case CigarOperationType::SOFT_CLIP: {
+                calcQueryLen += cigarOp.Length();
+                break;
+            }
+            case CigarOperationType::DELETION:
+            case CigarOperationType::REFERENCE_SKIP: {
+                calcRefLen += cigarOp.Length();
+                break;
+            }
+            default: {
+                std::string msg{"[pbcopper] CIGAR conversion ERROR: unsupported op: '"};
+                msg += cigarOp.Char();
+                msg += "'";
+                throw std::runtime_error{msg};
+            }
+        }
+    }
+    if (cigar.empty() || calcQueryLen != (qEnd - qStart) || calcRefLen != (rEnd - rStart)) {
+        return false;
+    }
+
+    // Prepare the query for simpler usage.
+    std::string querySub = query.substr(qStart, qEnd - qStart);
+    if (qReversed) {
+        querySub = Utility::ReverseComplemented(querySub);
+    }
+
+    int32_t qPos = 0;  // We extracted the entire subsequence.
+    int32_t rPos = rStart;
+
+    for (auto& cigarOp : cigar) {
+        auto op = cigarOp.Type();
+        auto count = cigarOp.Length();
+        switch (op) {
+            case CigarOperationType::ALIGNMENT_MATCH:
+            case CigarOperationType::SEQUENCE_MATCH:
+            case CigarOperationType::SEQUENCE_MISMATCH: {
+                qss << querySub.substr(qPos, count);
+                rss << ref.substr(rPos, count);
+                qPos += count;
+                rPos += count;
+                break;
+            }
+            case CigarOperationType::INSERTION:
+            case CigarOperationType::SOFT_CLIP: {
+                qss << querySub.substr(qPos, count);
+                rss << std::string(count, '-');
+                qPos += count;
+                break;
+            }
+            case CigarOperationType::DELETION:
+            case CigarOperationType::REFERENCE_SKIP: {
+                qss << std::string(count, '-');
+                rss << ref.substr(rPos, count);
+                rPos += count;
+                break;
+            }
+            default: {
+                std::string msg{"[pbcopper] CIGAR conversion ERROR: unsupported op: '"};
+                msg += cigarOp.Char();
+                msg += "'";
+                throw std::runtime_error{msg};
+            }
+        }
+    }
+
+    retRefAln = rss.str();
+    retQueryAln = qss.str();
+    return true;
 }
 
 }  // namespace Data
