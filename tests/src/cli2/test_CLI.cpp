@@ -14,6 +14,7 @@
 #include <pbcopper/cli2/internal/HelpMetrics.h>
 #include <pbcopper/cli2/internal/InterfaceHelpPrinter.h>
 #include <pbcopper/cli2/internal/MultiToolInterfaceHelpPrinter.h>
+#include <pbcopper/utility/Alarm.h>
 #include <pbcopper/utility/OStreamRedirect.h>
 
 #include "PbcopperTestData.h"
@@ -776,6 +777,29 @@ TEST(CLI2_CLI, creates_alarm_for_all_exceptions_when_given_alarm_file_arg) {
     std::ostringstream alarmText;
     alarmText << alarmFile.rdbuf();
     EXPECT_TRUE(alarmText.str().find("std exception from application") != std::string::npos);
+}
+
+TEST(CLI2_CLI, populates_alarm_owner_field_with_application_name) {
+
+    const std::string alarmFilename{PacBio::PbcopperTestsConfig::Generated_Dir + "/add_owner_alarm.json"};
+    const std::vector<std::string> args {"owner-check", "--alarms", alarmFilename};
+    auto runner = [](const PacBio::CLI_v2::Results&)
+    {
+        throw PB_ALARM("alarm type", "alarm message");
+        return 0;
+    };
+
+    PacBio::CLI_v2::Interface i{"owner-check", "Check owner in alarm.", "v3.1"};
+    const int result = PacBio::CLI_v2::Run(args, i, runner);
+    EXPECT_EQ(EXIT_FAILURE, result);
+
+    // check alarm file
+    std::ifstream alarmFile{alarmFilename};
+    std::ostringstream alarmText;
+    alarmText << alarmFile.rdbuf();
+    EXPECT_TRUE(alarmText.str().find("\"owner\": \"owner-check\"") != std::string::npos);
+    EXPECT_TRUE(alarmText.str().find("\"message\": \"alarm message\"") != std::string::npos);
+    EXPECT_TRUE(alarmText.str().find("\"name\": \"alarm type\"") != std::string::npos);
 }
 
 TEST(CLI2_CLI, multitoolinterface_supports_hidden_subtools)

@@ -48,6 +48,11 @@ Alarm::Alarm(std::string name, std::string message, std::string severity, std::s
     uuid_ = boost::uuids::to_string(uuid);
 }
 
+Alarm::Alarm(const AlarmException& e)
+    : Alarm{e.Name(), e.Message(), e.Severity(), e.Info(), e.Exception()}
+{
+}
+
 const std::string& Alarm::Exception() const { return exception_; }
 
 Alarm& Alarm::Exception(std::string exception)
@@ -116,17 +121,24 @@ void Alarm::Print(std::ostream& out) const
     out << result.dump(4);
 }
 
-void Alarm::WriteAlarms(const std::string& fn, const std::vector<Alarm>& alarms)
+void Alarm::WriteAlarms(const std::string& fn, const std::vector<Alarm>& alarms,
+                        const std::string& applicationName)
 {
     std::ofstream f{fn};
-    WriteAlarms(f, alarms);
+    WriteAlarms(f, alarms, applicationName);
 }
 
-void Alarm::WriteAlarms(std::ostream& out, const std::vector<Alarm>& alarms)
+void Alarm::WriteAlarms(std::ostream& out, const std::vector<Alarm>& alarms,
+                        const std::string& applicationName)
 {
     auto jsonAlarms = PacBio::JSON::Json::array();
-    for (const auto& alarm : alarms)
-        jsonAlarms.emplace_back(ToJson(alarm));
+    for (const auto& alarm : alarms) {
+        auto jsonAlarm = ToJson(alarm);
+        if (alarm.Owner().empty() && !applicationName.empty()) {
+            jsonAlarm["owner"] = applicationName;
+        }
+        jsonAlarms.emplace_back(std::move(jsonAlarm));
+    }
     out << jsonAlarms.dump(4);
 }
 
@@ -151,6 +163,16 @@ AlarmException::AlarmException(std::string sourceFilename, std::string functionN
 {
 }
 
+AlarmException::AlarmException(std::string sourceFilename, std::string functionName,
+                               int32_t lineNumber, AlarmType type, std::string message,
+                               std::string severity, std::string info,
+                               std::string exception) noexcept
+    : AlarmException{std::move(sourceFilename), std::move(functionName), lineNumber,
+                     NameForAlarmType(type),    std::move(message),      std::move(severity),
+                     std::move(info),           std::move(exception)}
+{
+}
+
 // Debugging Info
 const char* AlarmException::SourceFilename() const noexcept { return sourceFilename_.c_str(); }
 
@@ -168,6 +190,23 @@ const char* AlarmException::Severity() const noexcept { return severity_.c_str()
 const char* AlarmException::Info() const noexcept { return info_.c_str(); }
 
 const char* AlarmException::Exception() const noexcept { return exception_.c_str(); }
+
+std::string NameForAlarmType(const AlarmType type)
+{
+    const std::map<AlarmType, std::string> lookup{
+        {AlarmType::BARCODE, "BarcodeError"},
+        {AlarmType::CHEMISTRY_MODEL, "ChemistryModelError"},
+        {AlarmType::CLI, "CommandLineArgsError"},
+        {AlarmType::FILE_FORMAT, "FileFormatError"},
+        {AlarmType::FILE_NOT_FOUND, "FileNotFoundError"},
+    };
+
+    const auto found = lookup.find(type);
+    if (found == lookup.cend())
+        return std::string{};
+    else
+        return found->second;
+}
 
 }  // namespace Utility
 }  // namespace PacBio
