@@ -19,6 +19,7 @@ if not meson.is_subproject()
       'pbcopper/align/BandedChainAlignment.h',
       'pbcopper/align/ChainSeeds.h',
       'pbcopper/align/ChainSeedsConfig.h',
+      'pbcopper/align/EdlibAlign.h',
       'pbcopper/align/FindSeeds.h',
       'pbcopper/align/LinearAlignment.h',
       'pbcopper/align/LocalAlignment.h',

@@ -14,6 +14,7 @@ pbcopper_cpp_sources = files([
   'align/BandedChainAlignment.cpp',
   'align/ChainSeeds.cpp',
   'align/ChainSeedsConfig.cpp',
+  'align/EdlibAlign.cpp',
   'align/FindSeeds.cpp',
   'align/LinearAlignment.cpp',
   'align/LocalAlignment.cpp',
