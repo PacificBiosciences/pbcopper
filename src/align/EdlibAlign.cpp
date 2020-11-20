@@ -43,19 +43,23 @@ Data::Cigar EdlibAlignmentToCigar(const unsigned char* alignment, int32_t alignm
         return cigar;
     }
 
-    int32_t count = 0;
-    Data::CigarOperationType prevOp = Data::CigarOperationType::UNKNOWN_OP;
-    for (int32_t i = 0; i <= alignmentLength; i++) {
-        if (i == alignmentLength ||
-            (opToCigar[alignment[i]] != prevOp && prevOp != Data::CigarOperationType::UNKNOWN_OP)) {
-            cigar.emplace_back(prevOp, count);
-            count = 0;
+    int32_t count = 1;
+    Data::CigarOperationType previousOp = opToCigar[alignment[0]];
+    for (int32_t i = 1; i < alignmentLength; ++i) {
+        Data::CigarOperationType op = opToCigar[alignment[i]];
+        if (op == previousOp) {
+            ++count;
+            continue;
         }
-        if (i < alignmentLength) {
-            prevOp = opToCigar[alignment[i]];
-            count += 1;
-        }
+        cigar.emplace_back(previousOp, count);
+        count = 1;
+        previousOp = op;
     }
+
+    if (count > 0) {
+        cigar.emplace_back(previousOp, count);
+    }
+
     return cigar;
 }
 
