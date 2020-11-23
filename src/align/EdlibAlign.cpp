@@ -7,7 +7,7 @@ namespace Align {
 
 EdlibAlignment::EdlibAlignment(EdlibAlignResult aln) : Data(std::move(aln)) {}
 
-EdlibAlignment::~EdlibAlignment() { edlibFreeAlignResult(Data); }
+EdlibAlignment::~EdlibAlignment() noexcept { edlibFreeAlignResult(Data); }
 
 EdlibAlignment EdlibAlign(const std::string& query, const std::string& target,
                           const EdlibAlignConfig& config)
@@ -21,12 +21,14 @@ EdlibAlignment EdlibAlign(const char* query, const int queryLength, const char* 
     return EdlibAlignment{edlibAlign(query, queryLength, target, targetLength, config)};
 }
 
-std::vector<EdlibAlignment> EdlibAlign(const std::vector<std::string>& queries,
-                                       const std::string& target, const EdlibAlignConfig& config)
+std::vector<std::unique_ptr<EdlibAlignment>> EdlibAlign(const std::vector<std::string>& queries,
+                                                        const std::string& target,
+                                                        const EdlibAlignConfig& config)
 {
-    std::vector<EdlibAlignment> alignments;
+    std::vector<std::unique_ptr<EdlibAlignment>> alignments;
     for (const auto& query : queries) {
-        alignments.emplace_back(EdlibAlign(query, target, config));
+        alignments.emplace_back(std::make_unique<EdlibAlignment>(
+            edlibAlign(query.c_str(), query.size(), target.c_str(), target.size(), config)));
     }
     return alignments;
 }
