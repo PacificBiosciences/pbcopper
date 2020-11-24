@@ -3,6 +3,7 @@
 
 #include <pbcopper/PbcopperConfig.h>
 
+#include <memory>
 #include <string>
 #include <vector>
 
@@ -17,8 +18,13 @@ namespace Align {
 ///
 struct EdlibAlignment
 {
-    EdlibAlignment(EdlibAlignResult aln);
-    ~EdlibAlignment();
+    explicit EdlibAlignment(EdlibAlignResult aln);
+    EdlibAlignment(const EdlibAlignment&) = delete;
+    EdlibAlignment(EdlibAlignment&&) noexcept = default;
+    EdlibAlignment& operator=(const EdlibAlignment&) = delete;
+    EdlibAlignment& operator=(EdlibAlignment&&) noexcept = default;
+    ~EdlibAlignment() noexcept;
+
     EdlibAlignResult Data;
 };
 
@@ -33,8 +39,9 @@ EdlibAlignment EdlibAlign(const char* query, const int queryLength, const char* 
 ///
 /// Align queries to target
 ///
-std::vector<EdlibAlignment> EdlibAlign(const std::vector<std::string>& queries,
-                                       const std::string& target, const EdlibAlignConfig& config);
+std::vector<std::unique_ptr<EdlibAlignment>> EdlibAlign(const std::vector<std::string>& queries,
+                                                        const std::string& target,
+                                                        const EdlibAlignConfig& config);
 
 ///
 /// Convert edlib alignment result to CIGAR
