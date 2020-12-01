@@ -73,6 +73,7 @@ pbcopper_cpp_sources = files([
   'data/ReadId.cpp',
   'data/RSMovieName.cpp',
   'data/SNR.cpp',
+  'data/Strand.cpp',
 
   # ---------
   # logging
