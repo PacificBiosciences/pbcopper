@@ -155,6 +155,7 @@ if not meson.is_subproject()
     files([
       'pbcopper/parallel/FireAndForget.h',
       'pbcopper/parallel/FireAndForgetIndexed.h',
+      'pbcopper/parallel/ThreadCount.h',
       'pbcopper/parallel/WorkQueue.h']),
     subdir : 'pbcopper/parallel')
 

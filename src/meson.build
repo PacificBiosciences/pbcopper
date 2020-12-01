@@ -83,6 +83,11 @@ pbcopper_cpp_sources = files([
   'logging/LogMessage.cpp',
 
   # ---------
+  # parallel
+  # ---------
+  'parallel/ThreadCount.cpp',
+
+  # ---------
   # pbmer
   # ---------
   'pbmer/Dbg.cpp',
