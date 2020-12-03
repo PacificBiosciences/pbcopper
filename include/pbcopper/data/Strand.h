@@ -7,6 +7,8 @@
 
 #include <cstdint>
 
+#include <iosfwd>
+
 namespace PacBio {
 namespace Data {
 
@@ -19,6 +21,8 @@ enum class Strand : uint8_t
     REVERSE,  ///< Reverse strand
     UNMAPPED,
 };
+
+std::ostream& operator<<(std::ostream& os, const Strand& strand);
 
 }  // namespace Data
 }  // namespace PacBio

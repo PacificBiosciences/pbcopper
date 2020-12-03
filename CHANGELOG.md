@@ -5,6 +5,8 @@
 ### Added
  - Interval tree from unanimity
  - Sparse POA implementation, outsourced from unanimity
+ - edlib wrapper API
+ - "Normalized" thread count utility
 
 ## [1.8.0] - 2020-09-23
 

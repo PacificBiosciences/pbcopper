@@ -196,4 +196,135 @@ TEST(Data_CigarOpsCalculator, can_calculate_gap_compressed_identity_with_inserti
  EXPECT_NEAR(results.GapCompressedIdentity, 99.50249, 0.01);
 }
 
+// clang-format off
+
+TEST(Data_Cigar, can_convert_cigar_to_m5)
+{
+    struct TestData {
+        std::string reference;
+        int32_t rStart;
+        int32_t rEnd;
+        std::string query;
+        int32_t qStart;
+        int32_t qEnd;
+        Cigar cigar;
+        std::string expectedReference;
+        std::string expectedQuery;
+        bool queryReversed;
+        bool expectedReturnValue;
+    };
+
+    const std::vector<std::pair<std::string, TestData>> tests{
+        std::make_pair("empty input",
+            TestData{
+                "", 0, 0,           // input reference (begin, end)
+                "", 0, 0,           // input query (begin, end)
+                "",                 // cigar
+                "",                 // expected reference
+                "",                 // expected query
+                false,              // query is reverse complemented
+                false               // expected method return value
+            }),
+        std::make_pair("empty reference",
+            TestData{
+                "",      0, 0,
+                "ACGT",  0, 4,
+                "4I",
+                "----",
+                "ACGT",
+                 false,
+                 true
+            }),
+        std::make_pair("empty query",
+            TestData{
+                "ACTG", 0, 4,
+                "",     0, 0,
+                "4D",
+                "ACTG",
+                "----",
+                false,
+                true
+            }),
+        std::make_pair("empty CIGAR",
+            TestData{
+                "ACTG", 0, 4,
+                "ACTG", 0, 4,
+                "",
+                "",
+                "",
+                false,
+                false
+            }),
+        std::make_pair("CIGAR not valid for inputs",
+            TestData{
+                "ACTG", 0, 4,
+                "ACTG", 0, 4,
+                "3=",
+                "",
+                "",
+                false,
+                false
+            }),
+        std::make_pair("simple exact match",
+            TestData{
+                "ACTG", 0, 4,
+                "ACTG", 0, 4,
+                "4=",
+                "ACTG",
+                "ACTG",
+                false,
+                true
+            }),
+        std::make_pair("mix of matches, mismatches, and indels",
+            TestData{
+                "AAAAAAAAAAA",  0, 11,
+                "AAAAAAAA",     0, 8,
+                "3=2D2=1I2D2=",
+                "AAAAAAA-AAAA",
+                "AAA--AAA--AA",
+                false,
+                true
+            }),
+        std::make_pair("conversion internal to sequences",
+            TestData{
+                "AAAACCCCCCCCCCTTT", 4, 14,
+                "GCCCCCCCCCCG",      1, 11,
+                "10=",
+                "CCCCCCCCCC",
+                "CCCCCCCCCC",
+                false,
+                true
+            }),
+        std::make_pair("reverse complement",
+            TestData{
+                "AAAACCCCCCCCCCTTT", 4, 14,
+                "CGGGGGGGGGGC",      1, 11,
+                "10=",
+                "CCCCCCCCCC",
+                "CCCCCCCCCC",
+                true,
+                true
+            }),
+    };
+
+    for (const auto& test : tests) {
+        SCOPED_TRACE(test.first);
+        const auto& testData = test.second;
+
+        std::string alignedReference;
+        std::string alignedQuery;
+        const auto returnValue = PacBio::Data::ConvertCigarToM5(
+            testData.reference, testData.query,
+            testData.rStart, testData.rEnd,
+            testData.qStart, testData.qEnd,
+            testData.queryReversed, testData.cigar,
+            alignedReference, alignedQuery
+        );
+
+        EXPECT_EQ(returnValue, testData.expectedReturnValue);
+        EXPECT_EQ(alignedReference, testData.expectedReference);
+        EXPECT_EQ(alignedQuery, testData.expectedQuery);
+    }
+}
+
 // clang-format on

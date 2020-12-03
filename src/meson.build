@@ -14,6 +14,7 @@ pbcopper_cpp_sources = files([
   'align/BandedChainAlignment.cpp',
   'align/ChainSeeds.cpp',
   'align/ChainSeedsConfig.cpp',
+  'align/EdlibAlign.cpp',
   'align/FindSeeds.cpp',
   'align/LinearAlignment.cpp',
   'align/LocalAlignment.cpp',
@@ -72,6 +73,7 @@ pbcopper_cpp_sources = files([
   'data/ReadId.cpp',
   'data/RSMovieName.cpp',
   'data/SNR.cpp',
+  'data/Strand.cpp',
 
   # ---------
   # logging
@@ -80,6 +82,11 @@ pbcopper_cpp_sources = files([
   'logging/LogConfig.cpp',
   'logging/LogLevel.cpp',
   'logging/LogMessage.cpp',
+
+  # ---------
+  # parallel
+  # ---------
+  'parallel/ThreadCount.cpp',
 
   # ---------
   # pbmer
