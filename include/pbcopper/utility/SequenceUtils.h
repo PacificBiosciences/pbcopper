@@ -10,6 +10,9 @@
 #include <cctype>
 #include <cstdint>
 #include <string>
+#if __cplusplus >= 201703L
+#include <string_view>
+#endif
 
 #include <pbcopper/utility/StringView.h>
 
@@ -132,6 +135,16 @@ inline Utility::StringView ReverseComplement(const Utility::StringView input, ch
         output[i] = Complement(input[strLen - 1 - i]);
     return {output, strLen};
 }
+
+#if __cplusplus >= 201703L
+inline std::string_view ReverseComplement(const std::string_view input, char* output)
+{
+    const size_t strLen = input.length();
+    for (size_t i = 0; i < strLen; ++i)
+        output[i] = Complement(input[strLen - 1 - i]);
+    return {output, strLen};
+}
+#endif
 
 }  // namespace Utility
 }  // namespace PacBio
