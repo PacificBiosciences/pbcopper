@@ -14,8 +14,6 @@
 #include <string_view>
 #endif
 
-#include <pbcopper/utility/StringView.h>
-
 namespace PacBio {
 namespace Utility {
 
@@ -126,14 +124,6 @@ inline std::string ReverseComplemented(const std::string& input)
     std::string result = input;
     ReverseComplement(result);
     return result;
-}
-
-inline Utility::StringView ReverseComplement(const Utility::StringView input, char* output)
-{
-    const int32_t strLen = input.Length();
-    for (int32_t i = 0; i < strLen; ++i)
-        output[i] = Complement(input[strLen - 1 - i]);
-    return {output, strLen};
 }
 
 #if __cplusplus >= 201703L
