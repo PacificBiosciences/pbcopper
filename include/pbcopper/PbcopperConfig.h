@@ -41,44 +41,6 @@
 #define BOOST_UUID_RANDOM_PROVIDER_DISABLE_GETRANDOM
 #endif
 
-#ifdef __NVCC__
-
-#ifndef PB_CUDA_HOST
-#define PB_CUDA_HOST __host__
-#endif
-
-#ifndef PB_CUDA_DEVICE
-#define PB_CUDA_DEVICE __device__
-#endif
-
-#ifndef PB_CUDA_CONSTANT
-#define PB_CUDA_CONSTANT __constant__
-#endif
-
-#ifndef PB_CUDA_MANAGED
-#define PB_CUDA_MANAGED __managed__
-#endif
-
-#else
-
-#ifndef PB_CUDA_HOST
-#define PB_CUDA_HOST
-#endif
-
-#ifndef PB_CUDA_DEVICE
-#define PB_CUDA_DEVICE
-#endif
-
-#ifndef PB_CUDA_CONSTANT
-#define PB_CUDA_CONSTANT
-#endif
-
-#ifndef PB_CUDA_MANAGED
-#define PB_CUDA_MANAGED
-#endif
-
-#endif
-
 /// Switch for warnings on deprecated APIs
 #ifdef PACBIO_NODEPRECATED_API
 #define PBCOPPER_DEPRECATED [[deprecated("see header for recommended alternative")]]

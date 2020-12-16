@@ -134,7 +134,6 @@ pbcopper_cpp_sources = files([
   'utility/MemoryConsumption.cpp',
   'utility/Stopwatch.cpp',
   'utility/StringUtils.cpp',
-  'utility/StringView.cpp',
 ])
 
 # replace version strings
