@@ -149,4 +149,182 @@ TEST(Data_Cigar, can_create_string_from_multi_op_cigar)
     EXPECT_EQ("100=2D34I6=6X6=", cigar.ToStdString());
 }
 
+TEST(Data_CigarOpsCalculator, can_count_base_events){
+ const Cigar cigar = Cigar::FromStdString("5=1X2D3I");
+ const auto results = CigarOpsCalculator(cigar);
+
+ EXPECT_EQ(results.DeletionBases, 2);
+ EXPECT_EQ(results.InsertionBases, 3);
+ EXPECT_EQ(results.MatchBases, 5);
+ EXPECT_EQ(results.MismatchBases, 1);
+
+
+}
+
+// this tests the number of operations is correct, not base counts
+TEST(Data_CigarOpsCalculator, can_count_cigar_opts){
+ const Cigar cigar = Cigar::FromStdString("1X2=2X2D2I1D1=1X1=1X");
+ const auto results = CigarOpsCalculator(cigar);
+
+ EXPECT_EQ(results.DeletionEvents, 2);
+ EXPECT_EQ(results.InsertionEvents, 1);
+ EXPECT_EQ(results.MatchEvents, 3);
+ EXPECT_EQ(results.MismatchEvents, 4);
+}
+
+TEST(Data_CigarOpsCalculator, can_calculate_identity){
+ const Cigar cigar = Cigar::FromStdString("100=10D100=");
+ const auto results = CigarOpsCalculator(cigar);
+
+ // 200/210
+ EXPECT_NEAR(results.Identity, 95.2381, 0.01 );
+}
+
+TEST(Data_CigarOpsCalculator, can_calculate_gap_compressed_identity_with_deletions){
+ const Cigar cigar = Cigar::FromStdString("100=10D100=");
+ const auto results = CigarOpsCalculator(cigar);
+
+ // 200/201
+ EXPECT_NEAR(results.GapCompressedIdentity, 99.50249, 0.01);
+}
+
+TEST(Data_CigarOpsCalculator, can_calculate_gap_compressed_identity_with_insertions){
+ const Cigar cigar = Cigar::FromStdString("100=10I100=");
+ const auto results = CigarOpsCalculator(cigar);
+
+ // 200/201
+ EXPECT_NEAR(results.GapCompressedIdentity, 99.50249, 0.01);
+}
+
+// clang-format off
+
+TEST(Data_Cigar, can_convert_cigar_to_m5)
+{
+    struct TestData {
+        std::string reference;
+        int32_t rStart;
+        int32_t rEnd;
+        std::string query;
+        int32_t qStart;
+        int32_t qEnd;
+        Cigar cigar;
+        std::string expectedReference;
+        std::string expectedQuery;
+        bool queryReversed;
+        bool expectedReturnValue;
+    };
+
+    const std::vector<std::pair<std::string, TestData>> tests{
+        std::make_pair("empty input",
+            TestData{
+                "", 0, 0,           // input reference (begin, end)
+                "", 0, 0,           // input query (begin, end)
+                "",                 // cigar
+                "",                 // expected reference
+                "",                 // expected query
+                false,              // query is reverse complemented
+                false               // expected method return value
+            }),
+        std::make_pair("empty reference",
+            TestData{
+                "",      0, 0,
+                "ACGT",  0, 4,
+                "4I",
+                "----",
+                "ACGT",
+                 false,
+                 true
+            }),
+        std::make_pair("empty query",
+            TestData{
+                "ACTG", 0, 4,
+                "",     0, 0,
+                "4D",
+                "ACTG",
+                "----",
+                false,
+                true
+            }),
+        std::make_pair("empty CIGAR",
+            TestData{
+                "ACTG", 0, 4,
+                "ACTG", 0, 4,
+                "",
+                "",
+                "",
+                false,
+                false
+            }),
+        std::make_pair("CIGAR not valid for inputs",
+            TestData{
+                "ACTG", 0, 4,
+                "ACTG", 0, 4,
+                "3=",
+                "",
+                "",
+                false,
+                false
+            }),
+        std::make_pair("simple exact match",
+            TestData{
+                "ACTG", 0, 4,
+                "ACTG", 0, 4,
+                "4=",
+                "ACTG",
+                "ACTG",
+                false,
+                true
+            }),
+        std::make_pair("mix of matches, mismatches, and indels",
+            TestData{
+                "AAAAAAAAAAA",  0, 11,
+                "AAAAAAAA",     0, 8,
+                "3=2D2=1I2D2=",
+                "AAAAAAA-AAAA",
+                "AAA--AAA--AA",
+                false,
+                true
+            }),
+        std::make_pair("conversion internal to sequences",
+            TestData{
+                "AAAACCCCCCCCCCTTT", 4, 14,
+                "GCCCCCCCCCCG",      1, 11,
+                "10=",
+                "CCCCCCCCCC",
+                "CCCCCCCCCC",
+                false,
+                true
+            }),
+        std::make_pair("reverse complement",
+            TestData{
+                "AAAACCCCCCCCCCTTT", 4, 14,
+                "CGGGGGGGGGGC",      1, 11,
+                "10=",
+                "CCCCCCCCCC",
+                "CCCCCCCCCC",
+                true,
+                true
+            }),
+    };
+
+    for (const auto& test : tests) {
+        SCOPED_TRACE(test.first);
+        const auto& testData = test.second;
+
+        std::string alignedReference;
+        std::string alignedQuery;
+        const auto returnValue = PacBio::Data::ConvertCigarToM5(
+            testData.reference, testData.query,
+            testData.rStart, testData.rEnd,
+            testData.qStart, testData.qEnd,
+            testData.queryReversed, testData.cigar,
+            alignedReference, alignedQuery
+        );
+
+        EXPECT_EQ(returnValue, testData.expectedReturnValue);
+        EXPECT_EQ(alignedReference, testData.expectedReference);
+        EXPECT_EQ(alignedQuery, testData.expectedQuery);
+    }
+}
+
 // clang-format on

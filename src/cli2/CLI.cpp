@@ -108,10 +108,12 @@ int Run(const std::vector<std::string>& args, const Interface& interface,
         return handler(results);
     }
 
-    auto printToAlarmFile = [&alarmsOutputFilename](const Utility::Alarm alarm) {
+    const auto& applicationName = interface.ApplicationName();
+
+    auto printToAlarmFile = [&alarmsOutputFilename, &applicationName](const Utility::Alarm alarm) {
         std::ofstream alarmsOutput{alarmsOutputFilename};
         if (alarmsOutput) {
-            Utility::Alarm::WriteAlarms(alarmsOutput, {alarm});
+            Utility::Alarm::WriteAlarms(alarmsOutput, {alarm}, applicationName);
         } else {
             PBLOG_FATAL << "Could not rewrite alarms JSON to " << alarmsOutputFilename;
         }
@@ -123,22 +125,21 @@ int Run(const std::vector<std::string>& args, const Interface& interface,
     } catch (const Utility::AlarmException& a) {
         Logging::LogMessage(a.SourceFilename(), a.FunctionName(), a.LineNumber(),
                             Logging::LogLevel::FATAL, Logging::Logger::Current())
-            << interface.ApplicationName() << " ERROR: " << a.Message();
+            << applicationName << " ERROR: " << a.Message();
         if (!alarmsOutputFilename.empty()) {
             printToAlarmFile(
                 Utility::Alarm{a.Name(), a.Message(), a.Severity(), a.Info(), a.Exception()});
         }
     } catch (const std::exception& e) {
-        PBLOG_FATAL << interface.ApplicationName() << " ERROR: " << e.what();
+        PBLOG_FATAL << applicationName << " ERROR: " << e.what();
         if (!alarmsOutputFilename.empty()) {
-            printToAlarmFile(Utility::Alarm{interface.ApplicationName(), e.what(), "FATAL", "",
-                                            "std::exception"});
+            printToAlarmFile(
+                Utility::Alarm{applicationName, e.what(), "FATAL", "", "std::exception"});
         }
     } catch (...) {
         PBLOG_FATAL << "caught unknown exception type";
         if (!alarmsOutputFilename.empty()) {
-            printToAlarmFile(
-                Utility::Alarm{interface.ApplicationName(), "", "FATAL", "", "unknown exception"});
+            printToAlarmFile(Utility::Alarm{applicationName, "", "FATAL", "", "unknown exception"});
         }
     }
 

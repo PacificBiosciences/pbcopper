@@ -14,6 +14,7 @@ pbcopper_cpp_sources = files([
   'align/BandedChainAlignment.cpp',
   'align/ChainSeeds.cpp',
   'align/ChainSeedsConfig.cpp',
+  'align/EdlibAlign.cpp',
   'align/FindSeeds.cpp',
   'align/LinearAlignment.cpp',
   'align/LocalAlignment.cpp',
@@ -63,6 +64,7 @@ pbcopper_cpp_sources = files([
   'data/Frames.cpp',
   'data/GenomicInterval.cpp',
   'data/Interval.cpp',
+  'data/IntervalTree.cpp',
   'data/MappedRead.cpp',
   'data/MovieName.cpp',
   'data/QualityValue.cpp',
@@ -71,6 +73,7 @@ pbcopper_cpp_sources = files([
   'data/ReadId.cpp',
   'data/RSMovieName.cpp',
   'data/SNR.cpp',
+  'data/Strand.cpp',
 
   # ---------
   # logging
@@ -79,6 +82,11 @@ pbcopper_cpp_sources = files([
   'logging/LogConfig.cpp',
   'logging/LogLevel.cpp',
   'logging/LogMessage.cpp',
+
+  # ---------
+  # parallel
+  # ---------
+  'parallel/ThreadCount.cpp',
 
   # ---------
   # pbmer
@@ -92,6 +100,17 @@ pbcopper_cpp_sources = files([
   'pbmer/Mers.cpp',
   'pbmer/SparseHaplotype.cpp',
   'pbmer/Parser.cpp',
+
+  # ---------
+  # poa
+  # ---------
+  'poa/PoaAlignmentMatrix.cpp',
+  'poa/PoaConsensus.cpp',
+  'poa/PoaGraph.cpp',
+  'poa/PoaGraphImpl.cpp',
+  'poa/PoaGraphTraversals.cpp',
+  'poa/RangeFinder.cpp',
+  'poa/SparsePoa.cpp',
 
   # ---------
   # reports
@@ -115,7 +134,6 @@ pbcopper_cpp_sources = files([
   'utility/MemoryConsumption.cpp',
   'utility/Stopwatch.cpp',
   'utility/StringUtils.cpp',
-  'utility/StringView.cpp',
 ])
 
 # replace version strings

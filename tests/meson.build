@@ -2,6 +2,7 @@ pbcopper_test_cpp_sources = files([
   # align
   'src/align/test_Alignment.cpp',
   'src/align/test_BandedChainAlign.cpp',
+  'src/align/test_EdlibAlign.cpp',
   'src/align/test_Seeds.cpp',
 
   #cli2
@@ -25,6 +26,7 @@ pbcopper_test_cpp_sources = files([
   'src/data/test_Frames.cpp',
   'src/data/test_GenomicInterval.cpp',
   'src/data/test_Interval.cpp',
+  'src/data/test_IntervalTree.cpp',
   'src/data/test_MappedRead.cpp',
   'src/data/test_MovieName.cpp',
   'src/data/test_QualityValues.cpp',
@@ -57,6 +59,10 @@ pbcopper_test_cpp_sources = files([
   'src/pbmer/test_Mers.cpp',
   'src/pbmer/test_Parser.cpp',
 
+  # poa
+  'src/poa/test_PoaConsensus.cpp',
+  'src/poa/test_SparsePoa.cpp',
+
   # qgram
   'src/qgram/test_Index.cpp',
 
@@ -75,7 +81,6 @@ pbcopper_test_cpp_sources = files([
   'src/utility/test_Ssize.cpp',
   'src/utility/test_Stopwatch.cpp',
   'src/utility/test_StringUtils.cpp',
-  'src/utility/test_StringView.cpp',
 ])
 
 # find GoogleTest
@@ -128,4 +133,5 @@ test(
     '--gtest_output=xml:' + join_paths(meson.build_root(), 'pbcopper-gtest-unittests.xml')],
   env : [
     'ARGS=-V',
-    'VERBOSE=1'])
+    'VERBOSE=1'],
+  timeout : 300)    # debug unit tests on PoaConsensus can be *slow*

@@ -3,11 +3,11 @@
 #include <algorithm>
 #include <sstream>
 #include <stdexcept>
-#include <thread>
 
 #include <pbcopper/cli2/internal/BuiltinOptions.h>
 #include <pbcopper/cli2/internal/OptionTranslator.h>
 #include <pbcopper/cli2/internal/PositionalArgumentTranslator.h>
+#include <pbcopper/parallel/ThreadCount.h>
 #include <pbcopper/utility/StringUtils.h>
 
 namespace PacBio {
@@ -133,14 +133,8 @@ PacBio::Logging::LogLevel Results::LogLevel() const
 
 size_t Results::NumThreads() const
 {
-    const auto& numThreadOpt = (*this)[Builtin::NumThreads];
-    const unsigned int requestedNumThreads = numThreadOpt;
-    // NOTE: max may be 0 if unknown
-    const unsigned int maxNumThreads = std::thread::hardware_concurrency();
-
-    if (requestedNumThreads == 0) return std::max(1U, maxNumThreads);
-    if (maxNumThreads == 0) return requestedNumThreads;
-    return std::min(requestedNumThreads, maxNumThreads);
+    const unsigned int requestedNumThreads = (*this)[Builtin::NumThreads];
+    return static_cast<size_t>(Parallel::NormalizedThreadCount(requestedNumThreads));
 }
 
 std::string Results::AlarmsFile() const

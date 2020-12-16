@@ -19,6 +19,7 @@ if not meson.is_subproject()
       'pbcopper/align/BandedChainAlignment.h',
       'pbcopper/align/ChainSeeds.h',
       'pbcopper/align/ChainSeedsConfig.h',
+      'pbcopper/align/EdlibAlign.h',
       'pbcopper/align/FindSeeds.h',
       'pbcopper/align/LinearAlignment.h',
       'pbcopper/align/LocalAlignment.h',
@@ -91,6 +92,7 @@ if not meson.is_subproject()
       'pbcopper/data/Frames.h',
       'pbcopper/data/GenomicInterval.h',
       'pbcopper/data/Interval.h',
+      'pbcopper/data/IntervalTree.h',
       'pbcopper/data/LocalContextFlags.h',
       'pbcopper/data/MappedRead.h',
       'pbcopper/data/MovieName.h',
@@ -153,6 +155,7 @@ if not meson.is_subproject()
     files([
       'pbcopper/parallel/FireAndForget.h',
       'pbcopper/parallel/FireAndForgetIndexed.h',
+      'pbcopper/parallel/ThreadCount.h',
       'pbcopper/parallel/WorkQueue.h']),
     subdir : 'pbcopper/parallel')
 
@@ -171,6 +174,16 @@ if not meson.is_subproject()
       'pbcopper/pbmer/KFNode.h',
       ]),
     subdir : 'pbcopper/pbmer')
+
+  # pbcopper/poa
+  install_headers(
+    files([
+      'pbcopper/poa/PoaConsensus.h',
+      'pbcopper/poa/PoaGraph.h',
+      'pbcopper/poa/RangeFinder.h',
+      'pbcopper/poa/SparsePoa.h',
+    ]),
+    subdir : 'pbcopper/poa')
 
   # pbcopper/reports
   install_headers(
@@ -230,7 +243,6 @@ if not meson.is_subproject()
       'pbcopper/utility/Ssize.h',
       'pbcopper/utility/Stopwatch.h',
       'pbcopper/utility/StringUtils.h',
-      'pbcopper/utility/StringView.h',
       'pbcopper/utility/Unused.h']),
     subdir : 'pbcopper/utility')
 
