@@ -15,18 +15,47 @@ project(
 # CXXFLAGS #
 ############
 
-pbcopper_warning_flags = []
-cpp = meson.get_compiler('cpp')
-foreach cflag: [
+pbcopper_cpp_test_flags = [
   '-Wduplicated-cond',
   '-Wduplicated-branches',
   '-Wlogical-op',
   '-Wrestrict',
   '-Wdouble-promotion',
   '-Wshadow',
-  '-Wformat=1']
-    if cpp.has_argument(cflag)
-      pbcopper_warning_flags += cflag
+  '-Wformat=1',
+]
+
+pbcopper_cpp_flags = []
+cpp = meson.get_compiler('cpp')
+foreach cflag: pbcopper_cpp_test_flags
+  if cpp.has_argument(cflag)
+    pbcopper_cpp_flags += cflag
+  endif
+endforeach
+
+pbcopper_arch_flags = {
+  # ARM64 (ARMv8-A, Apple M1)
+  'aarch64': [
+    '-march=armv8.2-a',
+  ],
+  'x86_64': [
+    '-msse4.1',
+  ],
+}
+
+pbcopper_c_test_flags = [
+  '-Wc++-compat',
+  '-Wno-unused-parameter',
+  '-Wno-unused-variable',
+  '-Wno-sign-compare',
+  '-Wno-unused-but-set-variable'
+] + pbcopper_arch_flags.get(host_machine.cpu_family(), [])
+
+pbcopper_c_flags = []
+c = meson.get_compiler('c')
+foreach cflag: pbcopper_c_test_flags
+    if c.has_argument(cflag)
+      pbcopper_c_flags += cflag
     endif
 endforeach
 
