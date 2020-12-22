@@ -218,6 +218,14 @@ if not meson.is_subproject()
       'pbcopper/third-party/kxsort/kxsort.h']),
     subdir : 'pbcopper/third-party/kxsort')
 
+  # pbcopper/third-party/ksw2
+  install_headers(
+    files([
+      'pbcopper/third-party/ksw2/kalloc.h',
+      'pbcopper/third-party/ksw2/ksw2.h',
+    ]),
+    subdir : 'pbcopper/third-party/ksw2')
+
   # pbcopper/third-party/robin_hood
   install_headers(
     files([

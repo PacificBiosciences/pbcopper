@@ -107,7 +107,8 @@ pbcopper_test = executable(
   dependencies : [pbcopper_gtest_dep, pbcopper_thread_dep, pbcopper_boost_dep],
   include_directories : [pbcopper_include_directories, include_directories('include')],
   link_with : [pbcopper_lib],
-  cpp_args : pbcopper_warning_flags,
+  c_args : pbcopper_c_flags,
+  cpp_args : pbcopper_cpp_flags,
   install : false)
 
 #########

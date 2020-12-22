@@ -11,7 +11,6 @@
 #ifndef SSW_H
 #define SSW_H
 
-#include <emmintrin.h>
 #include <stdint.h>
 #include <stdio.h>
 #include <string.h>

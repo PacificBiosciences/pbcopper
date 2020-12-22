@@ -7,6 +7,9 @@
  - Sparse POA implementation, outsourced from unanimity
  - edlib wrapper API
  - "Normalized" thread count utility
+ - Add KSW2
+ - Support ARM compile target
+ - Add SIMDE to third-party sources
 
 ## [1.8.0] - 2020-09-23
 
