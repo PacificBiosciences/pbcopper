@@ -2,6 +2,8 @@
 
 ## Active
 
+## [1.9.0] - 2020-12-22
+
 ### Added
  - Interval tree from unanimity
  - Sparse POA implementation, outsourced from unanimity
