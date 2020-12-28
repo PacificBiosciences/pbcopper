@@ -27,8 +27,9 @@ static_assert(std::is_nothrow_move_assignable<Read>::value ==
               "");
 #endif
 
-Read::Read(Data::ReadId id, std::string seq, Frames pw, boost::optional<Frames> ipd,
-           LocalContextFlags flags, Accuracy readAccuracy, SNR snr, std::string model)
+Read::Read(Data::ReadId id, std::string seq, boost::optional<Frames> pw,
+           boost::optional<Frames> ipd, LocalContextFlags flags, Accuracy readAccuracy, SNR snr,
+           std::string model)
     : Id{std::move(id)}
     , Seq{std::move(seq)}
     , PulseWidth{std::move(pw)}
@@ -44,10 +45,10 @@ Read::Read(Data::ReadId id, std::string seq, Frames pw, boost::optional<Frames> 
         QueryEnd = Id.ZmwInterval->End();
     }
 
-    if (PulseWidth.size() != Seq.size()) {
+    if (PulseWidth && PulseWidth->size() != Seq.size()) {
         throw std::invalid_argument("[pbcopper] read (name=" + std::string(Id) +
                                     ") ERROR: features PW/seq are of mismatched length: " +
-                                    std::to_string(PulseWidth.size()) + " vs " +
+                                    std::to_string(PulseWidth->size()) + " vs " +
                                     std::to_string(Seq.size()));
     }
 
@@ -96,7 +97,9 @@ Read::Read(const std::string& name, std::string seq, QualityValues qualities, SN
 Read Read::ClipTo(const int32_t begin, const int32_t end) const
 {
     Read copy{this->Id, this->Seq.substr(begin, end - begin),
-              Frames(this->PulseWidth.cbegin() + begin, this->PulseWidth.cbegin() + end),
+              (this->PulseWidth ? boost::optional<Frames>{Frames(this->PulseWidth->cbegin() + begin,
+                                                                 this->PulseWidth->cbegin() + end)}
+                                : boost::none),
               (this->IPD ? boost::optional<Frames>{Frames(this->IPD->cbegin() + begin,
                                                           this->IPD->cbegin() + end)}
                          : boost::none),
@@ -111,8 +114,12 @@ std::string Read::FullName() const { return Id; }
 std::ostream& operator<<(std::ostream& os, const Read& read)
 {
     os << std::boolalpha;
-    os << "Read(Id=" << read.Id << ", Seq=" << read.Seq << ", PulseWidth=" << read.PulseWidth
-       << ", Qualities=" << read.Qualities << ", IPD=";
+    os << "Read(Id=" << read.Id << ", Seq=" << read.Seq << ", PulseWidth=";
+    if (read.IPD)
+        os << *read.PulseWidth;
+    else
+        os << "None";
+    os << ", Qualities=" << read.Qualities << ", IPD=";
     if (read.IPD)
         os << *read.IPD;
     else
