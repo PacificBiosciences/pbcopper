@@ -267,12 +267,14 @@ boost::optional<Frames> MappedRead::AlignedIPD(Orientation orientation, GapBehav
     return ipd;
 }
 
-Frames MappedRead::AlignedPulseWidth(Orientation orientation, GapBehavior gapBehavior,
-                                     SoftClipBehavior softClipBehavior) const
+boost::optional<Frames> MappedRead::AlignedPulseWidth(Orientation orientation,
+                                                      GapBehavior gapBehavior,
+                                                      SoftClipBehavior softClipBehavior) const
 {
+    if (!PulseWidth) return boost::none;
     if (Strand == Strand::UNMAPPED || Cigar.empty()) return PulseWidth;
 
-    Frames pw = PulseWidth;  // native orientation
+    Frames pw = PulseWidth.get();  // native orientation
     Orientation currentOrientation = Orientation::NATIVE;
 
     // if we need to touch CIGAR, force into genomic orientation (for mapping to CIGAR),
@@ -432,7 +434,12 @@ void ClipToReference(MappedRead& read, Position start, Position end, bool excise
         read.Qualities.clear();
         read.QueryStart = -1;
         read.QueryEnd = -1;
-        read.PulseWidth.clear();
+        if (read.PulseWidth) {
+            read.PulseWidth->clear();
+        }
+        if (read.IPD) {
+            read.IPD->clear();
+        }
         read.TemplateStart = -1;
         read.TemplateEnd = -1;
         read.Cigar.clear();

@@ -2,6 +2,9 @@
 
 ## Active
 
+### Changed
+ - Read.h pulse width is now optional to allow kinetic-free subreads as input
+
 ## [1.9.0] - 2020-12-22
 
 ### Added
