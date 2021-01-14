@@ -182,8 +182,8 @@ void ClipRead(Read& read, const ClipResult& result, size_t start, size_t end)
     read.Qualities = clipContainer(read.Qualities, clipFrom, clipLength);
     read.QueryStart = result.qStart_;
     read.QueryEnd = result.qEnd_;
-    if (!read.PulseWidth.empty())
-        read.PulseWidth = clipContainer(read.PulseWidth, clipFrom, clipLength);
+    if (read.PulseWidth)
+        read.PulseWidth = clipContainer(read.PulseWidth->Data(), clipFrom, clipLength);
     if (read.IPD) read.IPD = clipContainer(read.IPD->Data(), clipFrom, clipLength);
 }
 
