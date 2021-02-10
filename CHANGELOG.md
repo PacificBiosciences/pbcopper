@@ -2,6 +2,9 @@
 
 ## Active
 
+### Added
+ - Utility::Shuffle for portable alternative to std::shuffle
+
 ### Changed
  - Read.h pulse width is now optional to allow kinetic-free subreads as input
 
