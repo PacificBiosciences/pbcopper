@@ -127,6 +127,8 @@ pbcopper_cpp_sources = files([
   'third-party/edlib/edlib.cpp',
   'third-party/ksw2/kalloc.c',
   'third-party/ksw2/ksw2_simde.c',
+  'third-party/sparc/sparc.cpp',
+  'third-party/sparc/sparcSimple.cpp',
 
   # ---------
   # utility

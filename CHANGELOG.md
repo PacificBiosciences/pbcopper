@@ -2,6 +2,9 @@
 
 ## Active
 
+### Added
+ - Add Sparc implementation from unanimity
+
 ## [1.9.1] - 2021-02-16
 
 ### Added

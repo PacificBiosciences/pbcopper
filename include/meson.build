@@ -232,6 +232,12 @@ if not meson.is_subproject()
       'pbcopper/third-party/robin_hood/robin_hood.h']),
     subdir : 'pbcopper/third-party/robin_hood')
 
+  # pbcopper/third-party/sparc
+  install_headers(
+    files([
+      'pbcopper/third-party/sparc/sparc.hpp']),
+    subdir : 'pbcopper/third-party/sparc')
+
   # pbcopper/utility
   install_headers(
     files([
