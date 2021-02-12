@@ -86,6 +86,7 @@ pbcopper_cpp_sources = files([
   # ---------
   # parallel
   # ---------
+  'parallel/FireAndForget.cpp',
   'parallel/ThreadCount.cpp',
 
   # ---------
