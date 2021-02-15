@@ -12,6 +12,7 @@
 #include <future>
 #include <mutex>
 #include <queue>
+#include <stdexcept>
 
 #include <boost/optional.hpp>
 
@@ -25,7 +26,12 @@ private:
 
 public:
     FireAndForget(const size_t size, const size_t mul = 2)
-        : exc{nullptr}, numThreads{size}, sz{size * mul}, abort{false}, thrown{false}
+        : exc{nullptr}
+        , numThreads{size}
+        , sz{size * mul}
+        , abort{false}
+        , thrown{false}
+        , acceptingJobs{true}
     {
         for (size_t i = 0; i < size; ++i) {
             threads.emplace_back(std::thread([this]() {
@@ -62,6 +68,11 @@ public:
     template <typename F, typename... Args>
     void ProduceWith(F&& f, Args&&... args)
     {
+        if (!acceptingJobs) {
+            throw std::runtime_error(
+                "FireAndForget error: Cannot dispatch jobs to finalized thread pool!");
+        }
+
         std::packaged_task<void()> task{std::bind(std::forward<F>(f), std::forward<Args>(args)...)};
 
         {
@@ -87,6 +98,7 @@ public:
 
     void Finalize()
     {
+        acceptingJobs = false;
         {
             std::lock_guard<std::mutex> g(m);
             // Push boost::none to signal that there are no further tasks
@@ -141,6 +153,7 @@ private:
     size_t sz;
     std::atomic_bool abort;
     std::atomic_bool thrown;
+    std::atomic_bool acceptingJobs;
 };
 
 ///
