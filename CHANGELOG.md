@@ -2,6 +2,8 @@
 
 ## Active
 
+## [1.9.1] - 2021-02-16
+
 ### Added
  - Utility::Shuffle for portable alternative to std::shuffle
  - Parallel::Dispatch to submit jobs to an existing FireAndForget
