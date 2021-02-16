@@ -5,20 +5,17 @@ namespace Parallel {
 void Dispatch(Parallel::FireAndForget* const faf, const int32_t numEntries,
               const std::function<void(int32_t)>& callback)
 {
-    int32_t fafCounter{0};
-    std::condition_variable condVar;
-    std::mutex m;
     if (faf) {
+        int32_t fafCounter{0};
+        std::condition_variable condVar;
+        std::mutex m;
         const auto Submit = [&](int32_t i) {
             callback(i);
-            int32_t curCounter;
             {
                 std::unique_lock<std::mutex> lock{m};
-                ++fafCounter;
-                curCounter = fafCounter;
-            }
-            if (curCounter == numEntries) {
-                condVar.notify_one();
+                if (++fafCounter == numEntries) {
+                    condVar.notify_one();
+                }
             }
         };
 
