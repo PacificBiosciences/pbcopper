@@ -3,7 +3,13 @@
 ## Active
 
 ### Added
+ - Add Sparc implementation from unanimity
+
+## [1.9.1] - 2021-02-16
+
+### Added
  - Utility::Shuffle for portable alternative to std::shuffle
+ - Parallel::Dispatch to submit jobs to an existing FireAndForget
 
 ### Changed
  - Read.h pulse width is now optional to allow kinetic-free subreads as input

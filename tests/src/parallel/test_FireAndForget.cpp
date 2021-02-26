@@ -91,3 +91,29 @@ TEST(Parallel_FireAndForget, exceptionProduceWith)
 
     EXPECT_EQ(counter, 2);
 }
+
+TEST(Parallel_FireAndForget, dispatch)
+{
+    static const size_t numThreads = 3;
+    static const size_t numElements = 1000;
+    PacBio::Parallel::FireAndForget faf{numThreads};
+
+    std::vector<std::string> vec;
+    for (size_t i = 0; i < numElements; ++i) {
+        vec.emplace_back(std::to_string(i));
+    }
+
+    const auto Submit = [&vec](const int32_t i) {
+        std::string& input = vec[i];
+        input = "done-" + input;
+    };
+
+    PacBio::Parallel::Dispatch(&faf, numElements, Submit);
+
+    for (auto& v : vec)
+        EXPECT_EQ(v.substr(0, 4), "done");
+
+    EXPECT_EQ(vec.size(), numElements);
+
+    faf.Finalize();
+}
