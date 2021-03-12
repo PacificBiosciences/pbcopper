@@ -9,6 +9,7 @@
 #include <array>
 #include <cctype>
 #include <cstdint>
+#include <stdexcept>
 #include <string>
 #if __cplusplus >= 201703L
 #include <string_view>
