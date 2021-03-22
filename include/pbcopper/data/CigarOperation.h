@@ -5,6 +5,7 @@
 
 #include <pbcopper/PbcopperConfig.h>
 
+#include <cassert>
 #include <cstdint>
 #include <stdexcept>
 
@@ -58,7 +59,31 @@ public:
     ///
     /// \param[in] c SAM/BAM character code
     /// \returns CigarOperationType value
-    static CigarOperationType CharToType(const char c);
+    PB_CUDA_HOST PB_CUDA_DEVICE static CigarOperationType CharToType(const char c)
+    {
+        switch (c) {
+            case 'S':
+                return CigarOperationType::SOFT_CLIP;
+            case '=':
+                return CigarOperationType::SEQUENCE_MATCH;
+            case 'X':
+                return CigarOperationType::SEQUENCE_MISMATCH;
+            case 'I':
+                return CigarOperationType::INSERTION;
+            case 'D':
+                return CigarOperationType::DELETION;
+            case 'N':
+                return CigarOperationType::REFERENCE_SKIP;
+            case 'H':
+                return CigarOperationType::HARD_CLIP;
+            case 'P':
+                return CigarOperationType::PADDING;
+            case 'M':
+                return CigarOperationType::ALIGNMENT_MATCH;
+            default:
+                return CigarOperationType::UNKNOWN_OP;
+        }
+    }
 
     /// \}
 
@@ -66,9 +91,24 @@ public:
     /// \name Constructors & Related Methods
     /// \{
 
-    CigarOperation() = default;
-    CigarOperation(char c, uint32_t length);
-    CigarOperation(CigarOperationType op, uint32_t length);
+    PB_CUDA_HOST PB_CUDA_DEVICE CigarOperation() = default;
+
+    PB_CUDA_HOST PB_CUDA_DEVICE CigarOperation(char c, uint32_t length)
+        : CigarOperation{CigarOperation::CharToType(c), length}
+    {
+    }
+
+    PB_CUDA_HOST PB_CUDA_DEVICE CigarOperation(CigarOperationType op, uint32_t length)
+        : type_{op}, length_{length}
+    {
+#ifndef __CUDA_ARCH__  // host
+        if (AutoValidateCigar && (type_ == CigarOperationType::ALIGNMENT_MATCH))
+            throw std::runtime_error{
+                "[pbcopper] CIGAR operation ERROR: 'M' is not allowed in PacBio BAM files. Use "
+                "'X/=' "
+                "instead."};
+#endif
+    }
 
     /// \}
 
@@ -77,10 +117,10 @@ public:
     char Char() const;
 
     /// \returns operation length
-    uint32_t Length() const;
+    PB_CUDA_HOST PB_CUDA_DEVICE uint32_t Length() const { return length_; }
 
     /// \returns operation type as CigarOperationType enum value
-    CigarOperationType Type() const;
+    PB_CUDA_HOST PB_CUDA_DEVICE CigarOperationType Type() const { return type_; }
 
     /// \}
 
@@ -119,6 +159,9 @@ public:
     bool operator!=(const CigarOperation& other) const noexcept;
 
     /// \}
+
+private:
+    static bool AutoValidateCigar;
 
 private:
     CigarOperationType type_ = CigarOperationType::UNKNOWN_OP;

@@ -48,4 +48,26 @@
 #define PBCOPPER_DEPRECATED
 #endif
 
+#ifdef __NVCC__
+
+#ifndef PB_CUDA_HOST
+#define PB_CUDA_HOST __host__
+#endif
+
+#ifndef PB_CUDA_DEVICE
+#define PB_CUDA_DEVICE __device__
+#endif
+
+#else
+
+#ifndef PB_CUDA_HOST
+#define PB_CUDA_HOST
+#endif
+
+#ifndef PB_CUDA_DEVICE
+#define PB_CUDA_DEVICE
+#endif
+
+#endif
+
 #endif  // PBCOPPER_PBCOPPERCONFIG_H
