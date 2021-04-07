@@ -91,7 +91,7 @@ public:
     /// \name Constructors & Related Methods
     /// \{
 
-    PB_CUDA_HOST PB_CUDA_DEVICE CigarOperation() = default;
+    CigarOperation() = default;
 
     PB_CUDA_HOST PB_CUDA_DEVICE CigarOperation(char c, uint32_t length)
         : CigarOperation{CigarOperation::CharToType(c), length}
