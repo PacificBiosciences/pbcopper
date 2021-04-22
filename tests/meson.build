@@ -82,6 +82,7 @@ pbcopper_test_cpp_sources = files([
   'src/utility/test_Ssize.cpp',
   'src/utility/test_Stopwatch.cpp',
   'src/utility/test_StringUtils.cpp',
+  'src/utility/test_TimeReporter.cpp',
 
   # sparc
   'src/third-party/sparc/test_SparcConsensus.cpp',

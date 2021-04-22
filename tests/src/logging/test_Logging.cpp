@@ -163,3 +163,25 @@ TEST(Logging_Logger, trace_level_is_a_noop_in_release_mode)
     EXPECT_EQ(4, x);
 #endif  // NDEBUG
 }
+
+TEST(Logging_Logging, can_query_active_log_level)
+{
+    {
+        Logging::Logger logger{std::cerr, Logging::LogLevel::INFO};
+        Logging::Logger::Current(&logger);
+
+        EXPECT_EQ(Logging::LogLevel::INFO, Logging::CurrentLogLevel());
+
+        // reset default logging
+        Logging::Logger::Current(&Logging::Logger::Default());
+    }
+    {
+        Logging::Logger logger{std::cerr, Logging::LogLevel::DEBUG};
+        Logging::Logger::Current(&logger);
+
+        EXPECT_EQ(Logging::LogLevel::DEBUG, Logging::CurrentLogLevel());
+
+        // reset default logging
+        Logging::Logger::Current(&Logging::Logger::Default());
+    }
+}
