@@ -85,6 +85,8 @@ Logger& Logger::Current(Logger* newLogger)
     return *currentLogger;
 }
 
+LogLevel CurrentLogLevel() { return Logger::Current().Level(); }
+
 Logger& Logger::Default(Logger* logger)
 {
     static auto logger_ = std::make_unique<Logger>(std::cerr, LogLevel::INFO);
@@ -93,6 +95,8 @@ Logger& Logger::Default(Logger* logger)
 }
 
 bool Logger::Handles(const LogLevel level) const { return level >= config_.Level; }
+
+LogLevel Logger::Level() const { return config_.Level; }
 
 void Logger::MessageWriter()
 {
