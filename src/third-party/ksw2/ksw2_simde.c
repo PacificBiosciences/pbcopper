@@ -1,6 +1,6 @@
 #include <pbcopper/third-party/ksw2/ksw2.h>
 
-#include "../simde/x86/sse4.1.h"
+#include "../../../third-party/simde/x86/sse4.1.h"
 
 #include <assert.h>
 #include <stdio.h>
