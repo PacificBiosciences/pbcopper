@@ -7,6 +7,8 @@
 
 #include <pbcopper/cli2/internal/OptionData.h>
 
+#include "PbBoilerplateDisclaimer.h"
+
 namespace PacBio {
 namespace CLI_v2 {
 namespace internal {
@@ -68,6 +70,8 @@ void MultiToolInterfaceHelpPrinter::MakeHelpText()
 
     const auto& footer = interface_.HelpFooter();
     if (!footer.empty()) result << footer << '\n';
+
+    result << PB_BOILERPLATE_DISCLAIMER;
 
     text_ = result.str();
 }
