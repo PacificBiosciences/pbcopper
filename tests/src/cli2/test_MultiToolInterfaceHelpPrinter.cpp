@@ -11,6 +11,8 @@
 #include <pbcopper/cli2/internal/HelpMetrics.h>
 #include <pbcopper/cli2/internal/InterfaceHelpPrinter.h>
 
+#include "../../../src/cli2/PbBoilerplateDisclaimer.h"
+
 using HelpMetrics = PacBio::CLI_v2::internal::HelpMetrics;
 using Interface = PacBio::CLI_v2::Interface;
 using InterfaceHelpPrinter = PacBio::CLI_v2::internal::InterfaceHelpPrinter;
@@ -116,7 +118,9 @@ Typical workflow:
 
   5. Polish transcripts using subreads
      $ isoseq3 polish unpolished.bam movie.subreads.bam polished.bam
-)"};
+)"
+PB_BOILERPLATE_DISCLAIMER
+};
 
     MultiToolInterface i{"isoseq3", "De Novo Transcript Reconstruction", "3.1.2"};
     i.AddTools({{"refine7890123",    MakeRefineInterface(),    &RefineRunner},

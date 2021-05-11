@@ -6,6 +6,8 @@
 
 #include <pbcopper/utility/StringUtils.h>
 
+#include "PbBoilerplateDisclaimer.h"
+
 using HelpMetrics = PacBio::CLI_v2::internal::HelpMetrics;
 using Option = PacBio::CLI_v2::Option;
 using OptionData = PacBio::CLI_v2::internal::OptionData;
@@ -130,6 +132,8 @@ void InterfaceHelpPrinter::MakeHelpText()
 
     const auto& footer = interface_.HelpFooter();
     if (!footer.empty()) result << footer << '\n';
+
+    result << PB_BOILERPLATE_DISCLAIMER;
 
     text_ = result.str();
 }

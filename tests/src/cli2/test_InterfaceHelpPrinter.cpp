@@ -12,6 +12,8 @@
 #include <pbcopper/cli2/internal/OptionTranslator.h>
 #include <pbcopper/cli2/internal/PositionalArgumentTranslator.h>
 
+#include "../../../src/cli2/PbBoilerplateDisclaimer.h"
+
 using Interface = PacBio::CLI_v2::Interface;
 using InterfaceHelpPrinter = PacBio::CLI_v2::internal::InterfaceHelpPrinter;
 using MultiToolInterface = PacBio::CLI_v2::MultiToolInterface;
@@ -562,7 +564,9 @@ Algorithm Options:
                            WARN, FATAL). [WARN]
   --log-file        FILE   Log to a file, instead of stderr.
 
-)"};
+)"
+PB_BOILERPLATE_DISCLAIMER
+};
 
     Interface i {
         "frobber",
@@ -619,6 +623,7 @@ TEST(CLI2_InterfaceHelpPrinter, word_wraps_application_description)
 "                          WARN, FATAL). [WARN]\n"
 "  --log-file        FILE  Log to a file, instead of stderr.\n"
 "\n"
+PB_BOILERPLATE_DISCLAIMER
     };
 
     Interface i {
@@ -657,7 +662,9 @@ Typical workflow:
   3. Lather, rinse, repeat.
 
   So long, and thanks for all the fish.
-)"};
+)"
+PB_BOILERPLATE_DISCLAIMER
+};
 
     Interface i {
         "frobber",
