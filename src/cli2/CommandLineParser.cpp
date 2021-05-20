@@ -65,8 +65,12 @@ OptionValue ValueFromString(const OptionData& option, const std::string valueStr
             return OptionValue{valueString};
 
         case OptionValueType::BOOL: {
-            if (IsTrueBoolean(valueString)) return OptionValue{true};
-            if (IsFalseBoolean(valueString)) return OptionValue{false};
+            if (IsTrueBoolean(valueString)) {
+                return OptionValue{true};
+            }
+            if (IsFalseBoolean(valueString)) {
+                return OptionValue{false};
+            }
             throw CommandLineParserException{"value '" + valueString +
                                              "' is unexpected after a switch"};
         }
@@ -79,7 +83,9 @@ void EnsureOptionValue(const std::string& valueString, const std::string& option
                        const OptionValueType optionType)
 {
     // value string does not begin with a dash, treat as option value
-    if (valueString.find(token_dash) != 0) return;
+    if (valueString.find(token_dash) != 0) {
+        return;
+    }
 
     // value string begins with dash - may be either a new option, bare '-', or a
     // valid negative value
@@ -87,23 +93,25 @@ void EnsureOptionValue(const std::string& valueString, const std::string& option
 
         // bare '-' value may be OK for string-like options, but not numerical ones
         if (valueString.size() == 1) {
-            if (IsStringLike(optionType))
+            if (IsStringLike(optionType)) {
                 return;
-            else {
+            } else {
                 throw CommandLineParserException{
                     "single dash value '-' is not allowed for option '" + optionName + "'"};
             }
         }
 
         // next character is not a number, e.g. "-X", we're definitely missing our expected value
-        else if (!std::isdigit(valueString.at(1)))
+        else if (!std::isdigit(valueString.at(1))) {
             throw CommandLineParserException{"value is missing for option '" + optionName + "'"};
+        }
 
         // next token looks like a negative number, but is not valid
         // for this option type
-        else if (!CanBeNegative(optionType))
+        else if (!CanBeNegative(optionType)) {
             throw CommandLineParserException{"negative value " + valueString +
                                              " is not allowed for option '" + optionName + "'"};
+        }
 
         // else looks like valid negative number
     }
@@ -119,25 +127,30 @@ CommandLineParser::CommandLineParser(Interface interface) : interface_{std::move
 {
     options_ = interface_.Options();
     for (const auto& option : options_) {
-        for (const auto& name : option.names)
+        for (const auto& name : option.names) {
             optionsByName_.insert({name, option});
-        for (const auto& hiddenName : option.hiddenNames)
+        }
+        for (const auto& hiddenName : option.hiddenNames) {
             optionsByName_.insert({hiddenName, option});
+        }
     }
 }
 
 const OptionData& CommandLineParser::OptionFor(const std::string& name) const
 {
     const auto found = optionsByName_.find(name);
-    if (found != optionsByName_.cend()) return found->second;
+    if (found != optionsByName_.cend()) {
+        return found->second;
+    }
     throw CommandLineParserException{"unknown option '" + name + "'"};
 }
 
 Results CommandLineParser::Parse(const std::vector<std::string>& arguments) const
 {
-    if (arguments.empty())
+    if (arguments.empty()) {
         throw CommandLineParserException{
             "empty argument list (should have at least the program name)"};
+    }
 
     Results results = interface_.MakeDefaultResults();
     results.InputCommandLine(PacBio::Utility::Join(arguments, " "));
@@ -149,21 +162,27 @@ Results CommandLineParser::Parse(const std::vector<std::string>& arguments) cons
         args.pop_front();
 
         // bare '--' signifies the end of options & start of posArgs
-        if (arg == "--") break;
+        if (arg == "--") {
+            break;
+        }
 
         const auto isLongOption = (arg.find(token_doubleDash) == 0);
         const auto isShortOption = (arg.find(token_dash) == 0);
 
         // long option (--reference)
-        if (isLongOption) ParseLongOption(arg, args, results);
+        if (isLongOption) {
+            ParseLongOption(arg, args, results);
+        }
 
         // short option (-r)
-        else if (isShortOption)
+        else if (isShortOption) {
             ParseShortOption(arg, args, results);
+        }
 
         // positional argument
-        else
+        else {
             results.AddPositionalArgument(arg);
+        }
     }
 
     // add any remaining positional args after '--' break
@@ -171,21 +190,6 @@ Results CommandLineParser::Parse(const std::vector<std::string>& arguments) cons
         results.AddPositionalArgument(args.front());
         args.pop_front();
     }
-
-    // ensure minimum number of  positional args
-    // const size_t minimumNumPosArgs = interface_.NumRequiredPosArgs();
-    // if (minimumNumPosArgs > 0) {
-    //     const size_t foundNumPosArgs = results.PositionalArguments().size();
-    //     if (foundNumPosArgs < minimumNumPosArgs) {
-    //         std::ostringstream msg;
-    //         msg << "requires " << minimumNumPosArgs;
-    //         msg << (minimumNumPosArgs == 1 ? " argument" : " arguments");
-    //         msg << ", but " << foundNumPosArgs;
-    //         msg << (foundNumPosArgs == 1 ? " was" : " were");
-    //         msg << " provided";
-    //         throw CommandLineParserException{msg.str()};
-    //     }
-    // }
 
     return results;
 }
@@ -218,7 +222,9 @@ void CommandLineParser::ParseLongOption(const std::string& arg, std::deque<std::
 
     // boolean options do not require a value
     const auto& option = OptionFor(optionName);
-    if (option.type == OptionValueType::BOOL) results.AddObservedFlag(optionName, SetByMode::USER);
+    if (option.type == OptionValueType::BOOL) {
+        results.AddObservedFlag(optionName, SetByMode::USER);
+    }
 
     // non-boolean options do requre a value
     else {
@@ -232,8 +238,9 @@ void CommandLineParser::ParseLongOption(const std::string& arg, std::deque<std::
             results.AddObservedValue(optionName, value, SetByMode::USER);
             args.pop_front();
 
-        } else
+        } else {
             throw CommandLineParserException{"value is missing for option '" + optionName + "'"};
+        }
     }
 }
 
@@ -264,7 +271,9 @@ void CommandLineParser::ParseShortOption(const std::string& arg, std::deque<std:
         // if found, no remaining value expected
         else {
             if (i + 1 < arg.size()) {
-                if (arg.at(i + 1) == token_equal) ++i;
+                if (arg.at(i + 1) == token_equal) {
+                    ++i;
+                }
                 auto valueString = arg.substr(i + 1);
                 auto value = ValueFromString(option, valueString);
                 results.AddObservedValue(optionName, value, SetByMode::USER);

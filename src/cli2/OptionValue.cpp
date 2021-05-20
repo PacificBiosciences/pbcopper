@@ -118,9 +118,9 @@ OptionValueType ValueType(std::string typeString)
 {
     boost::to_lower(typeString);
     const auto found = stringToType.find(typeString);
-    if (found != stringToType.cend())
+    if (found != stringToType.cend()) {
         return found->second;
-    else {
+    } else {
         std::ostringstream msg;
         msg << "[pbcopper] command line option ERROR: could not determine value type for \""
             << typeString << "\"\n";

@@ -30,6 +30,7 @@ struct OptionData
     boost::optional<OptionValue> defaultValue;
 
     bool isHidden = false;
+    bool isDefaultValueHidden = false;
 
     std::vector<OptionValue> choices;
     bool isChoicesHidden = false;

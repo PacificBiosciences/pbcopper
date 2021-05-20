@@ -112,6 +112,17 @@ R"({
 })"
 };
 
+const Option Seed
+{
+R"({
+    "names" : ["seed"],
+    "description" : "Seed for random-number generator.",
+    "type" : "int",
+    "default" : -1,
+    "default.hidden" : true
+})"
+};
+
 const PositionalArgument Source
 {
 R"({
@@ -549,6 +560,7 @@ Output Options:
   -n,--no-op               Dry run. Report actions that would be taken but do
                            not perform them.
   --timeout         INT    Abort execution after <INT> milliseconds. [5000]
+  --seed            INT    Seed for random-number generator.
 
 Algorithm Options:
   --delta           FLOAT  Some delta for things. [0.01]
@@ -579,7 +591,8 @@ PB_BOILERPLATE_DISCLAIMER
         CLI_v2_InterfaceHelpPrinterTests::Options::Force,
         CLI_v2_InterfaceHelpPrinterTests::Options::TargetDirectory,
         CLI_v2_InterfaceHelpPrinterTests::Options::DryRun,
-        CLI_v2_InterfaceHelpPrinterTests::Options::Timeout
+        CLI_v2_InterfaceHelpPrinterTests::Options::Timeout,
+        CLI_v2_InterfaceHelpPrinterTests::Options::Seed,
     });
     i.AddOptionGroup("Algorithm Options",{
         CLI_v2_InterfaceHelpPrinterTests::Options::Delta,
