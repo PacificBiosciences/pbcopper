@@ -27,7 +27,9 @@ namespace CLI_v2 {
 bool LogLevelIsUserProvided(const Interface& interface, const Results& results)
 {
     const auto& logLevelOption = interface.LogLevelOption();
-    if (!logLevelOption) return false;
+    if (!logLevelOption) {
+        return false;
+    }
 
     assert(!logLevelOption->names.empty());
     const auto& logLevelResult = results[Builtin::LogLevel];
@@ -88,15 +90,18 @@ int Run(const std::vector<std::string>& args, const Interface& interface,
     // reflects the actual, active log level.
     //
     Logging::LogConfig logConfig = interface.LogConfig();
-    if (LogLevelIsUserProvided(interface, results))
+    if (LogLevelIsUserProvided(interface, results)) {
         logConfig.Level = results.LogLevel();
-    else
+    } else {
         results.AddObservedValue("log-level", logConfig.Level.ToString(), SetByMode::DEFAULT);
+    }
 
     const auto logger = [&]() {
         if (interface.LogFileOption()) {
             const auto logFile = results.LogFile();
-            if (!logFile.empty()) return std::make_unique<Logging::Logger>(logFile, logConfig);
+            if (!logFile.empty()) {
+                return std::make_unique<Logging::Logger>(logFile, logConfig);
+            }
         }
         return std::make_unique<Logging::Logger>(std::cerr, logConfig);
     }();

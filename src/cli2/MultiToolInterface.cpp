@@ -24,15 +24,18 @@ MultiToolInterface::MultiToolInterface(std::string name, std::string description
 MultiToolInterface& MultiToolInterface::AddTool(Tool tool)
 {
     // ensure new subtools use the multi-tool's config
-    if (data_.logConfig_) tool.interface.LogConfig(data_.logConfig_.get());
+    if (data_.logConfig_) {
+        tool.interface.LogConfig(data_.logConfig_.get());
+    }
     data_.tools_.emplace_back(std::move(tool));
     return *this;
 }
 
 MultiToolInterface& MultiToolInterface::AddTools(std::vector<Tool> tools)
 {
-    for (auto&& tool : tools)
+    for (auto&& tool : tools) {
         AddTool(std::move(tool));
+    }
     return *this;
 }
 
@@ -48,7 +51,9 @@ const std::string& MultiToolInterface::ApplicationVersion() const { return data_
 bool MultiToolInterface::HasTool(const std::string& toolName) const
 {
     for (const auto& tool : data_.tools_) {
-        if (tool.name == toolName) return true;
+        if (tool.name == toolName) {
+            return true;
+        }
     }
     return false;
 }
@@ -70,8 +75,9 @@ MultiToolInterface& MultiToolInterface::LogConfig(Logging::LogConfig config)
 {
     // ensure any current subtools use the new multi-tool config
     data_.logConfig_ = config;
-    for (auto& tool : data_.tools_)
+    for (auto& tool : data_.tools_) {
         tool.interface.LogConfig(config);
+    }
     return *this;
 }
 
@@ -89,7 +95,9 @@ MultiToolInterface& MultiToolInterface::RegisterVersionPrinter(
 const Tool& MultiToolInterface::ToolFor(const std::string& toolName) const
 {
     for (const auto& tool : data_.tools_) {
-        if (tool.name == toolName) return tool;
+        if (tool.name == toolName) {
+            return tool;
+        }
     }
     throw std::runtime_error{"[pbcopper] command line ERROR: unknown tool '" + toolName +
                              "' requested"};

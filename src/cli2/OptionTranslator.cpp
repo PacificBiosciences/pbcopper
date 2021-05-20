@@ -36,8 +36,12 @@ struct MissingOptionFieldException : public std::runtime_error
 void Validate(const Option& option, const OptionData& result)
 {
     // option data fields
-    if (result.names.empty()) throw MissingOptionFieldException{"names", option.text};
-    if (result.description.empty()) throw MissingOptionFieldException{"description", option.text};
+    if (result.names.empty()) {
+        throw MissingOptionFieldException{"names", option.text};
+    }
+    if (result.description.empty()) {
+        throw MissingOptionFieldException{"description", option.text};
+    }
 
     // ensure defaults match choices
     if (!result.choices.empty() && result.defaultValue) {
@@ -96,14 +100,14 @@ std::vector<std::string> OptionTranslator::OptionNames(const Option& option)
 {
     std::vector<std::string> result;
     const Json root = Json::parse(option.text);
-    for (const auto& name : root["names"])
+    for (const auto& name : root["names"]) {
         result.push_back(name);
+    }
     return result;
 }
 
 OptionData OptionTranslator::Translate(const Option& option)
 {
-    // clang-format off
 
     OptionData result;
 
@@ -115,53 +119,57 @@ OptionData OptionTranslator::Translate(const Option& option)
         //
         // type
         const auto type = root.find("type");
-        if (type != root.cend())
+        if (type != root.cend()) {
             result.type = ValueType(*type);
+        }
 
         // names
         const auto names = root.find("names");
-        if (names != root.cend())
-        {
-            for (const auto& name : *names)
+        if (names != root.cend()) {
+            for (const auto& name : *names) {
                 result.names.push_back(name.get<std::string>());
+            }
         }
 
         // names.hidden
         const auto hiddenNames = root.find("names.hidden");
-        if (hiddenNames != root.cend())
-        {
-            for (const auto& hiddenName : *hiddenNames)
+        if (hiddenNames != root.cend()) {
+            for (const auto& hiddenName : *hiddenNames) {
                 result.hiddenNames.push_back(hiddenName.get<std::string>());
+            }
         }
 
         // description - from single string, or joining array of strings
         const auto description = root.find("description");
         if (description != root.cend()) {
             if (description->is_array()) {
-                for (const auto& line : *description)
+                for (const auto& line : *description) {
                     result.description += line.get<std::string>();
-            }
-            else
+                }
+            } else {
                 result.description = description->get<std::string>();
+            }
         }
 
         // hidden
         const auto hidden = root.find("hidden");
-        if (hidden != root.cend())
+        if (hidden != root.cend()) {
             result.isHidden = *hidden;
+        }
 
         // choices
         const auto choices = root.find("choices");
-        if (choices != root.cend())
-        {
-            for (const auto& choice : *choices)
+        if (choices != root.cend()) {
+            for (const auto& choice : *choices) {
                 result.choices.emplace_back(MakeOptionValue(choice, result.type));
+            }
         }
 
         // choices.hidden
         const auto hideChoices = root.find("choices.hidden");
-        if (hideChoices != root.cend())
+        if (hideChoices != root.cend()) {
             result.isChoicesHidden = *hideChoices;
+        }
 
         // default
         //  - direct value supplied to Option ctor
@@ -170,19 +178,21 @@ OptionData OptionTranslator::Translate(const Option& option)
         //  - ok if absent for string options, default is ""
         //
         const auto defaultValue = root.find("default");
-        if (option.defaultValue)
+        if (option.defaultValue) {
             result.defaultValue = option.defaultValue;
-        else if (defaultValue != root.cend())
+        } else if (defaultValue != root.cend()) {
             result.defaultValue = MakeOptionValue(*defaultValue, result.type);
-        else if (result.type == OptionValueType::BOOL)
+        } else if (result.type == OptionValueType::BOOL) {
             result.defaultValue = false;
-        else if (IsStringLike(result.type))
+        } else if (IsStringLike(result.type)) {
             result.defaultValue = std::string{};
+        }
 
         // default.hidden
         const auto hideDefault = root.find("default.hidden");
-        if (hideDefault != root.cend())
+        if (hideDefault != root.cend()) {
             result.isDefaultValueHidden = *hideDefault;
+        }
 
     } catch (std::exception& e) {
         std::ostringstream msg;
@@ -194,15 +204,14 @@ OptionData OptionTranslator::Translate(const Option& option)
 
     Validate(option, result);
     return result;
-
-    // clang-format on
 }
 
 std::vector<OptionData> OptionTranslator::Translate(const std::vector<Option>& options)
 {
     std::vector<OptionData> result;
-    for (const auto& opt : options)
+    for (const auto& opt : options) {
         result.emplace_back(Translate(opt));
+    }
     return result;
 }
 
