@@ -157,7 +157,7 @@ std::string InterfaceHelpPrinter::OptionDescription(const OptionData& option)
     if (!choices.empty()) out << " Valid choices: (" << choices << ").";
 
     const auto defaultValue = DefaultValue(option);
-    if (!defaultValue.empty()) out << " [" << defaultValue << ']';
+    if (!defaultValue.empty() && !option.isDefaultValueHidden) out << " [" << defaultValue << ']';
 
     return out.str();
 }

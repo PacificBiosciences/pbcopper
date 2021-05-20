@@ -179,6 +179,11 @@ OptionData OptionTranslator::Translate(const Option& option)
         else if (IsStringLike(result.type))
             result.defaultValue = std::string{};
 
+        // default.hidden
+        const auto hideDefault = root.find("default.hidden");
+        if (hideDefault != root.cend())
+            result.isDefaultValueHidden = *hideDefault;
+
     } catch (std::exception& e) {
         std::ostringstream msg;
         msg << "[pbcopper] command line option ERROR: cannot parse option definition:\n"
