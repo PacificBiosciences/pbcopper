@@ -35,7 +35,7 @@
  *
  */
 
-#include "../../third-party/simde/x86/sse2.h"
+#include "../../../third-party/simde/x86/sse2.h"
 
 #include "ssw.h"
 
