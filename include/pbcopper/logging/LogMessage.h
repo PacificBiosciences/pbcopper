@@ -27,7 +27,9 @@ public:
     template <typename T>
     LogMessage& operator<<(const T& t)
     {
-        if (ptr_) ptr_->second << t;
+        if (ptr_) {
+            ptr_->second << t;
+        }
         return *this;
     }
 

@@ -17,7 +17,9 @@ ReadId::ReadId(const std::string& readName) : ReadName{readName}
         Data::ReadName rName{readName};
         MovieName = rName.MovieName().ToStdString();
         HoleNumber = static_cast<size_t>(rName.Zmw());
-        if (!rName.IsCCS()) ZmwInterval = rName.QueryInterval();
+        if (!rName.IsCCS()) {
+            ZmwInterval = rName.QueryInterval();
+        }
     }
 }
 

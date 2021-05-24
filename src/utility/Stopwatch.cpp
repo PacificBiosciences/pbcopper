@@ -29,13 +29,27 @@ std::string Stopwatch::PrettyPrintNanoseconds(int64_t nanosecs)
     auto us = (nanosecs / 1000) % 1000;
     auto ns = nanosecs % 1000;
     std::ostringstream ss;
-    if (d > 0) ss << std::to_string(d) << "d ";
-    if (h > 0) ss << std::to_string(h) << "h ";
-    if (m > 0 && d == 0) ss << std::to_string(m) << "m ";
-    if (s > 0 && h == 0) ss << std::to_string(s) << "s ";
-    if (ms > 0 && m == 0) ss << std::to_string(ms) << "ms ";
-    if (us > 0 && s == 0) ss << std::to_string(us) << "us ";
-    if (ns > 0 && ms == 0) ss << std::to_string(ns) << "ns ";
+    if (d > 0) {
+        ss << std::to_string(d) << "d ";
+    }
+    if (h > 0) {
+        ss << std::to_string(h) << "h ";
+    }
+    if (m > 0 && d == 0) {
+        ss << std::to_string(m) << "m ";
+    }
+    if (s > 0 && h == 0) {
+        ss << std::to_string(s) << "s ";
+    }
+    if (ms > 0 && m == 0) {
+        ss << std::to_string(ms) << "ms ";
+    }
+    if (us > 0 && s == 0) {
+        ss << std::to_string(us) << "us ";
+    }
+    if (ns > 0 && ms == 0) {
+        ss << std::to_string(ns) << "ns ";
+    }
     return ss.str();
 }
 

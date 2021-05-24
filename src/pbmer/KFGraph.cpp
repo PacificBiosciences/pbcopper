@@ -36,7 +36,9 @@ bool KFG::MoreRCHits(const std::vector<DnaBit>& bits) const
             ++rs;
         }
     }
-    if (rs > fs) return true;
+    if (rs > fs) {
+        return true;
+    }
     return false;
 }
 
@@ -124,7 +126,9 @@ int32_t KFG::OutEdgeCount() const
 bool KFG::ValidateLoad() const
 {
     for (const auto& x : kfg_) {
-        if (x.second.SeqCount() == 0) return false;
+        if (x.second.SeqCount() == 0) {
+            return false;
+        }
     }
     return true;
 }
@@ -225,11 +229,14 @@ Bubbles KFG::FindBubbles() const
     for (const auto& node : kfg_) {
 
         // this node is already part of a bubble and should be ignored.
-        if (used_branch_node.find(node.second.dna_.HashedKmer()) != used_branch_node.end())
+        if (used_branch_node.find(node.second.dna_.HashedKmer()) != used_branch_node.end()) {
             continue;
+        }
 
         // simple bubbles contain 2 out edges
-        if (node.second.OutEdgeCount() != 2) continue;
+        if (node.second.OutEdgeCount() != 2) {
+            continue;
+        }
 
         std::unordered_set<uint64_t>::const_iterator paths = node.second.begin();
 
@@ -362,8 +369,9 @@ bool KFG::NextUtg(uint64_t currentNode, std::unordered_set<uint64_t>& seen,
     // We need to get the branch node.
     if (fullPath.back().OutEdgeCount() == 1) {
         uint64_t tail = (*fullPath.back().outEdges_.begin());
-        if (tail != fullPath.back().Key() && seen.find(fullPath.back().Key()) == seen.end())
+        if (tail != fullPath.back().Key() && seen.find(fullPath.back().Key()) == seen.end()) {
             fullPath.push_back(kfg_.at(tail));
+        }
     }
 
     for (const auto& p : fullPath) {
@@ -418,9 +426,13 @@ std::string KFG::DumpGFAUtgs() const
     }
 
     for (const auto& k : keys) {
-        if (seen.find(k) != seen.end()) continue;
+        if (seen.find(k) != seen.end()) {
+            continue;
+        }
         auto node = kfg_.at(k);
-        if (node.InEdgeCount() != 0) continue;
+        if (node.InEdgeCount() != 0) {
+            continue;
+        }
         NextUtg(node.Key(), seen, segments, links);
     }
 

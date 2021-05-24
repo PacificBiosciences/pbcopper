@@ -102,11 +102,12 @@ public:
         : type_{op}, length_{length}
     {
 #ifndef __CUDA_ARCH__  // host
-        if (AutoValidateCigar && (type_ == CigarOperationType::ALIGNMENT_MATCH))
+        if (AutoValidateCigar && (type_ == CigarOperationType::ALIGNMENT_MATCH)) {
             throw std::runtime_error{
                 "[pbcopper] CIGAR operation ERROR: 'M' is not allowed in PacBio BAM files. Use "
                 "'X/=' "
                 "instead."};
+        }
 #endif
     }
 

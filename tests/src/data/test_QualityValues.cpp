@@ -9,8 +9,6 @@
 using QualityValue = PacBio::Data::QualityValue;
 using QualityValues = PacBio::Data::QualityValues;
 
-// clang-format off
-
 TEST(Data_QualityValue, constructs_expected_defaults)
 {
     const QualityValue value;
@@ -27,7 +25,7 @@ TEST(Data_QualityValue, can_be_constructed_from_integers)
     const QualityValue tooHigh{94};
     const QualityValue wayTooHigh{std::numeric_limits<int8_t>::max()};
 
-    EXPECT_EQ(0,  zero);
+    EXPECT_EQ(0, zero);
     EXPECT_EQ(33, thirtyThree);
     EXPECT_EQ(42, valid);
     EXPECT_EQ(93, max);
@@ -44,12 +42,12 @@ TEST(Data_QualityValue, can_be_constructed_from_integers)
 
 TEST(Data_QualityValue, can_be_constructed_from_fastq_chars)
 {
-    const QualityValue zero        = QualityValue::FromFastq('!');
+    const QualityValue zero = QualityValue::FromFastq('!');
     const QualityValue thirtyThree = QualityValue::FromFastq('B');
-    const QualityValue valid       = QualityValue::FromFastq('K');
-    const QualityValue max         = QualityValue::FromFastq('~');
+    const QualityValue valid = QualityValue::FromFastq('K');
+    const QualityValue max = QualityValue::FromFastq('~');
 
-    EXPECT_EQ(0,  zero);
+    EXPECT_EQ(0, zero);
     EXPECT_EQ(33, thirtyThree);
     EXPECT_EQ(42, valid);
     EXPECT_EQ(93, max);
@@ -67,8 +65,9 @@ TEST(Data_QualityValues, can_be_constructed_from_integers)
     const std::vector<uint8_t> values{93, 93, 93, 42, 42, 33, 33, 0, 0};
 
     QualityValues qvs;
-    for (auto qv : values)
+    for (auto qv : values) {
         qvs.push_back(qv);
+    }
 
     EXPECT_EQ("~~~KKBB!!", qvs.Fastq());
 }

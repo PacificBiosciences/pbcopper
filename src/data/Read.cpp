@@ -115,15 +115,17 @@ std::ostream& operator<<(std::ostream& os, const Read& read)
 {
     os << std::boolalpha;
     os << "Read(Id=" << read.Id << ", Seq=" << read.Seq << ", PulseWidth=";
-    if (read.IPD)
+    if (read.IPD) {
         os << *read.PulseWidth;
-    else
+    } else {
         os << "None";
+    }
     os << ", Qualities=" << read.Qualities << ", IPD=";
-    if (read.IPD)
+    if (read.IPD) {
         os << *read.IPD;
-    else
+    } else {
         os << "None";
+    }
     os << ", QueryStart=" << read.QueryStart << ", QueryEnd=" << read.QueryEnd
        << ", Flags=" << read.Flags << ", ReadAccuracy=" << read.ReadAccuracy
        << ", SignalToNoise=" << read.SignalToNoise << ", Model=" << read.Model
@@ -134,7 +136,9 @@ std::ostream& operator<<(std::ostream& os, const Read& read)
 void ClipToQuery(Read& read, Position start, Position end)
 {
     // skip out if clip not needed
-    if (start <= read.QueryStart && end >= read.QueryEnd) return;
+    if (start <= read.QueryStart && end >= read.QueryEnd) {
+        return;
+    }
 
     // calculate clipping
     ClipToQueryConfig clipConfig{read.Seq.size(),

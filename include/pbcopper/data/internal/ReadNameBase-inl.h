@@ -70,26 +70,29 @@ MovieNameType ReadNameBase<MovieNameType>::MovieName() const
 template <typename MovieNameType>
 Interval ReadNameBase<MovieNameType>::QueryInterval() const
 {
-    if (IsCCS())
+    if (IsCCS()) {
         throw std::runtime_error{
             "[pbcopper] read name ERROR: cannot get query interval from CCS read"};
+    }
     return *queryInterval_;
 }
 
 template <typename MovieNameType>
 Position ReadNameBase<MovieNameType>::QueryStart() const
 {
-    if (IsCCS())
+    if (IsCCS()) {
         throw std::runtime_error{
             "[pbcopper] read name ERROR: cannot get query start from CCS read"};
+    }
     return queryInterval_->Start();
 }
 
 template <typename MovieNameType>
 Position ReadNameBase<MovieNameType>::QueryEnd() const
 {
-    if (IsCCS())
+    if (IsCCS()) {
         throw std::runtime_error{"[pbcopper] read name ERROR: cannot get query end from CCS read"};
+    }
     return queryInterval_->End();
 }
 
@@ -104,17 +107,21 @@ bool ReadNameBase<MovieNameType>::operator==(const ReadNameBase<MovieNameType>& 
     noexcept
 {
     // simple int check first
-    if (zmw_ != other.zmw_) return false;
+    if (zmw_ != other.zmw_) {
+        return false;
+    }
 
     // not equal if one is CCS and one is not
-    if (IsCCS() != other.IsCCS())
+    if (IsCCS() != other.IsCCS()) {
         return false;
-    else {
+    } else {
         // reads share same CCS status, check intervals if both non-CCS
         if (!IsCCS()) {
             assert(queryInterval_);
             assert(other.queryInterval_);
-            if (*queryInterval_ != *other.queryInterval_) return false;
+            if (*queryInterval_ != *other.queryInterval_) {
+                return false;
+            }
         }
     }
 
@@ -130,45 +137,56 @@ bool ReadNameBase<MovieNameType>::operator<(const ReadNameBase<MovieNameType>& o
     //   2 - zmw hole number
     //   3 - query_interval (CCS to end)
 
-    if (movieName_ != other.movieName_) return movieName_ < other.movieName_;
-    if (zmw_ != other.zmw_) return zmw_ < other.zmw_;
+    if (movieName_ != other.movieName_) {
+        return movieName_ < other.movieName_;
+    }
+    if (zmw_ != other.zmw_) {
+        return zmw_ < other.zmw_;
+    }
 
     // if this read name is CCS, then we're either never less-than a subread
     // with query interval... or the other read is the same read name, so not
     // "less than" either
-    if (IsCCS()) return false;
+    if (IsCCS()) {
+        return false;
 
-    // this read is non-CCS. so if other is CCS, then we are always "less-than"
-    else if (other.IsCCS())
+        // this read is non-CCS. so if other is CCS, then we are always "less-than"
+    } else if (other.IsCCS()) {
         return true;
+    }
 
     // if here, both non-CCS, compare on query interval
     assert(!IsCCS());
     assert(!other.IsCCS());
     const auto thisInterval = *queryInterval_;
     const auto otherInterval = *other.queryInterval_;
-    if (thisInterval.Start() == otherInterval.Start())
+    if (thisInterval.Start() == otherInterval.Start()) {
         return thisInterval.End() < otherInterval.End();
+    }
     return thisInterval.End() < otherInterval.End();
 }
 
 template <typename MovieNameType>
 void ReadNameBase<MovieNameType>::Check() const
 {
-    if (movieName_.ToStdString().empty())
+    if (movieName_.ToStdString().empty()) {
         throw std::runtime_error{"[pbcopper] read name ERROR: movie name must not be empty"};
+    }
 
-    if (zmw_ < 0)
+    if (zmw_ < 0) {
         throw std::runtime_error{
             "[pbcopper] read name ERROR: ZMW hole number must be a positive integer"};
+    }
 
     if (!IsCCS()) {
-        if (QueryStart() < 0)
+        if (QueryStart() < 0) {
             throw std::runtime_error{
                 "[pbcopper] read name ERROR: query start must be a positive integer"};
-        if (QueryEnd() < 0)
+        }
+        if (QueryEnd() < 0) {
             throw std::runtime_error{
                 "[pbcopper] read name ERROR: query end must be a positive integer"};
+        }
     }
 }
 
@@ -181,19 +199,25 @@ void ReadNameBase<MovieNameType>::FromString(std::string&& name)
     queryInterval_.reset(nullptr);
 
     // parse name parts
-    if (name.empty()) return;
+    if (name.empty()) {
+        return;
+    }
     auto parts = PacBio::Utility::Split(name, '/');
 
     // most PB record names have 3 components, with the exception
     // of by-strand CCS, which has an additional 'fwd/rev' component
-    if ((parts.size() < 3) || (parts.size() > 4)) return;
+    if ((parts.size() < 3) || (parts.size() > 4)) {
+        return;
+    }
 
     // rip out & store name parts
     movieName_ = MovieNameType{std::move(parts.at(0))};
     zmw_ = std::stoi(parts.at(1));
     if (parts.at(2) != "ccs") {
         auto queryParts = PacBio::Utility::Split(parts.at(2), '_');
-        if (queryParts.size() != 2) return;
+        if (queryParts.size() != 2) {
+            return;
+        }
         const Position queryStart = std::stoi(queryParts.at(0));
         const Position queryEnd = std::stoi(queryParts.at(1));
         queryInterval_.reset(new Interval{queryStart, queryEnd});

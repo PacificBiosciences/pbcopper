@@ -24,8 +24,9 @@ Parser::Parser(uint8_t kmerSize)
 
 Mers Parser::Parse(const std::string& dna) const
 {
-    if (dna.size() < kmerSize_)
+    if (dna.size() < kmerSize_) {
         throw std::runtime_error{"[pbmer] parsing ERROR: DNA sequence shorter than kmer size."};
+    }
 
     Mers kms{kmerSize_};
     Kmer forwardKmer{Data::Strand::FORWARD};
@@ -76,8 +77,9 @@ Mers Parser::Parse(const std::string& dna) const
 
 std::vector<DnaBit> Parser::ParseDnaBit(const std::string& dna) const
 {
-    if (dna.size() < kmerSize_)
+    if (dna.size() < kmerSize_) {
         throw std::runtime_error{"[pbmer] parsing ERROR: DNA sequence shorter than kmer size."};
+    }
 
     std::vector<DnaBit> kms;
     kms.reserve(dna.size() - kmerSize_ + 1);
@@ -123,8 +125,9 @@ std::vector<DnaBit> Parser::ParseDnaBit(const std::string& dna) const
 
 void Parser::ParseDnaBit(const std::string& dna, std::vector<DnaBit>& kms) const
 {
-    if (dna.size() < kmerSize_)
+    if (dna.size() < kmerSize_) {
         throw std::runtime_error{"[pbmer] parsing ERROR: DNA sequence shorter than kmer size."};
+    }
 
     DnaBit forwardKmer;
     forwardKmer.strand = 0;
@@ -185,7 +188,9 @@ void Parser::RLE(std::string& dna) const
 {
     auto first = dna.begin();
     auto last = dna.end();
-    if (first == last) return;
+    if (first == last) {
+        return;
+    }
     auto result = first;
     while (++first != last) {
         if (!(*result == *first) && ++result != first) {

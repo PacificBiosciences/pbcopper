@@ -99,7 +99,9 @@ void Mers::AWWindowMin(unsigned int winSize)
 std::vector<Kmer> Mers::BuildNMPs() const
 {
 
-    if (kmerSize > 16) throw std::runtime_error{"[pbmer] Mers ERROR: Kmer must be <= 16 bp."};
+    if (kmerSize > 16) {
+        throw std::runtime_error{"[pbmer] Mers ERROR: Kmer must be <= 16 bp."};
+    }
 
     // no mask because we are merging to minimizers up to 32 bits.
     const uint64_t mask = ~uint64_t(0);
@@ -132,11 +134,13 @@ void Mers::HashKmers()
     level_ = 0;
     const uint64_t mask = (1ull << 2 * kmerSize) - 1;
 
-    for (auto& f : forward)
+    for (auto& f : forward) {
         f.mer = Mix64Masked(f.mer, mask);
+    }
 
-    for (auto& r : reverse)
+    for (auto& r : reverse) {
         r.mer = Mix64Masked(r.mer, mask);
+    }
 
     // clear minimizers in case a user wants to recompute
     minimizers.clear();
@@ -176,7 +180,9 @@ uint64_t Mers::Mix64Masked(uint64_t key, const uint64_t mask)
 void Mers::WindowMin(unsigned int winSize)
 {
     // Make sure that the kmers have been hashed
-    if (!hashed_) HashKmers();
+    if (!hashed_) {
+        HashKmers();
+    }
 
     /* For minimizer lists shorter than the window size, return the global minima
     if (winSize > minimizers.size()) {

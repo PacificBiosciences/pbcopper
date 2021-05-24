@@ -74,8 +74,9 @@ inline std::vector<int> PartitionElementCounts(
 
     // spread element counts over buckets
     std::vector<int> result(usingNumBuckets, minimum);
-    for (int i = 0; i < modulo; ++i)
+    for (int i = 0; i < modulo; ++i) {
         ++result[i];
+    }
     return result;
 }
 

@@ -32,7 +32,9 @@ std::string parseRegionString(const std::string& reg, Position* begin, Position*
     std::vector<std::string> parts;
     boost::split(parts, reg, boost::is_any_of(":"), boost::token_compress_on);
 
-    if (parts.empty() || parts.size() > 2) throw RegionStringException{reg};
+    if (parts.empty() || parts.size() > 2) {
+        throw RegionStringException{reg};
+    }
 
     // given name only, default min,max intervals
     if (parts.size() == 1) {
@@ -44,7 +46,9 @@ std::string parseRegionString(const std::string& reg, Position* begin, Position*
     else if (parts.size() == 2) {
         std::vector<std::string> intervalParts;
         boost::split(intervalParts, parts.at(1), boost::is_any_of("-"), boost::token_compress_on);
-        if (intervalParts.empty() || intervalParts.size() > 2) throw RegionStringException{reg};
+        if (intervalParts.empty() || intervalParts.size() > 2) {
+            throw RegionStringException{reg};
+        }
         *begin = std::stoi(intervalParts.at(0));
         *end = std::stoi(intervalParts.at(1));
     }
@@ -76,8 +80,9 @@ GenomicInterval::GenomicInterval(const std::string& samtoolsRegionString)
     Position end = UnmappedPosition;
 
     name_ = parseRegionString(samtoolsRegionString, &begin, &end);
-    if (begin == UnmappedPosition || end == UnmappedPosition)
+    if (begin == UnmappedPosition || end == UnmappedPosition) {
         throw RegionStringException{samtoolsRegionString};
+    }
     interval_ = Data::Interval(begin, end);
 }
 
@@ -93,19 +98,25 @@ bool GenomicInterval::operator!=(const GenomicInterval& other) const noexcept
 
 bool GenomicInterval::ContainedBy(const GenomicInterval& other) const
 {
-    if (name_ != other.name_) return false;
+    if (name_ != other.name_) {
+        return false;
+    }
     return interval_.ContainedBy(other.interval_);
 }
 
 bool GenomicInterval::Contains(const GenomicInterval& other) const
 {
-    if (name_ != other.name_) return false;
+    if (name_ != other.name_) {
+        return false;
+    }
     return interval_.Contains(other.interval_);
 }
 
 bool GenomicInterval::Intersects(const GenomicInterval& other) const
 {
-    if (name_ != other.name_) return false;
+    if (name_ != other.name_) {
+        return false;
+    }
     return interval_.Intersects(other.interval_);
 }
 

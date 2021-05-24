@@ -22,12 +22,13 @@ namespace {
 
 constexpr int ArgMax3(int a, int b, int c)
 {
-    if (a >= b && a >= c)
+    if (a >= b && a >= c) {
         return 0;
-    else if (b >= c)
+    } else if (b >= c) {
         return 1;
-    else
+    } else {
         return 2;
+    }
 }
 
 }  // namespace
@@ -186,7 +187,9 @@ void PairwiseAlignment::Justify(const LRType lr)
 {
     const size_t L = Length();
 
-    if (L < 2) return;
+    if (L < 2) {
+        return;
+    }
 
     while (true) {
         bool goAgain = false;
@@ -203,7 +206,9 @@ void PairwiseAlignment::Justify(const LRType lr)
             }
             goAgain |= internal::Rewrite2R(&target_, &query_, &transcript_, L - 2);
         }
-        if (!goAgain) break;
+        if (!goAgain) {
+            break;
+        }
     }
 }
 

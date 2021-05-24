@@ -25,7 +25,9 @@ void MovieName::UpdatePartsCache() const
 {
     // sanity checks
     assert(partsCache_ == nullptr);
-    if (movieName_.empty()) return;
+    if (movieName_.empty()) {
+        return;
+    }
 
     // calculate name parts
     const char underscore = '_';
@@ -44,10 +46,12 @@ void MovieName::UpdatePartsCache() const
     });
 
     // checks - here? or elsewhere?
-    if (partsCache_->instrumentName_.empty())
+    if (partsCache_->instrumentName_.empty()) {
         throw std::runtime_error("[pbcopper] movie name ERROR: instrument name must not be empty");
-    if (partsCache_->runStartTime_.empty())
+    }
+    if (partsCache_->runStartTime_.empty()) {
         throw std::runtime_error("[pbcopper] movie name ERROR: run start time must not be empty");
+    }
 }
 
 }  // namespace Data
