@@ -69,10 +69,11 @@ Seed& Seed::BeginPositionV(const uint64_t beginPosV)
 
 int64_t Seed::Diagonal() const
 {
-    if (beginPositionV_ > beginPositionH_)
+    if (beginPositionV_ > beginPositionH_) {
         return -static_cast<int64_t>(beginPositionV_ - beginPositionH_);
-    else
+    } else {
         return static_cast<int64_t>(beginPositionH_ - beginPositionV_);
+    }
 }
 
 int64_t Seed::EndDiagonal() const { return static_cast<int64_t>(endPositionH_ - endPositionV_); }

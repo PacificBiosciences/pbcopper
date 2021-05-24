@@ -59,7 +59,9 @@ inline char Complement(const char base)
 
     const char result = lookupTable[static_cast<int>(base)];
 
-    if (result == 0) throw std::invalid_argument(base + std::string{" is an invalid base!"});
+    if (result == 0) {
+        throw std::invalid_argument(base + std::string{" is an invalid base!"});
+    }
 
     return result;
 }
@@ -73,7 +75,9 @@ void Reverse(T& input)
 template <typename T>
 T MaybeReverse(T&& input, bool reverse)
 {
-    if (reverse) std::reverse(input.begin(), input.end());
+    if (reverse) {
+        std::reverse(input.begin(), input.end());
+    }
     return input;
 }
 
@@ -93,7 +97,9 @@ inline void ReverseComplement(std::string& seq)
 
 inline std::string MaybeReverseComplement(std::string&& seq, bool reverse)
 {
-    if (reverse) ReverseComplement(seq);
+    if (reverse) {
+        ReverseComplement(seq);
+    }
     return std::move(seq);
 }
 
@@ -108,15 +114,18 @@ inline void ReverseComplementCaseSens(std::string& seq)
         78, 4, 4, 4, 4, 4, 65, 65, 4, 4, 4, 4, 4,  4,  4, 4,  4,  4, 4, 116, 4, 103, 4, 4, 4, 99,
         4,  4, 4, 4, 4, 4, 4,  4,  4, 4, 4, 4, 97, 97, 4, 4,  4,  4, 4, 4,   4, 4,   4, 4};
     std::string reverseCompl(original.length(), 'N');
-    for (uint32_t i = 0; i < original.length(); ++i)
+    for (uint32_t i = 0; i < original.length(); ++i) {
         reverseCompl[original.length() - i - 1] =
             static_cast<char>(rc_table[static_cast<int8_t>(original[i])]);
+    }
     seq = reverseCompl;
 }
 
 inline std::string MaybeReverseComplementCaseSens(std::string&& seq, bool reverse)
 {
-    if (reverse) ReverseComplementCaseSens(seq);
+    if (reverse) {
+        ReverseComplementCaseSens(seq);
+    }
     return std::move(seq);
 }
 

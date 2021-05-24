@@ -12,7 +12,9 @@ void NormalizeGaps(Alignment& alignment, bool push)
 {
     assert(alignment.Query.length() == alignment.Target.length());
     const size_t queryLength = alignment.Query.length();
-    if (queryLength == 0) return;
+    if (queryLength == 0) {
+        return;
+    }
 
     std::string qNorm;
     qNorm.reserve(queryLength + 100);

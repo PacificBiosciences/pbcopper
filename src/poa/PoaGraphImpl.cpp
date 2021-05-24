@@ -69,7 +69,9 @@ public:
     explicit my_graph_writer(bool leftToRight = false) : leftToRight_(leftToRight) {}
     void operator()(std::ostream& out) const
     {
-        if (leftToRight_) out << "rankdir=\"LR\";" << std::endl;
+        if (leftToRight_) {
+            out << "rankdir=\"LR\";" << std::endl;
+        }
     }
 
 private:

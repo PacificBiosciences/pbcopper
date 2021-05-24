@@ -17,7 +17,9 @@ namespace {
 template <typename T>
 T clipContainer(const T& input, const size_t pos, const size_t len)
 {
-    if (input.empty()) return {};
+    if (input.empty()) {
+        return {};
+    }
     assert(input.size() >= pos + len);
     return T{input.cbegin() + pos, input.cbegin() + pos + len};
 }
@@ -37,11 +39,17 @@ size_t ClipToQueryImpl(Cigar& cigar, size_t startOffset, size_t endOffset)
 
         if (opLength <= remaining) {
             cigar.erase(cigar.begin());
-            if (consumesQuery) remaining -= opLength;
-            if (consumesRef) refPosRemoved += opLength;
+            if (consumesQuery) {
+                remaining -= opLength;
+            }
+            if (consumesRef) {
+                refPosRemoved += opLength;
+            }
         } else {
             op.Length(opLength - remaining);
-            if (consumesRef) refPosRemoved += remaining;
+            if (consumesRef) {
+                refPosRemoved += remaining;
+            }
             remaining = 0;
         }
     }
@@ -55,7 +63,9 @@ size_t ClipToQueryImpl(Cigar& cigar, size_t startOffset, size_t endOffset)
 
         if (opLength <= remaining) {
             cigar.pop_back();
-            if (consumesQuery) remaining -= opLength;
+            if (consumesQuery) {
+                remaining -= opLength;
+            }
         } else {
             op.Length(opLength - remaining);
             remaining = 0;
@@ -90,7 +100,9 @@ void ClipToReferenceImpl(ClipToReferenceConfig& config, size_t* queryPosRemovedF
 
             // e.g. softclip - just pop it completely
             cigar.erase(cigar.begin());
-            if (consumesQuery) *queryPosRemovedFront += firstOpLength;
+            if (consumesQuery) {
+                *queryPosRemovedFront += firstOpLength;
+            }
 
         } else {
             assert(consumesRef);
@@ -98,15 +110,21 @@ void ClipToReferenceImpl(ClipToReferenceConfig& config, size_t* queryPosRemovedF
             // CIGAR ends at or before clip
             if (firstOpLength <= remaining) {
                 cigar.erase(cigar.begin());
-                if (consumesQuery) *queryPosRemovedFront += firstOpLength;
-                if (consumesRef) remaining -= firstOpLength;
+                if (consumesQuery) {
+                    *queryPosRemovedFront += firstOpLength;
+                }
+                if (consumesRef) {
+                    remaining -= firstOpLength;
+                }
             }
 
             // CIGAR straddles clip
             else {
                 assert(firstOpLength > remaining);
                 firstOp.Length(firstOpLength - remaining);
-                if (consumesQuery) *queryPosRemovedFront += remaining;
+                if (consumesQuery) {
+                    *queryPosRemovedFront += remaining;
+                }
                 remaining = 0;
             }
         }
@@ -127,7 +145,9 @@ void ClipToReferenceImpl(ClipToReferenceConfig& config, size_t* queryPosRemovedF
 
             // e.g. softclip - just pop it completely
             cigar.pop_back();
-            if (consumesQuery) *queryPosRemovedBack += lastOpLength;
+            if (consumesQuery) {
+                *queryPosRemovedBack += lastOpLength;
+            }
 
         } else {
             assert(consumesRef);
@@ -135,15 +155,21 @@ void ClipToReferenceImpl(ClipToReferenceConfig& config, size_t* queryPosRemovedF
             // CIGAR ends at or after clip
             if (lastOpLength <= remaining) {
                 cigar.pop_back();
-                if (consumesQuery) *queryPosRemovedBack += lastOpLength;
-                if (consumesRef) remaining -= lastOpLength;
+                if (consumesQuery) {
+                    *queryPosRemovedBack += lastOpLength;
+                }
+                if (consumesRef) {
+                    remaining -= lastOpLength;
+                }
             }
 
             // CIGAR straddles clip
             else {
                 assert(lastOpLength > remaining);
                 lastOp.Length(lastOpLength - remaining);
-                if (consumesQuery) *queryPosRemovedBack += remaining;
+                if (consumesQuery) {
+                    *queryPosRemovedBack += remaining;
+                }
                 remaining = 0;
             }
         }
@@ -182,9 +208,12 @@ void ClipRead(Read& read, const ClipResult& result, size_t start, size_t end)
     read.Qualities = clipContainer(read.Qualities, clipFrom, clipLength);
     read.QueryStart = result.qStart_;
     read.QueryEnd = result.qEnd_;
-    if (read.PulseWidth)
+    if (read.PulseWidth) {
         read.PulseWidth = clipContainer(read.PulseWidth->Data(), clipFrom, clipLength);
-    if (read.IPD) read.IPD = clipContainer(read.IPD->Data(), clipFrom, clipLength);
+    }
+    if (read.IPD) {
+        read.IPD = clipContainer(read.IPD->Data(), clipFrom, clipLength);
+    }
 }
 
 // NOTE: 'result' is moved into here, so we can take the CIGAR
@@ -231,8 +260,9 @@ ClipResult ClipToQuery(ClipToQueryConfig& config)
 {
     // easy out for unmapped reads
     const size_t startOffset = (config.target_qStart_ - config.original_qStart_);
-    if (!config.isMapped_)
+    if (!config.isMapped_) {
         return ClipResult{startOffset, config.target_qStart_, config.target_qEnd_};
+    }
 
     // fetch CIGAR (in query orientation)
     Cigar cigar = std::move(config.cigar_);
@@ -261,10 +291,11 @@ ClipResult ClipToReference(ClipToReferenceConfig& config)
 
     size_t queryPosRemovedFront = 0;
     size_t queryPosRemovedBack = 0;
-    if (config.strand_ == Strand::FORWARD)
+    if (config.strand_ == Strand::FORWARD) {
         ClipToReferenceImpl(config, &queryPosRemovedFront, &queryPosRemovedBack);
-    else
+    } else {
         ClipToReferenceImpl(config, &queryPosRemovedBack, &queryPosRemovedFront);
+    }
 
     const size_t clipOffset = queryPosRemovedFront;
     const Position qStart = config.original_qStart_ + queryPosRemovedFront;

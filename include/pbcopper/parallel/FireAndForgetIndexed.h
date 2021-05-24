@@ -68,7 +68,9 @@ public:
                     }
                 } while (!abort && task);  // Stop if there are no tasks or abort has been signaled
                 try {
-                    if (!abort) finish(index);
+                    if (!abort) {
+                        finish(index);
+                    }
                 } catch (...) {
                     std::lock_guard<std::mutex> g(m);
                     // If there is an exception, signal to abort queue
@@ -82,7 +84,9 @@ public:
 
     ~FireAndForgetIndexed() noexcept(false)
     {
-        if (exc && !thrown) std::rethrow_exception(exc);
+        if (exc && !thrown) {
+            std::rethrow_exception(exc);
+        }
     }
 
     template <typename F, typename... Args>
@@ -124,8 +128,9 @@ public:
 
         // Wait for all threads to join and do not continue before all tasks
         // have been finishshed.
-        for (auto& thread : threads)
+        for (auto& thread : threads) {
             thread.join();
+        }
 
         // Is there a final exception, throw if so..
         if (exc) {
@@ -144,7 +149,9 @@ private:
         {
             std::unique_lock<std::mutex> lk(m);
             pushed.wait(lk, [&task, this]() {
-                if (head.empty()) return false;
+                if (head.empty()) {
+                    return false;
+                }
 
                 if ((task = std::move(head.front()))) {
                     head.pop();

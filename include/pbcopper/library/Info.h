@@ -20,7 +20,9 @@ struct Info
 inline std::string FormattedVersion(const Library::Info& library)
 {
     std::string result = library.Release;
-    if (!library.GitSha1.empty()) result += " (commit " + library.GitSha1 + ")";
+    if (!library.GitSha1.empty()) {
+        result += " (commit " + library.GitSha1 + ")";
+    }
     return result;
 }
 

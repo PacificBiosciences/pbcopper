@@ -99,8 +99,9 @@ std::string QualityValues::Fastq() const
     std::string result;
     result.resize(size());
     int32_t counter = 0;
-    for (const auto& qv : *this)
+    for (const auto& qv : *this) {
         result[counter++] = qv.Fastq();
+    }
     return result;
 }
 

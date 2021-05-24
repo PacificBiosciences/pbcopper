@@ -10,15 +10,33 @@ namespace {
 
 LogLevel LogLevelFromString(const std::string& level)
 {
-    if (level == "TRACE") return LogLevel::TRACE;
-    if (level == "DEBUG") return LogLevel::DEBUG;
-    if (level == "VERBOSE") return LogLevel::VERBOSE;
-    if (level == "INFO") return LogLevel::INFO;
-    if (level == "NOTICE") return LogLevel::NOTICE;
-    if (level == "ERROR") return LogLevel::ERROR;
-    if (level == "CRITICAL") return LogLevel::CRITICAL;
-    if (level == "FATAL") return LogLevel::FATAL;
-    if (level == "WARN" || level == "WARNING") return LogLevel::WARN;
+    if (level == "TRACE") {
+        return LogLevel::TRACE;
+    }
+    if (level == "DEBUG") {
+        return LogLevel::DEBUG;
+    }
+    if (level == "VERBOSE") {
+        return LogLevel::VERBOSE;
+    }
+    if (level == "INFO") {
+        return LogLevel::INFO;
+    }
+    if (level == "NOTICE") {
+        return LogLevel::NOTICE;
+    }
+    if (level == "ERROR") {
+        return LogLevel::ERROR;
+    }
+    if (level == "CRITICAL") {
+        return LogLevel::CRITICAL;
+    }
+    if (level == "FATAL") {
+        return LogLevel::FATAL;
+    }
+    if (level == "WARN" || level == "WARNING") {
+        return LogLevel::WARN;
+    }
 
     throw std::invalid_argument{"[pbcopper] logging ERROR: invalid log level '" + level + "'"};
 }

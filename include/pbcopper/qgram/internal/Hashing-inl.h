@@ -33,9 +33,9 @@ inline uint8_t BaseCode(const char c)
 // recursive q-gram hash calculator
 inline uint64_t HashImpl(uint64_t hash, std::string::const_iterator iter, size_t q)
 {
-    if (q == 1)
+    if (q == 1) {
         return hash;
-    else {
+    } else {
         ++iter;
         return HashImpl(hash * ALPHABET_SIZE + BaseCode(*iter), iter, q - 1);
     }
@@ -70,10 +70,11 @@ public:
         // but want to still enforce this requirement here (in case of clients
         // 'sneaking' into internal implementation or, more likely, in case later
         // refactoring upstream removes the check).
-        if (seq.size() < q_)
+        if (seq.size() < q_) {
             throw std::invalid_argument{"[pbcopper] qgram ERROR: sequence size (" +
                                         std::to_string(seq.size()) + ") must be >= q (" +
                                         std::to_string(q_)};
+        }
 
         currentHash_ = HashImpl(BaseCode(*iter_), iter_, q_ - 1);
     }

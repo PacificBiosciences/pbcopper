@@ -41,10 +41,11 @@ std::string BandedGlobalAlignBlock::Align(const char* target, const char* query,
     // (simplifies band calculations)
     const size_t qLen = seed.EndPositionV() - seed.BeginPositionV();
     const size_t tLen = seed.EndPositionH() - seed.BeginPositionH();
-    if (qLen == 0)
+    if (qLen == 0) {
         return std::string(tLen, 'D');
-    else if (tLen == 0)
+    } else if (tLen == 0) {
         return std::string(qLen, 'I');
+    }
 
     std::string result;
 
@@ -66,7 +67,9 @@ std::string BandedGlobalAlignBlock::Align(const char* target, const char* query,
         const auto& e = lookup_[i];
         for (size_t j = e.jBegin_; j <= e.jEnd_; ++j) {
 
-            if (j == 0) continue;
+            if (j == 0) {
+                continue;
+            }
 
             const auto currentIdx = IndexFor(i, j);
             const auto diagIdx = IndexFor(i - 1, j - 1);
@@ -106,12 +109,14 @@ std::string BandedGlobalAlignBlock::Align(const char* target, const char* query,
     // if not beginning at bottom right)
     if (i < seq1Len) {
         const auto op = (seqsFlipped ? 'D' : 'I');
-        for (size_t k = seq1Len - i; k > 0; --k)
+        for (size_t k = seq1Len - i; k > 0; --k) {
             addAlignmentOp(&result, op);
+        }
     } else if (j < seq2Len) {
         const auto op = (seqsFlipped ? 'I' : 'D');
-        for (size_t k = seq2Len - j; k > 0; --k)
+        for (size_t k = seq2Len - j; k > 0; --k) {
             addAlignmentOp(&result, op);
+        }
     }
 
     while (i > 0 || j > 0) {
@@ -164,7 +169,9 @@ std::string BandedGlobalAlignBlock::Align(const char* target, const char* query,
         mat = matPrev;
 
         // if at edge, force gap moves from here on
-        if (i == 0 || j == 0) mat = GAP_MATRIX;
+        if (i == 0 || j == 0) {
+            mat = GAP_MATRIX;
+        }
     }
 
     // reverse transcript & return
@@ -217,7 +224,9 @@ size_t BandedGlobalAlignBlock::IndexFor(const size_t i, const size_t j) const
     if (i != std::string::npos && j != std::string::npos) {
         const auto& e = lookup_[i];
         // hand array index back to caller for (i,j) if in-band
-        if (j >= e.jBegin_ && j <= e.jEnd_) return e.arrayStart_ + (j - e.jBegin_);
+        if (j >= e.jBegin_ && j <= e.jEnd_) {
+            return e.arrayStart_ + (j - e.jBegin_);
+        }
     }
 
     // (i,j) either out of matrix bounds, or out-of-band
@@ -248,11 +257,15 @@ size_t BandedGlobalAlignBlock::InitLookup(const size_t tLen, const size_t qLen)
 
         // jBegin
         jBegin = i - k;
-        if (jBegin < 0) jBegin = 0;
+        if (jBegin < 0) {
+            jBegin = 0;
+        }
 
         // jEnd
         jEnd = i + k;
-        if (jEnd > t) jEnd = t;
+        if (jEnd > t) {
+            jEnd = t;
+        }
 
         // sanity checks
         assert(jBegin >= 0);
@@ -337,11 +350,13 @@ std::string StandardGlobalAlignBlock::Align(const char* target, const size_t tLe
 
     // if not beginning at bottom right, add corresponding indel
     if (i < qLen) {
-        for (size_t k = qLen - i; k > 0; --k)
+        for (size_t k = qLen - i; k > 0; --k) {
             addAlignmentOp(&result, 'I');
+        }
     } else if (j < tLen) {
-        for (size_t k = tLen - j; k > 0; --k)
+        for (size_t k = tLen - j; k > 0; --k) {
             addAlignmentOp(&result, 'D');
+        }
     }
 
     // traceback remaining sequence
@@ -478,7 +493,9 @@ BandedChainAlignment BandedChainAlignerImpl::Align(const char* target, const siz
                                                    const std::vector<Align::Seed>& seeds)
 {
     // return empty alignment on empty seeds
-    if (seeds.empty()) return BandedChainAlignment{};
+    if (seeds.empty()) {
+        return BandedChainAlignment{};
+    }
 
     // reset state & store input sequence info
     Initialize(target, targetLen, query, queryLen);
@@ -568,7 +585,9 @@ void BandedChainAlignerImpl::Initialize(const char* target, const size_t targetL
 std::vector<Align::Seed> BandedChainAlignerImpl::MergeSeeds(const std::vector<Align::Seed>& seeds)
 {
     // no merging needed on empty or single-element containers
-    if (seeds.size() <= 1) return seeds;
+    if (seeds.size() <= 1) {
+        return seeds;
+    }
 
     // push first seed into output container
     std::vector<Align::Seed> mergedSeeds;
@@ -614,7 +633,9 @@ void BandedChainAlignerImpl::StitchTranscripts(std::string* global, std::string&
     assert(global);
 
     // quick checks if either transcript is empty
-    if (local.empty()) return;
+    if (local.empty()) {
+        return;
+    }
     if (global->empty()) {
         *global = std::move(local);
         return;
@@ -685,10 +706,11 @@ BandedChainAlignment::BandedChainAlignment(const BandedChainAlignConfig& config,
 
                 // update score (do not penalize end gaps) & current state
                 if (tPos != 0 && tPos < target_.size()) {
-                    if (state != TranscriptState::Insertion)
+                    if (state != TranscriptState::Insertion) {
                         score_ += config_.gapOpenPenalty_;
-                    else
+                    } else {
                         score_ += config_.gapExtendPenalty_;
+                    }
                 }
                 state = TranscriptState::Insertion;
                 break;
@@ -701,10 +723,11 @@ BandedChainAlignment::BandedChainAlignment(const BandedChainAlignConfig& config,
 
                 // update score (do not penalize end gaps) & current state
                 if (qPos != 0 && qPos < query_.size()) {
-                    if (state != TranscriptState::Deletion)
+                    if (state != TranscriptState::Deletion) {
                         score_ += config_.gapOpenPenalty_;
-                    else
+                    } else {
                         score_ += config_.gapExtendPenalty_;
+                    }
                 }
                 state = TranscriptState::Deletion;
                 break;
@@ -732,7 +755,9 @@ float BandedChainAlignment::Identity() const
     size_t numMatches = 0;
     const size_t len = alignedQuery_.length();
     for (size_t i = 0; i < len; ++i) {
-        if (alignedQuery_[i] == alignedTarget_[i]) ++numMatches;
+        if (alignedQuery_[i] == alignedTarget_[i]) {
+            ++numMatches;
+        }
     }
     return (100.0F * static_cast<float>(numMatches) / len);
 }

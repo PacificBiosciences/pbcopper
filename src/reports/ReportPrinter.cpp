@@ -44,8 +44,9 @@ Json ToJson(const PacBio::Reports::Column& column, const std::string& prefix)
     result["header"] = column.Header();
 
     Json values = Json::array();
-    for (const auto& value : column.Values())
+    for (const auto& value : column.Values()) {
         values.emplace_back(VariantToJson(value));
+    }
     result["values"] = values;
 
     return result;
@@ -59,8 +60,9 @@ Json ToJson(const PacBio::Reports::Table& table, const std::string& prefix)
     result["title"] = table.Title();
 
     Json columns = Json::array();
-    for (const auto& col : table.Columns())
+    for (const auto& col : table.Columns()) {
         columns.emplace_back(ToJson(col, prefix));
+    }
     result["columns"] = columns;
 
     return result;
@@ -86,13 +88,15 @@ void ReportPrinter::Print(std::ostream& out, const Report& report, const std::st
     result["dataset_uuids"] = report.DatasetUuids();
 
     Json attributes = Json::array();
-    for (const auto& attr : report.Attributes())
+    for (const auto& attr : report.Attributes()) {
         attributes.emplace_back(ToJson(attr, prefix));
+    }
     result["attributes"] = attributes;
 
     Json tables = Json::array();
-    for (const auto& table : report.Tables())
+    for (const auto& table : report.Tables()) {
         tables.emplace_back(ToJson(table, prefix));
+    }
     result["tables"] = tables;
 
     result["plotGroups"] = Json::array();
@@ -103,8 +107,9 @@ void ReportPrinter::Print(std::ostream& out, const Report& report, const std::st
 void ReportPrinter::PrintSummary(std::ostream& out, const Report& report)
 {
     Json result = Json::object();
-    for (const auto& attr : report.Attributes())
+    for (const auto& attr : report.Attributes()) {
         result[attr.Id()] = VariantToJson(attr.Value());
+    }
     out << result.dump(4);
 }
 

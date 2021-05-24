@@ -63,7 +63,9 @@ size_t ReferenceLength(const Cigar& cigar)
 {
     size_t length = 0;
     for (const auto& op : cigar) {
-        if (ConsumesReference(op.Type())) length += op.Length();
+        if (ConsumesReference(op.Type())) {
+            length += op.Length();
+        }
     }
     return length;
 }
