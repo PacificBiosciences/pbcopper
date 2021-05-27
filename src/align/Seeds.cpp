@@ -1,5 +1,3 @@
-// Author: Derek Barnett
-
 #include <pbcopper/align/Seeds.h>
 
 #include <type_traits>

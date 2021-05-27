@@ -1,5 +1,3 @@
-// Author: Lance Hepler
-
 #include <pbcopper/data/Read.h>
 
 #include <ios>

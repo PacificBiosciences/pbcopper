@@ -1,5 +1,3 @@
-// Author: Armin Töpfer
-
 #ifndef PBCOPPER_DATA_MAPPEDREAD_H
 #define PBCOPPER_DATA_MAPPEDREAD_H
 

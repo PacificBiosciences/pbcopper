@@ -1,5 +1,3 @@
-// Author: Derek Barnett
-
 #include <pbcopper/data/Accuracy.h>
 
 #include <type_traits>

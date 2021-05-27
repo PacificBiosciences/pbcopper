@@ -1,5 +1,3 @@
-// Authors: Chris Dunn, Zev Kronenberg, Derek Barnett
-
 #include <pbcopper/pbmer/Dbg.h>
 
 #include <cassert>

@@ -1,4 +1,3 @@
-// Authors: Chris Dunn, Zev Kronenberg, Derek Barnett
 #include <pbcopper/pbmer/Parser.h>
 
 #include <cassert>

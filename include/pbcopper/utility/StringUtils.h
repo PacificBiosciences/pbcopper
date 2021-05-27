@@ -1,5 +1,3 @@
-// Author: Derek Barnett
-
 #ifndef PBCOPPER_UTILITY_STRINGUTILS_H
 #define PBCOPPER_UTILITY_STRINGUTILS_H
 

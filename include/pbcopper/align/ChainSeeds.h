@@ -1,5 +1,3 @@
-// Authors: Lance Hepler, Brett Bowman
-
 #ifndef PBCOPPER_ALIGN_CHAINSEEDS_H
 #define PBCOPPER_ALIGN_CHAINSEEDS_H
 

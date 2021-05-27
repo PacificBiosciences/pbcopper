@@ -1,5 +1,3 @@
-// Author: David Alexander
-
 #include <pbcopper/align/PairwiseAlignment.h>
 
 #include <cassert>

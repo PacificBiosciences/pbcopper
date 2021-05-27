@@ -1,5 +1,3 @@
-// Authors: Armin Töpfer, Derek Barnett
-
 #include <pbcopper/utility/MemoryConsumption.h>
 
 #include <sys/resource.h>

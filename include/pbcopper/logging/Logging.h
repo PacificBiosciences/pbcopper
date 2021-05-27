@@ -1,5 +1,3 @@
-// Author: Lance Hepler, Derek Barnett
-
 #ifndef PBCOPPER_LOGGING_LOGGING_H
 #define PBCOPPER_LOGGING_LOGGING_H
 

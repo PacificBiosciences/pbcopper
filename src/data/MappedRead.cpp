@@ -1,5 +1,3 @@
-// Author: Lance Hepler
-
 #include <pbcopper/data/MappedRead.h>
 
 #include <algorithm>

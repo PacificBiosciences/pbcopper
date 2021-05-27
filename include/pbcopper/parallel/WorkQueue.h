@@ -1,5 +1,3 @@
-// Author: Lance Hepler
-
 #ifndef PBCOPPER_PARALLEL_WORKQUEUE_H
 #define PBCOPPER_PARALLEL_WORKQUEUE_H
 

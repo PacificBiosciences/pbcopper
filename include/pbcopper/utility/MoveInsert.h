@@ -1,5 +1,3 @@
-// Author: Derek Barnett
-
 #ifndef PBCOPPER_UTILITY_MOVEINSERT_H
 #define PBCOPPER_UTILITY_MOVEINSERT_H
 

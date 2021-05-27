@@ -1,5 +1,3 @@
-// Author: Derek Barnett
-
 #ifndef PBCOPPER_JSON_JSON_H
 #define PBCOPPER_JSON_JSON_H
 

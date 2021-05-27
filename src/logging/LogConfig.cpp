@@ -1,5 +1,3 @@
-// Author: Derek Barnett
-
 #include <pbcopper/logging/LogConfig.h>
 
 namespace PacBio {

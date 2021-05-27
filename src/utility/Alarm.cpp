@@ -1,5 +1,3 @@
-// Author: Nathaniel Echols, Derek Barnett
-
 #include <pbcopper/utility/Alarm.h>
 
 #include <fstream>

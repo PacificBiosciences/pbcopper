@@ -1,4 +1,3 @@
-// Author: Derek Barnett
 #include <pbcopper/utility/Stopwatch.h>
 
 #include <sstream>

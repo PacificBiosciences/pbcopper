@@ -1,5 +1,3 @@
-// Author: David Seifert
-
 #include <pbcopper/data/SNR.h>
 
 #include <gtest/gtest.h>

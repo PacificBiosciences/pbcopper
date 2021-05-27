@@ -1,6 +1,3 @@
-// Author: Derek Barnett
-// Author: Armin Toepfer
-
 #ifndef PBCOPPER_UTILITY_STOPWATCH_H
 #define PBCOPPER_UTILITY_STOPWATCH_H
 

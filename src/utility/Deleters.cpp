@@ -1,5 +1,3 @@
-// Author: Derek Barnett
-
 #include <pbcopper/utility/Deleters.h>
 
 #include <cstdlib>

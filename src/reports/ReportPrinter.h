@@ -1,9 +1,7 @@
-// Author: Derek Barnett
-
-// see pbcommand/schemas/pbreport.avsc
-
 #ifndef PBCOPPER_REPORTS_REPORTPRINTER_H
 #define PBCOPPER_REPORTS_REPORTPRINTER_H
+
+// see pbcommand/schemas/pbreport.avsc
 
 #include <pbcopper/PbcopperConfig.h>
 

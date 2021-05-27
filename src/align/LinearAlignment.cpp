@@ -1,5 +1,3 @@
-// Authors: David Alexander, Lance Hepler
-
 //
 // This is the basic Hirschberg algo, not the affine variation by Myers and Miller.
 // The tricky part of this code is that we use the a single array to store portions

@@ -1,5 +1,3 @@
-// Author: Derek Barnett
-
 #include <pbcopper/data/MovieName.h>
 
 #include <cstddef>

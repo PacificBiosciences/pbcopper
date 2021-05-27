@@ -1,9 +1,7 @@
-// Author: Nat Echols, Derek Barnett
-
-// see pbcommand/schemas/pbreport.avsc
-
 #ifndef PBCOPPER_REPORTS_REPORT_H
 #define PBCOPPER_REPORTS_REPORT_H
+
+// see pbcommand/schemas/pbreport.avsc
 
 #include <pbcopper/PbcopperConfig.h>
 

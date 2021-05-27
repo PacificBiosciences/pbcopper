@@ -1,5 +1,3 @@
-// Author: Armin Töpfer
-
 #ifndef PBCOPPER_DATA_READ_H
 #define PBCOPPER_DATA_READ_H
 
