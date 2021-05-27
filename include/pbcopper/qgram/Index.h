@@ -1,5 +1,3 @@
-// Author: Derek Barnett
-
 #ifndef PBCOPPER_QGRAM_INDEX_H
 #define PBCOPPER_QGRAM_INDEX_H
 

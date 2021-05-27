@@ -1,5 +1,3 @@
-// Author: Derek Barnett
-
 #ifndef PBCOPPER_CLI_v2_OPTIONGROUP_H
 #define PBCOPPER_CLI_v2_OPTIONGROUP_H
 

@@ -1,9 +1,6 @@
-// Author: Derek Barnett
-
 #include <pbcopper/data/QualityValue.h>
 
 #include <algorithm>
-#include <cassert>
 #include <cstdint>
 #include <type_traits>
 
@@ -11,16 +8,6 @@ namespace PacBio {
 namespace Data {
 
 const uint8_t QualityValue::MAX = 93;
-
-static_assert(std::is_copy_constructible<QualityValue>::value,
-              "QualityValue(const QualityValue&) is not = default");
-static_assert(std::is_copy_assignable<QualityValue>::value,
-              "QualityValue& operator=(const QualityValue&) is not = default");
-
-static_assert(std::is_nothrow_move_constructible<QualityValue>::value,
-              "QualityValue(QualityValue&&) is not = noexcept");
-static_assert(std::is_nothrow_move_assignable<QualityValue>::value,
-              "QualityValue& operator=(QualityValue&&) is not = noexcept");
 
 QualityValue::QualityValue(const uint8_t value)
     : value_{// clamp QV

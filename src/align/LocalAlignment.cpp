@@ -1,5 +1,3 @@
-// Author: Derek Barnett
-
 //
 // SIMD local (Smith-Waterman) alignment
 //

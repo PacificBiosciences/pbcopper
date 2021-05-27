@@ -1,5 +1,3 @@
-// Author: Derek Barnett
-
 #include <pbcopper/align/BandedChainAlignment.h>
 
 #include <cassert>

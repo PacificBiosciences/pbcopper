@@ -1,5 +1,3 @@
-// Author: Derek Barnett
-
 #ifndef PBCOPPER_QGRAM_HASHING_INL_H
 #define PBCOPPER_QGRAM_HASHING_INL_H
 

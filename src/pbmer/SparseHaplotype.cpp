@@ -1,5 +1,3 @@
-// Authors: Chris Dunn, Zev Kronenberg, Derek Barnett
-
 #include <pbcopper/pbmer/SparseHaplotype.h>
 
 #include <iomanip>

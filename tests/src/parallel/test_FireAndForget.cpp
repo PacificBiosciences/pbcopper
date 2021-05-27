@@ -1,5 +1,3 @@
-// Author: Armin Töpfer
-
 #include <pbcopper/parallel/FireAndForget.h>
 
 #include <chrono>

@@ -1,5 +1,3 @@
-// Authors: Brett Bowman, Derek Barnett
-
 #include <pbcopper/align/SparseAlignment.h>
 
 #include <pbcopper/align/ChainSeeds.h>

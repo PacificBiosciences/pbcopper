@@ -1,5 +1,3 @@
-// Author: Armin Töpfer, Derek Barnett
-
 #ifndef PBCOPPER_UTILITY_MOVEAPPEND_H
 #define PBCOPPER_UTILITY_MOVEAPPEND_H
 

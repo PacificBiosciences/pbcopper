@@ -1,5 +1,3 @@
-// Author: Lance Hepler
-
 #ifndef PBCOPPER_DATA_READID_H
 #define PBCOPPER_DATA_READID_H
 

@@ -1,5 +1,3 @@
-// Author: Lance Hepler, Derek Barnett
-
 #ifndef PBCOPPER_DATA_SNR_H
 #define PBCOPPER_DATA_SNR_H
 

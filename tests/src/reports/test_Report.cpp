@@ -1,5 +1,3 @@
-// Author: Nat Echols
-
 #include <pbcopper/reports/Report.h>
 
 #include <sstream>

@@ -1,5 +1,3 @@
-// Author: Derek Barnett
-
 #include <pbcopper/data/Interval.h>
 
 #include <istream>

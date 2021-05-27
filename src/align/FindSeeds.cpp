@@ -1,5 +1,3 @@
-// Authors: Brett Bowman, Derek Barnett
-
 #include <pbcopper/align/FindSeeds.h>
 
 #include <pbcopper/qgram/Index.h>

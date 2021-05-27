@@ -1,5 +1,3 @@
-// Author: Derek Barnett
-
 #ifndef PBCOPPER_LIBRARYINFO_H
 #define PBCOPPER_LIBRARYINFO_H
 

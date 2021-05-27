@@ -1,5 +1,3 @@
-// Author: Lance Hepler, Derek Barnett
-
 #include <pbcopper/data/SNR.h>
 
 #include <cassert>
