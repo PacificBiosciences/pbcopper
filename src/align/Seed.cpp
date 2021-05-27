@@ -12,14 +12,6 @@
 namespace PacBio {
 namespace Align {
 
-static_assert(std::is_copy_constructible<Seed>::value, "Seed(const Seed&) is not = default");
-static_assert(std::is_copy_assignable<Seed>::value,
-              "Seed& operator=(const Seed&) is not = default");
-
-static_assert(std::is_nothrow_move_constructible<Seed>::value, "Seed(Seed&&) is not = noexcept");
-static_assert(std::is_nothrow_move_assignable<Seed>::value,
-              "Seed& operator=(Seed&&) is not = noexcept");
-
 Seed::Seed(const uint64_t beginPosH, const uint64_t beginPosV, const uint64_t seedLength)
     : beginPositionH_{beginPosH}
     , beginPositionV_{beginPosV}

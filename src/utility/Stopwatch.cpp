@@ -1,23 +1,11 @@
 // Author: Derek Barnett
 #include <pbcopper/utility/Stopwatch.h>
 
-#include <cassert>
-
 #include <sstream>
 #include <type_traits>
 
 namespace PacBio {
 namespace Utility {
-
-static_assert(std::is_copy_constructible<Stopwatch>::value,
-              "Stopwatch(const Stopwatch&) is not = default");
-static_assert(std::is_copy_assignable<Stopwatch>::value,
-              "Stopwatch& operator=(const Stopwatch&) is not = default");
-
-static_assert(std::is_nothrow_move_constructible<Stopwatch>::value,
-              "Stopwatch(Stopwatch&&) is not = noexcept");
-static_assert(std::is_nothrow_move_assignable<Stopwatch>::value,
-              "Stopwatch& operator=(Stopwatch&&) is not = noexcept");
 
 std::string Stopwatch::PrettyPrintNanoseconds(int64_t nanosecs)
 {

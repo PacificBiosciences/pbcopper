@@ -2,7 +2,6 @@
 
 #include <pbcopper/data/GenomicInterval.h>
 
-#include <cassert>
 #include <cctype>
 #include <cstdlib>
 #include <cstring>
@@ -57,17 +56,6 @@ std::string parseRegionString(const std::string& reg, Position* begin, Position*
 }
 
 }  // namespace
-
-static_assert(std::is_copy_constructible<GenomicInterval>::value,
-              "GenomicInterval(const GenomicInterval&) is not = default");
-static_assert(std::is_copy_assignable<GenomicInterval>::value,
-              "GenomicInterval& operator=(const GenomicInterval&) is not = default");
-
-static_assert(std::is_nothrow_move_constructible<GenomicInterval>::value,
-              "GenomicInterval(GenomicInterval&&) is not = noexcept");
-static_assert(std::is_nothrow_move_assignable<GenomicInterval>::value ==
-                  std::is_nothrow_move_assignable<std::string>::value,
-              "");
 
 GenomicInterval::GenomicInterval(std::string name, Position start, Position stop)
     : name_{std::move(name)}, interval_{std::move(start), std::move(stop)}

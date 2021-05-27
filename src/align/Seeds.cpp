@@ -2,19 +2,10 @@
 
 #include <pbcopper/align/Seeds.h>
 
-#include <cassert>
 #include <type_traits>
 
 namespace PacBio {
 namespace Align {
-
-static_assert(std::is_copy_constructible<Seeds>::value, "Seeds(const Seeds&) is not = default");
-static_assert(std::is_copy_assignable<Seeds>::value,
-              "Seeds& operator=(const Seeds&) is not = default");
-
-static_assert(std::is_nothrow_move_constructible<Seeds>::value, "Seeds(Seeds&&) is not = noexcept");
-static_assert(std::is_nothrow_move_assignable<Seeds>::value,
-              "Seeds& operator=(Seeds&&) is not = noexcept");
 
 bool Seeds::AddSeed(const Seed& s)
 {

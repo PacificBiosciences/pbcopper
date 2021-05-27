@@ -11,7 +11,6 @@
 
 #include <boost/config.hpp>
 #include <boost/format.hpp>
-#include <boost/static_assert.hpp>
 #include <boost/type_traits.hpp>
 
 #include <pbcopper/align/AlignConfig.h>
