@@ -146,6 +146,12 @@ void InterfaceHelpPrinter::MakeHelpText()
     const auto& footer = interface_.HelpFooter();
     if (!footer.empty()) {
         result << footer << '\n';
+
+        // Some application footers contain trailing newlines, some do not.
+        // Ensure we have at least one empty line between footer and disclaimer.
+        if (footer.back() != '\n') {
+            result << '\n';
+        }
     }
 
     result << PB_BOILERPLATE_DISCLAIMER;

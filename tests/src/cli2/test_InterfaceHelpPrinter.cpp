@@ -675,6 +675,7 @@ Typical workflow:
   3. Lather, rinse, repeat.
 
   So long, and thanks for all the fish.
+
 )"
 PB_BOILERPLATE_DISCLAIMER
 };
