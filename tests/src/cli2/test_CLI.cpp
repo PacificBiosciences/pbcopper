@@ -222,6 +222,7 @@ Typical workflow:
 
   5. Polish transcripts using subreads
      $ isoseq3 polish unpolished.bam movie.subreads.bam polished.bam
+
 )"
 PB_BOILERPLATE_DISCLAIMER
 };
@@ -251,7 +252,8 @@ PB_BOILERPLATE_DISCLAIMER
      $ isoseq3 cluster movie.flnc.bam unpolished.bam --verbose
 
   5. Polish transcripts using subreads
-     $ isoseq3 polish unpolished.bam movie.subreads.bam polished.bam)");
+     $ isoseq3 polish unpolished.bam movie.subreads.bam polished.bam
+)");
 
     const std::vector<std::string> args {
         "isoseq3", "-h"

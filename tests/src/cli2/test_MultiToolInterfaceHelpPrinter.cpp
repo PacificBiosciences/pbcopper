@@ -118,6 +118,7 @@ Typical workflow:
 
   5. Polish transcripts using subreads
      $ isoseq3 polish unpolished.bam movie.subreads.bam polished.bam
+
 )"
 PB_BOILERPLATE_DISCLAIMER
 };
@@ -159,4 +160,4 @@ PB_BOILERPLATE_DISCLAIMER
     EXPECT_EQ(expectedText, out.str());
 }
 
-// clanf-format on
+// clang-format on
