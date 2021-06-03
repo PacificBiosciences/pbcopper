@@ -1,5 +1,3 @@
-// Author: Derek Barnett
-
 #ifndef PBCOPPER_QGRAM_INDEX_INL_H
 #define PBCOPPER_QGRAM_INDEX_INL_H
 
@@ -54,9 +52,10 @@ inline const IndexImpl::HashLookup_t& IndexImpl::HashLookup() const { return has
 
 inline void IndexImpl::Init()
 {
-    if (q_ == 0 || q_ > 16)
+    if (q_ == 0 || q_ > 16) {
         throw std::invalid_argument{"[pbcopper] qgram ERROR: qgram size (" + std::to_string(q_) +
                                     ") must be in the range [1,16]"};
+    }
 
     // init hash lookup (and calculate totalNumQGrams for later suffixArray)
     const auto lookupSize = static_cast<size_t>(std::pow(4, q_) + 1);
@@ -65,15 +64,17 @@ inline void IndexImpl::Init()
     for (const auto& seq : seqs_) {
 
         const auto seqLength = seq.size();
-        if (seqLength < q_)
+        if (seqLength < q_) {
             throw std::invalid_argument{"[pbcopper] qgram ERROR: sequence size (" +
                                         std::to_string(seqLength) + ") must be >= q (" +
                                         std::to_string(q_)};
+        }
 
         const auto numQGrams = seqLength - q_ + 1;
         Shape shape{q_, seq};
-        for (size_t i = 0; i < numQGrams; ++i)
+        for (size_t i = 0; i < numQGrams; ++i) {
             ++hashLookup_[shape.HashNext()];
+        }
         totalNumQGrams += numQGrams;
     }
 
@@ -96,8 +97,9 @@ inline void IndexImpl::Init()
 
         Shape shape{q_, seq};
         const auto numQGrams = seqLength - q_ + 1;
-        for (uint32_t i = 0; i < numQGrams; ++i)
+        for (uint32_t i = 0; i < numQGrams; ++i) {
             suffixArray_[hashLookup_[shape.HashNext() + 1]++] = IndexHit{seqNo, i};
+        }
 
         ++seqNo;
     }
@@ -122,7 +124,9 @@ inline std::vector<IndexHits> IndexImpl::Hits(const std::string& seq,
                                               const bool filterHomopolymers) const
 {
     std::vector<IndexHits> result;
-    if (seq.size() < q_) return result;
+    if (seq.size() < q_) {
+        return result;
+    }
 
     const auto end = ::PacBio::Utility::SafeSubtract(seq.size() + 1, q_);
     result.reserve(end);
@@ -136,7 +140,9 @@ inline std::vector<IndexHits> IndexImpl::Hits(const std::string& seq,
     } else {
         HpHasher isHomopolymer(q_);
         for (size_t i = 0; i < end; ++i) {
-            if (!isHomopolymer(shape.HashNext())) result.emplace_back(Hits(shape, i));
+            if (!isHomopolymer(shape.HashNext())) {
+                result.emplace_back(Hits(shape, i));
+            }
         }
     }
     return result;
@@ -161,7 +167,9 @@ inline Index::Index(Index&&) noexcept = default;
 
 inline Index& Index::operator=(const Index& other)
 {
-    if (this != &other) *this = Index{other};
+    if (this != &other) {
+        *this = Index{other};
+    }
     return *this;
 }
 

@@ -1,5 +1,3 @@
-// Author: Lance Hepler, Derek Barnett
-
 #include <pbcopper/logging/Logging.h>
 
 #include <cassert>
@@ -38,7 +36,9 @@ Logger::Logger(const std::string& filename, const LogConfig& config)
 
 Logger::~Logger()
 {
-    if (!writer_.joinable()) return;
+    if (!writer_.joinable()) {
+        return;
+    }
 
     // place a terminal sentinel for MessageWriter to know it's done
     {
@@ -60,7 +60,9 @@ Logger::~Logger()
 
 Logger& Logger::operator<<(std::unique_ptr<LogLevelStream>&& ptr)
 {
-    if (!writer_.joinable()) throw std::runtime_error("this logger is dead!");
+    if (!writer_.joinable()) {
+        throw std::runtime_error("this logger is dead!");
+    }
     {
         std::lock_guard<std::mutex> g(m_);
         queue_.emplace(std::forward<std::unique_ptr<LogLevelStream>>(ptr));
@@ -75,12 +77,14 @@ Logger& Logger::Current(Logger* newLogger)
     static Logger* currentLogger = nullptr;
 
     // If a new logger is explicitly provided, use it.
-    if (newLogger)
+    if (newLogger) {
         currentLogger = newLogger;
-    else {
+    } else {
         // If we don't have a current logger set yet, create via Default().
         // Default() maintains its own logger's lifetime.
-        if (!currentLogger) currentLogger = &(Default());
+        if (!currentLogger) {
+            currentLogger = &(Default());
+        }
     }
     return *currentLogger;
 }
@@ -90,7 +94,9 @@ LogLevel CurrentLogLevel() { return Logger::Current().Level(); }
 Logger& Logger::Default(Logger* logger)
 {
     static auto logger_ = std::make_unique<Logger>(std::cerr, LogLevel::INFO);
-    if (logger) logger_.reset(logger);
+    if (logger) {
+        logger_.reset(logger);
+    }
     return *logger_;
 }
 
@@ -107,7 +113,9 @@ void Logger::MessageWriter()
         {
             std::unique_lock<std::mutex> lk(m_);
             pushed_.wait(lk, [&ptr, this]() {
-                if (queue_.empty()) return false;
+                if (queue_.empty()) {
+                    return false;
+                }
                 ptr = std::move(queue_.front());
                 queue_.pop();
                 return true;

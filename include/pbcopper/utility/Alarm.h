@@ -1,5 +1,3 @@
-// Author: Nathaniel Echols, Derek Barnett
-
 #ifndef PBCOPPER_UTILITY_ALARM_H
 #define PBCOPPER_UTILITY_ALARM_H
 

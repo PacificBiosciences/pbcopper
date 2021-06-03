@@ -34,7 +34,9 @@ InterfaceHelpPrinter::InterfaceHelpPrinter(Interface interface, const size_t max
 
 std::string InterfaceHelpPrinter::Choices(const OptionData& option)
 {
-    if (option.isHidden || option.choices.empty() || option.isChoicesHidden) return {};
+    if (option.isHidden || option.choices.empty() || option.isChoicesHidden) {
+        return {};
+    }
 
     std::ostringstream out;
     for (const auto& choice : option.choices) {
@@ -67,7 +69,9 @@ std::string InterfaceHelpPrinter::Choices(const OptionData& option)
 
 std::string InterfaceHelpPrinter::DefaultValue(const OptionData& option)
 {
-    if (!ShouldShowDefaultValue(option)) return {};
+    if (!ShouldShowDefaultValue(option)) {
+        return {};
+    }
 
     std::ostringstream out;
     switch (option.type) {
@@ -99,7 +103,9 @@ std::string InterfaceHelpPrinter::DefaultValue(const OptionData& option)
 std::string InterfaceHelpPrinter::Description()
 {
     const auto& description = interface_.ApplicationDescription();
-    if (description.empty()) return {};
+    if (description.empty()) {
+        return {};
+    }
 
     // maybe word-wrap description
     std::ostringstream out;
@@ -108,8 +114,9 @@ std::string InterfaceHelpPrinter::Description()
     const auto wrappedLines = Utility::WordWrappedLines(description, max);
     if (!wrappedLines.empty()) {
         out << wrappedLines.at(0);
-        for (size_t i = 1; i < wrappedLines.size(); ++i)
+        for (size_t i = 1; i < wrappedLines.size(); ++i) {
             out << '\n' << std::string(indent, ' ') << wrappedLines.at(i);
+        }
     }
     return out.str();
 }
@@ -120,18 +127,32 @@ void InterfaceHelpPrinter::MakeHelpText()
     result << interface_.ApplicationName();
 
     const std::string description = Description();
-    if (!description.empty()) result << " - " << Description();
+    if (!description.empty()) {
+        result << " - " << Description();
+    }
 
     result << '\n' << '\n' << Usage() << '\n';
 
     const std::string posArgs = PositionalArguments();
-    if (!posArgs.empty()) result << '\n' << posArgs;  // << '\n';
+    if (!posArgs.empty()) {
+        result << '\n' << posArgs;
+    }
 
     const std::string options = Options();
-    if (!options.empty()) result << '\n' << options << '\n';
+    if (!options.empty()) {
+        result << '\n' << options << '\n';
+    }
 
     const auto& footer = interface_.HelpFooter();
-    if (!footer.empty()) result << footer << '\n';
+    if (!footer.empty()) {
+        result << footer << '\n';
+
+        // Some application footers contain trailing newlines, some do not.
+        // Ensure we have at least one empty line between footer and disclaimer.
+        if (footer.back() != '\n') {
+            result << '\n';
+        }
+    }
 
     result << PB_BOILERPLATE_DISCLAIMER;
 
@@ -154,23 +175,33 @@ std::string InterfaceHelpPrinter::OptionDescription(const OptionData& option)
     out << option.description;
 
     const std::string choices = Choices(option);
-    if (!choices.empty()) out << " Valid choices: (" << choices << ").";
+    if (!choices.empty()) {
+        out << " Valid choices: (" << choices << ").";
+    }
 
     const auto defaultValue = DefaultValue(option);
-    if (!defaultValue.empty()) out << " [" << defaultValue << ']';
+    if (!defaultValue.empty() && !option.isDefaultValueHidden) {
+        out << " [" << defaultValue << ']';
+    }
 
     return out.str();
 }
 
 std::string InterfaceHelpPrinter::OptionGroup(const OptionGroupData& group)
 {
-    if (group.options.empty()) return {};
+    if (group.options.empty()) {
+        return {};
+    }
 
     std::ostringstream out;
-    if (!group.name.empty()) out << group.name << ":\n";
+    if (!group.name.empty()) {
+        out << group.name << ":\n";
+    }
 
     for (const OptionData& option : group.options) {
-        if (!option.isHidden) out << Option(option) << '\n';
+        if (!option.isHidden) {
+            out << Option(option) << '\n';
+        }
     }
     return out.str();
 }
@@ -180,18 +211,29 @@ std::string InterfaceHelpPrinter::Options()
     // print client option groups
     std::ostringstream out;
     const auto& optionGroups = interface_.OptionGroups();
-    for (const auto& optionGroup : optionGroups)
+    for (const auto& optionGroup : optionGroups) {
         out << OptionGroup(optionGroup) << '\n';
+    }
 
     // print builtin group
     OptionGroupData group;
-    if (optionGroups.empty()) group.name = "Options";
+    if (optionGroups.empty()) {
+        group.name = "Options";
+    }
     group.options.push_back(interface_.HelpOption());
     group.options.push_back(interface_.VersionOption());
-    if (interface_.NumThreadsOption()) group.options.push_back(interface_.NumThreadsOption().get());
-    if (interface_.LogLevelOption()) group.options.push_back(interface_.LogLevelOption().get());
-    if (interface_.LogFileOption()) group.options.push_back(interface_.LogFileOption().get());
-    if (interface_.VerboseOption()) group.options.push_back(interface_.VerboseOption().get());
+    if (interface_.NumThreadsOption()) {
+        group.options.push_back(interface_.NumThreadsOption().get());
+    }
+    if (interface_.LogLevelOption()) {
+        group.options.push_back(interface_.LogLevelOption().get());
+    }
+    if (interface_.LogFileOption()) {
+        group.options.push_back(interface_.LogFileOption().get());
+    }
+    if (interface_.VerboseOption()) {
+        group.options.push_back(interface_.VerboseOption().get());
+    }
     out << OptionGroup(group);
     return out.str();
 }
@@ -206,11 +248,14 @@ std::string InterfaceHelpPrinter::PositionalArgument(const PositionalArgumentDat
 std::string InterfaceHelpPrinter::PositionalArguments()
 {
     const auto& posArgs = interface_.PositionalArguments();
-    if (posArgs.empty()) return {};
+    if (posArgs.empty()) {
+        return {};
+    }
 
     std::ostringstream out;
-    for (const auto& posArg : posArgs)
+    for (const auto& posArg : posArgs) {
         out << PositionalArgument(posArg) << '\n';
+    }
 
     return out.str();
 }
@@ -220,7 +265,9 @@ void InterfaceHelpPrinter::Print(std::ostream& out) const { out << text_; }
 bool InterfaceHelpPrinter::ShouldShowDefaultValue(const OptionData& option)
 {
     // omit if switch OR null
-    if (option.type == OptionValueType::BOOL) return false;
+    if (option.type == OptionValueType::BOOL) {
+        return false;
+    }
 
     // omit if string-type option has an empty default
     if (option.type == OptionValueType::STRING) {
@@ -241,10 +288,14 @@ std::string InterfaceHelpPrinter::Usage()
 
     // print all required pos args & then optional ones after, regardless of order added
     for (const auto& posArg : interface_.PositionalArguments()) {
-        if (posArg.required) usage << " <" << posArg.name << '>';
+        if (posArg.required) {
+            usage << " <" << posArg.name << '>';
+        }
     }
     for (const auto& posArg : interface_.PositionalArguments()) {
-        if (!posArg.required) usage << " [" << posArg.name << ']';
+        if (!posArg.required) {
+            usage << " [" << posArg.name << ']';
+        }
     }
 
     return usage.str();

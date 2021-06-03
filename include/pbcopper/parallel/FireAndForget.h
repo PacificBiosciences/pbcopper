@@ -62,7 +62,9 @@ public:
 
     ~FireAndForget() noexcept(false)
     {
-        if (exc && !thrown) std::rethrow_exception(exc);
+        if (exc && !thrown) {
+            std::rethrow_exception(exc);
+        }
     }
 
     template <typename F, typename... Args>
@@ -83,7 +85,9 @@ public:
             }
 
             popped.wait(lk, [&task, this]() {
-                if (exc) std::rethrow_exception(exc);
+                if (exc) {
+                    std::rethrow_exception(exc);
+                }
 
                 if (head.size() < sz) {
                     head.emplace(std::move(task));
@@ -109,8 +113,9 @@ public:
 
         // Wait for all threads to join and do not continue before all tasks
         // have been finished.
-        for (auto& thread : threads)
+        for (auto& thread : threads) {
             thread.join();
+        }
 
         // Is there a final exception, throw if so..
         if (exc) {
@@ -129,7 +134,9 @@ private:
         {
             std::unique_lock<std::mutex> lk(m);
             pushed.wait(lk, [&task, this]() {
-                if (head.empty()) return false;
+                if (head.empty()) {
+                    return false;
+                }
 
                 if ((task = std::move(head.front()))) {
                     head.pop();

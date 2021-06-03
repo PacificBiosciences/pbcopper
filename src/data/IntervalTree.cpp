@@ -23,7 +23,9 @@ void IntervalTree::Insert(const Interval& interval)
     if (it != begin()) {
         const_iterator prev = std::prev(it);
 
-        if (prev->Overlaps(*it)) it = prev;
+        if (prev->Overlaps(*it)) {
+            it = prev;
+        }
     }
 
     while (it != end()) {
@@ -34,8 +36,9 @@ void IntervalTree::Insert(const Interval& interval)
             it = storage.erase(it);
             it = storage.erase(it);
             it = storage.insert(it, u);
-        } else
+        } else {
             break;
+        }
     }
 }
 
@@ -46,7 +49,9 @@ IntervalTree IntervalTree::Gaps() const
     for (auto it = begin(); it != end(); ++it) {
         const_iterator nx = std::next(it);
 
-        if (nx == end()) break;
+        if (nx == end()) {
+            break;
+        }
 
         gaps.Insert(Interval(it->End(), nx->Start()));
     }
@@ -69,9 +74,13 @@ IntervalTree IntervalTree::Gaps(const Interval& interval) const
 
     IntervalTree gaps = Gaps();
 
-    if (interval.Start() < left->Start()) gaps.Insert(Interval(interval.Start(), left->Start()));
+    if (interval.Start() < left->Start()) {
+        gaps.Insert(Interval(interval.Start(), left->Start()));
+    }
 
-    if (right->End() < interval.End()) gaps.Insert(Interval(right->End(), interval.End()));
+    if (right->End() < interval.End()) {
+        gaps.Insert(Interval(right->End(), interval.End()));
+    }
 
     return gaps;
 }
@@ -80,10 +89,14 @@ bool IntervalTree::Contains(const Position value) const
 {
     const_iterator it = std::lower_bound(begin(), end(), Interval(value, value + 1));
 
-    if (it != begin()) it = std::prev(it);
+    if (it != begin()) {
+        it = std::prev(it);
+    }
 
     for (; it != end() && it->Start() <= value; ++it) {
-        if (it->Contains(value)) return true;
+        if (it->Contains(value)) {
+            return true;
+        }
     }
 
     return false;

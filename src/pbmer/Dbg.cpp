@@ -1,5 +1,3 @@
-// Authors: Chris Dunn, Zev Kronenberg, Derek Barnett
-
 #include <pbcopper/pbmer/Dbg.h>
 
 #include <cassert>
@@ -17,9 +15,13 @@ Dbg::Dbg(uint8_t k, uint32_t nr) : kmerSize_{k}, nReads_{nr} {}
 int Dbg::AddKmers(const PacBio::Pbmer::Mers& m, const uint32_t rid)
 {
     // cover the cases where the kmers are not suitable for the Dbg.
-    if ((m.kmerSize > 31)) return -1;
+    if ((m.kmerSize > 31)) {
+        return -1;
+    }
 
-    if ((m.kmerSize % 2) == 0) return -2;
+    if ((m.kmerSize % 2) == 0) {
+        return -2;
+    }
 
     for (auto const& x : m.forward) {
         DnaBit niby{x.mer, static_cast<uint8_t>(x.strand == Data::Strand::FORWARD ? 0 : 1),
@@ -98,7 +100,9 @@ uint8_t SetRevEdge(const DnaBit& a, const DnaBit& b)
             break;
         }
     }
-    if (a.mer == newNib.mer) return 0;
+    if (a.mer == newNib.mer) {
+        return 0;
+    }
     return es;
 }
 
@@ -138,7 +142,9 @@ uint8_t SetForEdge(const DnaBit& a, const DnaBit& b)
         }
     }
 
-    if (a.mer == newNib.mer) return 0;
+    if (a.mer == newNib.mer) {
+        return 0;
+    }
     return es;
 }
 
@@ -181,7 +187,9 @@ void Dbg::BuildEdges()
 
             // this is a self loop
             // TODO validate this should not be skipped.
-            if (x->second.dna_.mer == niby.mer) continue;
+            if (x->second.dna_.mer == niby.mer) {
+                continue;
+            }
 
             if (dbg_.find(niby.mer) != dbg_.end()) {
                 //setting the edges
@@ -247,7 +255,9 @@ void Dbg::FrequencyFilterNodes2(unsigned long n, bool gt)
 
     for (auto x = dbg_.begin(); x != dbg_.end(); ++x) {
         for (uint8_t y = 0; y < 8; ++y) {
-            if (((1 << y) & x->second.edges_) == 0) continue;
+            if (((1 << y) & x->second.edges_) == 0) {
+                continue;
+            }
             DnaBit niby = x->second.dna_;
             // pre-prending base
             if (y <= 3) {
@@ -288,17 +298,23 @@ Bubbles Dbg::FindBubbles() const
     for (auto x = dbg_.begin(); x != dbg_.end(); ++x) {
 
         // this node is already part of a bubble and should be ignored.
-        if (used_branch_node.find(x->second.dna_.mer) != used_branch_node.end()) continue;
+        if (used_branch_node.find(x->second.dna_.mer) != used_branch_node.end()) {
+            continue;
+        }
 
         // valid bubbles contain 3 or more paths
-        if (x->second.TotalEdgeCount() < 3) continue;
+        if (x->second.TotalEdgeCount() < 3) {
+            continue;
+        }
         std::vector<std::tuple<uint64_t, uint64_t>> path_info;
 
         // loop over neighboring nodes collecting the start and end node of
         // linear paths. I.E. looping over all linear paths coming out of a node.
         for (auto& out : x->second) {
             auto linear_path = LinearPath(out);
-            if (linear_path.empty()) continue;
+            if (linear_path.empty()) {
+                continue;
+            }
             path_info.push_back(std::make_tuple(out.mer, linear_path.back().mer));
         }
 
@@ -332,7 +348,9 @@ Bubbles Dbg::FindBubbles() const
                 }
             }
             // only keep the first valid bubble
-            if (hasBubble) break;
+            if (hasBubble) {
+                break;
+            }
         }
 
         if (!hasBubble) {
@@ -471,7 +489,9 @@ int Dbg::RemoveSpurs(unsigned int maxLength)
 
     for (auto nodeIter = dbg_.begin(); nodeIter != dbg_.end(); ++nodeIter) {
         // Starting at tip nodes with a degree of one.
-        if (nodeIter->second.TotalEdgeCount() != 1) continue;
+        if (nodeIter->second.TotalEdgeCount() != 1) {
+            continue;
+        }
 
         // Including tip node in the linear path.
         auto linear_path = LinearPath(nodeIter->second.dna_.mer);
@@ -523,7 +543,9 @@ bool Dbg::ValidateEdges() const
 bool Dbg::ValidateLoad() const
 {
     for (const auto& x : dbg_) {
-        if (x.second.readIds2_.count() == 0) return false;
+        if (x.second.readIds2_.count() == 0) {
+            return false;
+        }
     }
     return true;
 }

@@ -1,5 +1,3 @@
-// Author: Derek Barnett
-
 #include <pbcopper/utility/Deleters.h>
 
 #include <cstdlib>
@@ -9,7 +7,9 @@ namespace Utility {
 
 void FileDeleter::operator()(std::FILE* fp) const noexcept
 {
-    if (fp) std::fclose(fp);
+    if (fp) {
+        std::fclose(fp);
+    }
     fp = nullptr;
 }
 

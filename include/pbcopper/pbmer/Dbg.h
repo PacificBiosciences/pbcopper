@@ -1,5 +1,3 @@
-// Authors: Chris Dunn, Zev Kronenberg, Derek Barnett
-
 #ifndef PBCOPPER_PBMER_DBG_H
 #define PBCOPPER_PBMER_DBG_H
 

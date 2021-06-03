@@ -1,5 +1,3 @@
-// Author: Armin Töpfer
-
 #include <pbcopper/parallel/FireAndForget.h>
 
 #include <chrono>
@@ -36,8 +34,9 @@ TEST(Parallel_FireAndForget, strings)
     EXPECT_NO_THROW(faf.Finalize());
     EXPECT_EQ(waiting, 0);
 
-    for (auto& v : vec)
+    for (auto& v : vec) {
         EXPECT_EQ(v.substr(0, 4), "done");
+    }
 
     EXPECT_EQ(vec.size(), numElements);
 }
@@ -110,8 +109,9 @@ TEST(Parallel_FireAndForget, dispatch)
 
     PacBio::Parallel::Dispatch(&faf, numElements, Submit);
 
-    for (auto& v : vec)
+    for (auto& v : vec) {
         EXPECT_EQ(v.substr(0, 4), "done");
+    }
 
     EXPECT_EQ(vec.size(), numElements);
 

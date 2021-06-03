@@ -1,5 +1,3 @@
-// Authors: David Alexander, Lance Hepler
-
 #ifndef PBCOPPER_ALIGN_PAIRWISEALIGNMENT_H
 #define PBCOPPER_ALIGN_PAIRWISEALIGNMENT_H
 

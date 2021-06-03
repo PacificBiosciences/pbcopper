@@ -1,5 +1,3 @@
-// Authors: Lance Hepler, Brett Bowman, Derek Barnett
-
 #ifndef PBCOPPER_ALIGN_FINDSEEDS_H
 #define PBCOPPER_ALIGN_FINDSEEDS_H
 

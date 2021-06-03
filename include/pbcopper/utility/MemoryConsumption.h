@@ -1,5 +1,3 @@
-// Authors: Armin Töpfer, Derek Barnett
-
 #ifndef PBCOPPER_UTILITY_MEMORYCONSUMPTION_H
 #define PBCOPPER_UTILITY_MEMORYCONSUMPTION_H
 

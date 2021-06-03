@@ -1,5 +1,3 @@
-// Author: Derek Barnett
-
 #ifndef PBCOPPER_CLI_v2_POSITIONALARGUMENT_H
 #define PBCOPPER_CLI_v2_POSITIONALARGUMENT_H
 

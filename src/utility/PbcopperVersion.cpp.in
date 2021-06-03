@@ -1,5 +1,3 @@
-// Author: Armin Töpfer
-
 #include <pbcopper/utility/PbcopperVersion.h>
 #include <string>
 #include <tuple>

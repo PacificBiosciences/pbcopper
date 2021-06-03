@@ -70,7 +70,9 @@ PoaGraph::PoaGraph(const PoaGraph& other)
 PoaGraph& PoaGraph::operator=(const PoaGraph& other)
 {
     // check for self-assignment
-    if (&other != this) impl_ = std::make_unique<detail::PoaGraphImpl>(*other.impl_);
+    if (&other != this) {
+        impl_ = std::make_unique<detail::PoaGraphImpl>(*other.impl_);
+    }
 
     return *this;
 }

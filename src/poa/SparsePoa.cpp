@@ -29,7 +29,9 @@ std::vector<Align::Seed> SparseAlignSeedsUnySpecific(const size_t qGramSize,
     const auto config = Align::ChainSeedsConfig{1, 1, 3, -1, -1, -1, INT_MAX};
     const auto seeds = Align::FindSeeds(qGramSize, seq1, seq2, true);
     const auto chains = Align::ChainSeeds(seeds, config);
-    if (chains.empty()) return std::vector<Align::Seed>{};
+    if (chains.empty()) {
+        return std::vector<Align::Seed>{};
+    }
     return chains[0];
 }
 
@@ -39,8 +41,9 @@ std::vector<std::pair<size_t, size_t>> SparseAlignUnySpecific(const size_t qGram
 {
     std::vector<std::pair<size_t, size_t>> result;
     const auto chain = SparseAlignSeedsUnySpecific(qGramSize, seq1, seq2);
-    for (const auto& s : chain)
+    for (const auto& s : chain) {
         result.emplace_back(s.BeginPositionH(), s.BeginPositionV());
+    }
     return result;
 }
 }
@@ -146,7 +149,9 @@ char Complement(const char base)
 
     const char result = lookupTable[static_cast<int>(base)];
 
-    if (result == 0) throw std::invalid_argument(base + std::string{" is an invalid base!"});
+    if (result == 0) {
+        throw std::invalid_argument(base + std::string{" is an invalid base!"});
+    }
 
     return result;
 }
@@ -155,8 +160,9 @@ std::string Complement(const std::string& input)
 {
     std::string output;
     output.reserve(input.length());
-    for (const char b : input)
+    for (const char b : input) {
         output.push_back(Complement(b));
+    }
     return output;
 }
 
@@ -164,8 +170,9 @@ std::string Reverse(const std::string& input)
 {
     std::string output;
     output.reserve(input.length());
-    for (auto it = input.crbegin(); it != input.crend(); ++it)
+    for (auto it = input.crbegin(); it != input.crend(); ++it) {
         output.push_back(*it);
+    }
     return output;
 }
 
@@ -173,8 +180,9 @@ std::string ReverseComplement(const std::string& input)
 {
     std::string output;
     output.reserve(input.length());
-    for (auto it = input.crbegin(); it != input.crend(); ++it)
+    for (auto it = input.crbegin(); it != input.crend(); ++it) {
         output.push_back(Complement(*it));
+    }
     return output;
 }
 }

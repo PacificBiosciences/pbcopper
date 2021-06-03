@@ -1,5 +1,3 @@
-// Authors: David Alexander, Lance Hepler
-
 #include <pbcopper/align/AlignConfig.h>
 
 namespace PacBio {

@@ -1,11 +1,9 @@
-// Author: David Seifert, Derek Barnett
+#ifndef PBCOPPER_PBCOPPERCONFIG_H
+#define PBCOPPER_PBCOPPERCONFIG_H
 
 // Reduce the number of exposed symbols in order to speed up
 // DSO load times
 // https://gcc.gnu.org/wiki/Visibility
-
-#ifndef PBCOPPER_PBCOPPERCONFIG_H
-#define PBCOPPER_PBCOPPERCONFIG_H
 
 // clang-format off
 #if defined _WIN32 || defined __CYGWIN__

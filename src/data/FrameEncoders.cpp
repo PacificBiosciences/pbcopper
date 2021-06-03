@@ -1,5 +1,3 @@
-// Author: Derek Barnett
-
 #include <pbcopper/data/FrameEncoders.h>
 
 #include <cassert>
@@ -23,7 +21,9 @@ static uint16_t maxFramepoint;
 
 static int InitIpdDownsampling()
 {
-    if (!framepoints.empty()) return 0;
+    if (!framepoints.empty()) {
+        return 0;
+    }
 
     // liftover from kineticsTools
 
@@ -37,8 +37,9 @@ static int InitIpdDownsampling()
     for (int i = 0; i < end; ++i) {
         grain = std::pow(B, i);
         std::vector<uint16_t> nextOnes;
-        for (double j = 0; j < T; ++j)
+        for (double j = 0; j < T; ++j) {
             nextOnes.push_back(j * grain + next);
+        }
         next = nextOnes.back() + grain;
         framepoints.insert(framepoints.end(), nextOnes.cbegin(), nextOnes.cend());
     }
@@ -56,12 +57,15 @@ static int InitIpdDownsampling()
         fu = framepoints[i + 1];
         if (fu > fl + 1) {
             const int middle = (fl + fu) / 2;
-            for (int f = fl; f < middle; ++f)
+            for (int f = fl; f < middle; ++f) {
                 frameToCode[f] = i;
-            for (int f = middle; f < fu; ++f)
+            }
+            for (int f = middle; f < fu; ++f) {
                 frameToCode[f] = i + 1;
-        } else
+            }
+        } else {
             frameToCode[fl] = i;
+        }
     }
 
     // this next line differs from the python implementation (there, it's "i+1")

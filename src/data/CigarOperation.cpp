@@ -1,8 +1,5 @@
-// Author: Derek Barnett
-
 #include <pbcopper/data/CigarOperation.h>
 
-#include <cassert>
 #include <stdexcept>
 #include <tuple>
 #include <type_traits>
@@ -40,16 +37,6 @@ namespace {
 // clang-format on
 
 }  // namespace
-
-static_assert(std::is_copy_constructible<CigarOperation>::value,
-              "CigarOperation(const CigarOperation&) is not = default");
-static_assert(std::is_copy_assignable<CigarOperation>::value,
-              "CigarOperation& operator=(const CigarOperation&) is not = default");
-
-static_assert(std::is_nothrow_move_constructible<CigarOperation>::value,
-              "CigarOperation(CigarOperation&&) is not = noexcept");
-static_assert(std::is_nothrow_move_assignable<CigarOperation>::value,
-              "CigarOperation& operator=(CigarOperation&&) is not = noexcept");
 
 bool CigarOperation::AutoValidateCigar = true;
 

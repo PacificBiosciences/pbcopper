@@ -38,7 +38,9 @@ void plotConsensus(const PacBio::Poa::PoaConsensus* pc, std::string description,
                                     (PoaGraph::COLOR_NODES | PoaGraph::VERBOSE_NODES), pc);
         // std::cout << cmd << std::endl;
         const int result = std::system(cmd.c_str());
-        if (result) std::cerr << "Running '" << cmd << "' failed\n";
+        if (result) {
+            std::cerr << "Running '" << cmd << "' failed\n";
+        }
     }
 }
 

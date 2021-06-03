@@ -1,5 +1,3 @@
-// Author: Derek Barnett
-
 #ifndef PBCOPPER_UTILITY_SSIZE_H
 #define PBCOPPER_UTILITY_SSIZE_H
 

@@ -1,8 +1,4 @@
-// Author: Lance Hepler
-
 #include <pbcopper/data/Read.h>
-
-#include <cassert>
 
 #include <ios>
 #include <ostream>
@@ -15,17 +11,6 @@
 
 namespace PacBio {
 namespace Data {
-
-static_assert(std::is_copy_constructible<Read>::value, "Read(const Read&) is not = default");
-static_assert(std::is_copy_assignable<Read>::value,
-              "Read& operator=(const Read&) is not = default");
-
-#ifndef __INTEL_COMPILER
-static_assert(std::is_nothrow_move_constructible<Read>::value, "Read(Read&&) is not = noexcept");
-static_assert(std::is_nothrow_move_assignable<Read>::value ==
-                  std::is_nothrow_move_assignable<std::string>::value,
-              "");
-#endif
 
 Read::Read(Data::ReadId id, std::string seq, boost::optional<Frames> pw,
            boost::optional<Frames> ipd, LocalContextFlags flags, Accuracy readAccuracy, SNR snr,
@@ -115,15 +100,17 @@ std::ostream& operator<<(std::ostream& os, const Read& read)
 {
     os << std::boolalpha;
     os << "Read(Id=" << read.Id << ", Seq=" << read.Seq << ", PulseWidth=";
-    if (read.IPD)
+    if (read.IPD) {
         os << *read.PulseWidth;
-    else
+    } else {
         os << "None";
+    }
     os << ", Qualities=" << read.Qualities << ", IPD=";
-    if (read.IPD)
+    if (read.IPD) {
         os << *read.IPD;
-    else
+    } else {
         os << "None";
+    }
     os << ", QueryStart=" << read.QueryStart << ", QueryEnd=" << read.QueryEnd
        << ", Flags=" << read.Flags << ", ReadAccuracy=" << read.ReadAccuracy
        << ", SignalToNoise=" << read.SignalToNoise << ", Model=" << read.Model
@@ -134,7 +121,9 @@ std::ostream& operator<<(std::ostream& os, const Read& read)
 void ClipToQuery(Read& read, Position start, Position end)
 {
     // skip out if clip not needed
-    if (start <= read.QueryStart && end >= read.QueryEnd) return;
+    if (start <= read.QueryStart && end >= read.QueryEnd) {
+        return;
+    }
 
     // calculate clipping
     ClipToQueryConfig clipConfig{read.Seq.size(),

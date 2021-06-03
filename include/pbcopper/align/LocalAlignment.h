@@ -1,11 +1,9 @@
-// Author: Derek Barnett
+#ifndef PBCOPPER_ALIGN_LOCALALIGNMENT_H
+#define PBCOPPER_ALIGN_LOCALALIGNMENT_H
 
 //
 // SIMD local (Smith-Waterman) alignment score
 //
-
-#ifndef PBCOPPER_ALIGN_LOCALALIGNMENT_H
-#define PBCOPPER_ALIGN_LOCALALIGNMENT_H
 
 #include <string>
 #include <vector>

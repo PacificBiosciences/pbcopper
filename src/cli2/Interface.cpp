@@ -39,15 +39,18 @@ Interface::Interface(std::string name, std::string description, std::string vers
 
 Interface& Interface::AddOption(const Option& option)
 {
-    if (data_.optionGroups_.empty()) data_.optionGroups_.push_back(OptionGroupData{});
+    if (data_.optionGroups_.empty()) {
+        data_.optionGroups_.push_back(OptionGroupData{});
+    }
     data_.optionGroups_[0].options.push_back(OptionTranslator::Translate(option));
     return *this;
 }
 
 Interface& Interface::AddOptions(const std::vector<Option>& options)
 {
-    for (const auto& opt : options)
+    for (const auto& opt : options) {
         AddOption(opt);
+    }
     return *this;
 }
 
@@ -71,8 +74,9 @@ Interface& Interface::AddPositionalArgument(const PositionalArgument& posArg)
 
 Interface& Interface::AddPositionalArguments(const std::vector<PositionalArgument>& posArgs)
 {
-    for (const auto& arg : posArgs)
+    for (const auto& arg : posArgs) {
         AddPositionalArgument(arg);
+    }
     return *this;
 }
 
@@ -87,8 +91,9 @@ Logging::LogLevel Interface::DefaultLogLevel() const
     if (data_.logLevelOption_) {
         const auto& value = data_.logLevelOption_->defaultValue.get();
         return Logging::LogLevel{boost::get<std::string>(value)};
-    } else
+    } else {
         return data_.logConfig_.Level;
+    }
 }
 
 Interface& Interface::DefaultLogLevel(Logging::LogLevel level)
@@ -172,7 +177,9 @@ Results Interface::MakeDefaultResults() const
     Results results;
     const auto options = Options();
     for (const auto& opt : options) {
-        if (opt.defaultValue.is_initialized()) results.AddDefaultOption(opt);
+        if (opt.defaultValue.is_initialized()) {
+            results.AddDefaultOption(opt);
+        }
     }
     results.PositionalArguments(PositionalArguments());
     return results;
@@ -182,7 +189,9 @@ size_t Interface::NumRequiredPosArgs() const
 {
     size_t count = 0;
     for (const auto& posArg : data_.positionalArgs_) {
-        if (posArg.required) ++count;
+        if (posArg.required) {
+            ++count;
+        }
     }
     return count;
 }
@@ -193,19 +202,31 @@ std::vector<OptionData> Interface::Options() const
 
     // add registered objects
     for (const auto& group : data_.optionGroups_) {
-        for (const auto& opt : group.options)
+        for (const auto& opt : group.options) {
             result.push_back(opt);
+        }
     }
 
     // add builtins
     result.push_back(data_.helpOption_);
     result.push_back(data_.versionOption_);
     result.push_back(data_.exceptionPassthroughOption_);
-    if (data_.numThreadsOption_) result.push_back(data_.numThreadsOption_.get());
-    if (data_.logLevelOption_) result.push_back(data_.logLevelOption_.get());
-    if (data_.logFileOption_) result.push_back(data_.logFileOption_.get());
-    if (data_.verboseOption_) result.push_back(data_.verboseOption_.get());
-    if (data_.alarmsOption_) result.push_back(data_.alarmsOption_.get());
+    if (data_.numThreadsOption_) {
+        result.push_back(data_.numThreadsOption_.get());
+    }
+    if (data_.logLevelOption_) {
+        result.push_back(data_.logLevelOption_.get());
+    }
+    if (data_.logFileOption_) {
+        result.push_back(data_.logFileOption_.get());
+    }
+    if (data_.verboseOption_) {
+        result.push_back(data_.verboseOption_.get());
+    }
+    if (data_.alarmsOption_) {
+        result.push_back(data_.alarmsOption_.get());
+    }
+
     return result;
 }
 

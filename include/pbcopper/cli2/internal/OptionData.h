@@ -1,5 +1,3 @@
-// Author: Derek Barnett
-
 #ifndef PBCOPPER_CLI_v2_OPTIONDATA_H
 #define PBCOPPER_CLI_v2_OPTIONDATA_H
 
@@ -30,6 +28,7 @@ struct OptionData
     boost::optional<OptionValue> defaultValue;
 
     bool isHidden = false;
+    bool isDefaultValueHidden = false;
 
     std::vector<OptionValue> choices;
     bool isChoicesHidden = false;

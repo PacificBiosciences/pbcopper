@@ -1,5 +1,3 @@
-// Author: Lance Hepler, Derek Barnett
-
 #include <pbcopper/logging/LogMessage.h>
 
 #include <ctime>
@@ -18,7 +16,9 @@ LogMessage::LogMessage(const char* file, const char* function, unsigned int line
                        const LogLevel level, Logger& logger)
     : logger_{logger}
 {
-    if (!logger_.Handles(level)) return;
+    if (!logger_.Handles(level)) {
+        return;
+    }
     ptr_.reset(new LogLevelStream(std::piecewise_construct, std::forward_as_tuple(level),
                                   std::forward_as_tuple()));
 
@@ -44,7 +44,9 @@ LogMessage::LogMessage(const char* file, const char* function, unsigned int line
             << std::setw(3) << std::to_string(msec) << config.Delimiter;
     }
 
-    if (useField(LogField::LOG_LEVEL)) out << level.ToString() << config.Delimiter;
+    if (useField(LogField::LOG_LEVEL)) {
+        out << level.ToString() << config.Delimiter;
+    }
 
     if (useField(LogField::FUNCTION)) {
         out << function
@@ -67,7 +69,9 @@ LogMessage::LogMessage(const char* file, const char* function, unsigned int line
 
 LogMessage::~LogMessage()
 {
-    if (ptr_) logger_ << std::move(ptr_);
+    if (ptr_) {
+        logger_ << std::move(ptr_);
+    }
 }
 
 }  // namespace Logging
