@@ -6,6 +6,7 @@
  - Add Sparc implementation from unanimity
  - Add TimeReporter for conditionally logging timing info
  - Add "research use only" disclaimer to help display
+ - Add context message for missing positional arg in CLI
 
 ## [1.9.1] - 2021-02-16
 

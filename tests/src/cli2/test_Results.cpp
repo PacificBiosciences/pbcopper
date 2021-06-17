@@ -549,4 +549,24 @@ TEST(CLI2_Results, can_provide_effective_command_line_from_mixed_user_and_defaul
     EXPECT_NE(std::string::npos, cmdLine.find("requiredOut"));
 }
 
+TEST(CLI2_Results, throws_with_message_on_missing_pos_arg)
+{
+    Results results;
+    const auto posArgs = PositionalArgumentTranslator::Translate(
+    {
+        CLI_v2_ResultsTests::Source,
+        CLI_v2_ResultsTests::Dest
+    });
+    results.PositionalArguments(posArgs);
+    results.AddPositionalArgument("inFile.txt");
+
+    try {
+        const std::string destFile = results[CLI_v2_ResultsTests::Dest];
+        ASSERT_FALSE(true); // should not get here
+    } catch (const std::runtime_error& e) {
+        const std::string msg{e.what()};
+        EXPECT_TRUE(msg.find("missing value for positional argument: dest") != std::string::npos);
+    }
+}
+
 // clang-format on
