@@ -119,3 +119,62 @@ TEST(Utility_StringUtils, converts_si_string_to_negative_int)
     EXPECT_EQ(-60000000000, PacBio::Utility::SIStringToInt("-60G"));
     EXPECT_EQ(-60000000000, PacBio::Utility::SIStringToInt("-60g"));
 }
+
+TEST(Utility_StringUtils, scientific_notation_throws_on_empty_input)
+{
+    EXPECT_THROW(PacBio::Utility::ScientificNotationToInt(""), std::exception);
+    EXPECT_THROW(PacBio::Utility::ScientificNotationToUInt(""), std::exception);
+    EXPECT_THROW(PacBio::Utility::ScientificNotationToDouble(""), std::exception);
+}
+
+TEST(Utility_StringUtils, scientific_notation_throws_on_invalid_input)
+{
+    EXPECT_THROW(PacBio::Utility::ScientificNotationToInt("+"), std::exception);
+    EXPECT_THROW(PacBio::Utility::ScientificNotationToInt("-"), std::exception);
+    EXPECT_THROW(PacBio::Utility::ScientificNotationToInt("G"), std::exception);
+    EXPECT_THROW(PacBio::Utility::ScientificNotationToInt("x"), std::exception);
+    EXPECT_THROW(PacBio::Utility::ScientificNotationToInt("e"), std::exception);
+    EXPECT_THROW(PacBio::Utility::ScientificNotationToInt(" "), std::exception);
+
+    EXPECT_THROW(PacBio::Utility::ScientificNotationToUInt("+"), std::exception);
+    EXPECT_THROW(PacBio::Utility::ScientificNotationToUInt("-"), std::exception);
+    EXPECT_THROW(PacBio::Utility::ScientificNotationToUInt("G"), std::exception);
+    EXPECT_THROW(PacBio::Utility::ScientificNotationToUInt("x"), std::exception);
+    EXPECT_THROW(PacBio::Utility::ScientificNotationToUInt("e"), std::exception);
+    EXPECT_THROW(PacBio::Utility::ScientificNotationToUInt(" "), std::exception);
+
+    EXPECT_THROW(PacBio::Utility::ScientificNotationToDouble("+"), std::exception);
+    EXPECT_THROW(PacBio::Utility::ScientificNotationToDouble("-"), std::exception);
+    EXPECT_THROW(PacBio::Utility::ScientificNotationToDouble("G"), std::exception);
+    EXPECT_THROW(PacBio::Utility::ScientificNotationToDouble("x"), std::exception);
+    EXPECT_THROW(PacBio::Utility::ScientificNotationToDouble("e"), std::exception);
+    EXPECT_THROW(PacBio::Utility::ScientificNotationToDouble(" "), std::exception);
+}
+
+TEST(Utility_StringUtils, can_convert_scientific_notation_to_number)
+{
+    EXPECT_EQ(12000, PacBio::Utility::ScientificNotationToInt("12000"));
+    EXPECT_EQ(12000, PacBio::Utility::ScientificNotationToInt("1.2e4"));
+    EXPECT_EQ(12000, PacBio::Utility::ScientificNotationToInt("1.2E4"));
+    EXPECT_EQ(-12000, PacBio::Utility::ScientificNotationToInt("-12000"));
+    EXPECT_EQ(-12000, PacBio::Utility::ScientificNotationToInt("-1.2e4"));
+    EXPECT_EQ(-12000, PacBio::Utility::ScientificNotationToInt("-1.2E4"));
+
+    EXPECT_EQ(12000, PacBio::Utility::ScientificNotationToInt("12000"));
+    EXPECT_EQ(12000, PacBio::Utility::ScientificNotationToUInt("1.2e4"));
+    EXPECT_EQ(12000, PacBio::Utility::ScientificNotationToUInt("1.2E4"));
+
+    EXPECT_EQ(12000.0, PacBio::Utility::ScientificNotationToDouble("12000"));
+    EXPECT_EQ(12000.0, PacBio::Utility::ScientificNotationToDouble("1.2e4"));
+    EXPECT_EQ(12000.0, PacBio::Utility::ScientificNotationToDouble("1.2E4"));
+    EXPECT_EQ(-12000.0, PacBio::Utility::ScientificNotationToDouble("-12000"));
+    EXPECT_EQ(-12000.0, PacBio::Utility::ScientificNotationToDouble("-1.2e4"));
+    EXPECT_EQ(-12000.0, PacBio::Utility::ScientificNotationToDouble("-1.2E4"));
+
+    EXPECT_EQ(0.00012, PacBio::Utility::ScientificNotationToDouble("0.00012"));
+    EXPECT_EQ(0.00012, PacBio::Utility::ScientificNotationToDouble("1.2e-4"));
+    EXPECT_EQ(0.00012, PacBio::Utility::ScientificNotationToDouble("1.2E-4"));
+    EXPECT_EQ(-0.00012, PacBio::Utility::ScientificNotationToDouble("-0.00012"));
+    EXPECT_EQ(-0.00012, PacBio::Utility::ScientificNotationToDouble("-1.2e-4"));
+    EXPECT_EQ(-0.00012, PacBio::Utility::ScientificNotationToDouble("-1.2E-4"));
+}

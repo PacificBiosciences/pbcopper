@@ -2,6 +2,7 @@
 
 #include <cctype>
 #include <cstddef>
+#include <cstdlib>
 
 #include <sstream>
 #include <stdexcept>
@@ -35,6 +36,32 @@ std::string Join(const std::vector<std::string>& input, const std::string& separ
 std::string Join(const std::vector<std::string>& input, const char separator)
 {
     return Join(input, std::string(1, separator));
+}
+
+int64_t ScientificNotationToInt(const std::string& input)
+{
+    return ScientificNotationToDouble(input);
+}
+
+uint64_t ScientificNotationToUInt(const std::string& input)
+{
+    return ScientificNotationToDouble(input);
+}
+
+double ScientificNotationToDouble(const std::string& input)
+{
+    if (input.empty()) {
+        throw std::runtime_error{
+            "[pbcopper] string utility ERROR: cannot convert empty string to number."};
+    }
+
+    char* end;
+    const double value = std::strtod(input.c_str(), &end);
+    if (input.c_str() == end) {
+        throw std::runtime_error{"[pbcopper] string utility ERROR: cannot convert string '" +
+                                 input + "' to number"};
+    }
+    return value;
 }
 
 int64_t SIStringToInt(const std::string& input)
