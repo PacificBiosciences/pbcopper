@@ -202,9 +202,15 @@ const Result& Results::operator[](const Option& opt) const
 
 const std::string& Results::operator[](const PositionalArgument& posArg) const
 {
-    const auto& name = internal::PositionalArgumentTranslator::PositionalArgName(posArg);
+    const auto name = internal::PositionalArgumentTranslator::PositionalArgName(posArg);
     for (size_t i = 0; i < posArgNames_.size(); ++i) {
         if (posArgNames_.at(i) == name) {
+            if (i >= posArgValues_.size()) {
+                throw std::runtime_error{
+                    "[pbcopper] command line results ERROR: missing value for positional "
+                    "argument: " +
+                    name};
+            }
             return posArgValues_.at(i);
         }
     }
