@@ -731,7 +731,7 @@ TEST(CLI2_CommandLineParser, does_not_allow_negative_value_for_string_option)
     }
 }
 
-TEST(CLI2_CommandLineParser, can_interpret_numerics_with_suffix)
+TEST(CLI2_CommandLineParser, can_interpret_numerics_with_si_suffix)
 {
     const Option UIntOption{
     R"({
@@ -779,6 +779,56 @@ TEST(CLI2_CommandLineParser, can_interpret_numerics_with_suffix)
     EXPECT_EQ(x, 42'000);
     EXPECT_EQ(y, 300'000'000);
     EXPECT_EQ(z, 3'140'000'000);
+}
+
+TEST(CLI2_CommandLineParser, can_interpret_numerics_with_scientific_notation)
+{
+    const Option UIntOption{
+    R"({
+        "names" : ["x"],
+        "description" : "x",
+        "type" : "unsigned int",
+        "default" : 0
+    })"};
+    const Option IntOption{
+    R"({
+        "names" : ["yoink"],
+        "description" : "y",
+        "type" : "int",
+        "default" : 0
+    })"};
+    const Option FloatOption{
+    R"({
+        "names" : ["z"],
+        "description" : "z",
+        "type" : "float",
+        "default" : 0.0
+    })"};
+
+    Interface i {
+        "frobber",
+        "Frobb your files in a most delightful, nobbly way",
+        "3.14"
+    };
+    i.AddOption(UIntOption)
+     .AddOption(IntOption)
+     .AddOption(FloatOption);
+
+    const CommandLineParser parser{i};
+    const auto results = parser.Parse({
+        "frobber",
+        "-x", "1.5e6",
+        "--yoink=-3E7",
+        "-z", "1.2e-4"
+    });
+
+    const uint64_t x = results[UIntOption];
+    const int64_t y = results[IntOption];
+    const double z = results[FloatOption];
+
+    EXPECT_EQ(x, 1'500'000);
+    EXPECT_EQ(y, -30'000'000);
+    EXPECT_EQ(z, 0.00012);
 }
 
 TEST(CLI2_CommandLineParser, can_interpret_dash_option_value)

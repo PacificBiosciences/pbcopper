@@ -49,15 +49,34 @@ bool IsFalseBoolean(const std::string& s)
 
 OptionValue ValueFromString(const OptionData& option, const std::string valueString)
 {
+    const auto IsScientificNotation = [](const std::string& s) {
+        return s.find_first_of("eE") != std::string::npos;
+    };
+
     switch (option.type) {
-        case OptionValueType::INT:
-            return OptionValue{PacBio::Utility::SIStringToInt(valueString)};
+        case OptionValueType::INT: {
+            if (IsScientificNotation(valueString)) {
+                return OptionValue{PacBio::Utility::ScientificNotationToInt(valueString)};
+            } else {
+                return OptionValue{PacBio::Utility::SIStringToInt(valueString)};
+            }
+        }
 
-        case OptionValueType::UINT:
-            return OptionValue{PacBio::Utility::SIStringToUInt(valueString)};
+        case OptionValueType::UINT: {
+            if (IsScientificNotation(valueString)) {
+                return OptionValue{PacBio::Utility::ScientificNotationToUInt(valueString)};
+            } else {
+                return OptionValue{PacBio::Utility::SIStringToUInt(valueString)};
+            }
+        }
 
-        case OptionValueType::FLOAT:
-            return OptionValue{PacBio::Utility::SIStringToDouble(valueString)};
+        case OptionValueType::FLOAT: {
+            if (IsScientificNotation(valueString)) {
+                return OptionValue{PacBio::Utility::ScientificNotationToDouble(valueString)};
+            } else {
+                return OptionValue{PacBio::Utility::SIStringToDouble(valueString)};
+            }
+        }
 
         case OptionValueType::STRING:
         case OptionValueType::FILE:
