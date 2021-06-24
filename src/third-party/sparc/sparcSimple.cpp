@@ -397,8 +397,7 @@ std::string SparcSimpleConsensus(const std::string& backboneSeq, std::vector<Que
     for (size_t i = 0; i < backbone.Nodes.size(); ++i) {
         if (i >= radius) {
             if (backbone.Nodes[i - radius] != NULL) {
-                cov_cnt[backbone.Nodes[i - radius]->Cov];
-                --backbone.Nodes[i - radius]->Cov;
+                --cov_cnt[backbone.Nodes[i - radius]->Cov];
                 if (cov_cnt[backbone.Nodes[i - radius]->Cov] <= 0) {
                     cov_cnt.erase(backbone.Nodes[i - radius]->Cov);
                 }
