@@ -45,6 +45,9 @@ pbcopper_test_cpp_sources = files([
   # logging
   'src/logging/test_Logging.cpp',
 
+  # math
+  'src/math/test_ConfusionMatrix.cpp',
+
   # parallel
   'src/parallel/test_WorkQueue.cpp',
   'src/parallel/test_FireAndForget.cpp',
