@@ -24,6 +24,30 @@ std::string Join(const std::vector<std::string>& input, const std::string& separ
 std::string Join(const std::vector<std::string>& input, const char separator);
 
 ///
+/// Converts a string with (optional) scientific notation (e.g. 1e6)
+/// to its integer representation.
+///
+/// \throws if input is empty or invalid format
+///
+int64_t ScientificNotationToInt(const std::string& input);
+
+///
+/// Converts a string with (optional) scientific notation (e.g. 1e6)
+/// to its unsigned integer representation.
+///
+/// \throws if input is empty or invalid format
+///
+uint64_t ScientificNotationToUInt(const std::string& input);
+
+///
+/// Converts a string with (optional) scientific notation (e.g. 1e6)
+/// to its double representation.
+///
+/// \throws if input is empty or invalid format
+///
+double ScientificNotationToDouble(const std::string& input);
+
+///
 /// Converts a string with (optional) SI multiplier suffixes (e.g. "20k", "100M")
 /// to its integer representation.
 ///
