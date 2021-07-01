@@ -150,6 +150,13 @@ if not meson.is_subproject()
       'pbcopper/logging/LogMessage.h']),
     subdir : 'pbcopper/logging')
 
+  # pbcopper/math
+  install_headers(
+    files([
+      'pbcopper/math/ConfusionMatrix.h',
+    ]),
+    subdir : 'pbcopper/math')
+
   # pbcopper/parallel
   install_headers(
     files([
