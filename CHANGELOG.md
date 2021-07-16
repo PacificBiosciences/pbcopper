@@ -2,12 +2,15 @@
 
 ## Active
 
+## [1.9.2] - 2021-07-01
+
 ### Added
  - Add Sparc implementation from unanimity
  - Add TimeReporter for conditionally logging timing info
  - Add "research use only" disclaimer to help display
  - Add context message for missing positional arg in CLI
  - Add scientific notation support in CLI
+ - Add confusion matrix helper
 
 ## [1.9.1] - 2021-02-16
 
