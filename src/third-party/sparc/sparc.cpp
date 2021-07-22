@@ -1052,6 +1052,12 @@ void AddPathToBackboneSparse(Backbone& bb, Query& qq, size_t k, EdgeBucket& edge
         }
 
         PtrNode next_node;
+
+        // Out of bound, bug
+        if (Align2Backbone[align_idx] >= static_cast<int32_t>(bb.Nodes.size())) {
+            return;
+        }
+
         if (backbone_match && bb.Nodes[Align2Backbone[align_idx]] != NULL) {
             //add edges to the existing backbone node.
             next_node = bb.Nodes[Align2Backbone[align_idx]];
