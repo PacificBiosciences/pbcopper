@@ -1,5 +1,3 @@
-// Author: Lance Hepler, Derek Barnett
-
 #ifndef PBCOPPER_LOGGING_LOGGING_H
 #define PBCOPPER_LOGGING_LOGGING_H
 
@@ -46,6 +44,8 @@ public:
     Logger& operator=(const Logger&) = delete;
     ~Logger();
 
+    LogLevel Level() const;
+
 private:
     // output control
     std::ofstream logFile_;
@@ -65,6 +65,8 @@ private:
     bool Handles(const LogLevel level) const;
     void MessageWriter();
 };
+
+LogLevel CurrentLogLevel();
 
 #define PBLOGGER_LEVEL(lg, lvl) \
     PacBio::Logging::LogMessage(__FILE__, __func__, __LINE__, PacBio::Logging::lvl, (lg))

@@ -1,5 +1,3 @@
-// Author: Lance Hepler
-
 #ifndef PBCOPPER_PARALLEL_WORKQUEUE_H
 #define PBCOPPER_PARALLEL_WORKQUEUE_H
 
@@ -37,9 +35,13 @@ public:
         for (size_t i = 0; i < size; ++i) {
             threads.emplace_back(std::thread([this]() {
                 try {
-                    if (abort) return;
+                    if (abort) {
+                        return;
+                    }
                     while (auto task = PopTask()) {
-                        if (abort) return;
+                        if (abort) {
+                            return;
+                        }
                         (*task)();
                     }
                 } catch (...) {
@@ -55,7 +57,9 @@ public:
 
     ~WorkQueue() noexcept(false)
     {
-        if (exc && !thrown) std::rethrow_exception(exc);
+        if (exc && !thrown) {
+            std::rethrow_exception(exc);
+        }
     }
 
     template <typename F, typename... Args>
@@ -90,7 +94,9 @@ public:
         {
             std::unique_lock<std::mutex> lk(m);
             popped.wait(lk, [&futs, this]() {
-                if (tail.empty()) return false;
+                if (tail.empty()) {
+                    return false;
+                }
                 tail.swap(futs);
                 return !futs.empty();
             });
@@ -99,7 +105,9 @@ public:
 
         try {
             for (auto& fut : futs) {
-                if (!fut) return false;
+                if (!fut) {
+                    return false;
+                }
                 auto result = fut->get();
                 cont(std::forward<Args>(args)..., std::move(result));
             }
@@ -137,8 +145,9 @@ public:
         pushed.notify_all();
         // Wait for all threads to join and do not continue before all tasks
         // have been finished.
-        for (auto& thread : threads)
+        for (auto& thread : threads) {
             thread.join();
+        }
 
         // Is there a final exception, throw if so..
         if (exc) {
@@ -157,15 +166,20 @@ private:
             pushed.wait(lk, [&task, this]() {
                 // If a consumer task threw an exception, this is the shortcut
                 // to escape
-                if (abort) return true;
+                if (abort) {
+                    return true;
+                }
 
-                if (head.empty() || tail.size() >= sz) return false;
+                if (head.empty() || tail.size() >= sz) {
+                    return false;
+                }
 
                 if ((task = std::move(head.front()))) {
                     head.pop_front();
                     tail.emplace_back(std::move(task->get_future()));
-                } else
+                } else {
                     tail.emplace_back(boost::none);
+                }
 
                 return true;
             });

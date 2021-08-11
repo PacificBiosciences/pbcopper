@@ -1,4 +1,3 @@
-// Authors: Chris Dunn, Zev Kronenberg, Derek Barnett
 #include <pbcopper/pbmer/Kmer.h>
 
 #include <cassert>

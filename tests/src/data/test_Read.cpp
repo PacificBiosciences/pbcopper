@@ -1,5 +1,3 @@
-// Author: Derek Barnett
-
 #include <pbcopper/data/Read.h>
 
 #include <algorithm>
@@ -44,8 +42,8 @@ TEST(Data_Read, ClipRead)
     EXPECT_EQ(expectedQStart, read.QueryStart);
     EXPECT_EQ(expectedQEnd, read.QueryEnd);
     EXPECT_EQ(expectedSnr, read.SignalToNoise);
-    EXPECT_TRUE(read.PulseWidth.size());
-    EXPECT_TRUE(std::equal(expectedPw.cbegin(), expectedPw.cend(), read.PulseWidth.begin()));
+    EXPECT_TRUE(read.PulseWidth);
+    EXPECT_TRUE(std::equal(expectedPw.cbegin(), expectedPw.cend(), read.PulseWidth->begin()));
     EXPECT_TRUE(read.IPD);
     EXPECT_TRUE(std::equal(expectedIpd.cbegin(), expectedIpd.cend(), read.IPD->begin()));
 }
@@ -95,7 +93,7 @@ TEST(Data_Read, ClipMappedRead)
     EXPECT_EQ(expectedQStart, read.QueryStart);
     EXPECT_EQ(expectedQEnd, read.QueryEnd);
     EXPECT_EQ(expectedSnr, read.SignalToNoise);
-    EXPECT_TRUE(std::equal(expectedPw.cbegin(), expectedPw.cend(), read.PulseWidth.begin()));
+    EXPECT_TRUE(std::equal(expectedPw.cbegin(), expectedPw.cend(), read.PulseWidth->begin()));
     EXPECT_TRUE(std::equal(expectedIpd.cbegin(), expectedIpd.cend(), read.IPD->begin()));
     EXPECT_EQ(expectedStrand, read.Strand);
     EXPECT_EQ(expectedTStart, read.TemplateStart);
@@ -148,7 +146,7 @@ TEST(Data_Read, ClipToReferenceOutsideAlignedRegion)
         EXPECT_EQ(expectedQStart, read.QueryStart);
         EXPECT_EQ(expectedQEnd, read.QueryEnd);
         EXPECT_EQ(expectedSnr, read.SignalToNoise);
-        EXPECT_TRUE(std::equal(expectedPw.cbegin(), expectedPw.cend(), read.PulseWidth.begin()));
+        EXPECT_TRUE(std::equal(expectedPw.cbegin(), expectedPw.cend(), read.PulseWidth->begin()));
         EXPECT_TRUE(std::equal(expectedIpd.cbegin(), expectedIpd.cend(), read.IPD->begin()));
         EXPECT_EQ(expectedStrand, read.Strand);
         EXPECT_EQ(expectedTStart, read.TemplateStart);
@@ -220,7 +218,7 @@ TEST(Data_Read, MultipleClipsToReference)
     EXPECT_EQ(expectedQStart, read.QueryStart);
     EXPECT_EQ(expectedQEnd, read.QueryEnd);
     EXPECT_EQ(expectedSnr, read.SignalToNoise);
-    EXPECT_TRUE(std::equal(expectedPw.cbegin(), expectedPw.cend(), read.PulseWidth.begin()));
+    EXPECT_TRUE(std::equal(expectedPw.cbegin(), expectedPw.cend(), read.PulseWidth->begin()));
     EXPECT_TRUE(std::equal(expectedIpd.cbegin(), expectedIpd.cend(), read.IPD->begin()));
     EXPECT_EQ(expectedStrand, read.Strand);
     EXPECT_EQ(expectedTStart, read.TemplateStart);
@@ -247,7 +245,7 @@ TEST(Data_Read, MultipleClipsToReference)
     EXPECT_EQ(expectedQStart, read.QueryStart);
     EXPECT_EQ(expectedQEnd, read.QueryEnd);
     EXPECT_EQ(expectedSnr, read.SignalToNoise);
-    EXPECT_TRUE(std::equal(expectedPw.cbegin(), expectedPw.cend(), read.PulseWidth.begin()));
+    EXPECT_TRUE(std::equal(expectedPw.cbegin(), expectedPw.cend(), read.PulseWidth->begin()));
     EXPECT_TRUE(std::equal(expectedIpd.cbegin(), expectedIpd.cend(), read.IPD->begin()));
     EXPECT_EQ(expectedStrand, read.Strand);
     EXPECT_EQ(expectedTStart, read.TemplateStart);
@@ -274,7 +272,7 @@ TEST(Data_Read, MultipleClipsToReference)
     EXPECT_EQ(expectedQStart, read.QueryStart);
     EXPECT_EQ(expectedQEnd, read.QueryEnd);
     EXPECT_EQ(expectedSnr, read.SignalToNoise);
-    EXPECT_TRUE(std::equal(expectedPw.cbegin(), expectedPw.cend(), read.PulseWidth.begin()));
+    EXPECT_TRUE(std::equal(expectedPw.cbegin(), expectedPw.cend(), read.PulseWidth->begin()));
     EXPECT_TRUE(std::equal(expectedIpd.cbegin(), expectedIpd.cend(), read.IPD->begin()));
     EXPECT_EQ(expectedStrand, read.Strand);
     EXPECT_EQ(expectedTStart, read.TemplateStart);
@@ -328,7 +326,7 @@ TEST(Data_Read, MultipleClipsToReference_WithLargeDeletion)
     EXPECT_EQ(expectedQStart, read.QueryStart);
     EXPECT_EQ(expectedQEnd, read.QueryEnd);
     EXPECT_EQ(expectedSnr, read.SignalToNoise);
-    EXPECT_TRUE(std::equal(expectedPw.cbegin(), expectedPw.cend(), read.PulseWidth.begin()));
+    EXPECT_TRUE(std::equal(expectedPw.cbegin(), expectedPw.cend(), read.PulseWidth->begin()));
     EXPECT_TRUE(std::equal(expectedIpd.cbegin(), expectedIpd.cend(), read.IPD->begin()));
     EXPECT_EQ(expectedStrand, read.Strand);
     EXPECT_EQ(expectedTStart, read.TemplateStart);
@@ -355,7 +353,7 @@ TEST(Data_Read, MultipleClipsToReference_WithLargeDeletion)
     EXPECT_EQ(expectedQStart, read.QueryStart);
     EXPECT_EQ(expectedQEnd, read.QueryEnd);
     EXPECT_EQ(expectedSnr, read.SignalToNoise);
-    EXPECT_TRUE(std::equal(expectedPw.cbegin(), expectedPw.cend(), read.PulseWidth.begin()));
+    EXPECT_TRUE(std::equal(expectedPw.cbegin(), expectedPw.cend(), read.PulseWidth->begin()));
     EXPECT_TRUE(std::equal(expectedIpd.cbegin(), expectedIpd.cend(), read.IPD->begin()));
     EXPECT_EQ(expectedStrand, read.Strand);
     EXPECT_EQ(expectedTStart, read.TemplateStart);
@@ -382,7 +380,7 @@ TEST(Data_Read, MultipleClipsToReference_WithLargeDeletion)
     EXPECT_EQ(expectedQStart, read.QueryStart);
     EXPECT_EQ(expectedQEnd, read.QueryEnd);
     EXPECT_EQ(expectedSnr, read.SignalToNoise);
-    EXPECT_TRUE(std::equal(expectedPw.cbegin(), expectedPw.cend(), read.PulseWidth.begin()));
+    EXPECT_TRUE(std::equal(expectedPw.cbegin(), expectedPw.cend(), read.PulseWidth->begin()));
     EXPECT_TRUE(std::equal(expectedIpd.cbegin(), expectedIpd.cend(), read.IPD->begin()));
     EXPECT_EQ(expectedStrand, read.Strand);
     EXPECT_EQ(expectedTStart, read.TemplateStart);

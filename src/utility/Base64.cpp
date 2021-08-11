@@ -1,5 +1,3 @@
-// Author: Derek Barnett
-
 #include <pbcopper/utility/Base64.h>
 
 #include "third-party/base64/base64.h"

@@ -45,6 +45,9 @@ pbcopper_test_cpp_sources = files([
   # logging
   'src/logging/test_Logging.cpp',
 
+  # math
+  'src/math/test_ConfusionMatrix.cpp',
+
   # parallel
   'src/parallel/test_WorkQueue.cpp',
   'src/parallel/test_FireAndForget.cpp',
@@ -78,9 +81,14 @@ pbcopper_test_cpp_sources = files([
   'src/utility/test_MoveInsert.cpp',
   'src/utility/test_OStreamRedirect.cpp',
   'src/utility/test_PartitionElements.cpp',
+  'src/utility/test_Shuffle.cpp',
   'src/utility/test_Ssize.cpp',
   'src/utility/test_Stopwatch.cpp',
   'src/utility/test_StringUtils.cpp',
+  'src/utility/test_TimeReporter.cpp',
+
+  # sparc
+  'src/third-party/sparc/test_SparcConsensus.cpp',
 ])
 
 # find GoogleTest
@@ -107,7 +115,8 @@ pbcopper_test = executable(
   dependencies : [pbcopper_gtest_dep, pbcopper_thread_dep, pbcopper_boost_dep],
   include_directories : [pbcopper_include_directories, include_directories('include')],
   link_with : [pbcopper_lib],
-  cpp_args : pbcopper_warning_flags,
+  c_args : pbcopper_c_flags,
+  cpp_args : pbcopper_cpp_flags,
   install : false)
 
 #########

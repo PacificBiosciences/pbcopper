@@ -1,5 +1,3 @@
-// Authors: Chris Dunn, Zev Kronenberg, Derek Barnett
-
 #include <pbcopper/pbmer/DnaBit.h>
 
 #include <cassert>
@@ -194,7 +192,9 @@ void DnaBit::MakeLexSmallerHashed()
 {
     DnaBit test = *this;
     test.ReverseComp();
-    if (test <= *this) *this = test;
+    if (test <= *this) {
+        *this = test;
+    }
 }
 
 uint8_t DnaBit::LongestDiNucRun() const
@@ -280,9 +280,13 @@ std::string DnaBitVec2String(const std::vector<DnaBit>& bits)
 {
 
     std::string rv;
-    if (bits.empty()) return rv;
+    if (bits.empty()) {
+        return rv;
+    }
     rv += bits.front().KmerToStr();
-    if (bits.size() == 1) return rv;
+    if (bits.size() == 1) {
+        return rv;
+    }
     const uint8_t lastStrand = bits.front().strand;
     for (size_t i = 1; i < bits.size(); ++i) {
         DnaBit d = bits[i];

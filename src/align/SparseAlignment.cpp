@@ -1,5 +1,3 @@
-// Authors: Brett Bowman, Derek Barnett
-
 #include <pbcopper/align/SparseAlignment.h>
 
 #include <pbcopper/align/ChainSeeds.h>
@@ -16,7 +14,9 @@ std::vector<Seed> SparseAlignSeeds(const size_t qGramSize, const std::string& se
 {
     const auto seeds = FindSeeds(qGramSize, seq1, seq2, filterHomopolymers);
     const auto chains = ChainSeeds(seeds, ChainSeedsConfig{});
-    if (chains.empty()) return std::vector<Seed>{};
+    if (chains.empty()) {
+        return std::vector<Seed>{};
+    }
     return chains[0];
 }
 
@@ -35,7 +35,9 @@ std::pair<size_t, std::vector<Seed>> BestSparseAlign(const std::string& seq1,
     const auto fwd = SparseAlignSeeds(10, seq1, seq2, filterHomopolymers);
     const auto rev = SparseAlignSeeds(10, seq1, seq2rc, filterHomopolymers);
 
-    if (fwd.size() > rev.size()) return std::make_pair(0, fwd);
+    if (fwd.size() > rev.size()) {
+        return std::make_pair(0, fwd);
+    }
     return std::make_pair(1, rev);
 }
 
@@ -52,8 +54,9 @@ std::vector<std::pair<size_t, size_t>> SparseAlign(const size_t qGramSize, const
     std::vector<std::pair<size_t, size_t>> result;
 
     const auto chain = SparseAlignSeeds(qGramSize, seq1, seq2, filterHomopolymers);
-    for (const auto& s : chain)
+    for (const auto& s : chain) {
         result.emplace_back(s.BeginPositionH(), s.BeginPositionV());
+    }
 
     return result;
 }

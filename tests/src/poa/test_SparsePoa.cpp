@@ -149,13 +149,15 @@ TEST(SparsePoaTest, SingleReadNTimes)
         size_t len = 0;
         std::string seq;
 
-        while (len < 300)
+        while (len < 300) {
             len = d(gen);
+        }
 
         seq.reserve(len);
 
-        for (size_t j = 0; j < len; ++j)
+        for (size_t j = 0; j < len; ++j) {
             seq.push_back(bases[b(gen)]);
+        }
 
         SparsePoa sp;
         SparsePoa::ReadKey id = sp.OrientAndAddRead(seq);
@@ -182,14 +184,16 @@ TEST(SparsePoaTest, SingleAndHalfNTimes)
         size_t len = 0;
         std::string seq1, seq2;
 
-        while (len < 300)
+        while (len < 300) {
             len = d(gen);
+        }
 
         seq1.reserve(len);
         seq2.reserve(len / 3);
 
-        for (size_t j = 0; j < len; ++j)
+        for (size_t j = 0; j < len; ++j) {
             seq1.push_back(bases[b(gen)]);
+        }
 
         seq2 = rc(seq1).substr(0, len / 3);
 

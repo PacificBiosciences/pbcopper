@@ -1,5 +1,3 @@
-// Author: Armin Töpfer
-
 #ifndef PBCOPPER_DATA_MAPPEDREAD_H
 #define PBCOPPER_DATA_MAPPEDREAD_H
 
@@ -65,9 +63,10 @@ struct MappedRead : public Read
         GapBehavior gapBehavior = GapBehavior::IGNORE,
         SoftClipBehavior softClipBehavior = SoftClipBehavior::KEEP) const;
 
-    Frames AlignedPulseWidth(Orientation orientation = Orientation::NATIVE,
-                             GapBehavior gapBehavior = GapBehavior::IGNORE,
-                             SoftClipBehavior softClipBehavior = SoftClipBehavior::KEEP) const;
+    boost::optional<Frames> AlignedPulseWidth(
+        Orientation orientation = Orientation::NATIVE,
+        GapBehavior gapBehavior = GapBehavior::IGNORE,
+        SoftClipBehavior softClipBehavior = SoftClipBehavior::KEEP) const;
 
     int32_t NumMismatches() const;
 };

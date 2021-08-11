@@ -1,5 +1,3 @@
-// Authors: Chris Dunn, Zev Kronenberg, Derek Barnett
-
 #include <pbcopper/pbmer/KFNode.h>
 
 #include <array>
@@ -18,7 +16,9 @@ bool KFNode::AddLoad(uint32_t rid)
 }
 size_t KFNode::FirstRId() const
 {
-    if (readIds_.none()) return 0;
+    if (readIds_.none()) {
+        return 0;
+    }
     return readIds_.find_first() + 1;
 }
 
@@ -40,9 +40,13 @@ DnaBit KFNode::Bit() const { return dna_; }
 std::string Vec2String(const std::vector<KFNode>& nodes)
 {
     std::string rv;
-    if (nodes.empty()) return rv;
+    if (nodes.empty()) {
+        return rv;
+    }
     rv += nodes.front().Bit().KmerToStr();
-    if (nodes.size() == 1) return rv;
+    if (nodes.size() == 1) {
+        return rv;
+    }
 
     for (size_t i = 1; i < nodes.size(); ++i) {
         DnaBit d = nodes[i].Bit();

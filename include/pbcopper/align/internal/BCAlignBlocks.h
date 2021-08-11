@@ -1,11 +1,9 @@
-// Author: Derek Barnett
+#ifndef PBCOPPER_ALIGN_BCALIGNBLOCKS_H
+#define PBCOPPER_ALIGN_BCALIGNBLOCKS_H
 
 //
 // Alignment blocks for banded chain alignment
 //
-
-#ifndef PBCOPPER_ALIGN_BCALIGNBLOCKS_H
-#define PBCOPPER_ALIGN_BCALIGNBLOCKS_H
 
 #include <cfloat>
 

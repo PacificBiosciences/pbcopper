@@ -1,11 +1,9 @@
-// Author: Derek Barnett
+#ifndef PBCOPPER_ALIGN_BCALIGNIMPL_H
+#define PBCOPPER_ALIGN_BCALIGNIMPL_H
 
 //
 // BandedChainAlignment implementation
 //
-
-#ifndef PBCOPPER_ALIGN_BCALIGNIMPL_H
-#define PBCOPPER_ALIGN_BCALIGNIMPL_H
 
 #include <cassert>
 #include <cstddef>

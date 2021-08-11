@@ -2,6 +2,7 @@
 
 #include <cctype>
 #include <cstddef>
+#include <cstdlib>
 
 #include <sstream>
 #include <stdexcept>
@@ -13,16 +14,20 @@ std::string Join(const std::vector<std::string>& input, const std::string& separ
 {
     // determine total joined length
     size_t totalLen = 0;
-    for (const auto& s : input)
+    for (const auto& s : input) {
         totalLen += s.size();
-    if (!input.empty())
+    }
+    if (!input.empty()) {
         totalLen += separator.size() * (input.size() - 1);  // no separator after last string
+    }
 
     // join input strings
     std::string result;
     result.reserve(totalLen);
     for (size_t i = 0; i < input.size(); ++i) {
-        if (i != 0) result += separator;
+        if (i != 0) {
+            result += separator;
+        }
         result += input.at(i);
     }
     return result;
@@ -33,6 +38,32 @@ std::string Join(const std::vector<std::string>& input, const char separator)
     return Join(input, std::string(1, separator));
 }
 
+int64_t ScientificNotationToInt(const std::string& input)
+{
+    return ScientificNotationToDouble(input);
+}
+
+uint64_t ScientificNotationToUInt(const std::string& input)
+{
+    return ScientificNotationToDouble(input);
+}
+
+double ScientificNotationToDouble(const std::string& input)
+{
+    if (input.empty()) {
+        throw std::runtime_error{
+            "[pbcopper] string utility ERROR: cannot convert empty string to number."};
+    }
+
+    char* end;
+    const double value = std::strtod(input.c_str(), &end);
+    if (input.c_str() == end) {
+        throw std::runtime_error{"[pbcopper] string utility ERROR: cannot convert string '" +
+                                 input + "' to number"};
+    }
+    return value;
+}
+
 int64_t SIStringToInt(const std::string& input)
 {
     if (input.empty()) {
@@ -41,7 +72,9 @@ int64_t SIStringToInt(const std::string& input)
     }
 
     const auto suffix = input.back();
-    if (!std::isalpha(suffix)) return std::stoll(input);
+    if (!std::isalpha(suffix)) {
+        return std::stoll(input);
+    }
 
     int64_t result = std::stoll(input.substr(0, input.size() - 1));
     switch (suffix) {
@@ -74,7 +107,9 @@ uint64_t SIStringToUInt(const std::string& input)
     }
 
     const auto suffix = input.back();
-    if (!std::isalpha(suffix)) return std::stoull(input);
+    if (!std::isalpha(suffix)) {
+        return std::stoull(input);
+    }
 
     uint64_t result = std::stoull(input.substr(0, input.size() - 1));
     switch (suffix) {
@@ -107,7 +142,9 @@ double SIStringToDouble(const std::string& input)
     }
 
     const auto suffix = input.back();
-    if (!std::isalpha(suffix)) return std::stod(input);
+    if (!std::isalpha(suffix)) {
+        return std::stod(input);
+    }
 
     double result = std::stod(input.substr(0, input.size() - 1));
     switch (suffix) {
@@ -137,8 +174,9 @@ std::vector<std::string> Split(const std::string& line, const char delim)
     std::vector<std::string> tokens;
     std::istringstream lineStream{line};
     std::string token;
-    while (std::getline(lineStream, token, delim))
+    while (std::getline(lineStream, token, delim)) {
         tokens.push_back(token);
+    }
     return tokens;
 }
 

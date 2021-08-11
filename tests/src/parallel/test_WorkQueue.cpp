@@ -1,5 +1,3 @@
-// Author: Armin Töpfer
-
 #include <pbcopper/parallel/WorkQueue.h>
 
 #include <atomic>

@@ -1,5 +1,3 @@
-// Author: Derek Barnett
-
 #ifndef PBCOPPER_DATA_GENOMICINTERVAL_H
 #define PBCOPPER_DATA_GENOMICINTERVAL_H
 

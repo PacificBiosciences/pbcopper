@@ -1,5 +1,3 @@
-// Authors: David Alexander, Lance Hepler
-
 #include <pbcopper/align/AffineAlignment.h>
 
 #include <cassert>

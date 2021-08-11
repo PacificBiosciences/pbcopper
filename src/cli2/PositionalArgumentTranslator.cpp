@@ -32,8 +32,12 @@ struct MissingPosArgFieldException : public std::runtime_error
 void Validate(const PositionalArgument& posArg, const PositionalArgumentData& result)
 {
     // required argument data fields
-    if (result.name.empty()) throw MissingPosArgFieldException("name", posArg.text);
-    if (result.description.empty()) throw MissingPosArgFieldException("description", posArg.text);
+    if (result.name.empty()) {
+        throw MissingPosArgFieldException("name", posArg.text);
+    }
+    if (result.description.empty()) {
+        throw MissingPosArgFieldException("description", posArg.text);
+    }
 }
 
 }  // namespace
@@ -58,19 +62,27 @@ PositionalArgumentData PositionalArgumentTranslator::Translate(const PositionalA
 
         // name
         auto name = root.find("name");
-        if (name != root.cend()) result.name = name->get<std::string>();
+        if (name != root.cend()) {
+            result.name = name->get<std::string>();
+        }
 
         // description
         const auto description = root.find("description");
-        if (description != root.cend()) result.description = description->get<std::string>();
+        if (description != root.cend()) {
+            result.description = description->get<std::string>();
+        }
 
         // type
         const auto type = root.find("type");
-        if (type != root.cend()) result.type = ValueType(type->get<std::string>());
+        if (type != root.cend()) {
+            result.type = ValueType(type->get<std::string>());
+        }
 
         // required
         const auto required = root.find("required");
-        if (required != root.cend()) result.required = *required;
+        if (required != root.cend()) {
+            result.required = *required;
+        }
 
     } catch (std::exception& e) {
         std::ostringstream msg;
@@ -88,8 +100,9 @@ std::vector<PositionalArgumentData> PositionalArgumentTranslator::Translate(
     const std::vector<PositionalArgument>& posArgs)
 {
     std::vector<PositionalArgumentData> result;
-    for (const auto& posArg : posArgs)
+    for (const auto& posArg : posArgs) {
         result.emplace_back(Translate(posArg));
+    }
     return result;
 }
 

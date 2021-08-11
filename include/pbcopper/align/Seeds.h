@@ -1,5 +1,3 @@
-// Author: Derek Barnett
-
 #ifndef PBCOPPER_ALIGN_SEEDS_H
 #define PBCOPPER_ALIGN_SEEDS_H
 

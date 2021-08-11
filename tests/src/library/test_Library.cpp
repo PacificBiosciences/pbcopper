@@ -15,7 +15,9 @@ void PrintLibraryInfo(std::ostream& out, const Library::Info& libInfo,
 {
     out << indent << "Name:    " << libInfo.Name << '\n'
         << indent << "Release: " << libInfo.Release << '\n';
-    if (!libInfo.GitSha1.empty()) out << indent << "GitSHA1: " << libInfo.GitSha1 << '\n';
+    if (!libInfo.GitSha1.empty()) {
+        out << indent << "GitSHA1: " << libInfo.GitSha1 << '\n';
+    }
 }
 
 void PrintLibraryBundle(std::ostream& out, const Library::Bundle& bundle,

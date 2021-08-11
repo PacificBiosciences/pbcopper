@@ -150,6 +150,13 @@ if not meson.is_subproject()
       'pbcopper/logging/LogMessage.h']),
     subdir : 'pbcopper/logging')
 
+  # pbcopper/math
+  install_headers(
+    files([
+      'pbcopper/math/ConfusionMatrix.h',
+    ]),
+    subdir : 'pbcopper/math')
+
   # pbcopper/parallel
   install_headers(
     files([
@@ -218,11 +225,25 @@ if not meson.is_subproject()
       'pbcopper/third-party/kxsort/kxsort.h']),
     subdir : 'pbcopper/third-party/kxsort')
 
+  # pbcopper/third-party/ksw2
+  install_headers(
+    files([
+      'pbcopper/third-party/ksw2/kalloc.h',
+      'pbcopper/third-party/ksw2/ksw2.h',
+    ]),
+    subdir : 'pbcopper/third-party/ksw2')
+
   # pbcopper/third-party/robin_hood
   install_headers(
     files([
       'pbcopper/third-party/robin_hood/robin_hood.h']),
     subdir : 'pbcopper/third-party/robin_hood')
+
+  # pbcopper/third-party/sparc
+  install_headers(
+    files([
+      'pbcopper/third-party/sparc/sparc.hpp']),
+    subdir : 'pbcopper/third-party/sparc')
 
   # pbcopper/utility
   install_headers(
@@ -240,9 +261,11 @@ if not meson.is_subproject()
       'pbcopper/utility/PbcopperVersion.h',
       'pbcopper/utility/SafeSubtract.h',
       'pbcopper/utility/SequenceUtils.h',
+      'pbcopper/utility/Shuffle.h',
       'pbcopper/utility/Ssize.h',
       'pbcopper/utility/Stopwatch.h',
       'pbcopper/utility/StringUtils.h',
+      'pbcopper/utility/TimeReporter.h',
       'pbcopper/utility/Unused.h']),
     subdir : 'pbcopper/utility')
 

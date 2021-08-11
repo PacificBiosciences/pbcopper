@@ -1,11 +1,9 @@
-// Author: David Alexander
+#ifndef PBCOPPER_ALIGN_LINEARALIGNMENT_H
+#define PBCOPPER_ALIGN_LINEARALIGNMENT_H
 
 //
 // Linear-space basic alignment following Hirschberg
 //
-
-#ifndef PBCOPPER_ALIGN_LINEARALIGNMENT_H
-#define PBCOPPER_ALIGN_LINEARALIGNMENT_H
 
 #include <string>
 

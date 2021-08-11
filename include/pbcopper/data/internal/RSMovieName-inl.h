@@ -1,5 +1,3 @@
-// Author: Derek Barnett
-
 #ifndef PBCOPPER_DATA_RSMOVIENAME_INL_H
 #define PBCOPPER_DATA_RSMOVIENAME_INL_H
 
@@ -52,7 +50,9 @@ inline RSMovieName::~RSMovieName() = default;
 
 inline boost::string_ref RSMovieName::InstrumentSerialNumber() const
 {
-    if (!partsCache_) UpdatePartsCache();
+    if (!partsCache_) {
+        UpdatePartsCache();
+    }
     assert(partsCache_);
     return partsCache_->serialNumber_;
 }
@@ -65,28 +65,36 @@ inline bool RSMovieName::IsReagentExpired() const
 
 inline boost::string_ref RSMovieName::PartNumber() const
 {
-    if (!partsCache_) UpdatePartsCache();
+    if (!partsCache_) {
+        UpdatePartsCache();
+    }
     assert(partsCache_);
     return partsCache_->partNumber_;
 }
 
 inline boost::string_ref RSMovieName::RunStartTime() const
 {
-    if (!partsCache_) UpdatePartsCache();
+    if (!partsCache_) {
+        UpdatePartsCache();
+    }
     assert(partsCache_);
     return partsCache_->runStartTime_;
 }
 
 inline boost::string_ref RSMovieName::SetNumber() const
 {
-    if (!partsCache_) UpdatePartsCache();
+    if (!partsCache_) {
+        UpdatePartsCache();
+    }
     assert(partsCache_);
     return partsCache_->setNumber_;
 }
 
 inline boost::string_ref RSMovieName::SMRTCellBarcode() const
 {
-    if (!partsCache_) UpdatePartsCache();
+    if (!partsCache_) {
+        UpdatePartsCache();
+    }
     assert(partsCache_);
     return partsCache_->smrtCellBarcode_;
 }

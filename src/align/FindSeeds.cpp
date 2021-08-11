@@ -1,5 +1,3 @@
-// Authors: Brett Bowman, Derek Barnett
-
 #include <pbcopper/align/FindSeeds.h>
 
 #include <pbcopper/qgram/Index.h>
@@ -18,7 +16,9 @@ std::map<size_t, Seeds> FindSeeds(const PacBio::QGram::Index& index, const std::
         const auto queryPos = hits.QueryPosition();
         for (const auto& hit : hits) {
             const auto rIdx = hit.Id();
-            if (qIdx && rIdx == *qIdx) continue;
+            if (qIdx && rIdx == *qIdx) {
+                continue;
+            }
 
             const auto seed = Seed{queryPos, hit.Position(), index.Size()};
             auto& rIdxSeeds = seeds[rIdx];
@@ -54,7 +54,9 @@ std::map<size_t, Seeds> FindSeeds(const PacBio::QGram::Index& index, const std::
 Seeds FindSeeds(const size_t qGramSize, const std::string& seq1, const std::string& seq2,
                 const bool filterHomopolymers)
 {
-    if (seq2.length() < qGramSize) return Seeds{};
+    if (seq2.length() < qGramSize) {
+        return Seeds{};
+    }
     const auto index = PacBio::QGram::Index{qGramSize, seq2};
     const auto multiSeeds = FindSeeds(index, seq1, filterHomopolymers);
     return (multiSeeds.empty() ? Seeds{} : multiSeeds.cbegin()->second);

@@ -17,6 +17,7 @@
 #include <pbcopper/utility/Alarm.h>
 #include <pbcopper/utility/OStreamRedirect.h>
 
+#include "../../../src/cli2/PbBoilerplateDisclaimer.h"
 #include "PbcopperTestData.h"
 
 // clang-format off
@@ -155,6 +156,7 @@ TEST(CLI2_CLI, can_print_help)
 "                          WARN, FATAL). [WARN]\n"
 "  --log-file        FILE  Log to a file, instead of stderr.\n"
 "\n"
+PB_BOILERPLATE_DISCLAIMER
 };
 
     const std::vector<std::string> args {
@@ -220,7 +222,10 @@ Typical workflow:
 
   5. Polish transcripts using subreads
      $ isoseq3 polish unpolished.bam movie.subreads.bam polished.bam
-)"};
+
+)"
+PB_BOILERPLATE_DISCLAIMER
+};
 
     PacBio::CLI_v2::MultiToolInterface i{"isoseq3", "De Novo Transcript Reconstruction", "3.1.2"};
     i.AddTools({{"refine",    CLI_v2_CLITests::MakeRefineInterface(),    &CLI_v2_CLITests::RefineRunner},
@@ -247,7 +252,8 @@ Typical workflow:
      $ isoseq3 cluster movie.flnc.bam unpolished.bam --verbose
 
   5. Polish transcripts using subreads
-     $ isoseq3 polish unpolished.bam movie.subreads.bam polished.bam)");
+     $ isoseq3 polish unpolished.bam movie.subreads.bam polished.bam
+)");
 
     const std::vector<std::string> args {
         "isoseq3", "-h"
@@ -282,7 +288,9 @@ Usage:
                           WARN, FATAL). [WARN]
   --log-file        FILE  Log to a file, instead of stderr.
 
-)"};
+)"
+PB_BOILERPLATE_DISCLAIMER
+};
 
     PacBio::CLI_v2::MultiToolInterface i{"isoseq3", "De Novo Transcript Reconstruction", "3.1.2"};
     i.AddTools({{"refine",    CLI_v2_CLITests::MakeRefineInterface(),    &CLI_v2_CLITests::RefineRunner},

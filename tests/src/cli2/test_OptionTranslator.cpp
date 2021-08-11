@@ -450,6 +450,25 @@ TEST(CLI2_OptionTranslator, throws_if_default_value_is_not_in_choices)
     EXPECT_THROW({OptionTranslator::Translate(testOption);}, std::runtime_error);
 }
 
+TEST(CLI2_OptionTranslator, can_create_hidden_default_value)
+{
+    const Option testOption
+    {
+     R"({
+        "names" : ["test"],
+        "description" : "test_description",
+        "type" : "unsigned int",
+        "default" : 42,
+        "default.hidden" : true
+     })"
+    };
+
+    const auto optionData = OptionTranslator::Translate(testOption);
+    EXPECT_TRUE(optionData.isDefaultValueHidden);
+    const auto value = PacBio::CLI_v2::OptionValueToUInt(*optionData.defaultValue);
+    EXPECT_EQ(42u, value);
+}
+
 TEST(CLI2_OptionTranslator, can_add_hidden_names)
 {
     const std::string DefaultValue = "nope";

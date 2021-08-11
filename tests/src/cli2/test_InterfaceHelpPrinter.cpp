@@ -12,6 +12,8 @@
 #include <pbcopper/cli2/internal/OptionTranslator.h>
 #include <pbcopper/cli2/internal/PositionalArgumentTranslator.h>
 
+#include "../../../src/cli2/PbBoilerplateDisclaimer.h"
+
 using Interface = PacBio::CLI_v2::Interface;
 using InterfaceHelpPrinter = PacBio::CLI_v2::internal::InterfaceHelpPrinter;
 using MultiToolInterface = PacBio::CLI_v2::MultiToolInterface;
@@ -107,6 +109,17 @@ R"({
     "type" : "string",
     "default" : "fire",
     "choices" : ["earth", "wind", "fire", "water"]
+})"
+};
+
+const Option Seed
+{
+R"({
+    "names" : ["seed"],
+    "description" : "Seed for random-number generator.",
+    "type" : "int",
+    "default" : -1,
+    "default.hidden" : true
 })"
 };
 
@@ -547,6 +560,7 @@ Output Options:
   -n,--no-op               Dry run. Report actions that would be taken but do
                            not perform them.
   --timeout         INT    Abort execution after <INT> milliseconds. [5000]
+  --seed            INT    Seed for random-number generator.
 
 Algorithm Options:
   --delta           FLOAT  Some delta for things. [0.01]
@@ -562,7 +576,9 @@ Algorithm Options:
                            WARN, FATAL). [WARN]
   --log-file        FILE   Log to a file, instead of stderr.
 
-)"};
+)"
+PB_BOILERPLATE_DISCLAIMER
+};
 
     Interface i {
         "frobber",
@@ -575,7 +591,8 @@ Algorithm Options:
         CLI_v2_InterfaceHelpPrinterTests::Options::Force,
         CLI_v2_InterfaceHelpPrinterTests::Options::TargetDirectory,
         CLI_v2_InterfaceHelpPrinterTests::Options::DryRun,
-        CLI_v2_InterfaceHelpPrinterTests::Options::Timeout
+        CLI_v2_InterfaceHelpPrinterTests::Options::Timeout,
+        CLI_v2_InterfaceHelpPrinterTests::Options::Seed,
     });
     i.AddOptionGroup("Algorithm Options",{
         CLI_v2_InterfaceHelpPrinterTests::Options::Delta,
@@ -619,6 +636,7 @@ TEST(CLI2_InterfaceHelpPrinter, word_wraps_application_description)
 "                          WARN, FATAL). [WARN]\n"
 "  --log-file        FILE  Log to a file, instead of stderr.\n"
 "\n"
+PB_BOILERPLATE_DISCLAIMER
     };
 
     Interface i {
@@ -657,7 +675,10 @@ Typical workflow:
   3. Lather, rinse, repeat.
 
   So long, and thanks for all the fish.
-)"};
+
+)"
+PB_BOILERPLATE_DISCLAIMER
+};
 
     Interface i {
         "frobber",

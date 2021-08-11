@@ -1,8 +1,5 @@
-// Author: Derek Barnett
-
 #include <pbcopper/data/CigarOperation.h>
 
-#include <cassert>
 #include <stdexcept>
 #include <tuple>
 #include <type_traits>
@@ -10,8 +7,6 @@
 namespace PacBio {
 namespace Data {
 namespace {
-
-static bool AutoValidateCigar = true;
 
 // Since we can't rely on having htslib, define its CIGAR helpers here.
 // See <htslib/sam.h> . Names are changed to ensure we don't clash if htslib is
@@ -43,28 +38,7 @@ static bool AutoValidateCigar = true;
 
 }  // namespace
 
-static_assert(std::is_copy_constructible<CigarOperation>::value,
-              "CigarOperation(const CigarOperation&) is not = default");
-static_assert(std::is_copy_assignable<CigarOperation>::value,
-              "CigarOperation& operator=(const CigarOperation&) is not = default");
-
-static_assert(std::is_nothrow_move_constructible<CigarOperation>::value,
-              "CigarOperation(CigarOperation&&) is not = noexcept");
-static_assert(std::is_nothrow_move_assignable<CigarOperation>::value,
-              "CigarOperation& operator=(CigarOperation&&) is not = noexcept");
-
-CigarOperation::CigarOperation(char c, uint32_t length)
-    : CigarOperation{CigarOperation::CharToType(c), length}
-{
-}
-
-CigarOperation::CigarOperation(CigarOperationType op, uint32_t length) : type_{op}, length_{length}
-{
-    if (AutoValidateCigar && (type_ == CigarOperationType::ALIGNMENT_MATCH))
-        throw std::runtime_error{
-            "[pbcopper] CIGAR operation ERROR: 'M' is not allowed in PacBio BAM files. Use 'X/=' "
-            "instead."};
-}
+bool CigarOperation::AutoValidateCigar = true;
 
 bool CigarOperation::operator==(const CigarOperation& other) const noexcept
 {
@@ -84,43 +58,13 @@ CigarOperation& CigarOperation::Char(const char opChar)
     return *this;
 }
 
-CigarOperationType CigarOperation::CharToType(const char c)
-{
-    switch (c) {
-        case 'S':
-            return CigarOperationType::SOFT_CLIP;
-        case '=':
-            return CigarOperationType::SEQUENCE_MATCH;
-        case 'X':
-            return CigarOperationType::SEQUENCE_MISMATCH;
-        case 'I':
-            return CigarOperationType::INSERTION;
-        case 'D':
-            return CigarOperationType::DELETION;
-        case 'N':
-            return CigarOperationType::REFERENCE_SKIP;
-        case 'H':
-            return CigarOperationType::HARD_CLIP;
-        case 'P':
-            return CigarOperationType::PADDING;
-        case 'M':
-            return CigarOperationType::ALIGNMENT_MATCH;
-        default:
-            return CigarOperationType::UNKNOWN_OP;
-    }
-}
-
 void CigarOperation::DisableAutoValidation() { AutoValidateCigar = false; }
-
-uint32_t CigarOperation::Length() const { return length_; }
 
 CigarOperation& CigarOperation::Length(const uint32_t length)
 {
     length_ = length;
     return *this;
 }
-
-CigarOperationType CigarOperation::Type() const { return type_; }
 
 CigarOperation& CigarOperation::Type(const CigarOperationType opType)
 {

@@ -86,6 +86,7 @@ pbcopper_cpp_sources = files([
   # ---------
   # parallel
   # ---------
+  'parallel/FireAndForget.cpp',
   'parallel/ThreadCount.cpp',
 
   # ---------
@@ -124,6 +125,10 @@ pbcopper_cpp_sources = files([
   # -------------
   'third-party/base64/base64.cpp',
   'third-party/edlib/edlib.cpp',
+  'third-party/ksw2/kalloc.c',
+  'third-party/ksw2/ksw2_simde.c',
+  'third-party/sparc/sparc.cpp',
+  'third-party/sparc/sparcSimple.cpp',
 
   # ---------
   # utility
@@ -134,6 +139,7 @@ pbcopper_cpp_sources = files([
   'utility/MemoryConsumption.cpp',
   'utility/Stopwatch.cpp',
   'utility/StringUtils.cpp',
+  'utility/TimeReporter.cpp',
 ])
 
 # replace version strings
@@ -179,4 +185,5 @@ pbcopper_lib = library(
   install : pbcopper_lib_install,
   dependencies : [pbcopper_thread_dep, pbcopper_boost_dep],
   include_directories : pbcopper_include_directories,
-  cpp_args : pbcopper_warning_flags)
+  c_args : pbcopper_c_flags,
+  cpp_args : pbcopper_cpp_flags)

@@ -1,8 +1,4 @@
-// Author: Lance Hepler
-
 #include <pbcopper/data/MappedRead.h>
-
-#include <cassert>
 
 #include <algorithm>
 #include <numeric>
@@ -88,11 +84,11 @@ void ClipAndGapify(F* seq, const Cigar& cigar, const GapBehavior gapBehavior,
         }
 
         // maybe skip soft-clipped positions
-        else if (opType == CigarOperationType::SOFT_CLIP && removeSoftClips)
+        else if (opType == CigarOperationType::SOFT_CLIP && removeSoftClips) {
             srcIndex += opLength;
 
-        // maybe add deletions
-        else if (opType == CigarOperationType::DELETION && showGaps) {
+            // maybe add deletions
+        } else if (opType == CigarOperationType::DELETION && showGaps) {
             for (size_t i = 0; i < opLength; ++i) {
                 (*seq)[dstIndex] = deletionNullValue;
                 ++dstIndex;
@@ -120,32 +116,21 @@ template <typename Container>
 void OrientData(Container* data, Orientation currentOrientation, Orientation targetOrientation,
                 enum Strand strand)
 {
-    if ((currentOrientation != targetOrientation) && (strand == Strand::REVERSE))
+    if ((currentOrientation != targetOrientation) && (strand == Strand::REVERSE)) {
         std::reverse(data->begin(), data->end());
+    }
 }
 
 template <>
 void OrientData(std::string* data, Orientation currentOrientation, Orientation targetOrientation,
                 enum Strand strand)
 {
-    if ((currentOrientation != targetOrientation) && (strand == Strand::REVERSE))
+    if ((currentOrientation != targetOrientation) && (strand == Strand::REVERSE)) {
         Utility::ReverseComplement(*data);
+    }
 }
 
 }  // namespace
-
-static_assert(std::is_copy_constructible<MappedRead>::value,
-              "MappedRead(const MappedRead&) is not = default");
-static_assert(std::is_copy_assignable<MappedRead>::value,
-              "MappedRead& operator=(const MappedRead&) is not = default");
-
-#ifndef __INTEL_COMPILER
-static_assert(std::is_nothrow_move_constructible<MappedRead>::value,
-              "MappedRead(MappedRead&&) is not = noexcept");
-static_assert(std::is_nothrow_move_assignable<MappedRead>::value ==
-                  std::is_nothrow_move_assignable<Read>::value,
-              "");
-#endif
 
 MappedRead::MappedRead(Read read) noexcept : Read{std::move(read)} {}
 
@@ -205,7 +190,9 @@ MappedRead::MappedRead(Read read, PacBio::Data::Strand strand, Position template
 std::string MappedRead::AlignedSequence(Orientation orientation, GapBehavior gapBehavior,
                                         SoftClipBehavior softClipBehavior) const
 {
-    if (Strand == Strand::UNMAPPED || Cigar.empty()) return Seq;
+    if (Strand == Strand::UNMAPPED || Cigar.empty()) {
+        return Seq;
+    }
 
     std::string bases = Seq;  // native orientation
     Orientation currentOrientation = Orientation::NATIVE;
@@ -226,7 +213,9 @@ std::string MappedRead::AlignedSequence(Orientation orientation, GapBehavior gap
 QualityValues MappedRead::AlignedQualities(Orientation orientation, GapBehavior gapBehavior,
                                            SoftClipBehavior softClipBehavior) const
 {
-    if (Strand == Strand::UNMAPPED || Cigar.empty()) return Qualities;
+    if (Strand == Strand::UNMAPPED || Cigar.empty()) {
+        return Qualities;
+    }
 
     QualityValues quals = Qualities;  // native orientation
     Orientation currentOrientation = Orientation::NATIVE;
@@ -248,8 +237,12 @@ QualityValues MappedRead::AlignedQualities(Orientation orientation, GapBehavior 
 boost::optional<Frames> MappedRead::AlignedIPD(Orientation orientation, GapBehavior gapBehavior,
                                                SoftClipBehavior softClipBehavior) const
 {
-    if (!IPD) return boost::none;
-    if (Strand == Strand::UNMAPPED || Cigar.empty()) return IPD;
+    if (!IPD) {
+        return boost::none;
+    }
+    if (Strand == Strand::UNMAPPED || Cigar.empty()) {
+        return IPD;
+    }
 
     Frames ipd = IPD.get();  // native orientation
     Orientation currentOrientation = Orientation::NATIVE;
@@ -267,12 +260,18 @@ boost::optional<Frames> MappedRead::AlignedIPD(Orientation orientation, GapBehav
     return ipd;
 }
 
-Frames MappedRead::AlignedPulseWidth(Orientation orientation, GapBehavior gapBehavior,
-                                     SoftClipBehavior softClipBehavior) const
+boost::optional<Frames> MappedRead::AlignedPulseWidth(Orientation orientation,
+                                                      GapBehavior gapBehavior,
+                                                      SoftClipBehavior softClipBehavior) const
 {
-    if (Strand == Strand::UNMAPPED || Cigar.empty()) return PulseWidth;
+    if (!PulseWidth) {
+        return boost::none;
+    }
+    if (Strand == Strand::UNMAPPED || Cigar.empty()) {
+        return PulseWidth;
+    }
 
-    Frames pw = PulseWidth;  // native orientation
+    Frames pw = PulseWidth.get();  // native orientation
     Orientation currentOrientation = Orientation::NATIVE;
 
     // if we need to touch CIGAR, force into genomic orientation (for mapping to CIGAR),
@@ -290,9 +289,12 @@ Frames MappedRead::AlignedPulseWidth(Orientation orientation, GapBehavior gapBeh
 
 Position MappedRead::AlignedStart() const
 {
-    if (QueryStart == UnmappedPosition)
+    if (QueryStart == UnmappedPosition) {
         throw InvalidMappedReadException{"contains unmapped query start position"};
-    if (Strand == Strand::UNMAPPED) throw InvalidMappedReadException{"contains unmapped strand"};
+    }
+    if (Strand == Strand::UNMAPPED) {
+        throw InvalidMappedReadException{"contains unmapped strand"};
+    }
 
     Position startOffset = QueryStart;
     const Position seqLength = Seq.length();
@@ -305,26 +307,31 @@ Position MappedRead::AlignedStart() const
                     startOffset = -1;
                     break;
                 }
-            } else if (type == CigarOperationType::SOFT_CLIP)
+            } else if (type == CigarOperationType::SOFT_CLIP) {
                 startOffset += len;
-            else
+            } else {
                 break;
+            }
         }
     };
 
-    if (Strand == Strand::FORWARD)
+    if (Strand == Strand::FORWARD) {
         findAlignedStart(Cigar.cbegin(), Cigar.cend());
-    else
+    } else {
         findAlignedStart(Cigar.crbegin(), Cigar.crend());
+    }
 
     return startOffset;
 }
 
 Position MappedRead::AlignedEnd() const
 {
-    if (QueryEnd == UnmappedPosition)
+    if (QueryEnd == UnmappedPosition) {
         throw InvalidMappedReadException{"contains unmapped query end position"};
-    if (Strand == Strand::UNMAPPED) throw InvalidMappedReadException{"contains unmapped strand"};
+    }
+    if (Strand == Strand::UNMAPPED) {
+        throw InvalidMappedReadException{"contains unmapped strand"};
+    }
 
     Position endOffset = QueryEnd;
     const Position seqLength = Seq.length();
@@ -337,32 +344,36 @@ Position MappedRead::AlignedEnd() const
                     endOffset = -1;
                     break;
                 }
-            } else if (type == CigarOperationType::SOFT_CLIP)
+            } else if (type == CigarOperationType::SOFT_CLIP) {
                 endOffset -= len;
-            else
+            } else {
                 break;
+            }
         }
     };
 
-    if (Strand == Strand::FORWARD)
+    if (Strand == Strand::FORWARD) {
         findAlignedEnd(Cigar.crbegin(), Cigar.crend());
-    else
+    } else {
         findAlignedEnd(Cigar.cbegin(), Cigar.cend());
+    }
 
     return endOffset;
 }
 
 Position MappedRead::ReferenceStart() const
 {
-    if (TemplateStart == UnmappedPosition)
+    if (TemplateStart == UnmappedPosition) {
         throw InvalidMappedReadException{"contains unmapped template start position"};
+    }
     return TemplateStart;
 }
 
 Position MappedRead::ReferenceEnd() const
 {
-    if (TemplateEnd == UnmappedPosition)
+    if (TemplateEnd == UnmappedPosition) {
         throw InvalidMappedReadException{"contains unmapped template end position"};
+    }
     return TemplateEnd;
 }
 
@@ -406,7 +417,9 @@ std::ostream& operator<<(std::ostream& os, const MappedRead& mr)
 void ClipToQuery(MappedRead& read, Position start, Position end)
 {
     // skip out if clip not needed
-    if (start <= read.QueryStart && end >= read.QueryEnd) return;
+    if (start <= read.QueryStart && end >= read.QueryEnd) {
+        return;
+    }
 
     // calculate clipping
     ClipToQueryConfig clipConfig{read.Seq.size(),
@@ -432,7 +445,12 @@ void ClipToReference(MappedRead& read, Position start, Position end, bool excise
         read.Qualities.clear();
         read.QueryStart = -1;
         read.QueryEnd = -1;
-        read.PulseWidth.clear();
+        if (read.PulseWidth) {
+            read.PulseWidth->clear();
+        }
+        if (read.IPD) {
+            read.IPD->clear();
+        }
         read.TemplateStart = -1;
         read.TemplateEnd = -1;
         read.Cigar.clear();
@@ -441,7 +459,9 @@ void ClipToReference(MappedRead& read, Position start, Position end, bool excise
     }
 
     // skip out if clip region covers aligned region (no clip needed)
-    if (start <= read.TemplateStart && end >= read.TemplateEnd) return;
+    if (start <= read.TemplateStart && end >= read.TemplateEnd) {
+        return;
+    }
 
     // calculate clipping
     ClipToReferenceConfig clipConfig{

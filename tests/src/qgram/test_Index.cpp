@@ -69,8 +69,9 @@ TEST(QGram_Index, homopolymer_hasher)
     // clang-format on
 
     const auto isHomopolymer = PacBio::QGram::internal::HpHasher{3};
-    for (const auto& hit : input)
+    for (const auto& hit : input) {
         EXPECT_EQ(hit.second, isHomopolymer(hit.first));
+    }
 }
 
 TEST(QGram_Index, shape_hash_iteration)
@@ -310,8 +311,9 @@ TEST(QGram_Index, index_hits_INTERNAL_from_shape_longer_seq)
     for (uint32_t j = 0; j < end; ++j) {
         shape.HashNext();
         const auto hits = idx.Hits(shape, j);
-        for (size_t i = 0; i < hits.size(); ++i)
+        for (size_t i = 0; i < hits.size(); ++i) {
             observed.push_back(hits.at(i).Position());
+        }
     }
 
     EXPECT_EQ(expected, observed);

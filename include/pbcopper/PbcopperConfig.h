@@ -1,11 +1,9 @@
-// Author: David Seifert, Derek Barnett
+#ifndef PBCOPPER_PBCOPPERCONFIG_H
+#define PBCOPPER_PBCOPPERCONFIG_H
 
 // Reduce the number of exposed symbols in order to speed up
 // DSO load times
 // https://gcc.gnu.org/wiki/Visibility
-
-#ifndef PBCOPPER_PBCOPPERCONFIG_H
-#define PBCOPPER_PBCOPPERCONFIG_H
 
 // clang-format off
 #if defined _WIN32 || defined __CYGWIN__
@@ -46,6 +44,28 @@
 #define PBCOPPER_DEPRECATED [[deprecated("see header for recommended alternative")]]
 #else
 #define PBCOPPER_DEPRECATED
+#endif
+
+#ifdef __NVCC__
+
+#ifndef PB_CUDA_HOST
+#define PB_CUDA_HOST __host__
+#endif
+
+#ifndef PB_CUDA_DEVICE
+#define PB_CUDA_DEVICE __device__
+#endif
+
+#else
+
+#ifndef PB_CUDA_HOST
+#define PB_CUDA_HOST
+#endif
+
+#ifndef PB_CUDA_DEVICE
+#define PB_CUDA_DEVICE
+#endif
+
 #endif
 
 #endif  // PBCOPPER_PBCOPPERCONFIG_H

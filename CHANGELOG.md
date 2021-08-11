@@ -2,11 +2,35 @@
 
 ## Active
 
+## [1.9.2] - 2021-07-01
+
+### Added
+ - Add Sparc implementation from unanimity
+ - Add TimeReporter for conditionally logging timing info
+ - Add "research use only" disclaimer to help display
+ - Add context message for missing positional arg in CLI
+ - Add scientific notation support in CLI
+ - Add confusion matrix helper
+
+## [1.9.1] - 2021-02-16
+
+### Added
+ - Utility::Shuffle for portable alternative to std::shuffle
+ - Parallel::Dispatch to submit jobs to an existing FireAndForget
+
+### Changed
+ - Read.h pulse width is now optional to allow kinetic-free subreads as input
+
+## [1.9.0] - 2020-12-22
+
 ### Added
  - Interval tree from unanimity
  - Sparse POA implementation, outsourced from unanimity
  - edlib wrapper API
  - "Normalized" thread count utility
+ - Add KSW2
+ - Support ARM compile target
+ - Add SIMDE to third-party sources
 
 ## [1.8.0] - 2020-09-23
 

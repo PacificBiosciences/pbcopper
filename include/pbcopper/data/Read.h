@@ -1,5 +1,3 @@
-// Author: Armin Töpfer
-
 #ifndef PBCOPPER_DATA_READ_H
 #define PBCOPPER_DATA_READ_H
 
@@ -27,7 +25,7 @@ namespace Data {
 /// A Read contains the name, sequence, covariates, SNR, and associated model.
 struct Read
 {
-    Read(Data::ReadId id, std::string seq, Frames pw, boost::optional<Frames> ipd,
+    Read(Data::ReadId id, std::string seq, boost::optional<Frames> pw, boost::optional<Frames> ipd,
          LocalContextFlags flags, Accuracy readAccuracy, SNR snr, std::string model);
     Read(const std::string& name, std::string seq, QualityValues qualities, SNR snr);
     Read(const std::string& name, std::string seq, QualityValues qualities, SNR snr,
@@ -39,7 +37,7 @@ struct Read
 
     // base-level vectors
     std::string Seq;
-    Frames PulseWidth;
+    boost::optional<Frames> PulseWidth;
     QualityValues Qualities;
     boost::optional<Frames> IPD;
 

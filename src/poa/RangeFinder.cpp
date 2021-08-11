@@ -84,18 +84,20 @@ IntervalPair RangeUnion(const std::vector<IntervalPair>& ranges)
 
 IntervalPair next(const IntervalPair& v, int upperBound)
 {
-    if (v == emptyInterval)
+    if (v == emptyInterval) {
         return emptyInterval;
-    else
+    } else {
         return IntervalPair(std::min(v.first + 1, upperBound), std::min(v.second + 1, upperBound));
+    }
 }
 
 IntervalPair prev(const IntervalPair& v, int lowerBound = 0)
 {
-    if (v == emptyInterval)
+    if (v == emptyInterval) {
         return emptyInterval;
-    else
+    } else {
         return IntervalPair(std::max(v.first - 1, lowerBound), std::max(v.second - 1, lowerBound));
+    }
 }
 
 SdpRangeFinder::~SdpRangeFinder() = default;

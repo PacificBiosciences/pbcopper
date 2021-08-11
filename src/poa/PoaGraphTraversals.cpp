@@ -38,7 +38,9 @@ boost::unordered_set<VD> SpanningDFS(const VD start, const VD end, const BoostGr
         stack.pop_back();
         // mark those we've already visited,
         //   if so, skip
-        if (fwd.find(v) != fwd.end()) continue;
+        if (fwd.find(v) != fwd.end()) {
+            continue;
+        }
         fwd.insert(v);
         BOOST_FOREACH (const ED& e, out_edges(v, g)) {
             stack.push_back(target(e, g));
@@ -52,7 +54,9 @@ boost::unordered_set<VD> SpanningDFS(const VD start, const VD end, const BoostGr
         stack.pop_back();
         // if it's not been visited in the forward pass,
         //   or we've already visited it here, skip
-        if (fwd.find(v) == fwd.end() || rev.find(v) != rev.end()) continue;
+        if (fwd.find(v) == fwd.end() || rev.find(v) != rev.end()) {
+            continue;
+        }
         rev.insert(v);
         BOOST_FOREACH (const ED& e, in_edges(v, g)) {
             stack.push_back(source(e, g));

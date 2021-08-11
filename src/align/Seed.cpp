@@ -1,5 +1,3 @@
-// Author: Derek Barnett
-
 #include <pbcopper/align/Seed.h>
 
 #include <cassert>
@@ -11,14 +9,6 @@
 
 namespace PacBio {
 namespace Align {
-
-static_assert(std::is_copy_constructible<Seed>::value, "Seed(const Seed&) is not = default");
-static_assert(std::is_copy_assignable<Seed>::value,
-              "Seed& operator=(const Seed&) is not = default");
-
-static_assert(std::is_nothrow_move_constructible<Seed>::value, "Seed(Seed&&) is not = noexcept");
-static_assert(std::is_nothrow_move_assignable<Seed>::value,
-              "Seed& operator=(Seed&&) is not = noexcept");
 
 Seed::Seed(const uint64_t beginPosH, const uint64_t beginPosV, const uint64_t seedLength)
     : beginPositionH_{beginPosH}
@@ -69,10 +59,11 @@ Seed& Seed::BeginPositionV(const uint64_t beginPosV)
 
 int64_t Seed::Diagonal() const
 {
-    if (beginPositionV_ > beginPositionH_)
+    if (beginPositionV_ > beginPositionH_) {
         return -static_cast<int64_t>(beginPositionV_ - beginPositionH_);
-    else
+    } else {
         return static_cast<int64_t>(beginPositionH_ - beginPositionV_);
+    }
 }
 
 int64_t Seed::EndDiagonal() const { return static_cast<int64_t>(endPositionH_ - endPositionV_); }

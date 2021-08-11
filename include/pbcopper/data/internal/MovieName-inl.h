@@ -1,5 +1,3 @@
-// Author: Derek Barnett
-
 #ifndef PBCOPPER_DATA_MOVIENAME_INL_H
 #define PBCOPPER_DATA_MOVIENAME_INL_H
 
@@ -49,14 +47,18 @@ inline MovieName::~MovieName() = default;
 
 inline boost::string_ref MovieName::InstrumentName() const
 {
-    if (!partsCache_) UpdatePartsCache();
+    if (!partsCache_) {
+        UpdatePartsCache();
+    }
     assert(partsCache_);
     return partsCache_->instrumentName_;
 }
 
 inline boost::string_ref MovieName::RunStartTime() const
 {
-    if (!partsCache_) UpdatePartsCache();
+    if (!partsCache_) {
+        UpdatePartsCache();
+    }
     assert(partsCache_);
     return partsCache_->runStartTime_;
 }

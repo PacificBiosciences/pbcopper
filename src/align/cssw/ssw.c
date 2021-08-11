@@ -35,13 +35,15 @@
  *
  */
 
-#include <emmintrin.h>
+#include "../../../third-party/simde/x86/sse2.h"
+
+#include "ssw.h"
+
 #include <stdint.h>
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
 #include <math.h>
-#include "ssw.h"
 
 #ifdef __GNUC__
 #define LIKELY(x) __builtin_expect((x),1)
@@ -76,8 +78,8 @@ typedef struct {
 } cigar;
 
 struct _profile{
-	__m128i* profile_byte;	// 0: none
-	__m128i* profile_word;	// 0: none
+	simde__m128i* profile_byte;	// 0: none
+	simde__m128i* profile_word;	// 0: none
 	const int8_t* read;
 	const int8_t* mat;
 	int32_t readLen;
@@ -86,7 +88,7 @@ struct _profile{
 };
 
 /* Generate query profile rearrange query sequence & calculate the weight of match/mismatch. */
-static __m128i* qP_byte (const int8_t* read_num,
+static simde__m128i* qP_byte (const int8_t* read_num,
 				  const int8_t* mat,
 				  const int32_t readLen,
 				  const int32_t n,	/* the edge length of the squre matrix mat */
@@ -96,7 +98,7 @@ static __m128i* qP_byte (const int8_t* read_num,
 								     Each piece is 8 bit. Split the read into 16 segments.
 								     Calculat 16 segments in parallel.
 								   */
-	__m128i* vProfile = (__m128i*)malloc(n * segLen * sizeof(__m128i));
+	simde__m128i* vProfile = (simde__m128i*)malloc(n * segLen * sizeof(simde__m128i));
 	int8_t* t = (int8_t*)vProfile;
 	int32_t nt, i, j, segNum;
 
@@ -126,7 +128,7 @@ static alignment_end* sw_sse2_byte (const int8_t* ref,
 							 int32_t readLen,
 							 const uint8_t weight_gapO, /* will be used as - */
 							 const uint8_t weight_gapE, /* will be used as - */
-							 const __m128i* vProfile,
+							 const simde__m128i* vProfile,
 							 uint8_t terminate,	/* the best alignment score: used to terminate
 												   the matrix calculation when locating the
 												   alignment beginning point. If this score
@@ -134,11 +136,11 @@ static alignment_end* sw_sse2_byte (const int8_t* ref,
 	 						 uint8_t bias,  /* Shift 0 point to a positive value. */
 							 int32_t maskLen) {
 
-#define max16(m, vm) (vm) = _mm_max_epu8((vm), _mm_srli_si128((vm), 8)); \
-					  (vm) = _mm_max_epu8((vm), _mm_srli_si128((vm), 4)); \
-					  (vm) = _mm_max_epu8((vm), _mm_srli_si128((vm), 2)); \
-					  (vm) = _mm_max_epu8((vm), _mm_srli_si128((vm), 1)); \
-					  (m) = _mm_extract_epi16((vm), 0)
+#define max16(m, vm) (vm) = simde_mm_max_epu8((vm), simde_mm_srli_si128((vm), 8)); \
+					  (vm) = simde_mm_max_epu8((vm), simde_mm_srli_si128((vm), 4)); \
+					  (vm) = simde_mm_max_epu8((vm), simde_mm_srli_si128((vm), 2)); \
+					  (vm) = simde_mm_max_epu8((vm), simde_mm_srli_si128((vm), 1)); \
+					  (m) = simde_mm_extract_epi16((vm), 0)
 
 	uint8_t max = 0;		                     /* the max alignment score */
 	int32_t end_read = readLen - 1;
@@ -152,26 +154,26 @@ static alignment_end* sw_sse2_byte (const int8_t* ref,
 	int32_t* end_read_column = (int32_t*) calloc(refLen, sizeof(int32_t));
 
 	/* Define 16 byte 0 vector. */
-	__m128i vZero = _mm_set1_epi32(0);
+	simde__m128i vZero = simde_mm_set1_epi32(0);
 
-	__m128i* pvHStore = (__m128i*) calloc(segLen, sizeof(__m128i));
-	__m128i* pvHLoad = (__m128i*) calloc(segLen, sizeof(__m128i));
-	__m128i* pvE = (__m128i*) calloc(segLen, sizeof(__m128i));
-	__m128i* pvHmax = (__m128i*) calloc(segLen, sizeof(__m128i));
+	simde__m128i* pvHStore = (simde__m128i*) calloc(segLen, sizeof(simde__m128i));
+	simde__m128i* pvHLoad = (simde__m128i*) calloc(segLen, sizeof(simde__m128i));
+	simde__m128i* pvE = (simde__m128i*) calloc(segLen, sizeof(simde__m128i));
+	simde__m128i* pvHmax = (simde__m128i*) calloc(segLen, sizeof(simde__m128i));
 
 	int32_t i, j;
 	/* 16 byte insertion begin vector */
-	__m128i vGapO = _mm_set1_epi8(weight_gapO);
+	simde__m128i vGapO = simde_mm_set1_epi8(weight_gapO);
 
 	/* 16 byte insertion extension vector */
-	__m128i vGapE = _mm_set1_epi8(weight_gapE);
+	simde__m128i vGapE = simde_mm_set1_epi8(weight_gapE);
 
 	/* 16 byte bias vector */
-	__m128i vBias = _mm_set1_epi8(bias);
+	simde__m128i vBias = simde_mm_set1_epi8(bias);
 
-	__m128i vMaxScore = vZero; /* Trace the highest score of the whole SW matrix. */
-	__m128i vMaxMark = vZero; /* Trace the highest score till the previous column. */
-	__m128i vTemp;
+	simde__m128i vMaxScore = vZero; /* Trace the highest score of the whole SW matrix. */
+	simde__m128i vMaxMark = vZero; /* Trace the highest score till the previous column. */
+	simde__m128i vTemp;
 	int32_t edge, begin = 0, end = refLen, step = 1;
 
 	/* outer loop to process the reference sequence */
@@ -182,84 +184,84 @@ static alignment_end* sw_sse2_byte (const int8_t* ref,
 	}
 	for (i = begin; LIKELY(i != end); i += step) {
 		int32_t cmp;
-		__m128i e, vF = vZero, vMaxColumn = vZero; /* Initialize F value to 0.
+		simde__m128i e, vF = vZero, vMaxColumn = vZero; /* Initialize F value to 0.
 							   Any errors to vH values will be corrected in the Lazy_F loop.
 							 */
 
-		__m128i vH = pvHStore[segLen - 1];
-		vH = _mm_slli_si128 (vH, 1); /* Shift the 128-bit value in vH left by 1 byte. */
-		const __m128i* vP = vProfile + ref[i] * segLen; /* Right part of the vProfile */
+		simde__m128i vH = pvHStore[segLen - 1];
+		vH = simde_mm_slli_si128 (vH, 1); /* Shift the 128-bit value in vH left by 1 byte. */
+		const simde__m128i* vP = vProfile + ref[i] * segLen; /* Right part of the vProfile */
 
 		/* Swap the 2 H buffers. */
-		__m128i* pv = pvHLoad;
+		simde__m128i* pv = pvHLoad;
 		pvHLoad = pvHStore;
 		pvHStore = pv;
 
 		/* inner loop to process the query sequence */
 		for (j = 0; LIKELY(j < segLen); ++j) {
-			vH = _mm_adds_epu8(vH, _mm_load_si128(vP + j));
-			vH = _mm_subs_epu8(vH, vBias); /* vH will be always > 0 */
+			vH = simde_mm_adds_epu8(vH, simde_mm_load_si128(vP + j));
+			vH = simde_mm_subs_epu8(vH, vBias); /* vH will be always > 0 */
 
 			/* Get max from vH, vE and vF. */
-			e = _mm_load_si128(pvE + j);
-			vH = _mm_max_epu8(vH, e);
-			vH = _mm_max_epu8(vH, vF);
-			vMaxColumn = _mm_max_epu8(vMaxColumn, vH);
+			e = simde_mm_load_si128(pvE + j);
+			vH = simde_mm_max_epu8(vH, e);
+			vH = simde_mm_max_epu8(vH, vF);
+			vMaxColumn = simde_mm_max_epu8(vMaxColumn, vH);
 
 			/* Save vH values. */
-			_mm_store_si128(pvHStore + j, vH);
+			simde_mm_store_si128(pvHStore + j, vH);
 
 			/* Update vE value. */
-			vH = _mm_subs_epu8(vH, vGapO); /* saturation arithmetic, result >= 0 */
-			e = _mm_subs_epu8(e, vGapE);
-			e = _mm_max_epu8(e, vH);
-			_mm_store_si128(pvE + j, e);
+			vH = simde_mm_subs_epu8(vH, vGapO); /* saturation arithmetic, result >= 0 */
+			e = simde_mm_subs_epu8(e, vGapE);
+			e = simde_mm_max_epu8(e, vH);
+			simde_mm_store_si128(pvE + j, e);
 
 			/* Update vF value. */
-			vF = _mm_subs_epu8(vF, vGapE);
-			vF = _mm_max_epu8(vF, vH);
+			vF = simde_mm_subs_epu8(vF, vGapE);
+			vF = simde_mm_max_epu8(vF, vH);
 
 			/* Load the next vH. */
-			vH = _mm_load_si128(pvHLoad + j);
+			vH = simde_mm_load_si128(pvHLoad + j);
 		}
 
 		/* Lazy_F loop: has been revised to disallow adjecent insertion and then deletion, so don't update E(i, j), learn from SWPS3 */
         /* reset pointers to the start of the saved data */
         j = 0;
-        vH = _mm_load_si128 (pvHStore + j);
+        vH = simde_mm_load_si128 (pvHStore + j);
 
         /*  the computed vF value is for the given column.  since */
         /*  we are at the end, we need to shift the vF value over */
         /*  to the next column. */
-        vF = _mm_slli_si128 (vF, 1);
-        vTemp = _mm_subs_epu8 (vH, vGapO);
-		vTemp = _mm_subs_epu8 (vF, vTemp);
-		vTemp = _mm_cmpeq_epi8 (vTemp, vZero);
-		cmp  = _mm_movemask_epi8 (vTemp);
+        vF = simde_mm_slli_si128 (vF, 1);
+        vTemp = simde_mm_subs_epu8 (vH, vGapO);
+		vTemp = simde_mm_subs_epu8 (vF, vTemp);
+		vTemp = simde_mm_cmpeq_epi8 (vTemp, vZero);
+		cmp  = simde_mm_movemask_epi8 (vTemp);
 
         while (cmp != 0xffff)
         {
-            vH = _mm_max_epu8 (vH, vF);
-			vMaxColumn = _mm_max_epu8(vMaxColumn, vH);
-            _mm_store_si128 (pvHStore + j, vH);
-            vF = _mm_subs_epu8 (vF, vGapE);
+            vH = simde_mm_max_epu8 (vH, vF);
+			vMaxColumn = simde_mm_max_epu8(vMaxColumn, vH);
+            simde_mm_store_si128 (pvHStore + j, vH);
+            vF = simde_mm_subs_epu8 (vF, vGapE);
             j++;
             if (j >= segLen)
             {
                 j = 0;
-                vF = _mm_slli_si128 (vF, 1);
+                vF = simde_mm_slli_si128 (vF, 1);
             }
-            vH = _mm_load_si128 (pvHStore + j);
+            vH = simde_mm_load_si128 (pvHStore + j);
 
-            vTemp = _mm_subs_epu8 (vH, vGapO);
-            vTemp = _mm_subs_epu8 (vF, vTemp);
-            vTemp = _mm_cmpeq_epi8 (vTemp, vZero);
-            cmp  = _mm_movemask_epi8 (vTemp);
+            vTemp = simde_mm_subs_epu8 (vH, vGapO);
+            vTemp = simde_mm_subs_epu8 (vF, vTemp);
+            vTemp = simde_mm_cmpeq_epi8 (vTemp, vZero);
+            cmp  = simde_mm_movemask_epi8 (vTemp);
         }
 
-		vMaxScore = _mm_max_epu8(vMaxScore, vMaxColumn);
-		vTemp = _mm_cmpeq_epi8(vMaxMark, vMaxScore);
-		cmp = _mm_movemask_epi8(vTemp);
+		vMaxScore = simde_mm_max_epu8(vMaxScore, vMaxColumn);
+		vTemp = simde_mm_cmpeq_epi8(vMaxMark, vMaxScore);
+		cmp = simde_mm_movemask_epi8(vTemp);
 		if (cmp != 0xffff) {
 			uint8_t temp;
 			vMaxMark = vMaxScore;
@@ -327,13 +329,13 @@ static alignment_end* sw_sse2_byte (const int8_t* ref,
 	return bests;
 }
 
-static __m128i* qP_word (const int8_t* read_num,
+static simde__m128i* qP_word (const int8_t* read_num,
 				  const int8_t* mat,
 				  const int32_t readLen,
 				  const int32_t n) {
 
 	int32_t segLen = (readLen + 7) / 8;
-	__m128i* vProfile = (__m128i*)malloc(n * segLen * sizeof(__m128i));
+	simde__m128i* vProfile = (simde__m128i*)malloc(n * segLen * sizeof(simde__m128i));
 	int16_t* t = (int16_t*)vProfile;
 	int32_t nt, i, j;
 	int32_t segNum;
@@ -357,14 +359,14 @@ static alignment_end* sw_sse2_word (const int8_t* ref,
 							 int32_t readLen,
 							 const uint8_t weight_gapO, /* will be used as - */
 							 const uint8_t weight_gapE, /* will be used as - */
-							 const __m128i* vProfile,
+							 const simde__m128i* vProfile,
 							 uint16_t terminate,
 							 int32_t maskLen) {
 
-#define max8(m, vm) (vm) = _mm_max_epi16((vm), _mm_srli_si128((vm), 8)); \
-					(vm) = _mm_max_epi16((vm), _mm_srli_si128((vm), 4)); \
-					(vm) = _mm_max_epi16((vm), _mm_srli_si128((vm), 2)); \
-					(m) = _mm_extract_epi16((vm), 0)
+#define max8(m, vm) (vm) = simde_mm_max_epi16((vm), simde_mm_srli_si128((vm), 8)); \
+					(vm) = simde_mm_max_epi16((vm), simde_mm_srli_si128((vm), 4)); \
+					(vm) = simde_mm_max_epi16((vm), simde_mm_srli_si128((vm), 2)); \
+					(m) = simde_mm_extract_epi16((vm), 0)
 
 	uint16_t max = 0;		                     /* the max alignment score */
 	int32_t end_read = readLen - 1;
@@ -378,23 +380,23 @@ static alignment_end* sw_sse2_word (const int8_t* ref,
 	int32_t* end_read_column = (int32_t*) calloc(refLen, sizeof(int32_t));
 
 	/* Define 16 byte 0 vector. */
-	__m128i vZero = _mm_set1_epi32(0);
+	simde__m128i vZero = simde_mm_set1_epi32(0);
 
-	__m128i* pvHStore = (__m128i*) calloc(segLen, sizeof(__m128i));
-	__m128i* pvHLoad = (__m128i*) calloc(segLen, sizeof(__m128i));
-	__m128i* pvE = (__m128i*) calloc(segLen, sizeof(__m128i));
-	__m128i* pvHmax = (__m128i*) calloc(segLen, sizeof(__m128i));
+	simde__m128i* pvHStore = (simde__m128i*) calloc(segLen, sizeof(simde__m128i));
+	simde__m128i* pvHLoad = (simde__m128i*) calloc(segLen, sizeof(simde__m128i));
+	simde__m128i* pvE = (simde__m128i*) calloc(segLen, sizeof(simde__m128i));
+	simde__m128i* pvHmax = (simde__m128i*) calloc(segLen, sizeof(simde__m128i));
 
 	int32_t i, j, k;
 	/* 16 byte insertion begin vector */
-	__m128i vGapO = _mm_set1_epi16(weight_gapO);
+	simde__m128i vGapO = simde_mm_set1_epi16(weight_gapO);
 
 	/* 16 byte insertion extension vector */
-	__m128i vGapE = _mm_set1_epi16(weight_gapE);
+	simde__m128i vGapE = simde_mm_set1_epi16(weight_gapE);
 
-	__m128i vMaxScore = vZero; /* Trace the highest score of the whole SW matrix. */
-	__m128i vMaxMark = vZero; /* Trace the highest score till the previous column. */
-	__m128i vTemp;
+	simde__m128i vMaxScore = vZero; /* Trace the highest score of the whole SW matrix. */
+	simde__m128i vMaxMark = vZero; /* Trace the highest score till the previous column. */
+	simde__m128i vTemp;
 	int32_t edge, begin = 0, end = refLen, step = 1;
 
 	/* outer loop to process the reference sequence */
@@ -405,66 +407,66 @@ static alignment_end* sw_sse2_word (const int8_t* ref,
 	}
 	for (i = begin; LIKELY(i != end); i += step) {
 		int32_t cmp;
-		__m128i e, vF = vZero; /* Initialize F value to 0.
+		simde__m128i e, vF = vZero; /* Initialize F value to 0.
 							   Any errors to vH values will be corrected in the Lazy_F loop.
 							 */
-		__m128i vH = pvHStore[segLen - 1];
-		vH = _mm_slli_si128 (vH, 2); /* Shift the 128-bit value in vH left by 2 byte. */
+		simde__m128i vH = pvHStore[segLen - 1];
+		vH = simde_mm_slli_si128 (vH, 2); /* Shift the 128-bit value in vH left by 2 byte. */
 
 		/* Swap the 2 H buffers. */
-		__m128i* pv = pvHLoad;
+		simde__m128i* pv = pvHLoad;
 
-		__m128i vMaxColumn = vZero; /* vMaxColumn is used to record the max values of column i. */
+		simde__m128i vMaxColumn = vZero; /* vMaxColumn is used to record the max values of column i. */
 
-		const __m128i* vP = vProfile + ref[i] * segLen; /* Right part of the vProfile */
+		const simde__m128i* vP = vProfile + ref[i] * segLen; /* Right part of the vProfile */
 		pvHLoad = pvHStore;
 		pvHStore = pv;
 
 		/* inner loop to process the query sequence */
 		for (j = 0; LIKELY(j < segLen); j ++) {
-			vH = _mm_adds_epi16(vH, _mm_load_si128(vP + j));
+			vH = simde_mm_adds_epi16(vH, simde_mm_load_si128(vP + j));
 
 			/* Get max from vH, vE and vF. */
-			e = _mm_load_si128(pvE + j);
-			vH = _mm_max_epi16(vH, e);
-			vH = _mm_max_epi16(vH, vF);
-			vMaxColumn = _mm_max_epi16(vMaxColumn, vH);
+			e = simde_mm_load_si128(pvE + j);
+			vH = simde_mm_max_epi16(vH, e);
+			vH = simde_mm_max_epi16(vH, vF);
+			vMaxColumn = simde_mm_max_epi16(vMaxColumn, vH);
 
 			/* Save vH values. */
-			_mm_store_si128(pvHStore + j, vH);
+			simde_mm_store_si128(pvHStore + j, vH);
 
 			/* Update vE value. */
-			vH = _mm_subs_epu16(vH, vGapO); /* saturation arithmetic, result >= 0 */
-			e = _mm_subs_epu16(e, vGapE);
-			e = _mm_max_epi16(e, vH);
-			_mm_store_si128(pvE + j, e);
+			vH = simde_mm_subs_epu16(vH, vGapO); /* saturation arithmetic, result >= 0 */
+			e = simde_mm_subs_epu16(e, vGapE);
+			e = simde_mm_max_epi16(e, vH);
+			simde_mm_store_si128(pvE + j, e);
 
 			/* Update vF value. */
-			vF = _mm_subs_epu16(vF, vGapE);
-			vF = _mm_max_epi16(vF, vH);
+			vF = simde_mm_subs_epu16(vF, vGapE);
+			vF = simde_mm_max_epi16(vF, vH);
 
 			/* Load the next vH. */
-			vH = _mm_load_si128(pvHLoad + j);
+			vH = simde_mm_load_si128(pvHLoad + j);
 		}
 
 		/* Lazy_F loop: has been revised to disallow adjecent insertion and then deletion, so don't update E(i, j), learn from SWPS3 */
 		for (k = 0; LIKELY(k < 8); ++k) {
-			vF = _mm_slli_si128 (vF, 2);
+			vF = simde_mm_slli_si128 (vF, 2);
 			for (j = 0; LIKELY(j < segLen); ++j) {
-				vH = _mm_load_si128(pvHStore + j);
-				vH = _mm_max_epi16(vH, vF);
-				vMaxColumn = _mm_max_epi16(vMaxColumn, vH); //newly added line
-				_mm_store_si128(pvHStore + j, vH);
-				vH = _mm_subs_epu16(vH, vGapO);
-				vF = _mm_subs_epu16(vF, vGapE);
-				if (UNLIKELY(! _mm_movemask_epi8(_mm_cmpgt_epi16(vF, vH)))) goto end;
+				vH = simde_mm_load_si128(pvHStore + j);
+				vH = simde_mm_max_epi16(vH, vF);
+				vMaxColumn = simde_mm_max_epi16(vMaxColumn, vH); //newly added line
+				simde_mm_store_si128(pvHStore + j, vH);
+				vH = simde_mm_subs_epu16(vH, vGapO);
+				vF = simde_mm_subs_epu16(vF, vGapE);
+				if (UNLIKELY(! simde_mm_movemask_epi8(simde_mm_cmpgt_epi16(vF, vH)))) goto end;
 			}
 		}
 
 end:
-		vMaxScore = _mm_max_epi16(vMaxScore, vMaxColumn);
-		vTemp = _mm_cmpeq_epi16(vMaxMark, vMaxScore);
-		cmp = _mm_movemask_epi8(vTemp);
+		vMaxScore = simde_mm_max_epi16(vMaxScore, vMaxColumn);
+		vTemp = simde_mm_cmpeq_epi16(vMaxMark, vMaxScore);
+		cmp = simde_mm_movemask_epi8(vTemp);
 		if (cmp != 0xffff) {
 			uint16_t temp;
 			vMaxMark = vMaxScore;
@@ -801,7 +803,7 @@ s_align* ssw_align (const s_profile* prof,
 					const int32_t maskLen) {
 
 	alignment_end* bests = 0, *bests_reverse = 0;
-	__m128i* vP = 0;
+	simde__m128i* vP = 0;
 	int32_t word = 0, band_width = 0, readLen = prof->readLen;
 	int8_t* read_reverse = 0;
 	cigar* path;

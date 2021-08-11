@@ -1,5 +1,3 @@
-// Author: Derek Barnett
-
 #ifndef PBCOPPER_UTILITY_FILEUTILS_INL_H
 #define PBCOPPER_UTILITY_FILEUTILS_INL_H
 
@@ -24,7 +22,9 @@ inline bool FileExists(const std::string& path)
 inline std::string FileExtension(const std::string& path)
 {
     const auto lastDot = path.rfind('.');
-    if (lastDot == std::string::npos) return std::string{};
+    if (lastDot == std::string::npos) {
+        return std::string{};
+    }
     return path.substr(lastDot + 1);
 }
 

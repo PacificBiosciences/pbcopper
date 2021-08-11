@@ -1,5 +1,3 @@
-// Author: Nathaniel Echols, Derek Barnett
-
 #include <pbcopper/utility/Alarm.h>
 
 #include <fstream>
@@ -202,10 +200,11 @@ std::string NameForAlarmType(const AlarmType type)
     };
 
     const auto found = lookup.find(type);
-    if (found == lookup.cend())
+    if (found == lookup.cend()) {
         return std::string{};
-    else
+    } else {
         return found->second;
+    }
 }
 
 }  // namespace Utility

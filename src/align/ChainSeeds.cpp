@@ -1,5 +1,3 @@
-// Authors: Brett Bowman, Derek Barnett
-
 #include <pbcopper/align/ChainSeeds.h>
 
 #include <algorithm>
@@ -29,7 +27,9 @@ long Diagonal(const Seed& seed)
     const auto v = seed.BeginPositionV();
     const auto h = seed.BeginPositionH();
 
-    if (v > h) return -static_cast<long>(v - h);
+    if (v > h) {
+        return -static_cast<long>(v - h);
+    }
 
     return static_cast<long>(h - v);
 }
@@ -39,9 +39,13 @@ bool HVCompare(const Seed& lhs, const Seed& rhs)
     const auto leftH = lhs.BeginPositionH();
     const auto rightH = rhs.BeginPositionH();
 
-    if (leftH < rightH) return true;
+    if (leftH < rightH) {
+        return true;
+    }
 
-    if (leftH == rightH) return lhs.EndPositionV() < rhs.EndPositionV();
+    if (leftH == rightH) {
+        return lhs.EndPositionV() < rhs.EndPositionV();
+    }
 
     return false;
 }
@@ -51,9 +55,13 @@ bool VHCompare(const Seed& lhs, const Seed& rhs)
     const auto leftV = lhs.BeginPositionV();
     const auto rightV = rhs.BeginPositionV();
 
-    if (leftV < rightV) return true;
+    if (leftV < rightV) {
+        return true;
+    }
 
-    if (leftV == rightV) return lhs.EndPositionH() < rhs.EndPositionH();
+    if (leftV == rightV) {
+        return lhs.EndPositionH() < rhs.EndPositionH();
+    }
 
     return false;
 }
@@ -82,17 +90,20 @@ long LinkScore(const Seed& lhs, const Seed& rhs, const ChainSeedsConfig& config)
     const auto nonMatchScorePenalty = nonMatches * config.nonMatchPenalty;
 
     // Ignore any linkage over a certain size, no matter the score
-    if (nonMatches > config.maxSeedGap) return -1;
+    if (nonMatches > config.maxSeedGap) {
+        return -1;
+    }
 
     // indelPenalty = difference in the seed diagonals * indelScore
     const auto diagL = lhs.Diagonal();
     const auto diagR = rhs.Diagonal();
     const auto drift = diagL - diagR;
     long indelScorePenalty = 0;
-    if (drift > 0)
+    if (drift > 0) {
         indelScorePenalty = drift * config.insertionPenalty;
-    else if (drift < 0)
+    } else if (drift < 0) {
         indelScorePenalty = -drift * config.deletionPenalty;
+    }
 
     return matchReward + indelScorePenalty + nonMatchScorePenalty;
 }

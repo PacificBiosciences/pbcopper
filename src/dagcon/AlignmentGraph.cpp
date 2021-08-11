@@ -23,8 +23,9 @@ AlignmentGraph::AlignmentGraph(const std::string& backbone) : backboneLength_{ba
 {
     // initialize the graph structure with the backbone length + enter/exit vertex
     graph_ = GraphType{backboneLength_ + 2};
-    for (size_t i = 0; i < backboneLength_ + 1; ++i)
+    for (size_t i = 0; i < backboneLength_ + 1; ++i) {
         boost::add_edge(i, i + 1, graph_);
+    }
 
     VertexIterator curr;
     VertexIterator last;
@@ -141,7 +142,9 @@ void AlignmentGraph::MergeNodes()
     seedNodes.push(enterVertex_);
 
     while (true) {
-        if (seedNodes.empty()) break;
+        if (seedNodes.empty()) {
+            break;
+        }
 
         const VertexIndex u = seedNodes.front();
         seedNodes.pop();
@@ -154,12 +157,16 @@ void AlignmentGraph::MergeNodes()
             int notVisited = 0;
             const VertexIndex v = boost::target(e, graph_);
             for (const auto inEdge : boost::make_iterator_range(boost::in_edges(v, graph_))) {
-                if (graph_[inEdge].Visited == false) ++notVisited;
+                if (graph_[inEdge].Visited == false) {
+                    ++notVisited;
+                }
             }
 
             // move onto the boost::target node after we visit all incoming edges for
             // the boost::target node
-            if (notVisited == 0) seedNodes.push(v);
+            if (notVisited == 0) {
+                seedNodes.push(v);
+            }
         }
     }
 }
@@ -178,7 +185,9 @@ void AlignmentGraph::MergeInNodes(VertexIndex n)
     // iterate over node groups, merge an accumulate information
     for (const auto& kvp : nodeGroups) {
         const auto& nodes = kvp.second;
-        if (nodes.size() <= 1) continue;
+        if (nodes.size() <= 1) {
+            continue;
+        }
 
         auto ni = nodes.cbegin();
         const VertexIndex an = *ni++;
@@ -245,7 +254,9 @@ void AlignmentGraph::MergeOutNodes(VertexIndex n)
 
     for (const auto& kvp : nodeGroups) {
         const auto& nodes = kvp.second;
-        if (nodes.size() <= 1) continue;
+        if (nodes.size() <= 1) {
+            continue;
+        }
 
         auto nodeIter = nodes.cbegin();
         const VertexIndex an = *nodeIter;
@@ -440,7 +451,9 @@ void AlignmentGraph::ConsensusWithMinFlankCoverage(std::vector<ConsensusResult>&
     auto curr = startNode;
     for (; curr != endNode; ++curr) {
         const AlignmentNode& n = *curr;
-        if (n.Base == graph_[enterVertex_].Base || n.Base == graph_[exitVertex_].Base) continue;
+        if (n.Base == graph_[enterVertex_].Base || n.Base == graph_[exitVertex_].Base) {
+            continue;
+        }
 
         cns += n.Base;
 
@@ -482,7 +495,9 @@ std::vector<AlignmentNode> AlignmentGraph::BestPath()
     nodeScore[exitVertex_] = 0.0f;
 
     while (true) {
-        if (seedNodes.empty()) break;
+        if (seedNodes.empty()) {
+            break;
+        }
 
         const VertexIndex n = seedNodes.front();
         seedNodes.pop();
@@ -523,12 +538,16 @@ std::vector<AlignmentNode> AlignmentGraph::BestPath()
 
             for (const auto newOutEdge :
                  boost::make_iterator_range(boost::out_edges(inNode, graph_))) {
-                if (graph_[newOutEdge].Visited == false) notVisited++;
+                if (graph_[newOutEdge].Visited == false) {
+                    notVisited++;
+                }
             }
 
             // move onto the target node after we visit all incoming edges for
             // the target node
-            if (notVisited == 0) seedNodes.push(inNode);
+            if (notVisited == 0) {
+                seedNodes.push(inNode);
+            }
         }
     }
 
@@ -555,7 +574,9 @@ std::vector<AlignmentNode> AlignmentGraph::BestPath()
 bool AlignmentGraph::DanglingNodes()
 {
     for (const auto vertex : boost::make_iterator_range(boost::vertices(graph_))) {
-        if (graph_[vertex].Deleted) continue;
+        if (graph_[vertex].Deleted) {
+            continue;
+        }
         if (graph_[vertex].Base == graph_[enterVertex_].Base ||
             graph_[vertex].Base == graph_[exitVertex_].Base) {
             continue;
@@ -563,7 +584,9 @@ bool AlignmentGraph::DanglingNodes()
 
         const int indeg = out_degree(vertex, graph_);
         const int outdeg = in_degree(vertex, graph_);
-        if (outdeg > 0 && indeg > 0) continue;
+        if (outdeg > 0 && indeg > 0) {
+            continue;
+        }
 
         return true;
     }

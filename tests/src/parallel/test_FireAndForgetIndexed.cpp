@@ -1,5 +1,3 @@
-// Author: Armin Töpfer
-
 #include <pbcopper/parallel/FireAndForgetIndexed.h>
 
 #include <atomic>
@@ -38,8 +36,9 @@ TEST(Parallel_FireAndForgetIndexed, strings)
 
     size_t expected = initial + extra + numThreads;
     size_t observed = 0;
-    for (auto& v : vec)
+    for (auto& v : vec) {
         observed += v;
+    }
 
     // We do not know the order, but all the work is done.
     EXPECT_EQ(expected, observed);
@@ -67,8 +66,9 @@ TEST(Parallel_FireAndForgetIndexed, exceptionFinalize)
     EXPECT_ANY_THROW(faf.Finalize());
 
     size_t observed = 0;
-    for (auto& v : vec)
+    for (auto& v : vec) {
         observed += v;
+    }
 
     EXPECT_EQ(observed, 2);
 }
@@ -97,8 +97,9 @@ TEST(Parallel_FireAndForgetIndexed, exceptionProduceWith)
     EXPECT_ANY_THROW(faf.Finalize());
 
     size_t observed = 0;
-    for (auto& v : vec)
+    for (auto& v : vec) {
         observed += v;
+    }
 
     EXPECT_EQ(observed, 2);
 }
@@ -121,8 +122,9 @@ TEST(Parallel_FireAndForgetIndexed, exceptionFinish)
     EXPECT_ANY_THROW(faf.Finalize());
 
     size_t observed = 0;
-    for (auto& v : vec)
+    for (auto& v : vec) {
         observed += v;
+    }
 
     EXPECT_EQ(observed, 3);
 }

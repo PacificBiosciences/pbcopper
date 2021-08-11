@@ -23,12 +23,16 @@ namespace {
 size_t AdjustedMaxColumn(size_t maxColumn)
 {
     // if column count is explicitly set (i.e. for testing), use that
-    if (HelpMetrics::TestingFixedWidth != 0) return HelpMetrics::TestingFixedWidth;
+    if (HelpMetrics::TestingFixedWidth != 0) {
+        return HelpMetrics::TestingFixedWidth;
+    }
 
     // otherwise determine column count from terminal width (default behavior)
     struct winsize ws;
     ioctl(STDOUT_FILENO, TIOCGWINSZ, &ws);
-    if (ws.ws_col >= 2) maxColumn = ws.ws_col - 1;
+    if (ws.ws_col >= 2) {
+        maxColumn = ws.ws_col - 1;
+    }
     constexpr const size_t MaxColumn = 119;
     return std::min(maxColumn, MaxColumn);
 }
@@ -91,17 +95,26 @@ void HelpMetrics::Calculate(const Interface& interface)
 {
     // metrics using client options
     for (const auto& optionGroup : interface.OptionGroups()) {
-        for (const auto& option : optionGroup.options)
+        for (const auto& option : optionGroup.options) {
             UpdateForOption(option);
+        }
     }
 
     // metrics with builtin options
     UpdateForOption(interface.HelpOption());
     UpdateForOption(interface.VersionOption());
-    if (interface.NumThreadsOption()) UpdateForOption(interface.NumThreadsOption().get());
-    if (interface.LogLevelOption()) UpdateForOption(interface.LogLevelOption().get());
-    if (interface.LogFileOption()) UpdateForOption(interface.LogFileOption().get());
-    if (interface.VerboseOption()) UpdateForOption(interface.VerboseOption().get());
+    if (interface.NumThreadsOption()) {
+        UpdateForOption(interface.NumThreadsOption().get());
+    }
+    if (interface.LogLevelOption()) {
+        UpdateForOption(interface.LogLevelOption().get());
+    }
+    if (interface.LogFileOption()) {
+        UpdateForOption(interface.LogFileOption().get());
+    }
+    if (interface.VerboseOption()) {
+        UpdateForOption(interface.VerboseOption().get());
+    }
 
     // metrics using pos args
     for (const auto& posArg : interface.PositionalArguments()) {
@@ -145,8 +158,9 @@ std::string HelpMetrics::HelpEntry(std::string name, std::string type,
     const auto wrappedLines = PacBio::Utility::WordWrappedLines(description, max);
     if (!wrappedLines.empty()) {
         out << wrappedLines.at(0);
-        for (size_t i = 1; i < wrappedLines.size(); ++i)
+        for (size_t i = 1; i < wrappedLines.size(); ++i) {
             out << '\n' << std::string(indent, ' ') << wrappedLines.at(i);
+        }
     }
 
     return out.str();
@@ -154,21 +168,25 @@ std::string HelpMetrics::HelpEntry(std::string name, std::string type,
 
 std::string HelpMetrics::OptionNames(const OptionData& option)
 {
-    if (option.isHidden) return {};
+    if (option.isHidden) {
+        return {};
+    }
 
     std::ostringstream optionOutput;
     auto first = true;
     for (const auto& name : option.names) {
 
-        if (first)
+        if (first) {
             first = false;
-        else
+        } else {
             optionOutput << ",";
+        }
 
-        if (name.size() == 1)
+        if (name.size() == 1) {
             optionOutput << "-";
-        else
+        } else {
             optionOutput << "--";
+        }
 
         optionOutput << name;
     }
@@ -177,7 +195,9 @@ std::string HelpMetrics::OptionNames(const OptionData& option)
 
 void HelpMetrics::UpdateForOption(const OptionData& option)
 {
-    if (option.isHidden) return;
+    if (option.isHidden) {
+        return;
+    }
 
     auto optionNamesText = OptionNames(option);
     auto optionDisplayText = DisplayName(option.type);

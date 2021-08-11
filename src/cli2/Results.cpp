@@ -25,11 +25,12 @@ Results& Results::AddDefaultOption(const internal::OptionData& opt)
     auto result = std::make_shared<Result>(opt.defaultValue.get(), SetByMode::DEFAULT);
 
     // add for all option names
-    for (const auto& name : opt.names)
+    for (const auto& name : opt.names) {
         results_.insert({name, result});
-    for (const auto& hiddenName : opt.hiddenNames)
+    }
+    for (const auto& hiddenName : opt.hiddenNames) {
         results_.insert({hiddenName, result});
-
+    }
     return *this;
 }
 
@@ -46,8 +47,9 @@ Results& Results::AddObservedValue(const std::string& name, OptionValue value,
     if (found == results_.cend()) {
         auto result = std::make_shared<Result>(value, setBy);
         results_.insert({name, std::move(result)});
-    } else
+    } else {
         *found->second = Result{value, setBy};
+    }
 
     return *this;
 }
@@ -69,10 +71,12 @@ std::string Results::EffectiveCommandLine() const
         const auto& value = entry.second;
 
         auto found = values.find(value);
-        if (found == values.cend())
+        if (found == values.cend()) {
             values.insert({value, name});
-        else {
-            if (found->second.length() < name.length()) found->second = name;
+        } else {
+            if (found->second.length() < name.length()) {
+                found->second = name;
+            }
         }
     }
 
@@ -88,23 +92,29 @@ std::string Results::EffectiveCommandLine() const
         // print enabled switches
         if (typeIndex == 9) {
             const bool isSet = *result;
-            if (isSet) out << dashStyle << name;
+            if (isSet) {
+                out << dashStyle << name;
+            }
         }
 
         // print non-empty string parameters
         else if (typeIndex == 10) {
             const std::string stringValue = *result;
-            if (!stringValue.empty()) out << dashStyle << name << '=' << stringValue;
+            if (!stringValue.empty()) {
+                out << dashStyle << name << '=' << stringValue;
+            }
         }
 
         // for all numeric types
-        else
+        else {
             out << dashStyle << name << '=' << *result;
+        }
     }
 
     //  Positional arg output
-    for (const auto& posArg : posArgValues_)
+    for (const auto& posArg : posArgValues_) {
         out << ' ' << posArg;
+    }
 
     return out.str();
 }
@@ -147,22 +157,27 @@ const std::vector<std::string>& Results::PositionalArguments() const { return po
 
 Results& Results::PositionalArguments(const std::vector<internal::PositionalArgumentData>& posArgs)
 {
-    for (const auto& posArg : posArgs)
+    for (const auto& posArg : posArgs) {
         posArgNames_.push_back(posArg.name);
+    }
     return *this;
 }
 
 bool Results::Verbose() const
 {
     const auto found = results_.find("verbose");
-    if (found != results_.cend()) return *(found->second.get());
+    if (found != results_.cend()) {
+        return *(found->second.get());
+    }
     return false;  // verbose option not enabled
 }
 
 bool Results::ExceptionPassthrough() const
 {
     const auto found = results_.find("allow-exceptions-passthrough");
-    if (found != results_.cend()) return *(found->second.get());
+    if (found != results_.cend()) {
+        return *(found->second.get());
+    }
     return false;  // allow-exceptions-passthrough option not enabled
 }
 
@@ -171,22 +186,33 @@ const Result& Results::operator[](const Option& opt) const
     const auto optionNames = internal::OptionTranslator::OptionNames(opt);
     for (const auto& name : optionNames) {
         const auto found = results_.find(name);
-        if (found != results_.cend()) return *(found->second.get());
+        if (found != results_.cend()) {
+            return *(found->second.get());
+        }
     }
 
     // not found
     std::ostringstream out;
     out << "[pbcopper] command line results ERROR: unknown option, with name(s):\n";
-    for (const auto& name : optionNames)
+    for (const auto& name : optionNames) {
         out << "  " << name << '\n';
+    }
     throw std::invalid_argument{out.str()};
 }
 
 const std::string& Results::operator[](const PositionalArgument& posArg) const
 {
-    const auto& name = internal::PositionalArgumentTranslator::PositionalArgName(posArg);
+    const auto name = internal::PositionalArgumentTranslator::PositionalArgName(posArg);
     for (size_t i = 0; i < posArgNames_.size(); ++i) {
-        if (posArgNames_.at(i) == name) return posArgValues_.at(i);
+        if (posArgNames_.at(i) == name) {
+            if (i >= posArgValues_.size()) {
+                throw std::runtime_error{
+                    "[pbcopper] command line results ERROR: missing value for positional "
+                    "argument: " +
+                    name};
+            }
+            return posArgValues_.at(i);
+        }
     }
 
     // not found

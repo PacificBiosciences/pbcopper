@@ -1,5 +1,3 @@
-// Author: Derek Barnett
-
 #include <pbcopper/data/Interval.h>
 
 #include <istream>
@@ -81,9 +79,9 @@ Interval& Interval::Start(const Position& start)
 
 Interval Interval::Union(const Interval& other) const
 {
-    if (Overlaps(other))
+    if (Overlaps(other)) {
         return {std::min(Start(), other.Start()), std::max(End(), other.End())};
-    else {
+    } else {
         std::ostringstream msg;
         msg << "[pbcopper] interval ERROR: cannot merge intervals " << *this << " and " << other
             << ", because they do not overlap.";
@@ -93,9 +91,9 @@ Interval Interval::Union(const Interval& other) const
 
 Interval Interval::Intersect(const Interval& other) const
 {
-    if (Overlaps(other))
+    if (Overlaps(other)) {
         return {std::max(Start(), other.Start()), std::min(End(), other.End())};
-    else {
+    } else {
         std::ostringstream msg;
         msg << "[pbcopper] interval ERROR: cannot create the intersection of intervals " << *this
             << " and " << other << ", because they do not overlap.";
@@ -115,7 +113,9 @@ Interval Interval::FromString(const std::string& str)
             Position left = boost::lexical_cast<Position>(components[0]);
             Position right = boost::lexical_cast<Position>(components[1]);
             // if right < left, we have an invalid interval, fall through
-            if (left <= right) return Interval(left, right + 1);
+            if (left <= right) {
+                return Interval(left, right + 1);
+            }
         }
     } catch (...) {
     }

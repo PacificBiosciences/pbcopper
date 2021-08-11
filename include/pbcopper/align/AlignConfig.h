@@ -1,5 +1,3 @@
-// Author: David Alexander
-
 #ifndef PBCOPPER_ALIGN_ALIGNCONFIG_H
 #define PBCOPPER_ALIGN_ALIGNCONFIG_H
 

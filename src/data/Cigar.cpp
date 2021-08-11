@@ -1,8 +1,5 @@
-// Author: Derek Barnett
-
 #include <pbcopper/data/Cigar.h>
 
-#include <cassert>
 #include <cstddef>
 #include <cstdint>
 
@@ -15,16 +12,6 @@
 
 namespace PacBio {
 namespace Data {
-
-static_assert(std::is_copy_constructible<Cigar>::value, "Cigar(const Cigar&) is not = default");
-static_assert(std::is_copy_assignable<Cigar>::value,
-              "Cigar& operator=(const Cigar&) is not = default");
-
-#ifndef __INTEL_COMPILER
-static_assert(std::is_nothrow_move_constructible<Cigar>::value, "Cigar(Cigar&&) is not = noexcept");
-static_assert(std::is_nothrow_move_assignable<Cigar>::value,
-              "Cigar& operator=(Cigar&&) is not = noexcept");
-#endif
 
 Cigar::Cigar(const char* str) : std::vector<CigarOperation>{}
 {
@@ -63,7 +50,9 @@ size_t ReferenceLength(const Cigar& cigar)
 {
     size_t length = 0;
     for (const auto& op : cigar) {
-        if (ConsumesReference(op.Type())) length += op.Length();
+        if (ConsumesReference(op.Type())) {
+            length += op.Length();
+        }
     }
     return length;
 }

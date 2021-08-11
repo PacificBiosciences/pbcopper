@@ -1,5 +1,3 @@
-// Author: Lance Hepler, Derek Barnett
-
 #ifndef PBCOPPER_LOGGING_LOGMESSAGE_H
 #define PBCOPPER_LOGGING_LOGMESSAGE_H
 
@@ -27,7 +25,9 @@ public:
     template <typename T>
     LogMessage& operator<<(const T& t)
     {
-        if (ptr_) ptr_->second << t;
+        if (ptr_) {
+            ptr_->second << t;
+        }
         return *this;
     }
 
