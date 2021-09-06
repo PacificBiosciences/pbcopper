@@ -56,6 +56,14 @@
 #define PB_CUDA_DEVICE __device__
 #endif
 
+#ifndef PB_CUDA_CONSTANT
+#define PB_CUDA_CONSTANT __constant__
+#endif
+
+#ifndef PB_CUDA_FORCEINLINE
+#define PB_CUDA_FORCEINLINE __forceinline__
+#endif
+
 #else
 
 #ifndef PB_CUDA_HOST
@@ -64,6 +72,14 @@
 
 #ifndef PB_CUDA_DEVICE
 #define PB_CUDA_DEVICE
+#endif
+
+#ifndef PB_CUDA_CONSTANT
+#define PB_CUDA_CONSTANT
+#endif
+
+#ifndef PB_CUDA_FORCEINLINE
+#define PB_CUDA_FORCEINLINE
 #endif
 
 #endif
