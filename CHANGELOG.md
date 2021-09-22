@@ -2,6 +2,11 @@
 
 ## Active
 
+## [1.9.3] - 2021-09-21
+
+### Fixed
+ - Catch out of bounds in Sparc
+
 ## [1.9.2] - 2021-07-01
 
 ### Added
