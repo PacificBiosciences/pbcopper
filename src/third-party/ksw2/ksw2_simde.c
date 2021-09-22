@@ -112,7 +112,7 @@ void ksw_extd2_simde(void* km, int qlen, const uint8_t* query, int tlen, const u
         }
         // loop fission: set scores first
         if (!(flag & KSW_EZ_GENERIC_SC)) {
-            for (t = st0; t <= en0; t += 16) {
+            for (t = st; t <= en; t += 16) {
                 simde__m128i sq, st2, tmp, mask;
                 sq = simde_mm_loadu_si128((simde__m128i*)&sf[t]);
                 st2 = simde_mm_loadu_si128((simde__m128i*)&qrr[t]);
