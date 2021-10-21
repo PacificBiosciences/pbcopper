@@ -35,6 +35,8 @@ struct ConfusionMatrix
     double Specificity() const noexcept;
     double TrueNegativeRate() const noexcept;
     double TruePositiveRate() const noexcept;
+
+    ConfusionMatrix& operator+=(const ConfusionMatrix& other) noexcept;
 };
 
 inline double ConfusionMatrix::Accuracy() const noexcept
@@ -111,6 +113,15 @@ inline double ConfusionMatrix::Specificity() const noexcept
 inline double ConfusionMatrix::TrueNegativeRate() const noexcept { return Specificity(); }
 
 inline double ConfusionMatrix::TruePositiveRate() const noexcept { return Recall(); }
+
+inline ConfusionMatrix& ConfusionMatrix::operator+=(const ConfusionMatrix& other) noexcept
+{
+    NumTP += other.NumTP;
+    NumTN += other.NumTN;
+    NumFP += other.NumFP;
+    NumFN += other.NumFN;
+    return *this;
+}
 
 }  // namespace Math
 }  // namespace PacBio
