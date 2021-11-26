@@ -113,7 +113,7 @@ bool IndexCompare(const SDPHit& lhs, const SDPHit& rhs) { return lhs.Index < rhs
 std::vector<boost::optional<SDPHit>> ComputeVisibilityLeft(const std::vector<SDPHit>& seeds,
                                                            std::set<SDPHit>& sweepSet)
 {
-    std::vector<boost::optional<SDPHit>> visible(seeds.size(), boost::none);  // Output
+    std::vector<boost::optional<SDPHit>> visible(seeds.size());  // Output
 
     auto toRemove = seeds.begin();
     for (auto it = seeds.begin(); it != seeds.end();) {
@@ -185,7 +185,7 @@ void ChainSeedsImpl(
 
         for (; it != seeds->end() && row == (*it).BeginPositionV(); ++it) {
             long bestScore = -std::numeric_limits<long>::max();
-            boost::optional<SDPHit> bestSeed = boost::none;
+            boost::optional<SDPHit> bestSeed;
 
             // find the previous column and best fragment from it
             {
@@ -287,7 +287,7 @@ std::vector<std::vector<Seed>> ChainSeeds(const Seeds& seedSet, const ChainSeeds
 {
     // Initialize the work-horse vectors we will actually work with
     std::priority_queue<ChainHit, std::vector<ChainHit>, ChainHitCompare> chainHits;
-    std::vector<boost::optional<size_t>> chainPred(seedSet.size(), boost::none);
+    std::vector<boost::optional<size_t>> chainPred(seedSet.size());
     std::vector<SDPHit> seeds;
     std::vector<long> scores(seedSet.size(), 0L);
     InitializeSeedsAndScores(seedSet, &seeds, &scores);
@@ -326,7 +326,7 @@ std::vector<Seeds> ChainedSeedSets(const Seeds& seedSet, const ChainSeedsConfig&
 {
     // Initialize the work-horse vectors we will actually work with
     std::priority_queue<ChainHit, std::vector<ChainHit>, ChainHitCompare> chainHits;
-    std::vector<boost::optional<size_t>> chainPred(seedSet.size(), boost::none);
+    std::vector<boost::optional<size_t>> chainPred(seedSet.size());
     std::vector<SDPHit> seeds;
     std::vector<long> scores(seedSet.size(), 0L);
     InitializeSeedsAndScores(seedSet, &seeds, &scores);
@@ -381,7 +381,7 @@ std::vector<std::pair<size_t, Seeds>> ChainSeeds(const std::map<size_t, Seeds> s
         const auto& seedSet = it->second;
 
         // Initialize the work-horse vectors we will actually work with
-        chainPred[i] = std::vector<boost::optional<size_t>>(seedSet.size(), boost::none);
+        chainPred[i] = std::vector<boost::optional<size_t>>(seedSet.size());
         std::vector<long> scores(seedSet.size(), 0L);
         InitializeSeedsAndScores(seedSet, &seeds[i], &scores);
 

@@ -238,7 +238,7 @@ boost::optional<Frames> MappedRead::AlignedIPD(Orientation orientation, GapBehav
                                                SoftClipBehavior softClipBehavior) const
 {
     if (!IPD) {
-        return boost::none;
+        return {};
     }
     if (Strand == Strand::UNMAPPED || Cigar.empty()) {
         return IPD;
@@ -265,7 +265,7 @@ boost::optional<Frames> MappedRead::AlignedPulseWidth(Orientation orientation,
                                                       SoftClipBehavior softClipBehavior) const
 {
     if (!PulseWidth) {
-        return boost::none;
+        return {};
     }
     if (Strand == Strand::UNMAPPED || Cigar.empty()) {
         return PulseWidth;

@@ -105,8 +105,8 @@ public:
         acceptingJobs = false;
         {
             std::lock_guard<std::mutex> g(m);
-            // Push boost::none to signal that there are no further tasks
-            head.emplace(boost::none);
+            // Push sentinel to signal that there are no further tasks
+            head.emplace();
         }
         // Let all workers know that they should look that there is no further work
         pushed.notify_all();
@@ -129,7 +129,7 @@ public:
 private:
     TTask PopTask()
     {
-        TTask task(boost::none);
+        TTask task;
 
         {
             std::unique_lock<std::mutex> lk(m);

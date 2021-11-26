@@ -107,19 +107,19 @@ Interface& Interface::DefaultLogLevel(Logging::LogLevel level)
 
 Interface& Interface::DisableLogFileOption()
 {
-    data_.logFileOption_ = boost::none;
+    data_.logFileOption_.reset();
     return *this;
 }
 
 Interface& Interface::DisableLogLevelOption()
 {
-    data_.logLevelOption_ = boost::none;
+    data_.logLevelOption_.reset();
     return *this;
 }
 
 Interface& Interface::DisableNumThreadsOption()
 {
-    data_.numThreadsOption_ = boost::none;
+    data_.numThreadsOption_.reset();
     return *this;
 }
 
