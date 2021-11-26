@@ -104,16 +104,16 @@ void HelpMetrics::Calculate(const Interface& interface)
     UpdateForOption(interface.HelpOption());
     UpdateForOption(interface.VersionOption());
     if (interface.NumThreadsOption()) {
-        UpdateForOption(interface.NumThreadsOption().get());
+        UpdateForOption(*interface.NumThreadsOption());
     }
     if (interface.LogLevelOption()) {
-        UpdateForOption(interface.LogLevelOption().get());
+        UpdateForOption(*interface.LogLevelOption());
     }
     if (interface.LogFileOption()) {
-        UpdateForOption(interface.LogFileOption().get());
+        UpdateForOption(*interface.LogFileOption());
     }
     if (interface.VerboseOption()) {
-        UpdateForOption(interface.VerboseOption().get());
+        UpdateForOption(*interface.VerboseOption());
     }
 
     // metrics using pos args

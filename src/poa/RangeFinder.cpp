@@ -155,7 +155,7 @@ void SdpRangeFinder::InitRangeFinder(const PoaGraphImpl& poaGraph,
 
         boost::optional<IntervalPair> directRange = directRanges.at(v);
         if (directRange) {
-            fwdMarks[v] = directRange.get();
+            fwdMarks[v] = *directRange;
         } else {
             std::vector<IntervalPair> predRangesStepped;
             for (const ED& e : inEdges(v, poaGraph.g_)) {
@@ -175,7 +175,7 @@ void SdpRangeFinder::InitRangeFinder(const PoaGraphImpl& poaGraph,
 
         boost::optional<IntervalPair> directRange = directRanges.at(v);
         if (directRange) {
-            revMarks[v] = directRange.get();
+            revMarks[v] = *directRange;
         } else {
             std::vector<IntervalPair> succRangesStepped;
             BOOST_FOREACH (const ED& e, out_edges(v, poaGraph.g_)) {

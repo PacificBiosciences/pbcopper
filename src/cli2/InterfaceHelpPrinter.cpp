@@ -76,21 +76,21 @@ std::string InterfaceHelpPrinter::DefaultValue(const OptionData& option)
     std::ostringstream out;
     switch (option.type) {
         case OptionValueType::INT:
-            out << OptionValueToInt(option.defaultValue.get());
+            out << OptionValueToInt(*option.defaultValue);
             break;
         case OptionValueType::UINT:
-            out << OptionValueToUInt(option.defaultValue.get());
+            out << OptionValueToUInt(*option.defaultValue);
             break;
         case OptionValueType::FLOAT:
-            out << OptionValueToDouble(option.defaultValue.get());
+            out << OptionValueToDouble(*option.defaultValue);
             break;
         case OptionValueType::STRING:
         case OptionValueType::FILE:
         case OptionValueType::DIR:
-            out << OptionValueToString(option.defaultValue.get());
+            out << OptionValueToString(*option.defaultValue);
             break;
         case OptionValueType::BOOL: {
-            const bool on = OptionValueToBool(option.defaultValue.get());
+            const bool on = OptionValueToBool(*option.defaultValue);
             out << (on ? "true" : "false");
             break;
         }
@@ -223,16 +223,16 @@ std::string InterfaceHelpPrinter::Options()
     group.options.push_back(interface_.HelpOption());
     group.options.push_back(interface_.VersionOption());
     if (interface_.NumThreadsOption()) {
-        group.options.push_back(interface_.NumThreadsOption().get());
+        group.options.push_back(*interface_.NumThreadsOption());
     }
     if (interface_.LogLevelOption()) {
-        group.options.push_back(interface_.LogLevelOption().get());
+        group.options.push_back(*interface_.LogLevelOption());
     }
     if (interface_.LogFileOption()) {
-        group.options.push_back(interface_.LogFileOption().get());
+        group.options.push_back(*interface_.LogFileOption());
     }
     if (interface_.VerboseOption()) {
-        group.options.push_back(interface_.VerboseOption().get());
+        group.options.push_back(*interface_.VerboseOption());
     }
     out << OptionGroup(group);
     return out.str();
@@ -271,12 +271,12 @@ bool InterfaceHelpPrinter::ShouldShowDefaultValue(const OptionData& option)
 
     // omit if string-type option has an empty default
     if (option.type == OptionValueType::STRING) {
-        const auto& defaultValue = OptionValueToString(option.defaultValue.get());
+        const auto& defaultValue = OptionValueToString(*option.defaultValue);
         return !defaultValue.empty();
     }
 
     // otherwise (maybe) use default value
-    return option.defaultValue.is_initialized();
+    return bool{option.defaultValue};
 }
 
 std::string InterfaceHelpPrinter::Usage()

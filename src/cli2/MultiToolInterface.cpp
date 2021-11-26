@@ -25,7 +25,7 @@ MultiToolInterface& MultiToolInterface::AddTool(Tool tool)
 {
     // ensure new subtools use the multi-tool's config
     if (data_.logConfig_) {
-        tool.interface.LogConfig(data_.logConfig_.get());
+        tool.interface.LogConfig(*data_.logConfig_);
     }
     data_.tools_.emplace_back(std::move(tool));
     return *this;

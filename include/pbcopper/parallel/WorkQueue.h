@@ -8,6 +8,7 @@
 #include <cstddef>
 #include <deque>
 #include <exception>
+#include <functional>
 #include <future>
 #include <mutex>
 #include <vector>
