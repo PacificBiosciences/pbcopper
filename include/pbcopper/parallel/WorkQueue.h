@@ -129,8 +129,8 @@ public:
         if (!workersFinalized) {
             {
                 std::lock_guard<std::mutex> g(m);
-                // Push boost::none to signal that there are no further tasks
-                head.emplace_back(boost::none);
+                // Push sentinel to signal that there are no further tasks
+                head.emplace_back();
             }
             // Let all workers know that they should look that there is no further work
             pushed.notify_all();
@@ -160,7 +160,7 @@ public:
 private:
     TTask PopTask()
     {
-        TTask task(boost::none);
+        TTask task;
 
         {
             std::unique_lock<std::mutex> lk(m);
@@ -179,7 +179,7 @@ private:
                     head.pop_front();
                     tail.emplace_back(std::move(task->get_future()));
                 } else {
-                    tail.emplace_back(boost::none);
+                    tail.emplace_back();
                 }
 
                 return true;

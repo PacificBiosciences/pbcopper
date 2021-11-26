@@ -63,7 +63,7 @@ struct InterfaceData
     internal::OptionData exceptionPassthroughOption_;
 
     // default disabled
-    boost::optional<internal::OptionData> verboseOption_ = boost::none;
+    boost::optional<internal::OptionData> verboseOption_;
 
     Logging::LogConfig logConfig_;
 
