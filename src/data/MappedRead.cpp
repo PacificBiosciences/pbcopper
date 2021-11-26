@@ -244,7 +244,7 @@ boost::optional<Frames> MappedRead::AlignedIPD(Orientation orientation, GapBehav
         return IPD;
     }
 
-    Frames ipd = IPD.get();  // native orientation
+    Frames ipd = *IPD;  // native orientation
     Orientation currentOrientation = Orientation::NATIVE;
 
     // if we need to touch CIGAR, force into genomic orientation (for mapping to CIGAR),
@@ -271,7 +271,7 @@ boost::optional<Frames> MappedRead::AlignedPulseWidth(Orientation orientation,
         return PulseWidth;
     }
 
-    Frames pw = PulseWidth.get();  // native orientation
+    Frames pw = *PulseWidth;  // native orientation
     Orientation currentOrientation = Orientation::NATIVE;
 
     // if we need to touch CIGAR, force into genomic orientation (for mapping to CIGAR),

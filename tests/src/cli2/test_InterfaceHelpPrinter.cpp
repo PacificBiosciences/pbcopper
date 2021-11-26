@@ -264,7 +264,7 @@ TEST(CLI2_InterfaceHelpPrinter, can_calculate_metrics_with_long_option)
 
     const auto testOptionData = OptionTranslator::Translate(testOption);
     const auto& helpOption = i.HelpOption();
-    const auto& logLevelOption = i.LogLevelOption().get();
+    const auto& logLevelOption = *i.LogLevelOption();
     const auto& versionOption = i.VersionOption();
     EXPECT_EQ(longestText,  metrics.formattedOptionNames.at(testOptionData).nameString);
     EXPECT_EQ(helpText,     metrics.formattedOptionNames.at(helpOption).nameString);

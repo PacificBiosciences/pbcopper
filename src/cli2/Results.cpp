@@ -22,7 +22,7 @@ Results& Results::AddPositionalArgument(std::string arg)
 Results& Results::AddDefaultOption(const internal::OptionData& opt)
 {
     // make default value
-    auto result = std::make_shared<Result>(opt.defaultValue.get(), SetByMode::DEFAULT);
+    auto result = std::make_shared<Result>(*opt.defaultValue, SetByMode::DEFAULT);
 
     // add for all option names
     for (const auto& name : opt.names) {
