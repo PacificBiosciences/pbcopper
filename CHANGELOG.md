@@ -1,6 +1,8 @@
 # pbcopper - CHANGELOG
 
 ## Active
+### Changed
+ - Update JSON impl to 3.10.4
 
 ## [1.9.3] - 2021-09-21
 
