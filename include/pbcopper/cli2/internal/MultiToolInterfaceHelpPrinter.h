@@ -16,8 +16,10 @@ namespace internal {
 class MultiToolInterfaceHelpPrinter
 {
 public:
-    explicit MultiToolInterfaceHelpPrinter(MultiToolInterface multiToolInterface);
-    MultiToolInterfaceHelpPrinter(MultiToolInterface interface, const size_t maxColumn);
+    MultiToolInterfaceHelpPrinter(MultiToolInterface multiToolInterface,
+                                  HiddenOptionMode hiddenOptionMode);
+    MultiToolInterfaceHelpPrinter(MultiToolInterface interface, size_t maxColumn,
+                                  HiddenOptionMode hiddenOptionMode);
 
     void Print(std::ostream& out) const;
 
@@ -28,6 +30,7 @@ private:
     HelpMetrics metrics_;
     MultiToolInterface interface_;
     std::string text_;
+    bool showHiddenOptions_ = false;
 };
 
 std::ostream& operator<<(std::ostream& os, const MultiToolInterfaceHelpPrinter& printer);

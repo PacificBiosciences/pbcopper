@@ -181,6 +181,15 @@ bool Results::ExceptionPassthrough() const
     return false;  // allow-exceptions-passthrough option not enabled
 }
 
+bool Results::ShowAllHelp() const
+{
+    const auto found = results_.find("show-all-help");
+    if (found != std::cend(results_)) {
+        return *(found->second.get());
+    }
+    return false;  // show-all-help option not enabled
+}
+
 const Result& Results::operator[](const Option& opt) const
 {
     const auto optionNames = internal::OptionTranslator::OptionNames(opt);

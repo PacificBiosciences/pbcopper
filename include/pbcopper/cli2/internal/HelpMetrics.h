@@ -6,6 +6,7 @@
 
 #include <pbcopper/cli2/Interface.h>
 #include <pbcopper/cli2/MultiToolInterface.h>
+#include <pbcopper/cli2/internal/HiddenOptionMode.h>
 #include <pbcopper/cli2/internal/OptionData.h>
 #include <pbcopper/cli2/internal/PositionalArgumentData.h>
 
@@ -29,10 +30,13 @@ public:
 
     static std::string OptionNames(const OptionData& option);
 
-    explicit HelpMetrics(const Interface& interface);
-    explicit HelpMetrics(const MultiToolInterface& interface);
-    HelpMetrics(const Interface& interface, const size_t explicitMaxColumn);
-    HelpMetrics(const MultiToolInterface& interface, const size_t explicitMaxColumn);
+    HelpMetrics(const Interface& interface, HiddenOptionMode hiddenOptionMode);
+    HelpMetrics(const MultiToolInterface& interface, HiddenOptionMode hiddenOptionMode);
+
+    HelpMetrics(const Interface& interface, size_t explicitMaxColumn,
+                HiddenOptionMode hiddenOptionMode);
+    HelpMetrics(const MultiToolInterface& interface, size_t explicitMaxColumn,
+                HiddenOptionMode hiddenOptionMode);
 
     void Calculate(const Interface& interface);
     void Calculate(const MultiToolInterface& interface);
@@ -45,6 +49,7 @@ public:
     size_t maxNameLength = 0;
     size_t maxTypeLength = 0;
     size_t maxColumn = 79;
+    bool showHiddenOptions = false;
 };
 
 }  // namespace internal

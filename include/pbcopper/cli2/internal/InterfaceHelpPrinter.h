@@ -12,6 +12,7 @@
 #include <pbcopper/cli2/Interface.h>
 #include <pbcopper/cli2/MultiToolInterface.h>
 #include <pbcopper/cli2/internal/HelpMetrics.h>
+#include <pbcopper/cli2/internal/HiddenOptionMode.h>
 #include <pbcopper/cli2/internal/OptionData.h>
 #include <pbcopper/cli2/internal/PositionalArgumentData.h>
 
@@ -25,8 +26,8 @@ namespace internal {
 class InterfaceHelpPrinter
 {
 public:
-    explicit InterfaceHelpPrinter(Interface interface);
-    InterfaceHelpPrinter(Interface interface, const size_t maxColumn);
+    InterfaceHelpPrinter(Interface interface, HiddenOptionMode hiddenOptionMode);
+    InterfaceHelpPrinter(Interface interface, size_t maxColumn, HiddenOptionMode hiddenOptionMode);
 
     ///
     /// Prints formatted text to output stream
@@ -62,6 +63,7 @@ private:
     HelpMetrics metrics_;
     Interface interface_;
     std::string text_;
+    bool showHiddenOptions_ = false;
 };
 
 std::ostream& operator<<(std::ostream& os, const InterfaceHelpPrinter& printer);

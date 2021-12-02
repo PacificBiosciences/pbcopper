@@ -20,21 +20,32 @@ namespace PacBio {
 namespace CLI_v2 {
 namespace internal {
 
-InterfaceHelpPrinter::InterfaceHelpPrinter(Interface interface)
-    : metrics_{interface}, interface_{std::move(interface)}
+InterfaceHelpPrinter::InterfaceHelpPrinter(Interface interface, HiddenOptionMode hiddenOptionMode)
+    : metrics_{interface, hiddenOptionMode}
+    , interface_{std::move(interface)}
+    , showHiddenOptions_{hiddenOptionMode == HiddenOptionMode::SHOW}
 {
     MakeHelpText();
 }
 
-InterfaceHelpPrinter::InterfaceHelpPrinter(Interface interface, const size_t maxColumn)
-    : metrics_{interface, maxColumn}, interface_{std::move(interface)}
+InterfaceHelpPrinter::InterfaceHelpPrinter(Interface interface, const size_t maxColumn,
+                                           HiddenOptionMode hiddenOptionMode)
+    : metrics_{interface, maxColumn, hiddenOptionMode}
+    , interface_{std::move(interface)}
+    , showHiddenOptions_{hiddenOptionMode == HiddenOptionMode::SHOW}
 {
     MakeHelpText();
 }
 
 std::string InterfaceHelpPrinter::Choices(const OptionData& option)
 {
-    if (option.isHidden || option.choices.empty() || option.isChoicesHidden) {
+    // nothing to show
+    if (option.choices.empty()) {
+        return {};
+    }
+
+    // check for hidden status
+    if ((option.isHidden || option.isChoicesHidden) && !showHiddenOptions_) {
         return {};
     }
 
@@ -199,7 +210,7 @@ std::string InterfaceHelpPrinter::OptionGroup(const OptionGroupData& group)
     }
 
     for (const OptionData& option : group.options) {
-        if (!option.isHidden) {
+        if (!option.isHidden || showHiddenOptions_) {
             out << Option(option) << '\n';
         }
     }
@@ -222,6 +233,10 @@ std::string InterfaceHelpPrinter::Options()
     }
     group.options.push_back(interface_.HelpOption());
     group.options.push_back(interface_.VersionOption());
+    group.options.push_back(interface_.AlarmsOption());
+    group.options.push_back(interface_.ExceptionsPassthroughOption());
+    group.options.push_back(interface_.ShowAllHelpOption());
+
     if (interface_.NumThreadsOption()) {
         group.options.push_back(*interface_.NumThreadsOption());
     }

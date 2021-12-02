@@ -194,6 +194,16 @@ public:
 
 public:
     /// \internal
+    /// \return (translated) alarms option.
+    ///
+    const internal::OptionData& AlarmsOption() const;
+
+    /// \internal
+    /// \return (translated) "exceptions passthrough" option.
+    ///
+    const internal::OptionData& ExceptionsPassthroughOption() const;
+
+    /// \internal
     /// \return (translated) help option.
     ///
     const internal::OptionData& HelpOption() const;
@@ -211,6 +221,11 @@ public:
     /// \internal
     /// \return (translated) numThreads option.
     const boost::optional<internal::OptionData>& NumThreadsOption() const;
+
+    /// \internal
+    /// \return (translated) "show all help" option.
+    ///
+    const internal::OptionData& ShowAllHelpOption() const;
 
     /// \internal
     /// \return (translated) verbose option.

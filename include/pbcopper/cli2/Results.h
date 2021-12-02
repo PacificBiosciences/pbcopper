@@ -87,6 +87,11 @@ public:
     bool ExceptionPassthrough() const;
 
     ///
+    /// \return true if --show-all-help was requested
+    ///
+    bool ShowAllHelp() const;
+
+    ///
     /// \return value associated with option
     ///
     /// The lookup uses the same Option as defined in the application. Example:
