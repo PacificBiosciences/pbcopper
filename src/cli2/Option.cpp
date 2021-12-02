@@ -5,7 +5,7 @@
 namespace PacBio {
 namespace CLI_v2 {
 
-Option::Option(std::string def) : text{std::move(def)}, defaultValue{boost::none} {}
+Option::Option(std::string def) : text{std::move(def)} {}
 
 Option::Option(std::string def, bool on) : text{std::move(def)}, defaultValue{on} {}
 

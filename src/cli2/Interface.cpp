@@ -89,7 +89,7 @@ const std::string& Interface::ApplicationVersion() const { return data_.appVersi
 Logging::LogLevel Interface::DefaultLogLevel() const
 {
     if (data_.logLevelOption_) {
-        const auto& value = data_.logLevelOption_->defaultValue.get();
+        const auto& value = *data_.logLevelOption_->defaultValue;
         return Logging::LogLevel{boost::get<std::string>(value)};
     } else {
         return data_.logConfig_.Level;
@@ -107,19 +107,19 @@ Interface& Interface::DefaultLogLevel(Logging::LogLevel level)
 
 Interface& Interface::DisableLogFileOption()
 {
-    data_.logFileOption_ = boost::none;
+    data_.logFileOption_.reset();
     return *this;
 }
 
 Interface& Interface::DisableLogLevelOption()
 {
-    data_.logLevelOption_ = boost::none;
+    data_.logLevelOption_.reset();
     return *this;
 }
 
 Interface& Interface::DisableNumThreadsOption()
 {
-    data_.numThreadsOption_ = boost::none;
+    data_.numThreadsOption_.reset();
     return *this;
 }
 
@@ -177,7 +177,7 @@ Results Interface::MakeDefaultResults() const
     Results results;
     const auto options = Options();
     for (const auto& opt : options) {
-        if (opt.defaultValue.is_initialized()) {
+        if (opt.defaultValue) {
             results.AddDefaultOption(opt);
         }
     }
@@ -212,19 +212,19 @@ std::vector<OptionData> Interface::Options() const
     result.push_back(data_.versionOption_);
     result.push_back(data_.exceptionPassthroughOption_);
     if (data_.numThreadsOption_) {
-        result.push_back(data_.numThreadsOption_.get());
+        result.push_back(*data_.numThreadsOption_);
     }
     if (data_.logLevelOption_) {
-        result.push_back(data_.logLevelOption_.get());
+        result.push_back(*data_.logLevelOption_);
     }
     if (data_.logFileOption_) {
-        result.push_back(data_.logFileOption_.get());
+        result.push_back(*data_.logFileOption_);
     }
     if (data_.verboseOption_) {
-        result.push_back(data_.verboseOption_.get());
+        result.push_back(*data_.verboseOption_);
     }
     if (data_.alarmsOption_) {
-        result.push_back(data_.alarmsOption_.get());
+        result.push_back(*data_.alarmsOption_);
     }
 
     return result;

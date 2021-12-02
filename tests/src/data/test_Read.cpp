@@ -642,7 +642,7 @@ TEST(Data_ReadId, can_create_from_ccs_read_name)
     const PacBio::Data::ReadId id{"m54001_160623_195125/553/ccs"};
     EXPECT_EQ("m54001_160623_195125", id.MovieName);
     EXPECT_EQ(553, id.HoleNumber);
-    EXPECT_FALSE(id.ZmwInterval.is_initialized());
+    EXPECT_FALSE(id.ZmwInterval);
 }
 
 // clang-format on

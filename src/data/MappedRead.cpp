@@ -238,13 +238,13 @@ boost::optional<Frames> MappedRead::AlignedIPD(Orientation orientation, GapBehav
                                                SoftClipBehavior softClipBehavior) const
 {
     if (!IPD) {
-        return boost::none;
+        return {};
     }
     if (Strand == Strand::UNMAPPED || Cigar.empty()) {
         return IPD;
     }
 
-    Frames ipd = IPD.get();  // native orientation
+    Frames ipd = *IPD;  // native orientation
     Orientation currentOrientation = Orientation::NATIVE;
 
     // if we need to touch CIGAR, force into genomic orientation (for mapping to CIGAR),
@@ -265,13 +265,13 @@ boost::optional<Frames> MappedRead::AlignedPulseWidth(Orientation orientation,
                                                       SoftClipBehavior softClipBehavior) const
 {
     if (!PulseWidth) {
-        return boost::none;
+        return {};
     }
     if (Strand == Strand::UNMAPPED || Cigar.empty()) {
         return PulseWidth;
     }
 
-    Frames pw = PulseWidth.get();  // native orientation
+    Frames pw = *PulseWidth;  // native orientation
     Orientation currentOrientation = Orientation::NATIVE;
 
     // if we need to touch CIGAR, force into genomic orientation (for mapping to CIGAR),
