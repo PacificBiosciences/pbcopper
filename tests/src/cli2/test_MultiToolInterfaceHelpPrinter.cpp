@@ -8,16 +8,16 @@
 
 #include <pbcopper/cli2/Interface.h>
 #include <pbcopper/cli2/MultiToolInterface.h>
-#include <pbcopper/cli2/internal/HelpMetrics.h>
 #include <pbcopper/cli2/internal/InterfaceHelpPrinter.h>
 
 #include "../../../src/cli2/PbBoilerplateDisclaimer.h"
+#include "pbcopper/cli2/Tool.h"
 
-using HelpMetrics = PacBio::CLI_v2::internal::HelpMetrics;
+using HiddenOptionMode = PacBio::CLI_v2::internal::HiddenOptionMode;
 using Interface = PacBio::CLI_v2::Interface;
-using InterfaceHelpPrinter = PacBio::CLI_v2::internal::InterfaceHelpPrinter;
 using MultiToolInterface = PacBio::CLI_v2::MultiToolInterface;
 using MultiToolInterfaceHelpPrinter = PacBio::CLI_v2::internal::MultiToolInterfaceHelpPrinter;
+using ToolVisibility = PacBio::CLI_v2::ToolVisibility;
 
 // clang-format off
 
@@ -76,7 +76,6 @@ int SummarizeRunner(const PacBio::CLI_v2::Results&)
 TEST(CLI2_MultiToolInterfaceHelpPrinter, can_print_top_level_help)
 {
     using namespace CLI_v2_MultiToolInterfaceHelpPrinterTests;
-    HelpMetrics::TestingFixedWidth = 80;
 
     const std::string expectedText{R"(isoseq3 - De Novo Transcript Reconstruction
 
@@ -150,7 +149,7 @@ PB_BOILERPLATE_DISCLAIMER
   5. Polish transcripts using subreads
      $ isoseq3 polish unpolished.bam movie.subreads.bam polished.bam)");
 
-    MultiToolInterfaceHelpPrinter help{i};
+    MultiToolInterfaceHelpPrinter help{i, 80, HiddenOptionMode::HIDE};
     std::ostringstream out;
     help.Print(out);
     EXPECT_EQ(expectedText, out.str());
@@ -158,6 +157,33 @@ PB_BOILERPLATE_DISCLAIMER
     out.str("");
     out << help;
     EXPECT_EQ(expectedText, out.str());
+}
+
+TEST(CLI2_MultiToolInterfaceHelpPrinter, can_handle_hidden_tools)
+{
+    using namespace CLI_v2_MultiToolInterfaceHelpPrinterTests;
+
+    MultiToolInterface i{"isoseq3", "De Novo Transcript Reconstruction", "3.1.2"};
+    i.AddTools({{"refine",    MakeRefineInterface(),    &RefineRunner, ToolVisibility::HIDDEN},
+                {"cluster",   MakeClusterInterface(),   &ClusterRunner},
+                {"polish",    MakePolishInterface(),    &PolishRunner},
+                {"summarize", MakeSummarizeInterface(), &SummarizeRunner}});
+
+    // ensure hidden
+    {
+        MultiToolInterfaceHelpPrinter help{i, HiddenOptionMode::HIDE};
+        std::ostringstream out;
+        help.Print(out);
+        EXPECT_EQ(std::string::npos, out.str().find("refine"));
+    }
+
+    // expose via --show-all-help
+    {
+        MultiToolInterfaceHelpPrinter help{i, HiddenOptionMode::SHOW};
+        std::ostringstream out;
+        help.Print(out);
+        EXPECT_NE(std::string::npos, out.str().find("refine"));
+    }
 }
 
 // clang-format on

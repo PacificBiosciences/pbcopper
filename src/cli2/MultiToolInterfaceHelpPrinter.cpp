@@ -13,15 +13,21 @@ namespace PacBio {
 namespace CLI_v2 {
 namespace internal {
 
-MultiToolInterfaceHelpPrinter::MultiToolInterfaceHelpPrinter(MultiToolInterface multiToolInterface)
-    : metrics_{multiToolInterface}, interface_{std::move(multiToolInterface)}
+MultiToolInterfaceHelpPrinter::MultiToolInterfaceHelpPrinter(MultiToolInterface multiToolInterface,
+                                                             HiddenOptionMode hiddenOptionMode)
+    : metrics_{multiToolInterface, hiddenOptionMode}
+    , interface_{std::move(multiToolInterface)}
+    , showHiddenOptions_{hiddenOptionMode == HiddenOptionMode::SHOW}
 {
     MakeHelpText();
 }
 
 MultiToolInterfaceHelpPrinter::MultiToolInterfaceHelpPrinter(MultiToolInterface multiToolInterface,
-                                                             const size_t maxColumn)
-    : metrics_{multiToolInterface, maxColumn}, interface_{std::move(multiToolInterface)}
+                                                             const size_t maxColumn,
+                                                             HiddenOptionMode hiddenOptionMode)
+    : metrics_{multiToolInterface, maxColumn, hiddenOptionMode}
+    , interface_{std::move(multiToolInterface)}
+    , showHiddenOptions_{hiddenOptionMode == HiddenOptionMode::SHOW}
 {
     MakeHelpText();
 }
@@ -50,7 +56,7 @@ void MultiToolInterfaceHelpPrinter::MakeHelpText()
 
     const auto& tools = interface_.Tools();
     for (const auto& tool : tools) {
-        if (tool.visibility == ToolVisibility::HIDDEN) {
+        if ((tool.visibility == ToolVisibility::HIDDEN) && !showHiddenOptions_) {
             continue;
         }
         const auto& i = tool.interface;

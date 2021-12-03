@@ -15,9 +15,12 @@ namespace CLI_v2 {
 
 MultiToolInterface::MultiToolInterface(std::string name, std::string description,
                                        std::string version)
-    : data_{std::move(name), std::move(description), std::move(version),
+    : data_{std::move(name),
+            std::move(description),
+            std::move(version),
             OptionTranslator::Translate(Builtin::Help),
-            OptionTranslator::Translate(Builtin::Version)}
+            OptionTranslator::Translate(Builtin::Version),
+            OptionTranslator::Translate(Builtin::ShowAllHelp)}
 {
 }
 
@@ -90,6 +93,11 @@ MultiToolInterface& MultiToolInterface::RegisterVersionPrinter(
 {
     data_.versionPrinter_ = printer;
     return *this;
+}
+
+const internal::OptionData& MultiToolInterface::ShowAllHelpOption() const
+{
+    return data_.showAllHelpOption_;
 }
 
 const Tool& MultiToolInterface::ToolFor(const std::string& toolName) const

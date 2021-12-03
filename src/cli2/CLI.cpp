@@ -50,7 +50,7 @@ int Run(const std::vector<std::string>& args, const Interface& interface,
     // input filenames.
     //
     if (args.size() == 1 && interface.HasRequiredPosArgs()) {
-        const InterfaceHelpPrinter help{interface};
+        const InterfaceHelpPrinter help{interface, internal::HiddenOptionMode::HIDE};
         std::cout << help;
         return EXIT_SUCCESS;
     }
@@ -60,8 +60,11 @@ int Run(const std::vector<std::string>& args, const Interface& interface,
     Results results = parser.Parse(args);
 
     // help
-    if (results[Builtin::Help]) {
-        const InterfaceHelpPrinter help{interface};
+    if (results[Builtin::Help] || results[Builtin::ShowAllHelp]) {
+        const internal::HiddenOptionMode showHiddenOptions = results[Builtin::ShowAllHelp]
+                                                                 ? internal::HiddenOptionMode::SHOW
+                                                                 : internal::HiddenOptionMode::HIDE;
+        const InterfaceHelpPrinter help{interface, showHiddenOptions};
         std::cout << help;
         return EXIT_SUCCESS;
     }
@@ -166,7 +169,7 @@ int Run(const std::vector<std::string>& args, const MultiToolInterface& interfac
     // "$ tool"
     //
     if (args.size() == 1) {
-        const MultiToolInterfaceHelpPrinter help{interface};
+        const MultiToolInterfaceHelpPrinter help{interface, internal::HiddenOptionMode::HIDE};
         std::cout << help;
         return EXIT_SUCCESS;
     }
@@ -187,13 +190,20 @@ int Run(const std::vector<std::string>& args, const MultiToolInterface& interfac
     // command line has a second arg that is not a subtool, but could still be
     // top-level help/version
     //
-    // "$ tool -h"
-    // "$ tool --help"
-    // "$ tool --version"
+    // "$ multi-tool -h"
+    // "$ multi-tool --help"
+    // "$ multi-tool --show-all-help"
+    // "$ multi-tool --version"
+    //
+    // we have not done full command-line parsing (saving that for each subtool),
+    // so do "manual" check here on special options
     //
     for (const auto& arg : args) {
-        if (arg == "-h" || arg == "--help") {
-            const MultiToolInterfaceHelpPrinter help{interface};
+        if ((arg == "-h") || (arg == "--help") || (arg == "--show-all-help")) {
+            const internal::HiddenOptionMode showHiddenOptions =
+                (arg == "--show-all-help") ? internal::HiddenOptionMode::SHOW
+                                           : internal::HiddenOptionMode::HIDE;
+            const MultiToolInterfaceHelpPrinter help{interface, showHiddenOptions};
             std::cout << help;
             return EXIT_SUCCESS;
         } else if (arg == "--version") {

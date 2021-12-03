@@ -73,6 +73,13 @@ R"({
     "hidden" : true
 })"};
 
+const Option ShowAllHelp{
+R"({
+    "names" : ["show-all-help"],
+    "description" : "Show full help - including all hidden options, choices, and subtools.",
+    "hidden" : true
+})"};
+
 } // namespace Builtin
 } // namespace CLI_v2
 } // namespace PacBio

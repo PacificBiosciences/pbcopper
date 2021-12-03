@@ -82,6 +82,11 @@ public:
     ///
     const boost::optional<Logging::LogConfig>& LogConfig() const;
 
+    /// \internal
+    /// \return (translated) "show all help" option.
+    ///
+    const internal::OptionData& ShowAllHelpOption() const;
+
     ///
     /// \return tool for provided name
     ///

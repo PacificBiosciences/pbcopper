@@ -14,6 +14,7 @@
 
 #include "../../../src/cli2/PbBoilerplateDisclaimer.h"
 
+using HiddenOptionMode = PacBio::CLI_v2::internal::HiddenOptionMode;
 using Interface = PacBio::CLI_v2::Interface;
 using InterfaceHelpPrinter = PacBio::CLI_v2::internal::InterfaceHelpPrinter;
 using MultiToolInterface = PacBio::CLI_v2::MultiToolInterface;
@@ -160,7 +161,7 @@ TEST(CLI2_InterfaceHelpPrinter, formats_usage)
 
     const Interface i{"frobber"};
 
-    InterfaceHelpPrinter help{i};
+    InterfaceHelpPrinter help{i, HiddenOptionMode::HIDE};
     const auto formattedText = help.Usage();
     EXPECT_EQ(expectedText, formattedText);
 }
@@ -176,7 +177,7 @@ TEST(CLI2_InterfaceHelpPrinter, formats_usage_with_pos_args)
         CLI_v2_InterfaceHelpPrinterTests::Options::OptionalStats
     });
 
-    InterfaceHelpPrinter help{i};
+    InterfaceHelpPrinter help{i, HiddenOptionMode::HIDE};
     const auto formattedText = help.Usage();
     EXPECT_EQ(expectedText, formattedText);
 }
@@ -192,7 +193,7 @@ TEST(CLI2_InterfaceHelpPrinter, usage_with_optional_pos_args_always_places_them_
         CLI_v2_InterfaceHelpPrinterTests::Options::Dest
     });
 
-    InterfaceHelpPrinter help{i};
+    InterfaceHelpPrinter help{i, HiddenOptionMode::HIDE};
     const auto formattedText = help.Usage();
     EXPECT_EQ(expectedText, formattedText);
 }
@@ -203,7 +204,7 @@ TEST(CLI2_InterfaceHelpPrinter, formats_description)
 
     Interface i{"frobber", "some description"};
 
-    InterfaceHelpPrinter help{i};
+    InterfaceHelpPrinter help{i, HiddenOptionMode::HIDE};
     const auto formattedText = help.Description();
     EXPECT_EQ(expectedText, formattedText);
 }
@@ -214,7 +215,7 @@ TEST(CLI2_InterfaceHelpPrinter, formats_empty_description)
 
     Interface i{"frobber", ""};
 
-    InterfaceHelpPrinter help{i};
+    InterfaceHelpPrinter help{i, HiddenOptionMode::HIDE};
     const auto formattedText = help.Description();
     EXPECT_EQ(expectedText, formattedText);
 }
@@ -231,7 +232,7 @@ TEST(CLI2_InterfaceHelpPrinter, no_formatted_option_names_for_hidden_option)
 TEST(CLI2_InterfaceHelpPrinter, can_calculate_metrics_from_builtins_only)
 {
     Interface i{"frobber"};
-    InterfaceHelpPrinter help{i};
+    InterfaceHelpPrinter help{i, HiddenOptionMode::HIDE};
 
     const auto& metrics = help.Metrics();
 
@@ -258,7 +259,7 @@ TEST(CLI2_InterfaceHelpPrinter, can_calculate_metrics_with_long_option)
     Interface i{"frobber"};
     i.AddOption(testOption);
 
-    InterfaceHelpPrinter help{i};
+    InterfaceHelpPrinter help{i, HiddenOptionMode::HIDE};
     const auto& metrics = help.Metrics();
     EXPECT_EQ(longestText.size(), metrics.maxNameLength);  // include spacer
 
@@ -286,7 +287,7 @@ TEST(CLI2_InterfaceHelpPrinter, formats_int_choices)
     option.choices = {choice1, choice2, choice3, choice4};
 
     Interface i{"frobber"};
-    InterfaceHelpPrinter help{i};
+    InterfaceHelpPrinter help{i, HiddenOptionMode::HIDE};
 
     const auto formattedText = help.Choices(option);
     EXPECT_EQ(expectedText, formattedText);
@@ -306,7 +307,7 @@ TEST(CLI2_InterfaceHelpPrinter, formats_float_choices)
     option.choices = {choice1, choice2, choice3, choice4};
 
     Interface i{"frobber"};
-    InterfaceHelpPrinter help{i};
+    InterfaceHelpPrinter help{i, HiddenOptionMode::HIDE};
 
     const auto formattedText = help.Choices(option);
     EXPECT_EQ(expectedText, formattedText);
@@ -326,7 +327,7 @@ TEST(CLI2_InterfaceHelpPrinter, formats_string_choices)
     option.choices = {choice1, choice2, choice3, choice4};
 
     Interface i{"frobber"};
-    InterfaceHelpPrinter help{i};
+    InterfaceHelpPrinter help{i, HiddenOptionMode::HIDE};
 
     const auto formattedText = help.Choices(option);
     EXPECT_EQ(expectedText, formattedText);
@@ -336,7 +337,7 @@ TEST(CLI2_InterfaceHelpPrinter, should_not_show_default_value_for_boolean)
 {
     OptionData option;
     Interface i{"frobber"};
-    InterfaceHelpPrinter help{i};
+    InterfaceHelpPrinter help{i, HiddenOptionMode::HIDE};
     EXPECT_FALSE(help.ShouldShowDefaultValue(option));
 }
 
@@ -346,7 +347,7 @@ TEST(CLI2_InterfaceHelpPrinter, should_not_show_default_value_for_empty_string)
     option.type = OptionValueType::STRING;
     option.defaultValue = std::string{};
     Interface i{"frobber"};
-    InterfaceHelpPrinter help{i};
+    InterfaceHelpPrinter help{i, HiddenOptionMode::HIDE};
     EXPECT_FALSE(help.ShouldShowDefaultValue(option));
 }
 
@@ -356,7 +357,7 @@ TEST(CLI2_InterfaceHelpPrinter, should_show_default_value_for_string)
     option.type = OptionValueType::STRING;
     option.defaultValue = std::string{"foo"};
     Interface i{"frobber"};
-    InterfaceHelpPrinter help{i};
+    InterfaceHelpPrinter help{i, HiddenOptionMode::HIDE};
     EXPECT_TRUE(help.ShouldShowDefaultValue(option));
 }
 
@@ -366,7 +367,7 @@ TEST(CLI2_InterfaceHelpPrinter, should_show_default_value_for_number)
     option.type = OptionValueType::INT;
     option.defaultValue = 42;
     Interface i{"frobber"};
-    InterfaceHelpPrinter help{i};
+    InterfaceHelpPrinter help{i, HiddenOptionMode::HIDE};
     EXPECT_TRUE(help.ShouldShowDefaultValue(option));
 }
 
@@ -375,7 +376,7 @@ TEST(CLI2_InterfaceHelpPrinter, should_not_show_default_value_for_number_with_no
     OptionData option;
     option.type = OptionValueType::INT;
     Interface i{"frobber"};
-    InterfaceHelpPrinter help{i};
+    InterfaceHelpPrinter help{i, HiddenOptionMode::HIDE};
     EXPECT_FALSE(help.ShouldShowDefaultValue(option));
 }
 
@@ -388,7 +389,7 @@ TEST(CLI2_InterfaceHelpPrinter, formats_default_value)
     const std::string expectedText{"42"};
 
     Interface i{"frobber"};
-    InterfaceHelpPrinter help{i};
+    InterfaceHelpPrinter help{i, HiddenOptionMode::HIDE};
     const auto defaultValue = help.DefaultValue(option);
     EXPECT_EQ(expectedText, defaultValue);
 }
@@ -415,7 +416,7 @@ TEST(CLI2_InterfaceHelpPrinter, formats_option_with_wordwrapped_description)
     Interface i{"frobber"};
     i.AddOption(optionWithLongDescription);
 
-    InterfaceHelpPrinter help{i, 80};
+    InterfaceHelpPrinter help{i, 80, HiddenOptionMode::HIDE};
     const auto formattedText = help.Option(option);
     EXPECT_EQ(expectedText, formattedText);
 }
@@ -425,7 +426,7 @@ TEST(CLI2_InterfaceHelpPrinter, formats_empty_option_group)
     const std::string expectedText;
 
     Interface i{"frobber"};
-    InterfaceHelpPrinter help{i, 80};
+    InterfaceHelpPrinter help{i, 80, HiddenOptionMode::HIDE};
     const auto formattedText = help.OptionGroup(OptionGroupData{});
     EXPECT_EQ(expectedText, formattedText);
 }
@@ -442,7 +443,7 @@ TEST(CLI2_InterfaceHelpPrinter, formats_builtin_option_group)
         "  --log-file        FILE  Log to a file, instead of stderr.\n"};
 
     Interface i{"frobber"};
-    InterfaceHelpPrinter help{i, 80};
+    InterfaceHelpPrinter help{i, 80, HiddenOptionMode::HIDE};
     const auto formattedText = help.Options();
     EXPECT_EQ(expectedText, formattedText);
 }
@@ -460,7 +461,7 @@ TEST(CLI2_InterfaceHelpPrinter, prints_log_level_override)
 
     Interface i{"frobber"};
     i.DefaultLogLevel(PacBio::Logging::LogLevel::DEBUG);
-    InterfaceHelpPrinter help{i, 80};
+    InterfaceHelpPrinter help{i, 80, HiddenOptionMode::HIDE};
     const auto formattedText = help.Options();
     EXPECT_EQ(expectedText, formattedText);
 }
@@ -489,7 +490,7 @@ TEST(CLI2_InterfaceHelpPrinter, formats_option_group)
 
     Interface i{"frobber"};
     i.AddOptionGroup("Test Group", options);
-    InterfaceHelpPrinter help{i, 80};
+    InterfaceHelpPrinter help{i, 80, HiddenOptionMode::HIDE};
     const auto formattedText = help.OptionGroup({"Test Group", optionsData});
     EXPECT_EQ(expectedText, formattedText);
 }
@@ -508,7 +509,7 @@ TEST(CLI2_InterfaceHelpPrinter, formats_positional_argument)
 
     const auto posArgData = PositionalArgumentTranslator::Translate(CLI_v2_InterfaceHelpPrinterTests::Options::Source);
 
-    InterfaceHelpPrinter help{i, 80};
+    InterfaceHelpPrinter help{i, 80, HiddenOptionMode::HIDE};
     const auto formattedText = help.PositionalArgument(posArgData);
     EXPECT_EQ(expectedText, formattedText);
 }
@@ -535,7 +536,7 @@ TEST(CLI2_InterfaceHelpPrinter, formats_positional_argument_with_wordwrapped_des
 
     const auto posArgData = PositionalArgumentTranslator::Translate(CLI_v2_InterfaceHelpPrinterTests::Options::Source);
 
-    InterfaceHelpPrinter help{i, 80};
+    InterfaceHelpPrinter help{i, 80, HiddenOptionMode::HIDE};
     const auto formattedText = help.PositionalArguments();
     EXPECT_EQ(expectedText, formattedText);
 }
@@ -606,7 +607,7 @@ PB_BOILERPLATE_DISCLAIMER
         CLI_v2_InterfaceHelpPrinterTests::Options::OptionalStats
     });
 
-    const InterfaceHelpPrinter help{i, 80};
+    const InterfaceHelpPrinter help{i, 80, HiddenOptionMode::HIDE};
     std::ostringstream out;
     help.Print(out);
     EXPECT_EQ(expectedText, out.str());
@@ -644,7 +645,7 @@ PB_BOILERPLATE_DISCLAIMER
         "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
         "3.14"
     };
-    InterfaceHelpPrinter help{i, 80};
+    InterfaceHelpPrinter help{i, 80, HiddenOptionMode::HIDE};
     std::ostringstream out;
     out << help;
     EXPECT_EQ(expectedText, out.str());
@@ -696,7 +697,7 @@ PB_BOILERPLATE_DISCLAIMER
 
   So long, and thanks for all the fish.)");
 
-    InterfaceHelpPrinter help{i, 80};
+    InterfaceHelpPrinter help{i, 80, HiddenOptionMode::HIDE};
     std::ostringstream out;
     out << help;
     EXPECT_EQ(expectedText, out.str());
@@ -714,7 +715,7 @@ TEST(CLI2_InterfaceHelpPrinter, can_disable_builtins)
      .DisableLogLevelOption()
      .DisableNumThreadsOption();
 
-    InterfaceHelpPrinter help{i, 80};
+    InterfaceHelpPrinter help{i, 80, HiddenOptionMode::HIDE};
     const auto formattedText = help.Options();
     EXPECT_EQ(expectedText, formattedText);
 }
@@ -734,9 +735,67 @@ TEST(CLI2_InterfaceHelpPrinter, can_enable_verbose_option)
     Interface i{"frobber"};
     i.EnableVerboseOption();
 
-    InterfaceHelpPrinter help{i, 80};
+    InterfaceHelpPrinter help{i, 80, HiddenOptionMode::HIDE};
     const auto formattedText = help.Options();
     EXPECT_EQ(expectedText, formattedText);
+}
+
+TEST(CLI2_InterfaceHelpPrinter, can_handle_hidden_options)
+{
+    const Option triforceOption {
+R"({
+    "names" : ["t", "triforce"],
+    "description" : "Choose wisely.",
+    "type" : "string",
+    "choices" : ["power", "wisdom", "courage"],
+    "choices.hidden" : true,
+    "default" : "power"
+})"};
+
+    const Option doomOption {
+R"({
+    "names" : ["iddqd"],
+    "description" : "You know.",
+    "hidden" : true
+})"};
+
+    const std::string hiddenAlarms{"--alarms"};
+    const std::string hiddenExceptionsPassthrough{"--allow-exceptions-passthrough"};
+    const std::string hiddenShowAllHelp{"--show-all-help"};
+    // stopping short for choice list text, in case of wrap-around
+    const std::string hiddenTriforceChoices{"Choose wisely. Valid choices: ("}; 
+    const std::string hiddenDoom{"--iddqd"};
+
+    Interface i{"frobber"};
+    i.AddOptionGroup("Test Group", {triforceOption, doomOption});
+
+    // ensure hidden
+    {
+        InterfaceHelpPrinter help{i, 80, HiddenOptionMode::HIDE};
+        std::ostringstream helpOutput;
+        help.Print(helpOutput);
+        const std::string helpText = helpOutput.str();
+
+        EXPECT_EQ(std::string::npos, helpText.find(hiddenAlarms));
+        EXPECT_EQ(std::string::npos, helpText.find(hiddenExceptionsPassthrough));
+        EXPECT_EQ(std::string::npos, helpText.find(hiddenShowAllHelp));
+        EXPECT_EQ(std::string::npos, helpText.find(hiddenTriforceChoices));
+        EXPECT_EQ(std::string::npos, helpText.find(hiddenDoom));
+    }
+
+    // expose via --show-all-help
+    {
+        InterfaceHelpPrinter help{i, 80, HiddenOptionMode::SHOW};
+        std::ostringstream helpOutput;
+        help.Print(helpOutput);
+        const std::string helpText = helpOutput.str();
+
+        EXPECT_NE(std::string::npos, helpText.find(hiddenAlarms));
+        EXPECT_NE(std::string::npos, helpText.find(hiddenExceptionsPassthrough));
+        EXPECT_NE(std::string::npos, helpText.find(hiddenShowAllHelp));
+        EXPECT_NE(std::string::npos, helpText.find(hiddenTriforceChoices));
+        EXPECT_NE(std::string::npos, helpText.find(hiddenDoom));
+    }
 }
 
 // clang-format on
