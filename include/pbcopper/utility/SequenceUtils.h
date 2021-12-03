@@ -138,8 +138,9 @@ inline std::string ReverseComplemented(const std::string& input)
 inline std::string_view ReverseComplement(const std::string_view input, char* output)
 {
     const size_t strLen = input.length();
-    for (size_t i = 0; i < strLen; ++i)
+    for (size_t i = 0; i < strLen; ++i) {
         output[i] = Complement(input[strLen - 1 - i]);
+    }
     return {output, strLen};
 }
 #endif
