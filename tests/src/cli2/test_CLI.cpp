@@ -827,16 +827,33 @@ R"({
     CLI_v2::Interface i{"frobber", "Frob all the things.", "v3.1"};
     i.AddOption(HiddenOption);
 
-    const std::vector<std::string> args {
-        "frobber", "--show-all-help"
-    };
+    // --all-help
+    {
+        const std::vector<std::string> args {
+            "frobber", "--all-help"
+        };
 
-    std::ostringstream s;
-    Utility::CoutRedirect redirect{s.rdbuf()};
-    std::ignore = redirect;
-    const int result = CLI_v2::Run(args, i, runner);
-    EXPECT_EQ(EXIT_SUCCESS, result);
-    EXPECT_NE(std::string::npos, s.str().find("--hidden-mode"));
+        std::ostringstream s;
+        Utility::CoutRedirect redirect{s.rdbuf()};
+        std::ignore = redirect;
+        const int result = CLI_v2::Run(args, i, runner);
+        EXPECT_EQ(EXIT_SUCCESS, result);
+        EXPECT_NE(std::string::npos, s.str().find("--hidden-mode"));
+    }
+
+    // --show-all-help
+    {
+        const std::vector<std::string> args {
+            "frobber", "--show-all-help"
+        };
+
+        std::ostringstream s;
+        Utility::CoutRedirect redirect{s.rdbuf()};
+        std::ignore = redirect;
+        const int result = CLI_v2::Run(args, i, runner);
+        EXPECT_EQ(EXIT_SUCCESS, result);
+        EXPECT_NE(std::string::npos, s.str().find("--hidden-mode"));
+    }
 }
 
 TEST(CLI2_CLI, show_all_help_displays_hidden_subtools)
@@ -849,17 +866,34 @@ TEST(CLI2_CLI, show_all_help_displays_hidden_subtools)
                 {"polish",    CLI_v2_CLITests::MakePolishInterface(),    &CLI_v2_CLITests::PolishRunner},
                 {"summarize", CLI_v2_CLITests::MakeSummarizeInterface(), &CLI_v2_CLITests::SummarizeRunner}});
 
+    // --all-help
+    {
+        const std::vector<std::string> args {
+            "isoseq3", "--all-help"
+        };
 
-    const std::vector<std::string> args {
-        "isoseq3", "--show-all-help"
-    };
+        std::ostringstream s;
+        Utility::CoutRedirect redirect{s.rdbuf()};
+        std::ignore = redirect;
+        const int result = CLI_v2::Run(args, i);
+        EXPECT_EQ(EXIT_SUCCESS, result);
+        EXPECT_NE(std::string::npos, s.str().find("refine"));
+    }
 
-    std::ostringstream s;
-    Utility::CoutRedirect redirect{s.rdbuf()};
-    std::ignore = redirect;
-    const int result = CLI_v2::Run(args, i);
-    EXPECT_EQ(EXIT_SUCCESS, result);
-    EXPECT_NE(std::string::npos, s.str().find("refine"));
+    
+    // --show-all-help
+    {
+        const std::vector<std::string> args {
+            "isoseq3", "--show-all-help"
+        };
+
+        std::ostringstream s;
+        Utility::CoutRedirect redirect{s.rdbuf()};
+        std::ignore = redirect;
+        const int result = CLI_v2::Run(args, i);
+        EXPECT_EQ(EXIT_SUCCESS, result);
+        EXPECT_NE(std::string::npos, s.str().find("refine"));
+    }
 }
 
 // clang-format on
