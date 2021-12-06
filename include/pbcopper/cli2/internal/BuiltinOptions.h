@@ -75,7 +75,7 @@ R"({
 
 const Option ShowAllHelp{
 R"({
-    "names" : ["show-all-help"],
+    "names" : ["show-all-help", "all-help"],
     "description" : "Show full help - including all hidden options, choices, and subtools.",
     "hidden" : true
 })"};
