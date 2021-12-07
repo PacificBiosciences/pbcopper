@@ -89,7 +89,7 @@ struct SDPHit : public Seed
 {
     size_t Index;
 
-    SDPHit(const Seed& seed, const size_t index);
+    SDPHit(const Seed& seed, size_t index);
     bool operator<(const SDPHit& other) const noexcept;
 };
 
@@ -116,7 +116,7 @@ struct SDPColumn
     boost::optional<SDPHit> Seed;
     size_t Column;
 
-    SDPColumn(size_t column, const boost::optional<SDPHit> seed = boost::none);
+    SDPColumn(size_t column, boost::optional<SDPHit> seed = boost::none);
     bool operator<(const SDPColumn& other) const noexcept;
 };
 
@@ -196,7 +196,7 @@ void InitializeSeedsAndScores(const Seeds& seedSet, std::vector<SDPHit>* seeds,
 void __attribute__((__unused__))
 ChainSeedsImpl(std::priority_queue<ChainHit, std::vector<ChainHit>, ChainHitCompare>* chainHits,
                std::vector<boost::optional<size_t>>* chainPred, std::vector<SDPHit>* seeds,
-               std::vector<long>& scores, const size_t seedSetIdx, const ChainSeedsConfig& config);
+               std::vector<long>& scores, size_t seedSetIdx, const ChainSeedsConfig& config);
 
 /// Search a Seed set for the best numCandidates sets of locally-chainable
 /// seeds according to some scoring criteria.  Seed chains are scored based
@@ -241,8 +241,8 @@ std::vector<Seeds> ChainedSeedSets(const Seeds& seedSet, const ChainSeedsConfig&
 ///
 /// \return  A vector of SeedSets containing locally chained seeds.
 ///
-std::vector<std::pair<size_t, Seeds>> ChainSeeds(const std::map<size_t, Seeds> seedSets,
-                                                 const ChainSeedsConfig config);
+std::vector<std::pair<size_t, Seeds>> ChainSeeds(std::map<size_t, Seeds> seedSets,
+                                                 ChainSeedsConfig config);
 
 }  // namespace Align
 }  // namespace PacBio

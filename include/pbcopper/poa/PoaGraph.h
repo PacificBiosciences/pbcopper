@@ -83,7 +83,7 @@ public:
 
     void CommitAdd(PoaAlignmentMatrix* mat, std::vector<Vertex>* readPathOutput = NULL);
 
-    void PruneGraph(const int minCoverage);
+    void PruneGraph(int minCoverage);
 
     // ----------
 

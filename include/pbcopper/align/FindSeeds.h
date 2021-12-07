@@ -67,8 +67,7 @@ namespace Align {
 /// \return map containing Seeds for each referenceIndex with a hit
 ///
 std::map<size_t, Seeds> FindSeeds(const PacBio::QGram::Index& index, const std::string& seq,
-                                  const boost::optional<size_t> qIdx,
-                                  const bool filterHomopolymers);
+                                  boost::optional<size_t> qIdx, bool filterHomopolymers);
 
 /// Find all matching seeds between a DNA index and the sequences
 /// represented in some supplied index of the type specified in TConfig.
@@ -87,7 +86,7 @@ std::map<size_t, Seeds> FindSeeds(const PacBio::QGram::Index& index, const std::
 /// \return  map containing Seeds for each referenceIndex with a hit
 ///
 std::map<size_t, Seeds> FindSeeds(const PacBio::QGram::Index& index, const std::string& seq,
-                                  const boost::optional<size_t> qIdx);
+                                  boost::optional<size_t> qIdx);
 
 /// Find all matching seeds between a DNA index and the sequences
 /// represented in some supplied index of the type specified in TConfig.
@@ -102,7 +101,7 @@ std::map<size_t, Seeds> FindSeeds(const PacBio::QGram::Index& index, const std::
 /// \return  map containing Seeds for each referenceIndex with a hit
 ///
 std::map<size_t, Seeds> FindSeeds(const PacBio::QGram::Index& index, const std::string& seq,
-                                  const bool filterHomopolymers);
+                                  bool filterHomopolymers);
 
 /// Find all matching seeds between a DNA index and the sequences
 /// represented in some supplied index of the type specified in TConfig.
@@ -128,8 +127,8 @@ std::map<size_t, Seeds> FindSeeds(const PacBio::QGram::Index& index, const std::
 ///
 /// \return Seeds collection containing all hits
 ///
-Seeds FindSeeds(const size_t qGramSize, const std::string& seq1, const std::string& seq2,
-                const bool filterHomopolymers);
+Seeds FindSeeds(size_t qGramSize, const std::string& seq1, const std::string& seq2,
+                bool filterHomopolymers);
 
 /// Find all matching seeds between two DNA sequences
 ///
@@ -141,7 +140,7 @@ Seeds FindSeeds(const size_t qGramSize, const std::string& seq1, const std::stri
 ///
 /// \return Seeds collection containing all hits
 ///
-Seeds FindSeeds(const size_t qGramSize, const std::string& seq1, const std::string& seq2);
+Seeds FindSeeds(size_t qGramSize, const std::string& seq1, const std::string& seq2);
 
 }  // namespace Align
 }  // namespace PacBio

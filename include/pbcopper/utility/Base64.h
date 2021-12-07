@@ -11,7 +11,7 @@ struct Base64
     ///
     /// \return original data from Base64 encoding
     ///
-    static std::string Decode(const std::string s);
+    static std::string Decode(std::string s);
 
     ///
     /// \return Base64 encoding of input data

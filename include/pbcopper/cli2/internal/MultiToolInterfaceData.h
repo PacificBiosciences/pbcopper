@@ -7,6 +7,7 @@
 #include <pbcopper/cli2/VersionPrinterCallback.h>
 #include <pbcopper/cli2/internal/InterfaceData.h>
 #include <pbcopper/cli2/internal/OptionData.h>
+#include <pbcopper/cli2/internal/VersionPrinter.h>
 #include <pbcopper/logging/LogConfig.h>
 
 #include <boost/optional.hpp>

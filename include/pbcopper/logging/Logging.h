@@ -34,8 +34,8 @@ public:
     ///
     static Logger& Default(Logger* logger = nullptr);
 
-    Logger(std::ostream& out, const LogLevel level);
-    Logger(const std::string& filename, const LogLevel level);
+    Logger(std::ostream& out, LogLevel level);
+    Logger(const std::string& filename, LogLevel level);
 
     Logger(std::ostream& out, const LogConfig& config);
     Logger(const std::string& filename, const LogConfig& config);
@@ -62,7 +62,7 @@ private:
     friend class LogMessage;
 
     Logger& operator<<(std::unique_ptr<LogLevelStream>&& ptr);
-    bool Handles(const LogLevel level) const;
+    bool Handles(LogLevel level) const;
     void MessageWriter();
 };
 

@@ -74,7 +74,7 @@ enum class AlarmType
     FILE_NOT_FOUND,
 };
 
-std::string NameForAlarmType(const AlarmType type);
+std::string NameForAlarmType(AlarmType type);
 
 // AlarmException does not inherit from std::exception on purpose:
 // The idea is that AlarmException is orthogonal to the standard C++

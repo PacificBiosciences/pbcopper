@@ -28,8 +28,8 @@ public:
 
     // index lookup API
     IndexHit Hit(const Shape& shape) const;
-    IndexHits Hits(const Shape& shape, const size_t queryPos) const;
-    std::vector<IndexHits> Hits(const std::string& seq, const bool filterHomopolymers) const;
+    IndexHits Hits(const Shape& shape, size_t queryPos) const;
+    std::vector<IndexHits> Hits(const std::string& seq, bool filterHomopolymers) const;
 
     // "private" method(s) - index construction
     void Init();

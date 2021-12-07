@@ -19,7 +19,7 @@ using LogLevelStream = std::pair<LogLevel, std::ostringstream>;
 class LogMessage
 {
 public:
-    LogMessage(const char* file, const char* function, unsigned int line, const LogLevel level,
+    LogMessage(const char* file, const char* function, unsigned int line, LogLevel level,
                Logger& logger);
     ~LogMessage();
 

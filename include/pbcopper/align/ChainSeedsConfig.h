@@ -15,11 +15,11 @@ namespace Align {
 ///
 struct ChainSeedsConfig
 {
-    explicit ChainSeedsConfig(const size_t numCandidatesArg);
+    explicit ChainSeedsConfig(size_t numCandidatesArg);
 
-    ChainSeedsConfig(const size_t numCandidatesArg, const long minScoreArg, const int matchScoreArg,
-                     const int nonMatchPenaltyArg, const int insertionPenaltyArg,
-                     const int deletionPenaltyArg, const int maxSeedGapArg);
+    ChainSeedsConfig(size_t numCandidatesArg, long minScoreArg, int matchScoreArg,
+                     int nonMatchPenaltyArg, int insertionPenaltyArg, int deletionPenaltyArg,
+                     int maxSeedGapArg);
 
     ChainSeedsConfig() = default;
 

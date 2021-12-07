@@ -112,7 +112,7 @@ public:
     ///
     /// \param blen length of the reference sequence.
     ///
-    explicit AlignmentGraph(const size_t backboneLength);
+    explicit AlignmentGraph(size_t backboneLength);
 
     /// Add alignment to the graph.
     ///

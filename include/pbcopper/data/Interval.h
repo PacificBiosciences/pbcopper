@@ -32,16 +32,16 @@ public:
     Interval() = default;
 
     /// \brief Creates a 'singleton' interval [val,val+1)
-    Interval(const Position val);
+    Interval(Position val);
 
     /// \brief Creates an interval from [start, end) */
-    Interval(const Position start, const Position end);
+    Interval(Position start, Position end);
 
     /// \brief Creates an interval from a string "start-end" */
     static Interval FromString(const std::string& str);
 
     /// \brief Reset Interval */
-    void Reset(const Position start, const Position end);
+    void Reset(Position start, Position end);
 
     /// \brief Reset Interval */
     void Reset(const Interval& other);

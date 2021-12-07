@@ -67,7 +67,7 @@ public:
                                              const std::string& unalnTarget,
                                              const std::string& unalnQuery);
 
-    PairwiseAlignment ClippedTo(const size_t refStart, const size_t refEnd);
+    PairwiseAlignment ClippedTo(size_t refStart, size_t refEnd);
 };
 
 PairwiseAlignment* Align(const std::string& target, const std::string& query, int* score,

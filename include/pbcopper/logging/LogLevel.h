@@ -27,7 +27,7 @@ public:
     };
 
 public:
-    LogLevel(const int value);
+    LogLevel(int value);
     LogLevel(const std::string& value);
 
 public:

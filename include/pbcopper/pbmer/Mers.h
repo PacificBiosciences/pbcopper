@@ -19,7 +19,7 @@ public:
     /// A special hash function `cuz u64 kmers requires a mix_64_masked
     /// BADBOY: https://gist.github.com/badboy/6267743#64-bit-mix-functions
     ///
-    static uint64_t Mix64Masked(uint64_t key, const uint64_t mask);
+    static uint64_t Mix64Masked(uint64_t key, uint64_t mask);
 
     explicit Mers(uint8_t /*kmerSize*/ kSize);
 
