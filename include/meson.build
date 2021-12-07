@@ -11,6 +11,20 @@ if not meson.is_subproject()
       'pbcopper/PbcopperConfig.h']),
     subdir : 'pbcopper')
 
+  # pbcopper/algorithm
+  install_headers(
+    files([
+      'pbcopper/algorithm/Heteroduplex.h',
+    ]),
+    subdir : 'pbcopper/algorithm')
+
+  # pbcopper/algorithm/internal
+  install_headers(
+    files([
+      'pbcopper/algorithm/internal/HeteroduplexUtils.h',
+    ]),
+    subdir : 'pbcopper/algorithm/internal')
+
   # pbcopper/align
   install_headers(
     files([
@@ -155,6 +169,7 @@ if not meson.is_subproject()
   install_headers(
     files([
       'pbcopper/math/ConfusionMatrix.h',
+      'pbcopper/math/FishersExact.h',
     ]),
     subdir : 'pbcopper/math')
 
@@ -219,6 +234,12 @@ if not meson.is_subproject()
     files([
       'pbcopper/third-party/edlib.h']),
     subdir : 'pbcopper/third-party')
+
+  # pbcopper/third-party/htslib
+  install_headers(
+    files([
+      'pbcopper/third-party/htslib/kfunc.h']),
+    subdir : 'pbcopper/third-party/htslib')
 
   # pbcopper/third-party/kxsort
   install_headers(

@@ -2,6 +2,12 @@
 
 ## Active
 
+## [1.9.5] - 2021-12-07
+
+### Added
+ - Heteroduplex finder algorithm
+ - Fisher's exact test
+
 ## [1.9.4] - 2021-12-06
 
 ### Added
