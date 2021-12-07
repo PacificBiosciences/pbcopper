@@ -3,11 +3,11 @@
 
 #include <pbcopper/PbcopperConfig.h>
 
-#include <cassert>
-#include <cstddef>
-
 #include <algorithm>
 #include <vector>
+
+#include <cassert>
+#include <cstddef>
 
 namespace PacBio {
 namespace Poa {

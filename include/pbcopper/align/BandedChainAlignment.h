@@ -1,11 +1,14 @@
 #ifndef PBCOPPER_ALIGN_BANDEDCHAINALIGNMENT_H
 #define PBCOPPER_ALIGN_BANDEDCHAINALIGNMENT_H
 
-#include <cstddef>
+#include <pbcopper/PbcopperConfig.h>
+
+#include <pbcopper/align/Seed.h>
+
 #include <string>
 #include <vector>
 
-#include <pbcopper/align/Seed.h>
+#include <cstddef>
 
 //
 // Support for banded alignment of seed chains

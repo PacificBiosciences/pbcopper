@@ -5,14 +5,16 @@
 // Alignment blocks for banded chain alignment
 //
 
-#include <cfloat>
+#include <pbcopper/PbcopperConfig.h>
+
+#include <pbcopper/align/BandedChainAlignment.h>
+#include <pbcopper/align/Seed.h>
 
 #include <string>
 #include <utility>
 #include <vector>
 
-#include <pbcopper/align/BandedChainAlignment.h>
-#include <pbcopper/align/Seed.h>
+#include <cfloat>
 
 namespace PacBio {
 namespace Align {

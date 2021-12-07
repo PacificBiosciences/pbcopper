@@ -1,15 +1,7 @@
 #ifndef PBCOPPER_DATA_READ_H
 #define PBCOPPER_DATA_READ_H
 
-#include <cstddef>
-#include <cstdint>
-
-#include <iosfwd>
-#include <string>
-#include <tuple>
-#include <vector>
-
-#include <boost/optional.hpp>
+#include <pbcopper/PbcopperConfig.h>
 
 #include <pbcopper/data/Accuracy.h>
 #include <pbcopper/data/Frames.h>
@@ -18,6 +10,16 @@
 #include <pbcopper/data/QualityValues.h>
 #include <pbcopper/data/ReadId.h>
 #include <pbcopper/data/SNR.h>
+
+#include <boost/optional.hpp>
+
+#include <iosfwd>
+#include <string>
+#include <tuple>
+#include <vector>
+
+#include <cstddef>
+#include <cstdint>
 
 namespace PacBio {
 namespace Data {

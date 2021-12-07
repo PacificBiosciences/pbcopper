@@ -3,12 +3,12 @@
 
 #include <pbcopper/PbcopperConfig.h>
 
-#include <string>
-#include <vector>
-
 #include <pbcopper/cli2/Interface.h>
 #include <pbcopper/cli2/MultiToolInterface.h>
 #include <pbcopper/cli2/ResultsHandler.h>
+
+#include <string>
+#include <vector>
 
 namespace PacBio {
 namespace CLI_v2 {

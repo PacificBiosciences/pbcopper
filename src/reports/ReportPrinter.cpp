@@ -1,10 +1,10 @@
 #include "ReportPrinter.h"
 
-#include <ostream>
-
 #include <pbcopper/json/JSON.h>
 #include <pbcopper/reports/Report.h>
 #include <pbcopper/utility/PbcopperVersion.h>
+
+#include <ostream>
 
 using Json = PacBio::JSON::Json;
 

@@ -3,14 +3,14 @@
 
 #include <pbcopper/PbcopperConfig.h>
 
-#include <iosfwd>
-#include <type_traits>
-
 #include <pbcopper/data/CCSTag.h>
 #include <pbcopper/data/Interval.h>
 #include <pbcopper/data/MovieName.h>
 #include <pbcopper/data/Position.h>
 #include <pbcopper/data/Zmw.h>
+
+#include <iosfwd>
+#include <type_traits>
 
 namespace PacBio {
 namespace Data {

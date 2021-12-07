@@ -1,14 +1,14 @@
 #include <pbcopper/logging/Logging.h>
 
-#include <cassert>
-#include <cstddef>
-#include <ctime>
+#include <pbcopper/utility/Unused.h>
 
 #include <chrono>
 #include <iostream>
 #include <ostream>
 
-#include <pbcopper/utility/Unused.h>
+#include <cassert>
+#include <cstddef>
+#include <ctime>
 
 namespace PacBio {
 namespace Logging {

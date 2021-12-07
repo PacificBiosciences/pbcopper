@@ -3,11 +3,11 @@
 
 #include <pbcopper/PbcopperConfig.h>
 
-#include <string>
-#include <vector>
-
 #include <pbcopper/cli2/PositionalArgument.h>
 #include <pbcopper/cli2/internal/PositionalArgumentData.h>
+
+#include <string>
+#include <vector>
 
 namespace PacBio {
 namespace CLI_v2 {

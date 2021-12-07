@@ -1,15 +1,15 @@
 #include <pbcopper/data/SNR.h>
 
-#include <cassert>
-#include <cstring>
+#include <boost/algorithm/clamp.hpp>
+#include <boost/assert.hpp>
 
 #include <algorithm>
 #include <ostream>
 #include <string>
 #include <type_traits>
 
-#include <boost/algorithm/clamp.hpp>
-#include <boost/assert.hpp>
+#include <cassert>
+#include <cstring>
 
 namespace PacBio {
 namespace Data {

@@ -5,6 +5,8 @@
 // SIMD local (Smith-Waterman) alignment score
 //
 
+#include <pbcopper/PbcopperConfig.h>
+
 #include <string>
 #include <vector>
 

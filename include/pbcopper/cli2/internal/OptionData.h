@@ -3,13 +3,13 @@
 
 #include <pbcopper/PbcopperConfig.h>
 
-#include <algorithm>
-#include <string>
-#include <vector>
+#include <pbcopper/cli2/OptionValue.h>
 
 #include <boost/optional.hpp>
 
-#include <pbcopper/cli2/OptionValue.h>
+#include <algorithm>
+#include <string>
+#include <vector>
 
 namespace PacBio {
 namespace CLI_v2 {

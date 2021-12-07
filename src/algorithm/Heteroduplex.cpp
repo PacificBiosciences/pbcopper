@@ -1,11 +1,5 @@
 #include <pbcopper/algorithm/Heteroduplex.h>
 
-#include <cassert>
-
-#include <algorithm>
-#include <sstream>
-#include <stdexcept>
-
 #include <pbcopper/algorithm/internal/HeteroduplexUtils.h>
 #include <pbcopper/data/Cigar.h>
 #include <pbcopper/data/Strand.h>
@@ -13,6 +7,12 @@
 #include <pbcopper/math/FishersExact.h>
 #include <pbcopper/utility/SequenceUtils.h>
 #include <pbcopper/utility/Ssize.h>
+
+#include <algorithm>
+#include <sstream>
+#include <stdexcept>
+
+#include <cassert>
 
 namespace PacBio {
 namespace Algorithm {

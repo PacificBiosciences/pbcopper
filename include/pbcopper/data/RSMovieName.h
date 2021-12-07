@@ -3,12 +3,12 @@
 
 #include <pbcopper/PbcopperConfig.h>
 
+#include <boost/utility/string_ref.hpp>
+
 #include <iosfwd>
 #include <memory>
 #include <string>
 #include <type_traits>
-
-#include <boost/utility/string_ref.hpp>
 
 namespace PacBio {
 namespace Data {

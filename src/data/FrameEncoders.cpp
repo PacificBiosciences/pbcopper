@@ -1,15 +1,15 @@
 #include <pbcopper/data/FrameEncoders.h>
 
-#include <cassert>
-#include <cmath>
-#include <cstddef>
-#include <cstdint>
+#include <boost/algorithm/string/join.hpp>
+#include <boost/range/adaptor/transformed.hpp>
 
 #include <algorithm>
 #include <limits>
 
-#include <boost/algorithm/string/join.hpp>
-#include <boost/range/adaptor/transformed.hpp>
+#include <cassert>
+#include <cmath>
+#include <cstddef>
+#include <cstdint>
 
 namespace PacBio {
 namespace Data {

@@ -1,6 +1,8 @@
 #ifndef PBCOPPER_LOGGING_LOGLEVEL_H
 #define PBCOPPER_LOGGING_LOGLEVEL_H
 
+#include <pbcopper/PbcopperConfig.h>
+
 #include <string>
 
 namespace PacBio {

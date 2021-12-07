@@ -1,13 +1,5 @@
 #include <pbcopper/cli2/CLI.h>
 
-#include <cassert>
-#include <cstdlib>
-
-#include <exception>
-#include <fstream>
-#include <iostream>
-#include <string>
-
 #include <pbcopper/cli2/Results.h>
 #include <pbcopper/cli2/internal/BuiltinOptions.h>
 #include <pbcopper/cli2/internal/CommandLineParser.h>
@@ -16,6 +8,14 @@
 #include <pbcopper/cli2/internal/VersionPrinter.h>
 #include <pbcopper/logging/Logging.h>
 #include <pbcopper/utility/Alarm.h>
+
+#include <exception>
+#include <fstream>
+#include <iostream>
+#include <string>
+
+#include <cassert>
+#include <cstdlib>
 
 using CommandLineParser = PacBio::CLI_v2::internal::CommandLineParser;
 using InterfaceHelpPrinter = PacBio::CLI_v2::internal::InterfaceHelpPrinter;

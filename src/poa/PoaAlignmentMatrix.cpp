@@ -1,6 +1,6 @@
 #include "PoaAlignmentMatrix.h"
 
-#include <cstddef>
+#include "PoaGraphImpl.h"
 
 #include <iomanip>
 #include <ios>
@@ -9,7 +9,7 @@
 #include <string>
 #include <vector>
 
-#include "PoaGraphImpl.h"
+#include <cstddef>
 
 namespace PacBio {
 namespace Poa {

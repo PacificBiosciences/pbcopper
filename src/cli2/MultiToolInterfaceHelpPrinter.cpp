@@ -1,13 +1,12 @@
 #include <pbcopper/cli2/internal/MultiToolInterfaceHelpPrinter.h>
 
+#include <pbcopper/cli2/internal/OptionData.h>
+#include "PbBoilerplateDisclaimer.h"
+
 #include <iomanip>
 #include <ios>
 #include <ostream>
 #include <sstream>
-
-#include <pbcopper/cli2/internal/OptionData.h>
-
-#include "PbBoilerplateDisclaimer.h"
 
 namespace PacBio {
 namespace CLI_v2 {

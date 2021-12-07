@@ -1,8 +1,8 @@
 #include <pbcopper/data/Accuracy.h>
 
-#include <type_traits>
-
 #include <boost/algorithm/clamp.hpp>
+
+#include <type_traits>
 
 namespace PacBio {
 namespace Data {

@@ -1,13 +1,15 @@
 #ifndef PBCOPPER_DATA_INTERVAL_TREE_H
 #define PBCOPPER_DATA_INTERVAL_TREE_H
 
-#include <cstddef>
+#include <pbcopper/PbcopperConfig.h>
+
+#include <pbcopper/data/Interval.h>
+#include <pbcopper/data/Position.h>
 
 #include <set>
 #include <string>
 
-#include <pbcopper/data/Interval.h>
-#include <pbcopper/data/Position.h>
+#include <cstddef>
 
 namespace PacBio {
 namespace Data {

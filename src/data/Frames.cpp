@@ -1,12 +1,12 @@
 #include <pbcopper/data/Frames.h>
 
-#include <ostream>
-#include <type_traits>
+#include <pbcopper/data/FrameEncoders.h>
 
 #include <boost/algorithm/string/join.hpp>
 #include <boost/range/adaptor/transformed.hpp>
 
-#include <pbcopper/data/FrameEncoders.h>
+#include <ostream>
+#include <type_traits>
 
 namespace PacBio {
 namespace Data {

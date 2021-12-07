@@ -1,14 +1,14 @@
 #include <pbcopper/data/MappedRead.h>
 
+#include <pbcopper/data/Clipping.h>
+#include <pbcopper/data/internal/ClippingImpl.h>
+#include <pbcopper/utility/SequenceUtils.h>
+
 #include <algorithm>
 #include <numeric>
 #include <ostream>
 #include <stdexcept>
 #include <type_traits>
-
-#include <pbcopper/data/Clipping.h>
-#include <pbcopper/data/internal/ClippingImpl.h>
-#include <pbcopper/utility/SequenceUtils.h>
 
 namespace PacBio {
 namespace Data {

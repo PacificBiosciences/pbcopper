@@ -3,11 +3,11 @@
 
 #include <pbcopper/PbcopperConfig.h>
 
-#include <cstdint>
-
 #include <iosfwd>
 #include <string>
 #include <vector>
+
+#include <cstdint>
 
 namespace PacBio {
 namespace Utility {

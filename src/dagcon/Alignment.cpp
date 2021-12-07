@@ -1,9 +1,9 @@
 #include <pbcopper/dagcon/Alignment.h>
 
-#include <cassert>
-
 #include <stdexcept>
 #include <string>
+
+#include <cassert>
 
 namespace PacBio {
 namespace Dagcon {

@@ -3,11 +3,11 @@
 
 #include <pbcopper/PbcopperConfig.h>
 
+#include <pbcopper/data/CigarOperation.h>
+
 #include <iosfwd>
 #include <string>
 #include <vector>
-
-#include <pbcopper/data/CigarOperation.h>
 
 namespace PacBio {
 namespace Data {

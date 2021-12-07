@@ -5,13 +5,13 @@
 
 #include <pbcopper/PbcopperConfig.h>
 
-#include <cstddef>
+#include <boost/variant.hpp>
 
 #include <iosfwd>
 #include <string>
 #include <vector>
 
-#include <boost/variant.hpp>
+#include <cstddef>
 
 namespace PacBio {
 namespace Reports {

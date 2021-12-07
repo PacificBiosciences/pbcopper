@@ -3,11 +3,11 @@
 
 #include <pbcopper/PbcopperConfig.h>
 
-#include <cstddef>
-
 #include <boost/config.hpp>
 #include <boost/graph/adjacency_list.hpp>
 #include <boost/type_traits.hpp>
+
+#include <cstddef>
 
 namespace boost {
 enum vertex_info_t

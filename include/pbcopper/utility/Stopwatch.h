@@ -3,10 +3,11 @@
 
 #include <pbcopper/PbcopperConfig.h>
 
-#include <sys/resource.h>
-#include <sys/time.h>
 #include <chrono>
 #include <string>
+
+#include <sys/resource.h>
+#include <sys/time.h>
 
 namespace PacBio {
 namespace Utility {

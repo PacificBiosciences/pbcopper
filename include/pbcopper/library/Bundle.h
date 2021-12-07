@@ -3,10 +3,10 @@
 
 #include <pbcopper/PbcopperConfig.h>
 
+#include <pbcopper/library/Info.h>
+
 #include <memory>
 #include <vector>
-
-#include <pbcopper/library/Info.h>
 
 namespace PacBio {
 namespace Library {

@@ -3,20 +3,20 @@
 
 #include <pbcopper/PbcopperConfig.h>
 
-#include <cstddef>
-#include <cstdint>
-
-#include <map>
-#include <string>
-#include <tuple>
-#include <vector>
-
 #include <pbcopper/pbmer/Bubble.h>
 #include <pbcopper/pbmer/DbgNode.h>
 #include <pbcopper/pbmer/DnaBit.h>
 #include <pbcopper/pbmer/Mers.h>
 #include <pbcopper/pbmer/Parser.h>
 #include <pbcopper/third-party/robin_hood/robin_hood.h>
+
+#include <map>
+#include <string>
+#include <tuple>
+#include <vector>
+
+#include <cstddef>
+#include <cstdint>
 
 namespace PacBio {
 namespace Pbmer {

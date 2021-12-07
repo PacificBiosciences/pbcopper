@@ -3,12 +3,6 @@
 
 #include <pbcopper/PbcopperConfig.h>
 
-#include <memory>
-#include <string>
-#include <type_traits>
-#include <unordered_map>
-#include <vector>
-
 #include <pbcopper/cli2/Option.h>
 #include <pbcopper/cli2/OptionValue.h>
 #include <pbcopper/cli2/PositionalArgument.h>
@@ -16,6 +10,12 @@
 #include <pbcopper/cli2/internal/OptionData.h>
 #include <pbcopper/cli2/internal/PositionalArgumentData.h>
 #include <pbcopper/logging/Logging.h>
+
+#include <memory>
+#include <string>
+#include <type_traits>
+#include <unordered_map>
+#include <vector>
 
 namespace PacBio {
 namespace CLI_v2 {

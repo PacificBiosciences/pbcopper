@@ -1,11 +1,11 @@
 #include <pbcopper/pbmer/Dbg.h>
 
-#include <cassert>
-
 #include <fstream>
 #include <iostream>
 #include <sstream>
 #include <unordered_set>
+
+#include <cassert>
 
 namespace PacBio {
 namespace Pbmer {

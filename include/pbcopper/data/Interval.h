@@ -3,13 +3,13 @@
 
 #include <pbcopper/PbcopperConfig.h>
 
-#include <iosfwd>
-
 #include <pbcopper/data/Position.h>
 
 #define BOOST_ICL_USE_STATIC_BOUNDED_INTERVALS
 #include <boost/icl/discrete_interval.hpp>
 #include <boost/icl/interval_traits.hpp>
+
+#include <iosfwd>
 
 namespace PacBio {
 namespace Data {

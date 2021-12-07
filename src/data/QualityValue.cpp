@@ -1,8 +1,9 @@
 #include <pbcopper/data/QualityValue.h>
 
 #include <algorithm>
-#include <cstdint>
 #include <type_traits>
+
+#include <cstdint>
 
 namespace PacBio {
 namespace Data {

@@ -1,12 +1,13 @@
 #include <pbcopper/cli2/MultiToolInterface.h>
 
-#include <cassert>
-#include <type_traits>
-#include <utility>
-
 #include <pbcopper/cli2/internal/BuiltinOptions.h>
 #include <pbcopper/cli2/internal/InterfaceData.h>
 #include <pbcopper/cli2/internal/OptionTranslator.h>
+
+#include <type_traits>
+#include <utility>
+
+#include <cassert>
 
 using OptionTranslator = PacBio::CLI_v2::internal::OptionTranslator;
 

@@ -1,11 +1,11 @@
 #include <pbcopper/pbmer/DnaBit.h>
 
-#include <cassert>
+#include <pbcopper/pbmer/Parser.h>
 
 #include <array>
 #include <tuple>
 
-#include <pbcopper/pbmer/Parser.h>
+#include <cassert>
 
 namespace PacBio {
 namespace Pbmer {

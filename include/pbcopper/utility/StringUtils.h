@@ -3,10 +3,10 @@
 
 #include <pbcopper/PbcopperConfig.h>
 
-#include <cstdint>
-
 #include <string>
 #include <vector>
+
+#include <cstdint>
 
 namespace PacBio {
 namespace Utility {

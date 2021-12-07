@@ -1,12 +1,14 @@
 #ifndef PBCOPPER_ALIGN_FINDSEEDS_H
 #define PBCOPPER_ALIGN_FINDSEEDS_H
 
-#include <map>
-#include <string>
+#include <pbcopper/PbcopperConfig.h>
+
+#include <pbcopper/align/Seeds.h>
 
 #include <boost/optional.hpp>
 
-#include <pbcopper/align/Seeds.h>
+#include <map>
+#include <string>
 
 /*
  * This file contains a few minimal wrapper functions around the index types

@@ -1,6 +1,8 @@
 #ifndef PBCOPPER_ALIGN_AFFINEALIGNMENT_H
 #define PBCOPPER_ALIGN_AFFINEALIGNMENT_H
 
+#include <pbcopper/PbcopperConfig.h>
+
 #include <string>
 
 namespace PacBio {

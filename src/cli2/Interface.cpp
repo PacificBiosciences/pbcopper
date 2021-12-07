@@ -1,14 +1,15 @@
 #include <pbcopper/cli2/Interface.h>
 
-#include <cassert>
-#include <map>
-#include <stdexcept>
-#include <type_traits>
-
 #include <pbcopper/cli2/Interface.h>
 #include <pbcopper/cli2/internal/BuiltinOptions.h>
 #include <pbcopper/cli2/internal/OptionTranslator.h>
 #include <pbcopper/cli2/internal/PositionalArgumentTranslator.h>
+
+#include <map>
+#include <stdexcept>
+#include <type_traits>
+
+#include <cassert>
 
 using OptionData = PacBio::CLI_v2::internal::OptionData;
 using OptionGroupData = PacBio::CLI_v2::internal::OptionGroupData;

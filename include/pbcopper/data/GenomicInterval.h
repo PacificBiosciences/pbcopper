@@ -6,8 +6,9 @@
 #include <pbcopper/data/Interval.h>
 #include <pbcopper/data/Position.h>
 
-#include <cstddef>
 #include <string>
+
+#include <cstddef>
 
 namespace PacBio {
 namespace Data {

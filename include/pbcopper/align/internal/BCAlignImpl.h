@@ -5,15 +5,17 @@
 // BandedChainAlignment implementation
 //
 
-#include <cassert>
-#include <cstddef>
-#include <cstdint>
+#include <pbcopper/PbcopperConfig.h>
+
+#include <pbcopper/align/BandedChainAlignment.h>
+#include <pbcopper/align/internal/BCAlignBlocks.h>
 
 #include <string>
 #include <vector>
 
-#include <pbcopper/align/BandedChainAlignment.h>
-#include <pbcopper/align/internal/BCAlignBlocks.h>
+#include <cassert>
+#include <cstddef>
+#include <cstdint>
 
 namespace PacBio {
 namespace Align {

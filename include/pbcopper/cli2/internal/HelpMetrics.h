@@ -1,14 +1,16 @@
 #ifndef PBCOPPER_CLI_v2_HELPMETRICS_H
 #define PBCOPPER_CLI_v2_HELPMETRICS_H
 
-#include <string>
-#include <unordered_map>
+#include <pbcopper/PbcopperConfig.h>
 
 #include <pbcopper/cli2/Interface.h>
 #include <pbcopper/cli2/MultiToolInterface.h>
 #include <pbcopper/cli2/internal/HiddenOptionMode.h>
 #include <pbcopper/cli2/internal/OptionData.h>
 #include <pbcopper/cli2/internal/PositionalArgumentData.h>
+
+#include <string>
+#include <unordered_map>
 
 namespace PacBio {
 namespace CLI_v2 {

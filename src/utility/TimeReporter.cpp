@@ -1,8 +1,8 @@
 #include <pbcopper/utility/TimeReporter.h>
 
-#include <cassert>
-
 #include <pbcopper/logging/Logging.h>
+
+#include <cassert>
 
 namespace PacBio {
 namespace Utility {

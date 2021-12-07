@@ -1,16 +1,16 @@
 #include <pbcopper/poa/PoaGraph.h>
 
-#include <cstddef>
-
-#include <limits>
-#include <sstream>
+#include "PoaGraphImpl.h"
+#include "VectorL.h"
 
 #include <boost/foreach.hpp>
 #include <boost/graph/topological_sort.hpp>
 #include <boost/unordered_set.hpp>
 
-#include "PoaGraphImpl.h"
-#include "VectorL.h"
+#include <limits>
+#include <sstream>
+
+#include <cstddef>
 
 namespace PacBio {
 namespace Poa {

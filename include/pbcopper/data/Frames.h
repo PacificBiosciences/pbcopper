@@ -3,13 +3,13 @@
 
 #include <pbcopper/PbcopperConfig.h>
 
-#include <cstddef>
-#include <cstdint>
+#include <pbcopper/data/FrameCodec.h>
 
 #include <iosfwd>
 #include <vector>
 
-#include <pbcopper/data/FrameCodec.h>
+#include <cstddef>
+#include <cstdint>
 
 namespace PacBio {
 namespace Data {

@@ -3,10 +3,10 @@
 
 #include <pbcopper/PbcopperConfig.h>
 
+#include <boost/variant.hpp>
+
 #include <iosfwd>
 #include <string>
-
-#include <boost/variant.hpp>
 
 // clang-format off
 

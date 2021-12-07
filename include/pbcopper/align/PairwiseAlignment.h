@@ -1,10 +1,12 @@
 #ifndef PBCOPPER_ALIGN_PAIRWISEALIGNMENT_H
 #define PBCOPPER_ALIGN_PAIRWISEALIGNMENT_H
 
-#include <string>
-#include <vector>
+#include <pbcopper/PbcopperConfig.h>
 
 #include <pbcopper/align/AlignConfig.h>
+
+#include <string>
+#include <vector>
 
 namespace PacBio {
 namespace Align {

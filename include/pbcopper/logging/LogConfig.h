@@ -1,10 +1,12 @@
 #ifndef PBCOPPER_LOGGING_LOGCONFIG_H
 #define PBCOPPER_LOGGING_LOGCONFIG_H
 
-#include <string>
+#include <pbcopper/PbcopperConfig.h>
 
 #include <pbcopper/logging/LogField.h>
 #include <pbcopper/logging/LogLevel.h>
+
+#include <string>
 
 namespace PacBio {
 namespace Logging {

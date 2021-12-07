@@ -1,6 +1,8 @@
 #ifndef PBCOPPER_ALIGN_CHAINSEEDSCONFIG_H
 #define PBCOPPER_ALIGN_CHAINSEEDSCONFIG_H
 
+#include <pbcopper/PbcopperConfig.h>
+
 #include <cstddef>
 
 namespace PacBio {

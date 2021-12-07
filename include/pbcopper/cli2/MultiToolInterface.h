@@ -3,16 +3,16 @@
 
 #include <pbcopper/PbcopperConfig.h>
 
-#include <string>
-#include <type_traits>
-#include <utility>
-#include <vector>
-
 #include <pbcopper/cli2/Tool.h>
 #include <pbcopper/cli2/VersionPrinterCallback.h>
 #include <pbcopper/cli2/internal/MultiToolInterfaceData.h>
 #include <pbcopper/cli2/internal/OptionData.h>
 #include <pbcopper/logging/LogConfig.h>
+
+#include <string>
+#include <type_traits>
+#include <utility>
+#include <vector>
 
 namespace PacBio {
 namespace CLI_v2 {

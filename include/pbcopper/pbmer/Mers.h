@@ -3,11 +3,11 @@
 
 #include <pbcopper/PbcopperConfig.h>
 
-#include <cstdint>
+#include <pbcopper/pbmer/Kmer.h>
 
 #include <vector>
 
-#include <pbcopper/pbmer/Kmer.h>
+#include <cstdint>
 
 namespace PacBio {
 namespace Pbmer {

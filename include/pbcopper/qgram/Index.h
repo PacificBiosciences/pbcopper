@@ -3,12 +3,13 @@
 
 #include <pbcopper/PbcopperConfig.h>
 
-#include <cstddef>
+#include <pbcopper/qgram/IndexHits.h>
+
 #include <memory>
 #include <string>
 #include <vector>
 
-#include <pbcopper/qgram/IndexHits.h>
+#include <cstddef>
 
 namespace PacBio {
 namespace QGram {
