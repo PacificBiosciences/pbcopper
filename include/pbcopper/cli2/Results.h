@@ -20,10 +20,6 @@
 namespace PacBio {
 namespace CLI_v2 {
 
-namespace internal {
-class CommandLineParser;
-}
-
 ///
 /// Provides an application with values for all options & positional arguments
 /// that were registered in its interface.
@@ -132,12 +128,12 @@ public:
     ///
     /// Registers an observed flag turned on
     ///
-    Results& AddObservedFlag(const std::string& name, const SetByMode setBy);
+    Results& AddObservedFlag(const std::string& name, SetByMode setBy);
 
     ///
     /// Registers an observed option value
     ///
-    Results& AddObservedValue(const std::string& name, OptionValue value, const SetByMode setBy);
+    Results& AddObservedValue(const std::string& name, OptionValue value, SetByMode setBy);
 
     ///
     /// Sets the command line used to invoke the application

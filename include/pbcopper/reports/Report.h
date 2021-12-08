@@ -57,7 +57,7 @@ private:
 class Column : public BaseReportElement
 {
 public:
-    Column(std::string id_, std::vector<ReportValue> values, std::string header = "");
+    Column(std::string id, std::vector<ReportValue> values, std::string header = "");
 
     // header
     const std::string& Header() const;

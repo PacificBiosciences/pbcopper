@@ -34,7 +34,7 @@ public:
     ReadNameBase(const MovieNameType& movieName, const PacBio::Data::Zmw& zmw,
                  const Position& queryStart, const Position& queryEnd);
 
-    ReadNameBase(const MovieNameType& movieName, const PacBio::Data::Zmw& zmw, const CCSTag ccs);
+    ReadNameBase(const MovieNameType& movieName, const PacBio::Data::Zmw& zmw, CCSTag ccs);
 
     ReadNameBase() = default;
 

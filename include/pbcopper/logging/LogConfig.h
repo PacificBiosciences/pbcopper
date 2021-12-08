@@ -14,7 +14,7 @@ namespace Logging {
 struct LogConfig
 {
     LogConfig();
-    explicit LogConfig(const LogLevel level);
+    explicit LogConfig(LogLevel level);
 
     LogLevel Level;
     std::string Header;

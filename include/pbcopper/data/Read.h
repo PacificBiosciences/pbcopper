@@ -55,7 +55,7 @@ struct Read
     int32_t Length() const;
     std::string FullName() const;
 
-    Read ClipTo(const int32_t begin, const int32_t end) const;
+    Read ClipTo(int32_t begin, int32_t end) const;
 };
 
 std::ostream& operator<<(std::ostream& os, const Read& read);

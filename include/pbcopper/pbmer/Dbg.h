@@ -41,9 +41,9 @@ public:
     ///             -1 : kmer is too large.
     ///             -2 : kmer length is not odd.
     ///
-    int AddKmers(const PacBio::Pbmer::Mers& m, const uint32_t rid);
+    int AddKmers(const PacBio::Pbmer::Mers& m, uint32_t rid);
 
-    void AddVerifedKmerPairs(std::vector<PacBio::Pbmer::DnaBit>& bits, const uint32_t rid);
+    void AddVerifedKmerPairs(std::vector<PacBio::Pbmer::DnaBit>& bits, uint32_t rid);
 
     ///
     /// Iterates over node kmers and checks for all possible out/in bases

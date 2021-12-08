@@ -52,9 +52,8 @@ public:
     BandedChainAlignment() = default;
     BandedChainAlignment(const BandedChainAlignConfig& config, std::string target,
                          std::string query, const std::string& transcript);
-    BandedChainAlignment(const BandedChainAlignConfig& config, const char* target,
-                         const size_t targetLen, const char* query, const size_t queryLen,
-                         const std::string& transcript);
+    BandedChainAlignment(const BandedChainAlignConfig& config, const char* target, size_t targetLen,
+                         const char* query, size_t queryLen, const std::string& transcript);
 
 public:
     float Identity() const;
@@ -76,7 +75,7 @@ public:
 /// \return alignment results (pairwise alignment, score, etc)
 ///
 BandedChainAlignment BandedChainAlign(
-    const char* target, const size_t targetLen, const char* query, const size_t queryLen,
+    const char* target, size_t targetLen, const char* query, size_t queryLen,
     const std::vector<PacBio::Align::Seed>& seeds,
     const BandedChainAlignConfig& config = BandedChainAlignConfig::Default());
 

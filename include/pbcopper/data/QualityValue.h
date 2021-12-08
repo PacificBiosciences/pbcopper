@@ -34,7 +34,7 @@ public:
     /// \param[in] c    FASTQ character
     /// \returns quality value representing (c - 33)
     ///
-    static QualityValue FromFastq(const char c);
+    static QualityValue FromFastq(char c);
 
     /// \}
 
@@ -46,7 +46,7 @@ public:
     ///
     /// \param[in] value    quality value
     ///
-    QualityValue(const uint8_t value);
+    QualityValue(uint8_t value);
     QualityValue() = default;
 
     /// \}

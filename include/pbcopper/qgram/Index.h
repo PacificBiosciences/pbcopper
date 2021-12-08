@@ -57,8 +57,7 @@ public:
     /// \param[in] filterHomopolymers   do not count hits on homopolymers (len == q)
     /// \return a vector of IndexHits results.
     ///
-    std::vector<IndexHits> Hits(const std::string& seq,
-                                const bool filterHomopolymers = false) const;
+    std::vector<IndexHits> Hits(const std::string& seq, bool filterHomopolymers = false) const;
 
     ///
     /// \brief Size

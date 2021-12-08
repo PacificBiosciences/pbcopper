@@ -33,7 +33,7 @@ public:
     IntervalTree Gaps() const;
     IntervalTree Gaps(const Interval& interval) const;
 
-    bool Contains(const Position value) const;
+    bool Contains(Position value) const;
 
     iterator begin();
     const_iterator begin() const;

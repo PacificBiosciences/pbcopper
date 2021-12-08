@@ -33,8 +33,8 @@ struct EdlibAlignment
 ///
 EdlibAlignment EdlibAlign(const std::string& query, const std::string& target,
                           const EdlibAlignConfig& config);
-EdlibAlignment EdlibAlign(const char* query, const int queryLength, const char* target,
-                          const int targetLength, const EdlibAlignConfig& config);
+EdlibAlignment EdlibAlign(const char* query, int queryLength, const char* target, int targetLength,
+                          const EdlibAlignConfig& config);
 
 ///
 /// Align queries to target

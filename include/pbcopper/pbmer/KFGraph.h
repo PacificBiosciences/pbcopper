@@ -45,8 +45,7 @@ public:
        \param bits Dnabit (kmer) vector
        \param rid Read Id / index, one based.
     */
-    void AddSeq(const std::vector<PacBio::Pbmer::DnaBit>& bits, const size_t rid,
-                const std::string& rn);
+    void AddSeq(const std::vector<PacBio::Pbmer::DnaBit>& bits, size_t rid, const std::string& rn);
 
     /*!
        \brief After nodes are removed this method removes edges that link to a deleted node.

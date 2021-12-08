@@ -119,14 +119,14 @@ public:
     /// \param[in] start
     /// \returns reference to this interval
     ///
-    GenomicInterval& Start(const Position start);
+    GenomicInterval& Start(Position start);
 
     /// Sets this interval's stop coordinate.
     ///
     /// \param[in] stop
     /// \returns reference to this interval
     ///
-    GenomicInterval& Stop(const Position stop);
+    GenomicInterval& Stop(Position stop);
 
     /// \}
 
