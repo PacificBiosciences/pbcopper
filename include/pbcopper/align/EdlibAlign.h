@@ -3,12 +3,12 @@
 
 #include <pbcopper/PbcopperConfig.h>
 
+#include <pbcopper/data/Cigar.h>
+#include <pbcopper/third-party/edlib.h>
+
 #include <memory>
 #include <string>
 #include <vector>
-
-#include <pbcopper/data/Cigar.h>
-#include <pbcopper/third-party/edlib.h>
 
 namespace PacBio {
 namespace Align {

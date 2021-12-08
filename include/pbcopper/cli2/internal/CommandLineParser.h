@@ -3,13 +3,13 @@
 
 #include <pbcopper/PbcopperConfig.h>
 
-#include <string>
-#include <unordered_map>
-#include <vector>
-
 #include <pbcopper/cli2/Interface.h>
 #include <pbcopper/cli2/Results.h>
 #include <pbcopper/cli2/internal/OptionData.h>
+
+#include <string>
+#include <unordered_map>
+#include <vector>
 
 namespace PacBio {
 namespace CLI_v2 {

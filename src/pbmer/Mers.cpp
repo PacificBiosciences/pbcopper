@@ -1,10 +1,10 @@
 #include <pbcopper/pbmer/Mers.h>
 
-#include <cassert>
-
 #include <deque>
 #include <limits>
 #include <stdexcept>
+
+#include <cassert>
 
 namespace PacBio {
 namespace Pbmer {

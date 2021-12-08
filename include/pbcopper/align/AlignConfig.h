@@ -1,6 +1,8 @@
 #ifndef PBCOPPER_ALIGN_ALIGNCONFIG_H
 #define PBCOPPER_ALIGN_ALIGNCONFIG_H
 
+#include <pbcopper/PbcopperConfig.h>
+
 #include <cstdint>
 
 namespace PacBio {

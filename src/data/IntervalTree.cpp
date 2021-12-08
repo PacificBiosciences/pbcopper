@@ -1,9 +1,9 @@
 #include <pbcopper/data/IntervalTree.h>
 
+#include <boost/algorithm/string.hpp>
+
 #include <algorithm>
 #include <vector>
-
-#include <boost/algorithm/string.hpp>
 
 namespace PacBio {
 namespace Data {

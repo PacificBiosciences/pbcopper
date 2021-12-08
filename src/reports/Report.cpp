@@ -1,19 +1,18 @@
 #include <pbcopper/reports/Report.h>
 
-#include <array>
-#include <fstream>
-#include <ostream>
-#include <stdexcept>
-#include <utility>
+#include <pbcopper/json/JSON.h>
+#include <pbcopper/utility/PbcopperVersion.h>
+#include "ReportPrinter.h"
 
 #include <boost/uuid/uuid.hpp>
 #include <boost/uuid/uuid_generators.hpp>
 #include <boost/uuid/uuid_io.hpp>
 
-#include <pbcopper/json/JSON.h>
-#include <pbcopper/utility/PbcopperVersion.h>
-
-#include "ReportPrinter.h"
+#include <array>
+#include <fstream>
+#include <ostream>
+#include <stdexcept>
+#include <utility>
 
 using Json = PacBio::JSON::Json;
 

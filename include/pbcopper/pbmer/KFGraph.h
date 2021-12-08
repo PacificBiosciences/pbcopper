@@ -10,8 +10,12 @@
 
 #include <pbcopper/PbcopperConfig.h>
 
-#include <cstddef>
-#include <cstdint>
+#include <pbcopper/pbmer/Bubble.h>
+#include <pbcopper/pbmer/DnaBit.h>
+#include <pbcopper/pbmer/KFNode.h>
+#include <pbcopper/pbmer/Mers.h>
+#include <pbcopper/pbmer/Parser.h>
+#include <pbcopper/third-party/robin_hood/robin_hood.h>
 
 #include <map>
 #include <string>
@@ -19,12 +23,8 @@
 #include <unordered_map>
 #include <vector>
 
-#include <pbcopper/pbmer/Bubble.h>
-#include <pbcopper/pbmer/DnaBit.h>
-#include <pbcopper/pbmer/KFNode.h>
-#include <pbcopper/pbmer/Mers.h>
-#include <pbcopper/pbmer/Parser.h>
-#include <pbcopper/third-party/robin_hood/robin_hood.h>
+#include <cstddef>
+#include <cstdint>
 
 namespace PacBio {
 namespace Pbmer {

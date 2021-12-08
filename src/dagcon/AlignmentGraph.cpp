@@ -1,8 +1,10 @@
 #include <pbcopper/dagcon/AlignmentGraph.h>
 
-#include <cassert>
-#include <cfloat>
-#include <cstdint>
+#include <pbcopper/dagcon/Alignment.h>
+#include <pbcopper/utility/Ssize.h>
+
+#include <boost/range/iterator_range.hpp>
+#include <boost/utility/value_init.hpp>
 
 #include <algorithm>
 #include <map>
@@ -10,11 +12,9 @@
 #include <string>
 #include <vector>
 
-#include <boost/range/iterator_range.hpp>
-#include <boost/utility/value_init.hpp>
-
-#include <pbcopper/dagcon/Alignment.h>
-#include <pbcopper/utility/Ssize.h>
+#include <cassert>
+#include <cfloat>
+#include <cstdint>
 
 namespace PacBio {
 namespace Dagcon {

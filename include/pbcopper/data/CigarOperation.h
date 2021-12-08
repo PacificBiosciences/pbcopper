@@ -3,9 +3,10 @@
 
 #include <pbcopper/PbcopperConfig.h>
 
+#include <stdexcept>
+
 #include <cassert>
 #include <cstdint>
-#include <stdexcept>
 
 namespace PacBio {
 namespace Data {

@@ -1,6 +1,11 @@
 #include <pbcopper/poa/RangeFinder.h>
 
-#include <cstddef>
+#include "PoaGraphImpl.h"
+
+#include <boost/foreach.hpp>
+#include <boost/graph/topological_sort.hpp>
+#include <boost/optional.hpp>
+#include <boost/range/adaptor/reversed.hpp>
 
 #include <algorithm>
 #include <map>
@@ -8,12 +13,7 @@
 #include <utility>
 #include <vector>
 
-#include <boost/foreach.hpp>
-#include <boost/graph/topological_sort.hpp>
-#include <boost/optional.hpp>
-#include <boost/range/adaptor/reversed.hpp>
-
-#include "PoaGraphImpl.h"
+#include <cstddef>
 
 #define WIDTH 30
 #define DEBUG_RANGE_FINDER 0

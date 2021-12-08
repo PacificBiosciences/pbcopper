@@ -3,11 +3,11 @@
 
 #include <pbcopper/PbcopperConfig.h>
 
-#include <iosfwd>
-#include <string>
-
 #include <pbcopper/cli2/MultiToolInterface.h>
 #include <pbcopper/cli2/internal/InterfaceHelpPrinter.h>
+
+#include <iosfwd>
+#include <string>
 
 namespace PacBio {
 namespace CLI_v2 {

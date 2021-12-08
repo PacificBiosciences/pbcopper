@@ -3,17 +3,16 @@
 
 #include <pbcopper/PbcopperConfig.h>
 
-#include <climits>
+#include <pbcopper/align/AlignConfig.h>
+#include <pbcopper/poa/PoaGraph.h>
+
+#include <boost/utility.hpp>
 
 #include <string>
 #include <utility>
 #include <vector>
 
-#include <boost/utility.hpp>
-
-#include <pbcopper/align/AlignConfig.h>
-
-#include <pbcopper/poa/PoaGraph.h>
+#include <climits>
 
 namespace PacBio {
 namespace Poa {

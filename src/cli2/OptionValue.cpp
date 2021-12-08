@@ -1,12 +1,12 @@
 #include <pbcopper/cli2/OptionValue.h>
 
+#include <boost/algorithm/string.hpp>
+
 #include <ostream>
 #include <sstream>
 #include <stdexcept>
 #include <unordered_map>
 #include <vector>
-
-#include <boost/algorithm/string.hpp>
 
 namespace PacBio {
 namespace CLI_v2 {

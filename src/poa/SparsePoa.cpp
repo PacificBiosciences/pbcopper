@@ -1,13 +1,5 @@
 #include <pbcopper/poa/SparsePoa.h>
 
-#include <cstddef>
-
-#include <algorithm>
-#include <iostream>
-#include <string>
-#include <utility>
-#include <vector>
-
 #include <pbcopper/align/AlignConfig.h>
 #include <pbcopper/align/ChainSeeds.h>
 #include <pbcopper/align/ChainSeedsConfig.h>
@@ -18,6 +10,14 @@
 #include <pbcopper/logging/Logging.h>
 #include <pbcopper/poa/PoaGraph.h>
 #include <pbcopper/utility/SequenceUtils.h>
+
+#include <algorithm>
+#include <iostream>
+#include <string>
+#include <utility>
+#include <vector>
+
+#include <cstddef>
 
 namespace PacBio {
 namespace Poa {

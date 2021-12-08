@@ -1,11 +1,11 @@
 #include <pbcopper/utility/StringUtils.h>
 
+#include <sstream>
+#include <stdexcept>
+
 #include <cctype>
 #include <cstddef>
 #include <cstdlib>
-
-#include <sstream>
-#include <stdexcept>
 
 namespace PacBio {
 namespace Utility {

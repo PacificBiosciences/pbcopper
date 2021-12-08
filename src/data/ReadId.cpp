@@ -1,10 +1,10 @@
 #include <pbcopper/data/ReadId.h>
 
+#include <pbcopper/data/ReadName.h>
+
 #include <ostream>
 #include <sstream>
 #include <string>
-
-#include <pbcopper/data/ReadName.h>
 
 namespace PacBio {
 namespace Data {

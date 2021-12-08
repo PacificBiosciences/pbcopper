@@ -1,12 +1,11 @@
 #include <pbcopper/cli2/internal/InterfaceHelpPrinter.h>
 
+#include <pbcopper/utility/StringUtils.h>
+#include "PbBoilerplateDisclaimer.h"
+
 #include <algorithm>
 #include <ostream>
 #include <sstream>
-
-#include <pbcopper/utility/StringUtils.h>
-
-#include "PbBoilerplateDisclaimer.h"
 
 using HelpMetrics = PacBio::CLI_v2::internal::HelpMetrics;
 using Option = PacBio::CLI_v2::Option;

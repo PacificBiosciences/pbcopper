@@ -3,18 +3,18 @@
 
 #include <pbcopper/PbcopperConfig.h>
 
-#include <iosfwd>
-#include <string>
-#include <unordered_map>
-
-#include <boost/optional.hpp>
-
 #include <pbcopper/cli2/Interface.h>
 #include <pbcopper/cli2/MultiToolInterface.h>
 #include <pbcopper/cli2/internal/HelpMetrics.h>
 #include <pbcopper/cli2/internal/HiddenOptionMode.h>
 #include <pbcopper/cli2/internal/OptionData.h>
 #include <pbcopper/cli2/internal/PositionalArgumentData.h>
+
+#include <boost/optional.hpp>
+
+#include <iosfwd>
+#include <string>
+#include <unordered_map>
 
 namespace PacBio {
 namespace CLI_v2 {

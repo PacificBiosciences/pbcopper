@@ -1,9 +1,9 @@
 // (Based on the original "Partial Order Aligner" by Lee, Grasso, and Sharlow,
 //  and an implementation in C# by Patrick Marks)
 
-#include <pbcopper/poa/PoaConsensus.h>
 #include <pbcopper/poa/PoaGraph.h>
 
+#include <pbcopper/poa/PoaConsensus.h>
 #include "PoaGraphImpl.h"
 
 namespace PacBio {

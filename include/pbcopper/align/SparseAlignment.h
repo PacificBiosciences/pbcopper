@@ -1,11 +1,13 @@
 #ifndef PBCOPPER_ALIGN_SPARSEALIGNMENT_H
 #define PBCOPPER_ALIGN_SPARSEALIGNMENT_H
 
+#include <pbcopper/PbcopperConfig.h>
+
+#include <pbcopper/align/Seed.h>
+
 #include <string>
 #include <utility>
 #include <vector>
-
-#include <pbcopper/align/Seed.h>
 
 namespace PacBio {
 namespace Align {

@@ -5,9 +5,11 @@
 // Linear-space basic alignment following Hirschberg
 //
 
-#include <string>
+#include <pbcopper/PbcopperConfig.h>
 
 #include <pbcopper/align/PairwiseAlignment.h>
+
+#include <string>
 
 namespace PacBio {
 namespace Align {

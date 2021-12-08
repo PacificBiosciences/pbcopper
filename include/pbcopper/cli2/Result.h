@@ -3,13 +3,13 @@
 
 #include <pbcopper/PbcopperConfig.h>
 
-#include <cassert>
+#include <pbcopper/cli2/OptionValue.h>
 
 #include <iosfwd>
 #include <stdexcept>
 #include <string>
 
-#include <pbcopper/cli2/OptionValue.h>
+#include <cassert>
 
 namespace PacBio {
 namespace CLI_v2 {

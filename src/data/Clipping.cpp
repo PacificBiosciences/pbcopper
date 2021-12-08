@@ -1,12 +1,12 @@
 #include <pbcopper/data/Clipping.h>
 
-#include <cassert>
-
-#include <algorithm>
-
 #include <pbcopper/data/MappedRead.h>
 #include <pbcopper/data/Read.h>
 #include <pbcopper/data/internal/ClippingImpl.h>
+
+#include <algorithm>
+
+#include <cassert>
 
 namespace PacBio {
 namespace Data {

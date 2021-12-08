@@ -1,12 +1,12 @@
 #include <pbcopper/pbmer/Parser.h>
 
-#include <cassert>
-
 #include <algorithm>
 #include <array>
 #include <limits>
 #include <stdexcept>
 #include <vector>
+
+#include <cassert>
 
 namespace PacBio {
 namespace Pbmer {

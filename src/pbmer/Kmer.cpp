@@ -1,11 +1,11 @@
 #include <pbcopper/pbmer/Kmer.h>
 
-#include <cassert>
+#include <pbcopper/pbmer/Mers.h>
 
 #include <array>
 #include <tuple>
 
-#include <pbcopper/pbmer/Mers.h>
+#include <cassert>
 
 namespace PacBio {
 namespace Pbmer {

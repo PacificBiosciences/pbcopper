@@ -3,13 +3,13 @@
 
 #include <pbcopper/PbcopperConfig.h>
 
-#include <cstdint>
+#include <pbcopper/data/QualityValue.h>
 
 #include <iosfwd>
 #include <string>
 #include <vector>
 
-#include <pbcopper/data/QualityValue.h>
+#include <cstdint>
 
 namespace PacBio {
 namespace Data {

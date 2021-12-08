@@ -1,10 +1,10 @@
 #include <pbcopper/data/QualityValues.h>
 
+#include <boost/algorithm/string.hpp>
+
 #include <algorithm>
 #include <ostream>
 #include <type_traits>
-
-#include <boost/algorithm/string.hpp>
 
 namespace PacBio {
 namespace Data {

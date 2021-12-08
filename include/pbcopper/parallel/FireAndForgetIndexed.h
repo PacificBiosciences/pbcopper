@@ -3,15 +3,16 @@
 
 #include <pbcopper/PbcopperConfig.h>
 
+#include <boost/optional.hpp>
+
 #include <condition_variable>
-#include <cstddef>
 #include <exception>
 #include <functional>
 #include <future>
 #include <mutex>
 #include <queue>
 
-#include <boost/optional.hpp>
+#include <cstddef>
 
 namespace PacBio {
 namespace Parallel {

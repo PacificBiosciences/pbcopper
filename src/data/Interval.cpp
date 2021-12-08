@@ -1,12 +1,12 @@
 #include <pbcopper/data/Interval.h>
 
+#include <boost/algorithm/string.hpp>
+#include <boost/lexical_cast.hpp>
+
 #include <istream>
 #include <ostream>
 #include <sstream>
 #include <vector>
-
-#include <boost/algorithm/string.hpp>
-#include <boost/lexical_cast.hpp>
 
 namespace PacBio {
 namespace Data {

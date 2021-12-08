@@ -1,9 +1,7 @@
 #include <pbcopper/cli2/internal/HelpMetrics.h>
 
-#include <sys/ioctl.h>
-#include <unistd.h>
-
-#include <cassert>
+#include <pbcopper/cli2/OptionValue.h>
+#include <pbcopper/utility/StringUtils.h>
 
 #include <algorithm>
 #include <iomanip>
@@ -11,8 +9,10 @@
 #include <sstream>
 #include <string>
 
-#include <pbcopper/cli2/OptionValue.h>
-#include <pbcopper/utility/StringUtils.h>
+#include <cassert>
+
+#include <sys/ioctl.h>
+#include <unistd.h>
 
 namespace PacBio {
 namespace CLI_v2 {

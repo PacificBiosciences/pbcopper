@@ -3,8 +3,7 @@
 
 #include <pbcopper/PbcopperConfig.h>
 
-#include <climits>
-#include <cstddef>
+#include <pbcopper/align/AlignConfig.h>
 
 #include <limits>
 #include <memory>
@@ -12,7 +11,8 @@
 #include <utility>
 #include <vector>
 
-#include <pbcopper/align/AlignConfig.h>
+#include <climits>
+#include <cstddef>
 
 namespace PacBio {
 namespace Poa {

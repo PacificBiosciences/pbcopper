@@ -1,12 +1,12 @@
 #include <pbcopper/LibraryInfo.h>
 
-#include <string>
+#include "LibraryGitHash.h"
+#include "LibraryVersion.h"
 
 #include <boost/algorithm/string.hpp>
 #include <boost/version.hpp>
 
-#include "LibraryGitHash.h"
-#include "LibraryVersion.h"
+#include <string>
 
 namespace PacBio {
 namespace Pbcopper {

@@ -1,14 +1,15 @@
 #include <pbcopper/data/GenomicInterval.h>
 
-#include <cctype>
-#include <cstdlib>
-#include <cstring>
+#include <boost/algorithm/string.hpp>
+
 #include <stdexcept>
 #include <string>
 #include <type_traits>
 #include <vector>
 
-#include <boost/algorithm/string.hpp>
+#include <cctype>
+#include <cstdlib>
+#include <cstring>
 
 namespace PacBio {
 namespace Data {

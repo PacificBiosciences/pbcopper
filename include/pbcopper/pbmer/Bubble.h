@@ -3,12 +3,12 @@
 
 #include <pbcopper/PbcopperConfig.h>
 
-#include <cstdint>
-
 #include <map>
 #include <string>
 #include <tuple>
 #include <vector>
+
+#include <cstdint>
 
 namespace PacBio {
 namespace Pbmer {

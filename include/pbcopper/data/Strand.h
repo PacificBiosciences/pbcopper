@@ -3,9 +3,9 @@
 
 #include <pbcopper/PbcopperConfig.h>
 
-#include <cstdint>
-
 #include <iosfwd>
+
+#include <cstdint>
 
 namespace PacBio {
 namespace Data {

@@ -1,14 +1,14 @@
 #include <pbcopper/cli2/Results.h>
 
-#include <algorithm>
-#include <sstream>
-#include <stdexcept>
-
 #include <pbcopper/cli2/internal/BuiltinOptions.h>
 #include <pbcopper/cli2/internal/OptionTranslator.h>
 #include <pbcopper/cli2/internal/PositionalArgumentTranslator.h>
 #include <pbcopper/parallel/ThreadCount.h>
 #include <pbcopper/utility/StringUtils.h>
+
+#include <algorithm>
+#include <sstream>
+#include <stdexcept>
 
 namespace PacBio {
 namespace CLI_v2 {

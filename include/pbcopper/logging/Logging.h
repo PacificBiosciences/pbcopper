@@ -3,6 +3,10 @@
 
 #include <pbcopper/PbcopperConfig.h>
 
+#include <pbcopper/logging/LogConfig.h>
+#include <pbcopper/logging/LogLevel.h>
+#include <pbcopper/logging/LogMessage.h>
+
 #include <condition_variable>
 #include <fstream>
 #include <memory>
@@ -11,10 +15,6 @@
 #include <queue>
 #include <string>
 #include <thread>
-
-#include <pbcopper/logging/LogConfig.h>
-#include <pbcopper/logging/LogLevel.h>
-#include <pbcopper/logging/LogMessage.h>
 
 namespace PacBio {
 namespace Logging {

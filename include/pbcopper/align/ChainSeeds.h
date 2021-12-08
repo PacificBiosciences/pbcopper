@@ -1,16 +1,18 @@
 #ifndef PBCOPPER_ALIGN_CHAINSEEDS_H
 #define PBCOPPER_ALIGN_CHAINSEEDS_H
 
+#include <pbcopper/PbcopperConfig.h>
+
+#include <pbcopper/align/ChainSeedsConfig.h>
+#include <pbcopper/align/Seeds.h>
+
+#include <boost/optional.hpp>
+
 #include <map>
 #include <queue>
 #include <set>
 #include <utility>
 #include <vector>
-
-#include <boost/optional.hpp>
-
-#include <pbcopper/align/ChainSeedsConfig.h>
-#include <pbcopper/align/Seeds.h>
 
 namespace PacBio {
 namespace Align {
