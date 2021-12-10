@@ -795,6 +795,10 @@ TEST(CLI2_CLI, populates_alarm_owner_field_with_application_name) {
         return 0;
     };
 
+    std::ostringstream logOutput;
+    PacBio::Utility::CerrRedirect redirect{logOutput.rdbuf()};
+    std::ignore = redirect;
+
     PacBio::CLI_v2::Interface i{"owner-check", "Check owner in alarm.", "v3.1"};
     const int result = PacBio::CLI_v2::Run(args, i, runner);
     EXPECT_EQ(EXIT_FAILURE, result);
