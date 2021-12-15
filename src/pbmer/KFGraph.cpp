@@ -1,6 +1,6 @@
 #include <pbcopper/pbmer/KFGraph.h>
 
-#include <cassert>
+#include <pbcopper/utility/MoveAppend.h>
 
 #include <algorithm>
 #include <fstream>
@@ -9,7 +9,7 @@
 #include <sstream>
 #include <unordered_set>
 
-#include <pbcopper/utility/MoveAppend.h>
+#include <cassert>
 
 namespace PacBio {
 namespace Pbmer {

@@ -3,9 +3,10 @@
 
 #include <pbcopper/PbcopperConfig.h>
 
+#include <stdexcept>
+
 #include <cassert>
 #include <cstdint>
-#include <stdexcept>
 
 namespace PacBio {
 namespace Data {
@@ -51,7 +52,7 @@ public:
     ///
     /// \param[in] type CigarOperationType value
     /// \returns SAM/BAM character code
-    static char TypeToChar(const CigarOperationType type);
+    static char TypeToChar(CigarOperationType type);
 
     /// Convert between CigarOperationType enum & SAM/BAM character code.
     ///
@@ -131,19 +132,19 @@ public:
     ///
     /// \param[in] opChar SAM/BAM character code
     /// \returns reference to this operation
-    CigarOperation& Char(const char opChar);
+    CigarOperation& Char(char opChar);
 
     /// Sets this operation length.
     ///
     /// \param[in] length
     /// \returns reference to this operation
-    CigarOperation& Length(const uint32_t length);
+    CigarOperation& Length(uint32_t length);
 
     /// Sets this operation type.
     ///
     /// \param[in] opType CigarOperationType value
     /// \returns reference to this operation
-    CigarOperation& Type(const CigarOperationType opType);
+    CigarOperation& Type(CigarOperationType opType);
 
     /// \}
 
@@ -167,9 +168,9 @@ private:
     uint32_t length_ = 0;
 };
 
-bool ConsumesQuery(const CigarOperationType type);
+bool ConsumesQuery(CigarOperationType type);
 
-bool ConsumesReference(const CigarOperationType type);
+bool ConsumesReference(CigarOperationType type);
 
 }  // namespace Data
 }  // namespace PacBio

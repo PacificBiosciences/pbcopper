@@ -3,17 +3,17 @@
 
 #include <pbcopper/PbcopperConfig.h>
 
-#include <string>
-#include <vector>
-
-#include <boost/optional.hpp>
-
 #include <pbcopper/cli2/PositionalArgument.h>
 #include <pbcopper/cli2/VersionPrinterCallback.h>
 #include <pbcopper/cli2/internal/OptionData.h>
 #include <pbcopper/cli2/internal/PositionalArgumentData.h>
 #include <pbcopper/cli2/internal/VersionPrinter.h>
 #include <pbcopper/logging/LogConfig.h>
+
+#include <boost/optional.hpp>
+
+#include <string>
+#include <vector>
 
 namespace PacBio {
 namespace CLI_v2 {
@@ -26,7 +26,8 @@ struct InterfaceData
 {
     InterfaceData(std::string appName, std::string appDescription, std::string appVersion,
                   OptionData help, OptionData version, OptionData numThreads, OptionData logFile,
-                  OptionData logLevel, OptionData alarms, OptionData exceptionPassthrough)
+                  OptionData logLevel, OptionData alarms, OptionData exceptionPassthrough,
+                  OptionData showAllHelp)
         : appName_{std::move(appName)}
         , appDescription_{std::move(appDescription)}
         , appVersion_{std::move(appVersion)}
@@ -35,8 +36,9 @@ struct InterfaceData
         , numThreadsOption_{std::move(numThreads)}
         , logFileOption_{std::move(logFile)}
         , logLevelOption_{std::move(logLevel)}
-        , alarmsOption_{std::move(alarms)}
+        , alarmsOption_(std::move(alarms))                              // icc 17 hack
         , exceptionPassthroughOption_(std::move(exceptionPassthrough))  // icc 17 hack
+        , showAllHelpOption_(std::move(showAllHelp))                    // icc 17 hack
     {
         // default version printer
         versionPrinter_ = [](const Interface& interface) {
@@ -57,10 +59,11 @@ struct InterfaceData
     boost::optional<internal::OptionData> numThreadsOption_;
     boost::optional<internal::OptionData> logFileOption_;
     boost::optional<internal::OptionData> logLevelOption_;
-    boost::optional<internal::OptionData> alarmsOption_;
 
-    // always active
+    // always active, but hidden
+    internal::OptionData alarmsOption_;
     internal::OptionData exceptionPassthroughOption_;
+    internal::OptionData showAllHelpOption_;
 
     // default disabled
     boost::optional<internal::OptionData> verboseOption_;

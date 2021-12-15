@@ -1,14 +1,14 @@
 #include <pbcopper/data/Cigar.h>
 
-#include <cstddef>
-#include <cstdint>
+#include <pbcopper/utility/SequenceUtils.h>
 
 #include <ostream>
 #include <sstream>
 #include <stdexcept>
 #include <type_traits>
 
-#include <pbcopper/utility/SequenceUtils.h>
+#include <cstddef>
+#include <cstdint>
 
 namespace PacBio {
 namespace Data {

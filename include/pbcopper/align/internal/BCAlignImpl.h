@@ -5,15 +5,17 @@
 // BandedChainAlignment implementation
 //
 
-#include <cassert>
-#include <cstddef>
-#include <cstdint>
+#include <pbcopper/PbcopperConfig.h>
+
+#include <pbcopper/align/BandedChainAlignment.h>
+#include <pbcopper/align/internal/BCAlignBlocks.h>
 
 #include <string>
 #include <vector>
 
-#include <pbcopper/align/BandedChainAlignment.h>
-#include <pbcopper/align/internal/BCAlignBlocks.h>
+#include <cassert>
+#include <cstddef>
+#include <cstdint>
 
 namespace PacBio {
 namespace Align {
@@ -25,9 +27,8 @@ public:
     BandedChainAlignerImpl(const BandedChainAlignConfig& config);
 
 public:
-    BandedChainAlignment Align(const char* target, const size_t targetLen, const char* query,
-                               const size_t queryLen,
-                               const std::vector<PacBio::Align::Seed>& seeds);
+    BandedChainAlignment Align(const char* target, size_t targetLen, const char* query,
+                               size_t queryLen, const std::vector<PacBio::Align::Seed>& seeds);
 
     void StitchTranscripts(std::string* global, std::string&& local);
 
@@ -41,13 +42,12 @@ private:
     };
 
     void AlignGapBlock(const PacBio::Align::Seed& nextSeed);
-    void AlignGapBlock(const size_t hLength, const size_t vLength);
+    void AlignGapBlock(size_t hLength, size_t vLength);
     void AlignLastGapBlock();
 
     void AlignSeedBlock(const PacBio::Align::Seed& seed);
 
-    void Initialize(const char* target, const size_t targetLen, const char* query,
-                    const size_t queryLen);
+    void Initialize(const char* target, size_t targetLen, const char* query, size_t queryLen);
 
     std::vector<PacBio::Align::Seed> MergeSeeds(const std::vector<PacBio::Align::Seed>& seeds);
 

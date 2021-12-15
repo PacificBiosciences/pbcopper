@@ -1,15 +1,17 @@
 #ifndef PBCOPPER_DATA_READID_H
 #define PBCOPPER_DATA_READID_H
 
-#include <cstddef>
+#include <pbcopper/PbcopperConfig.h>
+
+#include <pbcopper/data/Interval.h>
+
+#include <boost/optional.hpp>
 
 #include <iosfwd>
 #include <memory>
 #include <string>
 
-#include <boost/optional.hpp>
-
-#include <pbcopper/data/Interval.h>
+#include <cstddef>
 
 namespace PacBio {
 namespace Data {

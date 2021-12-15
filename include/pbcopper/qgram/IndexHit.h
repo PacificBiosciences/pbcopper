@@ -3,8 +3,9 @@
 
 #include <pbcopper/PbcopperConfig.h>
 
-#include <cstdint>
 #include <tuple>
+
+#include <cstdint>
 
 namespace PacBio {
 namespace QGram {

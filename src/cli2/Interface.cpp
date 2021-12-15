@@ -1,14 +1,15 @@
 #include <pbcopper/cli2/Interface.h>
 
-#include <cassert>
-#include <map>
-#include <stdexcept>
-#include <type_traits>
-
 #include <pbcopper/cli2/Interface.h>
 #include <pbcopper/cli2/internal/BuiltinOptions.h>
 #include <pbcopper/cli2/internal/OptionTranslator.h>
 #include <pbcopper/cli2/internal/PositionalArgumentTranslator.h>
+
+#include <map>
+#include <stdexcept>
+#include <type_traits>
+
+#include <cassert>
 
 using OptionData = PacBio::CLI_v2::internal::OptionData;
 using OptionGroupData = PacBio::CLI_v2::internal::OptionGroupData;
@@ -29,7 +30,8 @@ Interface::Interface(std::string name, std::string description, std::string vers
             OptionTranslator::Translate(Builtin::LogFile),
             OptionTranslator::Translate(Builtin::LogLevel),
             OptionTranslator::Translate(Builtin::Alarms),
-            OptionTranslator::Translate(Builtin::ExceptionPassthrough)}
+            OptionTranslator::Translate(Builtin::ExceptionPassthrough),
+            OptionTranslator::Translate(Builtin::ShowAllHelp)}
 {
     if (data_.appName_.empty()) {
         throw std::runtime_error{
@@ -79,6 +81,8 @@ Interface& Interface::AddPositionalArguments(const std::vector<PositionalArgumen
     }
     return *this;
 }
+
+const internal::OptionData& Interface::AlarmsOption() const { return data_.alarmsOption_; }
 
 const std::string& Interface::ApplicationDescription() const { return data_.appDescription_; }
 
@@ -135,6 +139,11 @@ Interface& Interface::Example(std::string example)
 {
     data_.example_ = std::move(example);
     return *this;
+}
+
+const internal::OptionData& Interface::ExceptionsPassthroughOption() const
+{
+    return data_.exceptionPassthroughOption_;
 }
 
 bool Interface::HasRequiredPosArgs() const { return NumRequiredPosArgs() > 0; }
@@ -210,7 +219,9 @@ std::vector<OptionData> Interface::Options() const
     // add builtins
     result.push_back(data_.helpOption_);
     result.push_back(data_.versionOption_);
+    result.push_back(data_.alarmsOption_);
     result.push_back(data_.exceptionPassthroughOption_);
+    result.push_back(data_.showAllHelpOption_);
     if (data_.numThreadsOption_) {
         result.push_back(*data_.numThreadsOption_);
     }
@@ -222,9 +233,6 @@ std::vector<OptionData> Interface::Options() const
     }
     if (data_.verboseOption_) {
         result.push_back(*data_.verboseOption_);
-    }
-    if (data_.alarmsOption_) {
-        result.push_back(*data_.alarmsOption_);
     }
 
     return result;
@@ -243,6 +251,11 @@ Interface& Interface::RegisterVersionPrinter(VersionPrinterCallback printer)
 {
     data_.versionPrinter_ = printer;
     return *this;
+}
+
+const internal::OptionData& Interface::ShowAllHelpOption() const
+{
+    return data_.showAllHelpOption_;
 }
 
 const boost::optional<internal::OptionData>& Interface::VerboseOption() const

@@ -1,11 +1,14 @@
 #ifndef PBCOPPER_ALIGN_BANDEDCHAINALIGNMENT_H
 #define PBCOPPER_ALIGN_BANDEDCHAINALIGNMENT_H
 
-#include <cstddef>
+#include <pbcopper/PbcopperConfig.h>
+
+#include <pbcopper/align/Seed.h>
+
 #include <string>
 #include <vector>
 
-#include <pbcopper/align/Seed.h>
+#include <cstddef>
 
 //
 // Support for banded alignment of seed chains
@@ -49,9 +52,8 @@ public:
     BandedChainAlignment() = default;
     BandedChainAlignment(const BandedChainAlignConfig& config, std::string target,
                          std::string query, const std::string& transcript);
-    BandedChainAlignment(const BandedChainAlignConfig& config, const char* target,
-                         const size_t targetLen, const char* query, const size_t queryLen,
-                         const std::string& transcript);
+    BandedChainAlignment(const BandedChainAlignConfig& config, const char* target, size_t targetLen,
+                         const char* query, size_t queryLen, const std::string& transcript);
 
 public:
     float Identity() const;
@@ -73,7 +75,7 @@ public:
 /// \return alignment results (pairwise alignment, score, etc)
 ///
 BandedChainAlignment BandedChainAlign(
-    const char* target, const size_t targetLen, const char* query, const size_t queryLen,
+    const char* target, size_t targetLen, const char* query, size_t queryLen,
     const std::vector<PacBio::Align::Seed>& seeds,
     const BandedChainAlignConfig& config = BandedChainAlignConfig::Default());
 

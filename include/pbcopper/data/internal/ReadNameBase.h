@@ -3,14 +3,14 @@
 
 #include <pbcopper/PbcopperConfig.h>
 
-#include <iosfwd>
-#include <type_traits>
-
 #include <pbcopper/data/CCSTag.h>
 #include <pbcopper/data/Interval.h>
 #include <pbcopper/data/MovieName.h>
 #include <pbcopper/data/Position.h>
 #include <pbcopper/data/Zmw.h>
+
+#include <iosfwd>
+#include <type_traits>
 
 namespace PacBio {
 namespace Data {
@@ -34,7 +34,7 @@ public:
     ReadNameBase(const MovieNameType& movieName, const PacBio::Data::Zmw& zmw,
                  const Position& queryStart, const Position& queryEnd);
 
-    ReadNameBase(const MovieNameType& movieName, const PacBio::Data::Zmw& zmw, const CCSTag ccs);
+    ReadNameBase(const MovieNameType& movieName, const PacBio::Data::Zmw& zmw, CCSTag ccs);
 
     ReadNameBase() = default;
 

@@ -1,13 +1,13 @@
 #include <pbcopper/poa/PoaConsensus.h>
 
-#include <string>
-#include <utility>
-#include <vector>
+#include <pbcopper/align/AlignConfig.h>
 
 #include <boost/algorithm/string.hpp>
 #include <boost/foreach.hpp>
 
-#include <pbcopper/align/AlignConfig.h>
+#include <string>
+#include <utility>
+#include <vector>
 
 namespace PacBio {
 namespace Poa {

@@ -5,14 +5,16 @@
 // Alignment blocks for banded chain alignment
 //
 
-#include <cfloat>
+#include <pbcopper/PbcopperConfig.h>
+
+#include <pbcopper/align/BandedChainAlignment.h>
+#include <pbcopper/align/Seed.h>
 
 #include <string>
 #include <utility>
 #include <vector>
 
-#include <pbcopper/align/BandedChainAlignment.h>
-#include <pbcopper/align/Seed.h>
+#include <cfloat>
 
 namespace PacBio {
 namespace Align {
@@ -58,13 +60,13 @@ public:
     std::string Align(const char* target, const char* query, PacBio::Align::Seed seed);
 
 private:
-    std::pair<size_t, size_t> BacktraceStart(const size_t tLen, const size_t qLen) const;
+    std::pair<size_t, size_t> BacktraceStart(size_t tLen, size_t qLen) const;
 
-    size_t IndexFor(const size_t i, const size_t j) const;
+    size_t IndexFor(size_t i, size_t j) const;
 
-    void Init(const size_t tLen, const size_t qLen);
-    size_t InitLookup(const size_t tLen, const size_t qLen);
-    void InitScores(const size_t tLen, const size_t qLen, const size_t n);
+    void Init(size_t tLen, size_t qLen);
+    size_t InitLookup(size_t tLen, size_t qLen);
+    void InitScores(size_t tLen, size_t qLen, size_t n);
 
 private:
     BandedChainAlignConfig config_;
@@ -119,12 +121,12 @@ public:
     /// \param qLen
     /// \return
     ///
-    std::string Align(const char* target, const size_t tLem, const char* query, const size_t qLen);
+    std::string Align(const char* target, size_t tLem, const char* query, size_t qLen);
 
 private:
-    std::pair<size_t, size_t> BacktraceStart(const size_t tLen, const size_t qLen) const;
+    std::pair<size_t, size_t> BacktraceStart(size_t tLen, size_t qLen) const;
 
-    void Init(const size_t tLen, const size_t qLen);
+    void Init(size_t tLen, size_t qLen);
 
 private:
     BandedChainAlignConfig config_;

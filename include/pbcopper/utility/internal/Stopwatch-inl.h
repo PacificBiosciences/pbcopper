@@ -1,6 +1,8 @@
 #ifndef PBCOPPER_UTILITY_STOPWATCH_INL_H
 #define PBCOPPER_UTILITY_STOPWATCH_INL_H
 
+#include <pbcopper/PbcopperConfig.h>
+
 #include <pbcopper/utility/Stopwatch.h>
 
 namespace PacBio {

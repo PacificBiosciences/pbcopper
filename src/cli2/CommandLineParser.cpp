@@ -1,6 +1,8 @@
 #include <pbcopper/cli2/internal/CommandLineParser.h>
 
-#include <cassert>
+#include <pbcopper/utility/StringUtils.h>
+
+#include <boost/algorithm/string/predicate.hpp>
 
 #include <deque>
 #include <sstream>
@@ -8,9 +10,7 @@
 #include <string>
 #include <vector>
 
-#include <boost/algorithm/string/predicate.hpp>
-
-#include <pbcopper/utility/StringUtils.h>
+#include <cassert>
 
 using OptionData = PacBio::CLI_v2::internal::OptionData;
 using OptionValue = PacBio::CLI_v2::OptionValue;

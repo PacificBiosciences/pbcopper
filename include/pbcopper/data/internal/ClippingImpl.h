@@ -1,9 +1,11 @@
 #ifndef PBCOPPER_DATA_CLIPPING_IMPL_H
 #define PBCOPPER_DATA_CLIPPING_IMPL_H
 
-#include <cstddef>
+#include <pbcopper/PbcopperConfig.h>
 
 #include <pbcopper/data/Clipping.h>
+
+#include <cstddef>
 
 namespace PacBio {
 namespace Data {

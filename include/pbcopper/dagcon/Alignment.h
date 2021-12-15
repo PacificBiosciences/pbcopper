@@ -3,9 +3,9 @@
 
 #include <pbcopper/PbcopperConfig.h>
 
-#include <cstdint>
-
 #include <string>
+
+#include <cstdint>
 
 namespace PacBio {
 namespace Dagcon {

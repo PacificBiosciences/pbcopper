@@ -5,6 +5,8 @@
 // SIMD local (Smith-Waterman) alignment score
 //
 
+#include <pbcopper/PbcopperConfig.h>
+
 #include <string>
 #include <vector>
 
@@ -14,9 +16,9 @@ namespace Align {
 class LocalAlignment
 {
 public:
-    LocalAlignment(const int32_t targetBegin, const int32_t targetEnd, const int32_t queryBegin,
-                   const int32_t queryEnd, const int32_t mismatches, const uint16_t score,
-                   std::vector<uint32_t> cigar, std::string cigarString);
+    LocalAlignment(int32_t targetBegin, int32_t targetEnd, int32_t queryBegin, int32_t queryEnd,
+                   int32_t mismatches, uint16_t score, std::vector<uint32_t> cigar,
+                   std::string cigarString);
 
     LocalAlignment(const LocalAlignment&) = delete;
     LocalAlignment(LocalAlignment&&) = default;

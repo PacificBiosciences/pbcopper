@@ -1,4 +1,8 @@
 pbcopper_test_cpp_sources = files([
+
+  # algorithm
+  'src/algorithm/test_Heteroduplex.cpp',
+
   # align
   'src/align/test_Alignment.cpp',
   'src/align/test_BandedChainAlign.cpp',
@@ -47,6 +51,7 @@ pbcopper_test_cpp_sources = files([
 
   # math
   'src/math/test_ConfusionMatrix.cpp',
+  'src/math/test_FishersExact.cpp',
 
   # parallel
   'src/parallel/test_WorkQueue.cpp',

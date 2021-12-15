@@ -1,14 +1,16 @@
 #ifndef PBCOPPER_DATA_MOVIENAME_INL_H
 #define PBCOPPER_DATA_MOVIENAME_INL_H
 
-#include <cassert>
+#include <pbcopper/PbcopperConfig.h>
+
+#include <pbcopper/data/MovieName.h>
+#include <pbcopper/utility/StringUtils.h>
 
 #include <istream>
 #include <ostream>
 #include <stdexcept>
 
-#include <pbcopper/data/MovieName.h>
-#include <pbcopper/utility/StringUtils.h>
+#include <cassert>
 
 namespace PacBio {
 namespace Data {

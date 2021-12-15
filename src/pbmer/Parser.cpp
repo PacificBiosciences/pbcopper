@@ -1,12 +1,12 @@
 #include <pbcopper/pbmer/Parser.h>
 
-#include <cassert>
-
 #include <algorithm>
 #include <array>
 #include <limits>
 #include <stdexcept>
 #include <vector>
+
+#include <cassert>
 
 namespace PacBio {
 namespace Pbmer {
@@ -37,9 +37,6 @@ Mers Parser::Parse(const std::string& dna) const
     // The length of the current kmer buffer, lk needs to be >= to kmer_size
     // before a kmer is complete. Remember the kmer is build in a sliding fashion
     int lk = 0;
-    // The count of the number of kmers/2. Unknown bases are skipped so the
-    // dna.size() != size( kmers )
-    int n = 0;
 
     for (const auto d : dna) {
         // check that only ASCII is used
@@ -62,7 +59,6 @@ Mers Parser::Parse(const std::string& dna) const
             reverseKmer.pos += kmerSize_;
         }
         if (lk >= kmerSize_) {
-            n += 2;
             kms.AddKmer(forwardKmer);
             kms.AddKmer(reverseKmer);
             ++forwardKmer.pos;
@@ -92,9 +88,6 @@ std::vector<DnaBit> Parser::ParseDnaBit(const std::string& dna) const
     // The length of the current kmer buffer, lk needs to be >= to kmer_size
     // before a kmer is complete. Remember the kmer is build in a sliding fashion
     int lk = 0;
-    // The count of the number of kmers/2. Unknown bases are skipped so the
-    // dna.size() != size( kmers )
-    int n = 0;
 
     for (const auto d : dna) {
         // check that only ASCII is used
@@ -113,7 +106,6 @@ std::vector<DnaBit> Parser::ParseDnaBit(const std::string& dna) const
             forwardKmer.mer = 0;
         }
         if (lk >= kmerSize_) {
-            n += 2;
             kms.emplace_back(forwardKmer);
         }
         ++i;
@@ -138,9 +130,6 @@ void Parser::ParseDnaBit(const std::string& dna, std::vector<DnaBit>& kms) const
     // The length of the current kmer buffer, lk needs to be >= to kmer_size
     // before a kmer is complete. Remember the kmer is build in a sliding fashion
     int lk = 0;
-    // The count of the number of kmers/2. Unknown bases are skipped so the
-    // dna.size() != size( kmers )
-    int n = 0;
 
     for (const auto d : dna) {
         // check that only ASCII is used
@@ -159,7 +148,6 @@ void Parser::ParseDnaBit(const std::string& dna, std::vector<DnaBit>& kms) const
             forwardKmer.mer = 0;
         }
         if (lk >= kmerSize_) {
-            n += 2;
             kms.emplace_back(forwardKmer);
         }
         ++i;

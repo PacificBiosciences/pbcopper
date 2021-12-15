@@ -1,13 +1,16 @@
 #ifndef PBCOPPER_QGRAM_INDEX_INL_H
 #define PBCOPPER_QGRAM_INDEX_INL_H
 
-#include <cstdint>
-#include <stdexcept>
+#include <pbcopper/PbcopperConfig.h>
 
 #include <pbcopper/qgram/Index.h>
 #include <pbcopper/qgram/internal/Hashing-inl.h>
 #include <pbcopper/utility/MoveAppend.h>
 #include <pbcopper/utility/SafeSubtract.h>
+
+#include <stdexcept>
+
+#include <cstdint>
 
 namespace PacBio {
 namespace QGram {
@@ -25,8 +28,8 @@ public:
 
     // index lookup API
     IndexHit Hit(const Shape& shape) const;
-    IndexHits Hits(const Shape& shape, const size_t queryPos) const;
-    std::vector<IndexHits> Hits(const std::string& seq, const bool filterHomopolymers) const;
+    IndexHits Hits(const Shape& shape, size_t queryPos) const;
+    std::vector<IndexHits> Hits(const std::string& seq, bool filterHomopolymers) const;
 
     // "private" method(s) - index construction
     void Init();

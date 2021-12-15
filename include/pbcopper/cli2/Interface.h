@@ -3,14 +3,6 @@
 
 #include <pbcopper/PbcopperConfig.h>
 
-#include <memory>
-#include <string>
-#include <type_traits>
-#include <utility>
-#include <vector>
-
-#include <boost/optional.hpp>
-
 #include <pbcopper/cli2/Option.h>
 #include <pbcopper/cli2/OptionGroup.h>
 #include <pbcopper/cli2/PositionalArgument.h>
@@ -18,6 +10,14 @@
 #include <pbcopper/cli2/VersionPrinterCallback.h>
 #include <pbcopper/cli2/internal/InterfaceData.h>
 #include <pbcopper/logging/Logging.h>
+
+#include <boost/optional.hpp>
+
+#include <memory>
+#include <string>
+#include <type_traits>
+#include <utility>
+#include <vector>
 
 namespace PacBio {
 namespace CLI_v2 {
@@ -194,6 +194,16 @@ public:
 
 public:
     /// \internal
+    /// \return (translated) alarms option.
+    ///
+    const internal::OptionData& AlarmsOption() const;
+
+    /// \internal
+    /// \return (translated) "exceptions passthrough" option.
+    ///
+    const internal::OptionData& ExceptionsPassthroughOption() const;
+
+    /// \internal
     /// \return (translated) help option.
     ///
     const internal::OptionData& HelpOption() const;
@@ -211,6 +221,11 @@ public:
     /// \internal
     /// \return (translated) numThreads option.
     const boost::optional<internal::OptionData>& NumThreadsOption() const;
+
+    /// \internal
+    /// \return (translated) "show all help" option.
+    ///
+    const internal::OptionData& ShowAllHelpOption() const;
 
     /// \internal
     /// \return (translated) verbose option.

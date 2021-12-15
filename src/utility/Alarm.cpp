@@ -1,14 +1,14 @@
 #include <pbcopper/utility/Alarm.h>
 
-#include <fstream>
-#include <ostream>
-#include <utility>
+#include <pbcopper/json/JSON.h>
 
 #include <boost/uuid/uuid.hpp>
 #include <boost/uuid/uuid_generators.hpp>
 #include <boost/uuid/uuid_io.hpp>
 
-#include <pbcopper/json/JSON.h>
+#include <fstream>
+#include <ostream>
+#include <utility>
 
 namespace PacBio {
 namespace Utility {

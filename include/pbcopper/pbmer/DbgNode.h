@@ -3,14 +3,14 @@
 
 #include <pbcopper/PbcopperConfig.h>
 
-#include <cstddef>
-#include <cstdint>
-
-#include <iterator>
+#include <pbcopper/pbmer/DnaBit.h>
 
 #include <boost/dynamic_bitset.hpp>
 
-#include <pbcopper/pbmer/DnaBit.h>
+#include <iterator>
+
+#include <cstddef>
+#include <cstdint>
 
 namespace PacBio {
 namespace Pbmer {

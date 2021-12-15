@@ -1,12 +1,12 @@
 #include <pbcopper/cli2/internal/OptionTranslator.h>
 
+#include <pbcopper/cli2/OptionValue.h>
+#include <pbcopper/json/JSON.h>
+
 #include <sstream>
 #include <stdexcept>
 #include <string>
 #include <unordered_map>
-
-#include <pbcopper/cli2/OptionValue.h>
-#include <pbcopper/json/JSON.h>
 
 using Json = PacBio::JSON::Json;
 using Option = PacBio::CLI_v2::Option;

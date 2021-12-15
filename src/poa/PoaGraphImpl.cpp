@@ -1,19 +1,19 @@
 #include "PoaGraphImpl.h"
 
-#include <fstream>
-#include <ostream>
-#include <set>
-#include <sstream>
+#include <pbcopper/align/AlignConfig.h>
+#include <pbcopper/poa/PoaConsensus.h>
+#include <pbcopper/poa/PoaGraph.h>
+#include <pbcopper/poa/RangeFinder.h>
 
 #include <boost/foreach.hpp>
 #include <boost/graph/copy.hpp>
 #include <boost/graph/graphviz.hpp>
 #include <boost/graph/topological_sort.hpp>
 
-#include <pbcopper/align/AlignConfig.h>
-#include <pbcopper/poa/PoaConsensus.h>
-#include <pbcopper/poa/PoaGraph.h>
-#include <pbcopper/poa/RangeFinder.h>
+#include <fstream>
+#include <ostream>
+#include <set>
+#include <sstream>
 
 namespace boost {
 

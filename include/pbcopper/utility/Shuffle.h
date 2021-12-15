@@ -3,10 +3,10 @@
 
 #include <pbcopper/PbcopperConfig.h>
 
+#include <pbcopper/utility/Ssize.h>
+
 #include <iterator>
 #include <random>
-
-#include <pbcopper/utility/Ssize.h>
 
 namespace PacBio {
 namespace Utility {

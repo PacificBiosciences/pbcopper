@@ -3,21 +3,20 @@
 
 #include <pbcopper/PbcopperConfig.h>
 
-#include <cfloat>
-#include <climits>
-#include <cstddef>
-
-#include <vector>
+#include <pbcopper/align/AlignConfig.h>
+#include <pbcopper/poa/PoaGraph.h>
+#include "BoostGraph.h"
+#include "PoaAlignmentMatrix.h"
 
 #include <boost/config.hpp>
 #include <boost/format.hpp>
 #include <boost/type_traits.hpp>
 
-#include <pbcopper/align/AlignConfig.h>
-#include <pbcopper/poa/PoaGraph.h>
+#include <vector>
 
-#include "BoostGraph.h"
-#include "PoaAlignmentMatrix.h"
+#include <cfloat>
+#include <climits>
+#include <cstddef>
 
 ///
 ///  Boost graph library typedefs, properties, and graphviz output.

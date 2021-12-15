@@ -12,8 +12,6 @@
 #include <pbcopper/cli2/PositionalArgument.h>
 #include <pbcopper/cli2/Results.h>
 #include <pbcopper/cli2/internal/HelpMetrics.h>
-#include <pbcopper/cli2/internal/InterfaceHelpPrinter.h>
-#include <pbcopper/cli2/internal/MultiToolInterfaceHelpPrinter.h>
 #include <pbcopper/utility/Alarm.h>
 #include <pbcopper/utility/OStreamRedirect.h>
 
@@ -797,6 +795,10 @@ TEST(CLI2_CLI, populates_alarm_owner_field_with_application_name) {
         return 0;
     };
 
+    std::ostringstream logOutput;
+    PacBio::Utility::CerrRedirect redirect{logOutput.rdbuf()};
+    std::ignore = redirect;
+
     PacBio::CLI_v2::Interface i{"owner-check", "Check owner in alarm.", "v3.1"};
     const int result = PacBio::CLI_v2::Run(args, i, runner);
     EXPECT_EQ(EXIT_FAILURE, result);
@@ -810,7 +812,55 @@ TEST(CLI2_CLI, populates_alarm_owner_field_with_application_name) {
     EXPECT_TRUE(alarmText.str().find("\"name\": \"alarm type\"") != std::string::npos);
 }
 
-TEST(CLI2_CLI, multitoolinterface_supports_hidden_subtools)
+TEST(CLI2_CLI, show_all_help_displays_hidden_options)
+{
+    using namespace PacBio;
+
+    const CLI_v2::Option HiddenOption
+{
+R"({
+    "names" : ["hidden-mode"],
+    "description" : "Hidden mode",
+    "type" : "string",
+    "hidden" : true
+})"
+};
+
+    const auto runner = [](const CLI_v2::Results&) { return EXIT_SUCCESS; };
+
+    CLI_v2::Interface i{"frobber", "Frob all the things.", "v3.1"};
+    i.AddOption(HiddenOption);
+
+    // --all-help
+    {
+        const std::vector<std::string> args {
+            "frobber", "--all-help"
+        };
+
+        std::ostringstream s;
+        Utility::CoutRedirect redirect{s.rdbuf()};
+        std::ignore = redirect;
+        const int result = CLI_v2::Run(args, i, runner);
+        EXPECT_EQ(EXIT_SUCCESS, result);
+        EXPECT_NE(std::string::npos, s.str().find("--hidden-mode"));
+    }
+
+    // --show-all-help
+    {
+        const std::vector<std::string> args {
+            "frobber", "--show-all-help"
+        };
+
+        std::ostringstream s;
+        Utility::CoutRedirect redirect{s.rdbuf()};
+        std::ignore = redirect;
+        const int result = CLI_v2::Run(args, i, runner);
+        EXPECT_EQ(EXIT_SUCCESS, result);
+        EXPECT_NE(std::string::npos, s.str().find("--hidden-mode"));
+    }
+}
+
+TEST(CLI2_CLI, show_all_help_displays_hidden_subtools)
 {
     using namespace PacBio;
 
@@ -820,26 +870,33 @@ TEST(CLI2_CLI, multitoolinterface_supports_hidden_subtools)
                 {"polish",    CLI_v2_CLITests::MakePolishInterface(),    &CLI_v2_CLITests::PolishRunner},
                 {"summarize", CLI_v2_CLITests::MakeSummarizeInterface(), &CLI_v2_CLITests::SummarizeRunner}});
 
-    // hidden from help
-    {
-        CLI_v2::internal::MultiToolInterfaceHelpPrinter help{i};
-        std::ostringstream out;
-        help.Print(out);
-        EXPECT_TRUE(out.str().find("refine") == std::string::npos);
-    }
-
-    // can run from CLI
+    // --all-help
     {
         const std::vector<std::string> args {
-        "isoseq3", "refine", "--test", "--count", "10"
+            "isoseq3", "--all-help"
         };
 
         std::ostringstream s;
         Utility::CoutRedirect redirect{s.rdbuf()};
         std::ignore = redirect;
-
         const int result = CLI_v2::Run(args, i);
         EXPECT_EQ(EXIT_SUCCESS, result);
+        EXPECT_NE(std::string::npos, s.str().find("refine"));
+    }
+
+    
+    // --show-all-help
+    {
+        const std::vector<std::string> args {
+            "isoseq3", "--show-all-help"
+        };
+
+        std::ostringstream s;
+        Utility::CoutRedirect redirect{s.rdbuf()};
+        std::ignore = redirect;
+        const int result = CLI_v2::Run(args, i);
+        EXPECT_EQ(EXIT_SUCCESS, result);
+        EXPECT_NE(std::string::npos, s.str().find("refine"));
     }
 }
 

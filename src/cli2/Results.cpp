@@ -1,14 +1,14 @@
 #include <pbcopper/cli2/Results.h>
 
-#include <algorithm>
-#include <sstream>
-#include <stdexcept>
-
 #include <pbcopper/cli2/internal/BuiltinOptions.h>
 #include <pbcopper/cli2/internal/OptionTranslator.h>
 #include <pbcopper/cli2/internal/PositionalArgumentTranslator.h>
 #include <pbcopper/parallel/ThreadCount.h>
 #include <pbcopper/utility/StringUtils.h>
+
+#include <algorithm>
+#include <sstream>
+#include <stdexcept>
 
 namespace PacBio {
 namespace CLI_v2 {
@@ -179,6 +179,15 @@ bool Results::ExceptionPassthrough() const
         return *(found->second.get());
     }
     return false;  // allow-exceptions-passthrough option not enabled
+}
+
+bool Results::ShowAllHelp() const
+{
+    const auto found = results_.find("show-all-help");
+    if (found != std::cend(results_)) {
+        return *(found->second.get());
+    }
+    return false;  // show-all-help option not enabled
 }
 
 const Result& Results::operator[](const Option& opt) const

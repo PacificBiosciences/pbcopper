@@ -3,10 +3,10 @@
 
 #include <pbcopper/PbcopperConfig.h>
 
+#include <pbcopper/data/Frames.h>
+
 #include <memory>
 #include <string>
-
-#include <pbcopper/data/Frames.h>
 
 namespace PacBio {
 namespace Data {

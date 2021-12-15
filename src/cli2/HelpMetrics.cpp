@@ -1,9 +1,7 @@
 #include <pbcopper/cli2/internal/HelpMetrics.h>
 
-#include <sys/ioctl.h>
-#include <unistd.h>
-
-#include <cassert>
+#include <pbcopper/cli2/OptionValue.h>
+#include <pbcopper/utility/StringUtils.h>
 
 #include <algorithm>
 #include <iomanip>
@@ -11,8 +9,10 @@
 #include <sstream>
 #include <string>
 
-#include <pbcopper/cli2/OptionValue.h>
-#include <pbcopper/utility/StringUtils.h>
+#include <cassert>
+
+#include <sys/ioctl.h>
+#include <unistd.h>
 
 namespace PacBio {
 namespace CLI_v2 {
@@ -67,26 +67,30 @@ std::string DisplayName(const OptionValueType type)
 //
 size_t HelpMetrics::TestingFixedWidth = 0;
 
-HelpMetrics::HelpMetrics(const Interface& interface)
+HelpMetrics::HelpMetrics(const Interface& interface, HiddenOptionMode hiddenOptionMode)
+    : showHiddenOptions{hiddenOptionMode == HiddenOptionMode::SHOW}
 {
     maxColumn = AdjustedMaxColumn(maxColumn);
     Calculate(interface);
 }
 
-HelpMetrics::HelpMetrics(const MultiToolInterface& interface)
+HelpMetrics::HelpMetrics(const MultiToolInterface& interface, HiddenOptionMode hiddenOptionMode)
+    : showHiddenOptions{hiddenOptionMode == HiddenOptionMode::SHOW}
 {
     maxColumn = AdjustedMaxColumn(maxColumn);
     Calculate(interface);
 }
 
-HelpMetrics::HelpMetrics(const Interface& interface, const size_t explicitMaxColumn)
-    : maxColumn{explicitMaxColumn}
+HelpMetrics::HelpMetrics(const Interface& interface, const size_t explicitMaxColumn,
+                         HiddenOptionMode hiddenOptionMode)
+    : maxColumn{explicitMaxColumn}, showHiddenOptions{hiddenOptionMode == HiddenOptionMode::SHOW}
 {
     Calculate(interface);
 }
 
-HelpMetrics::HelpMetrics(const MultiToolInterface& interface, const size_t explicitMaxColumn)
-    : maxColumn{explicitMaxColumn}
+HelpMetrics::HelpMetrics(const MultiToolInterface& interface, const size_t explicitMaxColumn,
+                         HiddenOptionMode hiddenOptionMode)
+    : maxColumn{explicitMaxColumn}, showHiddenOptions{hiddenOptionMode == HiddenOptionMode::SHOW}
 {
     Calculate(interface);
 }
@@ -103,6 +107,13 @@ void HelpMetrics::Calculate(const Interface& interface)
     // metrics with builtin options
     UpdateForOption(interface.HelpOption());
     UpdateForOption(interface.VersionOption());
+
+    if (showHiddenOptions) {
+        UpdateForOption(interface.AlarmsOption());
+        UpdateForOption(interface.ExceptionsPassthroughOption());
+        UpdateForOption(interface.ShowAllHelpOption());
+    }
+
     if (interface.NumThreadsOption()) {
         UpdateForOption(*interface.NumThreadsOption());
     }
@@ -130,6 +141,9 @@ void HelpMetrics::Calculate(const MultiToolInterface& interface)
 {
     UpdateForOption(interface.HelpOption());
     UpdateForOption(interface.VersionOption());
+    if (showHiddenOptions) {
+        UpdateForOption(interface.ShowAllHelpOption());
+    }
 }
 
 std::string HelpMetrics::HelpEntry(const OptionData& option) const
@@ -168,10 +182,6 @@ std::string HelpMetrics::HelpEntry(std::string name, std::string type,
 
 std::string HelpMetrics::OptionNames(const OptionData& option)
 {
-    if (option.isHidden) {
-        return {};
-    }
-
     std::ostringstream optionOutput;
     auto first = true;
     for (const auto& name : option.names) {
@@ -195,7 +205,7 @@ std::string HelpMetrics::OptionNames(const OptionData& option)
 
 void HelpMetrics::UpdateForOption(const OptionData& option)
 {
-    if (option.isHidden) {
+    if (option.isHidden && !showHiddenOptions) {
         return;
     }
 

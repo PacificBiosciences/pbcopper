@@ -3,10 +3,10 @@
 
 #include <pbcopper/PbcopperConfig.h>
 
-#include <cstdint>
-
 #include <string>
 #include <vector>
+
+#include <cstdint>
 
 namespace PacBio {
 namespace Utility {
@@ -21,7 +21,7 @@ std::string Join(const std::vector<std::string>& input, const std::string& separ
 /// Concatenates input strings into a single string, separated by a char
 /// separator
 ///
-std::string Join(const std::vector<std::string>& input, const char separator);
+std::string Join(const std::vector<std::string>& input, char separator);
 
 ///
 /// Converts a string with (optional) scientific notation (e.g. 1e6)
@@ -74,21 +74,21 @@ double SIStringToDouble(const std::string& input);
 ///
 /// Returns the list of 'words' from a string, separated by a char delimiter
 ///
-std::vector<std::string> Split(const std::string& line, const char delim = '\t');
+std::vector<std::string> Split(const std::string& line, char delim = '\t');
 
 ///
 /// Generates a string from the input, with newline chars inserted such that no
 /// line exceeds the requested width. If a particular word covers this boundary,
 /// the newline is inserted before that word.
 ///
-std::string WordWrapped(const std::string& input, const size_t maxColumns);
+std::string WordWrapped(const std::string& input, size_t maxColumns);
 
 ///
 /// Generates a list of strings from the input, such that no string element
 /// exceeds the requested width. If a particular word covers this boundary,
 /// then a new string is created, beginning with that word.
 ///
-std::vector<std::string> WordWrappedLines(const std::string& input, const size_t maxColumns);
+std::vector<std::string> WordWrappedLines(const std::string& input, size_t maxColumns);
 
 }  // namespace Utility
 }  // namespace PacBio

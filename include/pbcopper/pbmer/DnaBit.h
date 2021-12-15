@@ -3,10 +3,10 @@
 
 #include <pbcopper/PbcopperConfig.h>
 
-#include <cstdint>
-
 #include <string>
 #include <vector>
+
+#include <cstdint>
 
 namespace PacBio {
 namespace Pbmer {
@@ -95,14 +95,14 @@ public:
     ///
     /// Put a base at the end of the kmer
     //
-    void AppendBase(const uint8_t c);
-    void AppendBase(const char c);
+    void AppendBase(uint8_t c);
+    void AppendBase(char c);
 
     ///
     /// Put a base at the beginning of kmer
     ///
-    void PrependBase(const uint8_t c);
-    void PrependBase(const char c);
+    void PrependBase(uint8_t c);
+    void PrependBase(char c);
 
     ///
     /// Get the first idx
@@ -140,7 +140,7 @@ public:
 };
 
 // This should remain a function, it has a lot of general utility.
-uint64_t ReverseComp64(const uint64_t mer, uint8_t kmerSize);
+uint64_t ReverseComp64(uint64_t mer, uint8_t kmerSize);
 // This should remain a function, it has a lot of general utility.
 uint64_t Mix64Masked(uint64_t key, uint8_t kmerSize) noexcept;
 
