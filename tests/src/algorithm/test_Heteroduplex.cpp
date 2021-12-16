@@ -325,8 +325,55 @@ TEST(Algorithm_Heteroduplex, call_simple_del_heteroduplex_fwd)
     settings.IgnoreEndBases = 0;
     settings.AlphaLevel = 0.1;
     settings.MinimumPerStrandSubreadCoverage = 4;
+    settings.SkipDeletions = false;
 
     EXPECT_TRUE(Algorithm::IsHeteroduplex(
+        reference, fwdSeqs, revSeqs, fwdCigars, revCigars,
+        fwdPositions, revPositions, settings));
+}
+
+TEST(Algorithm_Heteroduplex, can_skip_simple_del_heteroduplex_fwd)
+{
+    // Ref: GATTACA
+    // Fwd: GATTA-A
+    // Rev: GATCACA
+
+    const std::string reference{"GATTACA"};
+    const std::vector<std::string> fwdSeqs{
+        "GATTAA",
+        "GATTAA",
+        "GATTAA",
+        "GATTAA",
+    };
+    const std::vector<std::string> revSeqs{
+        "GATTACA",
+        "GATTACA",
+        "GATTACA",
+        "GATTACA",
+    };
+    const std::vector<PacBio::Data::Cigar> fwdCigars{
+        PacBio::Data::Cigar{"5=1D1="},
+        PacBio::Data::Cigar{"5=1D1="},
+        PacBio::Data::Cigar{"5=1D1="},
+        PacBio::Data::Cigar{"5=1D1="},
+    };
+    const std::vector<PacBio::Data::Cigar> revCigars{
+        PacBio::Data::Cigar{"7="},
+        PacBio::Data::Cigar{"7="},
+        PacBio::Data::Cigar{"7="},
+        PacBio::Data::Cigar{"7="},
+    };
+    const std::vector<int32_t> fwdPositions{0, 0, 0, 0};
+    const std::vector<int32_t> revPositions{0, 0, 0, 0};
+
+    // adjacent for small dataset
+    Algorithm::HeteroduplexSettings settings;
+    settings.IgnoreEndBases = 0;
+    settings.AlphaLevel = 0.1;
+    settings.MinimumPerStrandSubreadCoverage = 4;
+    settings.SkipDeletions = true;
+
+    EXPECT_FALSE(Algorithm::IsHeteroduplex(
         reference, fwdSeqs, revSeqs, fwdCigars, revCigars,
         fwdPositions, revPositions, settings));
 }
@@ -370,8 +417,55 @@ TEST(Algorithm_Heteroduplex, call_simple_del_heteroduplex_rev)
     settings.IgnoreEndBases = 0;
     settings.AlphaLevel = 0.1;
     settings.MinimumPerStrandSubreadCoverage = 4;
+    settings.SkipDeletions = false;
 
     EXPECT_TRUE(Algorithm::IsHeteroduplex(
+        reference, fwdSeqs, revSeqs, fwdCigars, revCigars,
+        fwdPositions, revPositions, settings));
+}
+
+TEST(Algorithm_Heteroduplex, can_skip_simple_del_heteroduplex_rev)
+{
+    // Ref: GATTACA
+    // Fwd: GATTACA
+    // Rev: GATT-CA
+
+    const std::string reference{"GATTACA"};
+    const std::vector<std::string> fwdSeqs{
+        "GATTACA",
+        "GATTACA",
+        "GATTACA",
+        "GATTACA",
+    };
+    const std::vector<std::string> revSeqs{
+        "GATTAA",
+        "GATTCA",
+        "GATTCA",
+        "GATTCA",
+    };
+    const std::vector<PacBio::Data::Cigar> fwdCigars{
+        PacBio::Data::Cigar{"7="},
+        PacBio::Data::Cigar{"7="},
+        PacBio::Data::Cigar{"7="},
+        PacBio::Data::Cigar{"7="},
+    };
+    const std::vector<PacBio::Data::Cigar> revCigars{
+        PacBio::Data::Cigar{"4=1D2="},
+        PacBio::Data::Cigar{"4=1D2="},
+        PacBio::Data::Cigar{"4=1D2="},
+        PacBio::Data::Cigar{"4=1D2="},
+    };
+    const std::vector<int32_t> fwdPositions{0, 0, 0, 0};
+    const std::vector<int32_t> revPositions{0, 0, 0, 0};
+
+    // adjacent for small dataset
+    Algorithm::HeteroduplexSettings settings;
+    settings.IgnoreEndBases = 0;
+    settings.AlphaLevel = 0.1;
+    settings.MinimumPerStrandSubreadCoverage = 4;
+    settings.SkipDeletions = true;
+
+    EXPECT_FALSE(Algorithm::IsHeteroduplex(
         reference, fwdSeqs, revSeqs, fwdCigars, revCigars,
         fwdPositions, revPositions, settings));
 }
