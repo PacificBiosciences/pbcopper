@@ -399,6 +399,13 @@ HeteroduplexResults FindHeteroduplex(
         const char refBase = reference[i];
         assert((fwdMostCommonBase != refBase) || (revMostCommonBase != refBase));
 
+        // skip deletion sites: the source of a large % of false positive HD calls
+        if (settings.SkipDeletions) {
+            if (fwdMostCommonBase == '-' || revMostCommonBase == '-') {
+                continue;
+            }
+        }
+
         // ensure some coverage on both strands
         auto fwdCoverageCount = fwdCoverageCounts[i];
         auto revCoverageCount = revCoverageCounts[i];
@@ -413,26 +420,31 @@ HeteroduplexResults FindHeteroduplex(
             continue;
         }
 
-        // PileupContext will determine if deletions are adjacent to hompolymers
-        // or need to be "squeezed", in which case the next base should be used
-        // at this position
-        const auto pileupResult = internal::PileupContext(
-            fwdMostCommonBase, fwdMostCommonBases, revMostCommonBase, revMostCommonBases,
-            fwdCoverageCount, revCoverageCount, fwdMismatchCount, revMismatchCount, i, refLength,
-            settings.HomopolymerThreshold);
-        if (pileupResult.HomopolymerAdjacent) {
-            continue;
-        }
-        if (pileupResult.StrandToUpdate == Data::Strand::FORWARD) {
-            fwdMostCommonBase = revMostCommonBases[i + 1];
-            fwdCoverageCount = internal::CoverageCount(fwdBaseCounts[i + 1]);
-            fwdMismatchCount = internal::MismatchCount(fwdBaseCounts[i + 1], reference[i + 1]);
-        } else if (pileupResult.StrandToUpdate == Data::Strand::REVERSE) {
-            revMostCommonBase = revMostCommonBases[i + 1];
-            revCoverageCount = internal::CoverageCount(revBaseCounts[i + 1]);
-            revMismatchCount = internal::MismatchCount(revBaseCounts[i + 1], reference[i + 1]);
-        } else {
-            assert(pileupResult.StrandToUpdate == Data::Strand::UNMAPPED);
+        // this adjustment is unnecessary if we're skipping deletions
+        bool usingAdjacent = false;
+        if (!settings.SkipDeletions) {
+            // PileupContext will determine if deletions are adjacent to hompolymers
+            // or need to be "squeezed", in which case the next base should be used
+            // at this position
+            const auto pileupResult = internal::PileupContext(
+                fwdMostCommonBase, fwdMostCommonBases, revMostCommonBase, revMostCommonBases,
+                fwdCoverageCount, revCoverageCount, fwdMismatchCount, revMismatchCount, i,
+                refLength, settings.HomopolymerThreshold);
+            if (pileupResult.HomopolymerAdjacent) {
+                continue;
+            }
+            if (pileupResult.StrandToUpdate == Data::Strand::FORWARD) {
+                fwdMostCommonBase = revMostCommonBases[i + 1];
+                fwdCoverageCount = internal::CoverageCount(fwdBaseCounts[i + 1]);
+                fwdMismatchCount = internal::MismatchCount(fwdBaseCounts[i + 1], reference[i + 1]);
+            } else if (pileupResult.StrandToUpdate == Data::Strand::REVERSE) {
+                revMostCommonBase = revMostCommonBases[i + 1];
+                revCoverageCount = internal::CoverageCount(revBaseCounts[i + 1]);
+                revMismatchCount = internal::MismatchCount(revBaseCounts[i + 1], reference[i + 1]);
+            } else {
+                assert(pileupResult.StrandToUpdate == Data::Strand::UNMAPPED);
+            }
+            usingAdjacent = pileupResult.UsingAdjacent;
         }
 
         // check mismatch fractions
@@ -460,7 +472,7 @@ HeteroduplexResults FindHeteroduplex(
         }
 
         // skip ahead an extra position, if we actually used the adjacent one here
-        i += pileupResult.UsingAdjacent;
+        i += usingAdjacent;
     }
 
     // calculate results summary & return
@@ -487,8 +499,9 @@ bool IsHeteroduplex(const std::string& reference, const std::vector<std::string>
                     const std::vector<int32_t>& fwdPositions,
                     const std::vector<int32_t>& revPositions, const HeteroduplexSettings& settings)
 {
-    const auto results = FindHeteroduplex(reference, fwdSequences, revSequences, fwdCigars,
-                                          revCigars, fwdPositions, revPositions, settings);
+    const HeteroduplexResults results =
+        FindHeteroduplex(reference, fwdSequences, revSequences, fwdCigars, revCigars, fwdPositions,
+                         revPositions, settings);
     return results.FractionSites >= settings.MinFractionSites;
 }
 
