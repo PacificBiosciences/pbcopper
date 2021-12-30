@@ -35,6 +35,7 @@ if not meson.is_subproject()
       'pbcopper/align/ChainSeedsConfig.h',
       'pbcopper/align/EdlibAlign.h',
       'pbcopper/align/FindSeeds.h',
+      'pbcopper/align/GlobalLocalAlignment.h',
       'pbcopper/align/LinearAlignment.h',
       'pbcopper/align/LocalAlignment.h',
       'pbcopper/align/PairwiseAlignment.h',

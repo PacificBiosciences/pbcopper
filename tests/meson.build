@@ -7,6 +7,7 @@ pbcopper_test_cpp_sources = files([
   'src/align/test_Alignment.cpp',
   'src/align/test_BandedChainAlign.cpp',
   'src/align/test_EdlibAlign.cpp',
+  'src/align/test_GlobalLocalAlignment.cpp',
   'src/align/test_Seeds.cpp',
 
   #cli2
