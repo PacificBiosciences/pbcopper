@@ -1,4 +1,5 @@
-#pragma once
+#ifndef PBCOPPER_ALIGN_GLOBALLOCALALIGNMENT_H
+#define PBCOPPER_ALIGN_GLOBALLOCALALIGNMENT_H
 
 #include <cstdint>
 #include <string>
@@ -54,3 +55,5 @@ GlobalLocalResult GlobalLocalLastRowMax(const std::vector<int32_t>& matrix, int3
 
 }  // namespace Align
 }  // namespace PacBio
+
+#endif  // PBCOPPER_ALIGN_GLOBALLOCALALIGNMENT_H
