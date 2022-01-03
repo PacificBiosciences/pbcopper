@@ -77,29 +77,21 @@ void GlobalLocalComputeMatrix(const char* const query, const int32_t queryLength
             for (int32_t j = 1; j < n; ++j) {
                 // We prefer more arithmetic operations than accessing memory
                 // in branches.
-                int32_t a{matrix[(i - 1) * n + j - 1]};
-                int32_t b{matrix[i * n + j - 1] + parameters.BranchPenalty};
+                const int32_t match = (target[j - 1] == iBeforeQuery);
+                const int32_t a{matrix[(i - 1) * n + j - 1] + (parameters.MatchScore * match) +
+                                (parameters.MismatchPenalty * !match)};
+                const int32_t b{matrix[i * n + j - 1] + parameters.BranchPenalty -
+                                (insertionDelta * (target[j - 1] != iQuery))};
                 const int32_t c{matrix[(i - 1) * n + j] + parameters.DeletionPenalty};
-                if (target[j - 1] == iBeforeQuery) {
-                    a += parameters.MatchScore;
-                } else {
-                    a += parameters.MismatchPenalty;
-                }
-                if (target[j - 1] != iQuery) {
-                    b -= insertionDelta;
-                }
                 matrix[i * n + j] = std::max(a, std::max(b, c));
             }
         } else {
             for (int32_t j = 1; j < n; ++j) {
-                int32_t a = matrix[(i - 1) * n + j - 1];
                 const int32_t b{matrix[i * n + j - 1] + parameters.InsertionPenalty};
                 const int32_t c{matrix[(i - 1) * n + j] + parameters.DeletionPenalty};
-                if (target[j - 1] == iBeforeQuery) {
-                    a += parameters.MatchScore;
-                } else {
-                    a += parameters.MismatchPenalty;
-                }
+                const int32_t match = (target[j - 1] == iBeforeQuery);
+                int32_t a{matrix[(i - 1) * n + j - 1]};
+                a += (parameters.MatchScore * match) + (parameters.MismatchPenalty * !match);
                 matrix[i * n + j] = std::max(a, std::max(b, c));
             }
         }
