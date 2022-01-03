@@ -3,6 +3,7 @@
 #include <pbcopper/utility/Ssize.h>
 
 #include <algorithm>
+#include <limits>
 
 namespace PacBio {
 namespace Align {
@@ -115,7 +116,7 @@ GlobalLocalResult GlobalLocalLastRowMax(const std::vector<int32_t>& matrix,
     const int32_t beginLastRow = (m - 1) * n;
 
     // Find maximal score in last row and it's position
-    int32_t maxScore = -1;
+    int32_t maxScore = std::numeric_limits<int32_t>::min();
     int32_t endPos = 0;
     for (int32_t j = 0; j < n; ++j) {
         if (matrix[beginLastRow + j] > maxScore) {
