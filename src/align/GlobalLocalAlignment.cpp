@@ -65,6 +65,9 @@ GlobalLocalResult GlobalLocalAlign(const char* const query, const int32_t queryL
     int32_t prevOffset = 0;
     int32_t curOffset = m;
 
+    // Initialize previous column, after swapping, to zero
+    std::fill_n(col + curOffset, m, 0);
+
     // Deltas are used to reduce number of instructions in the inner loop
     const int32_t mismatchDelta = parameters.MatchScore - parameters.MismatchPenalty;
     const int32_t insertionDelta = parameters.BranchPenalty - parameters.InsertionPenalty;
