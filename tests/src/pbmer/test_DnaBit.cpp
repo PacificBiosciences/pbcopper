@@ -1,6 +1,7 @@
 #include <pbcopper/pbmer/DnaBit.h>
 
 #include <array>
+#include <unordered_set>
 
 #include <gtest/gtest.h>
 
@@ -54,6 +55,46 @@ TEST(Pbmer_DnaBit, str_check_string)
 {
     const PacBio::Pbmer::DnaBit k1{2862426841, 0, 16};
     EXPECT_EQ("GGGGGCTCAGGGTCGC", k1.KmerToStr());
+}
+
+TEST(Pbmer_DnaBit, set_base)
+{
+    PacBio::Pbmer::DnaBit k1{2862426841, 0, 16};
+    EXPECT_EQ("GGGGGCTCAGGGTCGC", k1.KmerToStr());
+    k1.SetBase('G', 0);
+
+    // first modification
+    EXPECT_EQ("GGGGGCTCAGGGTCGG", k1.KmerToStr());
+    k1.SetBase('C', 0);
+    // round trip
+    EXPECT_EQ("GGGGGCTCAGGGTCGC", k1.KmerToStr());
+
+    //position one
+    k1.SetBase('T', 1);
+    // first base
+    EXPECT_EQ("GGGGGCTCAGGGTCTC", k1.KmerToStr());
+    k1.SetBase('G', 1);
+    // first base
+    EXPECT_EQ("GGGGGCTCAGGGTCGC", k1.KmerToStr());
+
+    //position 16
+    k1.SetBase('A', 15);
+    EXPECT_EQ("AGGGGCTCAGGGTCGC", k1.KmerToStr());
+    k1.SetBase('C', 15);
+    EXPECT_EQ("CGGGGCTCAGGGTCGC", k1.KmerToStr());
+}
+
+TEST(Pbmer_DnaBit, test_neighbors)
+{
+    PacBio::Pbmer::DnaBit k1{2862426841, 0, 16};
+    const std::vector<PacBio::Pbmer::DnaBit> neighbors = k1.Neighbors();
+    std::unordered_set<std::string> results;
+    for (const auto& s : neighbors) {
+        results.insert(s.KmerToStr());
+    }
+    // One original sequence, then three different bases at each of the 16 positions
+    // (3*16) + 1
+    EXPECT_EQ(49, results.size());
 }
 
 TEST(Pbmer_DnaBit, str_first_base_idx_a)

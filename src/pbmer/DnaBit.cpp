@@ -4,11 +4,24 @@
 
 #include <array>
 #include <tuple>
+#include <unordered_set>
+#include <vector>
 
 #include <cassert>
+#include <cstdint>
 
 namespace PacBio {
 namespace Pbmer {
+
+void DnaBit::SetBase(char c, int position)
+{
+    constexpr uint64_t mask = 3;
+
+    const uint64_t base = AsciiToDna[c];
+    const int step = position * 2;
+
+    mer = (mer & ~(mask << step)) | (base << step);
+}
 
 // https://gist.github.com/badboy/6267743
 // This is a multiplication method for hashing. Minimap2 uses this function, but
@@ -298,6 +311,27 @@ std::string DnaBitVec2String(const std::vector<DnaBit>& bits)
         }
     }
     return rv;
+}
+
+std::vector<DnaBit> DnaBit::Neighbors()
+{
+    std::vector<DnaBit> results;
+    results.reserve(4 * msize);
+
+    // unordered set to collapse duplicates
+    std::unordered_set<uint64_t> seen;
+
+    for (int i = 0; i < msize; ++i) {
+        for (int j = 0; j < 4; ++j) {
+            DnaBit currentMer = *this;
+            currentMer.SetBase(j, i);
+            const auto insertResult = seen.insert(currentMer.mer);
+            if (insertResult.second) {
+                results.emplace_back(currentMer);
+            }
+        }
+    }
+    return results;
 }
 
 }  // namespace Pbmer
