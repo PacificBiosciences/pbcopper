@@ -3,122 +3,101 @@
 #include <pbcopper/utility/Ssize.h>
 
 #include <algorithm>
-#include <limits>
 
 namespace PacBio {
 namespace Align {
+namespace {
+/// \brief Traverse the last row of a DP matrix (i.e. representing
+///        alignments terminating with the last base of the query
+///        sequence) and return the max score and it's position
+GlobalLocalResult GlobalLocalLastRowMax(const std::vector<int32_t>& lastRow) noexcept
+{
+    const auto maxElementIt = std::max_element(std::cbegin(lastRow), std::cend(lastRow));
+    const int32_t maxElementPos = maxElementIt - std::cbegin(lastRow);
+    return {*maxElementIt, maxElementPos};
+}
+}
 
-GlobalLocalResult GlobalLocalAlign(const std::string& query, const std::string& target,
+GlobalLocalResult GlobalLocalAlign(const std::string& query, const std::string& read,
                                    const GlobalLocalParameters& parameters) noexcept
 {
-    std::vector<int32_t> matrix;
-    return GlobalLocalAlign(query, target, parameters, matrix);
+    GlobalLocalStorage storage{};
+    return GlobalLocalAlign(query.c_str(), query.size(), read.c_str(), read.size(), parameters,
+                            storage);
 }
 
-GlobalLocalResult GlobalLocalAlign(const std::string& query, const std::string& target,
+GlobalLocalResult GlobalLocalAlign(const char* const query, const int32_t queryLength,
+                                   const char* const read, const int32_t readLength,
+                                   const GlobalLocalParameters& parameters) noexcept
+{
+    GlobalLocalStorage storage{};
+    return GlobalLocalAlign(query, queryLength, read, readLength, parameters, storage);
+}
+
+GlobalLocalResult GlobalLocalAlign(const std::string& query, const std::string& read,
                                    const GlobalLocalParameters& parameters,
-                                   std::vector<int32_t>& matrix) noexcept
+                                   GlobalLocalStorage& storage) noexcept
 {
-    const int32_t queryLength = query.size();
-    const int32_t targetLength = target.size();
-    GlobalLocalComputeMatrix(query.c_str(), queryLength, target.c_str(), targetLength, false,
-                             parameters, matrix);
-    return GlobalLocalLastRowMax(matrix, queryLength, targetLength);
+    return GlobalLocalAlign(query.c_str(), query.size(), read.c_str(), read.size(), parameters,
+                            storage);
 }
 
-void GlobalLocalComputeMatrix(const char* const query, const int32_t queryLength,
-                              const char* const target, const int32_t targetLength,
-                              const bool globalInQuery, const GlobalLocalParameters& parameters,
-                              std::vector<int32_t>& matrix) noexcept
+GlobalLocalResult GlobalLocalAlign(const char* const query, const int32_t queryLength,
+                                   const char* const read, const int32_t readLength,
+                                   const GlobalLocalParameters& parameters,
+                                   GlobalLocalStorage& storage) noexcept
 {
-    // The matrix has m rows for the query and
-    //                n column for the target
+    // The lastRow has m rows for the query and
+    //                 n column for the read
     const int32_t m = queryLength + 1;
-    const int32_t n = targetLength + 1;
+    const int32_t n = readLength + 1;
 
-    if (Utility::Ssize(matrix) < (m * n)) {
-        matrix.resize(m * n);
+    std::vector<int32_t> lastRow(readLength);
+
+    // We only store two columns as we do not compute the traceback.
+    // Both columns are stored in one contiguous memory block.
+    // Offsets determine where columns start.
+    // Columns are swapped after each outer loop of read bases.
+    if (Utility::Ssize(storage.Columns) < m * 2) {
+        storage.Columns.resize(m * 2, 0);
     }
+    auto* const col = storage.Columns.data();
+    int32_t prevOffset = 0;
+    int32_t curOffset = m;
 
-    matrix[0] = 0;
-
-    // Global in query means that we penalize missing bases of the query, if the
-    // target is truncated, only at the target start.
-    // If we don't penalize it, we allow that the target might have been trimmed
-    // in previous processing steps.
-    //
-    // Example
-    // Target:    AGATATGCCAG
-    // Query : GGTAGATAT
-    if (globalInQuery) {
-        for (int32_t i = 1; i < m; ++i) {
-            matrix[i * n] = i * parameters.DeletionPenalty;
-        }
-    } else {
-        for (int32_t i = 1; i < m; ++i) {
-            matrix[i * n] = 0;
-        }
-    }
-
-    for (int32_t j = 1; j < n; ++j) {
-        matrix[j] = 0;
-    }
-
-    // The matrix has i for rows, query bases, and j for columns, target bases.
-    // It's a 1D vector with a row layout. The first n cells are matching the
-    // first query base with 1:m target bases.
-    // Keep in mind that there the first column and row are not matching any
-    // bases but are used for initialization.
+    // Deltas are used to reduce number of instructions in the inner loop
+    const int32_t mismatchDelta = parameters.MatchScore - parameters.MismatchPenalty;
     const int32_t insertionDelta = parameters.BranchPenalty - parameters.InsertionPenalty;
-    for (int32_t i = 1; i < m; ++i) {
-        const char iQuery = query[i];
-        const char iBeforeQuery = query[i - 1];
-        if (i < m - 1) {
-            for (int32_t j = 1; j < n; ++j) {
-                // We prefer more arithmetic operations than accessing memory
-                // in branches.
-                const int32_t match = (target[j - 1] == iBeforeQuery);
-                const int32_t a{matrix[(i - 1) * n + j - 1] + (parameters.MatchScore * match) +
-                                (parameters.MismatchPenalty * !match)};
-                const int32_t b{matrix[i * n + j - 1] + parameters.BranchPenalty -
-                                (insertionDelta * (target[j - 1] != iQuery))};
-                const int32_t c{matrix[(i - 1) * n + j] + parameters.DeletionPenalty};
-                matrix[i * n + j] = std::max(a, std::max(b, c));
-            }
-        } else {
-            for (int32_t j = 1; j < n; ++j) {
-                const int32_t b{matrix[i * n + j - 1] + parameters.InsertionPenalty};
-                const int32_t c{matrix[(i - 1) * n + j] + parameters.DeletionPenalty};
-                const int32_t match = (target[j - 1] == iBeforeQuery);
-                int32_t a{matrix[(i - 1) * n + j - 1]};
-                a += (parameters.MatchScore * match) + (parameters.MismatchPenalty * !match);
-                matrix[i * n + j] = std::max(a, std::max(b, c));
-            }
-        }
-    }
-}
+    const int32_t deletionDelta = parameters.MergePenalty - parameters.DeletionPenalty;
 
-GlobalLocalResult GlobalLocalLastRowMax(const std::vector<int32_t>& matrix,
-                                        const int32_t queryLength,
-                                        const int32_t targetLength) noexcept
-{
-    // Calculate the starting position of the last row
-    const int32_t m = queryLength + 1;
-    const int32_t n = targetLength + 1;
-    const int32_t beginLastRow = (m - 1) * n;
+    // The matrix has i for rows, query bases, and j for columns, read bases.
+    // Outer loop is over read bases und inner loop over query bases.
+    // Insertion and deletions are with respect to the read that is horizontally.
+    for (int32_t j = 1; j < n; ++j) {  // rows
+        std::swap(prevOffset, curOffset);
+        const char prevRead = read[j - 1];
+        const int32_t readMismatch = (prevRead != read[j]);
+        for (int32_t i = 1; i < m; ++i) {  // cols
 
-    // Find maximal score in last row and it's position
-    int32_t maxScore = std::numeric_limits<int32_t>::min();
-    int32_t endPos = 0;
-    for (int32_t j = 0; j < n; ++j) {
-        if (matrix[beginLastRow + j] > maxScore) {
-            maxScore = matrix[beginLastRow + j];
-            endPos = j;
+            // Match/mismatch
+            const int32_t a{col[i - 1 + prevOffset] + parameters.MatchScore -
+                            (mismatchDelta * (prevRead != query[i - 1]))};
+
+            // Insertion in the read or branch if the current and last read sequence are identical
+            const int32_t b{col[i + prevOffset] + parameters.BranchPenalty -
+                            (insertionDelta * readMismatch)};
+
+            // Deletion in the read or merge if the current and last read sequence are identical
+            const int32_t c{col[i - 1 + curOffset] + parameters.MergePenalty -
+                            (deletionDelta * (query[i - 1] != query[i]))};
+
+            col[i + curOffset] = std::max(a, std::max(b, c));
         }
+        lastRow[j - 1] = col[curOffset + m - 1];
     }
 
-    // Return the maximum score and position
-    return {maxScore, endPos};
+    return GlobalLocalLastRowMax(lastRow);
 }
+
 }  // namespace Align
 }  // namespace PacBio
