@@ -54,45 +54,46 @@ GlobalLocalResult GlobalLocalAlign(const char* const query, const int32_t queryL
 
     std::vector<int32_t> lastRow(readLength);
 
-    if (Utility::Ssize(storage.Col0) < m) {
-        storage.Col0.resize(m, 0);
-        storage.Col1.resize(m, 0);
+    // We only store two columns as we do not compute the traceback.
+    // Both columns are stored in one contiguous memory block.
+    // Offsets determine where columns start.
+    // Columns are swapped after each outer loop of read bases.
+    if (Utility::Ssize(storage.Columns) < m * 2) {
+        storage.Columns.resize(m * 2, 0);
     }
-    decltype(storage.Col0)* colCur = &storage.Col0;
-    decltype(storage.Col1)* colPrev = &storage.Col1;
+    auto* const col = storage.Columns.data();
+    int32_t prevOffset = 0;
+    int32_t curOffset = m;
 
+    // Deltas are used to reduce number of instructions in the inner loop
     const int32_t mismatchDelta = parameters.MatchScore - parameters.MismatchPenalty;
     const int32_t insertionDelta = parameters.BranchPenalty - parameters.InsertionPenalty;
     const int32_t deletionDelta = parameters.MergePenalty - parameters.DeletionPenalty;
 
     // The matrix has i for rows, query bases, and j for columns, read bases.
     // Outer loop is over read bases und inner loop over query bases.
-    //
-    // We only store two columns as we do not compute the traceback.
-    // Columns are swapped after each outer loop of read bases.
-    //
     // Insertion and deletions are with respect to the read that is horizontally.
     for (int32_t j = 1; j < n; ++j) {  // rows
-        std::swap(colCur, colPrev);
+        std::swap(prevOffset, curOffset);
         const char prevRead = read[j - 1];
-        const int32_t readMismatch = prevRead != read[j];
+        const int32_t readMismatch = (prevRead != read[j]);
         for (int32_t i = 1; i < m; ++i) {  // cols
 
             // Match/mismatch
-            const int32_t a{(*colPrev)[i - 1] + parameters.MatchScore -
-                            (mismatchDelta * static_cast<int32_t>(prevRead != query[i - 1]))};
+            const int32_t a{col[i - 1 + prevOffset] + parameters.MatchScore -
+                            (mismatchDelta * (prevRead != query[i - 1]))};
 
             // Insertion in the read or branch if the current and last read sequence are identical
-            const int32_t b{(*colPrev)[i] + parameters.BranchPenalty -
+            const int32_t b{col[i + prevOffset] + parameters.BranchPenalty -
                             (insertionDelta * readMismatch)};
 
             // Deletion in the read or merge if the current and last read sequence are identical
-            const int32_t c{(*colCur)[i - 1] + parameters.MergePenalty -
+            const int32_t c{col[i - 1 + curOffset] + parameters.MergePenalty -
                             (deletionDelta * (query[i - 1] != query[i]))};
 
-            (*colCur)[i] = std::max(a, std::max(b, c));
+            col[i + curOffset] = std::max(a, std::max(b, c));
         }
-        lastRow[j - 1] = (*colCur).back();
+        lastRow[j - 1] = col[curOffset + m - 1];
     }
 
     return GlobalLocalLastRowMax(lastRow);

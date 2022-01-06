@@ -28,8 +28,7 @@ struct GlobalLocalResult
 // This storage can be used to further improve runtime
 struct GlobalLocalStorage
 {
-    std::vector<int32_t> Col0{};
-    std::vector<int32_t> Col1{};
+    std::vector<int32_t> Columns;
 };
 
 /// \brief Align a known query against read given the parameters.
