@@ -44,6 +44,11 @@ public:
     void SetBase(char c, int position);
 
     ///
+    /// Delete a base at a given position
+    ///
+    void DeleteBase(int position);
+
+    ///
     /// \return the hashed kmer
     ///
     uint64_t HashedKmer() const;

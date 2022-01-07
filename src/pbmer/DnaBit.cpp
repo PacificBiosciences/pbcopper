@@ -13,6 +13,9 @@
 namespace PacBio {
 namespace Pbmer {
 
+// all bits set to one for a uint64_t
+constexpr uint64_t allOn = ~0;
+
 void DnaBit::SetBase(char c, int position)
 {
     constexpr uint64_t mask = 3;
@@ -21,6 +24,20 @@ void DnaBit::SetBase(char c, int position)
     const int step = position * 2;
 
     mer = (mer & ~(mask << step)) | (base << step);
+}
+
+// use a left and right mask to squeeze out a base.
+void DnaBit::DeleteBase(int position)
+{
+    const int lstep = (position + 1) * 2;
+    const int rstep = 64 - (2 * position);
+
+    // protect against UB
+    const uint64_t leftMask = (lstep >= 64) ? 0 : (allOn << lstep);
+    const uint64_t rightMask = (rstep >= 64) ? 0 : (allOn >> rstep);
+
+    mer = ((mer & leftMask) >> 2) | (mer & rightMask);
+    msize = msize - 1;
 }
 
 // https://gist.github.com/badboy/6267743
@@ -91,12 +108,12 @@ bool DnaBit::operator!=(const DnaBit& b) const noexcept { return !(*this == b); 
 
 void DnaBit::AppendBase(const uint8_t b)
 {
-    mer = ((mer << 2) & ((uint64_t)-1 >> (64 - (2 * msize)))) | (b % 4);
+    mer = ((mer << 2) & (allOn >> (64 - (2 * msize)))) | (b % 4);
 }
 
 void DnaBit::AppendBase(const char b)
 {
-    mer = ((mer << 2) & ((uint64_t)-1 >> (64 - (2 * msize)))) | AsciiToDna[b];
+    mer = ((mer << 2) & (allOn >> (64 - (2 * msize)))) | AsciiToDna[b];
 }
 
 void DnaBit::Bin2DnaBit(BI bin)
