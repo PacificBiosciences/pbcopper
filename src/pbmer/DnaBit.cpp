@@ -3,6 +3,7 @@
 #include <pbcopper/pbmer/Parser.h>
 
 #include <array>
+#include <limits>
 #include <tuple>
 #include <unordered_set>
 #include <vector>
@@ -14,7 +15,7 @@ namespace PacBio {
 namespace Pbmer {
 
 // all bits set to one for a uint64_t
-constexpr uint64_t allOn = ~0;
+constexpr uint64_t allOn = std::numeric_limits<uint64_t>::max();
 
 void DnaBit::SetBase(char c, int position)
 {
@@ -26,18 +27,35 @@ void DnaBit::SetBase(char c, int position)
     mer = (mer & ~(mask << step)) | (base << step);
 }
 
-// use a left and right mask to squeeze out a base.
-void DnaBit::DeleteBase(int position)
+// use a lower and (implicit) upper bitmask to squeeze out a base.
+void DnaBit::DeleteBase(const int position)
 {
-    const int lstep = (position + 1) * 2;
-    const int rstep = 64 - (2 * position);
+    assert(position >= 0);
+    assert(position < msize);
 
-    // protect against UB
-    const uint64_t leftMask = (lstep >= 64) ? 0 : (allOn << lstep);
-    const uint64_t rightMask = (rstep >= 64) ? 0 : (allOn >> rstep);
+    //             example position = 1 ─┐
+    //                                   v
+    //                          4  3  2  1  0
+    //   mer:                   T  C  A  T  G
+    //   binary:               11'01'00'11'10
+    //
+    //   lowerBitMask:         00'00'00'00'11
+    //
+    // bases before position:
+    //   (mer & lowerBitMask): 00'00'00'00'10 (lower)
+    //
+    // bases past position:
+    //   (mer >> 2):           00'11'01'00'11
+    //   (~lowerBitMask):      11'11'11'11'00
+    //   bit-&:                00'11'01'00'00 (upper)
+    //
+    //                             3  2  1  0
+    // lower | upper:          00'11'01'00'10
+    //                             T  C  A  G
+    const uint64_t lowerBitMask{(1ull << (2 * position)) - 1};
 
-    mer = ((mer & leftMask) >> 2) | (mer & rightMask);
-    msize = msize - 1;
+    mer = (mer & lowerBitMask) | ((mer >> 2) & (~lowerBitMask));
+    --msize;
 }
 
 // https://gist.github.com/badboy/6267743

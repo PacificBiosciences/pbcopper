@@ -86,20 +86,20 @@ TEST(Pbmer_DnaBit, set_base)
 
 TEST(Pbmer_DnaBit, delete_base)
 {
-    //GGGGGCTCAGGGTCGC
-    PacBio::Pbmer::DnaBit k1{2862426841, 0, 16};
+    //CACCCCGCCCTTCCGGCATTCTTAACCGGCCG
+    PacBio::Pbmer::DnaBit k1{4997130103029503638, 0, 32};
     k1.DeleteBase(0);
-    EXPECT_EQ("GGGGGCTCAGGGTCG", k1.KmerToStr());
+    EXPECT_EQ("CACCCCGCCCTTCCGGCATTCTTAACCGGCC", k1.KmerToStr());
 
-    //GGGGGCTCAGGGTCGC
-    PacBio::Pbmer::DnaBit k2{2862426841, 0, 16};
+    //CACCCCGCCCTTCCGGCATTCTTAACCGGCCG
+    PacBio::Pbmer::DnaBit k2{4997130103029503638, 0, 32};
     k2.DeleteBase(1);
-    EXPECT_EQ("GGGGGCTCAGGGTCC", k2.KmerToStr());
+    EXPECT_EQ("CACCCCGCCCTTCCGGCATTCTTAACCGGCG", k2.KmerToStr());
 
-    //GGGGGCTCAGGGTCGC
-    PacBio::Pbmer::DnaBit k3{2862426841, 0, 16};
-    k3.DeleteBase(15);
-    EXPECT_EQ("GGGGCTCAGGGTCGC", k3.KmerToStr());
+    //CACCCCGCCCTTCCGGCATTCTTAACCGGCCG
+    PacBio::Pbmer::DnaBit k3{4997130103029503638, 0, 32};
+    k3.DeleteBase(31);
+    EXPECT_EQ("ACCCCGCCCTTCCGGCATTCTTAACCGGCCG", k3.KmerToStr());
 }
 
 TEST(Pbmer_DnaBit, test_neighbors)
