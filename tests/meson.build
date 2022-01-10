@@ -134,12 +134,12 @@ test(
   pbcopper_clang_formatter,
   args : [
     '--all'],
-  workdir : meson.source_root())
+  workdir : meson.project_source_root())
 
 test(
   'pbcopper EOF check',
   pbcopper_eof_check,
-  workdir : meson.source_root())
+  workdir : meson.project_source_root())
 
 test(
   'pbcopper gtest unittests',
