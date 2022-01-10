@@ -49,6 +49,11 @@ public:
     void DeleteBase(int position);
 
     ///
+    /// Inserts a base at a given position
+    ///
+    void InsertBase(char c, int position);
+
+    ///
     /// \return the hashed kmer
     ///
     uint64_t HashedKmer() const;
