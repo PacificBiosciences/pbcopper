@@ -2,6 +2,9 @@
 
 ## Active
 
+### Changed
+ - C++20 is now a *hard* minimum.
+
 ## [1.9.5] - 2021-12-07
 
 ### Added
