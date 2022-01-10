@@ -17,14 +17,15 @@ namespace Pbmer {
 // all bits set to one for a uint64_t
 constexpr uint64_t allOn = std::numeric_limits<uint64_t>::max();
 
-void DnaBit::SetBase(char c, int position)
+void DnaBit::SetBase(const char c, const int position)
 {
-    constexpr uint64_t mask = 3;
+    assert(position >= 0);
+    assert(position < msize);
 
     const uint64_t base = AsciiToDna[c];
     const int step = position * 2;
 
-    mer = (mer & ~(mask << step)) | (base << step);
+    mer = (mer & ~(0b11ULL << step)) | (base << step);
 }
 
 // use a lower and (implicit) upper bitmask to squeeze out a base.
@@ -56,6 +57,20 @@ void DnaBit::DeleteBase(const int position)
 
     mer = (mer & lowerBitMask) | ((mer >> 2) & (~lowerBitMask));
     --msize;
+}
+
+void DnaBit::InsertBase(const char c, const int position)
+{
+    assert(position >= 0);
+    assert(position <= msize);
+    assert(position < 32);
+
+    const uint64_t lowerBitMask{(1ull << (2 * position)) - 1};
+
+    mer = (mer & lowerBitMask) | ((mer & ~lowerBitMask) << 2);
+    ++msize;
+
+    SetBase(c, position);
 }
 
 // https://gist.github.com/badboy/6267743
