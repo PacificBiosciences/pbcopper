@@ -2,6 +2,8 @@
 
 ## Active
 
+## [2.0.0] - TBD
+
 ### Changed
  - C++20 is now a *hard* minimum.
 
