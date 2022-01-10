@@ -145,7 +145,7 @@ test(
   'pbcopper gtest unittests',
   pbcopper_test,
   args : [
-    '--gtest_output=xml:' + join_paths(meson.build_root(), 'pbcopper-gtest-unittests.xml')],
+    '--gtest_output=xml:' + join_paths(meson.project_build_root(), 'pbcopper-gtest-unittests.xml')],
   env : [
     'ARGS=-V',
     'VERBOSE=1'],
