@@ -4,10 +4,11 @@
 #include <pbcopper/PbcopperConfig.h>
 
 #include <pbcopper/data/Cigar.h>
-#include <pbcopper/data/Strand.h>
 
 #include <array>
 #include <string>
+#include <string_view>
+#include <utility>
 #include <vector>
 
 #include <cstdint>
@@ -23,54 +24,54 @@ namespace internal {
 // A:0, C:1, G:2, T:3, -:4
 using BaseCount = std::array<int, 5>;
 
+/// Find most common base and count (tie goes to the reference base)
 ///
-/// \brief Return number of bases at position (i.e. excludes deletions)
-///
-int CoverageCount(const BaseCount& baseCounts);
-
-///
-/// Return total number of bases that do not match reference base
-/// \note Ignores deletion count
-///
-int MismatchCount(const BaseCount& baseCounts, char ref);
+std::pair<char, int> MostCommonBase(const BaseCount& counts, char refBase);
 
 // ----------------
 // CIGAR counts
 // ----------------
 
-// Data members are all of ref.size() length. So every reference position has
-// a value. Query insertions are ignored.
-struct CigarCounts
+///
+/// Aggregate strand counts input
+///
+struct StrandInput
 {
-    CigarCounts() = default;
-    explicit CigarCounts(const std::string& ref);
+    const std::vector<std::string>& Sequences;
+    const std::vector<Data::Cigar>& Cigars;
+    const std::vector<int32_t>& Positions;
+};
+
+///
+/// Contains results of initial CIGAR scan, with raw counts at each reference
+/// position
+///
+struct StrandRawData
+{
+    explicit StrandRawData(size_t refLength);
+
+    std::vector<int> NumReads;  // includes reads with deletion at position
+    std::vector<BaseCount> BaseCounts;
+    std::vector<uint8_t> PotentialMismatches;
+    std::vector<std::vector<std::string_view>> Insertions;
+};
+
+///
+/// Contains most common base and potential mismatch counts for each reference
+/// position
+///
+struct StrandCounts
+{
+    StrandCounts() = default;
+    explicit StrandCounts(const std::string& ref);
 
     std::vector<int> NumReads;  // includes reads with deletion at position
     std::vector<int> MismatchBaseCounts;
     std::string MostCommonBases;
-    std::vector<BaseCount> BaseCounts;
 };
 
-CigarCounts CigarMismatchCounts(const std::string& reference,
-                                const std::vector<std::string>& sequences,
-                                const std::vector<Data::Cigar>& cigars,
-                                const std::vector<int32_t>& positions);
-
-// -------------------
-// pileup processing
-// -------------------
-
-struct PileUpInfo
-{
-    bool HomopolymerAdjacent = false;
-    bool UsingAdjacent = false;
-    Data::Strand StrandToUpdate = Data::Strand::UNMAPPED;
-};
-
-PileUpInfo PileupContext(char fwdMostCommonBase, const std::string& fwdMostCommonBases,
-                         char revMostCommonBase, const std::string& revMostCommonBases,
-                         int fwdCoverageCount, int revCoverageCount, int fwdMismatchCount,
-                         int revMismatchCount, int i, int refLength, int homopolymerThreshold);
+// gather mismatches, base counts, etc for a single strand
+StrandRawData CalculateStrandRawData(const std::string& reference, const StrandInput& input);
 
 }  // namespace internal
 }  // namespace Algorithm
