@@ -3,11 +3,10 @@
 
 #include <pbcopper/PbcopperConfig.h>
 
-#include <boost/utility/string_ref.hpp>
-
 #include <iosfwd>
 #include <memory>
 #include <string>
+#include <string_view>
 #include <type_traits>
 
 namespace PacBio {
@@ -44,11 +43,11 @@ public:
     /// \name Name Parts
     /// \{
 
-    boost::string_ref InstrumentSerialNumber() const;
-    boost::string_ref PartNumber() const;
-    boost::string_ref RunStartTime() const;
-    boost::string_ref SetNumber() const;
-    boost::string_ref SMRTCellBarcode() const;
+    std::string_view InstrumentSerialNumber() const;
+    std::string_view PartNumber() const;
+    std::string_view RunStartTime() const;
+    std::string_view SetNumber() const;
+    std::string_view SMRTCellBarcode() const;
 
     /// \}
 
