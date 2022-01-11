@@ -70,7 +70,7 @@ MultiToolInterface& MultiToolInterface::HelpFooter(std::string footer)
     return *this;
 }
 
-const boost::optional<Logging::LogConfig>& MultiToolInterface::LogConfig() const
+const std::optional<Logging::LogConfig>& MultiToolInterface::LogConfig() const
 {
     return data_.logConfig_;
 }

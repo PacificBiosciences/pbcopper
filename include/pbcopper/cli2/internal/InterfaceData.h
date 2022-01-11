@@ -10,8 +10,7 @@
 #include <pbcopper/cli2/internal/VersionPrinter.h>
 #include <pbcopper/logging/LogConfig.h>
 
-#include <boost/optional.hpp>
-
+#include <optional>
 #include <string>
 #include <vector>
 
@@ -56,9 +55,9 @@ struct InterfaceData
     // default enabled
     OptionData helpOption_;
     OptionData versionOption_;
-    boost::optional<internal::OptionData> numThreadsOption_;
-    boost::optional<internal::OptionData> logFileOption_;
-    boost::optional<internal::OptionData> logLevelOption_;
+    std::optional<internal::OptionData> numThreadsOption_;
+    std::optional<internal::OptionData> logFileOption_;
+    std::optional<internal::OptionData> logLevelOption_;
 
     // always active, but hidden
     internal::OptionData alarmsOption_;
@@ -66,7 +65,7 @@ struct InterfaceData
     internal::OptionData showAllHelpOption_;
 
     // default disabled
-    boost::optional<internal::OptionData> verboseOption_;
+    std::optional<internal::OptionData> verboseOption_;
 
     Logging::LogConfig logConfig_;
 

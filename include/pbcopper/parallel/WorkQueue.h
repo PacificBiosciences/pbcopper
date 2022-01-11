@@ -3,8 +3,6 @@
 
 #include <pbcopper/PbcopperConfig.h>
 
-#include <boost/optional.hpp>
-
 #include <atomic>
 #include <condition_variable>
 #include <deque>
@@ -12,6 +10,7 @@
 #include <functional>
 #include <future>
 #include <mutex>
+#include <optional>
 #include <vector>
 
 #include <cstddef>
@@ -27,8 +26,8 @@ template <typename T>
 class WorkQueue
 {
 private:
-    using TTask = boost::optional<std::packaged_task<T()>>;
-    using TFuture = boost::optional<std::future<T>>;
+    using TTask = std::optional<std::packaged_task<T()>>;
+    using TFuture = std::optional<std::future<T>>;
 
 public:
     WorkQueue(const size_t size, const size_t mul = 2)
