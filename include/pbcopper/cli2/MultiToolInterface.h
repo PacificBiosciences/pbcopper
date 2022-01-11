@@ -80,7 +80,7 @@ public:
     ///
     /// \return (optional) log configuration
     ///
-    const boost::optional<Logging::LogConfig>& LogConfig() const;
+    const std::optional<Logging::LogConfig>& LogConfig() const;
 
     /// \internal
     /// \return (translated) "show all help" option.

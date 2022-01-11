@@ -60,12 +60,12 @@ struct MappedRead : public Read
         GapBehavior gapBehavior = GapBehavior::IGNORE,
         SoftClipBehavior softClipBehavior = SoftClipBehavior::KEEP) const;
 
-    boost::optional<Frames> AlignedIPD(
+    std::optional<Frames> AlignedIPD(
         Orientation orientation = Orientation::NATIVE,
         GapBehavior gapBehavior = GapBehavior::IGNORE,
         SoftClipBehavior softClipBehavior = SoftClipBehavior::KEEP) const;
 
-    boost::optional<Frames> AlignedPulseWidth(
+    std::optional<Frames> AlignedPulseWidth(
         Orientation orientation = Orientation::NATIVE,
         GapBehavior gapBehavior = GapBehavior::IGNORE,
         SoftClipBehavior softClipBehavior = SoftClipBehavior::KEEP) const;

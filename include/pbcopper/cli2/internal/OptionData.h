@@ -5,9 +5,8 @@
 
 #include <pbcopper/cli2/OptionValue.h>
 
-#include <boost/optional.hpp>
-
 #include <algorithm>
+#include <optional>
 #include <string>
 #include <vector>
 
@@ -25,7 +24,7 @@ struct OptionData
     std::string description;
 
     OptionValueType type = OptionValueType::BOOL;
-    boost::optional<OptionValue> defaultValue;
+    std::optional<OptionValue> defaultValue;
 
     bool isHidden = false;
     bool isDefaultValueHidden = false;

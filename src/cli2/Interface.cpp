@@ -166,17 +166,17 @@ Interface& Interface::LogConfig(const Logging::LogConfig& config)
     return *this;
 }
 
-const boost::optional<internal::OptionData>& Interface::LogFileOption() const
+const std::optional<internal::OptionData>& Interface::LogFileOption() const
 {
     return data_.logFileOption_;
 }
 
-const boost::optional<internal::OptionData>& Interface::LogLevelOption() const
+const std::optional<internal::OptionData>& Interface::LogLevelOption() const
 {
     return data_.logLevelOption_;
 }
 
-const boost::optional<internal::OptionData>& Interface::NumThreadsOption() const
+const std::optional<internal::OptionData>& Interface::NumThreadsOption() const
 {
     return data_.numThreadsOption_;
 }
@@ -258,7 +258,7 @@ const internal::OptionData& Interface::ShowAllHelpOption() const
     return data_.showAllHelpOption_;
 }
 
-const boost::optional<internal::OptionData>& Interface::VerboseOption() const
+const std::optional<internal::OptionData>& Interface::VerboseOption() const
 {
     return data_.verboseOption_;
 }

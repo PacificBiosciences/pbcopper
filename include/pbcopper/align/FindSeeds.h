@@ -5,9 +5,8 @@
 
 #include <pbcopper/align/Seeds.h>
 
-#include <boost/optional.hpp>
-
 #include <map>
+#include <optional>
 #include <string>
 
 /*
@@ -67,7 +66,7 @@ namespace Align {
 /// \return map containing Seeds for each referenceIndex with a hit
 ///
 std::map<size_t, Seeds> FindSeeds(const PacBio::QGram::Index& index, const std::string& seq,
-                                  boost::optional<size_t> qIdx, bool filterHomopolymers);
+                                  std::optional<size_t> qIdx, bool filterHomopolymers);
 
 /// Find all matching seeds between a DNA index and the sequences
 /// represented in some supplied index of the type specified in TConfig.
@@ -86,7 +85,7 @@ std::map<size_t, Seeds> FindSeeds(const PacBio::QGram::Index& index, const std::
 /// \return  map containing Seeds for each referenceIndex with a hit
 ///
 std::map<size_t, Seeds> FindSeeds(const PacBio::QGram::Index& index, const std::string& seq,
-                                  boost::optional<size_t> qIdx);
+                                  std::optional<size_t> qIdx);
 
 /// Find all matching seeds between a DNA index and the sequences
 /// represented in some supplied index of the type specified in TConfig.

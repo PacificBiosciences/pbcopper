@@ -8,8 +8,6 @@
 
 #include <gtest/gtest.h>
 
-#include <boost/optional/optional_io.hpp>
-
 // clang-format off
 
 namespace MappedReadTests {

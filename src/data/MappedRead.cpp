@@ -234,8 +234,8 @@ QualityValues MappedRead::AlignedQualities(Orientation orientation, GapBehavior 
     return quals;
 }
 
-boost::optional<Frames> MappedRead::AlignedIPD(Orientation orientation, GapBehavior gapBehavior,
-                                               SoftClipBehavior softClipBehavior) const
+std::optional<Frames> MappedRead::AlignedIPD(Orientation orientation, GapBehavior gapBehavior,
+                                             SoftClipBehavior softClipBehavior) const
 {
     if (!IPD) {
         return {};
@@ -260,9 +260,9 @@ boost::optional<Frames> MappedRead::AlignedIPD(Orientation orientation, GapBehav
     return ipd;
 }
 
-boost::optional<Frames> MappedRead::AlignedPulseWidth(Orientation orientation,
-                                                      GapBehavior gapBehavior,
-                                                      SoftClipBehavior softClipBehavior) const
+std::optional<Frames> MappedRead::AlignedPulseWidth(Orientation orientation,
+                                                    GapBehavior gapBehavior,
+                                                    SoftClipBehavior softClipBehavior) const
 {
     if (!PulseWidth) {
         return {};

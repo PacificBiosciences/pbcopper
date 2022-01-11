@@ -5,8 +5,7 @@
 
 #include <pbcopper/cli2/OptionValue.h>
 
-#include <boost/optional.hpp>
-
+#include <optional>
 #include <string>
 #include <vector>
 

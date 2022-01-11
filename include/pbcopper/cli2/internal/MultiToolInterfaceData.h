@@ -10,9 +10,8 @@
 #include <pbcopper/cli2/internal/VersionPrinter.h>
 #include <pbcopper/logging/LogConfig.h>
 
-#include <boost/optional.hpp>
-
 #include <memory>
+#include <optional>
 #include <string>
 
 namespace PacBio {
@@ -48,7 +47,7 @@ struct MultiToolInterfaceData
 
     std::vector<Tool> tools_;
 
-    boost::optional<Logging::LogConfig> logConfig_;
+    std::optional<Logging::LogConfig> logConfig_;
 
     MultiToolVersionPrinterCallback versionPrinter_;
 };

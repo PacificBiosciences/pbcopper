@@ -5,10 +5,9 @@
 
 #include <pbcopper/data/Interval.h>
 
-#include <boost/optional.hpp>
-
 #include <iosfwd>
 #include <memory>
+#include <optional>
 #include <string>
 
 #include <cstddef>
@@ -20,7 +19,7 @@ struct ReadId
 {
     std::string MovieName;
     size_t HoleNumber;
-    boost::optional<Interval> ZmwInterval;
+    std::optional<Interval> ZmwInterval;
     std::string ReadName;
 
     ReadId(const std::string& readName);
