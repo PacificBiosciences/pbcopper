@@ -25,7 +25,8 @@ struct HeteroduplexSettings
         static constexpr double MinSecondaryFraction = 0.40;
         static constexpr int IgnoreEndBases = 25;
         static constexpr int MinimumPerStrandSubreadCoverage = 5;
-        static constexpr bool SkipDeletions = false;
+        static constexpr bool SkipDeletions = true;
+        static constexpr double AdjacentInsertionThreshold = 0.75;
     };
     // clang-format on
 
@@ -37,6 +38,7 @@ struct HeteroduplexSettings
     int IgnoreEndBases = Defaults::IgnoreEndBases;
     int MinimumPerStrandSubreadCoverage = Defaults::MinimumPerStrandSubreadCoverage;
     bool SkipDeletions = Defaults::SkipDeletions;
+    double AdjacentInsertionThreshold = Defaults::AdjacentInsertionThreshold;
 };
 
 struct HeteroduplexResults

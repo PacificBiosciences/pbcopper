@@ -1,11 +1,7 @@
 #include <pbcopper/algorithm/Heteroduplex.h>
 
 #include <pbcopper/algorithm/internal/HeteroduplexUtils.h>
-#include <pbcopper/data/Cigar.h>
-#include <pbcopper/data/Strand.h>
-#include <pbcopper/logging/Logging.h>
 #include <pbcopper/math/FishersExact.h>
-#include <pbcopper/utility/SequenceUtils.h>
 #include <pbcopper/utility/Ssize.h>
 
 #include <algorithm>
@@ -13,14 +9,10 @@
 #include <stdexcept>
 
 #include <cassert>
+#include <cstddef>
 
 namespace PacBio {
 namespace Algorithm {
-
-using BaseCount = internal::BaseCount;
-using CigarCounts = internal::CigarCounts;
-using PileupInfo = internal::PileUpInfo;
-
 namespace {
 
 constexpr std::array<char, 5> Bases{'A', 'C', 'G', 'T', '-'};
@@ -74,23 +66,6 @@ double CalculatePValue(const int fwdCoverageCount, const int fwdMismatchCount,
 
 namespace internal {
 
-int CoverageCount(const BaseCount& baseCounts)
-{
-    return baseCounts[0] + baseCounts[1] + baseCounts[2] + baseCounts[3];
-}
-
-int MismatchCount(const BaseCount& baseCounts, const char ref)
-{
-    const int index = BaseTable[static_cast<int>(ref)];
-    int count = 0;
-    for (int i = 0; i < 4; ++i) {
-        if (i != index) {
-            count += baseCounts[i];
-        }
-    }
-    return count;
-}
-
 std::pair<char, int> MostCommonBase(const BaseCount& counts, const char refBase)
 {
     assert(static_cast<int>(refBase) < 256);
@@ -110,39 +85,39 @@ std::pair<char, int> MostCommonBase(const BaseCount& counts, const char refBase)
     return {Bases[maxBaseCountIdx], maxBaseCount};
 }
 
-CigarCounts::CigarCounts(const std::string& ref)
-    : NumReads(ref.size())
-    , MismatchBaseCounts(ref.size())
-    , MostCommonBases{ref}
-    , BaseCounts{ref.size(), BaseCount{}}
+StrandCounts::StrandCounts(const std::string& ref)
+    : NumReads(ref.size()), MismatchBaseCounts(ref.size()), MostCommonBases{ref}
 {
     assert(ref.size() == NumReads.size());
     assert(ref.size() == MismatchBaseCounts.size());
     assert(ref.size() == MostCommonBases.size());
-    assert(ref.size() == BaseCounts.size());
 }
 
-CigarCounts CigarMismatchCounts(const std::string& reference,
-                                const std::vector<std::string>& sequences,
-                                const std::vector<Data::Cigar>& cigars,
-                                const std::vector<int32_t>& positions)
+StrandRawData::StrandRawData(const size_t refLength)
+    : NumReads(refLength, 0)
+    , BaseCounts{refLength, BaseCount{}}
+    , PotentialMismatches(refLength, 0)
+    , Insertions{refLength}
 {
-    assert(sequences.size() == cigars.size());
-    assert(sequences.size() == positions.size());
-    if (reference.empty() || sequences.empty()) {
-        return {};
-    }
+    assert(refLength == NumReads.size());
+    assert(refLength == BaseCounts.size());
+    assert(refLength == PotentialMismatches.size());
+    assert(refLength == Insertions.size());
+}
 
-    CigarCounts result{reference};
+StrandRawData CalculateStrandRawData(const std::string& reference, const StrandInput& input)
+{
+    assert(input.Sequences.size() == input.Cigars.size());
+    assert(input.Sequences.size() == input.Positions.size());
 
-    std::vector<BaseCount> baseCounts(reference.size());
-    std::vector<uint8_t> potentialMismatchPositions(reference.size());
-    std::vector<uint8_t> potentialDeletionPositions(reference.size());
+    StrandRawData result{reference.size()};
 
-    for (int i = 0; i < Utility::Ssize(cigars); ++i) {
-        const auto& cigar = cigars[i];
-        const auto& seq = sequences[i];
-        const auto startPos = positions[i];
+    const int referenceSize = Utility::Ssize(reference);
+    const int numSequences = Utility::Ssize(input.Sequences);
+    for (int i = 0; i < numSequences; ++i) {
+        const auto& cigar = input.Cigars[i];
+        const auto& seq = input.Sequences[i];
+        const auto startPos = input.Positions[i];
 
         int targetPos = startPos;
         int queryPos = 0;
@@ -155,28 +130,29 @@ CigarCounts CigarMismatchCounts(const std::string& reference,
                 case Data::CigarOperationType::SEQUENCE_MATCH: {
                     for (int j = 0; j < opLength; ++j) {
                         const int8_t base = seq[queryPos + j];
-                        ++baseCounts[targetPos + j][BaseTable[base]];
+                        ++result.BaseCounts[targetPos + j][BaseTable[base]];
                     }
                     break;
                 }
                 case Data::CigarOperationType::SEQUENCE_MISMATCH: {
                     for (int j = 0; j < opLength; ++j) {
                         const int8_t base = seq[queryPos + j];
-                        ++baseCounts[targetPos + j][BaseTable[base]];
-                        potentialMismatchPositions[targetPos + j] = 1;
+                        ++result.BaseCounts[targetPos + j][BaseTable[base]];
+                        result.PotentialMismatches[targetPos + j] = 1;
                     }
                     break;
                 }
                 case Data::CigarOperationType::DELETION: {
                     for (int j = 0; j < opLength; ++j) {
-                        ++baseCounts[targetPos + j][4];  // 4 = [BaseValue('-')];
-                        potentialMismatchPositions[targetPos + j] = 1;
+                        ++result.BaseCounts[targetPos + j][4];  // 4 = [BaseValue('-')];
+                        result.PotentialMismatches[targetPos + j] = 1;
                     }
                     break;
                 }
-
-                // Unused, for now at least
                 case Data::CigarOperationType::INSERTION: {
+                    if (targetPos < referenceSize) {
+                        result.Insertions[targetPos].emplace_back(seq.data() + queryPos, opLength);
+                    }
                     break;
                 }
 
@@ -205,131 +181,6 @@ CigarCounts CigarMismatchCounts(const std::string& reference,
         }
     }
 
-    result.BaseCounts = baseCounts;
-
-    // Check most common base for mismatch.
-    for (size_t pos = 0; pos < reference.size(); ++pos) {
-        if (potentialMismatchPositions[pos] == 0) {
-            continue;
-        }
-        const char refBase = reference[pos];
-        const auto& baseCount = baseCounts[pos];
-
-        // C++17 change to:
-        // const auto[mostCommonBase, mostCommonCount] = MostCommonBase(baseCount, refBase);
-        const auto mostCommonBaseResult = MostCommonBase(baseCount, refBase);
-        const char mostCommonBase = mostCommonBaseResult.first;
-        const int mostCommonCount = mostCommonBaseResult.second;
-
-        if (mostCommonBase != refBase) {
-            result.MostCommonBases[pos] = mostCommonBase;
-            result.MismatchBaseCounts[pos] = mostCommonCount;
-        }
-    }
-
-    return result;
-}
-
-PileUpInfo PileupContext(const char fwdMostCommonBase, const std::string& fwdMostCommonBases,
-                         const char revMostCommonBase, const std::string& revMostCommonBases,
-                         const int fwdCoverageCount, const int revCoverageCount,
-                         const int fwdMismatchCount, const int revMismatchCount, int i,
-                         int refLength, const int homopolymerThreshold)
-{
-    PileUpInfo result;
-
-    // skip inspection at sequence ends (even if IgnoreEndBases == 0)
-    if ((i == 0) || (i == refLength - 1)) {
-        return result;
-    }
-
-    if (fwdMostCommonBase == '-') {
-        assert(revMostCommonBase != '-');
-
-        // in the case of extreme deletion coverage, do not adjust
-        // (even if adjacent to homopolymer)
-        const auto fwdDelFraction =
-            static_cast<double>(fwdMismatchCount) / std::max(1, fwdCoverageCount);
-        const auto revMatchFraction = static_cast<double>(revCoverageCount - revMismatchCount) /
-                                      std::max(1, revCoverageCount);
-        if ((fwdDelFraction > 0.75) && (revMatchFraction < 0.25)) {
-            return result;
-        }
-
-        // deletion is the most common "base", but not overwhelmingly so
-        // scan ahead to see if we're adjacent to a homopolymer
-        const char nextBase = fwdMostCommonBases[i + 1];
-        int hpCount = 1;
-        const int numBases = Utility::Ssize(fwdMostCommonBases);
-        for (int j = 2; (i + j) < numBases; ++j) {
-            if (fwdMostCommonBases[i + j] == nextBase) {
-                ++hpCount;
-            } else {
-                break;
-            }
-        }
-
-        // adjacent "homopolymer" is just one base, do not adjust deletion
-        if (hpCount == 1) {
-            return result;
-        }
-
-        // deletion is adjacent to a longer homopolymer
-        // will fully ignore this position (high potential for messy HP boundaries)
-        if (hpCount >= homopolymerThreshold) {
-            result.HomopolymerAdjacent = true;
-        }
-        // deletion is adjacent to short hompolymer
-        // will "squeeze" deletion, and use the adjacent base below
-        else {
-            result.UsingAdjacent = true;
-            result.StrandToUpdate = Data::Strand::FORWARD;
-        }
-    }
-
-    else if (revMostCommonBase == '-') {
-        assert(fwdMostCommonBase != '-');
-
-        // in the case of extreme deletion coverage, do not adjust
-        // (even if adjacent to homopolymer)
-        const auto revDelFraction = static_cast<double>(revMismatchCount) / revCoverageCount;
-        const auto fwdMatchFraction =
-            static_cast<double>(fwdCoverageCount - fwdMismatchCount) / fwdCoverageCount;
-        if ((revDelFraction > 0.75) && (fwdMatchFraction < 0.25)) {
-            return result;
-        }
-
-        // deletion is the most common "base", but not overwhelmingly so
-        // scan ahead to see if we're adjacent to a homopolymer
-        const char nextBase = revMostCommonBases[i + 1];
-        int hpCount = 1;
-        const int numBases = Utility::Ssize(revMostCommonBases);
-        for (int j = 2; (i + j) < numBases; ++j) {
-            if (revMostCommonBases[i + j] == nextBase) {
-                ++hpCount;
-            } else {
-                break;
-            }
-        }
-
-        // adjacent "homopolymer" is just one base, do not adjust deletion
-        if (hpCount == 1) {
-            return result;
-        }
-
-        // deletion is adjacent to a longer homopolymer
-        // will fully ignore this position (high potential for messy HP boundaries)
-        if (hpCount >= homopolymerThreshold) {
-            result.HomopolymerAdjacent = true;
-        }
-        // deletion is adjacent to short hompolymer
-        // will "squeeze" deletion, and use the adjacent base below
-        else {
-            result.UsingAdjacent = true;
-            result.StrandToUpdate = Data::Strand::REVERSE;
-        }
-    }
-
     return result;
 }
 
@@ -355,96 +206,106 @@ HeteroduplexResults FindHeteroduplex(
     }
 
     // gather pileup and potential mismatch sites from CIGARs
-    auto fwdCigarCounts =
-        internal::CigarMismatchCounts(reference, fwdSequences, fwdCigars, fwdPositions);
-    auto revCigarCounts =
-        internal::CigarMismatchCounts(reference, revSequences, revCigars, revPositions);
+    const internal::StrandRawData fwdStrand = internal::CalculateStrandRawData(
+        reference, internal::StrandInput{fwdSequences, fwdCigars, fwdPositions});
+    const internal::StrandRawData revStrand = internal::CalculateStrandRawData(
+        reference, internal::StrandInput{revSequences, revCigars, revPositions});
 
-    const auto& fwdMismatchCounts = fwdCigarCounts.MismatchBaseCounts;
-    const auto& revMismatchCounts = revCigarCounts.MismatchBaseCounts;
-    const auto& fwdCoverageCounts = fwdCigarCounts.NumReads;
-    const auto& revCoverageCounts = revCigarCounts.NumReads;
-    auto& fwdMostCommonBases = fwdCigarCounts.MostCommonBases;
-    auto& revMostCommonBases = revCigarCounts.MostCommonBases;
-    const auto& fwdBaseCounts = fwdCigarCounts.BaseCounts;
-    const auto& revBaseCounts = revCigarCounts.BaseCounts;
-
-    assert(reference.size() == fwdMismatchCounts.size());
-    assert(reference.size() == revMismatchCounts.size());
-    assert(reference.size() == fwdCoverageCounts.size());
-    assert(reference.size() == revCoverageCounts.size());
-    assert(reference.size() == fwdMostCommonBases.size());
-    assert(reference.size() == revMostCommonBases.size());
-    assert(reference.size() == fwdBaseCounts.size());
-    assert(reference.size() == revBaseCounts.size());
+    std::string fwdMostCommonBases = reference;
+    std::string revMostCommonBases = reference;
 
     std::vector<int32_t> variableSites;
     std::vector<int32_t> significantSites;
-    std::vector<char> significantOperations;
     std::vector<char> significantBases;
 
     const int refLength = Utility::Ssize(reference);
-    const int start = settings.IgnoreEndBases;
-    const int end = refLength - settings.IgnoreEndBases;
+    const int start = std::max(1, settings.IgnoreEndBases);
+    const int end = std::min(refLength - 1, refLength - settings.IgnoreEndBases);
+    assert(start > 0);
     assert(end > start);
-
+    assert(end < refLength);
     for (int i = start; i < end; ++i) {
 
-        // ensure most common bases are not same
-        auto fwdMostCommonBase = fwdMostCommonBases[i];
-        auto revMostCommonBase = revMostCommonBases[i];
-        if (fwdMostCommonBase == revMostCommonBase) {
+        // nothing to see, carry on
+        if ((fwdStrand.PotentialMismatches[i] == 0) && (revStrand.PotentialMismatches[i] == 0)) {
             continue;
         }
-        const char refBase = reference[i];
-        assert((fwdMostCommonBase != refBase) || (revMostCommonBase != refBase));
 
-        // skip deletion sites: the source of a large % of false positive HD calls
-        if (settings.SkipDeletions) {
-            if (fwdMostCommonBase == '-' || revMostCommonBase == '-') {
-                continue;
-            }
-        }
-
-        // ensure some coverage on both strands
-        auto fwdCoverageCount = fwdCoverageCounts[i];
-        auto revCoverageCount = revCoverageCounts[i];
+        // sanity check: ensure some coverage on both strands
+        const int fwdCoverageCount = fwdStrand.NumReads[i];
+        const int revCoverageCount = revStrand.NumReads[i];
         if ((fwdCoverageCount == 0) || (revCoverageCount == 0)) {
             continue;
         }
 
-        // ensure any mismatches on either strand
-        auto fwdMismatchCount = fwdMismatchCounts[i];
-        auto revMismatchCount = revMismatchCounts[i];
-        if ((fwdMismatchCount == 0) && (revMismatchCount == 0)) {
+        // compute most common bases at position
+        const char refBase = reference[i];
+
+        const auto fwdMostCommonBaseCount =
+            internal::MostCommonBase(fwdStrand.BaseCounts[i], refBase);
+        const char fwdMostCommonBase = fwdMostCommonBaseCount.first;
+        const int fwdMostCommonCount = fwdMostCommonBaseCount.second;
+
+        const auto revMostCommonBaseCount =
+            internal::MostCommonBase(revStrand.BaseCounts[i], refBase);
+        const char revMostCommonBase = revMostCommonBaseCount.first;
+        const int revMostCommonCount = revMostCommonBaseCount.second;
+        if (fwdMostCommonBase == revMostCommonBase) {
+            continue;
+        }
+        assert((fwdMostCommonBase != refBase) || (revMostCommonBase != refBase));
+
+        // skip deletion sites: the source of a large % of false positive HD calls
+        if ((fwdMostCommonBase == '-') || (revMostCommonBase == '-')) {
             continue;
         }
 
-        // this adjustment is unnecessary if we're skipping deletions
-        bool usingAdjacent = false;
-        if (!settings.SkipDeletions) {
-            // PileupContext will determine if deletions are adjacent to hompolymers
-            // or need to be "squeezed", in which case the next base should be used
-            // at this position
-            const auto pileupResult = internal::PileupContext(
-                fwdMostCommonBase, fwdMostCommonBases, revMostCommonBase, revMostCommonBases,
-                fwdCoverageCount, revCoverageCount, fwdMismatchCount, revMismatchCount, i,
-                refLength, settings.HomopolymerThreshold);
-            if (pileupResult.HomopolymerAdjacent) {
-                continue;
-            }
-            if (pileupResult.StrandToUpdate == Data::Strand::FORWARD) {
-                fwdMostCommonBase = revMostCommonBases[i + 1];
-                fwdCoverageCount = internal::CoverageCount(fwdBaseCounts[i + 1]);
-                fwdMismatchCount = internal::MismatchCount(fwdBaseCounts[i + 1], reference[i + 1]);
-            } else if (pileupResult.StrandToUpdate == Data::Strand::REVERSE) {
-                revMostCommonBase = revMostCommonBases[i + 1];
-                revCoverageCount = internal::CoverageCount(revBaseCounts[i + 1]);
-                revMismatchCount = internal::MismatchCount(revBaseCounts[i + 1], reference[i + 1]);
-            } else {
-                assert(pileupResult.StrandToUpdate == Data::Strand::UNMAPPED);
-            }
-            usingAdjacent = pileupResult.UsingAdjacent;
+        // mask SNPs with alleles matching up & downstream bases, respectively. e.g.
+        //       v
+        // fwd: AAT
+        //      AAT
+        // rev: ATT
+        //      ATT
+        if ((fwdMostCommonBase == reference[i - 1]) && (revMostCommonBase == reference[i + 1])) {
+            continue;
+        }
+        if ((revMostCommonBase == reference[i - 1]) && (fwdMostCommonBase == reference[i + 1])) {
+            continue;
+        }
+
+        // mask SNPs adjacent to insertions, which contain the SNP alleles
+        const auto HasMostCommonBase = [fwdMostCommonBase,
+                                        revMostCommonBase](const std::string_view& ins) {
+            return (ins.find(fwdMostCommonBase) != std::string::npos) ||
+                   (ins.find(revMostCommonBase) != std::string::npos);
+        };
+
+        const auto& fwdAdjacentInsertions = fwdStrand.Insertions[i + 1];
+        const int fwdRelevantInsertions = std::count_if(
+            fwdAdjacentInsertions.cbegin(), fwdAdjacentInsertions.cend(), HasMostCommonBase);
+        const auto& revAdjacentInsertions = revStrand.Insertions[i + 1];
+        const int revRelevantInsertions = std::count_if(
+            revAdjacentInsertions.cbegin(), revAdjacentInsertions.cend(), HasMostCommonBase);
+
+        const int numPositionInsertions =
+            Utility::Ssize(fwdAdjacentInsertions) + Utility::Ssize(revAdjacentInsertions);
+        const double fractionAdjacentInsertions =
+            static_cast<double>(fwdRelevantInsertions + revRelevantInsertions) /
+            std::max(1, numPositionInsertions);
+        if (fractionAdjacentInsertions >= settings.AdjacentInsertionThreshold) {
+            continue;
+        }
+
+        // store mismatch count & update "most common bases" for return
+        int fwdMismatchCount = 0;
+        int revMismatchCount = 0;
+        if (fwdMostCommonBase != refBase) {
+            fwdMismatchCount = fwdMostCommonCount;
+            fwdMostCommonBases[i] = fwdMostCommonBase;
+        }
+        if (revMostCommonBase != refBase) {
+            revMismatchCount = revMostCommonCount;
+            revMostCommonBases[i] = revMostCommonBase;
         }
 
         // check mismatch fractions
@@ -459,7 +320,7 @@ HeteroduplexResults FindHeteroduplex(
             continue;
         }
 
-        // store all variable sites that have met coverage requirements
+        // store all variable sites that have met mismatch/coverage requirements
         variableSites.push_back(i);
 
         // determine the site's significance using Fisher's exact text
@@ -470,9 +331,6 @@ HeteroduplexResults FindHeteroduplex(
             significantBases.push_back((fwdMostCommonBase == refBase) ? revMostCommonBase
                                                                       : fwdMostCommonBase);
         }
-
-        // skip ahead an extra position, if we actually used the adjacent one here
-        i += usingAdjacent;
     }
 
     // calculate results summary & return
@@ -488,8 +346,8 @@ HeteroduplexResults FindHeteroduplex(
                                std::move(variableSites),
                                std::move(significantSites),
                                std::move(significantBases),
-                               fwdMostCommonBases,
-                               revMostCommonBases};
+                               std::move(fwdMostCommonBases),
+                               std::move(revMostCommonBases)};
 }
 
 bool IsHeteroduplex(const std::string& reference, const std::vector<std::string>& fwdSequences,
