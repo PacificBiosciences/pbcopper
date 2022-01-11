@@ -134,18 +134,18 @@ test(
   pbcopper_clang_formatter,
   args : [
     '--all'],
-  workdir : meson.source_root())
+  workdir : meson.project_source_root())
 
 test(
   'pbcopper EOF check',
   pbcopper_eof_check,
-  workdir : meson.source_root())
+  workdir : meson.project_source_root())
 
 test(
   'pbcopper gtest unittests',
   pbcopper_test,
   args : [
-    '--gtest_output=xml:' + join_paths(meson.build_root(), 'pbcopper-gtest-unittests.xml')],
+    '--gtest_output=xml:' + join_paths(meson.project_build_root(), 'pbcopper-gtest-unittests.xml')],
   env : [
     'ARGS=-V',
     'VERBOSE=1'],
