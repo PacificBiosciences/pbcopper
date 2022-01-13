@@ -11,9 +11,8 @@
 #include <pbcopper/cli2/internal/InterfaceData.h>
 #include <pbcopper/logging/Logging.h>
 
-#include <boost/optional.hpp>
-
 #include <memory>
+#include <optional>
 #include <string>
 #include <type_traits>
 #include <utility>
@@ -211,16 +210,16 @@ public:
     /// \internal
     /// \return (translated) log file option.
     ///
-    const boost::optional<internal::OptionData>& LogFileOption() const;
+    const std::optional<internal::OptionData>& LogFileOption() const;
 
     /// \internal
     /// \return (translated) log level option.
     ///
-    const boost::optional<internal::OptionData>& LogLevelOption() const;
+    const std::optional<internal::OptionData>& LogLevelOption() const;
 
     /// \internal
     /// \return (translated) numThreads option.
-    const boost::optional<internal::OptionData>& NumThreadsOption() const;
+    const std::optional<internal::OptionData>& NumThreadsOption() const;
 
     /// \internal
     /// \return (translated) "show all help" option.
@@ -229,7 +228,7 @@ public:
 
     /// \internal
     /// \return (translated) verbose option.
-    const boost::optional<internal::OptionData>& VerboseOption() const;
+    const std::optional<internal::OptionData>& VerboseOption() const;
 
     /// \internal
     /// \return (translated) version option.

@@ -10,9 +10,8 @@
 #include <pbcopper/cli2/internal/OptionData.h>
 #include <pbcopper/cli2/internal/PositionalArgumentData.h>
 
-#include <boost/optional.hpp>
-
 #include <iosfwd>
+#include <optional>
 #include <string>
 #include <unordered_map>
 

@@ -3,14 +3,13 @@
 
 #include <pbcopper/PbcopperConfig.h>
 
-#include <boost/optional.hpp>
-
 #include <atomic>
 #include <condition_variable>
 #include <exception>
 #include <functional>
 #include <future>
 #include <mutex>
+#include <optional>
 #include <queue>
 #include <stdexcept>
 
@@ -23,7 +22,7 @@ namespace Parallel {
 class FireAndForget
 {
 private:
-    typedef boost::optional<std::packaged_task<void()>> TTask;
+    typedef std::optional<std::packaged_task<void()>> TTask;
 
 public:
     FireAndForget(const size_t size, const size_t mul = 2)

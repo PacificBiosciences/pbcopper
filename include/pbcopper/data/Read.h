@@ -11,8 +11,6 @@
 #include <pbcopper/data/ReadId.h>
 #include <pbcopper/data/SNR.h>
 
-#include <boost/optional.hpp>
-
 #include <iosfwd>
 #include <string>
 #include <tuple>
@@ -27,7 +25,7 @@ namespace Data {
 /// A Read contains the name, sequence, covariates, SNR, and associated model.
 struct Read
 {
-    Read(Data::ReadId id, std::string seq, boost::optional<Frames> pw, boost::optional<Frames> ipd,
+    Read(Data::ReadId id, std::string seq, std::optional<Frames> pw, std::optional<Frames> ipd,
          LocalContextFlags flags, Accuracy readAccuracy, SNR snr, std::string model);
     Read(const std::string& name, std::string seq, QualityValues qualities, SNR snr);
     Read(const std::string& name, std::string seq, QualityValues qualities, SNR snr,
@@ -39,9 +37,9 @@ struct Read
 
     // base-level vectors
     std::string Seq;
-    boost::optional<Frames> PulseWidth;
+    std::optional<Frames> PulseWidth;
     QualityValues Qualities;
-    boost::optional<Frames> IPD;
+    std::optional<Frames> IPD;
 
     Position QueryStart = UnmappedPosition;
     Position QueryEnd = UnmappedPosition;

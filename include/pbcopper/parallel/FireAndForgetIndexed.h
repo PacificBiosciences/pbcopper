@@ -3,13 +3,12 @@
 
 #include <pbcopper/PbcopperConfig.h>
 
-#include <boost/optional.hpp>
-
 #include <condition_variable>
 #include <exception>
 #include <functional>
 #include <future>
 #include <mutex>
+#include <optional>
 #include <queue>
 
 #include <cstddef>
@@ -139,7 +138,7 @@ public:
     }
 
 private:
-    using TTask = boost::optional<TPTask>;
+    using TTask = std::optional<TPTask>;
 
     TTask PopTask()
     {

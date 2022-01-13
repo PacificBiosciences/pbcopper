@@ -12,9 +12,8 @@
 namespace PacBio {
 namespace Data {
 
-Read::Read(Data::ReadId id, std::string seq, boost::optional<Frames> pw,
-           boost::optional<Frames> ipd, LocalContextFlags flags, Accuracy readAccuracy, SNR snr,
-           std::string model)
+Read::Read(Data::ReadId id, std::string seq, std::optional<Frames> pw, std::optional<Frames> ipd,
+           LocalContextFlags flags, Accuracy readAccuracy, SNR snr, std::string model)
     : Id{std::move(id)}
     , Seq{std::move(seq)}
     , PulseWidth{std::move(pw)}
@@ -82,12 +81,12 @@ Read::Read(const std::string& name, std::string seq, QualityValues qualities, SN
 Read Read::ClipTo(const int32_t begin, const int32_t end) const
 {
     Read copy{this->Id, this->Seq.substr(begin, end - begin),
-              (this->PulseWidth ? boost::optional<Frames>{Frames(this->PulseWidth->cbegin() + begin,
-                                                                 this->PulseWidth->cbegin() + end)}
-                                : boost::none),
-              (this->IPD ? boost::optional<Frames>{Frames(this->IPD->cbegin() + begin,
-                                                          this->IPD->cbegin() + end)}
-                         : boost::none),
+              (this->PulseWidth ? std::optional<Frames>{Frames(this->PulseWidth->cbegin() + begin,
+                                                               this->PulseWidth->cbegin() + end)}
+                                : std::nullopt),
+              (this->IPD ? std::optional<Frames>{Frames(this->IPD->cbegin() + begin,
+                                                        this->IPD->cbegin() + end)}
+                         : std::nullopt),
               this->Flags, this->ReadAccuracy, this->SignalToNoise, this->Model};
     return copy;
 }

@@ -25,6 +25,7 @@ public:
     uint8_t msize = 0;
 
     DnaBit();
+
     DnaBit(uint64_t k, uint8_t strand, uint8_t size);
 
     // Ignores strand, compares hashed kmer.
@@ -36,6 +37,21 @@ public:
     // Checks strand, not hashed kmer.
     bool operator==(DnaBit const& b) const noexcept;
     bool operator!=(DnaBit const& b) const noexcept;
+
+    ///
+    /// Sets a base at a given position
+    ///
+    void SetBase(char c, int position);
+
+    ///
+    /// Delete a base at a given position
+    ///
+    void DeleteBase(int position);
+
+    ///
+    /// Inserts a base at a given position
+    ///
+    void InsertBase(char c, int position);
 
     ///
     /// \return the hashed kmer
@@ -137,6 +153,11 @@ public:
     /// Unpack top 80 bits into a DnaBit
     ///
     void Bin2DnaBit(BI bin);
+
+    ///
+    /// Return all kmers off by one base, includes the source kmer. NO indels.
+    ///
+    std::vector<DnaBit> Neighbors();
 };
 
 // This should remain a function, it has a lot of general utility.

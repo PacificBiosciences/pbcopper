@@ -1,6 +1,7 @@
 #include <pbcopper/pbmer/DnaBit.h>
 
 #include <array>
+#include <unordered_set>
 
 #include <gtest/gtest.h>
 
@@ -54,6 +55,82 @@ TEST(Pbmer_DnaBit, str_check_string)
 {
     const PacBio::Pbmer::DnaBit k1{2862426841, 0, 16};
     EXPECT_EQ("GGGGGCTCAGGGTCGC", k1.KmerToStr());
+}
+
+TEST(Pbmer_DnaBit, set_base)
+{
+    PacBio::Pbmer::DnaBit k1{2862426841, 0, 16};
+    EXPECT_EQ("GGGGGCTCAGGGTCGC", k1.KmerToStr());
+    k1.SetBase('G', 0);
+
+    // first modification
+    EXPECT_EQ("GGGGGCTCAGGGTCGG", k1.KmerToStr());
+    k1.SetBase('C', 0);
+    // round trip
+    EXPECT_EQ("GGGGGCTCAGGGTCGC", k1.KmerToStr());
+
+    //position one
+    k1.SetBase('T', 1);
+    // first base
+    EXPECT_EQ("GGGGGCTCAGGGTCTC", k1.KmerToStr());
+    k1.SetBase('G', 1);
+    // first base
+    EXPECT_EQ("GGGGGCTCAGGGTCGC", k1.KmerToStr());
+
+    //position 16
+    k1.SetBase('A', 15);
+    EXPECT_EQ("AGGGGCTCAGGGTCGC", k1.KmerToStr());
+    k1.SetBase('C', 15);
+    EXPECT_EQ("CGGGGCTCAGGGTCGC", k1.KmerToStr());
+}
+
+TEST(Pbmer_DnaBit, delete_base)
+{
+    //CACCCCGCCCTTCCGGCATTCTTAACCGGCCG
+    PacBio::Pbmer::DnaBit k1{4997130103029503638, 0, 32};
+    k1.DeleteBase(0);
+    EXPECT_EQ("CACCCCGCCCTTCCGGCATTCTTAACCGGCC", k1.KmerToStr());
+
+    //CACCCCGCCCTTCCGGCATTCTTAACCGGCCG
+    PacBio::Pbmer::DnaBit k2{4997130103029503638, 0, 32};
+    k2.DeleteBase(1);
+    EXPECT_EQ("CACCCCGCCCTTCCGGCATTCTTAACCGGCG", k2.KmerToStr());
+
+    //CACCCCGCCCTTCCGGCATTCTTAACCGGCCG
+    PacBio::Pbmer::DnaBit k3{4997130103029503638, 0, 32};
+    k3.DeleteBase(31);
+    EXPECT_EQ("ACCCCGCCCTTCCGGCATTCTTAACCGGCCG", k3.KmerToStr());
+}
+
+TEST(Pbmer_DnaBit, insert_base)
+{
+    //CACCCCGCCCTTCCGGCATTCTTAACCGGCC
+    PacBio::Pbmer::DnaBit k1{1249282525757375909, 0, 31};
+    k1.InsertBase('A', 0);
+    EXPECT_EQ("CACCCCGCCCTTCCGGCATTCTTAACCGGCCA", k1.KmerToStr());
+
+    //CACCCCGCCCTTCCGGCATTCTTAACCGGCC
+    PacBio::Pbmer::DnaBit k2{1249282525757375909, 0, 31};
+    k2.InsertBase('T', 1);
+    EXPECT_EQ("CACCCCGCCCTTCCGGCATTCTTAACCGGCTC", k2.KmerToStr());
+
+    //CACCCCGCCCTTCCGGCATTCTTAACCGGCC
+    PacBio::Pbmer::DnaBit k3{1249282525757375909, 0, 31};
+    k3.InsertBase('G', 31);
+    EXPECT_EQ("GCACCCCGCCCTTCCGGCATTCTTAACCGGCC", k3.KmerToStr());
+}
+
+TEST(Pbmer_DnaBit, test_neighbors)
+{
+    PacBio::Pbmer::DnaBit k1{2862426841, 0, 16};
+    const std::vector<PacBio::Pbmer::DnaBit> neighbors = k1.Neighbors();
+    std::unordered_set<std::string> results;
+    for (const auto& s : neighbors) {
+        results.insert(s.KmerToStr());
+    }
+    // One original sequence, then three different bases at each of the 16 positions
+    // (3*16) + 1
+    EXPECT_EQ(49, results.size());
 }
 
 TEST(Pbmer_DnaBit, str_first_base_idx_a)

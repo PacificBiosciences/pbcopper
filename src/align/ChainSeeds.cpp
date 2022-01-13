@@ -11,7 +11,7 @@ SDPHit::SDPHit(const Seed& seed, const size_t index) : Seed{seed}, Index{index} 
 
 bool SDPHit::operator<(const SDPHit& other) const noexcept { return DiagonalCompare(*this, other); }
 
-SDPColumn::SDPColumn(size_t column, const boost::optional<SDPHit> seed) : Seed{seed}, Column{column}
+SDPColumn::SDPColumn(size_t column, const std::optional<SDPHit> seed) : Seed{seed}, Column{column}
 {
 }
 
@@ -110,10 +110,10 @@ long LinkScore(const Seed& lhs, const Seed& rhs, const ChainSeedsConfig& config)
 
 bool IndexCompare(const SDPHit& lhs, const SDPHit& rhs) { return lhs.Index < rhs.Index; }
 
-std::vector<boost::optional<SDPHit>> ComputeVisibilityLeft(const std::vector<SDPHit>& seeds,
-                                                           std::set<SDPHit>& sweepSet)
+std::vector<std::optional<SDPHit>> ComputeVisibilityLeft(const std::vector<SDPHit>& seeds,
+                                                         std::set<SDPHit>& sweepSet)
 {
-    std::vector<boost::optional<SDPHit>> visible(seeds.size());  // Output
+    std::vector<std::optional<SDPHit>> visible(seeds.size());  // Output
 
     auto toRemove = seeds.begin();
     for (auto it = seeds.begin(); it != seeds.end();) {
@@ -162,7 +162,7 @@ void InitializeSeedsAndScores(const Seeds& seedSet, std::vector<SDPHit>* seeds,
 
 void ChainSeedsImpl(
     std::priority_queue<ChainHit, std::vector<ChainHit>, ChainHitCompare>* chainHits,
-    std::vector<boost::optional<size_t>>* chainPred, std::vector<SDPHit>* seeds,
+    std::vector<std::optional<size_t>>* chainPred, std::vector<SDPHit>* seeds,
     std::vector<long>& scores, const size_t seedSetIdx, const ChainSeedsConfig& config)
 {
     // compute visibility left, requires H-sorted seeds
@@ -185,7 +185,7 @@ void ChainSeedsImpl(
 
         for (; it != seeds->end() && row == (*it).BeginPositionV(); ++it) {
             long bestScore = -std::numeric_limits<long>::max();
-            boost::optional<SDPHit> bestSeed;
+            std::optional<SDPHit> bestSeed;
 
             // find the previous column and best fragment from it
             {
@@ -241,7 +241,7 @@ void ChainSeedsImpl(
             } else if (scores[it->Index] >= config.minScore) {
                 // PLEASE NOTE: these have already been done at creation time
                 // scores[it->Index] = seedSize(*it);
-                // chainPred[it->Index] = boost::none;
+                // chainPred[it->Index] = std::nullopt;
                 //
 
                 if (chainHits->size() < config.numCandidates) {
@@ -259,7 +259,7 @@ void ChainSeedsImpl(
         // and ensure the colSet invariant is kept:
         //   that all columns greater than our current
         for (; toRemove != seeds->end() && (*toRemove).EndPositionV() < row; ++toRemove) {
-            SDPColumn col((*toRemove).EndPositionH(), boost::make_optional(*toRemove));
+            SDPColumn col((*toRemove).EndPositionH(), std::make_optional(*toRemove));
 
             auto myIt = colSet.find(col);
 
@@ -287,7 +287,7 @@ std::vector<std::vector<Seed>> ChainSeeds(const Seeds& seedSet, const ChainSeeds
 {
     // Initialize the work-horse vectors we will actually work with
     std::priority_queue<ChainHit, std::vector<ChainHit>, ChainHitCompare> chainHits;
-    std::vector<boost::optional<size_t>> chainPred(seedSet.size());
+    std::vector<std::optional<size_t>> chainPred(seedSet.size());
     std::vector<SDPHit> seeds;
     std::vector<long> scores(seedSet.size(), 0L);
     InitializeSeedsAndScores(seedSet, &seeds, &scores);
@@ -306,7 +306,7 @@ std::vector<std::vector<Seed>> ChainSeeds(const Seeds& seedSet, const ChainSeeds
         //std::cout << "b(" << hit.reference << ", " << hit.endIndex << ", " << hit.score << ')' << std::endl;
 
         // While there are additional links in the chain, append them
-        boost::optional<size_t> chainEnd = hit.endIndex;
+        std::optional<size_t> chainEnd = hit.endIndex;
         while (chainEnd) {
             chains[i].push_back(seeds[*chainEnd]);
             chainEnd = chainPred[*chainEnd];
@@ -326,7 +326,7 @@ std::vector<Seeds> ChainedSeedSets(const Seeds& seedSet, const ChainSeedsConfig&
 {
     // Initialize the work-horse vectors we will actually work with
     std::priority_queue<ChainHit, std::vector<ChainHit>, ChainHitCompare> chainHits;
-    std::vector<boost::optional<size_t>> chainPred(seedSet.size());
+    std::vector<std::optional<size_t>> chainPred(seedSet.size());
     std::vector<SDPHit> seeds;
     std::vector<long> scores(seedSet.size(), 0L);
     InitializeSeedsAndScores(seedSet, &seeds, &scores);
@@ -344,7 +344,7 @@ std::vector<Seeds> ChainedSeedSets(const Seeds& seedSet, const ChainSeedsConfig&
         const auto hit = chainHits.top();
 
         // While there are additional links in the chain, append them
-        boost::optional<size_t> chainEnd = hit.endIndex;
+        std::optional<size_t> chainEnd = hit.endIndex;
         while (chainEnd) {
             auto seed = seeds[*chainEnd];
             chains[i].AddSeed(seed);
@@ -367,7 +367,7 @@ std::vector<std::pair<size_t, Seeds>> ChainSeeds(const std::map<size_t, Seeds> s
     //  use reconstructing our chains, so we initialize them as
     //  vectors-of-vectors here, 1 per seedSet we will analyze
     size_t numSeedSets = seedSets.size();
-    std::vector<std::vector<boost::optional<size_t>>> chainPred(numSeedSets);
+    std::vector<std::vector<std::optional<size_t>>> chainPred(numSeedSets);
     std::vector<std::vector<SDPHit>> seeds(numSeedSets);
 
     // We also need to record which seedSet came from which reference
@@ -381,7 +381,7 @@ std::vector<std::pair<size_t, Seeds>> ChainSeeds(const std::map<size_t, Seeds> s
         const auto& seedSet = it->second;
 
         // Initialize the work-horse vectors we will actually work with
-        chainPred[i] = std::vector<boost::optional<size_t>>(seedSet.size());
+        chainPred[i] = std::vector<std::optional<size_t>>(seedSet.size());
         std::vector<long> scores(seedSet.size(), 0L);
         InitializeSeedsAndScores(seedSet, &seeds[i], &scores);
 
@@ -401,7 +401,7 @@ std::vector<std::pair<size_t, Seeds>> ChainSeeds(const std::map<size_t, Seeds> s
         chains[j].first = references[hit.seedSetIdx];
 
         // While there are additional links in the chain, append them
-        boost::optional<size_t> chainEnd = hit.endIndex;
+        std::optional<size_t> chainEnd = hit.endIndex;
         while (chainEnd) {
             auto seed = seeds[hit.seedSetIdx][*chainEnd];
             chains[j].second.AddSeed(seed);

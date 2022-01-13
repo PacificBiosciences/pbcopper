@@ -6,9 +6,8 @@
 #include <pbcopper/align/ChainSeedsConfig.h>
 #include <pbcopper/align/Seeds.h>
 
-#include <boost/optional.hpp>
-
 #include <map>
+#include <optional>
 #include <queue>
 #include <set>
 #include <utility>
@@ -113,10 +112,10 @@ bool IndexCompare(const SDPHit& lhs, const SDPHit& rhs);
 ///
 struct SDPColumn
 {
-    boost::optional<SDPHit> Seed;
+    std::optional<SDPHit> Seed;
     size_t Column;
 
-    SDPColumn(size_t column, boost::optional<SDPHit> seed = boost::none);
+    SDPColumn(size_t column, std::optional<SDPHit> seed = std::nullopt);
     bool operator<(const SDPColumn& other) const noexcept;
 };
 
@@ -128,8 +127,8 @@ struct SDPColumn
 ///
 /// \return  vector<optional<SDPHits>>  For each seed in the input vector, the
 ///             first index that is visible to it's left, if any.
-std::vector<boost::optional<SDPHit>> ComputeVisibilityLeft(const std::vector<SDPHit>& seeds,
-                                                           std::set<SDPHit>& sweepSet);
+std::vector<std::optional<SDPHit>> ComputeVisibilityLeft(const std::vector<SDPHit>& seeds,
+                                                         std::set<SDPHit>& sweepSet);
 
 ///
 /// A possible chain of SDP seeds.  A simple struct for wrapping the
@@ -195,7 +194,7 @@ void InitializeSeedsAndScores(const Seeds& seedSet, std::vector<SDPHit>* seeds,
 ///                   a lower diagonal than the 'downstream' seed.
 void __attribute__((__unused__))
 ChainSeedsImpl(std::priority_queue<ChainHit, std::vector<ChainHit>, ChainHitCompare>* chainHits,
-               std::vector<boost::optional<size_t>>* chainPred, std::vector<SDPHit>* seeds,
+               std::vector<std::optional<size_t>>* chainPred, std::vector<SDPHit>* seeds,
                std::vector<long>& scores, size_t seedSetIdx, const ChainSeedsConfig& config);
 
 /// Search a Seed set for the best numCandidates sets of locally-chainable
