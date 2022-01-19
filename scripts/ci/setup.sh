@@ -7,7 +7,7 @@ export SHOULD_INSTALL="false"
 
 case "${GCC_VERSION}" in
   next)
-    module load gcc/8.1.0
+    module load gcc/11.1.0
     module load gtest
     ;;
 
