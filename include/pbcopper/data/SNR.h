@@ -26,8 +26,8 @@ struct SNR
 
     operator std::vector<float>() const;
 
-    const float& operator[](const int i) const noexcept;
-    float& operator[](const int i) noexcept;
+    const float& operator[](int i) const noexcept;
+    float& operator[](int i) noexcept;
 
     bool operator==(const SNR& other) const noexcept;
     bool operator!=(const SNR& other) const noexcept;

@@ -39,8 +39,8 @@ void MovieName::UpdatePartsCache() const
 
     // cache name parts
     partsCache_.reset(new PartsCache{
-        boost::string_ref{nameStart, nameSize},  // instrumentName
-        boost::string_ref{rstStart, rstSize}     // runStartTime
+        std::string_view{nameStart, nameSize},  // instrumentName
+        std::string_view{rstStart, rstSize}     // runStartTime
     });
 
     // checks - here? or elsewhere?

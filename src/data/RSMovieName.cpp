@@ -58,11 +58,11 @@ void RSMovieName::UpdatePartsCache() const
 
     // cache name parts
     partsCache_.reset(new RSMovieName::PartsCache{
-        boost::string_ref{rstStart, rstSize},              // runStartTime
-        boost::string_ref{serialNumStart, serialNumSize},  // serialNumber
-        boost::string_ref{scbStart, scbSize},              // smrtCellBarcode
-        boost::string_ref{setNumStart, setNumSize},        // setNumber
-        boost::string_ref{partNumStart, partNumSize},      // partNumber
+        std::string_view{rstStart, rstSize},              // runStartTime
+        std::string_view{serialNumStart, serialNumSize},  // serialNumber
+        std::string_view{scbStart, scbSize},              // smrtCellBarcode
+        std::string_view{setNumStart, setNumSize},        // setNumber
+        std::string_view{partNumStart, partNumSize},      // partNumber
     });
 
     // checks - here? or elsewhere?

@@ -1,12 +1,14 @@
 #ifndef PBCOPPER_DATA_MAPPEDREAD_H
 #define PBCOPPER_DATA_MAPPEDREAD_H
 
-#include <iosfwd>
+#include <pbcopper/PbcopperConfig.h>
 
 #include <pbcopper/data/Cigar.h>
 #include <pbcopper/data/Orientation.h>
 #include <pbcopper/data/Read.h>
 #include <pbcopper/data/Strand.h>
+
+#include <iosfwd>
 
 namespace PacBio {
 namespace Data {
@@ -58,12 +60,12 @@ struct MappedRead : public Read
         GapBehavior gapBehavior = GapBehavior::IGNORE,
         SoftClipBehavior softClipBehavior = SoftClipBehavior::KEEP) const;
 
-    boost::optional<Frames> AlignedIPD(
+    std::optional<Frames> AlignedIPD(
         Orientation orientation = Orientation::NATIVE,
         GapBehavior gapBehavior = GapBehavior::IGNORE,
         SoftClipBehavior softClipBehavior = SoftClipBehavior::KEEP) const;
 
-    boost::optional<Frames> AlignedPulseWidth(
+    std::optional<Frames> AlignedPulseWidth(
         Orientation orientation = Orientation::NATIVE,
         GapBehavior gapBehavior = GapBehavior::IGNORE,
         SoftClipBehavior softClipBehavior = SoftClipBehavior::KEEP) const;

@@ -4,14 +4,14 @@
 #include <pbcopper/PbcopperConfig.h>
 
 #include <condition_variable>
-#include <cstddef>
 #include <exception>
 #include <functional>
 #include <future>
 #include <mutex>
+#include <optional>
 #include <queue>
 
-#include <boost/optional.hpp>
+#include <cstddef>
 
 namespace PacBio {
 namespace Parallel {
@@ -118,8 +118,8 @@ public:
     {
         {
             std::lock_guard<std::mutex> g(m);
-            // Push boost::none to signal that there are no further tasks
-            head.emplace(boost::none);
+            // Push sentinel to signal that there are no further tasks
+            head.emplace();
         }
         // Let all workers know that they should look that there is no further work
         pushed.notify_all();
@@ -138,11 +138,11 @@ public:
     }
 
 private:
-    using TTask = boost::optional<TPTask>;
+    using TTask = std::optional<TPTask>;
 
     TTask PopTask()
     {
-        TTask task(boost::none);
+        TTask task;
 
         {
             std::unique_lock<std::mutex> lk(m);

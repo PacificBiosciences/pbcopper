@@ -25,7 +25,7 @@ public:
     /// \param beginPosV
     /// \param seedLength
     ///
-    Seed(const uint64_t beginPosH, const uint64_t beginPosV, const uint64_t seedLength);
+    Seed(uint64_t beginPosH, uint64_t beginPosV, uint64_t seedLength);
 
     ///
     /// \brief Seed
@@ -34,8 +34,7 @@ public:
     /// \param endPosH
     /// \param endPosV
     ///
-    Seed(const uint64_t beginPosH, const uint64_t beginPosV, const uint64_t endPosH,
-         const uint64_t endPosV);
+    Seed(uint64_t beginPosH, uint64_t beginPosV, uint64_t endPosH, uint64_t endPosV);
 
 public:
     ///
@@ -118,49 +117,49 @@ public:
     /// \param beginPosH
     /// \return
     ///
-    Seed& BeginPositionH(const uint64_t beginPosH);
+    Seed& BeginPositionH(uint64_t beginPosH);
 
     ///
     /// \brief BeginPositionV
     /// \param beginPosV
     /// \return
     ///
-    Seed& BeginPositionV(const uint64_t beginPosV);
+    Seed& BeginPositionV(uint64_t beginPosV);
 
     ///
     /// \brief EndPositionH
     /// \param endPosH
     /// \return
     ///
-    Seed& EndPositionH(const uint64_t endPosH);
+    Seed& EndPositionH(uint64_t endPosH);
 
     ///
     /// \brief EndPositionV
     /// \param endPosV
     /// \return
     ///
-    Seed& EndPositionV(const uint64_t endPosV);
+    Seed& EndPositionV(uint64_t endPosV);
 
     ///
     /// \brief LowerDiagonal
     /// \param lowerDiagonal
     /// \return
     ///
-    Seed& LowerDiagonal(const int64_t lowerDiagonal);
+    Seed& LowerDiagonal(int64_t lowerDiagonal);
 
     ///
     /// \brief UpperDiagonal
     /// \param upperDiagonal
     /// \return
     ///
-    Seed& UpperDiagonal(const int64_t upperDiagonal);
+    Seed& UpperDiagonal(int64_t upperDiagonal);
 
     ///
     /// \brief Score
     /// \param score
     /// \return
     ///
-    Seed& Score(const int32_t score);
+    Seed& Score(int32_t score);
 
 public:
     ///

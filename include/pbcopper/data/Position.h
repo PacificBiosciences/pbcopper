@@ -3,8 +3,9 @@
 
 #include <pbcopper/PbcopperConfig.h>
 
-#include <cstdint>
 #include <limits>
+
+#include <cstdint>
 
 namespace PacBio {
 namespace Data {

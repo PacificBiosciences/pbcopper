@@ -1,25 +1,27 @@
 #ifndef PBCOPPER_DATA_RSMOVIENAME_INL_H
 #define PBCOPPER_DATA_RSMOVIENAME_INL_H
 
-#include <cassert>
+#include <pbcopper/PbcopperConfig.h>
+
+#include <pbcopper/data/RSMovieName.h>
+#include <pbcopper/utility/StringUtils.h>
 
 #include <istream>
 #include <ostream>
 #include <stdexcept>
 
-#include <pbcopper/data/RSMovieName.h>
-#include <pbcopper/utility/StringUtils.h>
+#include <cassert>
 
 namespace PacBio {
 namespace Data {
 
 struct RSMovieName::PartsCache
 {
-    boost::string_ref runStartTime_;
-    boost::string_ref serialNumber_;
-    boost::string_ref smrtCellBarcode_;
-    boost::string_ref setNumber_;
-    boost::string_ref partNumber_;
+    std::string_view runStartTime_;
+    std::string_view serialNumber_;
+    std::string_view smrtCellBarcode_;
+    std::string_view setNumber_;
+    std::string_view partNumber_;
 };
 
 // NOTE: We're not going to re-calculate cache in copies until actually needed.
@@ -48,7 +50,7 @@ inline RSMovieName& RSMovieName::operator=(RSMovieName&& other) noexcept(
 
 inline RSMovieName::~RSMovieName() = default;
 
-inline boost::string_ref RSMovieName::InstrumentSerialNumber() const
+inline std::string_view RSMovieName::InstrumentSerialNumber() const
 {
     if (!partsCache_) {
         UpdatePartsCache();
@@ -63,7 +65,7 @@ inline bool RSMovieName::IsReagentExpired() const
     return expiredStatus == 'X' || expiredStatus == 'x';
 }
 
-inline boost::string_ref RSMovieName::PartNumber() const
+inline std::string_view RSMovieName::PartNumber() const
 {
     if (!partsCache_) {
         UpdatePartsCache();
@@ -72,7 +74,7 @@ inline boost::string_ref RSMovieName::PartNumber() const
     return partsCache_->partNumber_;
 }
 
-inline boost::string_ref RSMovieName::RunStartTime() const
+inline std::string_view RSMovieName::RunStartTime() const
 {
     if (!partsCache_) {
         UpdatePartsCache();
@@ -81,7 +83,7 @@ inline boost::string_ref RSMovieName::RunStartTime() const
     return partsCache_->runStartTime_;
 }
 
-inline boost::string_ref RSMovieName::SetNumber() const
+inline std::string_view RSMovieName::SetNumber() const
 {
     if (!partsCache_) {
         UpdatePartsCache();
@@ -90,7 +92,7 @@ inline boost::string_ref RSMovieName::SetNumber() const
     return partsCache_->setNumber_;
 }
 
-inline boost::string_ref RSMovieName::SMRTCellBarcode() const
+inline std::string_view RSMovieName::SMRTCellBarcode() const
 {
     if (!partsCache_) {
         UpdatePartsCache();

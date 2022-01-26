@@ -3,13 +3,13 @@
 
 #include <pbcopper/PbcopperConfig.h>
 
-#include <cstdint>
+#include <pbcopper/pbmer/DnaBit.h>
+#include <pbcopper/pbmer/Mers.h>
 
 #include <array>
 #include <string>
 
-#include <pbcopper/pbmer/DnaBit.h>
-#include <pbcopper/pbmer/Mers.h>
+#include <cstdint>
 
 namespace PacBio {
 namespace Pbmer {

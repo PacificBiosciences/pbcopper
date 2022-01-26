@@ -3,12 +3,6 @@
 
 #include <pbcopper/PbcopperConfig.h>
 
-#include <memory>
-#include <string>
-#include <type_traits>
-#include <unordered_map>
-#include <vector>
-
 #include <pbcopper/cli2/Option.h>
 #include <pbcopper/cli2/OptionValue.h>
 #include <pbcopper/cli2/PositionalArgument.h>
@@ -17,12 +11,14 @@
 #include <pbcopper/cli2/internal/PositionalArgumentData.h>
 #include <pbcopper/logging/Logging.h>
 
+#include <memory>
+#include <string>
+#include <type_traits>
+#include <unordered_map>
+#include <vector>
+
 namespace PacBio {
 namespace CLI_v2 {
-
-namespace internal {
-class CommandLineParser;
-}
 
 ///
 /// Provides an application with values for all options & positional arguments
@@ -87,6 +83,11 @@ public:
     bool ExceptionPassthrough() const;
 
     ///
+    /// \return true if --show-all-help was requested
+    ///
+    bool ShowAllHelp() const;
+
+    ///
     /// \return value associated with option
     ///
     /// The lookup uses the same Option as defined in the application. Example:
@@ -127,12 +128,12 @@ public:
     ///
     /// Registers an observed flag turned on
     ///
-    Results& AddObservedFlag(const std::string& name, const SetByMode setBy);
+    Results& AddObservedFlag(const std::string& name, SetByMode setBy);
 
     ///
     /// Registers an observed option value
     ///
-    Results& AddObservedValue(const std::string& name, OptionValue value, const SetByMode setBy);
+    Results& AddObservedValue(const std::string& name, OptionValue value, SetByMode setBy);
 
     ///
     /// Sets the command line used to invoke the application

@@ -5,13 +5,13 @@
 
 #include <pbcopper/PbcopperConfig.h>
 
-#include <cstddef>
+#include <boost/variant.hpp>
 
 #include <iosfwd>
 #include <string>
 #include <vector>
 
-#include <boost/variant.hpp>
+#include <cstddef>
 
 namespace PacBio {
 namespace Reports {
@@ -57,7 +57,7 @@ private:
 class Column : public BaseReportElement
 {
 public:
-    Column(std::string id_, std::vector<ReportValue> values, std::string header = "");
+    Column(std::string id, std::vector<ReportValue> values, std::string header = "");
 
     // header
     const std::string& Header() const;

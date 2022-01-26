@@ -3,11 +3,10 @@
 
 #include <pbcopper/PbcopperConfig.h>
 
-#include <string>
-
-#include <boost/optional.hpp>
-
 #include <pbcopper/cli2/OptionValue.h>
+
+#include <optional>
+#include <string>
 
 namespace PacBio {
 namespace CLI_v2 {
@@ -126,7 +125,7 @@ struct Option
     Option(std::string def, std::string val);
 
     std::string text;
-    boost::optional<OptionValue> defaultValue;
+    std::optional<OptionValue> defaultValue;
 
     // TODO: multi-value ("stringlist") support ???
 };

@@ -1,14 +1,77 @@
 #include <pbcopper/pbmer/DnaBit.h>
 
-#include <cassert>
+#include <pbcopper/pbmer/Parser.h>
 
 #include <array>
+#include <limits>
 #include <tuple>
+#include <unordered_set>
+#include <vector>
 
-#include <pbcopper/pbmer/Parser.h>
+#include <cassert>
+#include <cstdint>
 
 namespace PacBio {
 namespace Pbmer {
+
+// all bits set to one for a uint64_t
+constexpr uint64_t allOn = std::numeric_limits<uint64_t>::max();
+
+void DnaBit::SetBase(const char c, const int position)
+{
+    assert(position >= 0);
+    assert(position < msize);
+
+    const uint64_t base = AsciiToDna[c];
+    const int step = position * 2;
+
+    mer = (mer & ~(0b11ULL << step)) | (base << step);
+}
+
+// use a lower and (implicit) upper bitmask to squeeze out a base.
+void DnaBit::DeleteBase(const int position)
+{
+    assert(position >= 0);
+    assert(position < msize);
+
+    //             example position = 1 ─┐
+    //                                   v
+    //                          4  3  2  1  0
+    //   mer:                   T  C  A  T  G
+    //   binary:               11'01'00'11'10
+    //
+    //   lowerBitMask:         00'00'00'00'11
+    //
+    // bases before position:
+    //   (mer & lowerBitMask): 00'00'00'00'10 (lower)
+    //
+    // bases past position:
+    //   (mer >> 2):           00'11'01'00'11
+    //   (~lowerBitMask):      11'11'11'11'00
+    //   bit-&:                00'11'01'00'00 (upper)
+    //
+    //                             3  2  1  0
+    // lower | upper:          00'11'01'00'10
+    //                             T  C  A  G
+    const uint64_t lowerBitMask{(1ull << (2 * position)) - 1};
+
+    mer = (mer & lowerBitMask) | ((mer >> 2) & (~lowerBitMask));
+    --msize;
+}
+
+void DnaBit::InsertBase(const char c, const int position)
+{
+    assert(position >= 0);
+    assert(position <= msize);
+    assert(position < 32);
+
+    const uint64_t lowerBitMask{(1ull << (2 * position)) - 1};
+
+    mer = (mer & lowerBitMask) | ((mer & ~lowerBitMask) << 2);
+    ++msize;
+
+    SetBase(c, position);
+}
 
 // https://gist.github.com/badboy/6267743
 // This is a multiplication method for hashing. Minimap2 uses this function, but
@@ -78,12 +141,12 @@ bool DnaBit::operator!=(const DnaBit& b) const noexcept { return !(*this == b); 
 
 void DnaBit::AppendBase(const uint8_t b)
 {
-    mer = ((mer << 2) & ((uint64_t)-1 >> (64 - (2 * msize)))) | (b % 4);
+    mer = ((mer << 2) & (allOn >> (64 - (2 * msize)))) | (b % 4);
 }
 
 void DnaBit::AppendBase(const char b)
 {
-    mer = ((mer << 2) & ((uint64_t)-1 >> (64 - (2 * msize)))) | AsciiToDna[b];
+    mer = ((mer << 2) & (allOn >> (64 - (2 * msize)))) | AsciiToDna[b];
 }
 
 void DnaBit::Bin2DnaBit(BI bin)
@@ -298,6 +361,27 @@ std::string DnaBitVec2String(const std::vector<DnaBit>& bits)
         }
     }
     return rv;
+}
+
+std::vector<DnaBit> DnaBit::Neighbors()
+{
+    std::vector<DnaBit> results;
+    results.reserve(4 * msize);
+
+    // unordered set to collapse duplicates
+    std::unordered_set<uint64_t> seen;
+
+    for (int i = 0; i < msize; ++i) {
+        for (int j = 0; j < 4; ++j) {
+            DnaBit currentMer = *this;
+            currentMer.SetBase(j, i);
+            const auto insertResult = seen.insert(currentMer.mer);
+            if (insertResult.second) {
+                results.emplace_back(currentMer);
+            }
+        }
+    }
+    return results;
 }
 
 }  // namespace Pbmer

@@ -3,11 +3,11 @@
 
 #include <pbcopper/PbcopperConfig.h>
 
+#include <pbcopper/align/Seed.h>
+
 #include <functional>
 #include <set>
 #include <vector>
-
-#include <pbcopper/align/Seed.h>
 
 namespace PacBio {
 namespace Align {

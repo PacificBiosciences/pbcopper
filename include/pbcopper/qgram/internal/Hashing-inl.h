@@ -1,13 +1,16 @@
 #ifndef PBCOPPER_QGRAM_HASHING_INL_H
 #define PBCOPPER_QGRAM_HASHING_INL_H
 
+#include <pbcopper/PbcopperConfig.h>
+
 #include <array>
+#include <stdexcept>
+#include <string>
+
 #include <cassert>
 #include <cmath>
 #include <cstddef>
 #include <cstdint>
-#include <stdexcept>
-#include <string>
 
 namespace PacBio {
 namespace QGram {

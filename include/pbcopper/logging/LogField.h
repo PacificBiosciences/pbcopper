@@ -1,6 +1,8 @@
 #ifndef PBCOPPER_LOGGING_LOGFIELD_H
 #define PBCOPPER_LOGGING_LOGFIELD_H
 
+#include <pbcopper/PbcopperConfig.h>
+
 namespace PacBio {
 namespace Logging {
 namespace LogField {

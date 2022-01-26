@@ -3,20 +3,20 @@
 
 #include <pbcopper/PbcopperConfig.h>
 
-#include <cstddef>
-#include <cstdint>
-
-#include <map>
-#include <string>
-#include <tuple>
-#include <vector>
-
 #include <pbcopper/pbmer/Bubble.h>
 #include <pbcopper/pbmer/DbgNode.h>
 #include <pbcopper/pbmer/DnaBit.h>
 #include <pbcopper/pbmer/Mers.h>
 #include <pbcopper/pbmer/Parser.h>
 #include <pbcopper/third-party/robin_hood/robin_hood.h>
+
+#include <map>
+#include <string>
+#include <tuple>
+#include <vector>
+
+#include <cstddef>
+#include <cstdint>
 
 namespace PacBio {
 namespace Pbmer {
@@ -41,9 +41,9 @@ public:
     ///             -1 : kmer is too large.
     ///             -2 : kmer length is not odd.
     ///
-    int AddKmers(const PacBio::Pbmer::Mers& m, const uint32_t rid);
+    int AddKmers(const PacBio::Pbmer::Mers& m, uint32_t rid);
 
-    void AddVerifedKmerPairs(std::vector<PacBio::Pbmer::DnaBit>& bits, const uint32_t rid);
+    void AddVerifedKmerPairs(std::vector<PacBio::Pbmer::DnaBit>& bits, uint32_t rid);
 
     ///
     /// Iterates over node kmers and checks for all possible out/in bases

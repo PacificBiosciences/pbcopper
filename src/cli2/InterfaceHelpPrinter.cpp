@@ -1,12 +1,11 @@
 #include <pbcopper/cli2/internal/InterfaceHelpPrinter.h>
 
+#include <pbcopper/utility/StringUtils.h>
+#include "PbBoilerplateDisclaimer.h"
+
 #include <algorithm>
 #include <ostream>
 #include <sstream>
-
-#include <pbcopper/utility/StringUtils.h>
-
-#include "PbBoilerplateDisclaimer.h"
 
 using HelpMetrics = PacBio::CLI_v2::internal::HelpMetrics;
 using Option = PacBio::CLI_v2::Option;
@@ -20,21 +19,32 @@ namespace PacBio {
 namespace CLI_v2 {
 namespace internal {
 
-InterfaceHelpPrinter::InterfaceHelpPrinter(Interface interface)
-    : metrics_{interface}, interface_{std::move(interface)}
+InterfaceHelpPrinter::InterfaceHelpPrinter(Interface interface, HiddenOptionMode hiddenOptionMode)
+    : metrics_{interface, hiddenOptionMode}
+    , interface_{std::move(interface)}
+    , showHiddenOptions_{hiddenOptionMode == HiddenOptionMode::SHOW}
 {
     MakeHelpText();
 }
 
-InterfaceHelpPrinter::InterfaceHelpPrinter(Interface interface, const size_t maxColumn)
-    : metrics_{interface, maxColumn}, interface_{std::move(interface)}
+InterfaceHelpPrinter::InterfaceHelpPrinter(Interface interface, const size_t maxColumn,
+                                           HiddenOptionMode hiddenOptionMode)
+    : metrics_{interface, maxColumn, hiddenOptionMode}
+    , interface_{std::move(interface)}
+    , showHiddenOptions_{hiddenOptionMode == HiddenOptionMode::SHOW}
 {
     MakeHelpText();
 }
 
 std::string InterfaceHelpPrinter::Choices(const OptionData& option)
 {
-    if (option.isHidden || option.choices.empty() || option.isChoicesHidden) {
+    // nothing to show
+    if (option.choices.empty()) {
+        return {};
+    }
+
+    // check for hidden status
+    if ((option.isHidden || option.isChoicesHidden) && !showHiddenOptions_) {
         return {};
     }
 
@@ -76,21 +86,21 @@ std::string InterfaceHelpPrinter::DefaultValue(const OptionData& option)
     std::ostringstream out;
     switch (option.type) {
         case OptionValueType::INT:
-            out << OptionValueToInt(option.defaultValue.get());
+            out << OptionValueToInt(*option.defaultValue);
             break;
         case OptionValueType::UINT:
-            out << OptionValueToUInt(option.defaultValue.get());
+            out << OptionValueToUInt(*option.defaultValue);
             break;
         case OptionValueType::FLOAT:
-            out << OptionValueToDouble(option.defaultValue.get());
+            out << OptionValueToDouble(*option.defaultValue);
             break;
         case OptionValueType::STRING:
         case OptionValueType::FILE:
         case OptionValueType::DIR:
-            out << OptionValueToString(option.defaultValue.get());
+            out << OptionValueToString(*option.defaultValue);
             break;
         case OptionValueType::BOOL: {
-            const bool on = OptionValueToBool(option.defaultValue.get());
+            const bool on = OptionValueToBool(*option.defaultValue);
             out << (on ? "true" : "false");
             break;
         }
@@ -199,7 +209,7 @@ std::string InterfaceHelpPrinter::OptionGroup(const OptionGroupData& group)
     }
 
     for (const OptionData& option : group.options) {
-        if (!option.isHidden) {
+        if (!option.isHidden || showHiddenOptions_) {
             out << Option(option) << '\n';
         }
     }
@@ -222,17 +232,21 @@ std::string InterfaceHelpPrinter::Options()
     }
     group.options.push_back(interface_.HelpOption());
     group.options.push_back(interface_.VersionOption());
+    group.options.push_back(interface_.AlarmsOption());
+    group.options.push_back(interface_.ExceptionsPassthroughOption());
+    group.options.push_back(interface_.ShowAllHelpOption());
+
     if (interface_.NumThreadsOption()) {
-        group.options.push_back(interface_.NumThreadsOption().get());
+        group.options.push_back(*interface_.NumThreadsOption());
     }
     if (interface_.LogLevelOption()) {
-        group.options.push_back(interface_.LogLevelOption().get());
+        group.options.push_back(*interface_.LogLevelOption());
     }
     if (interface_.LogFileOption()) {
-        group.options.push_back(interface_.LogFileOption().get());
+        group.options.push_back(*interface_.LogFileOption());
     }
     if (interface_.VerboseOption()) {
-        group.options.push_back(interface_.VerboseOption().get());
+        group.options.push_back(*interface_.VerboseOption());
     }
     out << OptionGroup(group);
     return out.str();
@@ -271,12 +285,12 @@ bool InterfaceHelpPrinter::ShouldShowDefaultValue(const OptionData& option)
 
     // omit if string-type option has an empty default
     if (option.type == OptionValueType::STRING) {
-        const auto& defaultValue = OptionValueToString(option.defaultValue.get());
+        const auto& defaultValue = OptionValueToString(*option.defaultValue);
         return !defaultValue.empty();
     }
 
     // otherwise (maybe) use default value
-    return option.defaultValue.is_initialized();
+    return bool{option.defaultValue};
 }
 
 std::string InterfaceHelpPrinter::Usage()

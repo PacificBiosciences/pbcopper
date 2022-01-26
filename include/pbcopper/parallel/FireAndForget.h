@@ -5,16 +5,16 @@
 
 #include <atomic>
 #include <condition_variable>
-#include <cstddef>
-#include <cstdint>
 #include <exception>
 #include <functional>
 #include <future>
 #include <mutex>
+#include <optional>
 #include <queue>
 #include <stdexcept>
 
-#include <boost/optional.hpp>
+#include <cstddef>
+#include <cstdint>
 
 namespace PacBio {
 namespace Parallel {
@@ -22,7 +22,7 @@ namespace Parallel {
 class FireAndForget
 {
 private:
-    typedef boost::optional<std::packaged_task<void()>> TTask;
+    typedef std::optional<std::packaged_task<void()>> TTask;
 
 public:
     FireAndForget(const size_t size, const size_t mul = 2)
@@ -105,8 +105,8 @@ public:
         acceptingJobs = false;
         {
             std::lock_guard<std::mutex> g(m);
-            // Push boost::none to signal that there are no further tasks
-            head.emplace(boost::none);
+            // Push sentinel to signal that there are no further tasks
+            head.emplace();
         }
         // Let all workers know that they should look that there is no further work
         pushed.notify_all();
@@ -129,7 +129,7 @@ public:
 private:
     TTask PopTask()
     {
-        TTask task(boost::none);
+        TTask task;
 
         {
             std::unique_lock<std::mutex> lk(m);

@@ -1,14 +1,15 @@
 #include <pbcopper/cli2/Interface.h>
 
-#include <cassert>
-#include <map>
-#include <stdexcept>
-#include <type_traits>
-
 #include <pbcopper/cli2/Interface.h>
 #include <pbcopper/cli2/internal/BuiltinOptions.h>
 #include <pbcopper/cli2/internal/OptionTranslator.h>
 #include <pbcopper/cli2/internal/PositionalArgumentTranslator.h>
+
+#include <map>
+#include <stdexcept>
+#include <type_traits>
+
+#include <cassert>
 
 using OptionData = PacBio::CLI_v2::internal::OptionData;
 using OptionGroupData = PacBio::CLI_v2::internal::OptionGroupData;
@@ -29,7 +30,8 @@ Interface::Interface(std::string name, std::string description, std::string vers
             OptionTranslator::Translate(Builtin::LogFile),
             OptionTranslator::Translate(Builtin::LogLevel),
             OptionTranslator::Translate(Builtin::Alarms),
-            OptionTranslator::Translate(Builtin::ExceptionPassthrough)}
+            OptionTranslator::Translate(Builtin::ExceptionPassthrough),
+            OptionTranslator::Translate(Builtin::ShowAllHelp)}
 {
     if (data_.appName_.empty()) {
         throw std::runtime_error{
@@ -80,6 +82,8 @@ Interface& Interface::AddPositionalArguments(const std::vector<PositionalArgumen
     return *this;
 }
 
+const internal::OptionData& Interface::AlarmsOption() const { return data_.alarmsOption_; }
+
 const std::string& Interface::ApplicationDescription() const { return data_.appDescription_; }
 
 const std::string& Interface::ApplicationName() const { return data_.appName_; }
@@ -89,7 +93,7 @@ const std::string& Interface::ApplicationVersion() const { return data_.appVersi
 Logging::LogLevel Interface::DefaultLogLevel() const
 {
     if (data_.logLevelOption_) {
-        const auto& value = data_.logLevelOption_->defaultValue.get();
+        const auto& value = *data_.logLevelOption_->defaultValue;
         return Logging::LogLevel{boost::get<std::string>(value)};
     } else {
         return data_.logConfig_.Level;
@@ -107,19 +111,19 @@ Interface& Interface::DefaultLogLevel(Logging::LogLevel level)
 
 Interface& Interface::DisableLogFileOption()
 {
-    data_.logFileOption_ = boost::none;
+    data_.logFileOption_.reset();
     return *this;
 }
 
 Interface& Interface::DisableLogLevelOption()
 {
-    data_.logLevelOption_ = boost::none;
+    data_.logLevelOption_.reset();
     return *this;
 }
 
 Interface& Interface::DisableNumThreadsOption()
 {
-    data_.numThreadsOption_ = boost::none;
+    data_.numThreadsOption_.reset();
     return *this;
 }
 
@@ -135,6 +139,11 @@ Interface& Interface::Example(std::string example)
 {
     data_.example_ = std::move(example);
     return *this;
+}
+
+const internal::OptionData& Interface::ExceptionsPassthroughOption() const
+{
+    return data_.exceptionPassthroughOption_;
 }
 
 bool Interface::HasRequiredPosArgs() const { return NumRequiredPosArgs() > 0; }
@@ -157,17 +166,17 @@ Interface& Interface::LogConfig(const Logging::LogConfig& config)
     return *this;
 }
 
-const boost::optional<internal::OptionData>& Interface::LogFileOption() const
+const std::optional<internal::OptionData>& Interface::LogFileOption() const
 {
     return data_.logFileOption_;
 }
 
-const boost::optional<internal::OptionData>& Interface::LogLevelOption() const
+const std::optional<internal::OptionData>& Interface::LogLevelOption() const
 {
     return data_.logLevelOption_;
 }
 
-const boost::optional<internal::OptionData>& Interface::NumThreadsOption() const
+const std::optional<internal::OptionData>& Interface::NumThreadsOption() const
 {
     return data_.numThreadsOption_;
 }
@@ -177,7 +186,7 @@ Results Interface::MakeDefaultResults() const
     Results results;
     const auto options = Options();
     for (const auto& opt : options) {
-        if (opt.defaultValue.is_initialized()) {
+        if (opt.defaultValue) {
             results.AddDefaultOption(opt);
         }
     }
@@ -210,21 +219,20 @@ std::vector<OptionData> Interface::Options() const
     // add builtins
     result.push_back(data_.helpOption_);
     result.push_back(data_.versionOption_);
+    result.push_back(data_.alarmsOption_);
     result.push_back(data_.exceptionPassthroughOption_);
+    result.push_back(data_.showAllHelpOption_);
     if (data_.numThreadsOption_) {
-        result.push_back(data_.numThreadsOption_.get());
+        result.push_back(*data_.numThreadsOption_);
     }
     if (data_.logLevelOption_) {
-        result.push_back(data_.logLevelOption_.get());
+        result.push_back(*data_.logLevelOption_);
     }
     if (data_.logFileOption_) {
-        result.push_back(data_.logFileOption_.get());
+        result.push_back(*data_.logFileOption_);
     }
     if (data_.verboseOption_) {
-        result.push_back(data_.verboseOption_.get());
-    }
-    if (data_.alarmsOption_) {
-        result.push_back(data_.alarmsOption_.get());
+        result.push_back(*data_.verboseOption_);
     }
 
     return result;
@@ -245,7 +253,12 @@ Interface& Interface::RegisterVersionPrinter(VersionPrinterCallback printer)
     return *this;
 }
 
-const boost::optional<internal::OptionData>& Interface::VerboseOption() const
+const internal::OptionData& Interface::ShowAllHelpOption() const
+{
+    return data_.showAllHelpOption_;
+}
+
+const std::optional<internal::OptionData>& Interface::VerboseOption() const
 {
     return data_.verboseOption_;
 }

@@ -2,6 +2,25 @@
 
 ## Active
 
+## [2.0.0] - TBD
+
+### Changed
+ - C++20 is now a *hard* minimum.
+
+## [1.9.5] - 2021-12-07
+
+### Added
+ - Heteroduplex finder algorithm
+ - Fisher's exact test
+
+## [1.9.4] - 2021-12-06
+
+### Added
+ - "--all-help" and "--show-all-help" to CLI, to include hidden options in help output
+
+### Changed
+ - Update JSON impl to 3.10.4
+
 ## [1.9.3] - 2021-09-21
 
 ### Fixed

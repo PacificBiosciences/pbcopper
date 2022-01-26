@@ -1,8 +1,13 @@
 pbcopper_test_cpp_sources = files([
+
+  # algorithm
+  'src/algorithm/test_Heteroduplex.cpp',
+
   # align
   'src/align/test_Alignment.cpp',
   'src/align/test_BandedChainAlign.cpp',
   'src/align/test_EdlibAlign.cpp',
+  'src/align/test_GlobalLocalAlignment.cpp',
   'src/align/test_Seeds.cpp',
 
   #cli2
@@ -47,6 +52,7 @@ pbcopper_test_cpp_sources = files([
 
   # math
   'src/math/test_ConfusionMatrix.cpp',
+  'src/math/test_FishersExact.cpp',
 
   # parallel
   'src/parallel/test_WorkQueue.cpp',
@@ -128,18 +134,18 @@ test(
   pbcopper_clang_formatter,
   args : [
     '--all'],
-  workdir : meson.source_root())
+  workdir : meson.project_source_root())
 
 test(
   'pbcopper EOF check',
   pbcopper_eof_check,
-  workdir : meson.source_root())
+  workdir : meson.project_source_root())
 
 test(
   'pbcopper gtest unittests',
   pbcopper_test,
   args : [
-    '--gtest_output=xml:' + join_paths(meson.build_root(), 'pbcopper-gtest-unittests.xml')],
+    '--gtest_output=xml:' + join_paths(meson.project_build_root(), 'pbcopper-gtest-unittests.xml')],
   env : [
     'ARGS=-V',
     'VERBOSE=1'],

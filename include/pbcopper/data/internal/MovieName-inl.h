@@ -1,22 +1,24 @@
 #ifndef PBCOPPER_DATA_MOVIENAME_INL_H
 #define PBCOPPER_DATA_MOVIENAME_INL_H
 
-#include <cassert>
+#include <pbcopper/PbcopperConfig.h>
+
+#include <pbcopper/data/MovieName.h>
+#include <pbcopper/utility/StringUtils.h>
 
 #include <istream>
 #include <ostream>
 #include <stdexcept>
 
-#include <pbcopper/data/MovieName.h>
-#include <pbcopper/utility/StringUtils.h>
+#include <cassert>
 
 namespace PacBio {
 namespace Data {
 
 struct MovieName::PartsCache
 {
-    boost::string_ref instrumentName_;
-    boost::string_ref runStartTime_;
+    std::string_view instrumentName_;
+    std::string_view runStartTime_;
 };
 
 // NOTE: We're not going to re-calculate cache in copies until actually needed.
@@ -45,7 +47,7 @@ inline MovieName& MovieName::operator=(MovieName&&) noexcept(
 
 inline MovieName::~MovieName() = default;
 
-inline boost::string_ref MovieName::InstrumentName() const
+inline std::string_view MovieName::InstrumentName() const
 {
     if (!partsCache_) {
         UpdatePartsCache();
@@ -54,7 +56,7 @@ inline boost::string_ref MovieName::InstrumentName() const
     return partsCache_->instrumentName_;
 }
 
-inline boost::string_ref MovieName::RunStartTime() const
+inline std::string_view MovieName::RunStartTime() const
 {
     if (!partsCache_) {
         UpdatePartsCache();

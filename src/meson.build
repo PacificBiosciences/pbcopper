@@ -6,6 +6,11 @@ pbcopper_cpp_sources = files([
 
   'LibraryInfo.cpp',
 
+  # -----------
+  # algorithm
+  # -----------
+  'algorithm/Heteroduplex.cpp',
+
   # -------
   # align
   # -------
@@ -16,6 +21,7 @@ pbcopper_cpp_sources = files([
   'align/ChainSeedsConfig.cpp',
   'align/EdlibAlign.cpp',
   'align/FindSeeds.cpp',
+  'align/GlobalLocalAlignment.cpp',
   'align/LinearAlignment.cpp',
   'align/LocalAlignment.cpp',
   'align/PairwiseAlignment.cpp',
@@ -84,6 +90,11 @@ pbcopper_cpp_sources = files([
   'logging/LogMessage.cpp',
 
   # ---------
+  # math
+  # --------- 
+  'math/FishersExact.cpp',
+
+  # ---------
   # parallel
   # ---------
   'parallel/FireAndForget.cpp',
@@ -125,6 +136,7 @@ pbcopper_cpp_sources = files([
   # -------------
   'third-party/base64/base64.cpp',
   'third-party/edlib/edlib.cpp',
+  'third-party/htslib/kfunc.c',
   'third-party/ksw2/kalloc.c',
   'third-party/ksw2/ksw2_simde.c',
   'third-party/sparc/sparc.cpp',

@@ -3,14 +3,14 @@
 
 #include <pbcopper/PbcopperConfig.h>
 
-#include <cstddef>
+#include <pbcopper/poa/PoaGraph.h>
 
 #include <map>
 #include <string>
 #include <utility>
 #include <vector>
 
-#include <pbcopper/poa/PoaGraph.h>
+#include <cstddef>
 
 namespace PacBio {
 namespace Poa {

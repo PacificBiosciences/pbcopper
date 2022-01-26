@@ -3,13 +3,13 @@
 
 #include <pbcopper/PbcopperConfig.h>
 
-#include <iosfwd>
-
 #include <pbcopper/data/Position.h>
 
 #define BOOST_ICL_USE_STATIC_BOUNDED_INTERVALS
 #include <boost/icl/discrete_interval.hpp>
 #include <boost/icl/interval_traits.hpp>
+
+#include <iosfwd>
 
 namespace PacBio {
 namespace Data {
@@ -32,16 +32,16 @@ public:
     Interval() = default;
 
     /// \brief Creates a 'singleton' interval [val,val+1)
-    Interval(const Position val);
+    Interval(Position val);
 
     /// \brief Creates an interval from [start, end) */
-    Interval(const Position start, const Position end);
+    Interval(Position start, Position end);
 
     /// \brief Creates an interval from a string "start-end" */
     static Interval FromString(const std::string& str);
 
     /// \brief Reset Interval */
-    void Reset(const Position start, const Position end);
+    void Reset(Position start, Position end);
 
     /// \brief Reset Interval */
     void Reset(const Interval& other);

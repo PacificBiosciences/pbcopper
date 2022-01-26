@@ -3,13 +3,13 @@
 
 #include <pbcopper/PbcopperConfig.h>
 
-#include <memory>
-#include <string>
-#include <vector>
-
 #include <pbcopper/data/Interval.h>
 #include <pbcopper/poa/PoaConsensus.h>
 #include <pbcopper/poa/RangeFinder.h>
+
+#include <memory>
+#include <string>
+#include <vector>
 
 namespace PacBio {
 

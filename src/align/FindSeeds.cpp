@@ -8,7 +8,7 @@ namespace PacBio {
 namespace Align {
 
 std::map<size_t, Seeds> FindSeeds(const PacBio::QGram::Index& index, const std::string& seq,
-                                  const boost::optional<size_t> qIdx, const bool filterHomopolymers)
+                                  const std::optional<size_t> qIdx, const bool filterHomopolymers)
 {
     std::map<size_t, Seeds> seeds;
 
@@ -35,7 +35,7 @@ std::map<size_t, Seeds> FindSeeds(const PacBio::QGram::Index& index, const std::
 }
 
 std::map<size_t, Seeds> FindSeeds(const PacBio::QGram::Index& index, const std::string& seq,
-                                  const boost::optional<size_t> qIdx)
+                                  const std::optional<size_t> qIdx)
 {
     return FindSeeds(index, seq, qIdx, Default::FilterHomopolymers);
 }
@@ -43,12 +43,12 @@ std::map<size_t, Seeds> FindSeeds(const PacBio::QGram::Index& index, const std::
 std::map<size_t, Seeds> FindSeeds(const PacBio::QGram::Index& index, const std::string& seq,
                                   const bool filterHomopolymers)
 {
-    return FindSeeds(index, seq, boost::none, filterHomopolymers);
+    return FindSeeds(index, seq, std::nullopt, filterHomopolymers);
 }
 
 std::map<size_t, Seeds> FindSeeds(const PacBio::QGram::Index& index, const std::string& seq)
 {
-    return FindSeeds(index, seq, boost::none, Default::FilterHomopolymers);
+    return FindSeeds(index, seq, std::nullopt, Default::FilterHomopolymers);
 }
 
 Seeds FindSeeds(const size_t qGramSize, const std::string& seq1, const std::string& seq2,

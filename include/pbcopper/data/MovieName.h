@@ -6,9 +6,8 @@
 #include <iosfwd>
 #include <memory>
 #include <string>
+#include <string_view>
 #include <type_traits>
-
-#include <boost/utility/string_ref.hpp>
 
 namespace PacBio {
 namespace Data {
@@ -41,8 +40,8 @@ public:
     /// \name Name Parts
     /// \{
 
-    boost::string_ref InstrumentName() const;
-    boost::string_ref RunStartTime() const;
+    std::string_view InstrumentName() const;
+    std::string_view RunStartTime() const;
 
     /// \}
 

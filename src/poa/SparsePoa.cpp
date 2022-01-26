@@ -1,13 +1,5 @@
 #include <pbcopper/poa/SparsePoa.h>
 
-#include <cstddef>
-
-#include <algorithm>
-#include <iostream>
-#include <string>
-#include <utility>
-#include <vector>
-
 #include <pbcopper/align/AlignConfig.h>
 #include <pbcopper/align/ChainSeeds.h>
 #include <pbcopper/align/ChainSeedsConfig.h>
@@ -18,6 +10,14 @@
 #include <pbcopper/logging/Logging.h>
 #include <pbcopper/poa/PoaGraph.h>
 #include <pbcopper/utility/SequenceUtils.h>
+
+#include <algorithm>
+#include <iostream>
+#include <string>
+#include <utility>
+#include <vector>
+
+#include <cstddef>
 
 namespace PacBio {
 namespace Poa {
@@ -198,14 +198,12 @@ SparsePoa::ReadKey SparsePoa::OrientAndAddRead(const std::string& readSequence,
         readPaths_.push_back(outputPath);
         reverseComplemented_.push_back(false);
         key = graph_->NumReads() - 1;
-        std::cerr << "First\n";
     } else {
         std::unique_ptr<Poa::PoaAlignmentMatrix> c1{
             graph_->TryAddRead(readSequence, alnOptions.alignConfig, rangeFinder_.get())};
         std::unique_ptr<Poa::PoaAlignmentMatrix> c2{graph_->TryAddRead(
             TEST::ReverseComplement(readSequence), alnOptions.alignConfig, rangeFinder_.get())};
 
-        std::cerr << c1->Score() << ' ' << c2->Score() << '\n';
         if (c1->Score() >= c2->Score() && c1->Score() >= alnOptions.minScoreToAdd) {
             graph_->CommitAdd(c1.get(), &outputPath);
             readPaths_.push_back(outputPath);

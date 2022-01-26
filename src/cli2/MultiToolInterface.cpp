@@ -1,12 +1,13 @@
 #include <pbcopper/cli2/MultiToolInterface.h>
 
-#include <cassert>
-#include <type_traits>
-#include <utility>
-
 #include <pbcopper/cli2/internal/BuiltinOptions.h>
 #include <pbcopper/cli2/internal/InterfaceData.h>
 #include <pbcopper/cli2/internal/OptionTranslator.h>
+
+#include <type_traits>
+#include <utility>
+
+#include <cassert>
 
 using OptionTranslator = PacBio::CLI_v2::internal::OptionTranslator;
 
@@ -15,9 +16,12 @@ namespace CLI_v2 {
 
 MultiToolInterface::MultiToolInterface(std::string name, std::string description,
                                        std::string version)
-    : data_{std::move(name), std::move(description), std::move(version),
+    : data_{std::move(name),
+            std::move(description),
+            std::move(version),
             OptionTranslator::Translate(Builtin::Help),
-            OptionTranslator::Translate(Builtin::Version)}
+            OptionTranslator::Translate(Builtin::Version),
+            OptionTranslator::Translate(Builtin::ShowAllHelp)}
 {
 }
 
@@ -25,7 +29,7 @@ MultiToolInterface& MultiToolInterface::AddTool(Tool tool)
 {
     // ensure new subtools use the multi-tool's config
     if (data_.logConfig_) {
-        tool.interface.LogConfig(data_.logConfig_.get());
+        tool.interface.LogConfig(*data_.logConfig_);
     }
     data_.tools_.emplace_back(std::move(tool));
     return *this;
@@ -66,7 +70,7 @@ MultiToolInterface& MultiToolInterface::HelpFooter(std::string footer)
     return *this;
 }
 
-const boost::optional<Logging::LogConfig>& MultiToolInterface::LogConfig() const
+const std::optional<Logging::LogConfig>& MultiToolInterface::LogConfig() const
 {
     return data_.logConfig_;
 }
@@ -90,6 +94,11 @@ MultiToolInterface& MultiToolInterface::RegisterVersionPrinter(
 {
     data_.versionPrinter_ = printer;
     return *this;
+}
+
+const internal::OptionData& MultiToolInterface::ShowAllHelpOption() const
+{
+    return data_.showAllHelpOption_;
 }
 
 const Tool& MultiToolInterface::ToolFor(const std::string& toolName) const

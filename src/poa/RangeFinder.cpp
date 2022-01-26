@@ -1,19 +1,19 @@
 #include <pbcopper/poa/RangeFinder.h>
 
-#include <cstddef>
+#include "PoaGraphImpl.h"
+
+#include <boost/foreach.hpp>
+#include <boost/graph/topological_sort.hpp>
+#include <boost/range/adaptor/reversed.hpp>
 
 #include <algorithm>
 #include <map>
+#include <optional>
 #include <string>
 #include <utility>
 #include <vector>
 
-#include <boost/foreach.hpp>
-#include <boost/graph/topological_sort.hpp>
-#include <boost/optional.hpp>
-#include <boost/range/adaptor/reversed.hpp>
-
-#include "PoaGraphImpl.h"
+#include <cstddef>
 
 #define WIDTH 30
 #define DEBUG_RANGE_FINDER 0
@@ -121,13 +121,13 @@ void SdpRangeFinder::InitRangeFinder(const PoaGraphImpl& poaGraph,
     std::cout << "RawAnchors length: " << anchors.size() << std::endl;
 #endif
 
-    std::map<VD, boost::optional<IntervalPair>> directRanges;
+    std::map<VD, std::optional<IntervalPair>> directRanges;
     std::map<VD, IntervalPair> fwdMarks, revMarks;
 
     std::vector<VD> sortedVertices(num_vertices(poaGraph.g_));
     topological_sort(poaGraph.g_, sortedVertices.rbegin());
     for (const VD v : sortedVertices) {
-        directRanges[v] = boost::none;
+        directRanges[v] = std::nullopt;
     }
 
     // Find the "direct ranges" implied by the anchors between the
@@ -143,7 +143,7 @@ void SdpRangeFinder::InitRangeFinder(const PoaGraphImpl& poaGraph,
             directRanges[v] = IntervalPair(std::max(int(anchor->second) - WIDTH, 0),
                                            std::min(int(anchor->second) + WIDTH, readLength));
         } else {
-            directRanges[v] = boost::none;
+            directRanges[v] = std::nullopt;
         }
     }
 
@@ -153,9 +153,9 @@ void SdpRangeFinder::InitRangeFinder(const PoaGraphImpl& poaGraph,
     for (const VD v : sortedVertices) {
         /* Vertex vExt = */ poaGraph.externalize(v);  // DEBUGGING
 
-        boost::optional<IntervalPair> directRange = directRanges.at(v);
+        std::optional<IntervalPair> directRange = directRanges.at(v);
         if (directRange) {
-            fwdMarks[v] = directRange.get();
+            fwdMarks[v] = *directRange;
         } else {
             std::vector<IntervalPair> predRangesStepped;
             for (const ED& e : inEdges(v, poaGraph.g_)) {
@@ -173,9 +173,9 @@ void SdpRangeFinder::InitRangeFinder(const PoaGraphImpl& poaGraph,
     for (const VD v : boost::adaptors::reverse(sortedVertices)) {
         /* Vertex vExt = */ poaGraph.externalize(v);  // DEBUGGING
 
-        boost::optional<IntervalPair> directRange = directRanges.at(v);
+        std::optional<IntervalPair> directRange = directRanges.at(v);
         if (directRange) {
-            revMarks[v] = directRange.get();
+            revMarks[v] = *directRange;
         } else {
             std::vector<IntervalPair> succRangesStepped;
             BOOST_FOREACH (const ED& e, out_edges(v, poaGraph.g_)) {

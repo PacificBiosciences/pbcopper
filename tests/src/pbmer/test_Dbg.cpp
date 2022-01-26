@@ -579,7 +579,6 @@ TEST(Pbmer_Dbg, SpurRemoval_no_spur)
     dg.AddKmers(m2, 2);
 
     dg.BuildEdges();
-    dg.DumpNodes();
 
     auto spurCount = dg.RemoveSpurs(5);
 

@@ -9,15 +9,15 @@
 
 #include <pbcopper/PbcopperConfig.h>
 
-#include <cstddef>
-#include <cstdint>
+#include <pbcopper/pbmer/DnaBit.h>
+
+#include <boost/dynamic_bitset.hpp>
 
 #include <iterator>
 #include <unordered_set>
 
-#include <boost/dynamic_bitset.hpp>
-
-#include <pbcopper/pbmer/DnaBit.h>
+#include <cstddef>
+#include <cstdint>
 
 namespace PacBio {
 namespace Pbmer {

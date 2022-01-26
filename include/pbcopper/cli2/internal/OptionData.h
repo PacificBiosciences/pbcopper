@@ -3,13 +3,12 @@
 
 #include <pbcopper/PbcopperConfig.h>
 
+#include <pbcopper/cli2/OptionValue.h>
+
 #include <algorithm>
+#include <optional>
 #include <string>
 #include <vector>
-
-#include <boost/optional.hpp>
-
-#include <pbcopper/cli2/OptionValue.h>
 
 namespace PacBio {
 namespace CLI_v2 {
@@ -25,7 +24,7 @@ struct OptionData
     std::string description;
 
     OptionValueType type = OptionValueType::BOOL;
-    boost::optional<OptionValue> defaultValue;
+    std::optional<OptionValue> defaultValue;
 
     bool isHidden = false;
     bool isDefaultValueHidden = false;

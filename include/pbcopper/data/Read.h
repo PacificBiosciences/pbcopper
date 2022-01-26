@@ -1,15 +1,7 @@
 #ifndef PBCOPPER_DATA_READ_H
 #define PBCOPPER_DATA_READ_H
 
-#include <cstddef>
-#include <cstdint>
-
-#include <iosfwd>
-#include <string>
-#include <tuple>
-#include <vector>
-
-#include <boost/optional.hpp>
+#include <pbcopper/PbcopperConfig.h>
 
 #include <pbcopper/data/Accuracy.h>
 #include <pbcopper/data/Frames.h>
@@ -19,13 +11,21 @@
 #include <pbcopper/data/ReadId.h>
 #include <pbcopper/data/SNR.h>
 
+#include <iosfwd>
+#include <string>
+#include <tuple>
+#include <vector>
+
+#include <cstddef>
+#include <cstdint>
+
 namespace PacBio {
 namespace Data {
 
 /// A Read contains the name, sequence, covariates, SNR, and associated model.
 struct Read
 {
-    Read(Data::ReadId id, std::string seq, boost::optional<Frames> pw, boost::optional<Frames> ipd,
+    Read(Data::ReadId id, std::string seq, std::optional<Frames> pw, std::optional<Frames> ipd,
          LocalContextFlags flags, Accuracy readAccuracy, SNR snr, std::string model);
     Read(const std::string& name, std::string seq, QualityValues qualities, SNR snr);
     Read(const std::string& name, std::string seq, QualityValues qualities, SNR snr,
@@ -37,9 +37,9 @@ struct Read
 
     // base-level vectors
     std::string Seq;
-    boost::optional<Frames> PulseWidth;
+    std::optional<Frames> PulseWidth;
     QualityValues Qualities;
-    boost::optional<Frames> IPD;
+    std::optional<Frames> IPD;
 
     Position QueryStart = UnmappedPosition;
     Position QueryEnd = UnmappedPosition;
@@ -53,7 +53,7 @@ struct Read
     int32_t Length() const;
     std::string FullName() const;
 
-    Read ClipTo(const int32_t begin, const int32_t end) const;
+    Read ClipTo(int32_t begin, int32_t end) const;
 };
 
 std::ostream& operator<<(std::ostream& os, const Read& read);

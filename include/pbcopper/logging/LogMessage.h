@@ -1,11 +1,13 @@
 #ifndef PBCOPPER_LOGGING_LOGMESSAGE_H
 #define PBCOPPER_LOGGING_LOGMESSAGE_H
 
+#include <pbcopper/PbcopperConfig.h>
+
+#include <pbcopper/logging/LogLevel.h>
+
 #include <memory>
 #include <sstream>
 #include <utility>
-
-#include <pbcopper/logging/LogLevel.h>
 
 namespace PacBio {
 namespace Logging {
@@ -17,7 +19,7 @@ using LogLevelStream = std::pair<LogLevel, std::ostringstream>;
 class LogMessage
 {
 public:
-    LogMessage(const char* file, const char* function, unsigned int line, const LogLevel level,
+    LogMessage(const char* file, const char* function, unsigned int line, LogLevel level,
                Logger& logger);
     ~LogMessage();
 

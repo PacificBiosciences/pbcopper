@@ -3,11 +3,11 @@
 
 #include <pbcopper/PbcopperConfig.h>
 
-#include <functional>
-#include <string>
-
 #include <pbcopper/logging/LogLevel.h>
 #include <pbcopper/utility/Stopwatch.h>
+
+#include <functional>
+#include <string>
 
 namespace PacBio {
 namespace Utility {

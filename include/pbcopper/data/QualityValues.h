@@ -3,13 +3,13 @@
 
 #include <pbcopper/PbcopperConfig.h>
 
-#include <cstdint>
+#include <pbcopper/data/QualityValue.h>
 
 #include <iosfwd>
 #include <string>
 #include <vector>
 
-#include <pbcopper/data/QualityValue.h>
+#include <cstdint>
 
 namespace PacBio {
 namespace Data {
@@ -59,8 +59,8 @@ public:
     /// \param[in] first    input iterator, whose element is a numeric quality
     /// \param[in] last     input iterator, whose element is a numeric quality
     ///
-    QualityValues(const std::vector<uint8_t>::const_iterator first,
-                  const std::vector<uint8_t>::const_iterator last);
+    QualityValues(std::vector<uint8_t>::const_iterator first,
+                  std::vector<uint8_t>::const_iterator last);
 
     /// \brief Creates a QualityValues object from the contents of the range:
     ///        [first, last)
@@ -68,8 +68,7 @@ public:
     /// \param[in] first    input iterator, whose element is a QualityValue
     /// \param[in] last     input iterator, whose element is a QualityValue
     ///
-    QualityValues(const QualityValues::const_iterator first,
-                  const QualityValues::const_iterator last);
+    QualityValues(QualityValues::const_iterator first, QualityValues::const_iterator last);
 
     QualityValues() = default;
 

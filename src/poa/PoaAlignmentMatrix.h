@@ -8,16 +8,15 @@
 #include <pbcopper/PbcopperConfig.h>
 
 #include <pbcopper/poa/PoaGraph.h>
-
-#include <cfloat>
-#include <cstddef>
-
-#include <memory>
+#include "BoostGraph.h"
+#include "VectorL.h"
 
 #include <boost/utility.hpp>
 
-#include "BoostGraph.h"
-#include "VectorL.h"
+#include <memory>
+
+#include <cfloat>
+#include <cstddef>
 
 namespace PacBio {
 namespace Poa {
