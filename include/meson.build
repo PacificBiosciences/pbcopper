@@ -87,6 +87,16 @@ if not meson.is_subproject()
       'pbcopper/cli2/internal/VersionPrinter.h',]),
     subdir : 'pbcopper/cli2/internal')
 
+  # pbcopper/container
+  install_headers(
+    files([
+      'pbcopper/container/BitContainer.h',
+      'pbcopper/container/BitConversion.h',
+      'pbcopper/container/BitmaskContainer.h',
+      'pbcopper/container/DNAString.h',
+    ]),
+    subdir : 'pbcopper/container')
+
   # pbcopper/dagcon
   install_headers(
     files([
