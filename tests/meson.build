@@ -10,7 +10,13 @@ pbcopper_test_cpp_sources = files([
   'src/align/test_GlobalLocalAlignment.cpp',
   'src/align/test_Seeds.cpp',
 
-  #cli2
+  # container
+  'src/container/test_BitContainer.cpp',
+  'src/container/test_BitConversion.cpp',
+  'src/container/test_BitmaskContainer.cpp',
+  'src/container/test_DNAString.cpp',
+
+  # cli2
   'src/cli2/test_CLI.cpp',
   'src/cli2/test_CommandLineParser.cpp',
   'src/cli2/test_InterfaceHelpPrinter.cpp',
