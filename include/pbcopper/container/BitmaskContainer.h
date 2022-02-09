@@ -231,7 +231,7 @@ public:
     constexpr void Reverse() noexcept { ReverseImpl<0, Capacity() - 1>(); }
 
 public:
-    constexpr UnderlyingType RawData() const noexcept { return data_; }
+    PB_CUDA_HOST PB_CUDA_DEVICE constexpr UnderlyingType RawData() const noexcept { return data_; }
 
 public:
     constexpr bool operator==(const BitmaskContainer& rhs) const noexcept
