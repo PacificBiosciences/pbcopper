@@ -76,7 +76,11 @@ public:
 public:
     constexpr BitmaskContainer() noexcept = default;
 
-    constexpr explicit BitmaskContainer(const UnderlyingType val) noexcept : data_{val} {}
+    PB_CUDA_HOST PB_CUDA_DEVICE constexpr explicit BitmaskContainer(
+        const UnderlyingType val) noexcept
+        : data_{val}
+    {
+    }
 
 public:
     template <typename Callable, typename T>
@@ -100,7 +104,8 @@ public:
     }
 
     template <typename... Args>
-    constexpr static BitmaskContainer MakeFromArray(Args&&... args) noexcept
+    PB_CUDA_HOST PB_CUDA_DEVICE constexpr static BitmaskContainer MakeFromArray(
+        Args&&... args) noexcept
     {
         static_assert(sizeof...(Args) <= Capacity());
 
@@ -124,7 +129,8 @@ public:
     }
 
 public:
-    constexpr void Set(const int32_t idx, const ComputationType val) noexcept
+    PB_CUDA_HOST PB_CUDA_DEVICE constexpr void Set(const int32_t idx,
+                                                   const ComputationType val) noexcept
     {
         assert(idx >= 0);
         assert(idx < Capacity());

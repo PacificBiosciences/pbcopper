@@ -34,7 +34,7 @@ namespace Container {
 //   5:   c4 e2 43 f7 c0          shrx   eax,eax,edi
 //   a:   83 e0 03                and    eax,0x3
 //   d:   c3                      ret
-constexpr int32_t ConvertAsciiTo2bit(const char base) noexcept
+PB_CUDA_HOST PB_CUDA_DEVICE constexpr int32_t ConvertAsciiTo2bit(const char base) noexcept
 {
     assert((base == 'A') || (base == 'C') || (base == 'G') || (base == 'T'));
 
@@ -54,7 +54,7 @@ constexpr int32_t ConvertAsciiTo2bit(const char base) noexcept
 //   3:   b8 41 43 47 54          mov    eax,0x54474341
 //   8:   c4 e2 43 f7 c0          shrx   eax,eax,edi
 //   d:   c3                      ret
-constexpr char Convert2bitToAscii(const int32_t val) noexcept
+PB_CUDA_HOST PB_CUDA_DEVICE constexpr char Convert2bitToAscii(const int32_t val) noexcept
 {
     assert(val >= 0);
     assert(val < 4);
