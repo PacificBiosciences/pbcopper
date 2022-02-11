@@ -57,6 +57,11 @@ public:
         return *std::min_element(std::cbegin(data_), std::cend(data_));
     }
 
+    constexpr float Maximum() const noexcept
+    {
+        return *std::max_element(std::cbegin(data_), std::cend(data_));
+    }
+
 public:
     constexpr bool operator==(const SNR& rhs) const noexcept
     {

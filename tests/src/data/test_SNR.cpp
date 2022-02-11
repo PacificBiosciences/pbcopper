@@ -17,6 +17,7 @@ TEST(Data_SNR, Basic)
     EXPECT_EQ(snr[3], 20.25);
 
     EXPECT_EQ(snr.Minimum(), 0.25);
+    EXPECT_EQ(snr.Maximum(), 20.25);
 
     const std::vector<float> snrVec{snr};
     EXPECT_EQ(snrVec[0], 0.25);
@@ -39,6 +40,7 @@ TEST(Data_SNR, FromStdVector)
     EXPECT_EQ(snr[3], 20.25);
 
     EXPECT_EQ(snr.Minimum(), 0.25);
+    EXPECT_EQ(snr.Maximum(), 20.25);
 
     const std::vector<float> snrVec{snr};
     EXPECT_EQ(snrVec[0], 0.25);
@@ -61,6 +63,7 @@ TEST(Data_SNR, FromCArray)
     EXPECT_EQ(snr[3], 20.25);
 
     EXPECT_EQ(snr.Minimum(), 0.25);
+    EXPECT_EQ(snr.Maximum(), 20.25);
 
     const std::vector<float> snrVec{snr};
     EXPECT_EQ(snrVec[0], 0.25);
