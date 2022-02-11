@@ -1,76 +1,29 @@
 #include <pbcopper/data/SNR.h>
 
 #include <boost/algorithm/clamp.hpp>
-#include <boost/assert.hpp>
 
-#include <algorithm>
 #include <ostream>
-#include <string>
 #include <type_traits>
-
-#include <cassert>
-#include <cstring>
 
 namespace PacBio {
 namespace Data {
 
-SNR::SNR(const float a, const float c, const float g, const float t) noexcept
-    : A{a}, C{c}, G{g}, T{t}
-{
-}
+static_assert(std::is_trivially_copyable_v<SNR>, "SNR is not a trivially copyable type");
 
-SNR::SNR(const std::vector<float>& snrs) noexcept
-{
-    BOOST_ASSERT_MSG(snrs.size() == 4,
-                     "[pbcopper] SNR ERROR: initialized with a vector of not exactly 4 elements");
-
-    static_assert(std::is_trivially_copyable<SNR>::value, "SNR is not a trivially copyable type");
-    std::memcpy(this, snrs.data(), sizeof(float) * 4);
-}
-
-SNR::SNR(const float (&snrs)[4]) noexcept
-{
-    static_assert(std::is_trivially_copyable<SNR>::value, "SNR is not a trivially copyable type");
-    std::memcpy(this, &snrs, sizeof(float) * 4);
-}
-
-SNR::operator std::vector<float>() const { return {A, C, G, T}; }
-
-const float& SNR::operator[](const int i) const noexcept
-{
-    BOOST_ASSERT_MSG((0 <= i) && (i < 4), "[pbcopper] SNR ERROR: index is out of bounds [0, 4)");
-
-    // TODO(dseifert)
-    // convert this to a proper std::array or C array
-    return *(reinterpret_cast<const float*>(this) + i);
-}
-
-float& SNR::operator[](const int i) noexcept
-{
-    // casting away const when underlying object is non-const, is well-defined
-    // Effective C++ (Third Edition) - Item 3
-    return const_cast<float&>(static_cast<const SNR&>(*this)[i]);
-}
-
-bool SNR::operator==(const SNR& other) const noexcept
-{
-    return std::tie(A, C, G, T) == std::tie(other.A, other.C, other.G, other.T);
-}
-
-bool SNR::operator!=(const SNR& other) const noexcept { return !(*this == other); }
-
-float SNR::Minimum() const noexcept { return std::min(std::min(A, C), std::min(G, T)); }
+SNR::operator std::vector<float>() const { return {data_[0], data_[1], data_[2], data_[3]}; }
 
 SNR ClampSNR(const SNR& val, const SNR& lo, const SNR& hi) noexcept
 {
-    return SNR{
-        boost::algorithm::clamp(val.A, lo.A, hi.A), boost::algorithm::clamp(val.C, lo.C, hi.C),
-        boost::algorithm::clamp(val.G, lo.G, hi.G), boost::algorithm::clamp(val.T, lo.T, hi.T)};
+    return SNR{boost::algorithm::clamp(val[0], lo[0], hi[0]),
+               boost::algorithm::clamp(val[1], lo[1], hi[1]),
+               boost::algorithm::clamp(val[2], lo[2], hi[2]),
+               boost::algorithm::clamp(val[3], lo[3], hi[3])};
 }
 
 std::ostream& operator<<(std::ostream& os, const SNR& snr)
 {
-    return os << "SNR(A=" << snr.A << ", C=" << snr.C << ", G=" << snr.G << ", T=" << snr.T << ')';
+    return os << "SNR(A=" << snr[0] << ", C=" << snr[1] << ", G=" << snr[2] << ", T=" << snr[3]
+              << ')';
 }
 
 }  // namespace Data
