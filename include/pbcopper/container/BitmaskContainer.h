@@ -129,6 +129,8 @@ public:
     }
 
 public:
+    PB_CUDA_HOST PB_CUDA_DEVICE constexpr void Clear() noexcept { data_ = 0; }
+
     PB_CUDA_HOST PB_CUDA_DEVICE constexpr void Set(const int32_t idx,
                                                    const ComputationType val) noexcept
     {
