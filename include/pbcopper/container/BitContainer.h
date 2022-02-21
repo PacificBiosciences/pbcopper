@@ -85,6 +85,12 @@ public:
     }
 
 public:
+    constexpr void Clear() noexcept
+    {
+        Base::Clear();
+        size_ = 0;
+    }
+
     constexpr void Set(const int32_t idx, const ValueType val) noexcept
     {
         assert(idx < Size());
