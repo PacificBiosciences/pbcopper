@@ -8,6 +8,32 @@ using CigarOperationType = PacBio::Data::CigarOperationType;
 
 // clang-format off
 
+TEST(Data_CigarOperation, consumes_query)
+{
+    EXPECT_TRUE (ConsumesQuery(CigarOperationType::ALIGNMENT_MATCH));
+    EXPECT_TRUE (ConsumesQuery(CigarOperationType::INSERTION));
+    EXPECT_FALSE(ConsumesQuery(CigarOperationType::DELETION));
+    EXPECT_FALSE(ConsumesQuery(CigarOperationType::REFERENCE_SKIP));
+    EXPECT_TRUE (ConsumesQuery(CigarOperationType::SOFT_CLIP));
+    EXPECT_FALSE(ConsumesQuery(CigarOperationType::HARD_CLIP));
+    EXPECT_FALSE(ConsumesQuery(CigarOperationType::PADDING));
+    EXPECT_TRUE (ConsumesQuery(CigarOperationType::SEQUENCE_MATCH));
+    EXPECT_TRUE (ConsumesQuery(CigarOperationType::SEQUENCE_MISMATCH));
+}
+
+TEST(Data_CigarOperation, consumes_reference)
+{
+    EXPECT_TRUE (ConsumesReference(CigarOperationType::ALIGNMENT_MATCH));
+    EXPECT_FALSE(ConsumesReference(CigarOperationType::INSERTION));
+    EXPECT_TRUE (ConsumesReference(CigarOperationType::DELETION));
+    EXPECT_TRUE (ConsumesReference(CigarOperationType::REFERENCE_SKIP));
+    EXPECT_FALSE(ConsumesReference(CigarOperationType::SOFT_CLIP));
+    EXPECT_FALSE(ConsumesReference(CigarOperationType::HARD_CLIP));
+    EXPECT_FALSE(ConsumesReference(CigarOperationType::PADDING));
+    EXPECT_TRUE (ConsumesReference(CigarOperationType::SEQUENCE_MATCH));
+    EXPECT_TRUE (ConsumesReference(CigarOperationType::SEQUENCE_MISMATCH));
+}
+
 TEST(Data_CigarOperation, can_convert_enum_type_to_char)
 {
     EXPECT_EQ('M', CigarOperation::TypeToChar(CigarOperationType::ALIGNMENT_MATCH));
@@ -19,6 +45,7 @@ TEST(Data_CigarOperation, can_convert_enum_type_to_char)
     EXPECT_EQ('P', CigarOperation::TypeToChar(CigarOperationType::PADDING));
     EXPECT_EQ('=', CigarOperation::TypeToChar(CigarOperationType::SEQUENCE_MATCH));
     EXPECT_EQ('X', CigarOperation::TypeToChar(CigarOperationType::SEQUENCE_MISMATCH));
+    EXPECT_EQ('?', CigarOperation::TypeToChar(CigarOperationType::UNKNOWN_OP));
 }
 
 TEST(Data_CigarOperation, can_convert_char_to_enum_type)
@@ -32,6 +59,7 @@ TEST(Data_CigarOperation, can_convert_char_to_enum_type)
     EXPECT_EQ(CigarOperationType::PADDING,           CigarOperation::CharToType('P'));
     EXPECT_EQ(CigarOperationType::SEQUENCE_MATCH,    CigarOperation::CharToType('='));
     EXPECT_EQ(CigarOperationType::SEQUENCE_MISMATCH, CigarOperation::CharToType('X'));
+    EXPECT_EQ(CigarOperationType::UNKNOWN_OP,        CigarOperation::CharToType('?'));
 }
 
 TEST(Data_CigarOperation, setting_via_enum_type_yields_expected_char)
