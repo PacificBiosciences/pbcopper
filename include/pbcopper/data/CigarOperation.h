@@ -19,12 +19,11 @@ namespace Data {
 ///          consistency with htslib. However, as of PacBio BAM spec version
 ///          3.0b7, this CIGAR operation \b forbidden. Any attempt to read or
 ///          write a record containing this operation will trigger a
-///          std::runtime_error. SEQUENCE_MATCH('=) or SEQUENCE_MISMATCH('X')
+///          std::runtime_error. SEQUENCE_MATCH('=') or SEQUENCE_MISMATCH('X')
 ///          should be used instead.
 ///
 enum class CigarOperationType
 {
-    UNKNOWN_OP = -1,      ///< unknown/invalid CIGAR operator
     ALIGNMENT_MATCH = 0,  ///< alignment match (can be a sequence match or mismatch) [M]
     INSERTION,            ///< insertion to the reference [I]
     DELETION,             ///< deletion from the reference [D]
@@ -33,7 +32,8 @@ enum class CigarOperationType
     HARD_CLIP = 5,        ///< hard clipping (clipped sequences NOT present in SEQ) [H]
     PADDING,              ///< padding (silent deletion from padded reference) [P]
     SEQUENCE_MATCH,       ///< sequence match [=]
-    SEQUENCE_MISMATCH     ///< sequence mismatch [X]
+    SEQUENCE_MISMATCH,    ///< sequence mismatch [X]
+    UNKNOWN_OP = 15,      ///< unknown/invalid CIGAR operator
 };
 
 /// \brief The CigarOperation class represents a single CIGAR operation
@@ -58,7 +58,7 @@ public:
     ///
     /// \param[in] c SAM/BAM character code
     /// \returns CigarOperationType value
-    PB_CUDA_HOST PB_CUDA_DEVICE static CigarOperationType CharToType(const char c)
+    PB_CUDA_HOST PB_CUDA_DEVICE constexpr static CigarOperationType CharToType(const char c)
     {
         switch (c) {
             case 'S':
@@ -92,16 +92,17 @@ public:
 
     CigarOperation() = default;
 
-    PB_CUDA_HOST PB_CUDA_DEVICE CigarOperation(char c, uint32_t length)
+    PB_CUDA_HOST PB_CUDA_DEVICE constexpr CigarOperation(const char c, const uint32_t length)
         : CigarOperation{CigarOperation::CharToType(c), length}
     {
     }
 
-    PB_CUDA_HOST PB_CUDA_DEVICE CigarOperation(CigarOperationType op, uint32_t length)
-        : type_{op}, length_{length}
+    PB_CUDA_HOST PB_CUDA_DEVICE constexpr CigarOperation(const CigarOperationType op,
+                                                         const uint32_t length)
+        : data_{(length << 4) | static_cast<uint32_t>(op)}
     {
 #ifndef __CUDA_ARCH__  // host
-        if (AutoValidateCigar && (type_ == CigarOperationType::ALIGNMENT_MATCH)) {
+        if (AutoValidateCigar && (Type() == CigarOperationType::ALIGNMENT_MATCH)) {
             throw std::runtime_error{
                 "[pbcopper] CIGAR operation ERROR: 'M' is not allowed in PacBio BAM files. Use "
                 "'X/=' "
@@ -117,10 +118,13 @@ public:
     char Char() const;
 
     /// \returns operation length
-    PB_CUDA_HOST PB_CUDA_DEVICE uint32_t Length() const { return length_; }
+    PB_CUDA_HOST PB_CUDA_DEVICE constexpr uint32_t Length() const noexcept { return data_ >> 4; }
 
     /// \returns operation type as CigarOperationType enum value
-    PB_CUDA_HOST PB_CUDA_DEVICE CigarOperationType Type() const { return type_; }
+    PB_CUDA_HOST PB_CUDA_DEVICE constexpr CigarOperationType Type() const noexcept
+    {
+        return static_cast<CigarOperationType>(data_ & 0b1111U);
+    }
 
     /// \}
 
@@ -132,19 +136,30 @@ public:
     ///
     /// \param[in] opChar SAM/BAM character code
     /// \returns reference to this operation
-    CigarOperation& Char(char opChar);
+    constexpr CigarOperation& Char(const char opChar) noexcept
+    {
+        return Type(CigarOperation::CharToType(opChar));
+    }
 
     /// Sets this operation length.
     ///
     /// \param[in] length
     /// \returns reference to this operation
-    CigarOperation& Length(uint32_t length);
+    constexpr CigarOperation& Length(const uint32_t length) noexcept
+    {
+        data_ = (data_ & 0b1111U) | (length << 4);
+        return *this;
+    }
 
     /// Sets this operation type.
     ///
     /// \param[in] opType CigarOperationType value
     /// \returns reference to this operation
-    CigarOperation& Type(CigarOperationType opType);
+    constexpr CigarOperation& Type(const CigarOperationType opType) noexcept
+    {
+        data_ = (data_ & ~0b1111U) | static_cast<uint32_t>(opType);
+        return *this;
+    }
 
     /// \}
 
@@ -153,10 +168,13 @@ public:
     /// \{
 
     /// \returns true if both CIGAR operation type & length match
-    bool operator==(const CigarOperation& other) const noexcept;
+    constexpr bool operator==(const CigarOperation& rhs) const noexcept
+    {
+        return data_ == rhs.data_;
+    }
 
     /// \returns true if either CIGAR operation type or length differ
-    bool operator!=(const CigarOperation& other) const noexcept;
+    constexpr bool operator!=(const CigarOperation& rhs) const noexcept { return !(*this == rhs); }
 
     /// \}
 
@@ -164,13 +182,32 @@ private:
     static bool AutoValidateCigar;
 
 private:
-    CigarOperationType type_ = CigarOperationType::UNKNOWN_OP;
-    uint32_t length_ = 0;
+    // we use the same representation as the SAM/BAM spec
+    // 4 least significant bits: the operation
+    // 28 most significant bits: the length
+
+    uint32_t data_ = static_cast<uint32_t>(CigarOperationType::UNKNOWN_OP);
 };
 
-bool ConsumesQuery(CigarOperationType type);
+constexpr bool ConsumesQuery(const CigarOperationType type) noexcept
+{
+    //                               X=PHSNDIM
+    constexpr uint32_t lookupTable{0b110010011};
+    const auto val = static_cast<uint32_t>(type);
+    assert(val <= 8);
 
-bool ConsumesReference(CigarOperationType type);
+    return (lookupTable >> val) & 0b1U;
+}
+
+constexpr bool ConsumesReference(const CigarOperationType type) noexcept
+{
+    //                               X=PHSNDIM
+    constexpr uint32_t lookupTable{0b110001101};
+    const auto val = static_cast<uint32_t>(type);
+    assert(val <= 8);
+
+    return (lookupTable >> val) & 0b1U;
+}
 
 }  // namespace Data
 }  // namespace PacBio
