@@ -151,6 +151,10 @@ TEST(Container_BitContainer, Basic)
     bct.Insert(2, 0b01);
     EXPECT_EQ(bct.Size(), 4);
     EXPECT_EQ(bct.RawData(), 0b11'01'10'00);
+
+    bct.Clear();
+    EXPECT_EQ(bct.Size(), 0);
+    EXPECT_EQ(bct.RawData(), 0);
 }
 
 template <int32_t TotalBits, int32_t ElementBits>

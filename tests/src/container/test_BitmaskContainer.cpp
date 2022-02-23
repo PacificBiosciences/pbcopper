@@ -121,6 +121,9 @@ TEST(Container_BitmaskContainer, Basic)
 
     bmct.Insert(2, 0b01);
     EXPECT_EQ(bmct.RawData(), 0b00'01'10'00);
+
+    bmct.Clear();
+    EXPECT_EQ(bmct.RawData(), 0);
 }
 
 template <int32_t TotalBits, int32_t ElementBits>
