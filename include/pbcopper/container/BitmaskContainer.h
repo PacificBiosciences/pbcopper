@@ -21,17 +21,17 @@ namespace {
 template <int32_t TotalBits>
 constexpr auto BitsToType()
 {
-    if
-        constexpr(TotalBits == 8) { return uint8_t{}; }
-    else if
-        constexpr(TotalBits == 16) { return uint16_t{}; }
-    else if
-        constexpr(TotalBits == 32) { return uint32_t{}; }
-    else if
-        constexpr(TotalBits == 64) { return uint64_t{}; }
-    else if
-        constexpr(TotalBits == 128) { return __uint128_t{}; }
-    else {
+    if constexpr (TotalBits == 8) {
+        return uint8_t{};
+    } else if constexpr (TotalBits == 16) {
+        return uint16_t{};
+    } else if constexpr (TotalBits == 32) {
+        return uint32_t{};
+    } else if constexpr (TotalBits == 64) {
+        return uint64_t{};
+    } else if constexpr (TotalBits == 128) {
+        return __uint128_t{};
+    } else {
         throw std::logic_error{"invalid TotalBits argument"};
     }
 }
@@ -79,8 +79,7 @@ public:
     PB_CUDA_HOST PB_CUDA_DEVICE constexpr explicit BitmaskContainer(
         const UnderlyingType val) noexcept
         : data_{val}
-    {
-    }
+    {}
 
 public:
     template <typename Callable, typename T>
@@ -216,17 +215,14 @@ protected:
     template <int32_t round, int32_t capacity>
     constexpr void ReverseImpl() noexcept
     {
-        if
-            constexpr(capacity > 0)
-            {
-                constexpr ComputationType bitPattern = GenerateMovePattern(round);
-                constexpr int32_t bitsToShift = ElementBits * (1 << round);
+        if constexpr (capacity > 0) {
+            constexpr ComputationType bitPattern = GenerateMovePattern(round);
+            constexpr int32_t bitsToShift = ElementBits * (1 << round);
 
-                data_ =
-                    ((data_ & ~bitPattern) >> bitsToShift) | ((data_ & bitPattern) << bitsToShift);
+            data_ = ((data_ & ~bitPattern) >> bitsToShift) | ((data_ & bitPattern) << bitsToShift);
 
-                ReverseImpl<round + 1, capacity / 2>();
-            }
+            ReverseImpl<round + 1, capacity / 2>();
+        }
     }
 
 public:

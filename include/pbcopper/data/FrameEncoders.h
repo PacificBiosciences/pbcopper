@@ -53,8 +53,7 @@ class FrameEncoder
 public:
     template <typename T>
     FrameEncoder(T codec) : self_{std::make_unique<EncoderImpl<T>>(std::move(codec))}
-    {
-    }
+    {}
     FrameEncoder(const FrameEncoder& other) : self_{other.self_->Clone()} {}
     FrameEncoder(FrameEncoder&&) noexcept = default;
     FrameEncoder& operator=(const FrameEncoder& other)

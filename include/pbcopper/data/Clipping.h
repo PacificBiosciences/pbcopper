@@ -54,7 +54,7 @@ struct ClipResult
 ClipResult ClipToQuery(ClipToQueryConfig& config);
 ClipResult ClipToReference(ClipToReferenceConfig& config);
 
-}  // namespace BAM
+}  // namespace Data
 }  // namespace PacBio
 
 #endif  // PBCOPPER_DATA_CLIPPING_H

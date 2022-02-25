@@ -47,16 +47,14 @@ public:
         , Score(beginRow, endRow, -FLT_MAX)
         , ReachingMove(beginRow, endRow, InvalidMove)
         , PreviousVertex(beginRow, endRow, null_vertex)
-    {
-    }
+    {}
 
     AlignmentColumn(AlignmentColumn&& other) noexcept
         : CurrentVertex(std::move(other.CurrentVertex))
         , Score(std::move(other.Score))
         , ReachingMove(std::move(other.ReachingMove))
         , PreviousVertex(std::move(other.PreviousVertex))
-    {
-    }
+    {}
 
     AlignmentColumn& operator=(AlignmentColumn&& other) noexcept
     {

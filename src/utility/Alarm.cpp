@@ -30,8 +30,7 @@ PacBio::JSON::Json ToJson(const Alarm& a)
 
 Alarm::Alarm(std::string name, std::string message)
     : Alarm{std::move(name), std::move(message), "ERROR", "", ""}
-{
-}
+{}
 
 Alarm::Alarm(std::string name, std::string message, std::string severity, std::string info,
              std::string exception)
@@ -48,8 +47,7 @@ Alarm::Alarm(std::string name, std::string message, std::string severity, std::s
 
 Alarm::Alarm(const AlarmException& e)
     : Alarm{e.Name(), e.Message(), e.Severity(), e.Info(), e.Exception()}
-{
-}
+{}
 
 const std::string& Alarm::Exception() const { return exception_; }
 
@@ -158,8 +156,7 @@ AlarmException::AlarmException(std::string sourceFilename, std::string functionN
     , severity_{std::move(severity)}
     , info_{std::move(info)}
     , exception_{std::move(exception)}
-{
-}
+{}
 
 AlarmException::AlarmException(std::string sourceFilename, std::string functionName,
                                int32_t lineNumber, AlarmType type, std::string message,
@@ -168,8 +165,7 @@ AlarmException::AlarmException(std::string sourceFilename, std::string functionN
     : AlarmException{std::move(sourceFilename), std::move(functionName), lineNumber,
                      NameForAlarmType(type),    std::move(message),      std::move(severity),
                      std::move(info),           std::move(exception)}
-{
-}
+{}
 
 // Debugging Info
 const char* AlarmException::SourceFilename() const noexcept { return sourceFilename_.c_str(); }

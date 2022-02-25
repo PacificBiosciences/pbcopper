@@ -72,8 +72,8 @@ public:
     }
 
 public:
-    using Base::MaximumValue;
     using Base::Capacity;
+    using Base::MaximumValue;
 
     constexpr int32_t Size() const noexcept { return size_; }
 

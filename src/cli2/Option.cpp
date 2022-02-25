@@ -27,8 +27,7 @@ Option::Option(std::string def, uint64_t val) : text{std::move(def)}, defaultVal
 
 Option::Option(std::string def, float val)
     : text{std::move(def)}, defaultValue{static_cast<double>(val)}
-{
-}
+{}
 
 Option::Option(std::string def, double val) : text{std::move(def)}, defaultValue{val} {}
 

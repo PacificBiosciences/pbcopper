@@ -20,8 +20,7 @@ struct RegionStringException : public std::runtime_error
     RegionStringException(std::string region)
         : std::runtime_error{"[pbcopper] genomic interval ERROR: malformed region string '" +
                              region + "'"}
-    {
-    }
+    {}
 };
 
 // returns sequence name & sets begin/end, from input regionString
@@ -58,8 +57,7 @@ std::string parseRegionString(const std::string& reg, Position* begin, Position*
 
 GenomicInterval::GenomicInterval(std::string name, Position start, Position stop)
     : name_{std::move(name)}, interval_{std::move(start), std::move(stop)}
-{
-}
+{}
 
 GenomicInterval::GenomicInterval(const std::string& samtoolsRegionString)
 {

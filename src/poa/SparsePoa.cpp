@@ -46,23 +46,20 @@ std::vector<std::pair<size_t, size_t>> SparseAlignUnySpecific(const size_t qGram
     }
     return result;
 }
-}
+}  // namespace
 
 PoaAlignmentOptions::PoaAlignmentOptions()
     : alignConfig(Poa::DefaultPoaConfig(Align::AlignMode::LOCAL)), minScoreToAdd(0.0f)
-{
-}
+{}
 
 PoaAlignmentOptions::PoaAlignmentOptions(Align::AlignMode alignMode, float newMinScoreToAdd)
     : alignConfig(Poa::DefaultPoaConfig(alignMode)), minScoreToAdd(newMinScoreToAdd)
-{
-}
+{}
 
 PoaAlignmentOptions::PoaAlignmentOptions(const Align::AlignConfig& newAlignConfig,
                                          float newMinScoreToAdd)
     : alignConfig(newAlignConfig), minScoreToAdd(newMinScoreToAdd)
-{
-}
+{}
 
 detail::SdpAnchorVector SdpRangeFinder::FindAnchors(const std::string& consensusSequence,
                                                     const std::string& readSequence) const
@@ -75,8 +72,7 @@ SparsePoa::SparsePoa()
     , readPaths_()
     , reverseComplemented_()
     , rangeFinder_(std::make_unique<SdpRangeFinder>())
-{
-}
+{}
 
 SparsePoa::~SparsePoa() = default;
 
@@ -185,7 +181,7 @@ std::string ReverseComplement(const std::string& input)
     }
     return output;
 }
-}
+}  // namespace TEST
 
 SparsePoa::ReadKey SparsePoa::OrientAndAddRead(const std::string& readSequence,
                                                const PoaAlignmentOptions& alnOptions)

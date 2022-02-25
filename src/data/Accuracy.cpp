@@ -15,8 +15,7 @@ Accuracy::Accuracy(float accuracy)
     : accuracy_{(accuracy == Accuracy::MINUS_ONE)
                     ? Accuracy::MINUS_ONE
                     : boost::algorithm::clamp(accuracy, Accuracy::MIN, Accuracy::MAX)}
-{
-}
+{}
 
 Accuracy::operator float() const noexcept { return accuracy_; }
 

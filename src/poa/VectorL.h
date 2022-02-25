@@ -41,8 +41,7 @@ private:
 public:
     VectorL(int beginRow, int endRow, T defaultVal = T())
         : storage_(endRow - beginRow, defaultVal), beginRow_(beginRow), endRow_(endRow)
-    {
-    }
+    {}
 
     VectorL(VectorL&&) noexcept = default;
     VectorL& operator=(VectorL&&) noexcept = default;

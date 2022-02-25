@@ -34,7 +34,7 @@ constexpr LocalContextFlags operator|(const LocalContextFlags lhs,
     return static_cast<LocalContextFlags>(static_cast<int>(lhs) | static_cast<int>(rhs));
 }
 
-}  // namespace BAM
+}  // namespace Data
 }  // namespace PacBio
 
 #endif  // PBCOPPER_DATA_LOCALCONTEXTFLAGS_H

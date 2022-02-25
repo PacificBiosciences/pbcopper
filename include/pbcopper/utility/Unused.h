@@ -8,8 +8,7 @@ namespace Utility {
 
 template <typename T>
 void UNUSED(const T&)
-{
-}
+{}
 
 }  // namespace Utility
 }  // namespace PacBio

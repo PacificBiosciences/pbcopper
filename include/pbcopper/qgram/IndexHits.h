@@ -29,8 +29,7 @@ public:
     ///
     IndexHits(const std::vector<IndexHit>* source, const size_t queryPos)
         : IndexHits(source, 0, source->size(), queryPos)
-    {
-    }
+    {}
 
     ///
     /// \brief IndexHits

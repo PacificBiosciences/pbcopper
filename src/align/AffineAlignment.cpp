@@ -164,8 +164,7 @@ AffineAlignmentParams::AffineAlignmentParams(float matchScore, float mismatchSco
     , GapOpen(gapOpen)
     , GapExtend(gapExtend)
     , PartialMatchScore(partialMatchScore)
-{
-}
+{}
 
 AffineAlignmentParams DefaultAffineAlignmentParams() { return {0, -1.0, -1.0, -0.5, 0}; }
 

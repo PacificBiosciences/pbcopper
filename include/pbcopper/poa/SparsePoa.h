@@ -45,8 +45,7 @@ struct PoaAlignmentSummary
         , ExtentOnConsensus(0, 0)
         , AlignmentScore{0}
         , AlignmentIdentity{0}
-    {
-    }
+    {}
 };
 
 struct PoaAlignmentOptions

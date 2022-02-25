@@ -13,8 +13,7 @@ const uint8_t QualityValue::MAX = 93;
 QualityValue::QualityValue(const uint8_t value)
     : value_{// clamp QV
              std::min(value, QualityValue::MAX)}
-{
-}
+{}
 
 char QualityValue::Fastq() const { return static_cast<char>(value_ + 33); }
 

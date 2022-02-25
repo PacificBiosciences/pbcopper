@@ -18,8 +18,7 @@ Parser::Parser(uint8_t kmerSize)
                 : throw std::invalid_argument{"[pbmer] parsing ERROR: kmerSize must be in the "
                                               "range [1, 32]."}}
     , shift1_{2ull * (kmerSize - 1)}
-{
-}
+{}
 
 Mers Parser::Parse(const std::string& dna) const
 {

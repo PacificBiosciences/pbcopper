@@ -8,8 +8,8 @@
 namespace PacBio {
 namespace Data {
 
-bool IntervalTree::WeakIntervalOrdering::operator()(const Interval& lhs, const Interval& rhs) const
-    noexcept
+bool IntervalTree::WeakIntervalOrdering::operator()(const Interval& lhs,
+                                                    const Interval& rhs) const noexcept
 {
     return lhs.Start() < rhs.Start();
 }

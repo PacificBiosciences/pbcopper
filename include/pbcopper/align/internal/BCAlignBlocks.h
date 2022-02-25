@@ -42,8 +42,7 @@ class BandedGlobalAlignBlock
 {
 public:
     BandedGlobalAlignBlock(const BandedChainAlignConfig& config) : config_(config)  // icc 17 hack
-    {
-    }
+    {}
 
 public:
     ///
@@ -85,8 +84,7 @@ private:
 
         LookupElement(const size_t start, const size_t jBeg, const size_t jEnd)
             : arrayStart_{start}, jBegin_{jBeg}, jEnd_{jEnd}
-        {
-        }
+        {}
     };
 
     std::vector<LookupElement> lookup_;
@@ -105,8 +103,7 @@ class StandardGlobalAlignBlock
 {
 public:
     StandardGlobalAlignBlock(const BandedChainAlignConfig& config) : config_(config)  // icc 17 hack
-    {
-    }
+    {}
 
 public:
     ///

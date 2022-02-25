@@ -12,7 +12,7 @@ namespace Utility {
 std::string LibraryGitSha1String();
 std::string LibraryVersionString();
 std::tuple<int, int, int> LibraryVersionTriple();
-}
-}  // ::PacBio::Utility
+}  // namespace Utility
+}  // namespace PacBio
 
 #endif  // PBCOPPER_UTILITY_PBCOPPERVERSION_H

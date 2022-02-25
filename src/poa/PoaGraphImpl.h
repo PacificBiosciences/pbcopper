@@ -45,8 +45,7 @@ public:
     explicit PoaNode(size_t id, char base, int reads) : PoaNode(id, base, reads, 0) {}
     explicit PoaNode(size_t id, char base, int reads, int spanning)
         : Id{id}, Base{base}, Reads{reads}, SpanningReads{spanning}, Score{0}, ReachingScore{0}
-    {
-    }
+    {}
 };
 
 // External-facing vertex id type

@@ -32,8 +32,7 @@ LocalAlignment::LocalAlignment(const int32_t targetBegin, const int32_t targetEn
     , score_(score)
     , cigar_(std::move(cigar))
     , cigarString_(std::move(cigarString))
-{
-}
+{}
 
 LocalAlignment LocalAlign(const std::string& target, const std::string& query,
                           const LocalAlignConfig& config)

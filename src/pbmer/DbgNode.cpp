@@ -135,8 +135,7 @@ DbgNode::iterator DbgNode::iterator::operator++(int)
 DbgNode::const_iterator::const_iterator() = default;
 DbgNode::const_iterator::const_iterator(const DbgNode& node)
     : iterator_base{const_cast<DbgNode&>(node)}
-{
-}
+{}
 const DnaBit& DbgNode::const_iterator::operator*() const noexcept { return iterator_base::value_; }
 const DnaBit* DbgNode::const_iterator::operator->() const noexcept { return &(operator*()); }
 DbgNode::const_iterator& DbgNode::const_iterator::operator++()

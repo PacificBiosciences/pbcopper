@@ -103,8 +103,7 @@ PoaGraphImpl::PoaGraphImpl(const PoaGraphImpl& other)
     , enterVertex_(other.enterVertex_)
     , exitVertex_(other.exitVertex_)
     , numReads_(other.numReads_)
-{
-}
+{}
 
 void PoaGraphImpl::repCheck() const
 {
@@ -464,8 +463,9 @@ size_t PoaGraphImpl::NumReads() const { return numReads_; }
 std::string PoaGraphImpl::ToGraphViz(int flags, const PoaConsensus* pc) const
 {
     std::ostringstream ss;
-    write_graphviz(ss, g_, boost::my_label_writer(vertexInfoMap_, flags & PoaGraph::COLOR_NODES,
-                                                  flags & PoaGraph::VERBOSE_NODES, pc),
+    write_graphviz(ss, g_,
+                   boost::my_label_writer(vertexInfoMap_, flags & PoaGraph::COLOR_NODES,
+                                          flags & PoaGraph::VERBOSE_NODES, pc),
                    boost::default_writer(),  // edge writer
                    boost::my_graph_writer(true));
 

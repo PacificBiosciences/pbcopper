@@ -17,8 +17,7 @@ TimeReporter::TimeReporter(const Logging::LogLevel lvl) : logLevel_{lvl}
 
 TimeReporter::TimeReporter(const Logging::LogLevel lvl, TimeReporterCallback callback)
     : logLevel_{lvl}, callback_{callback}
-{
-}
+{}
 
 TimeReporter::~TimeReporter()
 {

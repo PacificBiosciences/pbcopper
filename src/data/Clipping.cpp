@@ -230,8 +230,7 @@ void ClipMappedRead(MappedRead& read, ClipResult result)
 
 ClipResult::ClipResult(size_t clipOffset, Position qStart, Position qEnd)
     : clipOffset_{clipOffset}, qStart_{qStart}, qEnd_{qEnd}
-{
-}
+{}
 
 ClipResult::ClipResult(size_t clipOffset, Position qStart, Position qEnd, Position refPos,
                        Cigar cigar)
@@ -240,8 +239,7 @@ ClipResult::ClipResult(size_t clipOffset, Position qStart, Position qEnd, Positi
     , qEnd_{qEnd}
     , refPos_{refPos}
     , cigar_{std::move(cigar)}
-{
-}
+{}
 
 ClipToReferenceConfig::ClipToReferenceConfig(const ClipToQueryConfig& queryConfig,
                                              Position originalTEnd, Position targetTStart,
@@ -251,8 +249,7 @@ ClipToReferenceConfig::ClipToReferenceConfig(const ClipToQueryConfig& queryConfi
     , target_tStart_{targetTStart}
     , target_tEnd_{targetTEnd}
     , exciseFlankingInserts_{exciseFlankingInserts}
-{
-}
+{}
 
 ClipResult ClipToQuery(ClipToQueryConfig& config)
 {

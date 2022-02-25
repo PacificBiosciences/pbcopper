@@ -113,8 +113,7 @@ V2FrameEncoder::V2FrameEncoder(int exponentBits, int mantissaBits)
     , mantissaBits_{mantissaBits}
     , base_(std::pow(2, mantissaBits_))
     , max_((1 << (exponentBits_ + mantissaBits_)) - 1)
-{
-}
+{}
 
 Frames V2FrameEncoder::Decode(const std::vector<uint8_t>& encodedFrames) const
 {
@@ -123,9 +122,9 @@ Frames V2FrameEncoder::Decode(const std::vector<uint8_t>& encodedFrames) const
     std::transform(encodedFrames.cbegin(), encodedFrames.cend(), std::back_inserter(decoded),
                    [&](uint8_t x) -> uint16_t {
                        if (x > max_) {
-                           throw std::runtime_error{"[pbcopper] invalid frame encoding ERROR: " +
-                                                    std::to_string(x) + " is out of range [0," +
-                                                    std::to_string(max_) + ']'};
+                           throw std::runtime_error{
+                               "[pbcopper] invalid frame encoding ERROR: " + std::to_string(x) +
+                               " is out of range [0," + std::to_string(max_) + ']'};
                        }
                        const uint8_t mantissa = x & static_cast<uint8_t>((base_ - 1));
                        const uint8_t exponent = (x ^ mantissa) >> mantissaBits_;

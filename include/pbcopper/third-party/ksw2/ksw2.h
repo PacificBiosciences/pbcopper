@@ -17,22 +17,23 @@
 #define KSW_EZ_SPLICE_FLANK 0x400
 
 #ifdef __cplusplus
-extern "C" {
+extern "C"
+{
 #endif
 
-typedef struct
-{
-    uint32_t max : 31, zdropped : 1;
-    int max_q, max_t;  // max extension coordinate
-    int mqe, mqe_t;    // max score when reaching the end of query
-    int mte, mte_q;    // max score when reaching the end of target
-    int score;         // max score reaching both ends; may be KSW_NEG_INF
-    int m_cigar, n_cigar;
-    int reach_end;
-    uint32_t* cigar;
-} ksw_extz_t;
+    typedef struct
+    {
+        uint32_t max : 31, zdropped : 1;
+        int max_q, max_t;  // max extension coordinate
+        int mqe, mqe_t;    // max score when reaching the end of query
+        int mte, mte_q;    // max score when reaching the end of target
+        int score;         // max score reaching both ends; may be KSW_NEG_INF
+        int m_cigar, n_cigar;
+        int reach_end;
+        uint32_t* cigar;
+    } ksw_extz_t;
 
-/**
+    /**
  * NW-like extension
  *
  * @param km        memory pool, when used with kalloc
@@ -49,17 +50,17 @@ typedef struct
  * @param flag      flag (see KSW_EZ_* macros)
  * @param ez        (out) scores and cigar
  */
-void ksw_extz2_simde(void* km, int qlen, const uint8_t* query, int tlen, const uint8_t* target,
-                     int8_t m, const int8_t* mat, int8_t q, int8_t e, int w, int zdrop,
-                     int end_bonus, int flag, ksw_extz_t* ez);
+    void ksw_extz2_simde(void* km, int qlen, const uint8_t* query, int tlen, const uint8_t* target,
+                         int8_t m, const int8_t* mat, int8_t q, int8_t e, int w, int zdrop,
+                         int end_bonus, int flag, ksw_extz_t* ez);
 
-void ksw_extd2_simde(void* km, int qlen, const uint8_t* query, int tlen, const uint8_t* target,
-                     int8_t m, const int8_t* mat, int8_t gapo, int8_t gape, int8_t gapo2,
-                     int8_t gape2, int w, int zdrop, int end_bonus, int flag, ksw_extz_t* ez);
+    void ksw_extd2_simde(void* km, int qlen, const uint8_t* query, int tlen, const uint8_t* target,
+                         int8_t m, const int8_t* mat, int8_t gapo, int8_t gape, int8_t gapo2,
+                         int8_t gape2, int w, int zdrop, int end_bonus, int flag, ksw_extz_t* ez);
 
-void ksw_exts2_simde(void* km, int qlen, const uint8_t* query, int tlen, const uint8_t* target,
-                     int8_t m, const int8_t* mat, int8_t gapo, int8_t gape, int8_t gapo2,
-                     int8_t noncan, int zdrop, int flag, ksw_extz_t* ez);
+    void ksw_exts2_simde(void* km, int qlen, const uint8_t* query, int tlen, const uint8_t* target,
+                         int8_t m, const int8_t* mat, int8_t gapo, int8_t gape, int8_t gapo2,
+                         int8_t noncan, int zdrop, int flag, ksw_extz_t* ez);
 #ifdef __cplusplus
 }
 #endif
@@ -132,7 +133,7 @@ static inline void ksw_backtrack(void* km, int is_rot, int is_rev, int min_intro
                                i + 1);                                            // first deletion
     if (j >= 0) cigar = ksw_push_cigar(km, &n_cigar, &m_cigar, cigar, 1, j + 1);  // first insertion
     if (!is_rev)
-        for (i = 0; i<n_cigar>> 1; ++i)  // reverse CIGAR
+        for (i = 0; i < n_cigar >> 1; ++i)  // reverse CIGAR
             tmp = cigar[i], cigar[i] = cigar[n_cigar - 1 - i], cigar[n_cigar - 1 - i] = tmp;
     *m_cigar_ = m_cigar, *n_cigar_ = n_cigar, *cigar_ = cigar;
 }

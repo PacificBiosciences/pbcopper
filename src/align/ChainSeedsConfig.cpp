@@ -14,12 +14,10 @@ ChainSeedsConfig::ChainSeedsConfig(const size_t numCandidatesArg, const long min
     , insertionPenalty{insertionPenaltyArg}
     , deletionPenalty{deletionPenaltyArg}
     , maxSeedGap{maxSeedGapArg}
-{
-}
+{}
 
 ChainSeedsConfig::ChainSeedsConfig(const size_t numCandidatesArg) : numCandidates{numCandidatesArg}
-{
-}
+{}
 
 }  // namespace Align
 }  // namespace PacBio

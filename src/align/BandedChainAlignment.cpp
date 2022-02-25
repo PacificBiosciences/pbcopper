@@ -484,8 +484,7 @@ static std::vector<Align::Seed>::const_iterator LastAnchorSeed(
 
 BandedChainAlignerImpl::BandedChainAlignerImpl(const BandedChainAlignConfig& config)
     : config_(config), gapBlock_(config), seedBlock_(config), gapBlockBeginH_(0), gapBlockBeginV_(0)
-{
-}
+{}
 
 BandedChainAlignment BandedChainAlignerImpl::Align(const char* target, const size_t targetLen,
                                                    const char* query, const size_t queryLen,
@@ -744,8 +743,7 @@ BandedChainAlignment::BandedChainAlignment(const BandedChainAlignConfig& config,
                                            const size_t queryLen, const std::string& transcript)
     : BandedChainAlignment(config, std::string{target, targetLen}, std::string{query, queryLen},
                            transcript)
-{
-}
+{}
 
 float BandedChainAlignment::Identity() const
 {

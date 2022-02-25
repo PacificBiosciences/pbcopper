@@ -94,8 +94,7 @@ public:
 
     PB_CUDA_HOST PB_CUDA_DEVICE constexpr CigarOperation(const char c, const uint32_t length)
         : CigarOperation{CigarOperation::CharToType(c), length}
-    {
-    }
+    {}
 
     PB_CUDA_HOST PB_CUDA_DEVICE constexpr CigarOperation(const CigarOperationType op,
                                                          const uint32_t length)
