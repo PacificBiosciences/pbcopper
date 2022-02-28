@@ -17,7 +17,7 @@ Cigar::Cigar(const char* str) : std::vector<CigarOperation>{}
 {
     size_t numberStart = 0;
     size_t i = 0;
-    for (const char *c = str; *c; ++i, ++c) {
+    for (const char* c = str; *c; ++i, ++c) {
         if (!std::isdigit(*c)) {
             const size_t distance = i - numberStart;
             const uint32_t length = std::stoul(std::string{str, numberStart, distance});
@@ -102,12 +102,12 @@ CigarBaseCounts CigarOpsCalculator(const Cigar& cigar)
     }
 
     results.NumAlignedBases = results.MatchBases + results.InsertionBases + results.MismatchBases;
-    results.Identity =
-        100.0 * results.MatchBases / (results.MatchBases + results.MismatchBases +
-                                      results.DeletionBases + results.InsertionBases);
-    results.GapCompressedIdentity =
-        100.0 * results.MatchBases / (results.MatchBases + results.MismatchBases +
-                                      results.DeletionEvents + results.InsertionEvents);
+    results.Identity = 100.0 * results.MatchBases /
+                       (results.MatchBases + results.MismatchBases + results.DeletionBases +
+                        results.InsertionBases);
+    results.GapCompressedIdentity = 100.0 * results.MatchBases /
+                                    (results.MatchBases + results.MismatchBases +
+                                     results.DeletionEvents + results.InsertionEvents);
 
     return results;
 }

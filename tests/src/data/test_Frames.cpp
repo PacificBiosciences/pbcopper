@@ -75,6 +75,7 @@ TEST(Data_FrameEncoder, v2_encoder_produces_expected_values)
     std::vector<uint16_t> input(240);
     std::iota(input.begin(), input.end(), 0);
 
+    // clang-format off
     const std::vector<uint8_t> expectedEncoded{
         // 0 - 15
         0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15,
@@ -107,6 +108,7 @@ TEST(Data_FrameEncoder, v2_encoder_produces_expected_values)
         // 224 - 239
         62, 62, 62, 62, 62, 62, 62, 62, 63, 63, 63, 63, 63, 63, 63, 63,
     };
+    // clang-format on
 
     PacBio::Data::V2FrameEncoder v2{2, 4};
     const auto encoded = v2.Encode(input);
@@ -129,12 +131,14 @@ TEST(Data_FrameEncoder, v2_decoder_produces_expected_values)
     std::vector<uint8_t> input(64);
     std::iota(input.begin(), input.end(), 0);
 
+    // clang-format off
     const std::vector<uint16_t> expectedDecoded{
         0,   1,   2,   3,   4,   5,   6,   7,   8,   9,   10,  11,  12,  13,  14,  15,
         16,  18,  20,  22,  24,  26,  28,  30,  32,  34,  36,  38,  40,  42,  44,  46,
         48,  52,  56,  60,  64,  68,  72,  76,  80,  84,  88,  92,  96,  100, 104, 108,
         112, 120, 128, 136, 144, 152, 160, 168, 176, 184, 192, 200, 208, 216, 224, 232,
     };
+    // clang-format on
 
     PacBio::Data::V2FrameEncoder v2{2, 4};
     const auto decoded = v2.Decode(input);

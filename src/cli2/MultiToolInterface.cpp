@@ -22,8 +22,7 @@ MultiToolInterface::MultiToolInterface(std::string name, std::string description
             OptionTranslator::Translate(Builtin::Help),
             OptionTranslator::Translate(Builtin::Version),
             OptionTranslator::Translate(Builtin::ShowAllHelp)}
-{
-}
+{}
 
 MultiToolInterface& MultiToolInterface::AddTool(Tool tool)
 {

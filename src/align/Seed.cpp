@@ -18,8 +18,7 @@ Seed::Seed(const uint64_t beginPosH, const uint64_t beginPosV, const uint64_t se
     , lowerDiagonal_{static_cast<int64_t>(beginPosH - beginPosV)}
     , upperDiagonal_{static_cast<int64_t>(beginPosH - beginPosV)}
     , score_{0}
-{
-}
+{}
 
 Seed::Seed(const uint64_t beginPosH, const uint64_t beginPosV, const uint64_t endPosH,
            const uint64_t endPosV)

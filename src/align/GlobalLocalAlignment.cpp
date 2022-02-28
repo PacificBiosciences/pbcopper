@@ -16,7 +16,7 @@ GlobalLocalResult GlobalLocalLastRowMax(const std::vector<int32_t>& lastRow) noe
     const int32_t maxElementPos = maxElementIt - std::cbegin(lastRow);
     return {*maxElementIt, maxElementPos};
 }
-}
+}  // namespace
 
 GlobalLocalResult GlobalLocalAlign(const std::string& query, const std::string& read,
                                    const GlobalLocalParameters& parameters) noexcept

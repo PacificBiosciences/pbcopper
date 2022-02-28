@@ -18,8 +18,7 @@ struct InvalidMappedReadException : public std::runtime_error
 {
     InvalidMappedReadException(std::string reason)
         : std::runtime_error{"[pbcopper] mapped read ERROR: " + reason}
-    {
-    }
+    {}
 };
 
 template <class InputIt, class Size, class OutputIt>
@@ -142,8 +141,7 @@ MappedRead::MappedRead(Read read, enum Strand strand, Position templateStart, Po
     , TemplateEnd(templateEnd)
     , PinStart{pinStart}
     , PinEnd{pinEnd}
-{
-}
+{}
 
 MappedRead::MappedRead(Read read, PacBio::Data::Strand strand, Position templateStart,
                        PacBio::Data::Cigar cigar, uint8_t mapQV)
@@ -184,8 +182,7 @@ MappedRead::MappedRead(Read read, PacBio::Data::Strand strand, Position template
     , TemplateEnd{templateEnd}
     , Cigar{std::move(cigar)}
     , MapQuality{mapQV}
-{
-}
+{}
 
 std::string MappedRead::AlignedSequence(Orientation orientation, GapBehavior gapBehavior,
                                         SoftClipBehavior softClipBehavior) const

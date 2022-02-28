@@ -55,8 +55,7 @@ AlignmentGraph::AlignmentGraph(const std::string& backbone) : backboneLength_{ba
 
 AlignmentGraph::AlignmentGraph(const size_t backboneLength)
     : AlignmentGraph{std::string(backboneLength, 'N')}
-{
-}
+{}
 
 void AlignmentGraph::AddAlignment(Alignment& alignment, bool useLocalMerge)
 {

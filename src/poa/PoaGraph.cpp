@@ -64,8 +64,7 @@ PoaGraph::PoaGraph() : impl_{std::make_unique<detail::PoaGraphImpl>()} {}
 
 PoaGraph::PoaGraph(const PoaGraph& other)
     : impl_{std::make_unique<detail::PoaGraphImpl>(*other.impl_)}
-{
-}
+{}
 
 PoaGraph& PoaGraph::operator=(const PoaGraph& other)
 {
@@ -82,8 +81,7 @@ PoaGraph::PoaGraph(PoaGraph&&) noexcept = default;
 PoaGraph& PoaGraph::operator=(PoaGraph&&) noexcept = default;
 
 PoaGraph::PoaGraph(const detail::PoaGraphImpl& o) : impl_{std::make_unique<detail::PoaGraphImpl>(o)}
-{
-}
+{}
 
 PoaGraph::~PoaGraph() = default;
 

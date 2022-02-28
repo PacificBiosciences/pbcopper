@@ -37,10 +37,10 @@ Read::Read(Data::ReadId id, std::string seq, std::optional<Frames> pw, std::opti
     }
 
     if (IPD && (IPD->size() != Seq.size())) {
-        throw std::invalid_argument("[pbcopper] read (name=" + std::string(Id) +
-                                    ") ERROR: features IPD/seq are of mismatched length: " +
-                                    std::to_string(IPD->size()) + " vs " +
-                                    std::to_string(Seq.size()));
+        throw std::invalid_argument(
+            "[pbcopper] read (name=" + std::string(Id) +
+            ") ERROR: features IPD/seq are of mismatched length: " + std::to_string(IPD->size()) +
+            " vs " + std::to_string(Seq.size()));
     }
 }
 
@@ -51,8 +51,7 @@ Read::Read(const std::string& name, std::string seq, QualityValues qualities, SN
     , QueryStart{0}
     , QueryEnd(Seq.size())
     , SignalToNoise{std::move(snr)}
-{
-}
+{}
 
 Read::Read(const std::string& name, std::string seq, QualityValues qualities, SNR snr,
            Position qStart, Position qEnd)
@@ -62,8 +61,7 @@ Read::Read(const std::string& name, std::string seq, QualityValues qualities, SN
     , QueryStart{qStart}
     , QueryEnd{qEnd}
     , SignalToNoise{std::move(snr)}
-{
-}
+{}
 
 Read::Read(const std::string& name, std::string seq, QualityValues qualities, SNR snr,
            Position qStart, Position qEnd, Frames pulseWidths, Frames ipd)
@@ -75,19 +73,22 @@ Read::Read(const std::string& name, std::string seq, QualityValues qualities, SN
     , QueryStart{qStart}
     , QueryEnd{qEnd}
     , SignalToNoise{std::move(snr)}
-{
-}
+{}
 
 Read Read::ClipTo(const int32_t begin, const int32_t end) const
 {
-    Read copy{this->Id, this->Seq.substr(begin, end - begin),
+    Read copy{this->Id,
+              this->Seq.substr(begin, end - begin),
               (this->PulseWidth ? std::optional<Frames>{Frames(this->PulseWidth->cbegin() + begin,
                                                                this->PulseWidth->cbegin() + end)}
                                 : std::nullopt),
               (this->IPD ? std::optional<Frames>{Frames(this->IPD->cbegin() + begin,
                                                         this->IPD->cbegin() + end)}
                          : std::nullopt),
-              this->Flags, this->ReadAccuracy, this->SignalToNoise, this->Model};
+              this->Flags,
+              this->ReadAccuracy,
+              this->SignalToNoise,
+              this->Model};
     return copy;
 }
 

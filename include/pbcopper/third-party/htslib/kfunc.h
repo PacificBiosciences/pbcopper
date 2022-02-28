@@ -24,17 +24,18 @@
 #define HTSLIB_KFUNC_H
 
 #ifdef __cplusplus
-extern "C" {
+extern "C"
+{
 #endif
 
-/*
+    /*
  *    n11  n12  | n1_
  *    n21  n22  | n2_
  *   -----------+----
  *    n_1  n_2  | n
  */
-double kt_fisher_exact(int n11, int n12, int n21, int n22, double *_left, double *_right,
-                       double *two);
+    double kt_fisher_exact(int n11, int n12, int n21, int n22, double* _left, double* _right,
+                           double* two);
 
 #ifdef __cplusplus
 }

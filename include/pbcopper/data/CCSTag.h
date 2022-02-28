@@ -8,8 +8,7 @@ namespace Data {
 
 // used as a 'tag' for overloading methods
 struct CCSTag
-{
-};
+{};
 
 }  // namespace Data
 }  // namespace PacBio

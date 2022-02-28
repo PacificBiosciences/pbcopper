@@ -12,8 +12,7 @@ SDPHit::SDPHit(const Seed& seed, const size_t index) : Seed{seed}, Index{index} 
 bool SDPHit::operator<(const SDPHit& other) const noexcept { return DiagonalCompare(*this, other); }
 
 SDPColumn::SDPColumn(size_t column, const std::optional<SDPHit> seed) : Seed{seed}, Column{column}
-{
-}
+{}
 
 bool SDPColumn::operator<(const SDPColumn& other) const noexcept { return Column < other.Column; }
 

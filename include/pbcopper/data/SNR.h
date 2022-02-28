@@ -23,8 +23,7 @@ class alignas(16) SNR
 public:
     constexpr SNR(const float a, const float c, const float g, const float t) noexcept
         : data_{a, c, g, t}
-    {
-    }
+    {}
 
     SNR(const std::vector<float>& snrs) noexcept : SNR{snrs[0], snrs[1], snrs[2], snrs[3]}
     {

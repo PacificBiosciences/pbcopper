@@ -25,13 +25,11 @@ namespace Reports {
 
 Attribute::Attribute(std::string id, ReportValue value)
     : BaseReportElement{std::move(id)}, value_{std::move(value)}
-{
-}
+{}
 
 Attribute::Attribute(std::string id, ReportValue value, std::string name)
     : BaseReportElement{std::move(id)}, name_{std::move(name)}, value_{std::move(value)}
-{
-}
+{}
 
 Attribute::operator int() const { return boost::get<int>(value_); }
 
@@ -73,8 +71,7 @@ const std::string& BaseReportElement::Id() const { return id_; }
 
 Column::Column(std::string id, std::vector<ReportValue> values, std::string header)
     : BaseReportElement{id}, header_{std::move(header)}, values_(std::move(values))
-{
-}
+{}
 
 Column& Column::AddValue(ReportValue val)
 {
@@ -198,8 +195,7 @@ Report& Report::Uuid(std::string uuid)
 
 Table::Table(std::string id, std::vector<Column> columns, std::string title)
     : BaseReportElement(std::move(id)), title_(std::move(title)), columns_(std::move(columns))
-{
-}
+{}
 
 Table::Table(std::string id) : BaseReportElement(std::move(id)) {}
 

@@ -27,9 +27,9 @@ private:
 private:
     constexpr int32_t SizeImpl() const noexcept
     {
-        if
-            constexpr(FixedWidth) { return this->Capacity(); }
-        else {
+        if constexpr (FixedWidth) {
+            return this->Capacity();
+        } else {
             return this->Size();
         }
     }
@@ -43,8 +43,9 @@ public:
         assert(strSize <= this->Capacity());
 
         // variable-width
-        if
-            constexpr(!FixedWidth) { this->size_ = strSize; }
+        if constexpr (!FixedWidth) {
+            this->size_ = strSize;
+        }
 
         for (int32_t i = 0; i < strSize; ++i) {
             this->Set(i, ConvertAsciiTo2bit(str[i]));
@@ -56,8 +57,7 @@ public:
     constexpr DNA2bitStringImpl(const DNA2bitStringImpl<TotalBits, ElementBits, true> cont,
                                 const int32_t size) noexcept
         : Base{cont, size}
-    {
-    }
+    {}
 
 public:
     explicit operator std::string() const

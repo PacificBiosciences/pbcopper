@@ -37,23 +37,20 @@ ReadNameBase<MovieNameType>::ReadNameBase(const MovieNameType& movieName,
                                           const PacBio::Data::Zmw& zmw,
                                           const Interval& queryInterval)
     : movieName_(movieName), zmw_(zmw), queryInterval_(new Interval{queryInterval})
-{
-}
+{}
 
 template <typename MovieNameType>
 ReadNameBase<MovieNameType>::ReadNameBase(const MovieNameType& movieName,
                                           const PacBio::Data::Zmw& zmw, const Position& queryStart,
                                           const Position& queryEnd)
     : ReadNameBase<MovieNameType>(movieName, zmw, Interval(queryStart, queryEnd))
-{
-}
+{}
 
 template <typename MovieNameType>
 ReadNameBase<MovieNameType>::ReadNameBase(const MovieNameType& movieName,
                                           const PacBio::Data::Zmw& zmw, const CCSTag)
     : movieName_(movieName), zmw_(zmw), queryInterval_(nullptr)
-{
-}
+{}
 
 template <typename MovieNameType>
 bool ReadNameBase<MovieNameType>::IsCCS() const
@@ -103,8 +100,8 @@ PacBio::Data::Zmw ReadNameBase<MovieNameType>::Zmw() const
 }
 
 template <typename MovieNameType>
-bool ReadNameBase<MovieNameType>::operator==(const ReadNameBase<MovieNameType>& other) const
-    noexcept
+bool ReadNameBase<MovieNameType>::operator==(
+    const ReadNameBase<MovieNameType>& other) const noexcept
 {
     // simple int check first
     if (zmw_ != other.zmw_) {

@@ -784,9 +784,10 @@ static int myersCalcEditDistanceNW(const Word* const Peq, const int W, const int
 
         // Update k. I do it only on end of column because it would slow calculation too much otherwise.
         // NOTICE: I add W when in last block because it is actually result from W cells to the left and W cells up.
-        k = min(k, bl->score + max(targetLength - c - 1,
-                                   queryLength - ((1 + lastBlock) * WORD_SIZE - 1) - 1) +
-                       (lastBlock == maxNumBlocks - 1 ? W : 0));
+        k = min(k,
+                bl->score +
+                    max(targetLength - c - 1, queryLength - ((1 + lastBlock) * WORD_SIZE - 1) - 1) +
+                    (lastBlock == maxNumBlocks - 1 ? W : 0));
 
         //---------- Adjust number of blocks according to Ukkonen ----------//
         //--- Adjust last block ---//

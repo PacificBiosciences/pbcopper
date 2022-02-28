@@ -44,8 +44,7 @@ struct OptionGroupData
 
     OptionGroupData(std::string n, std::vector<OptionData> opts)
         : name{std::move(n)}, options{std::move(opts)}
-    {
-    }
+    {}
 
     std::string name;
     std::vector<OptionData> options;
