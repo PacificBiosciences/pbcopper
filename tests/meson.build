@@ -143,11 +143,6 @@ test(
   workdir : meson.project_source_root())
 
 test(
-  'pbcopper EOF check',
-  pbcopper_eof_check,
-  workdir : meson.project_source_root())
-
-test(
   'pbcopper gtest unittests',
   pbcopper_test,
   args : [
