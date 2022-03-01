@@ -94,7 +94,6 @@ if not meson.is_subproject()
   # tests
   if get_option('tests')
     pbcopper_clang_formatter = find_program('tools/check-formatting')
-    pbcopper_eof_check = find_program('tools/check-eof')
     subdir('tests')
   endif
 endif
