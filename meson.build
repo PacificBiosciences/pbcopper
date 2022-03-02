@@ -64,10 +64,10 @@ endforeach
 ################
 
 # threads
-pbcopper_thread_dep = dependency('threads', required : true)
+pbcopper_thread_dep = dependency('threads')
 
 # boost
-pbcopper_boost_dep = dependency('boost', include_type : 'system', required : true)
+pbcopper_boost_dep = dependency('boost', include_type : 'system')
 
 ###########
 # headers #
