@@ -23,8 +23,8 @@ constexpr int popcount(unsigned int x)
 /**
  * The bases are duplicated for the iterator, avoiding strand checking
  */
-constexpr const std::array<char, 8> bases{'A', 'C', 'G', 'T', 'A', 'C', 'G', 'T'};
-constexpr const std::array<uint8_t, 256> clzLookup{
+constexpr const std::array<char, 8> BASES{'A', 'C', 'G', 'T', 'A', 'C', 'G', 'T'};
+constexpr const std::array<uint8_t, 256> CLZ_LOOKUP{
     8, 7, 6, 6, 5, 5, 5, 5, 4, 4, 4, 4, 4, 4, 4, 4, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3,
     2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
     1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
@@ -97,22 +97,21 @@ void DbgNode::iterator_base::LoadNext()
         // this is using a lookup table to find the current on bit. The 255
         // shift is a mask. This saves time because we don't loop over all
         // four bases x 2 strands.
-        index_ = clzLookup[((255 >> (index_)) & node_->edges_)];
+        index_ = CLZ_LOOKUP[((255 >> (index_)) & node_->edges_)];
 
         DnaBit niby = node_->dna_;
         if (index_ > 3) {
-            niby.PrependBase(bases[7 - index_]);
+            niby.PrependBase(BASES[7 - index_]);
         } else {
-            niby.AppendBase(bases[7 - index_]);
+            niby.AppendBase(BASES[7 - index_]);
         }
         value_ = niby.LexSmallerEq();
 
-        index_ = clzLookup[((255 >> (index_ + 1)) & node_->edges_)];
+        index_ = CLZ_LOOKUP[((255 >> (index_ + 1)) & node_->edges_)];
 
     } else {
         node_ = nullptr;
     }
-    return;
 }
 
 DbgNode::iterator::iterator() = default;

@@ -34,14 +34,14 @@
 
 namespace PacBio {
 namespace Align {
-namespace {
+namespace LinearAlign {
 
 namespace ublas = boost::numeric::ublas;
 
-int ALIGN_INSERT_SCORE = -2;
-int ALIGN_DELETE_SCORE = -2;
-int ALIGN_MISALIGN_MATCH_SCORE = -1;
-int ALIGN_MATCH_SCORE = +2;
+constexpr int ALIGN_INSERT_SCORE = -2;
+constexpr int ALIGN_DELETE_SCORE = -2;
+constexpr int ALIGN_MISALIGN_MATCH_SCORE = -1;
+constexpr int ALIGN_MATCH_SCORE = +2;
 
 const AlignParams params{ALIGN_MATCH_SCORE, ALIGN_MISALIGN_MATCH_SCORE, ALIGN_INSERT_SCORE,
                          ALIGN_DELETE_SCORE};
@@ -215,11 +215,12 @@ std::string OptimalTranscript(const std::string& target, int j1, int j2, const s
     return x;
 }
 
-}  // anonymous namespace
+}  // namespace LinearAlign
 
 PairwiseAlignment* AlignLinear(const std::string& target, const std::string& query, int* score,
                                AlignConfig /*unused*/)
 {
+    using namespace LinearAlign;
     int J = target.length();
     ublas::vector<int> buf1(J + 1);
     ublas::vector<int> buf2(J + 1);
