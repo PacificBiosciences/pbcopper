@@ -43,8 +43,8 @@ int Dbg::AddKmers(const PacBio::Pbmer::Mers& m, const uint32_t rid)
 void Dbg::AddVerifedKmerPairs(std::vector<DnaBit>& bits, const uint32_t rid)
 {
 
-    for (size_t i = 0; i < bits.size(); ++i) {
-        bits[i].MakeLexSmaller();
+    for (auto& bit : bits) {
+        bit.MakeLexSmaller();
     }
 
     auto edges = BuildVerifiedEdges(bits);
@@ -201,13 +201,13 @@ void Dbg::BuildEdges()
 
 void Dbg::DumpNodes() const
 {
-    for (auto x = dbg_.begin(); x != dbg_.end(); ++x) {
-        std::cout << "    " << x->second.dna_.KmerToStr() << " n out:" << x->second.TotalEdgeCount()
-                  << " e val: " << static_cast<int>(x->second.edges_)
-                  << " n ids: " << x->second.readIds2_.count()
-                  << " n left eg: " << x->second.LeftEdgeCount()
-                  << " n right eg: " << x->second.RightEdgeCount()
-                  << " n total eg: " << x->second.TotalEdgeCount() << "\n";
+    for (const auto& x : dbg_) {
+        std::cout << "    " << x.second.dna_.KmerToStr() << " n out:" << x.second.TotalEdgeCount()
+                  << " e val: " << static_cast<int>(x.second.edges_)
+                  << " n ids: " << x.second.readIds2_.count()
+                  << " n left eg: " << x.second.LeftEdgeCount()
+                  << " n right eg: " << x.second.RightEdgeCount()
+                  << " n total eg: " << x.second.TotalEdgeCount() << "\n";
     }
 }
 
@@ -217,9 +217,9 @@ void Dbg::FrequencyFilterNodes(unsigned long n)
 
     std::vector<uint64_t> toRemove;
 
-    for (auto x = dbg_.begin(); x != dbg_.end(); ++x) {
-        if (x->second.readIds2_.count() < n) {
-            toRemove.push_back(x->first);
+    for (auto& x : dbg_) {
+        if (x.second.readIds2_.count() < n) {
+            toRemove.push_back(x.first);
         }
     }
     for (const auto x : toRemove) {
@@ -237,14 +237,13 @@ void Dbg::FrequencyFilterNodes2(unsigned long n, bool gt)
     auto filterDirection = [&](const auto count) {
         if (gt) {
             return (count > n);
-        } else {
-            return (count < n);
         }
+        return (count < n);
     };
 
-    for (auto x = dbg_.begin(); x != dbg_.end(); ++x) {
-        if (filterDirection(x->second.readIds2_.count())) {
-            toRemove.push_back(x->first);
+    for (auto& x : dbg_) {
+        if (filterDirection(x.second.readIds2_.count())) {
+            toRemove.push_back(x.first);
         }
     }
     for (const auto x : toRemove) {
@@ -286,19 +285,23 @@ Bubbles Dbg::FindBubbles() const
 
     // keeping track of read id counts over linear paths
     // these variables are reused
-    robin_hood::unordered_map<uint32_t, int> left_reads;
-    robin_hood::unordered_map<uint32_t, int> right_reads;
+    robin_hood::unordered_map<uint32_t, int> leftReads;
+    robin_hood::unordered_map<uint32_t, int> rightReads;
 
     // keep track of the used head/tails of bubbles.
-    std::unordered_set<uint64_t> used_branch_node;
+    std::unordered_set<uint64_t> usedBranchNode;
 
     // reused variables
-    uint64_t s1, s2, e1, e2, shared;
+    uint64_t s1;
+    uint64_t s2;
+    uint64_t e1;
+    uint64_t e2;
+    uint64_t shared;
 
     for (auto x = dbg_.begin(); x != dbg_.end(); ++x) {
 
         // this node is already part of a bubble and should be ignored.
-        if (used_branch_node.find(x->second.dna_.mer) != used_branch_node.end()) {
+        if (usedBranchNode.find(x->second.dna_.mer) != usedBranchNode.end()) {
             continue;
         }
 
@@ -306,16 +309,16 @@ Bubbles Dbg::FindBubbles() const
         if (x->second.TotalEdgeCount() < 3) {
             continue;
         }
-        std::vector<std::tuple<uint64_t, uint64_t>> path_info;
+        std::vector<std::tuple<uint64_t, uint64_t>> pathInfo;
 
         // loop over neighboring nodes collecting the start and end node of
         // linear paths. I.E. looping over all linear paths coming out of a node.
-        for (auto& out : x->second) {
-            auto linear_path = LinearPath(out);
-            if (linear_path.empty()) {
+        for (const auto& out : x->second) {
+            auto linearPath = LinearPath(out);
+            if (linearPath.empty()) {
                 continue;
             }
-            path_info.push_back(std::make_tuple(out.mer, linear_path.back().mer));
+            pathInfo.emplace_back(out.mer, linearPath.back().mer);
         }
 
         // The left and right path of a bubble.
@@ -327,13 +330,13 @@ Bubbles Dbg::FindBubbles() const
         // Comparing all linear paths to check if they converge. The first
         // two paths to converge are considered a bubble. subsequent bubbles are
         // ignored.
-        for (size_t i = 0; i < path_info.size(); ++i) {
+        for (size_t i = 0; i < pathInfo.size(); ++i) {
             hasBubble = false;
-            for (size_t j = 0; j < path_info.size(); ++j) {
-                s1 = std::get<0>(path_info[i]);
-                s2 = std::get<0>(path_info[j]);
-                e1 = std::get<1>(path_info[i]);
-                e2 = std::get<1>(path_info[j]);
+            for (size_t j = 0; j < pathInfo.size(); ++j) {
+                s1 = std::get<0>(pathInfo[i]);
+                s2 = std::get<0>(pathInfo[j]);
+                e1 = std::get<1>(pathInfo[i]);
+                e2 = std::get<1>(pathInfo[j]);
 
                 // check if the paths converge on a common neighboring node.
                 if (OneIntermediateNode(e1, e2, &shared)) {
@@ -341,8 +344,8 @@ Bubbles Dbg::FindBubbles() const
                     left = LinearPath(s1);
                     right = LinearPath(s2);
                     // set the used incoming node so we don't get 2x n bubbles
-                    used_branch_node.insert(shared);
-                    used_branch_node.insert(x->second.dna_.mer);
+                    usedBranchNode.insert(shared);
+                    usedBranchNode.insert(x->second.dna_.mer);
                     hasBubble = true;
                     break;
                 }
@@ -357,13 +360,13 @@ Bubbles Dbg::FindBubbles() const
             continue;
         }
         // reuse the same temp data struct.
-        left_reads.clear();
-        right_reads.clear();
+        leftReads.clear();
+        rightReads.clear();
 
         for (auto const& l : left) {
             size_t i = dbg_.at(l.mer).readIds2_.find_first();
             while (i != dbg_.at(l.mer).readIds2_.npos) {
-                ++left_reads[i + 1];
+                ++leftReads[i + 1];
                 i = dbg_.at(l.mer).readIds2_.find_next(i);
             }
         }
@@ -371,7 +374,7 @@ Bubbles Dbg::FindBubbles() const
         for (auto const& r : right) {
             size_t i = dbg_.at(r.mer).readIds2_.find_first();
             while (i != dbg_.at(r.mer).readIds2_.npos) {
-                ++right_reads[i + 1];
+                ++rightReads[i + 1];
                 i = dbg_.at(r.mer).readIds2_.find_next(i);
             }
         }
@@ -382,12 +385,12 @@ Bubbles Dbg::FindBubbles() const
         bubble.LKmerCount = left.size();
         bubble.RKmerCount = right.size();
 
-        for (const auto& kv : left_reads) {
-            bubble.LData.push_back(std::make_pair(kv.first, kv.second));
+        for (const auto& kv : leftReads) {
+            bubble.LData.emplace_back(kv.first, kv.second);
         }
 
-        for (const auto& kv : right_reads) {
-            bubble.RData.push_back(std::make_pair(kv.first, kv.second));
+        for (const auto& kv : rightReads) {
+            bubble.RData.emplace_back(kv.first, kv.second);
         }
         result.emplace_back(std::move(bubble));
     }
@@ -431,19 +434,19 @@ std::string Dbg::Graph2StringDot()
 {
     std::ostringstream ss;
     ss << "digraph DBGraph {\n";
-    for (auto x = dbg_.begin(); x != dbg_.end(); ++x) {
-        ss << "    " << x->second.dna_.KmerToStr();
-        if (x->second.dna_.strand) {
+    for (auto& x : dbg_) {
+        ss << "    " << x.second.dna_.KmerToStr();
+        if (x.second.dna_.strand) {
             ss << " [fillcolor=red, style=\"rounded,filled\", shape=diamond]\n";
         } else {
             ss << " [fillcolor=grey, style=\"rounded,filled\", shape=ellipse]\n";
         }
     }
-    for (auto x = dbg_.begin(); x != dbg_.end(); ++x) {
-        for (const auto& y : x->second) {
+    for (auto& x : dbg_) {
+        for (const auto& y : x.second) {
             const DnaBit niby = y;
 
-            ss << "    " << x->second.dna_.KmerToStr() << " -> " << niby.KmerToStr() << ";\n";
+            ss << "    " << x.second.dna_.KmerToStr() << " -> " << niby.KmerToStr() << ";\n";
         }
     }
     ss << "}";
@@ -457,8 +460,8 @@ size_t Dbg::NEdges() const
 {
     size_t edgeCount = 0;
 
-    for (auto x = dbg_.begin(); x != dbg_.end(); ++x) {
-        edgeCount += x->second.TotalEdgeCount();
+    for (const auto& x : dbg_) {
+        edgeCount += x.second.TotalEdgeCount();
     }
     return edgeCount;
 }
@@ -487,19 +490,19 @@ int Dbg::RemoveSpurs(unsigned int maxLength)
 
     std::unordered_set<uint64_t> toDelete;
 
-    for (auto nodeIter = dbg_.begin(); nodeIter != dbg_.end(); ++nodeIter) {
+    for (auto& nodeIter : dbg_) {
         // Starting at tip nodes with a degree of one.
-        if (nodeIter->second.TotalEdgeCount() != 1) {
+        if (nodeIter.second.TotalEdgeCount() != 1) {
             continue;
         }
 
         // Including tip node in the linear path.
-        auto linear_path = LinearPath(nodeIter->second.dna_.mer);
+        auto linearPath = LinearPath(nodeIter.second.dna_.mer);
 
-        if (linear_path.size() > maxLength) {
+        if (linearPath.size() > maxLength) {
             continue;
         }
-        for (const auto& x : linear_path) {
+        for (const auto& x : linearPath) {
             toDelete.insert(x.mer);
         }
 
@@ -517,8 +520,8 @@ int Dbg::RemoveSpurs(unsigned int maxLength)
 
 void Dbg::ResetEdges()
 {
-    for (auto x = dbg_.begin(); x != dbg_.end(); ++x) {
-        x->second.edges_ = 0;
+    for (auto& x : dbg_) {
+        x.second.edges_ = 0;
     }
 }
 
