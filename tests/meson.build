@@ -2,6 +2,8 @@ pbcopper_test_cpp_sources = files([
 
   # algorithm
   'src/algorithm/test_Heteroduplex.cpp',
+  'src/algorithm/test_KMerIndex.cpp',
+  'src/algorithm/test_LSHIndex.cpp',
 
   # align
   'src/align/test_Alignment.cpp',
@@ -90,7 +92,9 @@ pbcopper_test_cpp_sources = files([
   'src/utility/test_Alarm.cpp',
   'src/utility/test_Base64.cpp',
   'src/utility/test_FileUtils.cpp',
+  'src/utility/test_FastMod.cpp',
   'src/utility/test_MinMax.cpp',
+  'src/utility/test_Intrinsics.cpp',
   'src/utility/test_MoveAppend.cpp',
   'src/utility/test_MoveInsert.cpp',
   'src/utility/test_OStreamRedirect.cpp',

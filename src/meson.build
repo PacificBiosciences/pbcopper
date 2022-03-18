@@ -10,6 +10,7 @@ pbcopper_cpp_sources = files([
   # algorithm
   # -----------
   'algorithm/Heteroduplex.cpp',
+  'algorithm/KMerIndex.cpp',
 
   # -------
   # align
@@ -148,7 +149,9 @@ pbcopper_cpp_sources = files([
   'utility/Alarm.cpp',
   'utility/Base64.cpp',
   'utility/Deleters.cpp',
+  'utility/FastMod.cpp',
   'utility/MemoryConsumption.cpp',
+  'utility/Random.cpp',
   'utility/Stopwatch.cpp',
   'utility/StringUtils.cpp',
   'utility/TimeReporter.cpp',

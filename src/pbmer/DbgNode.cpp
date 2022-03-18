@@ -1,24 +1,11 @@
 #include <pbcopper/pbmer/DbgNode.h>
+#include <pbcopper/utility/Intrinsics.h>
 
 #include <array>
 
 namespace PacBio {
 namespace Pbmer {
 namespace {
-
-#ifdef __SSE4_2__
-constexpr int popcount(unsigned int x) { return __builtin_popcount(x); }
-#else
-constexpr int popcount(unsigned int x)
-{
-    int v = 0;
-    while (x != 0) {
-        x &= x - 1;
-        v++;
-    }
-    return v;
-}
-#endif
 
 /**
  * The bases are duplicated for the iterator, avoiding strand checking
@@ -59,17 +46,17 @@ uint64_t DbgNode::Kmer() const { return dna_.mer; }
 int DbgNode::LeftEdgeCount() const
 {
     // 11110000 = 240
-    return popcount(edges_ & 240);
+    return Utility::PopCount(edges_ & 240);
 }
 int DbgNode::RightEdgeCount() const
 {
     // 00001111 = 15
-    return popcount(edges_ & 15);
+    return Utility::PopCount(edges_ & 15);
 }
 
 void DbgNode::SetEdges(uint8_t o) { edges_ |= o; }
 
-int DbgNode::TotalEdgeCount() const { return popcount(edges_ & 255); }
+int DbgNode::TotalEdgeCount() const { return Utility::PopCount(edges_ & 255); }
 
 // -------------------------------------------
 // iteration of DnaBits over node

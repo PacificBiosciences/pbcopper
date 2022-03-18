@@ -75,21 +75,9 @@ TEST(Pbmer_Dbg, test_topo_three_kmers)
     ATA -> ATG;
     CTA -> ATA;
 })";
-#if 0
-    const std::string oldExpected =
-R"(digraph DBGraph {
-    ATG [fillcolor=red, style="rounded,filled", shape=diamond]
-    CTA [fillcolor=red, style="rounded,filled", shape=diamond]
-    ATA [fillcolor=grey, style="rounded,filled", shape=ellipse]
-    ATG -> ATA;
-    CTA -> ATA;
-    ATA -> CTA;
-    ATA -> ATG;
-})";
-#endif
 
     std::string seen = dg.Graph2StringDot();
-    EXPECT_EQ(dg.ValidateEdges(), true);
+    EXPECT_TRUE(dg.ValidateEdges());
     EXPECT_EQ(seen, expected);
 }
 

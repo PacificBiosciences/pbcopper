@@ -3,12 +3,10 @@
 #include <pbcopper/align/EdlibAlign.h>
 #include <pbcopper/container/Unordered.h>
 #include <pbcopper/pbmer/Parser.h>
+#include <pbcopper/utility/Intrinsics.h>  // PopCount
 #include <pbcopper/utility/MinMax.h>
 
 #include <array>
-#ifndef __clang__
-#include <bit>  // clang doesn't yet support <bit>
-#endif
 #include <iostream>
 #include <limits>
 #include <memory>  // std::unique_ptr<[]>
@@ -368,20 +366,6 @@ std::string DnaBitVec2String(const std::vector<DnaBit>& bits)
             rv += d.KmerToStr().back();
         }
     }
-#if 0
-    auto getrcstr = [&](auto x) {
-        if (x.strand != lastStrand) x.ReverseComp();
-        return x.KmerToStr();
-    };
-    uint64_t accum = 0;
-    auto strand2str = [](auto x) { return x ? "+" : "-"; };
-    for (const auto& x : bits) {
-        accum += x.mer;
-        std::cerr << x.mer << ',' << strand2str(x.strand) << "-" << x.KmerToStr() << "-"
-                  << getrcstr(x) << '\n';
-    }
-    std::cerr << "String which is converted back as " << rv << "for  sum = " << accum << '\n';
-#endif
     return rv;
 }
 
@@ -418,24 +402,14 @@ int DnaBit::HammingDistance(const DnaBit other) const noexcept
     // Now we want to find bit pairs of 0 in x ^ y
     uint64_t x1 = (x0 >> 1);
     uint64_t x2 = x1 & (0x5555555555555555);
-#if __clang__
-    return msize - __builtin_popcountll(x0 & x2 & BitMask());
-#else
-    return msize - std::popcount(x0 & x2 & BitMask());
-#endif
+    return msize - Utility::PopCount(x0 & x2 & BitMask());
 }
 
 int HammingDistance(const uint64_t x, const uint64_t y, int k) noexcept
 {
     const uint64_t bitMask = (uint64_t(0x5555555555555555) >> (2 * k));
     const uint64_t x0 = ~(x ^ y);
-    return k -
-#if __clang__
-           __builtin_popcountll
-#else
-           std::popcount
-#endif
-           (x0 & (x0 >> 1) & bitMask);
+    return k - Utility::PopCount(x0 & (x0 >> 1) & bitMask);
 }
 
 int DnaBit::EditDistance(const DnaBit other) const noexcept

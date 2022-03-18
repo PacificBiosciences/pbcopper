@@ -15,6 +15,8 @@ if not meson.is_subproject()
   install_headers(
     files([
       'pbcopper/algorithm/Heteroduplex.h',
+      'pbcopper/algorithm/KMerIndex.h',
+      'pbcopper/algorithm/LSHIndex.h',
     ]),
     subdir : 'pbcopper/algorithm')
 
@@ -286,7 +288,9 @@ if not meson.is_subproject()
       'pbcopper/utility/Alarm.h',
       'pbcopper/utility/Base64.h',
       'pbcopper/utility/Deleters.h',
+      'pbcopper/utility/FastMod.h',
       'pbcopper/utility/FileUtils.h',
+      'pbcopper/utility/Intrinsics.h',
       'pbcopper/utility/MemoryConsumption.h',
       'pbcopper/utility/MinMax.h',
       'pbcopper/utility/MoveAppend.h',
@@ -294,6 +298,7 @@ if not meson.is_subproject()
       'pbcopper/utility/OStreamRedirect.h',
       'pbcopper/utility/PartitionElements.h',
       'pbcopper/utility/PbcopperVersion.h',
+      'pbcopper/utility/Random.h',
       'pbcopper/utility/SafeSubtract.h',
       'pbcopper/utility/SequenceUtils.h',
       'pbcopper/utility/Shuffle.h',

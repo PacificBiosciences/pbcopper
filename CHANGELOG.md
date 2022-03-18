@@ -6,6 +6,7 @@
  - ValidateCigar
  - LeftAlignCigar
  - UnorderedMap, UnorderedSet
+ - KMerIndex, LSHIndex, FastMod
 
 ## [2.0.0] - 2022-01-10
 
