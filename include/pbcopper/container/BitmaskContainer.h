@@ -16,27 +16,6 @@
 
 namespace PacBio {
 namespace Container {
-namespace {
-
-template <int32_t TotalBits>
-constexpr auto BitsToType()
-{
-    if constexpr (TotalBits == 8) {
-        return uint8_t{};
-    } else if constexpr (TotalBits == 16) {
-        return uint16_t{};
-    } else if constexpr (TotalBits == 32) {
-        return uint32_t{};
-    } else if constexpr (TotalBits == 64) {
-        return uint64_t{};
-    } else if constexpr (TotalBits == 128) {
-        return __uint128_t{};
-    } else {
-        throw std::logic_error{"invalid TotalBits argument"};
-    }
-}
-
-}  // namespace
 
 ///
 /// BitmaskContainer is a template class that packs elements that can be encoded
@@ -50,7 +29,14 @@ template <int32_t TotalBits, int32_t ElementBits>
 class BitmaskContainer
 {
 public:
-    using UnderlyingType = decltype(BitsToType<TotalBits>());
+    using UnderlyingType = std::conditional_t<
+        TotalBits == 8, uint8_t,
+        std::conditional_t<
+            TotalBits == 16, uint16_t,
+            std::conditional_t<
+                TotalBits == 32, uint32_t,
+                std::conditional_t<TotalBits == 64, uint64_t,
+                                   std::conditional_t<TotalBits == 128, __uint128_t, void> > > > >;
 
     // We cap the working value type to a minimum of 32 bits. C++ is full
     // of extremely surprising behavior, and integer promotion is one of
