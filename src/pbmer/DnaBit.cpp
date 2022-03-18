@@ -1,11 +1,19 @@
 #include <pbcopper/pbmer/DnaBit.h>
 
+#include <pbcopper/align/EdlibAlign.h>
+#include <pbcopper/container/Unordered.h>
 #include <pbcopper/pbmer/Parser.h>
+#include <pbcopper/utility/MinMax.h>
 
 #include <array>
+#ifndef __clang__
+#include <bit>  // clang doesn't yet support <bit>
+#endif
+#include <iostream>
 #include <limits>
+#include <memory>  // std::unique_ptr<[]>
+#include <numeric>
 #include <tuple>
-#include <unordered_set>
 #include <vector>
 
 #include <cassert>
@@ -346,7 +354,7 @@ std::string DnaBitVec2String(const std::vector<DnaBit>& bits)
     if (bits.empty()) {
         return rv;
     }
-    rv += bits.front().KmerToStr();
+    rv = bits.front().KmerToStr();
     if (bits.size() == 1) {
         return rv;
     }
@@ -360,16 +368,28 @@ std::string DnaBitVec2String(const std::vector<DnaBit>& bits)
             rv += d.KmerToStr().back();
         }
     }
+#if 0
+    auto getrcstr = [&](auto x) {
+        if (x.strand != lastStrand) x.ReverseComp();
+        return x.KmerToStr();
+    };
+    uint64_t accum = 0;
+    auto strand2str = [](auto x) { return x ? "+" : "-"; };
+    for (const auto& x : bits) {
+        accum += x.mer;
+        std::cerr << x.mer << ',' << strand2str(x.strand) << "-" << x.KmerToStr() << "-"
+                  << getrcstr(x) << '\n';
+    }
+    std::cerr << "String which is converted back as " << rv << "for  sum = " << accum << '\n';
+#endif
     return rv;
 }
 
-std::vector<DnaBit> DnaBit::Neighbors()
+std::vector<DnaBit> DnaBit::Neighbors() const
 {
     std::vector<DnaBit> results;
     results.reserve(4 * msize);
-
-    // unordered set to collapse duplicates
-    std::unordered_set<uint64_t> seen;
+    Container::UnorderedSet<uint64_t> seen;
 
     for (int i = 0; i < msize; ++i) {
         for (int j = 0; j < 4; ++j) {
@@ -382,6 +402,73 @@ std::vector<DnaBit> DnaBit::Neighbors()
         }
     }
     return results;
+}
+uint64_t DnaBit::BitMask() const noexcept { return uint64_t(-1) >> (64 - 2 * msize); }
+
+int DnaBit::HammingDistance(const DnaBit other) const noexcept
+{
+    if (other.msize != msize) {
+        return -1;
+    }
+    // You can speed this up a bit by caching the bitmask
+    // and anding it with 0x5555555555555555,
+    // but that requires storing in memory.
+    // I would hope that the compiler can do this for us. - DB
+    uint64_t x0 = ~(mer ^ other.mer);
+    // Now we want to find bit pairs of 0 in x ^ y
+    uint64_t x1 = (x0 >> 1);
+    uint64_t x2 = x1 & (0x5555555555555555);
+#if __clang__
+    return msize - __builtin_popcountll(x0 & x2 & BitMask());
+#else
+    return msize - std::popcount(x0 & x2 & BitMask());
+#endif
+}
+
+int HammingDistance(const uint64_t x, const uint64_t y, int k) noexcept
+{
+    const uint64_t bitMask = (uint64_t(0x5555555555555555) >> (2 * k));
+    const uint64_t x0 = ~(x ^ y);
+    return k -
+#if __clang__
+           __builtin_popcountll
+#else
+           std::popcount
+#endif
+           (x0 & (x0 >> 1) & bitMask);
+}
+
+int DnaBit::EditDistance(const DnaBit other) const noexcept
+{
+#if 0
+    // This edit distance code seems to be slightly off.
+    // We have to pay a little cost to convert the DnaBits to std::strings
+    // but then we have the 
+    const int m = msize, n = other.msize;
+    auto scratch = std::make_unique<int8_t[]>((n + 1) * 2);
+    int8_t* row1 = scratch.get();
+    int8_t* row2 = row1 + n + 1;
+    std::iota(row1, row1 + n + 1, 0);
+    for (int i = 0; i < m; ++i) {
+        row2[i] = i + 1;
+        const int leftHandValue = (mer >> (i * 2)) & 3;
+        for (int j = 0; j < n; ++j) {
+            const int rightHandValue = (other.mer >> (j * 2)) & 3;
+            const int deleteCost = row1[j + 1] + 1;
+            const int insertionCost = row2[j] + 1;
+            const int substitutionCost = row1[j] + (rightHandValue != leftHandValue);
+            row2[j + 1] = Utility::Min(deleteCost, insertionCost, substitutionCost);
+        }
+        std::swap(row1, row2);
+    }
+    return row1[msize];
+#else
+    const std::string myStr = KmerToStr();
+    const std::string oStr = other.KmerToStr();
+    EdlibAlignConfig conf{int(std::max(oStr.size(), myStr.size())), EDLIB_MODE_NW,
+                          EDLIB_TASK_DISTANCE, nullptr, 0};
+    return Align::EdlibAlign(myStr, oStr, conf).Data.editDistance;
+#endif
 }
 
 }  // namespace Pbmer

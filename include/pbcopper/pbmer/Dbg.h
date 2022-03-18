@@ -3,12 +3,12 @@
 
 #include <pbcopper/PbcopperConfig.h>
 
+#include <pbcopper/container/Unordered.h>
 #include <pbcopper/pbmer/Bubble.h>
 #include <pbcopper/pbmer/DbgNode.h>
 #include <pbcopper/pbmer/DnaBit.h>
 #include <pbcopper/pbmer/Mers.h>
 #include <pbcopper/pbmer/Parser.h>
-#include <pbcopper/third-party/robin_hood/robin_hood.h>
 
 #include <map>
 #include <string>
@@ -158,7 +158,7 @@ public:
 
 private:
     // the whole graph structure and colors are stored here.
-    using rh = robin_hood::unordered_map<uint64_t, DbgNode>;
+    using rh = Container::UnorderedMap<uint64_t, DbgNode>;
     rh dbg_;
     // kmer size up to 32
     uint8_t kmerSize_;

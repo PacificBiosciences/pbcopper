@@ -155,15 +155,35 @@ public:
     void Bin2DnaBit(BI bin);
 
     ///
+    /// Compute hamming distance with another DnaBit.
+    /// The msize must be the same.
+    /// If not, this returns -1 to signify an error
+    ///
+    int HammingDistance(DnaBit other) const noexcept;
+
+    ///
+    /// Compute hamming distance with another DnaBit.
+    ///
+    int EditDistance(DnaBit other) const noexcept;
+
+    ///
+    /// Generate a bitmask for specific length of k-mer
+    ///
+    uint64_t BitMask() const noexcept;
+
+    ///
     /// Return all kmers off by one base, includes the source kmer. NO indels.
     ///
-    std::vector<DnaBit> Neighbors();
+    std::vector<DnaBit> Neighbors() const;
 };
 
 // This should remain a function, it has a lot of general utility.
 uint64_t ReverseComp64(uint64_t mer, uint8_t kmerSize);
 // This should remain a function, it has a lot of general utility.
 uint64_t Mix64Masked(uint64_t key, uint8_t kmerSize) noexcept;
+
+// Removed from DnaBit, allows you to compute Hamming Distance without a DnaBit object.
+int HammingDistance(uint64_t, uint64_t, int) noexcept;
 
 ///
 /// Turn path to a DNA string.
