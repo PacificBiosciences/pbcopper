@@ -7,6 +7,7 @@
 
 #include <iosfwd>
 #include <string>
+#include <string_view>
 #include <vector>
 
 namespace PacBio {
@@ -146,6 +147,36 @@ bool ConvertCigarToM5(const std::string& ref, const std::string& query, bool qRe
 bool ConvertCigarToM5(const std::string& ref, const std::string& query, int32_t rStart,
                       int32_t rEnd, int32_t qStart, int32_t qEnd, bool qReversed,
                       const Data::Cigar& cigar, std::string& retRefAln, std::string& retQueryAln);
+
+/// \brief Check Cigar validity.
+///
+/// Included checks:
+/// - CigarOperation adjacency
+/// - CigarOperation content
+/// - SOFT_CLIP and HARD_CLIP position
+/// - calculated ref and query lengths
+///
+/// \param cigar              CIGAR alignment data
+/// \param ref                input reference sequence
+/// \param query              input query sequence
+///
+/// \return success/failure
+///
+bool ValidateCigar(const Data::Cigar& cigar, std::string_view ref, std::string_view query);
+
+/// \brief Shift all bases inside indels to the left (gaps to the right).
+///
+/// Can replace all mismatches with equal number of insertions and deletions (needed for sparc).
+///
+/// \param cigar              CIGAR alignment data
+/// \param ref                input reference sequence
+/// \param query              input query sequence
+/// \param replaceMismatches  true if resulting Cigar should have no mismatches
+///
+/// \return resulting Cigar
+///
+Data::Cigar LeftAlignCigar(const Data::Cigar& cigar, std::string_view ref, std::string_view query,
+                           bool replaceMismatches = false);
 
 }  // namespace Data
 }  // namespace PacBio

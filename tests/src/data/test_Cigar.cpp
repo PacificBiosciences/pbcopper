@@ -355,4 +355,137 @@ TEST(Data_Cigar, can_convert_cigar_to_m5)
     }
 }
 
+TEST(Data_Cigar, can_validate)
+{
+    // empty
+    EXPECT_TRUE(PacBio::Data::ValidateCigar("", "", ""));
+    EXPECT_FALSE(PacBio::Data::ValidateCigar("", "A", ""));
+    EXPECT_FALSE(PacBio::Data::ValidateCigar("", "", "A"));
+
+    // adjacent
+    EXPECT_FALSE(PacBio::Data::ValidateCigar("1I2I", "", "AAA"));
+    EXPECT_FALSE(PacBio::Data::ValidateCigar("3D2D", "AAAAA", ""));
+    EXPECT_FALSE(PacBio::Data::ValidateCigar("1N4N", "AAAA", ""));
+    EXPECT_FALSE(PacBio::Data::ValidateCigar("2S2S", "", "AAAA"));
+    EXPECT_FALSE(PacBio::Data::ValidateCigar("1H1H", "", ""));
+    EXPECT_FALSE(PacBio::Data::ValidateCigar("5P3P", "", ""));
+    EXPECT_FALSE(PacBio::Data::ValidateCigar("1=1=", "AA", "AA"));
+    EXPECT_FALSE(PacBio::Data::ValidateCigar("1X1X", "AA", "CC"));
+
+    // hard clip
+    EXPECT_FALSE(PacBio::Data::ValidateCigar("1=1H1=", "AA", "AA"));
+    EXPECT_TRUE(PacBio::Data::ValidateCigar("1H1=", "A", "A"));
+    EXPECT_TRUE(PacBio::Data::ValidateCigar("1=1H", "A", "A"));
+    EXPECT_TRUE(PacBio::Data::ValidateCigar("1H1X1H", "A", "C"));
+
+    // soft clip
+    EXPECT_FALSE(PacBio::Data::ValidateCigar("1=1S1=", "AA", "AA"));
+    EXPECT_TRUE(PacBio::Data::ValidateCigar("1S1X", "A", "AC"));
+    EXPECT_TRUE(PacBio::Data::ValidateCigar("1X1S", "A", "CA"));
+    EXPECT_TRUE(PacBio::Data::ValidateCigar("1S1D1I1S", "A", "ACA"));
+    EXPECT_TRUE(PacBio::Data::ValidateCigar("1H1S1D1I1S1H", "A", "ACA"));
+
+    // length
+    EXPECT_FALSE(PacBio::Data::ValidateCigar("3=", "AA", "AAA"));
+    EXPECT_FALSE(PacBio::Data::ValidateCigar("1S3D3=", "CCCAAA", "AAA"));
+    EXPECT_FALSE(PacBio::Data::ValidateCigar("1D2X", "AC", "CA"));
+    EXPECT_FALSE(PacBio::Data::ValidateCigar("1H1I1D", "A", ""));
+    EXPECT_FALSE(PacBio::Data::ValidateCigar("1H1P2N2S3H", "A", "CC"));
+
+    // content
+    EXPECT_FALSE(PacBio::Data::ValidateCigar("3=", "AAC", "AAA"));
+    EXPECT_FALSE(PacBio::Data::ValidateCigar("3X", "ACG", "AAA"));
+    EXPECT_TRUE(PacBio::Data::ValidateCigar("1H1S2=2N2X1D1I2P3S5H", "AACCCCC", "CAAGGGTTT"));
+}
+
+TEST(Data_Cigar, can_left_align)
+{
+    std::string target1{"AAA"};
+    std::string query1{"AAA"};
+    Cigar cigarIn1{"3="};
+    Cigar cigarOut1{"3="};
+
+    // can replace mismatches
+    // T: AAA    A-A-A-
+    //        ->
+    // Q: TTT    -T-T-T
+    std::string target2{"AAA"};
+    std::string query2{"TTT"};
+    Cigar cigarIn2{"3X"};
+    Cigar cigarOut2{"3X"};
+    Cigar cigarOut2X{"1D1I1D1I1D1I"};
+
+    // should remove padding
+    // T: AA-A    AAA
+    //    || | -> |||
+    // Q: AA*A    AAA
+    std::string target3{"AAA"};
+    std::string query3{"AAA"};
+    Cigar cigarIn3{"2=1P1="};
+    Cigar cigarOut3{"3="};
+
+    // should not modify soft clip
+    // T: -AAA--    -AAA--
+    //    #| |## -> #|| ##
+    // Q: AA-AAA    AAA-AA
+    std::string target4{"AAA"};
+    std::string query4{"AAAAA"};
+    Cigar cigarIn4{"1S1=1D1=2S"};
+    Cigar cigarOut4{"1S2=1D2S"};
+
+    // should not modify hard clip
+    // T:  AAA      AAA
+    //       |  ->  |
+    // Q: #--A#    #A--#
+    std::string target5{"AAA"};
+    std::string query5{"A"};
+    Cigar cigarIn5{"3H2D1=5H"};
+    Cigar cigarOut5{"3H1=2D5H"};
+
+    // should replace mismatches with deletions first
+    // T: AAA--CA--T-TGG    AAAC--AT---TGG    AAAC--ATTGG--
+    //    | |            -> || |   |       or || |   ||||
+    // Q: A-ACCTTTGGGG--    AA-CCTTTGGGG--    AA-CCT-TTGGGG
+    std::string target6{"AAACATTGG"};
+    std::string query6{"AACCTTTGGGG"};
+    Cigar cigarIn6{"1=1D1=2I2X2I1X1I1X2D"};
+    Cigar cigarOut6{"2=1D1=2I1X1=3I1X2D"};
+    Cigar cigarOut6X{"2=1D1=2I1D4=2I"};
+
+    // same sequences in different order can yield different result while replacing mismatches
+    // T: A-ACCTTTGGGG--    AA-CCTTTGGGG--    AA-CCTT-TGGGG---
+    //    | |            -> || |   |       or || |    |
+    // Q: AAA--CA--T-TGG    AAAC--AT---TGG    AAAC---AT----TGG
+    std::string target7{"AACCTTTGGGG"};
+    std::string query7{"AAACATTGG"};
+    Cigar cigarIn7{"1=1I1=2D2X2D1X1D1X2I"};
+    Cigar cigarOut7{"2=1I1=2D1X1=3D1X2I"};
+    Cigar cigarOut7X{"2=1I1=3D1I1=4D3I"};
+
+    // ---AAACCC------TTT    AAACCCTTT
+    //                    -> |||||||||
+    // AAA------CCCTTT---    AAACCCTTT
+    std::string target8{"AAACCCTTT"};
+    std::string query8{"AAACCCTTT"};
+    Cigar cigarIn8{"3I6D6I3D"};
+    Cigar cigarOut8{"9="};
+
+    // clang-format off
+
+    EXPECT_EQ(cigarOut1,  PacBio::Data::LeftAlignCigar(cigarIn1, target1, query1));
+    EXPECT_EQ(cigarOut1,  PacBio::Data::LeftAlignCigar(cigarIn1, target1, query1, true));
+    EXPECT_EQ(cigarOut2,  PacBio::Data::LeftAlignCigar(cigarIn2, target2, query2));
+    EXPECT_EQ(cigarOut2X, PacBio::Data::LeftAlignCigar(cigarIn2, target2, query2, true));
+    EXPECT_EQ(cigarOut3,  PacBio::Data::LeftAlignCigar(cigarIn3, target3, query3));
+    EXPECT_EQ(cigarOut4,  PacBio::Data::LeftAlignCigar(cigarIn4, target4, query4));
+    EXPECT_EQ(cigarOut5,  PacBio::Data::LeftAlignCigar(cigarIn5, target5, query5));
+    EXPECT_EQ(cigarOut6,  PacBio::Data::LeftAlignCigar(cigarIn6, target6, query6));
+    EXPECT_EQ(cigarOut6X, PacBio::Data::LeftAlignCigar(cigarIn6, target6, query6, true));
+    EXPECT_EQ(cigarOut7,  PacBio::Data::LeftAlignCigar(cigarIn7, target7, query7));
+    EXPECT_EQ(cigarOut7X, PacBio::Data::LeftAlignCigar(cigarIn7, target7, query7, true));
+    EXPECT_EQ(cigarOut8,  PacBio::Data::LeftAlignCigar(cigarIn8, target8, query8));
+
+    // clang-format on
+}
+
 // clang-format on
