@@ -1,12 +1,16 @@
 #include <pbcopper/data/Cigar.h>
 
 #include <pbcopper/utility/SequenceUtils.h>
+#include <pbcopper/utility/Ssize.h>
 
+#include <iterator>
 #include <ostream>
 #include <sstream>
+#include <stack>
 #include <stdexcept>
 #include <type_traits>
 
+#include <cassert>
 #include <cstddef>
 #include <cstdint>
 
@@ -214,6 +218,257 @@ bool ConvertCigarToM5(const std::string& ref, const std::string& query, const in
     retRefAln = rss.str();
     retQueryAln = qss.str();
     return true;
+}
+
+bool ValidateCigar(const Data::Cigar& cigar, const std::string_view ref,
+                   const std::string_view query)
+{
+    const auto cigarBegin = std::cbegin(cigar);
+    const auto cigarEnd = std::cend(cigar);
+
+    const int32_t refLen = Utility::Ssize(ref);
+    const int32_t queryLen = Utility::Ssize(query);
+
+    int32_t refPos = 0;
+    int32_t queryPos = 0;
+
+    for (auto it = cigarBegin; it != cigarEnd; ++it) {
+        const Data::CigarOperationType type = it->Type();
+        const int32_t length = it->Length();
+
+        if ((it != cigarBegin) && (type == std::prev(it)->Type())) {
+            return false;
+        }
+
+        if (type == Data::CigarOperationType::INSERTION) {
+            queryPos += length;
+
+        } else if ((type == Data::CigarOperationType::DELETION) ||
+                   (type == Data::CigarOperationType::REFERENCE_SKIP)) {
+            refPos += length;
+
+        } else if (type == Data::CigarOperationType::SOFT_CLIP) {
+            if ((it != cigarBegin) && (it != std::prev(cigarEnd)) &&
+                (std::next(it)->Type() != Data::CigarOperationType::HARD_CLIP) &&
+                (std::prev(it)->Type() != Data::CigarOperationType::HARD_CLIP)) {
+                return false;
+            }
+            queryPos += length;
+
+        } else if (type == Data::CigarOperationType::HARD_CLIP) {
+            if ((it != cigarBegin) && (it != std::prev(cigarEnd))) {
+                return false;
+            }
+
+        } else if (type == Data::CigarOperationType::PADDING) {
+            continue;
+
+        } else if (type == Data::CigarOperationType::SEQUENCE_MATCH) {
+            for (int32_t i = 0; i < length; ++i, ++refPos, ++queryPos) {
+                if ((refPos >= refLen) || (queryPos >= queryLen) ||
+                    (ref[refPos] != query[queryPos])) {
+                    return false;
+                }
+            }
+
+        } else if (type == Data::CigarOperationType::SEQUENCE_MISMATCH) {
+            for (int32_t i = 0; i < length; ++i, ++refPos, ++queryPos) {
+                if ((refPos >= refLen) || (queryPos >= queryLen) ||
+                    (ref[refPos] == query[queryPos])) {
+                    return false;
+                }
+            }
+
+        } else {  // ALIGNMENT_MATCH | UNKNOWN_OP
+            return false;
+        }
+    }
+
+    return (refPos == refLen) && (queryPos == queryLen);
+}
+
+Data::Cigar LeftAlignCigar(const Data::Cigar& cigar, const std::string_view ref,
+                           const std::string_view query, const bool replaceMismatches)
+{
+    assert(ValidateCigar(cigar, ref, query));
+
+    std::stack<Data::CigarOperation> cigarStack;
+
+    int32_t refBegin = 0;
+    int32_t refEnd = Utility::Ssize(ref);
+    int32_t refLoan = 0;
+
+    int32_t queryBegin = 0;
+    int32_t queryEnd = Utility::Ssize(query);
+    int32_t queryLoan = 0;
+
+    Data::Cigar result;
+    result.reserve(std::size(cigar) * 1.5);
+
+    // helper lambdas
+    const auto updateCigarStack = [&]() {
+        while (!cigarStack.empty()) {
+            Data::CigarOperation op = cigarStack.top();
+            const Data::CigarOperationType type = op.Type();
+
+            assert(type != Data::CigarOperationType::PADDING);
+            assert(type != Data::CigarOperationType::HARD_CLIP);
+            assert(type != Data::CigarOperationType::SOFT_CLIP);
+
+            if (((queryLoan == 0) && (refLoan == 0)) ||
+                ((type == Data::CigarOperationType::INSERTION) && (queryLoan == 0)) ||
+                ((type == Data::CigarOperationType::DELETION) && (refLoan == 0))) {
+                break;
+            }
+
+            cigarStack.pop();
+            int32_t length = op.Length();
+
+            if ((type == Data::CigarOperationType::SEQUENCE_MATCH) ||
+                (type == Data::CigarOperationType::SEQUENCE_MISMATCH)) {
+                const int32_t loan = std::min(queryLoan, refLoan);
+                if (loan >= length) {
+                    queryLoan -= length;
+                    refLoan -= length;
+                } else {
+                    queryLoan -= loan;
+                    refLoan -= loan;
+                    length -= loan;
+                    if ((queryLoan > 0) && (refLoan == 0)) {
+                        if (queryLoan >= length) {
+                            cigarStack.emplace(Data::CigarOperationType::DELETION, length);
+                            queryLoan -= length;
+                        } else {
+                            cigarStack.emplace(type, length - queryLoan);
+                            cigarStack.emplace(Data::CigarOperationType::DELETION, queryLoan);
+                            queryLoan = 0;
+                        }
+                    } else if ((queryLoan == 0) && (refLoan > 0)) {
+                        if (refLoan >= length) {
+                            cigarStack.emplace(Data::CigarOperationType::INSERTION, length);
+                            refLoan -= length;
+                        } else {
+                            cigarStack.emplace(type, length - refLoan);
+                            cigarStack.emplace(Data::CigarOperationType::INSERTION, refLoan);
+                            refLoan = 0;
+                        }
+                    }
+                }
+
+            } else if (type == Data::CigarOperationType::INSERTION) {
+                if (queryLoan >= length) {
+                    queryLoan -= length;
+                } else {
+                    length -= queryLoan;
+                    queryLoan = 0;
+                    cigarStack.emplace(Data::CigarOperationType::INSERTION, length);
+                }
+
+            } else if ((type == Data::CigarOperationType::DELETION) ||
+                       (type == Data::CigarOperationType::REFERENCE_SKIP)) {
+                if (refLoan >= length) {
+                    refLoan -= length;
+                } else {
+                    length -= refLoan;
+                    refLoan = 0;
+                    cigarStack.emplace(Data::CigarOperationType::DELETION, length);
+                }
+            }
+        }
+    };
+
+    const auto updateOrAppendToResult = [&result](Data::CigarOperation op) {
+        if (!result.empty() && (result.back().Type() == op.Type())) {
+            result.back().Length(result.back().Length() + op.Length());
+        } else {
+            result.emplace_back(op);
+        }
+    };
+
+    // preprocess query
+    if (!cigar.empty() && (cigar.front().Type() == Data::CigarOperationType::SOFT_CLIP)) {
+        queryBegin += cigar.front().Length();
+    }
+    if ((Utility::Ssize(cigar) > 1) &&
+        (cigar.back().Type() == Data::CigarOperationType::SOFT_CLIP)) {
+        queryEnd -= cigar.back().Length();
+    }
+
+    // unroll
+    for (const auto& it : cigar) {
+        Data::CigarOperationType type = it.Type();
+
+        if (type == Data::CigarOperationType::PADDING) {
+            continue;
+        }
+        if ((type == Data::CigarOperationType::HARD_CLIP) ||
+            (type == Data::CigarOperationType::SOFT_CLIP)) {
+            // SOFT_CLIP does not consume query due to preprocess
+            result.emplace_back(it);
+            continue;
+        }
+
+        if (replaceMismatches && (type == Data::CigarOperationType::SEQUENCE_MISMATCH)) {
+            const int32_t length = it.Length();
+            for (int32_t i = 0; i < length; ++i) {
+                cigarStack.emplace(Data::CigarOperationType::INSERTION, 1);
+                cigarStack.emplace(Data::CigarOperationType::DELETION, 1);
+            }
+        } else {
+            cigarStack.emplace(it);
+        }
+
+        updateCigarStack();
+        while (!cigarStack.empty()) {
+            Data::CigarOperation op = cigarStack.top();
+            cigarStack.pop();
+
+            type = op.Type();
+            const int32_t length = op.Length();
+
+            if ((type == Data::CigarOperationType::SEQUENCE_MATCH) ||
+                (type == Data::CigarOperationType::SEQUENCE_MISMATCH)) {
+                updateOrAppendToResult(op);
+                refBegin += length;
+                queryBegin += length;
+
+            } else if (type == Data::CigarOperationType::INSERTION) {
+                for (int32_t i = 0; i < length; ++i, ++queryBegin) {
+                    if ((refBegin < refEnd) && (ref[refBegin] == query[queryBegin])) {
+                        // left align
+                        updateOrAppendToResult(
+                            Data::CigarOperation{Data::CigarOperationType::SEQUENCE_MATCH, 1});
+                        ++refBegin;
+                        ++refLoan;
+                    } else {
+                        updateOrAppendToResult(
+                            Data::CigarOperation{Data::CigarOperationType::INSERTION, 1});
+                    }
+                }
+
+            } else if ((type == Data::CigarOperationType::DELETION) ||
+                       (type == Data::CigarOperationType::REFERENCE_SKIP)) {
+                for (int32_t i = 0; i < length; ++i, ++refBegin) {
+                    if ((queryBegin < queryEnd) && (ref[refBegin] == query[queryBegin])) {
+                        // left align
+                        updateOrAppendToResult(
+                            Data::CigarOperation{Data::CigarOperationType::SEQUENCE_MATCH, 1});
+                        ++queryBegin;
+                        ++queryLoan;
+                    } else {
+                        updateOrAppendToResult(
+                            Data::CigarOperation{Data::CigarOperationType::DELETION, 1});
+                    }
+                }
+            }
+
+            updateCigarStack();
+        }
+    }
+
+    assert(ValidateCigar(result, ref, query));
+
+    return result;
 }
 
 }  // namespace Data

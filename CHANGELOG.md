@@ -2,7 +2,11 @@
 
 ## Active
 
-## [2.0.0] - TBD
+### Added
+ - ValidateCigar
+ - LeftAlignCigar
+
+## [2.0.0] - 2022-01-10
 
 ### Changed
  - C++20 is now a *hard* minimum.
