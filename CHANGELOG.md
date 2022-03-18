@@ -5,6 +5,7 @@
 ### Added
  - ValidateCigar
  - LeftAlignCigar
+ - UnorderedMap, UnorderedSet
 
 ## [2.0.0] - 2022-01-10
 

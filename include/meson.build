@@ -94,6 +94,8 @@ if not meson.is_subproject()
       'pbcopper/container/BitConversion.h',
       'pbcopper/container/BitmaskContainer.h',
       'pbcopper/container/DNAString.h',
+      'pbcopper/container/RHUnordered.h',
+      'pbcopper/container/Unordered.h',
     ]),
     subdir : 'pbcopper/container')
 

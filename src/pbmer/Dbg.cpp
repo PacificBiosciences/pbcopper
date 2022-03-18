@@ -1,9 +1,11 @@
 #include <pbcopper/pbmer/Dbg.h>
 
+#include <pbcopper/container/Unordered.h>
+
 #include <fstream>
 #include <iostream>
+#include <numeric>
 #include <sstream>
-#include <unordered_set>
 
 #include <cassert>
 
@@ -23,7 +25,7 @@ int Dbg::AddKmers(const PacBio::Pbmer::Mers& m, const uint32_t rid)
         return -2;
     }
 
-    for (auto const& x : m.forward) {
+    for (const auto& x : m.forward) {
         DnaBit niby{x.mer, static_cast<uint8_t>(x.strand == Data::Strand::FORWARD ? 0 : 1),
                     kmerSize_};
 
@@ -168,11 +170,11 @@ std::vector<uint8_t> Dbg::BuildVerifiedEdges(const std::vector<PacBio::Pbmer::Dn
 
 void Dbg::BuildEdges()
 {
-    for (auto x = dbg_.begin(); x != dbg_.end(); ++x) {
+    for (auto& x : dbg_) {
         // all 8 possible edges
         for (uint8_t y = 0; y < 8; ++y) {
 
-            DnaBit niby = x->second.dna_;
+            DnaBit niby = x.second.dna_;
             // pre-prending base
             if (y <= 3) {
                 niby.PrependBase(y);
@@ -187,13 +189,13 @@ void Dbg::BuildEdges()
 
             // this is a self loop
             // TODO validate this should not be skipped.
-            if (x->second.dna_.mer == niby.mer) {
+            if (x.second.dna_.mer == niby.mer) {
                 continue;
             }
 
             if (dbg_.find(niby.mer) != dbg_.end()) {
                 //setting the edges
-                x->second.SetEdges((uint8_t(1) << y));
+                x.second.SetEdges((uint8_t(1) << y));
             }
         }
     }
@@ -234,12 +236,7 @@ void Dbg::FrequencyFilterNodes2(unsigned long n, bool gt)
 
     std::vector<uint64_t> toRemove;
 
-    auto filterDirection = [&](const auto count) {
-        if (gt) {
-            return (count > n);
-        }
-        return (count < n);
-    };
+    auto filterDirection = [&](const auto count) { return gt ? (count > n) : (count < n); };
 
     for (auto& x : dbg_) {
         if (filterDirection(x.second.readIds2_.count())) {
@@ -252,12 +249,12 @@ void Dbg::FrequencyFilterNodes2(unsigned long n, bool gt)
 
     uint64_t lexSmall = 0;
 
-    for (auto x = dbg_.begin(); x != dbg_.end(); ++x) {
+    for (auto& x : dbg_) {
         for (uint8_t y = 0; y < 8; ++y) {
-            if (((1 << y) & x->second.edges_) == 0) {
+            if (((1 << y) & x.second.edges_) == 0) {
                 continue;
             }
-            DnaBit niby = x->second.dna_;
+            DnaBit niby = x.second.dna_;
             // pre-prending base
             if (y <= 3) {
                 niby.PrependBase(y);
@@ -272,7 +269,7 @@ void Dbg::FrequencyFilterNodes2(unsigned long n, bool gt)
 
             if (dbg_.find(lexSmall) == dbg_.end()) {
                 uint8_t turnOff = ~(uint8_t(1) << y);
-                x->second.edges_ &= turnOff;
+                x.second.edges_ &= turnOff;
             }
         }
     }
@@ -285,40 +282,34 @@ Bubbles Dbg::FindBubbles() const
 
     // keeping track of read id counts over linear paths
     // these variables are reused
-    robin_hood::unordered_map<uint32_t, int> leftReads;
-    robin_hood::unordered_map<uint32_t, int> rightReads;
+    Container::UnorderedMap<uint32_t, int> leftReads;
+    Container::UnorderedMap<uint32_t, int> rightReads;
 
     // keep track of the used head/tails of bubbles.
-    std::unordered_set<uint64_t> usedBranchNode;
+    Container::UnorderedSet<uint64_t> usedBranchNode;
 
     // reused variables
-    uint64_t s1;
-    uint64_t s2;
-    uint64_t e1;
-    uint64_t e2;
-    uint64_t shared;
 
-    for (auto x = dbg_.begin(); x != dbg_.end(); ++x) {
+    for (const auto& x : dbg_) {
 
         // this node is already part of a bubble and should be ignored.
-        if (usedBranchNode.find(x->second.dna_.mer) != usedBranchNode.end()) {
+        if (usedBranchNode.find(x.second.dna_.mer) != usedBranchNode.end()) {
             continue;
         }
 
         // valid bubbles contain 3 or more paths
-        if (x->second.TotalEdgeCount() < 3) {
+        if (x.second.TotalEdgeCount() < 3) {
             continue;
         }
         std::vector<std::tuple<uint64_t, uint64_t>> pathInfo;
 
         // loop over neighboring nodes collecting the start and end node of
         // linear paths. I.E. looping over all linear paths coming out of a node.
-        for (const auto& out : x->second) {
-            auto linearPath = LinearPath(out);
-            if (linearPath.empty()) {
-                continue;
+        for (const auto& out : x.second) {
+            const auto linearPath = LinearPath(out);
+            if (!linearPath.empty()) {
+                pathInfo.emplace_back(out.mer, linearPath.back().mer);
             }
-            pathInfo.emplace_back(out.mer, linearPath.back().mer);
         }
 
         // The left and right path of a bubble.
@@ -330,22 +321,17 @@ Bubbles Dbg::FindBubbles() const
         // Comparing all linear paths to check if they converge. The first
         // two paths to converge are considered a bubble. subsequent bubbles are
         // ignored.
-        for (size_t i = 0; i < pathInfo.size(); ++i) {
+        for (const auto& [s1, e1] : pathInfo) {
             hasBubble = false;
-            for (size_t j = 0; j < pathInfo.size(); ++j) {
-                s1 = std::get<0>(pathInfo[i]);
-                s2 = std::get<0>(pathInfo[j]);
-                e1 = std::get<1>(pathInfo[i]);
-                e2 = std::get<1>(pathInfo[j]);
-
+            for (const auto& [s2, e2] : pathInfo) {
                 // check if the paths converge on a common neighboring node.
-                if (OneIntermediateNode(e1, e2, &shared)) {
+                if (uint64_t shared; OneIntermediateNode(e1, e2, &shared)) {
                     // the paths are not stored in the first loop, maybe the should?
                     left = LinearPath(s1);
                     right = LinearPath(s2);
                     // set the used incoming node so we don't get 2x n bubbles
                     usedBranchNode.insert(shared);
-                    usedBranchNode.insert(x->second.dna_.mer);
+                    usedBranchNode.insert(x.second.dna_.mer);
                     hasBubble = true;
                     break;
                 }
@@ -363,7 +349,7 @@ Bubbles Dbg::FindBubbles() const
         leftReads.clear();
         rightReads.clear();
 
-        for (auto const& l : left) {
+        for (const auto& l : left) {
             size_t i = dbg_.at(l.mer).readIds2_.find_first();
             while (i != dbg_.at(l.mer).readIds2_.npos) {
                 ++leftReads[i + 1];
@@ -371,7 +357,7 @@ Bubbles Dbg::FindBubbles() const
             }
         }
 
-        for (auto const& r : right) {
+        for (const auto& r : right) {
             size_t i = dbg_.at(r.mer).readIds2_.find_first();
             while (i != dbg_.at(r.mer).readIds2_.npos) {
                 ++rightReads[i + 1];
@@ -384,6 +370,8 @@ Bubbles Dbg::FindBubbles() const
         bubble.RSeq = DnaBitVec2String(right);
         bubble.LKmerCount = left.size();
         bubble.RKmerCount = right.size();
+        bubble.LVec = std::move(left);
+        bubble.RVec = std::move(right);
 
         for (const auto& kv : leftReads) {
             bubble.LData.emplace_back(kv.first, kv.second);
@@ -408,14 +396,11 @@ std::vector<DnaBit> Dbg::LinearPath(const DnaBit& niby) const
     }
 
     // lookup for which nodes we've seen to prevent loops
-    std::unordered_set<uint64_t> seen;
+    Container::UnorderedSet<uint64_t> seen;
 
     uint64_t past = niby.mer;
 
-    while (1) {
-        if (seen.find(past) != seen.end()) {
-            break;
-        }
+    while (seen.find(past) == seen.end()) {
         seen.insert(past);
         result.push_back(dbg_.at(past).dna_);
         for (const auto& y : dbg_.at(past)) {
@@ -458,17 +443,14 @@ size_t Dbg::NNodes() const { return dbg_.size(); }
 
 size_t Dbg::NEdges() const
 {
-    size_t edgeCount = 0;
-
-    for (const auto& x : dbg_) {
-        edgeCount += x.second.TotalEdgeCount();
-    }
-    return edgeCount;
+    return std::accumulate(
+        std::begin(dbg_), std::end(dbg_), size_t(0),
+        [](size_t sum, const auto& x) { return sum + x.second.TotalEdgeCount(); });
 }
 
 bool Dbg::OneIntermediateNode(uint64_t n1, uint64_t n2, uint64_t* shared) const
 {
-    std::unordered_set<uint64_t> seen;
+    Container::UnorderedSet<uint64_t> seen;
     if (n1 == n2) {
         return false;
     }
@@ -488,16 +470,16 @@ int Dbg::RemoveSpurs(unsigned int maxLength)
 {
     int nSpurs = 0;
 
-    std::unordered_set<uint64_t> toDelete;
+    Container::UnorderedSet<uint64_t> toDelete;
 
-    for (auto& nodeIter : dbg_) {
+    for (auto& node : dbg_) {
         // Starting at tip nodes with a degree of one.
-        if (nodeIter.second.TotalEdgeCount() != 1) {
+        if (node.second.TotalEdgeCount() != 1) {
             continue;
         }
 
         // Including tip node in the linear path.
-        auto linearPath = LinearPath(nodeIter.second.dna_.mer);
+        const auto linearPath = LinearPath(node.second.dna_.mer);
 
         if (linearPath.size() > maxLength) {
             continue;
@@ -527,30 +509,17 @@ void Dbg::ResetEdges()
 
 bool Dbg::ValidateEdges() const
 {
-    bool valid = true;
-    int count = 0;
-
-    for (auto x = dbg_.begin(); x != dbg_.end(); ++x) {
-        for (const auto& y : x->second) {
-            auto got = dbg_.find(y.mer);
-            if (got == dbg_.end()) {
-                ++count;
-
-                valid = false;
-            }
-        }
-    }
-    return valid;
+    const auto& dbg = dbg_;
+    return std::all_of(std::begin(dbg_), std::end(dbg_), [&dbg](const auto& x) {
+        return std::all_of(std::begin(x.second), std::end(x.second),
+                           [&dbg](const auto& y) { return dbg.find(y.mer) != dbg.end(); });
+    });
 }
 
 bool Dbg::ValidateLoad() const
 {
-    for (const auto& x : dbg_) {
-        if (x.second.readIds2_.count() == 0) {
-            return false;
-        }
-    }
-    return true;
+    return std::all_of(std::begin(dbg_), std::end(dbg_),
+                       [](const auto& x) { return x.second.readIds2_.count() != 0; });
 }
 
 void Dbg::WriteGraph(std::string fn)

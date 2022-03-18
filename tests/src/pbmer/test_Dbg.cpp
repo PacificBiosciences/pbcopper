@@ -2,6 +2,9 @@
 
 #include <gtest/gtest.h>
 
+using namespace std::literals;
+using PacBio::Pbmer::DnaBit;
+
 TEST(Pbmer_Dbg, add_kmers_throws_if_kmer_too_big)
 {
     const PacBio::Pbmer::Parser parser{32};
@@ -55,6 +58,7 @@ TEST(Pbmer_Dbg, test_topo_three_kmers)
     const PacBio::Pbmer::Parser parser{3};
     const std::string td1{"CATAG"};
     PacBio::Pbmer::Mers m1{parser.Parse(td1)};
+    EXPECT_EQ(int(m1.forward.size()), 3);
     PacBio::Pbmer::Dbg dg{3, 1};
     dg.AddKmers(m1, 1);
 
@@ -62,7 +66,18 @@ TEST(Pbmer_Dbg, test_topo_three_kmers)
 
     dg.BuildEdges();
 
-    std::string expected = R"(digraph DBGraph {
+    const std::string expected = R"(digraph DBGraph {
+    ATG [fillcolor=red, style="rounded,filled", shape=diamond]
+    ATA [fillcolor=grey, style="rounded,filled", shape=ellipse]
+    CTA [fillcolor=red, style="rounded,filled", shape=diamond]
+    ATG -> ATA;
+    ATA -> CTA;
+    ATA -> ATG;
+    CTA -> ATA;
+})";
+#if 0
+    const std::string oldExpected =
+R"(digraph DBGraph {
     ATG [fillcolor=red, style="rounded,filled", shape=diamond]
     CTA [fillcolor=red, style="rounded,filled", shape=diamond]
     ATA [fillcolor=grey, style="rounded,filled", shape=ellipse]
@@ -71,6 +86,7 @@ TEST(Pbmer_Dbg, test_topo_three_kmers)
     ATA -> CTA;
     ATA -> ATG;
 })";
+#endif
 
     std::string seen = dg.Graph2StringDot();
     EXPECT_EQ(dg.ValidateEdges(), true);
@@ -89,23 +105,23 @@ TEST(Pbmer_Dbg, test_topo_five_kmers)
 
     dg.BuildEdges();
 
-    std::string expected = R"(digraph DBGraph {
-    ACC [fillcolor=grey, style="rounded,filled", shape=ellipse]
-    AGG [fillcolor=red, style="rounded,filled", shape=diamond]
-    GTA [fillcolor=red, style="rounded,filled", shape=diamond]
+    constexpr std::string_view expected{R"(digraph DBGraph {
     ATG [fillcolor=red, style="rounded,filled", shape=diamond]
+    AGG [fillcolor=red, style="rounded,filled", shape=diamond]
     ATA [fillcolor=grey, style="rounded,filled", shape=ellipse]
-    ACC -> AGG;
-    ACC -> GTA;
-    AGG -> ACC;
-    GTA -> ATA;
-    GTA -> ACC;
+    GTA [fillcolor=red, style="rounded,filled", shape=diamond]
+    ACC [fillcolor=grey, style="rounded,filled", shape=ellipse]
     ATG -> ATA;
+    AGG -> ACC;
     ATA -> GTA;
     ATA -> ATG;
-})";
+    GTA -> ATA;
+    GTA -> ACC;
+    ACC -> AGG;
+    ACC -> GTA;
+})"};
 
-    std::string seen = dg.Graph2StringDot();
+    const std::string seen = dg.Graph2StringDot();
     EXPECT_EQ(seen, expected);
 }
 
@@ -121,21 +137,21 @@ TEST(Pbmer_Dbg, test_topo_five_kmers_add_verifed_edges)
 
     EXPECT_EQ(dg.NNodes(), 5);
 
-    std::string expected = R"(digraph DBGraph {
-    ACC [fillcolor=grey, style="rounded,filled", shape=ellipse]
-    AGG [fillcolor=red, style="rounded,filled", shape=diamond]
-    GTA [fillcolor=red, style="rounded,filled", shape=diamond]
+    constexpr std::string_view expected{R"(digraph DBGraph {
     ATG [fillcolor=red, style="rounded,filled", shape=diamond]
+    AGG [fillcolor=red, style="rounded,filled", shape=diamond]
     ATA [fillcolor=grey, style="rounded,filled", shape=ellipse]
-    ACC -> AGG;
-    ACC -> GTA;
-    AGG -> ACC;
-    GTA -> ATA;
-    GTA -> ACC;
+    GTA [fillcolor=red, style="rounded,filled", shape=diamond]
+    ACC [fillcolor=grey, style="rounded,filled", shape=ellipse]
     ATG -> ATA;
+    AGG -> ACC;
     ATA -> GTA;
     ATA -> ATG;
-})";
+    GTA -> ATA;
+    GTA -> ACC;
+    ACC -> AGG;
+    ACC -> GTA;
+})"};
 
     std::string seen = dg.Graph2StringDot();
     EXPECT_EQ(seen, expected);
@@ -411,10 +427,37 @@ TEST(Pbmer_Dbg, Bubbles_mismatch_found)
     dg.BuildEdges();
     auto bubbles = dg.FindBubbles();
     EXPECT_EQ(bubbles.size(), 1);
-    //reverse comp
-    EXPECT_EQ(bubbles[0].LSeq, "AAATTCGAATTCTACATTGGATTACTTTA");
-    //reverse comp
-    EXPECT_EQ(bubbles[0].RSeq, "AAATTCGAATTCTAAATTGGATTACTTTA");
+    const auto& bubble = bubbles.front();
+    std::vector<uint64_t> integers{334033404, 11588667, 46354668,  185418674, 741674696,
+                                   819215136, 55635075, 64769955,  553063400, 339419382,
+                                   283935704, 62000992, 248003971, 64503236,  16125809};
+    const std::vector<bool> strands{true, false, false, false, false, false, false, true,
+                                    true, false, false, false, false, true,  true};
+    std::vector<DnaBit> rightTruth{
+        DnaBit{65597948, 1, 15},  DnaBit{11588671, 0, 15},  DnaBit{46354684, 0, 15},
+        DnaBit{185418738, 0, 15}, DnaBit{741674952, 0, 15}, DnaBit{819216160, 0, 15},
+        DnaBit{55639171, 0, 15},  DnaBit{64753571, 1, 15},  DnaBit{553059304, 1, 15},
+        DnaBit{339681526, 0, 15}, DnaBit{284984280, 0, 15}, DnaBit{66195296, 0, 15},
+        DnaBit{258012931, 1, 15}, DnaBit{64503232, 1, 15},  DnaBit{16125808, 1, 15}};
+
+    std::vector<DnaBit> leftTruth;
+    for (int i = 0, e = integers.size(); i < e; ++i) {
+        leftTruth.emplace_back(integers[i], strands[i], 15);
+    }
+    auto leftPbmers = bubble.LVec;
+    auto rightPbmers = bubble.RVec;
+    auto standardizeSeq = [&](auto& x) {
+        const auto lv = ((__uint128_t(x.front().mer) << 32) | x.front().strand);
+        const auto rv = ((__uint128_t(x.back().mer) << 32) | x.back().strand);
+        if (lv < rv) {
+            std::reverse(x.begin(), x.end());
+        }
+    };
+    standardizeSeq(rightTruth);
+    standardizeSeq(leftPbmers);
+    standardizeSeq(rightPbmers);
+    EXPECT_EQ(std::equal(leftTruth.begin(), leftTruth.end(), leftPbmers.begin()), true);
+    EXPECT_EQ(std::equal(rightTruth.begin(), rightTruth.end(), rightPbmers.begin()), true);
 }
 /*
 This is de bruijn graph has a complicated topology.Leave as a stretch
@@ -467,8 +510,20 @@ TEST(Pbmer_Dbg, Bubbles_indel_found2)
 
     dg.BuildEdges();
     auto bubbles = dg.FindBubbles();
+    const std::ptrdiff_t lSize = bubbles.front().LSeq.size();
+    const std::ptrdiff_t rSize = bubbles.front().RSeq.size();
+    const std::string& lseq = bubbles.front().LSeq;
+    const std::string& rseq = bubbles.front().RSeq;
 
     EXPECT_EQ(bubbles.size(), 1);
+    // There should be an insertion of one A.
+    EXPECT_EQ(std::max(lSize, rSize) - std::min(lSize, rSize), 1);
+
+    // Make sure that the strings don't change. This may change with hash-map ordering
+    // so if only these tests fail after changing the underlying hash-map, it may not be bad news.
+    EXPECT_EQ(lseq, "CCAGCTTCGAAAAACCTTTAAAA");
+    EXPECT_EQ(rseq, "CCAGCTTCGAAAAAACCTTTAAAA");
+    EXPECT_EQ(rseq.substr(0, 14) + rseq.substr(15, std::string::npos), lseq);
 }
 
 TEST(Pbmer_Dbg, Bubbles_no_bubble)
@@ -511,30 +566,30 @@ TEST(Pbmer_Dbg, SpurRemoval_spur_found)
     dg.BuildEdges();
     auto spurCount = dg.RemoveSpurs(1);
 
-    std::string expected = R"(digraph DBGraph {
-    ACTTCCA [fillcolor=red, style="rounded,filled", shape=diamond]
-    GGAAGTA [fillcolor=grey, style="rounded,filled", shape=ellipse]
-    CTACTTC [fillcolor=red, style="rounded,filled", shape=diamond]
+    constexpr std::string_view expected{R"(digraph DBGraph {
     AGCGACT [fillcolor=red, style="rounded,filled", shape=diamond]
-    CGACTTC [fillcolor=red, style="rounded,filled", shape=diamond]
-    AAGTCGC [fillcolor=grey, style="rounded,filled", shape=ellipse]
     AAGTAGC [fillcolor=grey, style="rounded,filled", shape=ellipse]
     GACTTCC [fillcolor=red, style="rounded,filled", shape=diamond]
-    ACTTCCA -> GGAAGTA;
-    ACTTCCA -> GACTTCC;
+    GGAAGTA [fillcolor=grey, style="rounded,filled", shape=ellipse]
+    CGACTTC [fillcolor=red, style="rounded,filled", shape=diamond]
+    AAGTCGC [fillcolor=grey, style="rounded,filled", shape=ellipse]
+    ACTTCCA [fillcolor=red, style="rounded,filled", shape=diamond]
+    CTACTTC [fillcolor=red, style="rounded,filled", shape=diamond]
+    AGCGACT -> AAGTCGC;
+    AAGTAGC -> CTACTTC;
+    GACTTCC -> ACTTCCA;
+    GACTTCC -> CGACTTC;
     GGAAGTA -> CTACTTC;
     GGAAGTA -> ACTTCCA;
-    CTACTTC -> GGAAGTA;
-    CTACTTC -> AAGTAGC;
-    AGCGACT -> AAGTCGC;
     CGACTTC -> GACTTCC;
     CGACTTC -> AAGTCGC;
     AAGTCGC -> AGCGACT;
     AAGTCGC -> CGACTTC;
-    AAGTAGC -> CTACTTC;
-    GACTTCC -> ACTTCCA;
-    GACTTCC -> CGACTTC;
-})";
+    ACTTCCA -> GGAAGTA;
+    ACTTCCA -> GACTTCC;
+    CTACTTC -> GGAAGTA;
+    CTACTTC -> AAGTAGC;
+})"};
 
     std::string seen = dg.Graph2StringDot();
 

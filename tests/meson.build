@@ -15,6 +15,8 @@ pbcopper_test_cpp_sources = files([
   'src/container/test_BitConversion.cpp',
   'src/container/test_BitmaskContainer.cpp',
   'src/container/test_DNAString.cpp',
+  'src/container/test_Unordered.cpp',
+  'src/container/test_RHUnordered.cpp',
 
   # cli2
   'src/cli2/test_CLI.cpp',

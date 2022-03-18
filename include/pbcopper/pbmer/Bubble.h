@@ -2,6 +2,7 @@
 #define PBCOPPER_PBMER_BUBBLE_H
 
 #include <pbcopper/PbcopperConfig.h>
+#include <pbcopper/pbmer/DnaBit.h>
 
 #include <map>
 #include <string>
@@ -28,6 +29,10 @@ struct BubbleInfo
     // READID, KMER_COUNT
     std::vector<std::pair<uint32_t, int32_t>> LData;
     std::vector<std::pair<uint32_t, int32_t>> RData;
+    // K-mers from the left-hand side
+    std::vector<DnaBit> LVec;
+    // K-mers from the right-hand side
+    std::vector<DnaBit> RVec;
 };
 
 using Bubbles = std::vector<BubbleInfo>;
