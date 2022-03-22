@@ -155,7 +155,8 @@ public:
         data_ = (data_ & lowerBitMask) | ((data_ >> ElementBits) & ~lowerBitMask);
     }
 
-    constexpr void Insert(const int32_t idx, const ComputationType val) noexcept
+    PB_CUDA_HOST PB_CUDA_DEVICE constexpr void Insert(const int32_t idx,
+                                                      const ComputationType val) noexcept
     {
         assert(idx >= 0);
         assert(idx < Capacity());
