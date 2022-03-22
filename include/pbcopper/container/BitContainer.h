@@ -75,7 +75,7 @@ public:
     using Base::Capacity;
     using Base::MaximumValue;
 
-    constexpr int32_t Size() const noexcept { return size_; }
+    PB_CUDA_HOST PB_CUDA_DEVICE constexpr int32_t Size() const noexcept { return size_; }
 
     constexpr ValueType operator[](const int32_t idx) const noexcept
     {
@@ -85,7 +85,7 @@ public:
     }
 
 public:
-    constexpr void Clear() noexcept
+    PB_CUDA_HOST PB_CUDA_DEVICE constexpr void Clear() noexcept
     {
         Base::Clear();
         size_ = 0;
@@ -106,13 +106,25 @@ public:
         --size_;
     }
 
-    constexpr void Insert(const int32_t idx, const ValueType val) noexcept
+    PB_CUDA_HOST PB_CUDA_DEVICE constexpr void Insert(const int32_t idx,
+                                                      const ValueType val) noexcept
     {
         assert(idx <= Size());
 
         Base::Insert(idx, val);
         // truncating insertion, shifts the last element into oblivion
-        size_ = std::min(size_ + 1, Capacity());
+#ifndef __CUDA_ARCH__
+        // host (uses <algorithm>)
+        using std::min;
+#endif
+        size_ = min(size_ + 1, Capacity());
+    }
+
+    PB_CUDA_HOST PB_CUDA_DEVICE constexpr void PushBack(const ValueType val) noexcept
+    {
+        assert(Size() < Capacity());
+
+        Insert(Size(), val);
     }
 
     constexpr void Reverse() noexcept
