@@ -22,6 +22,8 @@
 
 #include <pbcopper/third-party/htslib/kfunc.h>
 
+#include <boost/math/special_functions/gamma.hpp>
+
 #include <math.h>
 #include <stdlib.h>
 #include <stdint.h>
@@ -30,7 +32,8 @@
 static double lbinom(int n, int k)
 {
     if (k == 0 || n == k) return 0;
-    return lgamma(n+1) - lgamma(k+1) - lgamma(n-k+1);
+    namespace bm = boost::math;
+    return bm::lgamma(n+1) - bm::lgamma(k+1) - bm::lgamma(n-k+1);
 }
 
 // n11  n12  | n1_
