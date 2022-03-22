@@ -115,6 +115,13 @@ public:
         size_ = std::min(size_ + 1, Capacity());
     }
 
+    constexpr void PushBack(const ValueType val) noexcept
+    {
+        assert(Size() < Capacity());
+
+        Insert(Size(), val);
+    }
+
     constexpr void Reverse() noexcept
     {
         Base::Reverse();

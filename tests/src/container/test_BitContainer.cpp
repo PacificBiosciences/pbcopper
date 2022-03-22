@@ -157,6 +157,24 @@ TEST(Container_BitContainer, Basic)
     EXPECT_EQ(bct.RawData(), 0);
 }
 
+TEST(Container_BitContainer, PushBack)
+{
+    Container::BitContainer<8, 2> bct{0b11, 1};
+    EXPECT_EQ(sizeof(bct), 2 * sizeof(uint32_t));
+    EXPECT_EQ(bct.Capacity(), 4);
+    EXPECT_EQ(bct.Size(), 1);
+
+    bct.PushBack(2);
+    bct.PushBack(0);
+    bct.PushBack(3);
+
+    EXPECT_EQ(bct[0], 0b11);
+    EXPECT_EQ(bct[1], 0b10);
+    EXPECT_EQ(bct[2], 0b00);
+    EXPECT_EQ(bct[3], 0b11);
+    EXPECT_EQ(bct.Size(), 4);
+}
+
 template <int32_t TotalBits, int32_t ElementBits>
 void TestBitContainer()
 {
