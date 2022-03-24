@@ -571,7 +571,7 @@ using KMerLSH32_64 = KMerLSHTable<uint32_t, uint64_t>;
 using KMerLSH64 = KMerLSHTable<uint64_t, uint64_t>;
 using KMerLSH64_64 = KMerLSH64;
 
-using KMerLSH64_32 = KMerLSHTable<uint64_t, uint>;
+using KMerLSH64_32 = KMerLSHTable<uint64_t, uint32_t>;
 using KMerIndex = KMerLSH64_64;
 // Default to 64-bit IDs and 64-bit hashes
 // Users can opt-in to more compact tables by using 32/32
