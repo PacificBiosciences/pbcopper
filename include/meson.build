@@ -53,6 +53,13 @@ if not meson.is_subproject()
       'pbcopper/align/internal/BCAlignImpl.h']),
     subdir : 'pbcopper/align/internal')
 
+   # pbcopper/align/cssw
+  install_headers(
+    files([
+      'pbcopper/align/cssw/ssw.h',
+      'pbcopper/align/cssw/ssw_cpp.h']),
+    subdir : 'pbcopper/align/cssw')
+
   # pbcopper/cli2
   install_headers(
     files([

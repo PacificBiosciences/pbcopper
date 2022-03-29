@@ -6,7 +6,7 @@
 
 #include <utility>
 
-#include "cssw/ssw_cpp.h"
+#include "../../include/pbcopper/align/cssw/ssw_cpp.h"
 
 namespace PacBio {
 namespace Align {

@@ -1,5 +1,6 @@
-#include "ssw_cpp.h"
-#include "ssw.h"
+
+#include <pbcopper/align/cssw/ssw.h>
+#include <pbcopper/align/cssw/ssw_cpp.h>
 
 #include <sstream>
 
