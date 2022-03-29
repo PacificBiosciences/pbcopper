@@ -52,6 +52,8 @@ public:
 
     Cigar(std::vector<CigarOperation> cigar);
 
+    using std::vector<CigarOperation>::vector;
+
     /// \}
 
 public:
