@@ -277,6 +277,14 @@ if not meson.is_subproject()
     ]),
     subdir : 'pbcopper/third-party/ksw2')
 
+  # pbcopper/third-party/rigtorp
+  install_headers(
+    files([
+      'pbcopper/third-party/rigtorp/MPMCQueue.hpp',
+      'pbcopper/third-party/rigtorp/SPSCQueue.hpp',
+      ]),
+    subdir : 'pbcopper/third-party/rigtorp')
+
   # pbcopper/third-party/robin_hood
   install_headers(
     files([
