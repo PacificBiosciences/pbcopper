@@ -7,6 +7,7 @@
  - LeftAlignCigar
  - UnorderedMap, UnorderedSet
  - KMerIndex, LSHIndex, FastMod
+ - Concurrent queues (SPSC, MPMC) from rigtorp
 
 ## [2.0.0] - 2022-01-10
 
