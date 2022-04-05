@@ -46,7 +46,7 @@
 #define PBCOPPER_DEPRECATED
 #endif
 
-#ifdef __NVCC__
+#ifdef __CUDACC__
 
 #ifndef PB_CUDA_HOST
 #define PB_CUDA_HOST __host__
