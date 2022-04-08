@@ -188,25 +188,9 @@ private:
     uint32_t data_ = static_cast<uint32_t>(CigarOperationType::UNKNOWN_OP);
 };
 
-constexpr bool ConsumesQuery(const CigarOperationType type) noexcept
-{
-    //                               X=PHSNDIM
-    constexpr uint32_t lookupTable{0b110010011};
-    const auto val = static_cast<uint32_t>(type);
-    assert(val <= 8);
+bool ConsumesQuery(CigarOperationType type) noexcept;
 
-    return (lookupTable >> val) & 0b1U;
-}
-
-constexpr bool ConsumesReference(const CigarOperationType type) noexcept
-{
-    //                               X=PHSNDIM
-    constexpr uint32_t lookupTable{0b110001101};
-    const auto val = static_cast<uint32_t>(type);
-    assert(val <= 8);
-
-    return (lookupTable >> val) & 0b1U;
-}
+bool ConsumesReference(CigarOperationType type) noexcept;
 
 }  // namespace Data
 }  // namespace PacBio
