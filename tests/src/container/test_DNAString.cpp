@@ -31,7 +31,7 @@ TEST(Container_DNAString, ConstexprFixed32)
     EXPECT_EQ(constexprBct[15], 2);
 
     auto revCt{constexprBct};
-    revCt.ReverseComp();
+    revCt.ReverseComplement();
 
     EXPECT_EQ(std::string{revCt}, "CCTTGGACGACTCTGA");
     EXPECT_EQ(revCt.RawData(), 0b00'10'11'01'11'01'00'10'01'00'10'10'11'11'01'01U);
@@ -79,7 +79,7 @@ TEST(Container_DNAString, ConstexprVariable64ReverseCompl)
     EXPECT_EQ(constexprBct[3], 2);
 
     auto revCt{constexprBct};
-    revCt.ReverseComp();
+    revCt.ReverseComplement();
 
     EXPECT_EQ(revCt[0], 1);
     EXPECT_EQ(revCt[1], 3);
