@@ -175,6 +175,88 @@ TEST(Container_BitContainer, PushBack)
     EXPECT_EQ(bct.Size(), 4);
 }
 
+TEST(Container_BitContainer, Range)
+{
+    using ContType = Container::BitContainer<32, 4>;
+
+    const auto bct = ContType::MakeFromArray(1, 7, 9, 15, 3, 6, 5, 4);
+    EXPECT_EQ(sizeof(bct), 2 * sizeof(uint32_t));
+    EXPECT_EQ(bct.Capacity(), 8);
+    EXPECT_EQ(bct.Size(), 8);
+
+    // copy the whole range
+    {
+        const auto bctNew = bct.Range(0, 8);
+        EXPECT_EQ(bctNew, bct);
+    }
+
+    // copy the whole range, but exceed length
+    {
+        const auto bctNew = bct.Range(0, 34837);
+        EXPECT_EQ(bctNew, bct);
+    }
+
+    // copy nothing from the start
+    {
+        const auto bctNew = bct.Range(0, 0);
+        EXPECT_EQ(bctNew, ContType{});
+    }
+
+    // copy nothing from the middle
+    {
+        const auto bctNew = bct.Range(4, 0);
+        EXPECT_EQ(bctNew, ContType{});
+    }
+
+    // copy nothing from the end
+    {
+        const auto bctNew = bct.Range(8, 2);
+        EXPECT_EQ(bctNew, ContType{});
+    }
+
+    // copy 1 base from the start
+    {
+        const auto bctNew = bct.Range(0, 1);
+        EXPECT_EQ(bctNew, ContType::MakeFromArray(1));
+    }
+
+    // copy 2 bases from the start
+    {
+        const auto bctNew = bct.Range(0, 2);
+        EXPECT_EQ(bctNew, ContType::MakeFromArray(1, 7));
+    }
+
+    // copy 1 base from the middle
+    {
+        const auto bctNew = bct.Range(4, 1);
+        EXPECT_EQ(bctNew, ContType::MakeFromArray(3));
+    }
+
+    // copy 2 bases from the middle
+    {
+        const auto bctNew = bct.Range(4, 2);
+        EXPECT_EQ(bctNew, ContType::MakeFromArray(3, 6));
+    }
+
+    // copy 1 base from the end
+    {
+        const auto bctNew = bct.Range(6, 1);
+        EXPECT_EQ(bctNew, ContType::MakeFromArray(5));
+    }
+
+    // copy 2 bases from the end
+    {
+        const auto bctNew = bct.Range(6, 2);
+        EXPECT_EQ(bctNew, ContType::MakeFromArray(5, 4));
+    }
+
+    // copy all bases from the 2nd base
+    {
+        const auto bctNew = bct.Range(1, 3457874);
+        EXPECT_EQ(bctNew, ContType::MakeFromArray(7, 9, 15, 3, 6, 5, 4));
+    }
+}
+
 template <int32_t TotalBits, int32_t ElementBits>
 void TestBitContainer()
 {

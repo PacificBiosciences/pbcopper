@@ -35,7 +35,12 @@ private:
     }
 
 public:
-    using Base::Base;
+    constexpr explicit DNA2bitStringImpl(const Base base) noexcept : Base{base} {}
+
+    constexpr explicit DNA2bitStringImpl(const Base::UnderlyingType val,
+                                         const int32_t size) noexcept
+        : Base{val, size}
+    {}
 
     constexpr explicit DNA2bitStringImpl(const std::string_view str) noexcept
     {
@@ -77,6 +82,11 @@ public:
     {
         this->data_ = ~this->data_;
         this->Reverse();
+    }
+
+    constexpr DNA2bitStringImpl Range(const int32_t pos, const int32_t len) const noexcept
+    {
+        return DNA2bitStringImpl{Base::Range(pos, len)};
     }
 };
 

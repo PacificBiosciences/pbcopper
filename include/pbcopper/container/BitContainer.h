@@ -135,6 +135,26 @@ public:
         Base::data_ >>= (ElementBits * unusedElems);
     }
 
+    constexpr BitContainer Range(const int32_t pos, const int32_t len) const noexcept
+    {
+        assert(pos >= 0);
+        assert(pos <= Size());
+        assert(len >= 0);
+
+        const int32_t pastEndIdx = std::min(Size(), pos + len);
+        const int32_t unusedElems = Capacity() - pastEndIdx;
+
+        if ((unusedElems == Capacity()) || (pos == Capacity())) {
+            // avoid UB by shifting TotalBits
+            return {};
+        }
+
+        constexpr auto ALL_ONES = static_cast<ComputationType>(-1);
+        const ComputationType bitmask{ALL_ONES >> (ElementBits * unusedElems)};
+        const ComputationType newData = (RawData() & bitmask) >> (ElementBits * pos);
+        return {newData, pastEndIdx - pos};
+    }
+
 public:
     using Base::RawData;
 
