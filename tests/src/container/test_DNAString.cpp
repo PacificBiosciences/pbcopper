@@ -44,6 +44,7 @@ TEST(Container_DNAString, ConstexprVariable32)
     EXPECT_EQ(sizeof(constexprBct), 2 * sizeof(uint32_t));
     EXPECT_EQ(constexprBct.Capacity(), 16);
     EXPECT_EQ(constexprBct.Size(), 16);
+    EXPECT_EQ(constexprBct.Size(), constexprBct.Length());
 
     EXPECT_EQ(constexprBct[0], 3);
     EXPECT_EQ(constexprBct[1], 1);
@@ -70,6 +71,7 @@ TEST(Container_DNAString, ConstexprVariable64ReverseCompl)
     EXPECT_EQ(sizeof(constexprBct), 2 * sizeof(uint64_t));
     EXPECT_EQ(constexprBct.Capacity(), 32);
     EXPECT_EQ(constexprBct.Size(), 4);
+    EXPECT_EQ(constexprBct.Size(), constexprBct.Length());
 
     EXPECT_EQ(constexprBct[0], 3);
     EXPECT_EQ(constexprBct[1], 1);

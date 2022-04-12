@@ -25,7 +25,7 @@ private:
                                     BitContainer<TotalBits, ElementBits>>;
 
 private:
-    constexpr int32_t SizeImpl() const noexcept
+    PB_CUDA_HOST PB_CUDA_DEVICE constexpr int32_t SizeImpl() const noexcept
     {
         if constexpr (FixedWidth) {
             return this->Capacity();
@@ -78,6 +78,8 @@ public:
     }
 
 public:
+    PB_CUDA_HOST PB_CUDA_DEVICE constexpr int32_t Length() const noexcept { return SizeImpl(); }
+
     constexpr void ReverseComp() noexcept
     {
         this->data_ = ~this->data_;
