@@ -127,7 +127,7 @@ public:
         data_ = (val << shiftBits) | (data_ & ~(MaximumValue << shiftBits));
     }
 
-    constexpr void Remove(const int32_t idx) noexcept
+    PB_CUDA_HOST PB_CUDA_DEVICE constexpr void Remove(const int32_t idx) noexcept
     {
         assert(idx >= 0);
         assert(idx < Capacity());

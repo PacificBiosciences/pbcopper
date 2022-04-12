@@ -23,6 +23,7 @@ class DNA2bitStringImpl
 private:
     using Base = std::conditional_t<FixedWidth, BitmaskContainer<TotalBits, ElementBits>,
                                     BitContainer<TotalBits, ElementBits>>;
+    using UnderlyingType = typename Base::UnderlyingType;
 
 private:
     PB_CUDA_HOST PB_CUDA_DEVICE constexpr int32_t SizeImpl() const noexcept
@@ -37,8 +38,8 @@ private:
 public:
     constexpr explicit DNA2bitStringImpl(const Base base) noexcept : Base{base} {}
 
-    constexpr explicit DNA2bitStringImpl(const Base::UnderlyingType val,
-                                         const int32_t size) noexcept
+    PB_CUDA_HOST PB_CUDA_DEVICE constexpr explicit DNA2bitStringImpl(const UnderlyingType val,
+                                                                     const int32_t size) noexcept
         : Base{val, size}
     {}
 

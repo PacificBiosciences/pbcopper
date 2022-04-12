@@ -37,7 +37,8 @@ protected:
 public:
     constexpr BitContainer() noexcept = default;
 
-    constexpr BitContainer(const UnderlyingType val, const int32_t size) noexcept
+    PB_CUDA_HOST PB_CUDA_DEVICE constexpr BitContainer(const UnderlyingType val,
+                                                       const int32_t size) noexcept
         : Base{val}, size_{size}
     {
         assert(size_ >= 0);
@@ -45,9 +46,9 @@ public:
 
 #ifndef NDEBUG
         // check whether bits in "inactive" positions are set
-        constexpr ComputationType allOnes = -1;
+        constexpr auto ALL_ONES = static_cast<ComputationType>(-1);
 
-        assert(val <= (size_ ? (allOnes >> (ElementBits * (Capacity() - size_))) : 0));
+        assert(val <= (size_ ? (ALL_ONES >> (ElementBits * (Capacity() - size_))) : 0));
 #endif
     }
 
@@ -77,7 +78,7 @@ public:
 
     PB_CUDA_HOST PB_CUDA_DEVICE constexpr int32_t Size() const noexcept { return size_; }
 
-    constexpr ValueType operator[](const int32_t idx) const noexcept
+    PB_CUDA_HOST PB_CUDA_DEVICE constexpr ValueType operator[](const int32_t idx) const noexcept
     {
         assert(idx < Size());
 
@@ -91,14 +92,14 @@ public:
         size_ = 0;
     }
 
-    constexpr void Set(const int32_t idx, const ValueType val) noexcept
+    PB_CUDA_HOST PB_CUDA_DEVICE constexpr void Set(const int32_t idx, const ValueType val) noexcept
     {
         assert(idx < Size());
 
         Base::Set(idx, val);
     }
 
-    constexpr void Remove(const int32_t idx) noexcept
+    PB_CUDA_HOST PB_CUDA_DEVICE constexpr void Remove(const int32_t idx) noexcept
     {
         assert(idx < Size());
 
