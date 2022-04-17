@@ -109,6 +109,13 @@ if not meson.is_subproject()
     ]),
     subdir : 'pbcopper/container')
 
+  # pbcopper/cuda
+  install_headers(
+    files([
+      'pbcopper/cuda/Cuda.h',
+    ]),
+    subdir : 'pbcopper/cuda')
+
   # pbcopper/dagcon
   install_headers(
     files([
