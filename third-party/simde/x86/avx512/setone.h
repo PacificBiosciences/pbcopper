@@ -27,37 +27,37 @@
 #if !defined(SIMDE_X86_AVX512_SETONE_H)
 #define SIMDE_X86_AVX512_SETONE_H
 
-#include "cast.h"
 #include "types.h"
+#include "cast.h"
 
 HEDLEY_DIAGNOSTIC_PUSH
 SIMDE_DISABLE_UNWANTED_DIAGNOSTICS
 SIMDE_BEGIN_DECLS_
 
 SIMDE_FUNCTION_ATTRIBUTES
-simde__m512i simde_x_mm512_setone_si512(void)
-{
-    simde__m512i_private r_;
+simde__m512i
+simde_x_mm512_setone_si512(void) {
+  simde__m512i_private r_;
 
-    SIMDE_VECTORIZE
-    for (size_t i = 0; i < (sizeof(r_.i32f) / sizeof(r_.i32f[0])); i++) {
-        r_.i32f[i] = ~HEDLEY_STATIC_CAST(int_fast32_t, 0);
-    }
+  SIMDE_VECTORIZE
+  for (size_t i = 0 ; i < (sizeof(r_.i32f) / sizeof(r_.i32f[0])) ; i++) {
+    r_.i32f[i] = ~HEDLEY_STATIC_CAST(int_fast32_t, 0);
+  }
 
-    return simde__m512i_from_private(r_);
+  return simde__m512i_from_private(r_);
 }
 #define simde_x_mm512_setone_epi32() simde_x_mm512_setone_si512()
 
 SIMDE_FUNCTION_ATTRIBUTES
-simde__m512 simde_x_mm512_setone_ps(void)
-{
-    return simde_mm512_castsi512_ps(simde_x_mm512_setone_si512());
+simde__m512
+simde_x_mm512_setone_ps(void) {
+  return simde_mm512_castsi512_ps(simde_x_mm512_setone_si512());
 }
 
 SIMDE_FUNCTION_ATTRIBUTES
-simde__m512d simde_x_mm512_setone_pd(void)
-{
-    return simde_mm512_castsi512_pd(simde_x_mm512_setone_si512());
+simde__m512d
+simde_x_mm512_setone_pd(void) {
+  return simde_mm512_castsi512_pd(simde_x_mm512_setone_si512());
 }
 
 SIMDE_END_DECLS_

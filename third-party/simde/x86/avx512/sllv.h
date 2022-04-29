@@ -28,35 +28,92 @@
 #if !defined(SIMDE_X86_AVX512_SLLV_H)
 #define SIMDE_X86_AVX512_SLLV_H
 
-#include "mov.h"
 #include "types.h"
+#include "mov.h"
 
 HEDLEY_DIAGNOSTIC_PUSH
 SIMDE_DISABLE_UNWANTED_DIAGNOSTICS
 SIMDE_BEGIN_DECLS_
 
 SIMDE_FUNCTION_ATTRIBUTES
-simde__m512i simde_mm512_sllv_epi16(simde__m512i a, simde__m512i b)
-{
-    simde__m512i_private a_ = simde__m512i_to_private(a), b_ = simde__m512i_to_private(b), r_;
+simde__m512i
+simde_mm512_sllv_epi16 (simde__m512i a, simde__m512i b) {
+  simde__m512i_private
+    a_ = simde__m512i_to_private(a),
+    b_ = simde__m512i_to_private(b),
+    r_;
 
-#if defined(SIMDE_VECTOR_SUBSCRIPT_SCALAR)
-    r_.u16 = HEDLEY_STATIC_CAST(__typeof__(r_.u16), (b_.u16 < 16) & (a_.u16 << b_.u16));
-#else
+  #if defined(SIMDE_VECTOR_SUBSCRIPT_SCALAR)
+    r_.u16 = HEDLEY_REINTERPRET_CAST(__typeof__(r_.u16), (b_.u16 < 16)) & (a_.u16 << b_.u16);
+  #else
     SIMDE_VECTORIZE
-    for (size_t i = 0; i < (sizeof(r_.u16) / sizeof(r_.u16[0])); i++) {
-        r_.u16[i] = (b_.u16[i] < 16) ? HEDLEY_STATIC_CAST(uint16_t, (a_.u16[i] << b_.u16[i])) : 0;
+    for (size_t i = 0 ; i < (sizeof(r_.u16) / sizeof(r_.u16[0])) ; i++) {
+      r_.u16[i] = (b_.u16[i] < 16) ? HEDLEY_STATIC_CAST(uint16_t, (a_.u16[i] << b_.u16[i])) : 0;
     }
-#endif
+  #endif
 
-    return simde__m512i_from_private(r_);
+  return simde__m512i_from_private(r_);
 }
 #if defined(SIMDE_X86_AVX512BW_NATIVE)
-#define simde_mm512_sllv_epi16(a, b) _mm512_sllv_epi16(a, b)
+  #define simde_mm512_sllv_epi16(a, b) _mm512_sllv_epi16(a, b)
 #endif
 #if defined(SIMDE_X86_AVX512BW_ENABLE_NATIVE_ALIASES)
-#undef _mm512_sllv_epi16
-#define _mm512_sllv_epi16(a, b) simde_mm512_sllv_epi16(a, b)
+  #undef _mm512_sllv_epi16
+  #define _mm512_sllv_epi16(a, b) simde_mm512_sllv_epi16(a, b)
+#endif
+
+SIMDE_FUNCTION_ATTRIBUTES
+simde__m512i
+simde_mm512_sllv_epi32 (simde__m512i a, simde__m512i b) {
+  simde__m512i_private
+    a_ = simde__m512i_to_private(a),
+    b_ = simde__m512i_to_private(b),
+    r_;
+
+  #if defined(SIMDE_VECTOR_SUBSCRIPT_SCALAR)
+    r_.u32 = HEDLEY_REINTERPRET_CAST(__typeof__(r_.u32), (b_.u32 < 32)) & (a_.u32 << b_.u32);
+  #else
+    SIMDE_VECTORIZE
+    for (size_t i = 0 ; i < (sizeof(r_.u32) / sizeof(r_.u32[0])) ; i++) {
+      r_.u32[i] = (b_.u32[i] < 32) ? HEDLEY_STATIC_CAST(uint32_t, (a_.u32[i] << b_.u32[i])) : 0;
+    }
+  #endif
+
+  return simde__m512i_from_private(r_);
+}
+#if defined(SIMDE_X86_AVX512F_NATIVE)
+  #define simde_mm512_sllv_epi32(a, b) _mm512_sllv_epi32(a, b)
+#endif
+#if defined(SIMDE_X86_AVX512F_ENABLE_NATIVE_ALIASES)
+  #undef _mm512_sllv_epi32
+  #define _mm512_sllv_epi32(a, b) simde_mm512_sllv_epi32(a, b)
+#endif
+
+SIMDE_FUNCTION_ATTRIBUTES
+simde__m512i
+simde_mm512_sllv_epi64 (simde__m512i a, simde__m512i b) {
+  simde__m512i_private
+    a_ = simde__m512i_to_private(a),
+    b_ = simde__m512i_to_private(b),
+    r_;
+
+  #if defined(SIMDE_VECTOR_SUBSCRIPT_SCALAR)
+    r_.u64 = HEDLEY_REINTERPRET_CAST(__typeof__(r_.u64), (b_.u64 < 64)) & (a_.u64 << b_.u64);
+  #else
+    SIMDE_VECTORIZE
+    for (size_t i = 0 ; i < (sizeof(r_.u64) / sizeof(r_.u64[0])) ; i++) {
+      r_.u64[i] = (b_.u64[i] < 64) ? HEDLEY_STATIC_CAST(uint64_t, (a_.u64[i] << b_.u64[i])) : 0;
+    }
+  #endif
+
+  return simde__m512i_from_private(r_);
+}
+#if defined(SIMDE_X86_AVX512F_NATIVE)
+  #define simde_mm512_sllv_epi64(a, b) _mm512_sllv_epi64(a, b)
+#endif
+#if defined(SIMDE_X86_AVX512F_ENABLE_NATIVE_ALIASES)
+  #undef _mm512_sllv_epi64
+  #define _mm512_sllv_epi64(a, b) simde_mm512_sllv_epi64(a, b)
 #endif
 
 SIMDE_END_DECLS_
