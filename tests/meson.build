@@ -21,6 +21,9 @@ pbcopper_test_cpp_sources = files([
   'src/container/test_Unordered.cpp',
   'src/container/test_RHUnordered.cpp',
 
+  # cuda
+  'src/cuda/test_AsciiConversion.cpp',
+
   # cli2
   'src/cli2/test_CLI.cpp',
   'src/cli2/test_CommandLineParser.cpp',
