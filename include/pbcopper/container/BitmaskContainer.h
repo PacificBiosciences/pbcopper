@@ -170,7 +170,8 @@ public:
     }
 
 protected:
-    constexpr static ComputationType GenerateMovePattern(const int32_t round)
+    PB_CUDA_HOST PB_CUDA_DEVICE constexpr static ComputationType GenerateMovePattern(
+        const int32_t round)
     {
         // TotalBits = 32
         // ElementBits = 2
@@ -200,7 +201,7 @@ protected:
     // template, we can force all computation into a constexpr context, which is
     // a lot easier for the optimizer.
     template <int32_t round, int32_t capacity>
-    constexpr void ReverseImpl() noexcept
+    PB_CUDA_HOST PB_CUDA_DEVICE constexpr void ReverseImpl() noexcept
     {
         if constexpr (capacity > 0) {
             constexpr ComputationType bitPattern = GenerateMovePattern(round);
@@ -213,7 +214,10 @@ protected:
     }
 
 public:
-    constexpr void Reverse() noexcept { ReverseImpl<0, Capacity() - 1>(); }
+    PB_CUDA_HOST PB_CUDA_DEVICE constexpr void Reverse() noexcept
+    {
+        ReverseImpl<0, Capacity() - 1>();
+    }
 
 public:
     PB_CUDA_HOST PB_CUDA_DEVICE constexpr UnderlyingType RawData() const noexcept { return data_; }

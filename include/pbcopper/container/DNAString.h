@@ -36,7 +36,9 @@ private:
     }
 
 public:
-    constexpr explicit DNA2bitStringImpl(const Base base) noexcept : Base{base} {}
+    PB_CUDA_HOST PB_CUDA_DEVICE constexpr explicit DNA2bitStringImpl(const Base base) noexcept
+        : Base{base}
+    {}
 
     PB_CUDA_HOST PB_CUDA_DEVICE constexpr explicit DNA2bitStringImpl(const UnderlyingType val,
                                                                      const int32_t size) noexcept
@@ -81,13 +83,14 @@ public:
 public:
     PB_CUDA_HOST PB_CUDA_DEVICE constexpr int32_t Length() const noexcept { return SizeImpl(); }
 
-    constexpr void ReverseComplement() noexcept
+    PB_CUDA_HOST PB_CUDA_DEVICE constexpr void ReverseComplement() noexcept
     {
         this->data_ = ~this->data_;
         this->Reverse();
     }
 
-    constexpr DNA2bitStringImpl Range(const int32_t pos, const int32_t len) const noexcept
+    PB_CUDA_HOST PB_CUDA_DEVICE constexpr DNA2bitStringImpl Range(const int32_t pos,
+                                                                  const int32_t len) const noexcept
     {
         return DNA2bitStringImpl{Base::Range(pos, len)};
     }

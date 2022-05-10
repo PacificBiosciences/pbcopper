@@ -128,21 +128,30 @@ public:
         Insert(Size(), val);
     }
 
-    constexpr void Reverse() noexcept
+    PB_CUDA_HOST PB_CUDA_DEVICE constexpr void Reverse() noexcept
     {
+#ifndef __CUDA_ARCH__  // host
+        using std::max;
+#endif
+
         Base::Reverse();
 
-        const int32_t unusedElems = Capacity() - std::max(1, Size());
+        const int32_t unusedElems = Capacity() - max(1, Size());
         Base::data_ >>= (ElementBits * unusedElems);
     }
 
-    constexpr BitContainer Range(const int32_t pos, const int32_t len) const noexcept
+    PB_CUDA_HOST PB_CUDA_DEVICE constexpr BitContainer Range(const int32_t pos,
+                                                             const int32_t len) const noexcept
     {
+#ifndef __CUDA_ARCH__  // host
+        using std::min;
+#endif
+
         assert(pos >= 0);
         assert(pos <= Size());
         assert(len >= 0);
 
-        const int32_t pastEndIdx = std::min(Size(), pos + len);
+        const int32_t pastEndIdx = min(Size(), pos + len);
         const int32_t unusedElems = Capacity() - pastEndIdx;
 
         if ((unusedElems == Capacity()) || (pos == Capacity())) {
