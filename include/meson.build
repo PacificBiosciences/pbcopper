@@ -112,6 +112,7 @@ if not meson.is_subproject()
   # pbcopper/cuda
   install_headers(
     files([
+      'pbcopper/cuda/AsciiConversion.h',
       'pbcopper/cuda/Cuda.h',
     ]),
     subdir : 'pbcopper/cuda')
