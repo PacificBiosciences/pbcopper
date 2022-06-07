@@ -35,6 +35,8 @@ Attribute::operator int() const { return boost::get<int>(value_); }
 
 Attribute::operator unsigned int() const { return boost::get<unsigned int>(value_); }
 
+Attribute::operator int64_t() const { return boost::get<int64_t>(value_); }
+
 Attribute::operator double() const { return boost::get<double>(value_); }
 
 Attribute::operator bool() const { return boost::get<bool>(value_); }

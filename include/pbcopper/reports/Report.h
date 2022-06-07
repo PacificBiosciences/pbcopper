@@ -12,11 +12,13 @@
 #include <vector>
 
 #include <cstddef>
+#include <cstdint>
 
 namespace PacBio {
 namespace Reports {
 
-using ReportValue = boost::variant<boost::blank, int, unsigned int, double, bool, std::string>;
+using ReportValue =
+    boost::variant<boost::blank, int, unsigned int, int64_t, double, bool, std::string>;
 
 class BaseReportElement
 {
@@ -37,6 +39,7 @@ public:
     // conversion
     operator int() const;
     operator unsigned int() const;
+    operator int64_t() const;
     operator double() const;
     operator bool() const;
     operator std::string() const;

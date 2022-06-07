@@ -18,9 +18,10 @@ Json VariantToJson(const PacBio::Reports::ReportValue& value)
         case 0 : return Json{};
         case 1 : return Json::number_integer_t{boost::get<int>(value)};
         case 2 : return Json::number_unsigned_t{boost::get<unsigned int>(value)};
-        case 3 : return Json::number_float_t{boost::get<double>(value)};
-        case 4 : return Json::boolean_t{boost::get<bool>(value)};
-        case 5 : return Json::string_t{boost::get<std::string>(value)};
+        case 3 : return Json::number_integer_t{boost::get<int64_t>(value)};
+        case 4 : return Json::number_float_t{boost::get<double>(value)};
+        case 5 : return Json::boolean_t{boost::get<bool>(value)};
+        case 6 : return Json::string_t{boost::get<std::string>(value)};
         default:
             throw std::runtime_error{"[pbcopper] reports ERROR: invalid report value type"};
     }

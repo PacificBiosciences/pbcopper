@@ -116,3 +116,31 @@ TEST(Reports_Report, can_write_task_report)
     EXPECT_NE(s.str().find("Exit code"), std::string::npos);
     EXPECT_NE(s.str().find("Peak RSS (GB)"), std::string::npos);
 }
+
+TEST(Reports_Report, can_report_longints)
+{
+    EXPECT_EQ(0, 0);
+    Report report{"isoseq3_flnca", "Report isoseq3"};
+    const std::string expected =
+        "{\n    \"_comment\": \"Created by pbcopper v2.0.0\",\n    \"attributes\": [\n        {\n  "
+        "          \"id\": \"foo\",\n            \"name\": \"Foo Title for uint32_t\",\n           "
+        " \"value\": 4294967295\n        },\n        {\n            \"id\": \"bar\",\n            "
+        "\"name\": \"Bar Title for long long\",\n            \"value\": 281474976710655\n        "
+        "},\n        {\n            \"id\": \"bar\",\n            \"name\": \"Bar Title for long "
+        "long\",\n            \"value\": 4611686018427387904\n        }\n    ],\n    "
+        "\"dataset_uuids\": [],\n    \"id\": \"isoseq3_flnca\",\n    \"plotGroups\": [],\n    "
+        "\"tables\": [],\n    \"title\": \"Report isoseq3\",\n    \"uuid\": \"fakeitem\",\n    "
+        "\"version\": \"1.0.1\"\n}";
+    // clang-format off
+    report.Attributes({
+        {"foo", 0xffffffffu, "Foo Title for uint32_t"},
+        {"bar", static_cast<int64_t>(0xffffffffffff), "Bar Title for long long"},
+        {"bar", static_cast<int64_t>(1) << 62, "Bar Title for long long"},
+    });
+
+    // clang-format on
+    report.Uuid("fakeitem");
+    std::ostringstream s;
+    report.Print(s);
+    EXPECT_EQ(s.str(), expected);
+}
