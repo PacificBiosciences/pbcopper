@@ -104,8 +104,11 @@ public:
         : data_{(length << 4) | static_cast<uint32_t>(op)}
     {
 #ifndef __CUDA_ARCH__  // host
-        if (!std::is_constant_evaluated() && AutoValidateCigar &&
-            (Type() == CigarOperationType::ALIGNMENT_MATCH)) {
+        if (
+#ifdef __cpp_lib_is_constant_evaluated
+            !std::is_constant_evaluated() &&
+#endif
+            AutoValidateCigar && (Type() == CigarOperationType::ALIGNMENT_MATCH)) {
             throw std::runtime_error{
                 "[pbcopper] CIGAR operation ERROR: 'M' is not allowed in PacBio BAM files. Use "
                 "'X/=' "
