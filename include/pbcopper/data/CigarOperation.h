@@ -4,6 +4,7 @@
 #include <pbcopper/PbcopperConfig.h>
 
 #include <stdexcept>
+#include <type_traits>
 
 #include <cassert>
 #include <cstdint>
@@ -42,6 +43,8 @@ enum class CigarOperationType
 class CigarOperation
 {
 public:
+    static void EnableAutoValidation();
+
     static void DisableAutoValidation();
 
 public:
@@ -101,7 +104,8 @@ public:
         : data_{(length << 4) | static_cast<uint32_t>(op)}
     {
 #ifndef __CUDA_ARCH__  // host
-        if (AutoValidateCigar && (Type() == CigarOperationType::ALIGNMENT_MATCH)) {
+        if (!std::is_constant_evaluated() && AutoValidateCigar &&
+            (Type() == CigarOperationType::ALIGNMENT_MATCH)) {
             throw std::runtime_error{
                 "[pbcopper] CIGAR operation ERROR: 'M' is not allowed in PacBio BAM files. Use "
                 "'X/=' "
@@ -178,7 +182,7 @@ public:
     /// \}
 
 private:
-    static bool AutoValidateCigar;
+    inline static bool AutoValidateCigar = true;
 
 private:
     // we use the same representation as the SAM/BAM spec

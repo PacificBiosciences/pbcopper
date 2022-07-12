@@ -34,6 +34,19 @@ TEST(Data_CigarOperation, consumes_reference)
     EXPECT_TRUE (ConsumesReference(CigarOperationType::SEQUENCE_MISMATCH));
 }
 
+TEST(Data_CigarOperation, match_throw)
+{
+    // constexpr construction never throws
+    EXPECT_NO_THROW({ [[maybe_unused]] constexpr CigarOperation cig('M', 1); });
+
+    // runtime construction may throw
+    EXPECT_THROW({ CigarOperation cig('M', 1); }, std::runtime_error);
+
+    CigarOperation::DisableAutoValidation();
+    EXPECT_NO_THROW({ CigarOperation cig('M', 1); });
+    CigarOperation::EnableAutoValidation();
+}
+
 TEST(Data_CigarOperation, can_convert_enum_type_to_char)
 {
     EXPECT_EQ('M', CigarOperation::TypeToChar(CigarOperationType::ALIGNMENT_MATCH));

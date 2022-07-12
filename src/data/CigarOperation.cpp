@@ -7,9 +7,9 @@
 namespace PacBio {
 namespace Data {
 
-bool CigarOperation::AutoValidateCigar = true;
-
 char CigarOperation::Char() const { return CigarOperation::TypeToChar(Type()); }
+
+void CigarOperation::EnableAutoValidation() { AutoValidateCigar = true; }
 
 void CigarOperation::DisableAutoValidation() { AutoValidateCigar = false; }
 
