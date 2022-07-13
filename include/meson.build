@@ -103,6 +103,7 @@ if not meson.is_subproject()
       'pbcopper/container/BitConversion.h',
       'pbcopper/container/BitmaskContainer.h',
       'pbcopper/container/CapacityPointer.h',
+      'pbcopper/container/Contains.h',
       'pbcopper/container/DNAString.h',
       'pbcopper/container/RHUnordered.h',
       'pbcopper/container/Unordered.h',
