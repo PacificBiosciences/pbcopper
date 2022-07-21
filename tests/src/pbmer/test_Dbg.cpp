@@ -554,34 +554,20 @@ TEST(Pbmer_Dbg, SpurRemoval_spur_found)
     dg.BuildEdges();
     auto spurCount = dg.RemoveSpurs(1);
 
-    constexpr std::string_view expected{R"(digraph DBGraph {
-    AGCGACT [fillcolor=red, style="rounded,filled", shape=diamond]
-    AAGTAGC [fillcolor=grey, style="rounded,filled", shape=ellipse]
-    GACTTCC [fillcolor=red, style="rounded,filled", shape=diamond]
-    GGAAGTA [fillcolor=grey, style="rounded,filled", shape=ellipse]
-    CGACTTC [fillcolor=red, style="rounded,filled", shape=diamond]
-    AAGTCGC [fillcolor=grey, style="rounded,filled", shape=ellipse]
-    ACTTCCA [fillcolor=red, style="rounded,filled", shape=diamond]
-    CTACTTC [fillcolor=red, style="rounded,filled", shape=diamond]
-    AGCGACT -> AAGTCGC;
-    AAGTAGC -> CTACTTC;
-    GACTTCC -> ACTTCCA;
-    GACTTCC -> CGACTTC;
-    GGAAGTA -> CTACTTC;
-    GGAAGTA -> ACTTCCA;
-    CGACTTC -> GACTTCC;
-    CGACTTC -> AAGTCGC;
-    AAGTCGC -> AGCGACT;
-    AAGTCGC -> CGACTTC;
-    ACTTCCA -> GGAAGTA;
-    ACTTCCA -> GACTTCC;
-    CTACTTC -> GGAAGTA;
-    CTACTTC -> AAGTAGC;
-})"};
+    std::vector<std::pair<uint64_t, uint64_t>> edgePairs;
+    for (const auto& [key, value] : dg) {
+        for (const PacBio::Pbmer::DnaBit db : value) {
+            edgePairs.emplace_back(key, db.mer);
+        }
+    }
+    std::sort(std::begin(edgePairs), std::end(edgePairs));
 
-    std::string seen = dg.Graph2StringDot();
+    const std::vector<std::pair<uint64_t, uint64_t>> expected{
+        {713, 7293},  {729, 2439},  {729, 6269},   {2004, 8693}, {2004, 10284},
+        {2439, 729},  {6269, 729},  {6269, 8693},  {7293, 713},  {7293, 10284},
+        {8693, 2004}, {8693, 6269}, {10284, 2004}, {10284, 7293}};
 
-    EXPECT_EQ(seen, expected);
+    EXPECT_EQ(edgePairs, expected);
     EXPECT_EQ(spurCount, 1);
 }
 

@@ -9,6 +9,9 @@
  - KMerIndex, LSHIndex, FastMod
  - Concurrent queues (SPSC, MPMC) from rigtorp
 
+### Changed
+ - Updated robin_hood to v3.11.5
+
 ## [2.0.0] - 2022-01-10
 
 ### Changed
