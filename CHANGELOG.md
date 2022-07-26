@@ -2,6 +2,8 @@
 
 ## Active
 
+## [2.1.0] - 2022-07-26
+
 ### Added
  - ValidateCigar
  - LeftAlignCigar

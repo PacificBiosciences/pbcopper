@@ -6,6 +6,7 @@
 
 #include <gtest/gtest.h>
 
+#include <pbcopper/json/JSON.h>
 #include <pbcopper/utility/PbcopperVersion.h>
 
 using namespace PacBio;
@@ -121,26 +122,36 @@ TEST(Reports_Report, can_report_longints)
 {
     EXPECT_EQ(0, 0);
     Report report{"isoseq3_flnca", "Report isoseq3"};
-    const std::string expected =
-        "{\n    \"_comment\": \"Created by pbcopper v2.0.0\",\n    \"attributes\": [\n        {\n  "
-        "          \"id\": \"foo\",\n            \"name\": \"Foo Title for uint32_t\",\n           "
-        " \"value\": 4294967295\n        },\n        {\n            \"id\": \"bar\",\n            "
-        "\"name\": \"Bar Title for long long\",\n            \"value\": 281474976710655\n        "
-        "},\n        {\n            \"id\": \"bar\",\n            \"name\": \"Bar Title for long "
-        "long\",\n            \"value\": 4611686018427387904\n        }\n    ],\n    "
-        "\"dataset_uuids\": [],\n    \"id\": \"isoseq3_flnca\",\n    \"plotGroups\": [],\n    "
-        "\"tables\": [],\n    \"title\": \"Report isoseq3\",\n    \"uuid\": \"fakeitem\",\n    "
-        "\"version\": \"1.0.1\"\n}";
     // clang-format off
     report.Attributes({
         {"foo", 0xffffffffu, "Foo Title for uint32_t"},
         {"bar", static_cast<int64_t>(0xffffffffffff), "Bar Title for long long"},
-        {"bar", static_cast<int64_t>(1) << 62, "Bar Title for long long"},
+        {"bar2", static_cast<int64_t>(1) << 62, "Bar Title for long long"},
     });
-
-    // clang-format on
     report.Uuid("fakeitem");
-    std::ostringstream s;
+    // clang-format on
+
+    // serialize
+    std::stringstream s;
     report.Print(s);
-    EXPECT_EQ(s.str(), expected);
+
+    // deserialize
+    JSON::Json doc;
+    s >> doc;
+    ASSERT_TRUE(doc.is_object());
+    const JSON::Json attributes = doc["attributes"];
+    ASSERT_TRUE(attributes.is_array());
+    for (const auto& attribute : attributes) {
+        ASSERT_TRUE(attribute.is_object());
+        const std::string id = attribute["id"];
+        if (id == "foo") {
+            ASSERT_EQ(attribute["value"], 4294967295);
+        } else if (id == "bar") {
+            ASSERT_EQ(attribute["value"], 281474976710655);
+        } else if (id == "bar2") {
+            ASSERT_EQ(attribute["value"], 4611686018427387904);
+        } else {
+            ASSERT_EQ("unexpected_id", id);
+        }
+    }
 }
