@@ -7,7 +7,6 @@
 #include <utility>
 #include <vector>
 
-#include <boost/assert.hpp>
 #include <boost/container/flat_set.hpp>
 #include <boost/numeric/ublas/matrix.hpp>
 
@@ -312,12 +311,11 @@ PairwiseAlignment* Align(const std::string& target, const std::string& query, in
         'a', 'b', 'c', 'd', 'g', 'h', 'k', 'm', 'n', 'r', 's', 't', 'v', 'w', 'y'};
 
     for (char c : target) {
-        BOOST_ASSERT_MSG(validBases.find(c) != validBases.cend(),
-                         "target contains non-IUPAC bases");
+        assert(validBases.find(c) != validBases.cend());
     }
 
     for (char c : query) {
-        BOOST_ASSERT_MSG(validBases.find(c) != validBases.cend(), "query contains non-IUPAC bases");
+        assert(validBases.find(c) != validBases.cend());
     }
 #endif
 
