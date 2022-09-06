@@ -321,6 +321,7 @@ if not meson.is_subproject()
       'pbcopper/utility/MoveAppend.h',
       'pbcopper/utility/MoveInsert.h',
       'pbcopper/utility/OStreamRedirect.h',
+      'pbcopper/utility/Overloaded.h',
       'pbcopper/utility/PartitionElements.h',
       'pbcopper/utility/PbcopperVersion.h',
       'pbcopper/utility/Random.h',
