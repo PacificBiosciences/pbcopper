@@ -19,7 +19,7 @@ namespace Utility {
 
 inline char Complement(const char base)
 {
-    constexpr const std::array<char, 256> lookupTable{
+    constexpr std::array<char, 256> LOOKUP_TABLE{
         {/*   0 -   7: */ 0,   0,   0,   0,   0,   0,   0,   0,
          /*   8 -  15: */ 0,   0,   0,   0,   0,   0,   0,   0,
          /*  16 -  23: */ 0,   0,   0,   0,   0,   0,   0,   0,
@@ -56,7 +56,7 @@ inline char Complement(const char base)
          /* 240 - 247: */ 0,   0,   0,   0,   0,   0,   0,   0,
          /* 248 - 255: */ 0,   0,   0,   0,   0,   0,   0,   0}};
 
-    const char result = lookupTable[static_cast<int>(base)];
+    const char result = LOOKUP_TABLE[static_cast<unsigned char>(base)];
 
     if (result == 0) {
         throw std::invalid_argument(base + std::string{" is an invalid base!"});
@@ -106,7 +106,7 @@ inline std::string MaybeReverseComplement(std::string&& seq, bool reverse)
 inline void ReverseComplementCaseSens(std::string& seq)
 {
     const std::string original = seq;
-    constexpr const static int8_t rc_table[128] = {
+    constexpr std::array<char, 128> RC_TABLE = {
         4,  4, 4, 4, 4, 4, 4,  4,  4, 4, 4, 4, 4,  4,  4, 4,  4,  4, 4, 4,   4, 4,   4, 4, 4, 4,
         4,  4, 4, 4, 4, 4, 32, 4,  4, 4, 4, 4, 4,  4,  4, 4,  42, 4, 4, 45,  4, 4,   4, 4, 4, 4,
         4,  4, 4, 4, 4, 4, 4,  4,  4, 4, 4, 4, 4,  84, 4, 71, 4,  4, 4, 67,  4, 4,   4, 4, 4, 4,
@@ -114,8 +114,7 @@ inline void ReverseComplementCaseSens(std::string& seq)
         4,  4, 4, 4, 4, 4, 4,  4,  4, 4, 4, 4, 97, 97, 4, 4,  4,  4, 4, 4,   4, 4,   4, 4};
     std::string reverseCompl(original.length(), 'N');
     for (uint32_t i = 0; i < original.length(); ++i) {
-        reverseCompl[original.length() - i - 1] =
-            static_cast<char>(rc_table[static_cast<int8_t>(original[i])]);
+        reverseCompl[original.length() - i - 1] = RC_TABLE[static_cast<unsigned char>(original[i])];
     }
     seq = reverseCompl;
 }

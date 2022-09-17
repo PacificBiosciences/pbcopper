@@ -21,14 +21,14 @@ namespace PacBio {
 namespace Pbmer {
 
 // all bits set to one for a uint64_t
-constexpr uint64_t allOn = std::numeric_limits<uint64_t>::max();
+constexpr uint64_t ALL_BITS_ON = std::numeric_limits<uint64_t>::max();
 
 void DnaBit::SetBase(const char c, const int position)
 {
     assert(position >= 0);
     assert(position < msize);
 
-    const uint64_t base = AsciiToDna[c];
+    const uint64_t base = ASCII_TO_DNA[c];
     const int step = position * 2;
 
     mer = (mer & ~(0b11ULL << step)) | (base << step);
@@ -147,12 +147,12 @@ bool DnaBit::operator!=(const DnaBit& b) const noexcept { return !(*this == b); 
 
 void DnaBit::AppendBase(const uint8_t b)
 {
-    mer = ((mer << 2) & (allOn >> (64 - (2 * msize)))) | (b % 4);
+    mer = ((mer << 2) & (ALL_BITS_ON >> (64 - (2 * msize)))) | (b % 4);
 }
 
 void DnaBit::AppendBase(const char b)
 {
-    mer = ((mer << 2) & (allOn >> (64 - (2 * msize)))) | AsciiToDna[b];
+    mer = ((mer << 2) & (ALL_BITS_ON >> (64 - (2 * msize)))) | ASCII_TO_DNA[b];
 }
 
 void DnaBit::Bin2DnaBit(BI bin)
@@ -194,7 +194,7 @@ std::string DnaBit::KmerToStr(void) const
     std::string bases;
     bases.resize(msize);
 
-    constexpr const std::array<char, 4> lookup{'A', 'C', 'G', 'T'};
+    constexpr std::array<char, 4> LOOKUP_TABLE{'A', 'C', 'G', 'T'};
     uint8_t i = 0;
     uint64_t tmp = 0;
     uint64_t offset = 0;
@@ -203,7 +203,7 @@ std::string DnaBit::KmerToStr(void) const
         tmp = mer;
         offset = (msize - i - 1) * 2;
         tmp >>= offset;
-        bases[i] = lookup[3ull & tmp];
+        bases[i] = LOOKUP_TABLE[3ull & tmp];
         ++i;
     }
 
@@ -279,7 +279,7 @@ uint8_t DnaBit::LongestDiNucRun() const
     uint8_t tmpRun = 1;
 
     // four bit mask
-    constexpr uint8_t mask = 0b1111;
+    constexpr uint8_t MASK = 0b1111;
     uint8_t i = 0;
     uint64_t tmp1 = 0;
     uint64_t tmp2 = 0;
@@ -293,7 +293,7 @@ uint8_t DnaBit::LongestDiNucRun() const
         tmp1 = (tmp1 >> i);
         tmp2 = (tmp2 >> (i + 4));
 
-        if ((tmp1 & mask) == (tmp2 & mask)) {
+        if ((tmp1 & MASK) == (tmp2 & MASK)) {
             ++tmpRun;
             if (tmpRun > runLength) {
                 runLength = tmpRun;
@@ -314,7 +314,7 @@ uint8_t DnaBit::LongestDiNucRun() const
         tmp1 = (tmp1 >> i);
         tmp2 = (tmp2 >> (i + 4));
 
-        if ((tmp1 & mask) == (tmp2 & mask)) {
+        if ((tmp1 & MASK) == (tmp2 & MASK)) {
             ++tmpRun;
             if (tmpRun > runLength) {
                 runLength = tmpRun;
@@ -336,7 +336,7 @@ void DnaBit::PrependBase(const uint8_t b)
 void DnaBit::PrependBase(const char b)
 {
     assert(msize > 0);
-    mer = (uint64_t(AsciiToDna[b]) << 2 * (msize - 1)) | (mer >> 2);
+    mer = (uint64_t(ASCII_TO_DNA[b]) << 2 * (msize - 1)) | (mer >> 2);
 }
 
 void DnaBit::ReverseComp(void)

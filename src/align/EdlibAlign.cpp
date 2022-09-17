@@ -36,7 +36,7 @@ std::vector<std::unique_ptr<EdlibAlignment>> EdlibAlign(const std::vector<std::s
 Data::Cigar EdlibAlignmentToCigar(const unsigned char* alignment, int32_t alignmentLength)
 {
     // edlib op codes: 0: '=', 1: 'I', 2: 'D', 3: 'X'
-    constexpr const std::array<Data::CigarOperationType, 4> opToCigar{
+    constexpr std::array<Data::CigarOperationType, 4> OP_TO_CIGAR{
         Data::CigarOperationType::SEQUENCE_MATCH, Data::CigarOperationType::INSERTION,
         Data::CigarOperationType::DELETION, Data::CigarOperationType::SEQUENCE_MISMATCH};
 
@@ -46,9 +46,9 @@ Data::Cigar EdlibAlignmentToCigar(const unsigned char* alignment, int32_t alignm
     }
 
     int32_t count = 1;
-    Data::CigarOperationType previousOp = opToCigar[alignment[0]];
+    Data::CigarOperationType previousOp = OP_TO_CIGAR[alignment[0]];
     for (int32_t i = 1; i < alignmentLength; ++i) {
-        Data::CigarOperationType op = opToCigar[alignment[i]];
+        Data::CigarOperationType op = OP_TO_CIGAR[alignment[i]];
         if (op == previousOp) {
             ++count;
             continue;

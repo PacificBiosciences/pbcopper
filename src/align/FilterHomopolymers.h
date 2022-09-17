@@ -8,9 +8,9 @@ namespace Align {
 namespace Default {
 
 #ifdef FILTERHOMOPOLYMERS
-constexpr const bool FilterHomopolymers = true;
+constexpr bool FILTER_HOMOPOLYMERS = true;
 #else
-constexpr const bool FilterHomopolymers = false;
+constexpr bool FILTER_HOMOPOLYMERS = false;
 #endif
 
 }  // namespace Default

@@ -15,10 +15,10 @@ namespace PacBio {
 namespace Algorithm {
 namespace {
 
-constexpr std::array<char, 5> Bases{'A', 'C', 'G', 'T', '-'};
+constexpr std::array<char, 5> BASES{'A', 'C', 'G', 'T', '-'};
 
 // clang-format off
-constexpr std::array<uint8_t, 256> BaseTable{
+constexpr std::array<uint8_t, 256> BASE_TABLE{
     255,255,255,255, 255,255,255,255, 255,255,255,255, 255,255,255,255,  // 15
     255,255,255,255, 255,255,255,255, 255,255,255,255, 255,255,255,255,  // 31
     //                                                     -
@@ -71,7 +71,7 @@ std::pair<char, int> MostCommonBase(const BaseCount& counts, const char refBase)
     assert(static_cast<int>(refBase) < 256);
 
     // a tie goes to reference base, so the max count starts there
-    int maxBaseCountIdx = BaseTable[static_cast<int>(refBase)];
+    int maxBaseCountIdx = BASE_TABLE[static_cast<unsigned char>(refBase)];
     int maxBaseCount = counts[maxBaseCountIdx];
 
     for (int i = 0; i < 5; ++i) {
@@ -82,7 +82,7 @@ std::pair<char, int> MostCommonBase(const BaseCount& counts, const char refBase)
         }
     }
 
-    return {Bases[maxBaseCountIdx], maxBaseCount};
+    return {BASES[maxBaseCountIdx], maxBaseCount};
 }
 
 StrandCounts::StrandCounts(const std::string& ref)
@@ -130,14 +130,14 @@ StrandRawData CalculateStrandRawData(const std::string& reference, const StrandI
                 case Data::CigarOperationType::SEQUENCE_MATCH: {
                     for (int j = 0; j < opLength; ++j) {
                         const int8_t base = seq[queryPos + j];
-                        ++result.BaseCounts[targetPos + j][BaseTable[base]];
+                        ++result.BaseCounts[targetPos + j][BASE_TABLE[base]];
                     }
                     break;
                 }
                 case Data::CigarOperationType::SEQUENCE_MISMATCH: {
                     for (int j = 0; j < opLength; ++j) {
                         const int8_t base = seq[queryPos + j];
-                        ++result.BaseCounts[targetPos + j][BaseTable[base]];
+                        ++result.BaseCounts[targetPos + j][BASE_TABLE[base]];
                         result.PotentialMismatches[targetPos + j] = 1;
                     }
                     break;

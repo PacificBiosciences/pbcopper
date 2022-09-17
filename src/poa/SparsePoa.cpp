@@ -106,7 +106,7 @@ namespace TEST {
 
 char Complement(const char base)
 {
-    constexpr const std::array<char, 256> lookupTable{
+    constexpr std::array<char, 256> LOOKUP_TABLE{
         {/*   0 -   7: */ 0,   0,   0,   0,   0,   0,   0,   0,
          /*   8 -  15: */ 0,   0,   0,   0,   0,   0,   0,   0,
          /*  16 -  23: */ 0,   0,   0,   0,   0,   0,   0,   0,
@@ -143,7 +143,7 @@ char Complement(const char base)
          /* 240 - 247: */ 0,   0,   0,   0,   0,   0,   0,   0,
          /* 248 - 255: */ 0,   0,   0,   0,   0,   0,   0,   0}};
 
-    const char result = lookupTable[static_cast<int>(base)];
+    const char result = LOOKUP_TABLE[static_cast<unsigned char>(base)];
 
     if (result == 0) {
         throw std::invalid_argument(base + std::string{" is an invalid base!"});

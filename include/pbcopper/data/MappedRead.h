@@ -38,8 +38,8 @@ struct MappedRead : public Read
 
     int32_t RefId;
     enum Strand Strand = Strand::UNMAPPED;
-    Position TemplateStart = UnmappedPosition;
-    Position TemplateEnd = UnmappedPosition;
+    Position TemplateStart = UNMAPPED_POSITION;
+    Position TemplateEnd = UNMAPPED_POSITION;
     bool PinStart = false;
     bool PinEnd = false;
     class Cigar Cigar;

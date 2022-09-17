@@ -28,7 +28,7 @@ std::string Kmer::KmerToStr(uint8_t kmerSize) const
     std::string bases;
     bases.resize(kmerSize);
 
-    constexpr const std::array<char, 4> lookup{'A', 'C', 'G', 'T'};
+    constexpr std::array<char, 4> LOOKUP_TABLE{'A', 'C', 'G', 'T'};
     uint8_t i = 0;
     uint64_t tmp = 0;
     uint64_t offset = 0;
@@ -37,7 +37,7 @@ std::string Kmer::KmerToStr(uint8_t kmerSize) const
         tmp = mer;
         offset = (kmerSize - i - 1) * 2;
         tmp >>= offset;
-        bases[i] = lookup[3ull & tmp];
+        bases[i] = LOOKUP_TABLE[3ull & tmp];
         ++i;
     }
 

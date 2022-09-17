@@ -1,10 +1,12 @@
 #ifndef PBCOPPER_LIBRARY_VERSION_H
 #define PBCOPPER_LIBRARY_VERSION_H
 
+#include <string_view>
+
 namespace PacBio {
 namespace Pbcopper {
 
-constexpr const char ReleaseVersion[] = "@pbcopper_VERSION@";
+constexpr std::string_view RELEASE_VERSION{"@pbcopper_VERSION@"};
 
 }  // namespace Pbcopper
 }  // namespace PacBio

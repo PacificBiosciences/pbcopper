@@ -8,6 +8,7 @@
 #include <sstream>
 #include <stdexcept>
 #include <string>
+#include <string_view>
 #include <vector>
 
 #include <cassert>
@@ -19,9 +20,9 @@ using Results = PacBio::CLI_v2::Results;
 
 namespace {
 
-constexpr static const char token_doubleDash[] = "--";
-constexpr static const char token_dash = '-';
-constexpr static const char token_equal = '=';
+constexpr std::string_view TOKEN_DOUBLE_DASH{"--"};
+constexpr char TOKEN_DASH = '-';
+constexpr char TOKEN_EQUAL = '=';
 
 struct CommandLineParserException : public std::runtime_error
 {
@@ -102,7 +103,7 @@ void EnsureOptionValue(const std::string& valueString, const std::string& option
                        const OptionValueType optionType)
 {
     // value string does not begin with a dash, treat as option value
-    if (valueString.find(token_dash) != 0) {
+    if (valueString.find(TOKEN_DASH) != 0) {
         return;
     }
 
@@ -185,8 +186,8 @@ Results CommandLineParser::Parse(const std::vector<std::string>& arguments) cons
             break;
         }
 
-        const auto isLongOption = (arg.find(token_doubleDash) == 0);
-        const auto isShortOption = (arg.find(token_dash) == 0);
+        const auto isLongOption = (arg.find(TOKEN_DOUBLE_DASH) == 0);
+        const auto isShortOption = (arg.find(TOKEN_DASH) == 0);
 
         // long option (--reference)
         if (isLongOption) {
@@ -225,7 +226,7 @@ void CommandLineParser::ParseLongOption(const std::string& arg, std::deque<std::
     std::string valueString;
 
     // if arg is "opt=value", do the simple split & store
-    const auto equalOffset = optionToken.find(token_equal);
+    const auto equalOffset = optionToken.find(TOKEN_EQUAL);
     if (equalOffset != std::string::npos) {
         optionName = optionToken.substr(0, equalOffset);
         valueString = optionToken.substr(equalOffset + 1);
@@ -290,7 +291,7 @@ void CommandLineParser::ParseShortOption(const std::string& arg, std::deque<std:
         // if found, no remaining value expected
         else {
             if (i + 1 < arg.size()) {
-                if (arg.at(i + 1) == token_equal) {
+                if (arg.at(i + 1) == TOKEN_EQUAL) {
                     ++i;
                 }
                 auto valueString = arg.substr(i + 1);

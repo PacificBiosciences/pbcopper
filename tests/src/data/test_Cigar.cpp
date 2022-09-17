@@ -37,7 +37,7 @@ TEST(Data_CigarOperation, consumes_reference)
 TEST(Data_CigarOperation, match_throw)
 {
     // constexpr construction never throws
-    EXPECT_NO_THROW({ [[maybe_unused]] constexpr CigarOperation cig('M', 1); });
+    EXPECT_NO_THROW({ [[maybe_unused]] constexpr CigarOperation CIG('M', 1); });
 
     // runtime construction may throw
     EXPECT_THROW({ CigarOperation cig('M', 1); }, std::runtime_error);

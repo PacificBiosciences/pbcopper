@@ -47,7 +47,7 @@ struct DivisionResult
 
     T& second() const { return this->Remainder; }
 
-    std::pair<T, T> to_pair() const { return std::make_pair(Quotient, Remainder); }
+    std::pair<T, T> to_pair() const { return {Quotient, Remainder}; }
 };
 
 template <typename T, bool shortcircuit = false>
@@ -78,8 +78,8 @@ public:
 
     INLINE bool TestLimits(uint64_t v) const
     {
-        static constexpr uint64_t threshold = std::numeric_limits<uint32_t>::max();
-        return d_ <= threshold && v <= threshold;
+        constexpr uint64_t THRESHOLD = std::numeric_limits<uint32_t>::max();
+        return (d_ <= THRESHOLD) && (v <= THRESHOLD);
     }
 
     INLINE uint64_t Divide(uint64_t v) const

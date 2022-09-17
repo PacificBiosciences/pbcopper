@@ -93,7 +93,7 @@ TEST(Pbmer_Dbg, test_topo_five_kmers)
 
     dg.BuildEdges();
 
-    constexpr std::string_view expected{R"(digraph DBGraph {
+    constexpr std::string_view EXPECTED{R"(digraph DBGraph {
     ATG [fillcolor=red, style="rounded,filled", shape=diamond]
     AGG [fillcolor=red, style="rounded,filled", shape=diamond]
     ATA [fillcolor=grey, style="rounded,filled", shape=ellipse]
@@ -110,7 +110,7 @@ TEST(Pbmer_Dbg, test_topo_five_kmers)
 })"};
 
     const std::string seen = dg.Graph2StringDot();
-    EXPECT_EQ(seen, expected);
+    EXPECT_EQ(seen, EXPECTED);
 }
 
 TEST(Pbmer_Dbg, test_topo_five_kmers_add_verifed_edges)
@@ -125,7 +125,7 @@ TEST(Pbmer_Dbg, test_topo_five_kmers_add_verifed_edges)
 
     EXPECT_EQ(dg.NNodes(), 5);
 
-    constexpr std::string_view expected{R"(digraph DBGraph {
+    constexpr std::string_view EXPECTED{R"(digraph DBGraph {
     ATG [fillcolor=red, style="rounded,filled", shape=diamond]
     AGG [fillcolor=red, style="rounded,filled", shape=diamond]
     ATA [fillcolor=grey, style="rounded,filled", shape=ellipse]
@@ -142,7 +142,7 @@ TEST(Pbmer_Dbg, test_topo_five_kmers_add_verifed_edges)
 })"};
 
     std::string seen = dg.Graph2StringDot();
-    EXPECT_EQ(seen, expected);
+    EXPECT_EQ(seen, EXPECTED);
 }
 
 TEST(Pbmer_Dbg, can_validate_verified_edges)

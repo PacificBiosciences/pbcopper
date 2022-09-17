@@ -1,21 +1,23 @@
 #include <pbcopper/utility/PbcopperVersion.h>
 
 #include <string>
+#include <string_view>
 #include <tuple>
 
 namespace PacBio {
 namespace Utility {
-namespace {
-static constexpr const char LibraryVersion[] = "@pbcopper_VERSION@";
-static constexpr const int LibraryMajor      = @pbcopper_VERSION_MAJOR@;
-static constexpr const int LibraryMinor      = @pbcopper_VERSION_MINOR@;
-static constexpr const int LibraryPatch      = @pbcopper_VERSION_PATCH@;
-}
 
-std::string LibraryVersionString()
-{ return LibraryVersion; }
+constexpr std::string_view LIBRARY_VERSION{"@pbcopper_VERSION@"};
+constexpr int LIBRARY_MAJOR = @pbcopper_VERSION_MAJOR@;
+constexpr int LIBRARY_MINOR = @pbcopper_VERSION_MINOR@;
+constexpr int LIBRARY_PATCH = @pbcopper_VERSION_PATCH@;
+
+std::string LibraryVersionString() { return std::string{LIBRARY_VERSION}; }
 
 std::tuple<int, int, int> LibraryVersionTriple()
-{ return std::make_tuple(LibraryMajor, LibraryMinor, LibraryPatch); }
+{
+    return {LIBRARY_MAJOR, LIBRARY_MINOR, LIBRARY_PATCH};
+}
 
-}}  // ::PacBio::Utility
+}  // namespace Utility
+}  // namespace PacBio

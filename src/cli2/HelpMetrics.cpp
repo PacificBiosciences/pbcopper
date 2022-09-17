@@ -33,8 +33,8 @@ size_t AdjustedMaxColumn(size_t maxColumn)
     if (ws.ws_col >= 2) {
         maxColumn = ws.ws_col - 1;
     }
-    constexpr const size_t MaxColumn = 119;
-    return std::min(maxColumn, MaxColumn);
+    constexpr size_t MAX_COLUMN = 119;
+    return std::min(maxColumn, MAX_COLUMN);
 }
 
 std::string DisplayName(const OptionValueType type)

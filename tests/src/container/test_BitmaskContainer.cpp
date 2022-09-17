@@ -37,38 +37,38 @@ bool operator==(
 
 TEST(Container_BitmaskContainer, Constexpr)
 {
-    //                                                            T  G  C  A
-    //                                                            3  2  1  0
-    constexpr Container::BitmaskContainer<32, 8> constexprBmct{0x54'47'43'41U};
+    //                                                             T  G  C  A
+    //                                                             3  2  1  0
+    constexpr Container::BitmaskContainer<32, 8> CONSTEXPR_BMCT{0x54'47'43'41U};
 
-    EXPECT_EQ(sizeof(constexprBmct), sizeof(uint32_t));
-    EXPECT_EQ(constexprBmct.Capacity(), 4);
+    EXPECT_EQ(sizeof(CONSTEXPR_BMCT), sizeof(uint32_t));
+    EXPECT_EQ(CONSTEXPR_BMCT.Capacity(), 4);
 
-    EXPECT_EQ(constexprBmct[0], 'A');
-    EXPECT_EQ(constexprBmct[1], 'C');
-    EXPECT_EQ(constexprBmct[2], 'G');
-    EXPECT_EQ(constexprBmct[3], 'T');
+    EXPECT_EQ(CONSTEXPR_BMCT[0], 'A');
+    EXPECT_EQ(CONSTEXPR_BMCT[1], 'C');
+    EXPECT_EQ(CONSTEXPR_BMCT[2], 'G');
+    EXPECT_EQ(CONSTEXPR_BMCT[3], 'T');
 }
 
 TEST(Container_BitmaskContainer, VariadicCtor)
 {
-    constexpr auto constexprBmct =
+    constexpr auto CONSTEXPR_BMCT =
         Container::BitmaskContainer<32, 8>::MakeFromArray('G', 'A', 'T', 'C');
 
-    EXPECT_EQ(sizeof(constexprBmct), sizeof(uint32_t));
-    EXPECT_EQ(constexprBmct.Capacity(), 4);
+    EXPECT_EQ(sizeof(CONSTEXPR_BMCT), sizeof(uint32_t));
+    EXPECT_EQ(CONSTEXPR_BMCT.Capacity(), 4);
 
-    EXPECT_EQ(constexprBmct[0], 'G');
-    EXPECT_EQ(constexprBmct[1], 'A');
-    EXPECT_EQ(constexprBmct[2], 'T');
-    EXPECT_EQ(constexprBmct[3], 'C');
-    EXPECT_EQ(constexprBmct.RawData(), 0x43'54'41'47U);
+    EXPECT_EQ(CONSTEXPR_BMCT[0], 'G');
+    EXPECT_EQ(CONSTEXPR_BMCT[1], 'A');
+    EXPECT_EQ(CONSTEXPR_BMCT[2], 'T');
+    EXPECT_EQ(CONSTEXPR_BMCT[3], 'C');
+    EXPECT_EQ(CONSTEXPR_BMCT.RawData(), 0x43'54'41'47U);
 }
 
 TEST(Container_BitmaskContainer, ConstexprDependencyInjection)
 {
-    constexpr std::string_view str{"ACGT"};
-    constexpr auto converter = [](const char c) {
+    constexpr std::string_view STR{"ACGT"};
+    constexpr auto CONVERTER = [](const char c) {
         if (c == 'T') {
             return 0;
         } else if (c == 'G') {
@@ -82,20 +82,20 @@ TEST(Container_BitmaskContainer, ConstexprDependencyInjection)
         throw std::logic_error{"encountered an invalid base"};
     };
 
-    constexpr auto constexprBmctDI =
-        Container::BitmaskContainer<8, 2>::MakeFromTransform(converter, str);
-    EXPECT_EQ(sizeof(constexprBmctDI), sizeof(uint8_t));
-    EXPECT_EQ(constexprBmctDI.Capacity(), 4);
+    constexpr auto CONSTEXPR_BMCT_DI =
+        Container::BitmaskContainer<8, 2>::MakeFromTransform(CONVERTER, STR);
+    EXPECT_EQ(sizeof(CONSTEXPR_BMCT_DI), sizeof(uint8_t));
+    EXPECT_EQ(CONSTEXPR_BMCT_DI.Capacity(), 4);
 
-    EXPECT_EQ(constexprBmctDI[0], 3);
-    EXPECT_EQ(constexprBmctDI[1], 2);
-    EXPECT_EQ(constexprBmctDI[2], 1);
-    EXPECT_EQ(constexprBmctDI[3], 0);
+    EXPECT_EQ(CONSTEXPR_BMCT_DI[0], 3);
+    EXPECT_EQ(CONSTEXPR_BMCT_DI[1], 2);
+    EXPECT_EQ(CONSTEXPR_BMCT_DI[2], 1);
+    EXPECT_EQ(CONSTEXPR_BMCT_DI[3], 0);
 
-    EXPECT_EQ(constexprBmctDI.RawData(), 0b00'01'10'11);
+    EXPECT_EQ(CONSTEXPR_BMCT_DI.RawData(), 0b00'01'10'11);
 
     std::ostringstream os;
-    os << constexprBmctDI;
+    os << CONSTEXPR_BMCT_DI;
     EXPECT_EQ(os.str(), "BitmaskContainer(3, 2, 1, 0)");
 }
 
@@ -132,15 +132,15 @@ void TestBitmaskContainer()
     std::random_device rd;
     std::mt19937 gen{rd()};
 
-    constexpr int32_t rounds = 100'000;
+    constexpr int32_t ROUNDS = 100'000;
 
     Container::BitmaskContainer<TotalBits, ElementBits> bmct{};
     std::vector<typename decltype(bmct)::ValueType> vec;
 
     std::uniform_int_distribution<typename decltype(bmct)::ValueType> elementDistribution{
-        0, bmct.MaximumValue};
+        0, bmct.MAXIMUM_VALUE};
 
-    for (int32_t i = 0; i < rounds; ++i) {
+    for (int32_t i = 0; i < ROUNDS; ++i) {
         const auto randVal = elementDistribution(gen);
 
         if (vec.size() == 0) {

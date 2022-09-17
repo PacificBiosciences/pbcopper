@@ -18,27 +18,27 @@ struct HeteroduplexSettings
     // clang-format off
     struct Defaults
     {
-        static constexpr double AlphaLevel = 0.1;
-        static constexpr double MinFractionSites = 0.01;
-        static constexpr double MinFractionMismatchCoverage = 0.7;
-        static constexpr int HomopolymerThreshold = 3;
-        static constexpr double MinSecondaryFraction = 0.40;
-        static constexpr int IgnoreEndBases = 25;
-        static constexpr int MinimumPerStrandSubreadCoverage = 5;
-        static constexpr bool SkipDeletions = true;
-        static constexpr double AdjacentInsertionThreshold = 0.75;
+        static constexpr double ALPHA_LEVEL = 0.1;
+        static constexpr double MIN_FRACTION_SITES = 0.01;
+        static constexpr double MIN_FRACTION_MISMATCH_COVERAGE = 0.7;
+        static constexpr int HOMOPOLYMER_THRESHOLD = 3;
+        static constexpr double MIN_SECONDARY_FRACTION = 0.40;
+        static constexpr int IGNORE_END_BASES = 25;
+        static constexpr int MINIMUM_PER_STRAND_SUBREAD_COVERAGE = 5;
+        static constexpr bool SKIP_DELETIONS = true;
+        static constexpr double ADJACENT_INSERTION_THRESHOLD = 0.75;
     };
     // clang-format on
 
-    double AlphaLevel = Defaults::AlphaLevel;
-    double MinFractionSites = Defaults::MinFractionSites;
-    double MinFractionMismatchCoverage = Defaults::MinFractionMismatchCoverage;
-    int HomopolymerThreshold = Defaults::HomopolymerThreshold;
-    double MinSecondaryFraction = Defaults::MinSecondaryFraction;
-    int IgnoreEndBases = Defaults::IgnoreEndBases;
-    int MinimumPerStrandSubreadCoverage = Defaults::MinimumPerStrandSubreadCoverage;
-    bool SkipDeletions = Defaults::SkipDeletions;
-    double AdjacentInsertionThreshold = Defaults::AdjacentInsertionThreshold;
+    double AlphaLevel = Defaults::ALPHA_LEVEL;
+    double MinFractionSites = Defaults::MIN_FRACTION_SITES;
+    double MinFractionMismatchCoverage = Defaults::MIN_FRACTION_MISMATCH_COVERAGE;
+    int HomopolymerThreshold = Defaults::HOMOPOLYMER_THRESHOLD;
+    double MinSecondaryFraction = Defaults::MIN_SECONDARY_FRACTION;
+    int IgnoreEndBases = Defaults::IGNORE_END_BASES;
+    int MinimumPerStrandSubreadCoverage = Defaults::MINIMUM_PER_STRAND_SUBREAD_COVERAGE;
+    bool SkipDeletions = Defaults::SKIP_DELETIONS;
+    double AdjacentInsertionThreshold = Defaults::ADJACENT_INSERTION_THRESHOLD;
 };
 
 struct HeteroduplexResults

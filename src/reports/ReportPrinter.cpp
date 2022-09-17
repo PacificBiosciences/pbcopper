@@ -5,6 +5,7 @@
 #include <pbcopper/utility/PbcopperVersion.h>
 
 #include <ostream>
+#include <string_view>
 
 using Json = PacBio::JSON::Json;
 
@@ -75,7 +76,7 @@ namespace PacBio {
 namespace Reports {
 namespace internal {
 
-static constexpr const char* PB_REPORT_SCHEMA_VERSION = "1.0.1";
+constexpr std::string_view PB_REPORT_SCHEMA_VERSION{"1.0.1"};
 
 void ReportPrinter::Print(std::ostream& out, const Report& report, const std::string& prefix)
 {

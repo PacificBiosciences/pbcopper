@@ -8,29 +8,29 @@ using namespace PacBio;
 
 TEST(Container_DNAString, ConstexprFixed32)
 {
-    constexpr Container::DNA2bitStringFixed32 constexprBct{"TCAGAGTCGTCCAAGG"};
+    constexpr Container::DNA2bitStringFixed32 CONSTEXPR_BCT{"TCAGAGTCGTCCAAGG"};
 
-    EXPECT_EQ(sizeof(constexprBct), sizeof(uint32_t));
-    EXPECT_EQ(constexprBct.Capacity(), 16);
+    EXPECT_EQ(sizeof(CONSTEXPR_BCT), sizeof(uint32_t));
+    EXPECT_EQ(CONSTEXPR_BCT.Capacity(), 16);
 
-    EXPECT_EQ(constexprBct[0], 3);
-    EXPECT_EQ(constexprBct[1], 1);
-    EXPECT_EQ(constexprBct[2], 0);
-    EXPECT_EQ(constexprBct[3], 2);
-    EXPECT_EQ(constexprBct[4], 0);
-    EXPECT_EQ(constexprBct[5], 2);
-    EXPECT_EQ(constexprBct[6], 3);
-    EXPECT_EQ(constexprBct[7], 1);
-    EXPECT_EQ(constexprBct[8], 2);
-    EXPECT_EQ(constexprBct[9], 3);
-    EXPECT_EQ(constexprBct[10], 1);
-    EXPECT_EQ(constexprBct[11], 1);
-    EXPECT_EQ(constexprBct[12], 0);
-    EXPECT_EQ(constexprBct[13], 0);
-    EXPECT_EQ(constexprBct[14], 2);
-    EXPECT_EQ(constexprBct[15], 2);
+    EXPECT_EQ(CONSTEXPR_BCT[0], 3);
+    EXPECT_EQ(CONSTEXPR_BCT[1], 1);
+    EXPECT_EQ(CONSTEXPR_BCT[2], 0);
+    EXPECT_EQ(CONSTEXPR_BCT[3], 2);
+    EXPECT_EQ(CONSTEXPR_BCT[4], 0);
+    EXPECT_EQ(CONSTEXPR_BCT[5], 2);
+    EXPECT_EQ(CONSTEXPR_BCT[6], 3);
+    EXPECT_EQ(CONSTEXPR_BCT[7], 1);
+    EXPECT_EQ(CONSTEXPR_BCT[8], 2);
+    EXPECT_EQ(CONSTEXPR_BCT[9], 3);
+    EXPECT_EQ(CONSTEXPR_BCT[10], 1);
+    EXPECT_EQ(CONSTEXPR_BCT[11], 1);
+    EXPECT_EQ(CONSTEXPR_BCT[12], 0);
+    EXPECT_EQ(CONSTEXPR_BCT[13], 0);
+    EXPECT_EQ(CONSTEXPR_BCT[14], 2);
+    EXPECT_EQ(CONSTEXPR_BCT[15], 2);
 
-    auto revCt{constexprBct};
+    auto revCt{CONSTEXPR_BCT};
     revCt.ReverseComplement();
 
     EXPECT_EQ(std::string{revCt}, "CCTTGGACGACTCTGA");
@@ -39,46 +39,46 @@ TEST(Container_DNAString, ConstexprFixed32)
 
 TEST(Container_DNAString, ConstexprVariable32)
 {
-    constexpr Container::DNA2bitStringVariable32 constexprBct{"TCAGAGTCGTCCAAGG"};
+    constexpr Container::DNA2bitStringVariable32 CONSTEXPR_BCT{"TCAGAGTCGTCCAAGG"};
 
-    EXPECT_EQ(sizeof(constexprBct), 2 * sizeof(uint32_t));
-    EXPECT_EQ(constexprBct.Capacity(), 16);
-    EXPECT_EQ(constexprBct.Size(), 16);
-    EXPECT_EQ(constexprBct.Size(), constexprBct.Length());
+    EXPECT_EQ(sizeof(CONSTEXPR_BCT), 2 * sizeof(uint32_t));
+    EXPECT_EQ(CONSTEXPR_BCT.Capacity(), 16);
+    EXPECT_EQ(CONSTEXPR_BCT.Size(), 16);
+    EXPECT_EQ(CONSTEXPR_BCT.Size(), CONSTEXPR_BCT.Length());
 
-    EXPECT_EQ(constexprBct[0], 3);
-    EXPECT_EQ(constexprBct[1], 1);
-    EXPECT_EQ(constexprBct[2], 0);
-    EXPECT_EQ(constexprBct[3], 2);
-    EXPECT_EQ(constexprBct[4], 0);
-    EXPECT_EQ(constexprBct[5], 2);
-    EXPECT_EQ(constexprBct[6], 3);
-    EXPECT_EQ(constexprBct[7], 1);
-    EXPECT_EQ(constexprBct[8], 2);
-    EXPECT_EQ(constexprBct[9], 3);
-    EXPECT_EQ(constexprBct[10], 1);
-    EXPECT_EQ(constexprBct[11], 1);
-    EXPECT_EQ(constexprBct[12], 0);
-    EXPECT_EQ(constexprBct[13], 0);
-    EXPECT_EQ(constexprBct[14], 2);
-    EXPECT_EQ(constexprBct[15], 2);
+    EXPECT_EQ(CONSTEXPR_BCT[0], 3);
+    EXPECT_EQ(CONSTEXPR_BCT[1], 1);
+    EXPECT_EQ(CONSTEXPR_BCT[2], 0);
+    EXPECT_EQ(CONSTEXPR_BCT[3], 2);
+    EXPECT_EQ(CONSTEXPR_BCT[4], 0);
+    EXPECT_EQ(CONSTEXPR_BCT[5], 2);
+    EXPECT_EQ(CONSTEXPR_BCT[6], 3);
+    EXPECT_EQ(CONSTEXPR_BCT[7], 1);
+    EXPECT_EQ(CONSTEXPR_BCT[8], 2);
+    EXPECT_EQ(CONSTEXPR_BCT[9], 3);
+    EXPECT_EQ(CONSTEXPR_BCT[10], 1);
+    EXPECT_EQ(CONSTEXPR_BCT[11], 1);
+    EXPECT_EQ(CONSTEXPR_BCT[12], 0);
+    EXPECT_EQ(CONSTEXPR_BCT[13], 0);
+    EXPECT_EQ(CONSTEXPR_BCT[14], 2);
+    EXPECT_EQ(CONSTEXPR_BCT[15], 2);
 }
 
 TEST(Container_DNAString, ConstexprVariable64ReverseCompl)
 {
-    constexpr Container::DNA2bitStringVariable64 constexprBct{"TCAG"};
+    constexpr Container::DNA2bitStringVariable64 CONSTEXPR_BCT{"TCAG"};
 
-    EXPECT_EQ(sizeof(constexprBct), 2 * sizeof(uint64_t));
-    EXPECT_EQ(constexprBct.Capacity(), 32);
-    EXPECT_EQ(constexprBct.Size(), 4);
-    EXPECT_EQ(constexprBct.Size(), constexprBct.Length());
+    EXPECT_EQ(sizeof(CONSTEXPR_BCT), 2 * sizeof(uint64_t));
+    EXPECT_EQ(CONSTEXPR_BCT.Capacity(), 32);
+    EXPECT_EQ(CONSTEXPR_BCT.Size(), 4);
+    EXPECT_EQ(CONSTEXPR_BCT.Size(), CONSTEXPR_BCT.Length());
 
-    EXPECT_EQ(constexprBct[0], 3);
-    EXPECT_EQ(constexprBct[1], 1);
-    EXPECT_EQ(constexprBct[2], 0);
-    EXPECT_EQ(constexprBct[3], 2);
+    EXPECT_EQ(CONSTEXPR_BCT[0], 3);
+    EXPECT_EQ(CONSTEXPR_BCT[1], 1);
+    EXPECT_EQ(CONSTEXPR_BCT[2], 0);
+    EXPECT_EQ(CONSTEXPR_BCT[3], 2);
 
-    auto revCt{constexprBct};
+    auto revCt{CONSTEXPR_BCT};
     revCt.ReverseComplement();
 
     EXPECT_EQ(revCt[0], 1);

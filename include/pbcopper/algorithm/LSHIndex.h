@@ -58,7 +58,7 @@ private:
     std::vector<std::vector<std::mutex>> mutexes_;
     bool isBottomKOnly_{false};
 
-    static constexpr inline uint64_t wangHash(uint64_t key) noexcept
+    static constexpr uint64_t wangHash(uint64_t key) noexcept
     {
         key = (~key) + (key << 21);  // key = (key << 21) - key - 1;
         key = key ^ (key >> 24);

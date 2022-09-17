@@ -41,8 +41,8 @@ struct Read
     QualityValues Qualities;
     std::optional<Frames> IPD;
 
-    Position QueryStart = UnmappedPosition;
-    Position QueryEnd = UnmappedPosition;
+    Position QueryStart = UNMAPPED_POSITION;
+    Position QueryEnd = UNMAPPED_POSITION;
 
     LocalContextFlags Flags = LocalContextFlags::NO_LOCAL_CONTEXT;
     Accuracy ReadAccuracy = 0;

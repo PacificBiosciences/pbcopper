@@ -1,10 +1,12 @@
 #ifndef PBCOPPER_LIBRARY_GITHASH_H
 #define PBCOPPER_LIBRARY_GITHASH_H
 
+#include <string_view>
+
 namespace PacBio {
 namespace Pbcopper {
 
-constexpr const char LibraryGitSha1[] = "@COPPER_GIT_SHA1@";
+constexpr std::string_view LIBRARY_GIT_SHA1{"@COPPER_GIT_SHA1@"};
 
 }  // namespace Pbcopper
 }  // namespace PacBio

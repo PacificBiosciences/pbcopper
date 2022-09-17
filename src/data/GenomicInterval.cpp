@@ -61,11 +61,11 @@ GenomicInterval::GenomicInterval(std::string name, Position start, Position stop
 
 GenomicInterval::GenomicInterval(const std::string& samtoolsRegionString)
 {
-    Position begin = UnmappedPosition;
-    Position end = UnmappedPosition;
+    Position begin = UNMAPPED_POSITION;
+    Position end = UNMAPPED_POSITION;
 
     name_ = parseRegionString(samtoolsRegionString, &begin, &end);
-    if (begin == UnmappedPosition || end == UnmappedPosition) {
+    if ((begin == UNMAPPED_POSITION) || (end == UNMAPPED_POSITION)) {
         throw RegionStringException{samtoolsRegionString};
     }
     interval_ = Data::Interval(begin, end);

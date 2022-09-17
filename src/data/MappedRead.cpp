@@ -145,7 +145,7 @@ MappedRead::MappedRead(Read read, enum Strand strand, Position templateStart, Po
 
 MappedRead::MappedRead(Read read, PacBio::Data::Strand strand, Position templateStart,
                        PacBio::Data::Cigar cigar, uint8_t mapQV)
-    : MappedRead{std::move(read), strand, templateStart, UnmappedPosition, std::move(cigar), mapQV}
+    : MappedRead{std::move(read), strand, templateStart, UNMAPPED_POSITION, std::move(cigar), mapQV}
 {
     if (!Cigar.empty()) {
         TemplateEnd = TemplateStart;
@@ -286,7 +286,7 @@ std::optional<Frames> MappedRead::AlignedPulseWidth(Orientation orientation,
 
 Position MappedRead::AlignedStart() const
 {
-    if (QueryStart == UnmappedPosition) {
+    if (QueryStart == UNMAPPED_POSITION) {
         throw InvalidMappedReadException{"contains unmapped query start position"};
     }
     if (Strand == Strand::UNMAPPED) {
@@ -323,7 +323,7 @@ Position MappedRead::AlignedStart() const
 
 Position MappedRead::AlignedEnd() const
 {
-    if (QueryEnd == UnmappedPosition) {
+    if (QueryEnd == UNMAPPED_POSITION) {
         throw InvalidMappedReadException{"contains unmapped query end position"};
     }
     if (Strand == Strand::UNMAPPED) {
@@ -360,7 +360,7 @@ Position MappedRead::AlignedEnd() const
 
 Position MappedRead::ReferenceStart() const
 {
-    if (TemplateStart == UnmappedPosition) {
+    if (TemplateStart == UNMAPPED_POSITION) {
         throw InvalidMappedReadException{"contains unmapped template start position"};
     }
     return TemplateStart;
@@ -368,7 +368,7 @@ Position MappedRead::ReferenceStart() const
 
 Position MappedRead::ReferenceEnd() const
 {
-    if (TemplateEnd == UnmappedPosition) {
+    if (TemplateEnd == UNMAPPED_POSITION) {
         throw InvalidMappedReadException{"contains unmapped template end position"};
     }
     return TemplateEnd;

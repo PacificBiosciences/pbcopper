@@ -41,10 +41,10 @@ PB_CUDA_HOST PB_CUDA_DEVICE constexpr int32_t ConvertAsciiTo2bit(const char base
     const int32_t truncatedBase = base & 0b1'1111;
 
     // ASCII range [64, 85)
-    constexpr uint32_t lut{//  ┝T┥                       ┝G┥     ┝C┥ ┝A┥
-                           0b0'1'1'0'0'0'0'0'0'0'0'0'0'0'1'0'0'0'0'1'0'0'0};
+    constexpr uint32_t LOOKUP_TABLE{//  ┝T┥                       ┝G┥     ┝C┥ ┝A┥
+                                    0b0'1'1'0'0'0'0'0'0'0'0'0'0'0'1'0'0'0'0'1'0'0'0};
 
-    return (lut >> truncatedBase) & 0b11;
+    return (LOOKUP_TABLE >> truncatedBase) & 0b11;
 }
 
 // Convert 2-bit encoding (NCBI2na) to ASCII
@@ -59,8 +59,9 @@ PB_CUDA_HOST PB_CUDA_DEVICE constexpr char Convert2bitToAscii(const int32_t val)
     assert(val >= 0);
     assert(val < 4);
 
-    constexpr auto lut = Container::BitmaskContainer<32, 8>::MakeFromArray('A', 'C', 'G', 'T');
-    return lut[val];
+    constexpr auto LOOKUP_TABLE =
+        Container::BitmaskContainer<32, 8>::MakeFromArray('A', 'C', 'G', 'T');
+    return LOOKUP_TABLE[val];
 }
 
 }  // namespace Container

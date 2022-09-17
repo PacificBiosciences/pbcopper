@@ -132,9 +132,9 @@ std::string rc(const std::string& a)
 }
 
 #if EXTENSIVE_TESTING
-constexpr size_t numIterations = 100;
+constexpr size_t NUM_ITERATIONS = 100;
 #else
-constexpr size_t numIterations = 10;
+constexpr size_t NUM_ITERATIONS = 10;
 #endif
 
 TEST(SparsePoaTest, SingleReadNTimes)
@@ -145,7 +145,7 @@ TEST(SparsePoaTest, SingleReadNTimes)
 
     const std::string bases = "ACGT";
 
-    for (size_t i = 0; i < numIterations; ++i) {
+    for (size_t i = 0; i < NUM_ITERATIONS; ++i) {
         size_t len = 0;
         std::string seq;
 
@@ -180,7 +180,7 @@ TEST(SparsePoaTest, SingleAndHalfNTimes)
 
     const std::string bases = "ACGT";
 
-    for (size_t i = 0; i < numIterations; ++i) {
+    for (size_t i = 0; i < NUM_ITERATIONS; ++i) {
         size_t len = 0;
         std::string seq1, seq2;
 

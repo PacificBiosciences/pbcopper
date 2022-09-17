@@ -36,18 +36,18 @@ bool operator==(const BitContainer<TotalBits, ElementBits>& lhs,
 
 TEST(Container_BitContainer, Constexpr)
 {
-    //                                                       T  G  C  A
-    //                                                       3  2  1  0
-    constexpr Container::BitContainer<32, 8> constexprBct{0x54'47'43'41U, 4};
+    //                                                        T  G  C  A
+    //                                                        3  2  1  0
+    constexpr Container::BitContainer<32, 8> CONSTEXPR_BCT{0x54'47'43'41U, 4};
 
-    EXPECT_EQ(sizeof(constexprBct), 2 * sizeof(uint32_t));
-    EXPECT_EQ(constexprBct.Capacity(), 4);
-    EXPECT_EQ(constexprBct.Size(), 4);
+    EXPECT_EQ(sizeof(CONSTEXPR_BCT), 2 * sizeof(uint32_t));
+    EXPECT_EQ(CONSTEXPR_BCT.Capacity(), 4);
+    EXPECT_EQ(CONSTEXPR_BCT.Size(), 4);
 
-    EXPECT_EQ(constexprBct[0], 'A');
-    EXPECT_EQ(constexprBct[1], 'C');
-    EXPECT_EQ(constexprBct[2], 'G');
-    EXPECT_EQ(constexprBct[3], 'T');
+    EXPECT_EQ(CONSTEXPR_BCT[0], 'A');
+    EXPECT_EQ(CONSTEXPR_BCT[1], 'C');
+    EXPECT_EQ(CONSTEXPR_BCT[2], 'G');
+    EXPECT_EQ(CONSTEXPR_BCT[3], 'T');
 }
 
 TEST(Container_BitContainer, Equal)
@@ -76,23 +76,24 @@ TEST(Container_BitContainer, NonEqual2)
 
 TEST(Container_BitContainer, VariadicCtor)
 {
-    constexpr auto constexprBct = Container::BitContainer<32, 8>::MakeFromArray('G', 'A', 'T', 'C');
+    constexpr auto CONSTEXPR_BCT =
+        Container::BitContainer<32, 8>::MakeFromArray('G', 'A', 'T', 'C');
 
-    EXPECT_EQ(sizeof(constexprBct), 2 * sizeof(uint32_t));
-    EXPECT_EQ(constexprBct.Capacity(), 4);
-    EXPECT_EQ(constexprBct.Size(), 4);
+    EXPECT_EQ(sizeof(CONSTEXPR_BCT), 2 * sizeof(uint32_t));
+    EXPECT_EQ(CONSTEXPR_BCT.Capacity(), 4);
+    EXPECT_EQ(CONSTEXPR_BCT.Size(), 4);
 
-    EXPECT_EQ(constexprBct[0], 'G');
-    EXPECT_EQ(constexprBct[1], 'A');
-    EXPECT_EQ(constexprBct[2], 'T');
-    EXPECT_EQ(constexprBct[3], 'C');
-    EXPECT_EQ(constexprBct.RawData(), 0x43'54'41'47U);
+    EXPECT_EQ(CONSTEXPR_BCT[0], 'G');
+    EXPECT_EQ(CONSTEXPR_BCT[1], 'A');
+    EXPECT_EQ(CONSTEXPR_BCT[2], 'T');
+    EXPECT_EQ(CONSTEXPR_BCT[3], 'C');
+    EXPECT_EQ(CONSTEXPR_BCT.RawData(), 0x43'54'41'47U);
 }
 
 TEST(Container_BitContainer, ConstexprDependencyInjection)
 {
-    constexpr std::string_view str{"ACGT"};
-    constexpr auto converter = [](const char c) {
+    constexpr std::string_view STR{"ACGT"};
+    constexpr auto CONVERTER = [](const char c) {
         if (c == 'T') {
             return 0;
         } else if (c == 'G') {
@@ -106,21 +107,21 @@ TEST(Container_BitContainer, ConstexprDependencyInjection)
         throw std::logic_error{"encountered an invalid base"};
     };
 
-    constexpr auto constexprBctDI =
-        Container::BitContainer<8, 2>::MakeFromTransform(converter, str);
-    EXPECT_EQ(sizeof(constexprBctDI), 2 * sizeof(uint32_t));
-    EXPECT_EQ(constexprBctDI.Capacity(), 4);
-    EXPECT_EQ(constexprBctDI.Size(), 4);
+    constexpr auto CONSTEXPR_BCT_DI =
+        Container::BitContainer<8, 2>::MakeFromTransform(CONVERTER, STR);
+    EXPECT_EQ(sizeof(CONSTEXPR_BCT_DI), 2 * sizeof(uint32_t));
+    EXPECT_EQ(CONSTEXPR_BCT_DI.Capacity(), 4);
+    EXPECT_EQ(CONSTEXPR_BCT_DI.Size(), 4);
 
-    EXPECT_EQ(constexprBctDI[0], 3);
-    EXPECT_EQ(constexprBctDI[1], 2);
-    EXPECT_EQ(constexprBctDI[2], 1);
-    EXPECT_EQ(constexprBctDI[3], 0);
+    EXPECT_EQ(CONSTEXPR_BCT_DI[0], 3);
+    EXPECT_EQ(CONSTEXPR_BCT_DI[1], 2);
+    EXPECT_EQ(CONSTEXPR_BCT_DI[2], 1);
+    EXPECT_EQ(CONSTEXPR_BCT_DI[3], 0);
 
-    EXPECT_EQ(constexprBctDI.RawData(), 0b00'01'10'11);
+    EXPECT_EQ(CONSTEXPR_BCT_DI.RawData(), 0b00'01'10'11);
 
     std::ostringstream os;
-    os << constexprBctDI;
+    os << CONSTEXPR_BCT_DI;
     EXPECT_EQ(os.str(), "BitContainer(Size=4, BitmaskContainer(3, 2, 1, 0)");
 }
 
@@ -263,15 +264,15 @@ void TestBitContainer()
     std::random_device rd;
     std::mt19937 gen{rd()};
 
-    constexpr int32_t rounds = 100'000;
+    constexpr int32_t ROUNDS = 100'000;
 
     Container::BitContainer<TotalBits, ElementBits> bct{};
     std::vector<typename decltype(bct)::ValueType> vec;
 
     std::uniform_int_distribution<typename decltype(bct)::ValueType> elementDistribution{
-        0, bct.MaximumValue};
+        0, bct.MAXIMUM_VALUE};
 
-    for (int32_t i = 0; i < rounds; ++i) {
+    for (int32_t i = 0; i < ROUNDS; ++i) {
         const auto randVal = elementDistribution(gen);
 
         if (vec.size() == 0) {
@@ -357,16 +358,16 @@ void TestBitReverse()
     std::random_device rd;
     std::mt19937 gen{rd()};
 
-    constexpr int32_t rounds = 100'000;
+    constexpr int32_t ROUNDS = 100'000;
 
     using BitVec = typename Container::BitContainer<TotalBits, ElementBits>;
-    constexpr int32_t capacity = BitVec::Capacity();
+    constexpr int32_t CAPACITY = BitVec::Capacity();
 
     std::uniform_int_distribution<typename BitVec::ValueType> elementDistribution{
-        0, BitVec::MaximumValue};
-    std::uniform_int_distribution<int32_t> lengthDistribution{1, capacity};
+        0, BitVec::MAXIMUM_VALUE};
+    std::uniform_int_distribution<int32_t> lengthDistribution{1, CAPACITY};
 
-    for (int32_t i = 0; i < rounds; ++i) {
+    for (int32_t i = 0; i < ROUNDS; ++i) {
         const int32_t length = lengthDistribution(gen);
 
         BitVec fwdBct{0, length};

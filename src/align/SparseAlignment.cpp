@@ -23,7 +23,7 @@ std::vector<Seed> SparseAlignSeeds(const size_t qGramSize, const std::string& se
 std::vector<Seed> SparseAlignSeeds(const size_t qGramSize, const std::string& seq1,
                                    const std::string& seq2)
 {
-    return SparseAlignSeeds(qGramSize, seq1, seq2, Default::FilterHomopolymers);
+    return SparseAlignSeeds(qGramSize, seq1, seq2, Default::FILTER_HOMOPOLYMERS);
 }
 
 std::pair<size_t, std::vector<Seed>> BestSparseAlign(const std::string& seq1,
@@ -44,7 +44,7 @@ std::pair<size_t, std::vector<Seed>> BestSparseAlign(const std::string& seq1,
 std::pair<size_t, std::vector<Seed>> BestSparseAlign(const std::string& seq1,
                                                      const std::string& seq2)
 {
-    return BestSparseAlign(seq1, seq2, Default::FilterHomopolymers);
+    return BestSparseAlign(seq1, seq2, Default::FILTER_HOMOPOLYMERS);
 }
 
 std::vector<std::pair<size_t, size_t>> SparseAlign(const size_t qGramSize, const std::string& seq1,
@@ -64,7 +64,7 @@ std::vector<std::pair<size_t, size_t>> SparseAlign(const size_t qGramSize, const
 std::vector<std::pair<size_t, size_t>> SparseAlign(const size_t qGramSize, const std::string& seq1,
                                                    const std::string& seq2)
 {
-    return SparseAlign(qGramSize, seq1, seq2, Default::FilterHomopolymers);
+    return SparseAlign(qGramSize, seq1, seq2, Default::FILTER_HOMOPOLYMERS);
 }
 
 }  // namespace Align

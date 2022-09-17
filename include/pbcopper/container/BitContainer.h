@@ -74,7 +74,7 @@ public:
 
 public:
     using Base::Capacity;
-    using Base::MaximumValue;
+    using Base::MAXIMUM_VALUE;
 
     PB_CUDA_HOST PB_CUDA_DEVICE constexpr int32_t Size() const noexcept { return size_; }
 

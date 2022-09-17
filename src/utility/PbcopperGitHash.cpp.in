@@ -1,14 +1,14 @@
 #include <pbcopper/utility/PbcopperVersion.h>
 
 #include <string>
+#include <string_view>
 
 namespace PacBio {
 namespace Utility {
-namespace {
-static constexpr const char LibraryGitSha1[] = "@COPPER_GIT_SHA1@";
-}
 
-std::string LibraryGitSha1String()
-{ return LibraryGitSha1; }
+constexpr std::string_view LIBRARY_GIT_SHA1{"@COPPER_GIT_SHA1@"};
 
-}}  // ::PacBio::Utility
+std::string LibraryGitSha1String() { return std::string{LIBRARY_GIT_SHA1}; }
+
+}  // namespace Utility
+}  // namespace PacBio

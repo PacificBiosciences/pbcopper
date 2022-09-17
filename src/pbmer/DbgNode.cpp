@@ -5,13 +5,12 @@
 
 namespace PacBio {
 namespace Pbmer {
-namespace {
 
 /**
  * The bases are duplicated for the iterator, avoiding strand checking
  */
-constexpr const std::array<char, 8> BASES{'A', 'C', 'G', 'T', 'A', 'C', 'G', 'T'};
-constexpr const std::array<uint8_t, 256> CLZ_LOOKUP{
+constexpr std::array<char, 8> BASES{'A', 'C', 'G', 'T', 'A', 'C', 'G', 'T'};
+constexpr std::array<uint8_t, 256> CLZ_LOOKUP{
     8, 7, 6, 6, 5, 5, 5, 5, 4, 4, 4, 4, 4, 4, 4, 4, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3,
     2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
     1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
@@ -20,8 +19,6 @@ constexpr const std::array<uint8_t, 256> CLZ_LOOKUP{
     0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
     0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
     0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
-
-}  // namespace
 
 DbgNode::DbgNode(const DnaBit& d, uint8_t o, uint32_t n) : dna_{d}, edges_{o}
 {

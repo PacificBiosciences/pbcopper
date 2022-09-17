@@ -27,7 +27,8 @@ Library::Bundle LibraryBundle()
 
 Library::Info LibraryInfo()
 {
-    return {"pbcopper", Pbcopper::ReleaseVersion, Pbcopper::LibraryGitSha1};
+    return {"pbcopper", std::string{Pbcopper::RELEASE_VERSION},
+            std::string{Pbcopper::LIBRARY_GIT_SHA1}};
 }
 
 }  // namespace Pbcopper

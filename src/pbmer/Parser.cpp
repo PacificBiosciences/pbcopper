@@ -40,7 +40,7 @@ Mers Parser::Parse(const std::string& dna) const
     for (const auto d : dna) {
         // check that only ASCII is used
         assert(static_cast<unsigned char>(d) < 128);
-        c = AsciiToDna[static_cast<int>(d)];
+        c = ASCII_TO_DNA[static_cast<unsigned char>(d)];
         // If an unknown character is seen (c < 4) advance the window, set lk = 0,
         // and reset the kmer.
         if (c < 4) {
@@ -91,7 +91,7 @@ std::vector<DnaBit> Parser::ParseDnaBit(const std::string& dna) const
     for (const auto d : dna) {
         // check that only ASCII is used
         assert(static_cast<unsigned char>(d) < 128);
-        c = AsciiToDna[static_cast<int>(d)];
+        c = ASCII_TO_DNA[static_cast<unsigned char>(d)];
         // If an unknown chracter is seen (c < 4) advance the window, set lk = 0,
         // and reset the kmer.
         if (c < 4) {
@@ -133,7 +133,7 @@ void Parser::ParseDnaBit(const std::string& dna, std::vector<DnaBit>& kms) const
     for (const auto d : dna) {
         // check that only ASCII is used
         assert(static_cast<unsigned char>(d) < 128);
-        c = AsciiToDna[static_cast<int>(d)];
+        c = ASCII_TO_DNA[static_cast<unsigned char>(d)];
         // If an unknown chracter is seen (c < 4) advance the window, set lk = 0,
         // and reset the kmer.
         if (c < 4) {

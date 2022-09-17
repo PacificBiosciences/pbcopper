@@ -16,11 +16,11 @@ namespace PacBio {
 namespace QGram {
 namespace internal {
 
-static constexpr const uint8_t ALPHABET_SIZE = 4;  // {A,C,G,T}
+constexpr uint8_t ALPHABET_SIZE = 4;  // {A,C,G,T}
 
-inline uint8_t BaseCode(const char c)
+constexpr uint8_t BaseCode(const char c)
 {
-    static constexpr const std::array<uint8_t, 128> baseCode = {
+    constexpr std::array<uint8_t, 128> BASE_CODE = {
         // C->1, G->2, T->3, else 0
         {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
          0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
@@ -28,7 +28,7 @@ inline uint8_t BaseCode(const char c)
          0, 0, 0, 0, 0, 0, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
          0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}};
     assert(c >= 0);
-    return baseCode[static_cast<uint8_t>(c)];
+    return BASE_CODE[static_cast<unsigned char>(c)];
 }
 
 // recursive q-gram hash calculator
@@ -95,9 +95,9 @@ class HpHasher
 public:
     HpHasher(const size_t q)
     {
-        const char dna[ALPHABET_SIZE] = {'A', 'C', 'G', 'T'};
+        constexpr std::array<char, ALPHABET_SIZE> DNA = {'A', 'C', 'G', 'T'};
         for (size_t i = 0; i < ALPHABET_SIZE; i++) {
-            const std::string s = std::string(q, dna[i]);
+            const std::string s = std::string(q, DNA[i]);
             const auto it = s.cbegin();
             const auto h = BaseCode(*it);
             hashes[i] = HashImpl(h, it, q);

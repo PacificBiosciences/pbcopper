@@ -133,7 +133,7 @@ void ClipToQuery(Read& read, Position start, Position end)
                                  start,
                                  end,
                                  // TODO: these next are unused for unmapped clip-to-query
-                                 UnmappedPosition,
+                                 UNMAPPED_POSITION,
                                  Strand::FORWARD,
                                  {},
                                  false};

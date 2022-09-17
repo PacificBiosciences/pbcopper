@@ -48,14 +48,14 @@ protected:
     using ComputationType = std::common_type_t<UnderlyingType, ValueType>;
 
 private:
-    constexpr static int32_t capacity_ = TotalBits / ElementBits;
-    static_assert(capacity_ >= 2, "TotalBits is not >= 2 * ElementBits");
+    constexpr static int32_t CAPACITY_ = TotalBits / ElementBits;
+    static_assert(CAPACITY_ >= 2, "TotalBits is not >= 2 * ElementBits");
     static_assert(TotalBits % ElementBits == 0, "Cannot handle padding bits");
 
 public:
-    PB_CUDA_HOST PB_CUDA_DEVICE constexpr static int32_t Capacity() { return capacity_; }
+    PB_CUDA_HOST PB_CUDA_DEVICE constexpr static int32_t Capacity() { return CAPACITY_; }
 
-    constexpr static ComputationType MaximumValue{
+    constexpr static ComputationType MAXIMUM_VALUE{
         std::numeric_limits<UnderlyingType>::max() >>
         (sizeof(UnderlyingType) * CHAR_BIT - ElementBits)};
 
@@ -80,7 +80,7 @@ public:
             data <<= ElementBits;
 
             const ComputationType val = transform(input[i]);
-            assert(val <= MaximumValue);
+            assert(val <= MAXIMUM_VALUE);
 
             data |= val;
         }
@@ -97,7 +97,7 @@ public:
         UnderlyingType data{};
 
         int32_t idx = 0;
-        (..., (assert(static_cast<ComputationType>(args) <= MaximumValue), data |= (args << idx),
+        (..., (assert(static_cast<ComputationType>(args) <= MAXIMUM_VALUE), data |= (args << idx),
                idx += ElementBits));
 
         return BitmaskContainer{data};
@@ -110,7 +110,7 @@ public:
         assert(idx < Capacity());
 
         const int32_t shiftBits = ElementBits * idx;
-        return (data_ >> shiftBits) & MaximumValue;
+        return (data_ >> shiftBits) & MAXIMUM_VALUE;
     }
 
 public:
@@ -121,10 +121,10 @@ public:
     {
         assert(idx >= 0);
         assert(idx < Capacity());
-        assert(val <= MaximumValue);
+        assert(val <= MAXIMUM_VALUE);
 
         const int32_t shiftBits = ElementBits * idx;
-        data_ = (val << shiftBits) | (data_ & ~(MaximumValue << shiftBits));
+        data_ = (val << shiftBits) | (data_ & ~(MAXIMUM_VALUE << shiftBits));
     }
 
     PB_CUDA_HOST PB_CUDA_DEVICE constexpr void Remove(const int32_t idx) noexcept
@@ -160,7 +160,7 @@ public:
     {
         assert(idx >= 0);
         assert(idx < Capacity());
-        assert(val <= MaximumValue);
+        assert(val <= MAXIMUM_VALUE);
 
         const int32_t shiftBits = ElementBits * idx;
         const auto lowerBitMask = (ComputationType{1} << shiftBits) - 1;
@@ -204,10 +204,11 @@ protected:
     PB_CUDA_HOST PB_CUDA_DEVICE constexpr void ReverseImpl() noexcept
     {
         if constexpr (capacity > 0) {
-            constexpr ComputationType bitPattern = GenerateMovePattern(round);
-            constexpr int32_t bitsToShift = ElementBits * (1 << round);
+            constexpr ComputationType BIT_PATTERN = GenerateMovePattern(round);
+            constexpr int32_t BITS_TO_SHIFT = ElementBits * (1 << round);
 
-            data_ = ((data_ & ~bitPattern) >> bitsToShift) | ((data_ & bitPattern) << bitsToShift);
+            data_ = ((data_ & ~BIT_PATTERN) >> BITS_TO_SHIFT) |
+                    ((data_ & BIT_PATTERN) << BITS_TO_SHIFT);
 
             ReverseImpl<round + 1, capacity / 2>();
         }
