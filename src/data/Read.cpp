@@ -3,6 +3,7 @@
 #include <pbcopper/data/Clipping.h>
 #include <pbcopper/data/internal/ClippingImpl.h>
 
+#include <bitset>
 #include <ios>
 #include <ostream>
 #include <stdexcept>
@@ -112,7 +113,7 @@ std::ostream& operator<<(std::ostream& os, const Read& read)
         os << "None";
     }
     os << ", QueryStart=" << read.QueryStart << ", QueryEnd=" << read.QueryEnd
-       << ", Flags=" << read.Flags << ", ReadAccuracy=" << read.ReadAccuracy
+       << ", Flags=" << std::bitset<8>{read.Flags} << ", ReadAccuracy=" << read.ReadAccuracy
        << ", SignalToNoise=" << read.SignalToNoise << ", Model=" << read.Model
        << ", FullLength=" << read.FullLength << ')';
     return os;
