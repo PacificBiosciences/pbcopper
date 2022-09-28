@@ -50,8 +50,9 @@ void Validate(const Option& option, const OptionData& result)
             std::find(result.choices.cbegin(), result.choices.cend(), *result.defaultValue);
         if (match == result.choices.cend()) {
             std::ostringstream msg;
-            msg << "[pbcopper] command line option ERROR: default value: \"" << *result.defaultValue
-                << "\" is not among valid choices for option: " << result.names.at(0);
+            msg << "[pbcopper] command line option ERROR: default value: \"";
+            std::visit([&msg](const auto& v) { msg << v; }, *result.defaultValue);
+            msg << "\" is not among valid choices for option: " << result.names.at(0);
             throw std::runtime_error{msg.str()};
         }
     }

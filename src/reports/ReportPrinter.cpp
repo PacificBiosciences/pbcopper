@@ -14,15 +14,15 @@ namespace {
 // clang-format off
 Json VariantToJson(const PacBio::Reports::ReportValue& value)
 {
-    // boost::blank, int, double, bool, std::string
-    switch(value.which()) {
+    // std::monostate, int, double, bool, std::string
+    switch(value.index()) {
         case 0 : return Json{};
-        case 1 : return Json::number_integer_t{boost::get<int>(value)};
-        case 2 : return Json::number_unsigned_t{boost::get<unsigned int>(value)};
-        case 3 : return Json::number_integer_t{boost::get<int64_t>(value)};
-        case 4 : return Json::number_float_t{boost::get<double>(value)};
-        case 5 : return Json::boolean_t{boost::get<bool>(value)};
-        case 6 : return Json::string_t{boost::get<std::string>(value)};
+        case 1 : return Json::number_integer_t{std::get<int>(value)};
+        case 2 : return Json::number_unsigned_t{std::get<unsigned int>(value)};
+        case 3 : return Json::number_integer_t{std::get<int64_t>(value)};
+        case 4 : return Json::number_float_t{std::get<double>(value)};
+        case 5 : return Json::boolean_t{std::get<bool>(value)};
+        case 6 : return Json::string_t{std::get<std::string>(value)};
         default:
             throw std::runtime_error{"[pbcopper] reports ERROR: invalid report value type"};
     }

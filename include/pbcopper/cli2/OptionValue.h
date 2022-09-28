@@ -3,10 +3,9 @@
 
 #include <pbcopper/PbcopperConfig.h>
 
-#include <boost/variant.hpp>
-
 #include <iosfwd>
 #include <string>
+#include <variant>
 
 // clang-format off
 
@@ -31,7 +30,7 @@ enum class OptionValueType
 /// This variant carries the value associated with an option - parsed from the
 /// command line or a resolved tool contract.
 ///
-using OptionValue = boost::variant<
+using OptionValue = std::variant<
     int8_t,
     int16_t,
     int32_t,

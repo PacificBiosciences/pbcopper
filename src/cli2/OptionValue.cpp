@@ -12,7 +12,7 @@ namespace PacBio {
 namespace CLI_v2 {
 namespace {
 
-class BoolConverter : public boost::static_visitor<bool>
+class BoolConverter
 {
 public:
     bool operator()(bool x) const noexcept { return x; }
@@ -27,7 +27,7 @@ public:
     }
 };
 
-class DoubleConverter : public boost::static_visitor<double>
+class DoubleConverter
 {
 public:
     double operator()(double x) const noexcept { return x; }
@@ -42,7 +42,7 @@ public:
     }
 };
 
-class Int64Converter : public boost::static_visitor<int64_t>
+class Int64Converter
 {
 public:
     int64_t operator()(int8_t x) const noexcept { return x; }
@@ -60,7 +60,7 @@ public:
     }
 };
 
-class UInt64Converter : public boost::static_visitor<uint64_t>
+class UInt64Converter
 {
 public:
     uint64_t operator()(uint8_t x) const noexcept { return x; }
@@ -78,7 +78,7 @@ public:
     }
 };
 
-class StringConverter : public boost::static_visitor<std::string>
+class StringConverter
 {
 public:
     std::string operator()(std::string x) const { return x; }
@@ -105,7 +105,7 @@ const std::unordered_map<std::string, OptionValueType> stringToType{
 };
 
 const std::vector<std::string> typeToString{
-    // index follows our boost::variant
+    // index follows our std::variant
     "int8_t", "int16_t", "int32_t", "int64_t",
     "uint8_t", "uint16_t", "uint32_t", "uint64_t",
     "double", "bool", "string"
@@ -128,36 +128,29 @@ OptionValueType ValueType(std::string typeString)
     }
 }
 
-bool OptionValueToBool(const OptionValue& value)
-{
-    return boost::apply_visitor(BoolConverter(), value);
-}
+bool OptionValueToBool(const OptionValue& value) { return std::visit(BoolConverter{}, value); }
 
 double OptionValueToDouble(const OptionValue& value)
 {
-    return boost::apply_visitor(DoubleConverter(), value);
+    return std::visit(DoubleConverter{}, value);
 }
 
-int64_t OptionValueToInt(const OptionValue& value)
-{
-    return boost::apply_visitor(Int64Converter(), value);
-}
+int64_t OptionValueToInt(const OptionValue& value) { return std::visit(Int64Converter{}, value); }
 
 std::string OptionValueToString(const OptionValue& value)
 {
-    return boost::apply_visitor(StringConverter(), value);
+    return std::visit(StringConverter{}, value);
 }
 
 uint64_t OptionValueToUInt(const OptionValue& value)
 {
-    return boost::apply_visitor(UInt64Converter(), value);
+    return std::visit(UInt64Converter{}, value);
 }
 
 std::ostream& operator<<(std::ostream& out, const OptionValue& value)
 {
-    const auto typeIndex = value.which();
+    const auto typeIndex = value.index();
     switch (typeIndex) {
-
         // int8_t, int16_t, int32_t, int64_t
         case 0:
         case 1:

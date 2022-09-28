@@ -5,10 +5,9 @@
 
 #include <pbcopper/PbcopperConfig.h>
 
-#include <boost/variant.hpp>
-
 #include <iosfwd>
 #include <string>
+#include <variant>
 #include <vector>
 
 #include <cstddef>
@@ -18,7 +17,7 @@ namespace PacBio {
 namespace Reports {
 
 using ReportValue =
-    boost::variant<boost::blank, int, unsigned int, int64_t, double, bool, std::string>;
+    std::variant<std::monostate, int, unsigned int, int64_t, double, bool, std::string>;
 
 class BaseReportElement
 {

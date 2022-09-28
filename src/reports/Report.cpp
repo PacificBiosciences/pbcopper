@@ -31,17 +31,17 @@ Attribute::Attribute(std::string id, ReportValue value, std::string name)
     : BaseReportElement{std::move(id)}, name_{std::move(name)}, value_{std::move(value)}
 {}
 
-Attribute::operator int() const { return boost::get<int>(value_); }
+Attribute::operator int() const { return std::get<int>(value_); }
 
-Attribute::operator unsigned int() const { return boost::get<unsigned int>(value_); }
+Attribute::operator unsigned int() const { return std::get<unsigned int>(value_); }
 
-Attribute::operator int64_t() const { return boost::get<int64_t>(value_); }
+Attribute::operator int64_t() const { return std::get<int64_t>(value_); }
 
-Attribute::operator double() const { return boost::get<double>(value_); }
+Attribute::operator double() const { return std::get<double>(value_); }
 
-Attribute::operator bool() const { return boost::get<bool>(value_); }
+Attribute::operator bool() const { return std::get<bool>(value_); }
 
-Attribute::operator std::string() const { return boost::get<std::string>(value_); }
+Attribute::operator std::string() const { return std::get<std::string>(value_); }
 
 const std::string& Attribute::Name() const { return name_; }
 
