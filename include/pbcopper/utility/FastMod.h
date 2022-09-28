@@ -10,7 +10,7 @@
 #include <cstdint>
 
 #ifndef INLINE
-#define INLINE_UNDEFINE___
+#define INLINE_UNDEFINE_AT_END
 #if __GNUC__ || __clang__
 #define INLINE __attribute__((always_inline)) inline
 #elif __CUDACC__
@@ -130,8 +130,8 @@ struct FastMod<uint32_t>
 }  // namespace Utility
 }  // namespace PacBio
 
-#ifdef INLINE_UNDEFINE___
-#undef INLINE_UNDEFINE___
+#ifdef INLINE_UNDEFINE_AT_END
+#undef INLINE_UNDEFINE_AT_END
 #undef INLINE
 #endif
 
