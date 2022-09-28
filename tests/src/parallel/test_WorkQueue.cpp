@@ -154,7 +154,7 @@ TEST(Parallel_WorkQueue, exceptionConsumer)
     std::string exceptionMsg;
     try {
         workQueue.Finalize();
-    } catch (std::runtime_error& e) {
+    } catch (const std::runtime_error& e) {
         exceptionMsg = e.what();
     }
     const std::string expectedError{"consumer abort"};

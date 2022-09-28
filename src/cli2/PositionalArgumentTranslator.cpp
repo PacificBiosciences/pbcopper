@@ -84,7 +84,7 @@ PositionalArgumentData PositionalArgumentTranslator::Translate(const PositionalA
             result.required = *required;
         }
 
-    } catch (std::exception& e) {
+    } catch (const std::exception& e) {
         std::ostringstream msg;
         msg << "[pbcopper] command line argument ERROR: cannot parse definition:\n"
             << posArg.text << '\n'

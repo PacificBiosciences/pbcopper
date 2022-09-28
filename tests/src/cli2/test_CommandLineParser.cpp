@@ -477,7 +477,7 @@ TEST(CLI2_CommandLineParser, displays_useful_message_on_bad_args)
     try {
         const std::vector<std::string> args{"frobber", "--badarg"};
         const auto results = parser.Parse(args);
-    } catch (std::exception& e) {
+    } catch (const std::exception& e) {
         const std::string message{e.what()};
         EXPECT_NE("unordered_map::at: key not found", message);
         EXPECT_TRUE(message.find("unknown option") != std::string::npos);
@@ -487,7 +487,7 @@ TEST(CLI2_CommandLineParser, displays_useful_message_on_bad_args)
     try {
         const std::vector<std::string> args{"frobber", "-X"};
         const auto results = parser.Parse(args);
-    } catch (std::exception& e) {
+    } catch (const std::exception& e) {
         const std::string message{e.what()};
         EXPECT_NE("unordered_map::at: key not found", message);
         EXPECT_TRUE(message.find("unknown option") != std::string::npos);
@@ -656,7 +656,7 @@ TEST(CLI2_CommandLineParser, throws_if_expected_value_is_next_option_instead)
         try {
             const auto results = parser.Parse(args);
             ASSERT_TRUE(false); // should not execute
-        } catch (std::exception& e)
+        } catch (const std::exception& e)
         {
             const std::string msg{e.what()};
             EXPECT_TRUE(msg.find("value is missing for option 'x'") != std::string::npos);
@@ -672,7 +672,7 @@ TEST(CLI2_CommandLineParser, throws_if_expected_value_is_next_option_instead)
         try {
             const auto results = parser.Parse(args);
             ASSERT_TRUE(false); // should not execute
-        } catch (std::exception& e)
+        } catch (const std::exception& e)
         {
             const std::string msg{e.what()};
             EXPECT_TRUE(msg.find("value is missing for option 'long-y'") != std::string::npos);
@@ -700,7 +700,7 @@ TEST(CLI2_CommandLineParser, does_not_allow_negative_value_for_unsigned_option)
         const CommandLineParser parser{i};
         parser.Parse({"frobber", "-x", "-42"});
         ASSERT_TRUE(false); // should not execute
-    } catch (std::exception& e) {
+    } catch (const std::exception& e) {
         const std::string msg{e.what()};
         EXPECT_TRUE(msg.find("negative value -42 is not allowed for option 'x'") != std::string::npos);
     }
@@ -725,7 +725,7 @@ TEST(CLI2_CommandLineParser, does_not_allow_negative_value_for_string_option)
         const CommandLineParser parser{i};
         parser.Parse({"frobber", "-x", "-42"});
         ASSERT_TRUE(false); // should not execute
-    } catch (std::exception& e) {
+    } catch (const std::exception& e) {
         const std::string msg{e.what()};
         EXPECT_TRUE(msg.find("negative value -42 is not allowed for option 'x'") != std::string::npos);
     }
