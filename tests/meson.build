@@ -159,7 +159,4 @@ test(
   pbcopper_test,
   args : [
     '--gtest_output=xml:' + join_paths(meson.project_build_root(), 'pbcopper-gtest-unittests.xml')],
-  env : [
-    'ARGS=-V',
-    'VERBOSE=1'],
   timeout : 300)    # debug unit tests on PoaConsensus can be *slow*
