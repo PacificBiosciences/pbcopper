@@ -445,7 +445,6 @@ std::string SparcSimpleConsensus(const std::string& backboneSeq, std::vector<Que
         std::reverse(consensus.begin(), consensus.end());
     }
 
-    int32_t cns_pos = consensus.size();
     current_node = backbone.Nodes[position];
     backbone.Nodes.clear();
     backbone.Nodes.push_back(current_node);
@@ -453,7 +452,6 @@ std::string SparcSimpleConsensus(const std::string& backboneSeq, std::vector<Que
         current_node = current_node->LastNode;
         while (current_node != NULL) {
             backbone.Nodes.push_back(current_node);
-            --cns_pos;
             current_node = current_node->LastNode;
         }
     }

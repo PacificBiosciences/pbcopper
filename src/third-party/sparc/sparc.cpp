@@ -146,11 +146,7 @@ inline void GetSubArray(uint64_t* bitsarr_in, int bitsarr_len, int begin_pos, in
     if (bitsarr_len < sub_sz) {
         throw std::runtime_error("Input Kmer too short.");
     }
-    int arr_sz_in = bitsarr_len / 32 + 1;
     int rem = bitsarr_len % 32;
-    if (rem == 0) {
-        arr_sz_in--;
-    }
 
     int arr_sz_out = sub_sz / 32 + 1;
     if (sub_sz % 32 == 0) {
@@ -304,18 +300,6 @@ void ConsensusKmerGraphConstruction(struct Read* read, Backbone* backbone, int k
     const int readLen = read->ReadLen;
     int overlappingKmers = readLen - k + 1;
 
-    int Read_arr_sz = readLen / 32 + 1;
-    int rem = readLen % 32;
-    if (rem == 0) {
-        Read_arr_sz--;
-    }
-
-    int Kmer_arr_sz = k / 32 + 1;
-    int rem1 = k % 32;
-    if (rem1 == 0) {
-        Kmer_arr_sz--;
-    }
-
     uint64_t seq;
 
     PtrNode previous_node = NULL;
@@ -353,17 +337,6 @@ void ConsensusSparseKmerGraphConstruction(struct Read* read, Backbone* backbone,
 
     const int readLen = read->ReadLen;
     const int overlappingKmers = readLen - k + 1;
-
-    int Read_arr_sz = readLen / 32 + 1;
-    int rem = readLen % 32;
-    if (rem == 0) {
-        Read_arr_sz--;
-    }
-    int Kmer_arr_sz = k / 32 + 1;
-    int rem1 = k % 32;
-    if (rem1 == 0) {
-        Kmer_arr_sz--;
-    }
 
     uint64_t seq;
 
@@ -415,15 +388,9 @@ void NormalizeAlignment(Query* query)
     size_t seq_sz = query->qAlignedSeq.size();
     qAlignedSeq_new.resize(2 * seq_sz);
     tAlignedSeq_new.resize(2 * seq_sz);
-    int target_position = query->tStart;
     std::string target_crop, query_crop;
     int n_char = 0;
     for (size_t i = 0; i < seq_sz; ++i) {
-
-        if (query->tAlignedSeq[i] != '-') {
-            target_position++;
-        }
-
         if (query->qAlignedSeq[i] == query->tAlignedSeq[i]) {
             qAlignedSeq_new[n_char] = query->qAlignedSeq[i];
             tAlignedSeq_new[n_char] = query->tAlignedSeq[i];
@@ -750,8 +717,6 @@ void BFSFindBestPathSparse(Backbone* backbone, int node_idx)
 
 void FindBestPath(Backbone* backbone)
 {
-
-    uint32_t n_Rbranched = 0, n_Lbranched = 0;
     backbone->Nodes[0]->Cov = 1;  //depth
     for (size_t i = 0; i + 1 < backbone->Nodes.size(); ++i) {
 
@@ -760,35 +725,22 @@ void FindBestPath(Backbone* backbone)
         PtrEdgeNode edge_ptr = backbone->Nodes[i]->Right;
         std::map<uint64_t, PtrNode> node_map;
         std::map<PtrNode, int> node_cov;
-        int RBranch = 0;
         while (edge_ptr != NULL) {
-            RBranch++;
             edge_ptr = edge_ptr->NextEdge;
-        }
-        if (RBranch > 1) {
-            n_Rbranched++;
         }
 
         node_map.clear();
         node_cov.clear();
 
         edge_ptr = backbone->Nodes[i]->Left;
-        int LBranch = 0;
         while (edge_ptr != NULL) {
-            LBranch++;
             edge_ptr = edge_ptr->NextEdge;
-        }
-
-        if (LBranch > 1) {
-            n_Lbranched++;
         }
     }
 }
 
 void FindBestPathSparse(Backbone* backbone)
 {
-
-    uint32_t n_Rbranched = 0, n_Lbranched = 0;
     backbone->Nodes[0]->Cov = 1;  //depth
     for (size_t i = 0; i + 1 < backbone->Nodes.size(); ++i) {
         if (backbone->Nodes[i] == NULL) {
@@ -800,27 +752,16 @@ void FindBestPathSparse(Backbone* backbone)
         PtrEdgeNode edge_ptr = backbone->Nodes[i]->Right;
         std::map<uint64_t, PtrNode> node_map;
         std::map<PtrNode, int> node_cov;
-        int RBranch = 0;
         while (edge_ptr != NULL) {
-            RBranch++;
             edge_ptr = edge_ptr->NextEdge;
-        }
-        if (RBranch > 1) {
-            n_Rbranched++;
         }
 
         node_map.clear();
         node_cov.clear();
 
         edge_ptr = backbone->Nodes[i]->Left;
-        int LBranch = 0;
         while (edge_ptr != NULL) {
-            LBranch++;
             edge_ptr = edge_ptr->NextEdge;
-        }
-
-        if (LBranch > 1) {
-            n_Lbranched++;
         }
     }
 }
@@ -829,26 +770,9 @@ void AddPathToBackboneSparse(Backbone& bb, Query& qq, size_t k, EdgeBucket& edge
 {
     int gap = bb.Gap;
 
-    int bases_q1 = 0, bases_t1 = 0, bases_q2 = 0, bases_t2 = 0;
     std::string t1, q1;
-    for (size_t i = 0; i < qq.tAlignedSeq.size(); ++i) {
-        if (qq.qAlignedSeq[i] != '-') {
-            bases_q1++;
-        }
-        if (qq.tAlignedSeq[i] != '-') {
-            bases_t1++;
-        }
-    }
     NormalizeAlignment(&qq);
     std::string t2, q2;
-    for (size_t i = 0; i < qq.tAlignedSeq.size(); ++i) {
-        if (qq.qAlignedSeq[i] != '-') {
-            bases_q2++;
-        }
-        if (qq.tAlignedSeq[i] != '-') {
-            bases_t2++;
-        }
-    }
 
     PtrNode current_node = NULL;
     int qStart = -1;
@@ -1251,7 +1175,6 @@ std::string SparcConsensus(const std::string& backboneSeq, std::vector<Query>& q
             std::reverse(consensus.begin(), consensus.end());
         }
 
-        int cns_pos = consensus.size();
         current_node = backbone.Nodes[position];
         backbone.Nodes.clear();
         backbone.Nodes.push_back(current_node);
@@ -1259,7 +1182,6 @@ std::string SparcConsensus(const std::string& backboneSeq, std::vector<Query>& q
             current_node = current_node->LastNode;
             while (current_node != NULL) {
                 backbone.Nodes.push_back(current_node);
-                cns_pos--;
                 current_node = current_node->LastNode;
             }
         }

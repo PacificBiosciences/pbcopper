@@ -31,8 +31,6 @@ Mers Parser::Parse(const std::string& dna) const
     Kmer reverseKmer{Data::Strand::REVERSE};
 
     uint8_t c;
-    // Counters to keep track of position and sizes of things
-    int i = 0;
     // The length of the current kmer buffer, lk needs to be >= to kmer_size
     // before a kmer is complete. Remember the kmer is build in a sliding fashion
     int lk = 0;
@@ -51,7 +49,6 @@ Mers Parser::Parse(const std::string& dna) const
         } else {
             // unknown base, reset
             lk = 0;
-            i += kmerSize_;
             forwardKmer.mer = 0;
             reverseKmer.mer = 0;
             forwardKmer.pos += kmerSize_;
@@ -63,7 +60,6 @@ Mers Parser::Parse(const std::string& dna) const
             ++forwardKmer.pos;
             ++reverseKmer.pos;
         }
-        ++i;
     }
 
     return kms;  // placeholder return
@@ -82,8 +78,6 @@ std::vector<DnaBit> Parser::ParseDnaBit(const std::string& dna) const
     forwardKmer.msize = kmerSize_;
 
     uint8_t c;
-    // Counters to keep track of position and sizes of things
-    int i = 0;
     // The length of the current kmer buffer, lk needs to be >= to kmer_size
     // before a kmer is complete. Remember the kmer is build in a sliding fashion
     int lk = 0;
@@ -101,13 +95,11 @@ std::vector<DnaBit> Parser::ParseDnaBit(const std::string& dna) const
         } else {
             // unknown base, reset
             lk = 0;
-            i += kmerSize_;
             forwardKmer.mer = 0;
         }
         if (lk >= kmerSize_) {
             kms.emplace_back(forwardKmer);
         }
-        ++i;
     }
 
     return kms;
@@ -124,8 +116,6 @@ void Parser::ParseDnaBit(const std::string& dna, std::vector<DnaBit>& kms) const
     forwardKmer.msize = kmerSize_;
 
     uint8_t c;
-    // Counters to keep track of position and sizes of things
-    int i = 0;
     // The length of the current kmer buffer, lk needs to be >= to kmer_size
     // before a kmer is complete. Remember the kmer is build in a sliding fashion
     int lk = 0;
@@ -143,13 +133,11 @@ void Parser::ParseDnaBit(const std::string& dna, std::vector<DnaBit>& kms) const
         } else {
             // unknown base, reset
             lk = 0;
-            i += kmerSize_;
             forwardKmer.mer = 0;
         }
         if (lk >= kmerSize_) {
             kms.emplace_back(forwardKmer);
         }
-        ++i;
     }
 }
 
