@@ -68,29 +68,29 @@ std::string DisplayName(const OptionValueType type)
 size_t HelpMetrics::TestingFixedWidth = 0;
 
 HelpMetrics::HelpMetrics(const Interface& interface, HiddenOptionMode hiddenOptionMode)
-    : showHiddenOptions{hiddenOptionMode == HiddenOptionMode::SHOW}
+    : ShowHiddenOptions{hiddenOptionMode == HiddenOptionMode::SHOW}
 {
-    maxColumn = AdjustedMaxColumn(maxColumn);
+    MaxColumn = AdjustedMaxColumn(MaxColumn);
     Calculate(interface);
 }
 
 HelpMetrics::HelpMetrics(const MultiToolInterface& interface, HiddenOptionMode hiddenOptionMode)
-    : showHiddenOptions{hiddenOptionMode == HiddenOptionMode::SHOW}
+    : ShowHiddenOptions{hiddenOptionMode == HiddenOptionMode::SHOW}
 {
-    maxColumn = AdjustedMaxColumn(maxColumn);
+    MaxColumn = AdjustedMaxColumn(MaxColumn);
     Calculate(interface);
 }
 
 HelpMetrics::HelpMetrics(const Interface& interface, const size_t explicitMaxColumn,
                          HiddenOptionMode hiddenOptionMode)
-    : maxColumn{explicitMaxColumn}, showHiddenOptions{hiddenOptionMode == HiddenOptionMode::SHOW}
+    : MaxColumn{explicitMaxColumn}, ShowHiddenOptions{hiddenOptionMode == HiddenOptionMode::SHOW}
 {
     Calculate(interface);
 }
 
 HelpMetrics::HelpMetrics(const MultiToolInterface& interface, const size_t explicitMaxColumn,
                          HiddenOptionMode hiddenOptionMode)
-    : maxColumn{explicitMaxColumn}, showHiddenOptions{hiddenOptionMode == HiddenOptionMode::SHOW}
+    : MaxColumn{explicitMaxColumn}, ShowHiddenOptions{hiddenOptionMode == HiddenOptionMode::SHOW}
 {
     Calculate(interface);
 }
@@ -99,7 +99,7 @@ void HelpMetrics::Calculate(const Interface& interface)
 {
     // metrics using client options
     for (const auto& optionGroup : interface.OptionGroups()) {
-        for (const auto& option : optionGroup.options) {
+        for (const auto& option : optionGroup.Options) {
             UpdateForOption(option);
         }
     }
@@ -108,7 +108,7 @@ void HelpMetrics::Calculate(const Interface& interface)
     UpdateForOption(interface.HelpOption());
     UpdateForOption(interface.VersionOption());
 
-    if (showHiddenOptions) {
+    if (ShowHiddenOptions) {
         UpdateForOption(interface.AlarmsOption());
         UpdateForOption(interface.ExceptionsPassthroughOption());
         UpdateForOption(interface.ShowAllHelpOption());
@@ -129,11 +129,11 @@ void HelpMetrics::Calculate(const Interface& interface)
 
     // metrics using pos args
     for (const auto& posArg : interface.PositionalArguments()) {
-        auto posArgDisplayText = DisplayName(posArg.type);
-        maxNameLength = std::max(maxNameLength, posArg.name.size());
-        maxTypeLength = std::max(maxTypeLength, posArgDisplayText.size());
-        formattedPosArgNames.emplace(posArg,
-                                     FormattedEntry{posArg.name, std::move(posArgDisplayText)});
+        auto posArgDisplayText = DisplayName(posArg.Type);
+        MaxNameLength = std::max(MaxNameLength, posArg.Name.size());
+        MaxTypeLength = std::max(MaxTypeLength, posArgDisplayText.size());
+        FormattedPosArgNames.emplace(posArg,
+                                     FormattedEntry{posArg.Name, std::move(posArgDisplayText)});
     }
 }
 
@@ -141,15 +141,15 @@ void HelpMetrics::Calculate(const MultiToolInterface& interface)
 {
     UpdateForOption(interface.HelpOption());
     UpdateForOption(interface.VersionOption());
-    if (showHiddenOptions) {
+    if (ShowHiddenOptions) {
         UpdateForOption(interface.ShowAllHelpOption());
     }
 }
 
 std::string HelpMetrics::HelpEntry(const OptionData& option) const
 {
-    const auto& formattedOption = formattedOptionNames.at(option);
-    return HelpEntry(formattedOption.nameString, formattedOption.typeString, option.description);
+    const auto& formattedOption = FormattedOptionNames.at(option);
+    return HelpEntry(formattedOption.nameString, formattedOption.typeString, option.Description);
 }
 
 std::string HelpMetrics::HelpEntry(std::string name, std::string type,
@@ -162,13 +162,13 @@ std::string HelpMetrics::HelpEntry(std::string name, std::string type,
     std::ostringstream out;
 
     // formatted name & type
-    name.resize(maxNameLength, ' ');
-    type.resize(maxTypeLength, ' ');
-    out << spacer << std::setw(maxNameLength) << std::left << name << spacer << type << spacer;
+    name.resize(MaxNameLength, ' ');
+    type.resize(MaxTypeLength, ' ');
+    out << spacer << std::setw(MaxNameLength) << std::left << name << spacer << type << spacer;
 
     // maybe wrap description
     const auto indent = out.str().length();
-    const size_t max = maxColumn - indent;
+    const size_t max = MaxColumn - indent;
     const auto wrappedLines = PacBio::Utility::WordWrappedLines(description, max);
     if (!wrappedLines.empty()) {
         out << wrappedLines.at(0);
@@ -184,7 +184,7 @@ std::string HelpMetrics::OptionNames(const OptionData& option)
 {
     std::ostringstream optionOutput;
     auto first = true;
-    for (const auto& name : option.names) {
+    for (const auto& name : option.Names) {
 
         if (first) {
             first = false;
@@ -205,15 +205,15 @@ std::string HelpMetrics::OptionNames(const OptionData& option)
 
 void HelpMetrics::UpdateForOption(const OptionData& option)
 {
-    if (option.isHidden && !showHiddenOptions) {
+    if (option.IsHidden && !ShowHiddenOptions) {
         return;
     }
 
     auto optionNamesText = OptionNames(option);
-    auto optionDisplayText = DisplayName(option.type);
-    maxNameLength = std::max(maxNameLength, optionNamesText.size());
-    maxTypeLength = std::max(maxTypeLength, optionDisplayText.size());
-    formattedOptionNames.emplace(
+    auto optionDisplayText = DisplayName(option.Type);
+    MaxNameLength = std::max(MaxNameLength, optionNamesText.size());
+    MaxTypeLength = std::max(MaxTypeLength, optionDisplayText.size());
+    FormattedOptionNames.emplace(
         option, FormattedEntry{std::move(optionNamesText), std::move(optionDisplayText)});
 }
 

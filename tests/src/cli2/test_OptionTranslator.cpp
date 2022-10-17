@@ -93,18 +93,18 @@ TEST(CLI2_OptionTranslator, creates_basic_integer_option_data_from_text)
 
     const auto optionData = OptionTranslator::Translate(testOption);
 
-    const auto& names = optionData.names;
+    const auto& names = optionData.Names;
     ASSERT_EQ(1u, names.size());
     EXPECT_EQ("test", names[0]);
 
-    const auto value = PacBio::CLI_v2::OptionValueToInt(*optionData.defaultValue);
+    const auto value = PacBio::CLI_v2::OptionValueToInt(*optionData.DefaultValue);
     EXPECT_EQ(42, value);
 
-    EXPECT_EQ("test_description", optionData.description);
-    EXPECT_EQ(OptionValueType::INT, optionData.type);
+    EXPECT_EQ("test_description", optionData.Description);
+    EXPECT_EQ(OptionValueType::INT, optionData.Type);
 
-    EXPECT_FALSE(optionData.isHidden);
-    EXPECT_TRUE(optionData.choices.empty());
+    EXPECT_FALSE(optionData.IsHidden);
+    EXPECT_TRUE(optionData.Choices.empty());
 }
 
 TEST(CLI2_OptionTranslator, creates_basic_unsigned_integer_option_data_from_text)
@@ -120,13 +120,13 @@ TEST(CLI2_OptionTranslator, creates_basic_unsigned_integer_option_data_from_text
     };
 
     const auto optionData = OptionTranslator::Translate(testOption);
-    const auto value = PacBio::CLI_v2::OptionValueToUInt(*optionData.defaultValue);
+    const auto value = PacBio::CLI_v2::OptionValueToUInt(*optionData.DefaultValue);
     EXPECT_EQ(42u, value);
 
-    EXPECT_THROW({PacBio::CLI_v2::OptionValueToInt(*optionData.defaultValue); },    std::exception);
-    EXPECT_THROW({PacBio::CLI_v2::OptionValueToDouble(*optionData.defaultValue); }, std::exception);
-    EXPECT_THROW({PacBio::CLI_v2::OptionValueToBool(*optionData.defaultValue); },   std::exception);
-    EXPECT_THROW({PacBio::CLI_v2::OptionValueToString(*optionData.defaultValue); }, std::exception);
+    EXPECT_THROW({PacBio::CLI_v2::OptionValueToInt(*optionData.DefaultValue); },    std::exception);
+    EXPECT_THROW({PacBio::CLI_v2::OptionValueToDouble(*optionData.DefaultValue); }, std::exception);
+    EXPECT_THROW({PacBio::CLI_v2::OptionValueToBool(*optionData.DefaultValue); },   std::exception);
+    EXPECT_THROW({PacBio::CLI_v2::OptionValueToString(*optionData.DefaultValue); }, std::exception);
 }
 
 TEST(CLI2_OptionTranslator, creates_basic_float_option_data_from_text)
@@ -143,18 +143,18 @@ TEST(CLI2_OptionTranslator, creates_basic_float_option_data_from_text)
 
     const auto optionData = OptionTranslator::Translate(testOption);
 
-    const auto& names = optionData.names;
+    const auto& names = optionData.Names;
     ASSERT_EQ(1u, names.size());
     EXPECT_EQ("test", names[0]);
 
-    const auto value = PacBio::CLI_v2::OptionValueToDouble(*optionData.defaultValue);
+    const auto value = PacBio::CLI_v2::OptionValueToDouble(*optionData.DefaultValue);
     EXPECT_EQ(3.14, value);
 
-    EXPECT_EQ("test_description", optionData.description);
-    EXPECT_EQ(OptionValueType::FLOAT, optionData.type);
+    EXPECT_EQ("test_description", optionData.Description);
+    EXPECT_EQ(OptionValueType::FLOAT, optionData.Type);
 
-    EXPECT_FALSE(optionData.isHidden);
-    EXPECT_TRUE(optionData.choices.empty());
+    EXPECT_FALSE(optionData.IsHidden);
+    EXPECT_TRUE(optionData.Choices.empty());
 }
 
 TEST(CLI2_OptionTranslator, creates_basic_boolean_option_data_from_text)
@@ -170,18 +170,18 @@ TEST(CLI2_OptionTranslator, creates_basic_boolean_option_data_from_text)
 
     const auto optionData = OptionTranslator::Translate(testOption);
 
-    const auto& names = optionData.names;
+    const auto& names = optionData.Names;
     ASSERT_EQ(1u, names.size());
     EXPECT_EQ("test", names[0]);
 
-    const auto value = PacBio::CLI_v2::OptionValueToBool(*optionData.defaultValue);
+    const auto value = PacBio::CLI_v2::OptionValueToBool(*optionData.DefaultValue);
     EXPECT_FALSE(value);
 
-    EXPECT_EQ("test_description", optionData.description);
-    EXPECT_EQ(OptionValueType::BOOL, optionData.type);
+    EXPECT_EQ("test_description", optionData.Description);
+    EXPECT_EQ(OptionValueType::BOOL, optionData.Type);
 
-    EXPECT_FALSE(optionData.isHidden);
-    EXPECT_TRUE(optionData.choices.empty());
+    EXPECT_FALSE(optionData.IsHidden);
+    EXPECT_TRUE(optionData.Choices.empty());
 }
 
 TEST(CLI2_OptionTranslator, creates_basic_string_option_data_from_text)
@@ -198,18 +198,18 @@ TEST(CLI2_OptionTranslator, creates_basic_string_option_data_from_text)
 
     const auto optionData = OptionTranslator::Translate(testOption);
 
-    const auto& names = optionData.names;
+    const auto& names = optionData.Names;
     ASSERT_EQ(1u, names.size());
     EXPECT_EQ("test", names[0]);
 
-    const auto value = PacBio::CLI_v2::OptionValueToString(*optionData.defaultValue);
+    const auto value = PacBio::CLI_v2::OptionValueToString(*optionData.DefaultValue);
     EXPECT_EQ("foo", value);
 
-    EXPECT_EQ("test_description", optionData.description);
-    EXPECT_EQ(OptionValueType::STRING, optionData.type);
+    EXPECT_EQ("test_description", optionData.Description);
+    EXPECT_EQ(OptionValueType::STRING, optionData.Type);
 
-    EXPECT_FALSE(optionData.isHidden);
-    EXPECT_TRUE(optionData.choices.empty());
+    EXPECT_FALSE(optionData.IsHidden);
+    EXPECT_TRUE(optionData.Choices.empty());
 }
 
 TEST(CLI2_OptionTranslator, creates_basic_file_option_data_from_text)
@@ -226,18 +226,18 @@ TEST(CLI2_OptionTranslator, creates_basic_file_option_data_from_text)
 
     const auto optionData = OptionTranslator::Translate(testOption);
 
-    const auto& names = optionData.names;
+    const auto& names = optionData.Names;
     ASSERT_EQ(1u, names.size());
     EXPECT_EQ("test", names[0]);
 
-    const auto value = PacBio::CLI_v2::OptionValueToString(*optionData.defaultValue);
+    const auto value = PacBio::CLI_v2::OptionValueToString(*optionData.DefaultValue);
     EXPECT_EQ("foo", value);
 
-    EXPECT_EQ("test_description", optionData.description);
-    EXPECT_EQ(OptionValueType::FILE, optionData.type);
+    EXPECT_EQ("test_description", optionData.Description);
+    EXPECT_EQ(OptionValueType::FILE, optionData.Type);
 
-    EXPECT_FALSE(optionData.isHidden);
-    EXPECT_TRUE(optionData.choices.empty());
+    EXPECT_FALSE(optionData.IsHidden);
+    EXPECT_TRUE(optionData.Choices.empty());
 }
 
 TEST(CLI2_OptionTranslator, creates_basic_dir_option_data_from_text)
@@ -254,18 +254,18 @@ TEST(CLI2_OptionTranslator, creates_basic_dir_option_data_from_text)
 
     const auto optionData = OptionTranslator::Translate(testOption);
 
-    const auto& names = optionData.names;
+    const auto& names = optionData.Names;
     ASSERT_EQ(1u, names.size());
     EXPECT_EQ("test", names[0]);
 
-    const auto value = PacBio::CLI_v2::OptionValueToString(*optionData.defaultValue);
+    const auto value = PacBio::CLI_v2::OptionValueToString(*optionData.DefaultValue);
     EXPECT_EQ("foo", value);
 
-    EXPECT_EQ("test_description", optionData.description);
-    EXPECT_EQ(OptionValueType::DIR, optionData.type);
+    EXPECT_EQ("test_description", optionData.Description);
+    EXPECT_EQ(OptionValueType::DIR, optionData.Type);
 
-    EXPECT_FALSE(optionData.isHidden);
-    EXPECT_TRUE(optionData.choices.empty());
+    EXPECT_FALSE(optionData.IsHidden);
+    EXPECT_TRUE(optionData.Choices.empty());
 }
 
 TEST(CLI2_OptionTranslator, creates_option_with_choices)
@@ -283,23 +283,23 @@ TEST(CLI2_OptionTranslator, creates_option_with_choices)
 
     const auto optionData = OptionTranslator::Translate(testOption);
 
-    const auto& names = optionData.names;
+    const auto& names = optionData.Names;
     ASSERT_EQ(1u, names.size());
     EXPECT_EQ("test", names[0]);
 
-    const auto value = PacBio::CLI_v2::OptionValueToString(*optionData.defaultValue);
+    const auto value = PacBio::CLI_v2::OptionValueToString(*optionData.DefaultValue);
     EXPECT_EQ("foo", value);
 
-    EXPECT_EQ("test_description", optionData.description);
-    EXPECT_EQ(OptionValueType::STRING, optionData.type);
+    EXPECT_EQ("test_description", optionData.Description);
+    EXPECT_EQ(OptionValueType::STRING, optionData.Type);
 
-    const auto& choices = optionData.choices;
+    const auto& choices = optionData.Choices;
     ASSERT_EQ(3u, choices.size());
     EXPECT_EQ("bar", PacBio::CLI_v2::OptionValueToString(choices[0]));
     EXPECT_EQ("foo", PacBio::CLI_v2::OptionValueToString(choices[1]));
     EXPECT_EQ("baz", PacBio::CLI_v2::OptionValueToString(choices[2]));
 
-    EXPECT_FALSE(optionData.isHidden);
+    EXPECT_FALSE(optionData.IsHidden);
 }
 
 TEST(CLI2_OptionTranslator, creates_hidden_option)
@@ -317,19 +317,19 @@ TEST(CLI2_OptionTranslator, creates_hidden_option)
 
     const auto optionData = OptionTranslator::Translate(testOption);
 
-    EXPECT_TRUE(optionData.isHidden);
+    EXPECT_TRUE(optionData.IsHidden);
 
-    const auto names = optionData.names;
+    const auto names = optionData.Names;
     ASSERT_EQ(1u, names.size());
     EXPECT_EQ("test", names[0]);
 
-    const auto value = PacBio::CLI_v2::OptionValueToInt(*optionData.defaultValue);
+    const auto value = PacBio::CLI_v2::OptionValueToInt(*optionData.DefaultValue);
     EXPECT_EQ(10, value);
 
-    EXPECT_EQ("test_description", optionData.description);
-    EXPECT_EQ(OptionValueType::INT, optionData.type);
+    EXPECT_EQ("test_description", optionData.Description);
+    EXPECT_EQ(OptionValueType::INT, optionData.Type);
 
-    EXPECT_TRUE(optionData.choices.empty());
+    EXPECT_TRUE(optionData.Choices.empty());
 }
 
 TEST(CLI2_OptionTranslator, throws_if_default_string_not_in_choices_list)
@@ -363,9 +363,9 @@ TEST(CLI2_OptionTranslator, can_pass_default_integer_value_at_option_ctor)
     };
 
     const auto testOptionData = OptionTranslator::Translate(testOption);
-    EXPECT_TRUE(testOptionData.defaultValue);
+    EXPECT_TRUE(testOptionData.DefaultValue);
 
-    const auto value = PacBio::CLI_v2::OptionValueToInt(*testOptionData.defaultValue);
+    const auto value = PacBio::CLI_v2::OptionValueToInt(*testOptionData.DefaultValue);
     EXPECT_EQ(DefaultValue, value);
 }
 
@@ -384,9 +384,9 @@ TEST(CLI2_OptionTranslator, can_pass_default_unsigned_integer_value_at_option_ct
     };
 
     const auto testOptionData = OptionTranslator::Translate(testOption);
-    EXPECT_TRUE(testOptionData.defaultValue);
+    EXPECT_TRUE(testOptionData.DefaultValue);
 
-    const auto value = PacBio::CLI_v2::OptionValueToUInt(*testOptionData.defaultValue);
+    const auto value = PacBio::CLI_v2::OptionValueToUInt(*testOptionData.DefaultValue);
     EXPECT_EQ(DefaultValue, value);
 }
 
@@ -405,9 +405,9 @@ TEST(CLI2_OptionTranslator, can_pass_default_float_value_at_option_ctor)
     };
 
     const auto testOptionData = OptionTranslator::Translate(testOption);
-    EXPECT_TRUE(testOptionData.defaultValue);
+    EXPECT_TRUE(testOptionData.DefaultValue);
 
-    const auto value = PacBio::CLI_v2::OptionValueToDouble(*testOptionData.defaultValue);
+    const auto value = PacBio::CLI_v2::OptionValueToDouble(*testOptionData.DefaultValue);
     EXPECT_EQ(DefaultValue, value);
 }
 
@@ -426,9 +426,9 @@ TEST(CLI2_OptionTranslator, can_pass_default_string_value_at_option_ctor)
     };
 
     const auto testOptionData = OptionTranslator::Translate(testOption);
-    EXPECT_TRUE(testOptionData.defaultValue);
+    EXPECT_TRUE(testOptionData.DefaultValue);
 
-    const auto value = PacBio::CLI_v2::OptionValueToString(*testOptionData.defaultValue);
+    const auto value = PacBio::CLI_v2::OptionValueToString(*testOptionData.DefaultValue);
     EXPECT_EQ(DefaultValue, value);
 }
 
@@ -464,8 +464,8 @@ TEST(CLI2_OptionTranslator, can_create_hidden_default_value)
     };
 
     const auto optionData = OptionTranslator::Translate(testOption);
-    EXPECT_TRUE(optionData.isDefaultValueHidden);
-    const auto value = PacBio::CLI_v2::OptionValueToUInt(*optionData.defaultValue);
+    EXPECT_TRUE(optionData.IsDefaultValueHidden);
+    const auto value = PacBio::CLI_v2::OptionValueToUInt(*optionData.DefaultValue);
     EXPECT_EQ(42u, value);
 }
 
@@ -485,9 +485,9 @@ TEST(CLI2_OptionTranslator, can_add_hidden_names)
     };
 
     const auto testOptionData = OptionTranslator::Translate(testOption);
-    ASSERT_EQ(2, testOptionData.hiddenNames.size());
-    EXPECT_EQ("hideMe", testOptionData.hiddenNames[0]);
-    EXPECT_EQ("Who_would_name_an_Option_like__this", testOptionData.hiddenNames[1]);
+    ASSERT_EQ(2, testOptionData.HiddenNames.size());
+    EXPECT_EQ("hideMe", testOptionData.HiddenNames[0]);
+    EXPECT_EQ("Who_would_name_an_Option_like__this", testOptionData.HiddenNames[1]);
 }
 
 TEST(CLI2_OptionTranslator, can_create_description_from_array)
@@ -513,7 +513,7 @@ TEST(CLI2_OptionTranslator, can_create_description_from_array)
      })"
     };
     const auto testOptionData = OptionTranslator::Translate(testOption);
-    EXPECT_EQ(expectedText, testOptionData.description);
+    EXPECT_EQ(expectedText, testOptionData.Description);
 }
 
 // clang-format on

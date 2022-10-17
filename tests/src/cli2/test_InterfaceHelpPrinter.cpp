@@ -223,7 +223,7 @@ TEST(CLI2_InterfaceHelpPrinter, formats_empty_description)
 TEST(CLI2_InterfaceHelpPrinter, no_formatted_option_names_for_hidden_option)
 {
     OptionData option;
-    option.isHidden = true;
+    option.IsHidden = true;
 
     const auto formattedText = PacBio::CLI_v2::internal::HelpMetrics::OptionNames(option);
     EXPECT_TRUE(formattedText.empty());
@@ -237,7 +237,7 @@ TEST(CLI2_InterfaceHelpPrinter, can_calculate_metrics_from_builtins_only)
     const auto& metrics = help.Metrics();
 
     const std::string longestTest{"-j,--num-threads"};
-    EXPECT_EQ(longestTest.size(), metrics.maxNameLength);
+    EXPECT_EQ(longestTest.size(), metrics.MaxNameLength);
 }
 
 TEST(CLI2_InterfaceHelpPrinter, can_calculate_metrics_with_long_option)
@@ -261,16 +261,16 @@ TEST(CLI2_InterfaceHelpPrinter, can_calculate_metrics_with_long_option)
 
     InterfaceHelpPrinter help{i, HiddenOptionMode::HIDE};
     const auto& metrics = help.Metrics();
-    EXPECT_EQ(longestText.size(), metrics.maxNameLength);  // include spacer
+    EXPECT_EQ(longestText.size(), metrics.MaxNameLength);  // include spacer
 
     const auto testOptionData = OptionTranslator::Translate(testOption);
     const auto& helpOption = i.HelpOption();
     const auto& logLevelOption = *i.LogLevelOption();
     const auto& versionOption = i.VersionOption();
-    EXPECT_EQ(longestText,  metrics.formattedOptionNames.at(testOptionData).nameString);
-    EXPECT_EQ(helpText,     metrics.formattedOptionNames.at(helpOption).nameString);
-    EXPECT_EQ(logLevelText, metrics.formattedOptionNames.at(logLevelOption).nameString);
-    EXPECT_EQ(versionText,  metrics.formattedOptionNames.at(versionOption).nameString);
+    EXPECT_EQ(longestText,  metrics.FormattedOptionNames.at(testOptionData).nameString);
+    EXPECT_EQ(helpText,     metrics.FormattedOptionNames.at(helpOption).nameString);
+    EXPECT_EQ(logLevelText, metrics.FormattedOptionNames.at(logLevelOption).nameString);
+    EXPECT_EQ(versionText,  metrics.FormattedOptionNames.at(versionOption).nameString);
 }
 
 TEST(CLI2_InterfaceHelpPrinter, formats_int_choices)
@@ -283,8 +283,8 @@ TEST(CLI2_InterfaceHelpPrinter, formats_int_choices)
     OptionValue choice4 = 15;
 
     OptionData option;
-    option.type = OptionValueType::INT;
-    option.choices = {choice1, choice2, choice3, choice4};
+    option.Type = OptionValueType::INT;
+    option.Choices = {choice1, choice2, choice3, choice4};
 
     Interface i{"frobber"};
     InterfaceHelpPrinter help{i, HiddenOptionMode::HIDE};
@@ -303,8 +303,8 @@ TEST(CLI2_InterfaceHelpPrinter, formats_float_choices)
     OptionValue choice4 = 1.5f;
 
     OptionData option;
-    option.type = OptionValueType::FLOAT;
-    option.choices = {choice1, choice2, choice3, choice4};
+    option.Type = OptionValueType::FLOAT;
+    option.Choices = {choice1, choice2, choice3, choice4};
 
     Interface i{"frobber"};
     InterfaceHelpPrinter help{i, HiddenOptionMode::HIDE};
@@ -323,8 +323,8 @@ TEST(CLI2_InterfaceHelpPrinter, formats_string_choices)
     OptionValue choice4 = std::string{"earth"};
 
     OptionData option;
-    option.type = OptionValueType::STRING;
-    option.choices = {choice1, choice2, choice3, choice4};
+    option.Type = OptionValueType::STRING;
+    option.Choices = {choice1, choice2, choice3, choice4};
 
     Interface i{"frobber"};
     InterfaceHelpPrinter help{i, HiddenOptionMode::HIDE};
@@ -344,8 +344,8 @@ TEST(CLI2_InterfaceHelpPrinter, should_not_show_default_value_for_boolean)
 TEST(CLI2_InterfaceHelpPrinter, should_not_show_default_value_for_empty_string)
 {
     OptionData option;
-    option.type = OptionValueType::STRING;
-    option.defaultValue = std::string{};
+    option.Type = OptionValueType::STRING;
+    option.DefaultValue = std::string{};
     Interface i{"frobber"};
     InterfaceHelpPrinter help{i, HiddenOptionMode::HIDE};
     EXPECT_FALSE(help.ShouldShowDefaultValue(option));
@@ -354,8 +354,8 @@ TEST(CLI2_InterfaceHelpPrinter, should_not_show_default_value_for_empty_string)
 TEST(CLI2_InterfaceHelpPrinter, should_show_default_value_for_string)
 {
     OptionData option;
-    option.type = OptionValueType::STRING;
-    option.defaultValue = std::string{"foo"};
+    option.Type = OptionValueType::STRING;
+    option.DefaultValue = std::string{"foo"};
     Interface i{"frobber"};
     InterfaceHelpPrinter help{i, HiddenOptionMode::HIDE};
     EXPECT_TRUE(help.ShouldShowDefaultValue(option));
@@ -364,8 +364,8 @@ TEST(CLI2_InterfaceHelpPrinter, should_show_default_value_for_string)
 TEST(CLI2_InterfaceHelpPrinter, should_show_default_value_for_number)
 {
     OptionData option;
-    option.type = OptionValueType::INT;
-    option.defaultValue = 42;
+    option.Type = OptionValueType::INT;
+    option.DefaultValue = 42;
     Interface i{"frobber"};
     InterfaceHelpPrinter help{i, HiddenOptionMode::HIDE};
     EXPECT_TRUE(help.ShouldShowDefaultValue(option));
@@ -374,7 +374,7 @@ TEST(CLI2_InterfaceHelpPrinter, should_show_default_value_for_number)
 TEST(CLI2_InterfaceHelpPrinter, should_not_show_default_value_for_number_with_no_default)
 {
     OptionData option;
-    option.type = OptionValueType::INT;
+    option.Type = OptionValueType::INT;
     Interface i{"frobber"};
     InterfaceHelpPrinter help{i, HiddenOptionMode::HIDE};
     EXPECT_FALSE(help.ShouldShowDefaultValue(option));
@@ -383,8 +383,8 @@ TEST(CLI2_InterfaceHelpPrinter, should_not_show_default_value_for_number_with_no
 TEST(CLI2_InterfaceHelpPrinter, formats_default_value)
 {
     OptionData option;
-    option.type = OptionValueType::INT;
-    option.defaultValue = 42;
+    option.Type = OptionValueType::INT;
+    option.DefaultValue = 42;
 
     const std::string expectedText{"42"};
 

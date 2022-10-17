@@ -46,12 +46,12 @@ public:
     std::string HelpEntry(std::string name, std::string type, const std::string& description) const;
     void UpdateForOption(const OptionData& option);
 
-    std::unordered_map<OptionData, FormattedEntry> formattedOptionNames;
-    std::unordered_map<PositionalArgumentData, FormattedEntry> formattedPosArgNames;
-    size_t maxNameLength = 0;
-    size_t maxTypeLength = 0;
-    size_t maxColumn = 79;
-    bool showHiddenOptions = false;
+    std::unordered_map<OptionData, FormattedEntry> FormattedOptionNames;
+    std::unordered_map<PositionalArgumentData, FormattedEntry> FormattedPosArgNames;
+    size_t MaxNameLength = 0;
+    size_t MaxTypeLength = 0;
+    size_t MaxColumn = 79;
+    bool ShowHiddenOptions = false;
 };
 
 }  // namespace internal

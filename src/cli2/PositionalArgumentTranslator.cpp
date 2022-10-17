@@ -32,10 +32,10 @@ struct MissingPosArgFieldException : public std::runtime_error
 void Validate(const PositionalArgument& posArg, const PositionalArgumentData& result)
 {
     // required argument data fields
-    if (result.name.empty()) {
+    if (result.Name.empty()) {
         throw MissingPosArgFieldException("name", posArg.text);
     }
-    if (result.description.empty()) {
+    if (result.Description.empty()) {
         throw MissingPosArgFieldException("description", posArg.text);
     }
 }
@@ -63,25 +63,25 @@ PositionalArgumentData PositionalArgumentTranslator::Translate(const PositionalA
         // name
         auto name = root.find("name");
         if (name != root.cend()) {
-            result.name = name->get<std::string>();
+            result.Name = name->get<std::string>();
         }
 
         // description
         const auto description = root.find("description");
         if (description != root.cend()) {
-            result.description = description->get<std::string>();
+            result.Description = description->get<std::string>();
         }
 
         // type
         const auto type = root.find("type");
         if (type != root.cend()) {
-            result.type = ValueType(type->get<std::string>());
+            result.Type = ValueType(type->get<std::string>());
         }
 
         // required
         const auto required = root.find("required");
         if (required != root.cend()) {
-            result.required = *required;
+            result.Required = *required;
         }
 
     } catch (const std::exception& e) {

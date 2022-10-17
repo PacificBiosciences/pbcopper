@@ -31,7 +31,7 @@ bool LogLevelIsUserProvided(const Interface& interface, const Results& results)
         return false;
     }
 
-    assert(!logLevelOption->names.empty());
+    assert(!logLevelOption->Names.empty());
     const auto& logLevelResult = results[Builtin::LogLevel];
     return logLevelResult.IsUserProvided();
 }

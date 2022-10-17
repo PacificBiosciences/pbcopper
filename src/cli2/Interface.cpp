@@ -33,7 +33,7 @@ Interface::Interface(std::string name, std::string description, std::string vers
             OptionTranslator::Translate(Builtin::ExceptionPassthrough),
             OptionTranslator::Translate(Builtin::ShowAllHelp)}
 {
-    if (data_.appName_.empty()) {
+    if (data_.AppName.empty()) {
         throw std::runtime_error{
             "[pbcopper] command line interface ERROR: application name must not be empty"};
     }
@@ -41,10 +41,10 @@ Interface::Interface(std::string name, std::string description, std::string vers
 
 Interface& Interface::AddOption(const Option& option)
 {
-    if (data_.optionGroups_.empty()) {
-        data_.optionGroups_.push_back(OptionGroupData{});
+    if (data_.OptionGroups.empty()) {
+        data_.OptionGroups.push_back(OptionGroupData{});
     }
-    data_.optionGroups_[0].options.push_back(OptionTranslator::Translate(option));
+    data_.OptionGroups[0].Options.push_back(OptionTranslator::Translate(option));
     return *this;
 }
 
@@ -58,19 +58,19 @@ Interface& Interface::AddOptions(const std::vector<Option>& options)
 
 Interface& Interface::AddOptionGroup(const std::string& title, const std::vector<Option>& options)
 {
-    data_.optionGroups_.emplace_back(title, OptionTranslator::Translate(options));
+    data_.OptionGroups.emplace_back(title, OptionTranslator::Translate(options));
     return *this;
 }
 
 Interface& Interface::AddOptionGroup(const OptionGroup& group)
 {
-    data_.optionGroups_.emplace_back(group.name, OptionTranslator::Translate(group.options));
+    data_.OptionGroups.emplace_back(group.name, OptionTranslator::Translate(group.options));
     return *this;
 }
 
 Interface& Interface::AddPositionalArgument(const PositionalArgument& posArg)
 {
-    data_.positionalArgs_.push_back(PositionalArgumentTranslator::Translate(posArg));
+    data_.PositionalArgs.push_back(PositionalArgumentTranslator::Translate(posArg));
     return *this;
 }
 
@@ -82,103 +82,103 @@ Interface& Interface::AddPositionalArguments(const std::vector<PositionalArgumen
     return *this;
 }
 
-const internal::OptionData& Interface::AlarmsOption() const { return data_.alarmsOption_; }
+const internal::OptionData& Interface::AlarmsOption() const { return data_.AlarmsOption; }
 
-const std::string& Interface::ApplicationDescription() const { return data_.appDescription_; }
+const std::string& Interface::ApplicationDescription() const { return data_.AppDescription; }
 
-const std::string& Interface::ApplicationName() const { return data_.appName_; }
+const std::string& Interface::ApplicationName() const { return data_.AppName; }
 
-const std::string& Interface::ApplicationVersion() const { return data_.appVersion_; }
+const std::string& Interface::ApplicationVersion() const { return data_.AppVersion; }
 
 Logging::LogLevel Interface::DefaultLogLevel() const
 {
-    if (data_.logLevelOption_) {
-        const auto& value = *data_.logLevelOption_->defaultValue;
+    if (data_.LogLevelOption) {
+        const auto& value = *data_.LogLevelOption->DefaultValue;
         return Logging::LogLevel{std::get<std::string>(value)};
     } else {
-        return data_.logConfig_.Level;
+        return data_.LogConfig.Level;
     }
 }
 
 Interface& Interface::DefaultLogLevel(Logging::LogLevel level)
 {
     // Error if client is setting default log level, when that option has been disabled.
-    assert(data_.logLevelOption_);
-    data_.logLevelOption_->defaultValue = level.ToString();
-    data_.logConfig_.Level = level;
+    assert(data_.LogLevelOption);
+    data_.LogLevelOption->DefaultValue = level.ToString();
+    data_.LogConfig.Level = level;
     return *this;
 }
 
 Interface& Interface::DisableLogFileOption()
 {
-    data_.logFileOption_.reset();
+    data_.LogFileOption.reset();
     return *this;
 }
 
 Interface& Interface::DisableLogLevelOption()
 {
-    data_.logLevelOption_.reset();
+    data_.LogLevelOption.reset();
     return *this;
 }
 
 Interface& Interface::DisableNumThreadsOption()
 {
-    data_.numThreadsOption_.reset();
+    data_.NumThreadsOption.reset();
     return *this;
 }
 
 Interface& Interface::EnableVerboseOption()
 {
-    data_.verboseOption_ = OptionTranslator::Translate(Builtin::Verbose);
+    data_.VerboseOption = OptionTranslator::Translate(Builtin::Verbose);
     return *this;
 }
 
-const std::string& Interface::Example() const { return data_.example_; }
+const std::string& Interface::Example() const { return data_.Example; }
 
 Interface& Interface::Example(std::string example)
 {
-    data_.example_ = std::move(example);
+    data_.Example = std::move(example);
     return *this;
 }
 
 const internal::OptionData& Interface::ExceptionsPassthroughOption() const
 {
-    return data_.exceptionPassthroughOption_;
+    return data_.ExceptionPassthroughOption;
 }
 
 bool Interface::HasRequiredPosArgs() const { return NumRequiredPosArgs() > 0; }
 
-const std::string& Interface::HelpFooter() const { return data_.footer_; }
+const std::string& Interface::HelpFooter() const { return data_.Footer; }
 
 Interface& Interface::HelpFooter(std::string footer)
 {
-    data_.footer_ = std::move(footer);
+    data_.Footer = std::move(footer);
     return *this;
 }
 
-const OptionData& Interface::HelpOption() const { return data_.helpOption_; }
+const OptionData& Interface::HelpOption() const { return data_.HelpOption; }
 
-const Logging::LogConfig& Interface::LogConfig() const { return data_.logConfig_; }
+const Logging::LogConfig& Interface::LogConfig() const { return data_.LogConfig; }
 
 Interface& Interface::LogConfig(const Logging::LogConfig& config)
 {
-    data_.logConfig_ = config;
+    data_.LogConfig = config;
     return *this;
 }
 
 const std::optional<internal::OptionData>& Interface::LogFileOption() const
 {
-    return data_.logFileOption_;
+    return data_.LogFileOption;
 }
 
 const std::optional<internal::OptionData>& Interface::LogLevelOption() const
 {
-    return data_.logLevelOption_;
+    return data_.LogLevelOption;
 }
 
 const std::optional<internal::OptionData>& Interface::NumThreadsOption() const
 {
-    return data_.numThreadsOption_;
+    return data_.NumThreadsOption;
 }
 
 Results Interface::MakeDefaultResults() const
@@ -186,7 +186,7 @@ Results Interface::MakeDefaultResults() const
     Results results;
     const auto options = Options();
     for (const auto& opt : options) {
-        if (opt.defaultValue) {
+        if (opt.DefaultValue) {
             results.AddDefaultOption(opt);
         }
     }
@@ -197,8 +197,8 @@ Results Interface::MakeDefaultResults() const
 size_t Interface::NumRequiredPosArgs() const
 {
     size_t count = 0;
-    for (const auto& posArg : data_.positionalArgs_) {
-        if (posArg.required) {
+    for (const auto& posArg : data_.PositionalArgs) {
+        if (posArg.Required) {
             ++count;
         }
     }
@@ -210,60 +210,57 @@ std::vector<OptionData> Interface::Options() const
     std::vector<OptionData> result;
 
     // add registered objects
-    for (const auto& group : data_.optionGroups_) {
-        for (const auto& opt : group.options) {
+    for (const auto& group : data_.OptionGroups) {
+        for (const auto& opt : group.Options) {
             result.push_back(opt);
         }
     }
 
     // add builtins
-    result.push_back(data_.helpOption_);
-    result.push_back(data_.versionOption_);
-    result.push_back(data_.alarmsOption_);
-    result.push_back(data_.exceptionPassthroughOption_);
-    result.push_back(data_.showAllHelpOption_);
-    if (data_.numThreadsOption_) {
-        result.push_back(*data_.numThreadsOption_);
+    result.push_back(data_.HelpOption);
+    result.push_back(data_.VersionOption);
+    result.push_back(data_.AlarmsOption);
+    result.push_back(data_.ExceptionPassthroughOption);
+    result.push_back(data_.ShowAllHelpOption);
+    if (data_.NumThreadsOption) {
+        result.push_back(*data_.NumThreadsOption);
     }
-    if (data_.logLevelOption_) {
-        result.push_back(*data_.logLevelOption_);
+    if (data_.LogLevelOption) {
+        result.push_back(*data_.LogLevelOption);
     }
-    if (data_.logFileOption_) {
-        result.push_back(*data_.logFileOption_);
+    if (data_.LogFileOption) {
+        result.push_back(*data_.LogFileOption);
     }
-    if (data_.verboseOption_) {
-        result.push_back(*data_.verboseOption_);
+    if (data_.VerboseOption) {
+        result.push_back(*data_.VerboseOption);
     }
 
     return result;
 }
 
-const std::vector<OptionGroupData>& Interface::OptionGroups() const { return data_.optionGroups_; }
+const std::vector<OptionGroupData>& Interface::OptionGroups() const { return data_.OptionGroups; }
 
 const std::vector<PositionalArgumentData>& Interface::PositionalArguments() const
 {
-    return data_.positionalArgs_;
+    return data_.PositionalArgs;
 }
 
-void Interface::PrintVersion() const { data_.versionPrinter_(*this); }
+void Interface::PrintVersion() const { data_.VersionPrinter(*this); }
 
 Interface& Interface::RegisterVersionPrinter(VersionPrinterCallback printer)
 {
-    data_.versionPrinter_ = printer;
+    data_.VersionPrinter = printer;
     return *this;
 }
 
-const internal::OptionData& Interface::ShowAllHelpOption() const
-{
-    return data_.showAllHelpOption_;
-}
+const internal::OptionData& Interface::ShowAllHelpOption() const { return data_.ShowAllHelpOption; }
 
 const std::optional<internal::OptionData>& Interface::VerboseOption() const
 {
-    return data_.verboseOption_;
+    return data_.VerboseOption;
 }
 
-const internal::OptionData& Interface::VersionOption() const { return data_.versionOption_; }
+const internal::OptionData& Interface::VersionOption() const { return data_.VersionOption; }
 
 }  // namespace CLI_v2
 }  // namespace PacBio

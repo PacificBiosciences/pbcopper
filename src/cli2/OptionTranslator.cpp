@@ -36,23 +36,23 @@ struct MissingOptionFieldException : public std::runtime_error
 void Validate(const Option& option, const OptionData& result)
 {
     // option data fields
-    if (result.names.empty()) {
+    if (result.Names.empty()) {
         throw MissingOptionFieldException{"names", option.text};
     }
-    if (result.description.empty()) {
+    if (result.Description.empty()) {
         throw MissingOptionFieldException{"description", option.text};
     }
 
     // ensure defaults match choices
-    if (!result.choices.empty() && result.defaultValue) {
+    if (!result.Choices.empty() && result.DefaultValue) {
 
         const auto match =
-            std::find(result.choices.cbegin(), result.choices.cend(), *result.defaultValue);
-        if (match == result.choices.cend()) {
+            std::find(result.Choices.cbegin(), result.Choices.cend(), *result.DefaultValue);
+        if (match == result.Choices.cend()) {
             std::ostringstream msg;
             msg << "[pbcopper] command line option ERROR: default value: \"";
-            std::visit([&msg](const auto& v) { msg << v; }, *result.defaultValue);
-            msg << "\" is not among valid choices for option: " << result.names.at(0);
+            std::visit([&msg](const auto& v) { msg << v; }, *result.DefaultValue);
+            msg << "\" is not among valid choices for option: " << result.Names.at(0);
             throw std::runtime_error{msg.str()};
         }
     }
@@ -121,14 +121,14 @@ OptionData OptionTranslator::Translate(const Option& option)
         // type
         const auto type = root.find("type");
         if (type != root.cend()) {
-            result.type = ValueType(*type);
+            result.Type = ValueType(*type);
         }
 
         // names
         const auto names = root.find("names");
         if (names != root.cend()) {
             for (const auto& name : *names) {
-                result.names.push_back(name.get<std::string>());
+                result.Names.push_back(name.get<std::string>());
             }
         }
 
@@ -136,7 +136,7 @@ OptionData OptionTranslator::Translate(const Option& option)
         const auto hiddenNames = root.find("names.hidden");
         if (hiddenNames != root.cend()) {
             for (const auto& hiddenName : *hiddenNames) {
-                result.hiddenNames.push_back(hiddenName.get<std::string>());
+                result.HiddenNames.push_back(hiddenName.get<std::string>());
             }
         }
 
@@ -145,31 +145,31 @@ OptionData OptionTranslator::Translate(const Option& option)
         if (description != root.cend()) {
             if (description->is_array()) {
                 for (const auto& line : *description) {
-                    result.description += line.get<std::string>();
+                    result.Description += line.get<std::string>();
                 }
             } else {
-                result.description = description->get<std::string>();
+                result.Description = description->get<std::string>();
             }
         }
 
         // hidden
         const auto hidden = root.find("hidden");
         if (hidden != root.cend()) {
-            result.isHidden = *hidden;
+            result.IsHidden = *hidden;
         }
 
         // choices
         const auto choices = root.find("choices");
         if (choices != root.cend()) {
             for (const auto& choice : *choices) {
-                result.choices.emplace_back(MakeOptionValue(choice, result.type));
+                result.Choices.emplace_back(MakeOptionValue(choice, result.Type));
             }
         }
 
         // choices.hidden
         const auto hideChoices = root.find("choices.hidden");
         if (hideChoices != root.cend()) {
-            result.isChoicesHidden = *hideChoices;
+            result.IsChoicesHidden = *hideChoices;
         }
 
         // default
@@ -180,19 +180,19 @@ OptionData OptionTranslator::Translate(const Option& option)
         //
         const auto defaultValue = root.find("default");
         if (option.defaultValue) {
-            result.defaultValue = option.defaultValue;
+            result.DefaultValue = option.defaultValue;
         } else if (defaultValue != root.cend()) {
-            result.defaultValue = MakeOptionValue(*defaultValue, result.type);
-        } else if (result.type == OptionValueType::BOOL) {
-            result.defaultValue = false;
-        } else if (IsStringLike(result.type)) {
-            result.defaultValue = std::string{};
+            result.DefaultValue = MakeOptionValue(*defaultValue, result.Type);
+        } else if (result.Type == OptionValueType::BOOL) {
+            result.DefaultValue = false;
+        } else if (IsStringLike(result.Type)) {
+            result.DefaultValue = std::string{};
         }
 
         // default.hidden
         const auto hideDefault = root.find("default.hidden");
         if (hideDefault != root.cend()) {
-            result.isDefaultValueHidden = *hideDefault;
+            result.IsDefaultValueHidden = *hideDefault;
         }
 
     } catch (const std::exception& e) {

@@ -39,18 +39,18 @@ InterfaceHelpPrinter::InterfaceHelpPrinter(Interface interface, const size_t max
 std::string InterfaceHelpPrinter::Choices(const OptionData& option)
 {
     // nothing to show
-    if (option.choices.empty()) {
+    if (option.Choices.empty()) {
         return {};
     }
 
     // check for hidden status
-    if ((option.isHidden || option.isChoicesHidden) && !showHiddenOptions_) {
+    if ((option.IsHidden || option.IsChoicesHidden) && !showHiddenOptions_) {
         return {};
     }
 
     std::ostringstream out;
-    for (const auto& choice : option.choices) {
-        switch (option.type) {
+    for (const auto& choice : option.Choices) {
+        switch (option.Type) {
             case OptionValueType::INT:
                 out << OptionValueToInt(choice);
                 break;
@@ -84,23 +84,23 @@ std::string InterfaceHelpPrinter::DefaultValue(const OptionData& option)
     }
 
     std::ostringstream out;
-    switch (option.type) {
+    switch (option.Type) {
         case OptionValueType::INT:
-            out << OptionValueToInt(*option.defaultValue);
+            out << OptionValueToInt(*option.DefaultValue);
             break;
         case OptionValueType::UINT:
-            out << OptionValueToUInt(*option.defaultValue);
+            out << OptionValueToUInt(*option.DefaultValue);
             break;
         case OptionValueType::FLOAT:
-            out << OptionValueToDouble(*option.defaultValue);
+            out << OptionValueToDouble(*option.DefaultValue);
             break;
         case OptionValueType::STRING:
         case OptionValueType::FILE:
         case OptionValueType::DIR:
-            out << OptionValueToString(*option.defaultValue);
+            out << OptionValueToString(*option.DefaultValue);
             break;
         case OptionValueType::BOOL: {
-            const bool on = OptionValueToBool(*option.defaultValue);
+            const bool on = OptionValueToBool(*option.DefaultValue);
             out << (on ? "true" : "false");
             break;
         }
@@ -120,7 +120,7 @@ std::string InterfaceHelpPrinter::Description()
     // maybe word-wrap description
     std::ostringstream out;
     const auto indent = interface_.ApplicationName().size() + 3;  // " - " spacer
-    const auto max = metrics_.maxColumn - indent;
+    const auto max = metrics_.MaxColumn - indent;
     const auto wrappedLines = Utility::WordWrappedLines(description, max);
     if (!wrappedLines.empty()) {
         out << wrappedLines.at(0);
@@ -173,7 +173,7 @@ const HelpMetrics& InterfaceHelpPrinter::Metrics() { return metrics_; }
 
 std::string InterfaceHelpPrinter::Option(const OptionData& option)
 {
-    const auto& formattedOption = metrics_.formattedOptionNames.at(option);
+    const auto& formattedOption = metrics_.FormattedOptionNames.at(option);
     return metrics_.HelpEntry(formattedOption.nameString, formattedOption.typeString,
                               OptionDescription(option));
 }
@@ -182,7 +182,7 @@ std::string InterfaceHelpPrinter::OptionDescription(const OptionData& option)
 {
     // layout full description, with optional components
     std::ostringstream out;
-    out << option.description;
+    out << option.Description;
 
     const std::string choices = Choices(option);
     if (!choices.empty()) {
@@ -190,7 +190,7 @@ std::string InterfaceHelpPrinter::OptionDescription(const OptionData& option)
     }
 
     const auto defaultValue = DefaultValue(option);
-    if (!defaultValue.empty() && !option.isDefaultValueHidden) {
+    if (!defaultValue.empty() && !option.IsDefaultValueHidden) {
         out << " [" << defaultValue << ']';
     }
 
@@ -199,17 +199,17 @@ std::string InterfaceHelpPrinter::OptionDescription(const OptionData& option)
 
 std::string InterfaceHelpPrinter::OptionGroup(const OptionGroupData& group)
 {
-    if (group.options.empty()) {
+    if (group.Options.empty()) {
         return {};
     }
 
     std::ostringstream out;
-    if (!group.name.empty()) {
-        out << group.name << ":\n";
+    if (!group.Name.empty()) {
+        out << group.Name << ":\n";
     }
 
-    for (const OptionData& option : group.options) {
-        if (!option.isHidden || showHiddenOptions_) {
+    for (const OptionData& option : group.Options) {
+        if (!option.IsHidden || showHiddenOptions_) {
             out << Option(option) << '\n';
         }
     }
@@ -228,25 +228,25 @@ std::string InterfaceHelpPrinter::Options()
     // print builtin group
     OptionGroupData group;
     if (optionGroups.empty()) {
-        group.name = "Options";
+        group.Name = "Options";
     }
-    group.options.push_back(interface_.HelpOption());
-    group.options.push_back(interface_.VersionOption());
-    group.options.push_back(interface_.AlarmsOption());
-    group.options.push_back(interface_.ExceptionsPassthroughOption());
-    group.options.push_back(interface_.ShowAllHelpOption());
+    group.Options.push_back(interface_.HelpOption());
+    group.Options.push_back(interface_.VersionOption());
+    group.Options.push_back(interface_.AlarmsOption());
+    group.Options.push_back(interface_.ExceptionsPassthroughOption());
+    group.Options.push_back(interface_.ShowAllHelpOption());
 
     if (interface_.NumThreadsOption()) {
-        group.options.push_back(*interface_.NumThreadsOption());
+        group.Options.push_back(*interface_.NumThreadsOption());
     }
     if (interface_.LogLevelOption()) {
-        group.options.push_back(*interface_.LogLevelOption());
+        group.Options.push_back(*interface_.LogLevelOption());
     }
     if (interface_.LogFileOption()) {
-        group.options.push_back(*interface_.LogFileOption());
+        group.Options.push_back(*interface_.LogFileOption());
     }
     if (interface_.VerboseOption()) {
-        group.options.push_back(*interface_.VerboseOption());
+        group.Options.push_back(*interface_.VerboseOption());
     }
     out << OptionGroup(group);
     return out.str();
@@ -254,9 +254,9 @@ std::string InterfaceHelpPrinter::Options()
 
 std::string InterfaceHelpPrinter::PositionalArgument(const PositionalArgumentData& posArg)
 {
-    const auto& formattedPosArg = metrics_.formattedPosArgNames.at(posArg);
+    const auto& formattedPosArg = metrics_.FormattedPosArgNames.at(posArg);
     return metrics_.HelpEntry(formattedPosArg.nameString, formattedPosArg.typeString,
-                              posArg.description);
+                              posArg.Description);
 }
 
 std::string InterfaceHelpPrinter::PositionalArguments()
@@ -279,18 +279,18 @@ void InterfaceHelpPrinter::Print(std::ostream& out) const { out << text_; }
 bool InterfaceHelpPrinter::ShouldShowDefaultValue(const OptionData& option)
 {
     // omit if switch OR null
-    if (option.type == OptionValueType::BOOL) {
+    if (option.Type == OptionValueType::BOOL) {
         return false;
     }
 
     // omit if string-type option has an empty default
-    if (option.type == OptionValueType::STRING) {
-        const auto& defaultValue = OptionValueToString(*option.defaultValue);
+    if (option.Type == OptionValueType::STRING) {
+        const auto& defaultValue = OptionValueToString(*option.DefaultValue);
         return !defaultValue.empty();
     }
 
     // otherwise (maybe) use default value
-    return bool{option.defaultValue};
+    return bool{option.DefaultValue};
 }
 
 std::string InterfaceHelpPrinter::Usage()
@@ -302,13 +302,13 @@ std::string InterfaceHelpPrinter::Usage()
 
     // print all required pos args & then optional ones after, regardless of order added
     for (const auto& posArg : interface_.PositionalArguments()) {
-        if (posArg.required) {
-            usage << " <" << posArg.name << '>';
+        if (posArg.Required) {
+            usage << " <" << posArg.Name << '>';
         }
     }
     for (const auto& posArg : interface_.PositionalArguments()) {
-        if (!posArg.required) {
-            usage << " [" << posArg.name << ']';
+        if (!posArg.Required) {
+            usage << " [" << posArg.Name << ']';
         }
     }
 

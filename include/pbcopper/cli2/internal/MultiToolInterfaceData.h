@@ -25,31 +25,31 @@ struct MultiToolInterfaceData
 {
     MultiToolInterfaceData(std::string appName, std::string appDescription, std::string appVersion,
                            OptionData help, OptionData versionOption, OptionData showAllHelpOption)
-        : appName_{std::move(appName)}
-        , appDescription_{std::move(appDescription)}
-        , appVersion_{std::move(appVersion)}
-        , helpOption_(std::move(help))                      // icc 17 hack
-        , versionOption_(std::move(versionOption))          // icc 17 hack
-        , showAllHelpOption_(std::move(showAllHelpOption))  // icc 17 hack
+        : AppName{std::move(appName)}
+        , AppDescription{std::move(appDescription)}
+        , AppVersion{std::move(appVersion)}
+        , HelpOption(std::move(help))                      // icc 17 hack
+        , VersionOption(std::move(versionOption))          // icc 17 hack
+        , ShowAllHelpOption(std::move(showAllHelpOption))  // icc 17 hack
     {
         // default version printer
-        versionPrinter_ = [](const MultiToolInterface& i) { internal::VersionPrinter::Print(i); };
+        VersionPrinter = [](const MultiToolInterface& i) { internal::VersionPrinter::Print(i); };
     }
 
-    std::string appName_;
-    std::string appDescription_;
-    std::string appVersion_;
-    std::string helpFooter_;
+    std::string AppName;
+    std::string AppDescription;
+    std::string AppVersion;
+    std::string HelpFooter;
 
-    OptionData helpOption_;
-    OptionData versionOption_;
-    OptionData showAllHelpOption_;
+    OptionData HelpOption;
+    OptionData VersionOption;
+    OptionData ShowAllHelpOption;
 
-    std::vector<Tool> tools_;
+    std::vector<Tool> Tools;
 
-    std::optional<Logging::LogConfig> logConfig_;
+    std::optional<Logging::LogConfig> LogConfig;
 
-    MultiToolVersionPrinterCallback versionPrinter_;
+    MultiToolVersionPrinterCallback VersionPrinter;
 };
 
 }  // namespace internal

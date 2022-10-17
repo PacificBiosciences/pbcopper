@@ -78,10 +78,10 @@ TEST(CLI2_PositionalArgumentTranslator, creates_minimal_positional_arg)
     };
 
     const auto posArgData = PositionalArgumentTranslator::Translate(testArg);
-    EXPECT_EQ("test_name", posArgData.name);
-    EXPECT_EQ("test_description", posArgData.description);
-    EXPECT_TRUE(posArgData.required);
-    EXPECT_EQ(PacBio::CLI_v2::OptionValueType::STRING, posArgData.type);
+    EXPECT_EQ("test_name", posArgData.Name);
+    EXPECT_EQ("test_description", posArgData.Description);
+    EXPECT_TRUE(posArgData.Required);
+    EXPECT_EQ(PacBio::CLI_v2::OptionValueType::STRING, posArgData.Type);
 }
 
 TEST(CLI2_PositionalArgumentTranslator, creates_file_positional_arg)
@@ -96,10 +96,10 @@ TEST(CLI2_PositionalArgumentTranslator, creates_file_positional_arg)
     };
 
     const auto posArgData = PositionalArgumentTranslator::Translate(testArg);
-    EXPECT_EQ("test_name", posArgData.name);
-    EXPECT_EQ("test_description", posArgData.description);
-    EXPECT_TRUE(posArgData.required);
-    EXPECT_EQ(PacBio::CLI_v2::OptionValueType::FILE, posArgData.type);
+    EXPECT_EQ("test_name", posArgData.Name);
+    EXPECT_EQ("test_description", posArgData.Description);
+    EXPECT_TRUE(posArgData.Required);
+    EXPECT_EQ(PacBio::CLI_v2::OptionValueType::FILE, posArgData.Type);
 }
 
 TEST(CLI2_PositionalArgumentTranslator, creates_dir_positional_arg)
@@ -114,10 +114,10 @@ TEST(CLI2_PositionalArgumentTranslator, creates_dir_positional_arg)
     };
 
     const auto posArgData = PositionalArgumentTranslator::Translate(testArg);
-    EXPECT_EQ("test_name", posArgData.name);
-    EXPECT_EQ("test_description", posArgData.description);
-    EXPECT_TRUE(posArgData.required);
-    EXPECT_EQ(PacBio::CLI_v2::OptionValueType::DIR, posArgData.type);
+    EXPECT_EQ("test_name", posArgData.Name);
+    EXPECT_EQ("test_description", posArgData.Description);
+    EXPECT_TRUE(posArgData.Required);
+    EXPECT_EQ(PacBio::CLI_v2::OptionValueType::DIR, posArgData.Type);
 }
 
 TEST(CLI2_PositionalArgumentTranslator, creates_optional_positional_arg)
@@ -131,10 +131,10 @@ TEST(CLI2_PositionalArgumentTranslator, creates_optional_positional_arg)
      })"
     };
     const auto posArgData = PositionalArgumentTranslator::Translate(testArg);
-    EXPECT_EQ("test_name", posArgData.name);
-    EXPECT_EQ("test_description", posArgData.description);
-    EXPECT_FALSE(posArgData.required);
-    EXPECT_EQ(PacBio::CLI_v2::OptionValueType::STRING, posArgData.type);
+    EXPECT_EQ("test_name", posArgData.Name);
+    EXPECT_EQ("test_description", posArgData.Description);
+    EXPECT_FALSE(posArgData.Required);
+    EXPECT_EQ(PacBio::CLI_v2::OptionValueType::STRING, posArgData.Type);
 }
 
 // clang-format on

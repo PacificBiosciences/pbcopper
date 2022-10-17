@@ -27,52 +27,52 @@ struct InterfaceData
                   OptionData help, OptionData version, OptionData numThreads, OptionData logFile,
                   OptionData logLevel, OptionData alarms, OptionData exceptionPassthrough,
                   OptionData showAllHelp)
-        : appName_{std::move(appName)}
-        , appDescription_{std::move(appDescription)}
-        , appVersion_{std::move(appVersion)}
-        , helpOption_(std::move(help))        // icc 17 hack
-        , versionOption_(std::move(version))  // icc 17 hack
-        , numThreadsOption_{std::move(numThreads)}
-        , logFileOption_{std::move(logFile)}
-        , logLevelOption_{std::move(logLevel)}
-        , alarmsOption_(std::move(alarms))                              // icc 17 hack
-        , exceptionPassthroughOption_(std::move(exceptionPassthrough))  // icc 17 hack
-        , showAllHelpOption_(std::move(showAllHelp))                    // icc 17 hack
+        : AppName{std::move(appName)}
+        , AppDescription{std::move(appDescription)}
+        , AppVersion{std::move(appVersion)}
+        , HelpOption(std::move(help))        // icc 17 hack
+        , VersionOption(std::move(version))  // icc 17 hack
+        , NumThreadsOption{std::move(numThreads)}
+        , LogFileOption{std::move(logFile)}
+        , LogLevelOption{std::move(logLevel)}
+        , AlarmsOption(std::move(alarms))                              // icc 17 hack
+        , ExceptionPassthroughOption(std::move(exceptionPassthrough))  // icc 17 hack
+        , ShowAllHelpOption(std::move(showAllHelp))                    // icc 17 hack
     {
         // default version printer
-        versionPrinter_ = [](const Interface& interface) {
+        VersionPrinter = [](const Interface& interface) {
             internal::VersionPrinter::Print(interface);
         };
     }
 
-    std::string appName_;
-    std::string appDescription_;
-    std::string appVersion_;
+    std::string AppName;
+    std::string AppDescription;
+    std::string AppVersion;
 
-    std::string example_;
-    std::string footer_;
+    std::string Example;
+    std::string Footer;
 
     // default enabled
-    OptionData helpOption_;
-    OptionData versionOption_;
-    std::optional<internal::OptionData> numThreadsOption_;
-    std::optional<internal::OptionData> logFileOption_;
-    std::optional<internal::OptionData> logLevelOption_;
+    OptionData HelpOption;
+    OptionData VersionOption;
+    std::optional<internal::OptionData> NumThreadsOption;
+    std::optional<internal::OptionData> LogFileOption;
+    std::optional<internal::OptionData> LogLevelOption;
 
     // always active, but hidden
-    internal::OptionData alarmsOption_;
-    internal::OptionData exceptionPassthroughOption_;
-    internal::OptionData showAllHelpOption_;
+    internal::OptionData AlarmsOption;
+    internal::OptionData ExceptionPassthroughOption;
+    internal::OptionData ShowAllHelpOption;
 
     // default disabled
-    std::optional<internal::OptionData> verboseOption_;
+    std::optional<internal::OptionData> VerboseOption;
 
-    Logging::LogConfig logConfig_;
+    Logging::LogConfig LogConfig;
 
-    std::vector<OptionGroupData> optionGroups_;
-    std::vector<PositionalArgumentData> positionalArgs_;
+    std::vector<OptionGroupData> OptionGroups;
+    std::vector<PositionalArgumentData> PositionalArgs;
 
-    VersionPrinterCallback versionPrinter_;
+    VersionPrinterCallback VersionPrinter;
 };
 
 }  // namespace internal

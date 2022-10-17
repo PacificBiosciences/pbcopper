@@ -27,10 +27,10 @@ MultiToolInterface::MultiToolInterface(std::string name, std::string description
 MultiToolInterface& MultiToolInterface::AddTool(Tool tool)
 {
     // ensure new subtools use the multi-tool's config
-    if (data_.logConfig_) {
-        tool.interface.LogConfig(*data_.logConfig_);
+    if (data_.LogConfig) {
+        tool.interface.LogConfig(*data_.LogConfig);
     }
-    data_.tools_.emplace_back(std::move(tool));
+    data_.Tools.emplace_back(std::move(tool));
     return *this;
 }
 
@@ -44,16 +44,16 @@ MultiToolInterface& MultiToolInterface::AddTools(std::vector<Tool> tools)
 
 const std::string& MultiToolInterface::ApplicationDescription() const
 {
-    return data_.appDescription_;
+    return data_.AppDescription;
 }
 
-const std::string& MultiToolInterface::ApplicationName() const { return data_.appName_; }
+const std::string& MultiToolInterface::ApplicationName() const { return data_.AppName; }
 
-const std::string& MultiToolInterface::ApplicationVersion() const { return data_.appVersion_; }
+const std::string& MultiToolInterface::ApplicationVersion() const { return data_.AppVersion; }
 
 bool MultiToolInterface::HasTool(const std::string& toolName) const
 {
-    for (const auto& tool : data_.tools_) {
+    for (const auto& tool : data_.Tools) {
         if (tool.name == toolName) {
             return true;
         }
@@ -61,48 +61,48 @@ bool MultiToolInterface::HasTool(const std::string& toolName) const
     return false;
 }
 
-const std::string& MultiToolInterface::HelpFooter() const { return data_.helpFooter_; }
+const std::string& MultiToolInterface::HelpFooter() const { return data_.HelpFooter; }
 
 MultiToolInterface& MultiToolInterface::HelpFooter(std::string footer)
 {
-    data_.helpFooter_ = std::move(footer);
+    data_.HelpFooter = std::move(footer);
     return *this;
 }
 
 const std::optional<Logging::LogConfig>& MultiToolInterface::LogConfig() const
 {
-    return data_.logConfig_;
+    return data_.LogConfig;
 }
 
 MultiToolInterface& MultiToolInterface::LogConfig(Logging::LogConfig config)
 {
     // ensure any current subtools use the new multi-tool config
-    data_.logConfig_ = config;
-    for (auto& tool : data_.tools_) {
+    data_.LogConfig = config;
+    for (auto& tool : data_.Tools) {
         tool.interface.LogConfig(config);
     }
     return *this;
 }
 
-const internal::OptionData& MultiToolInterface::HelpOption() const { return data_.helpOption_; }
+const internal::OptionData& MultiToolInterface::HelpOption() const { return data_.HelpOption; }
 
-void MultiToolInterface::PrintVersion() const { data_.versionPrinter_(*this); }
+void MultiToolInterface::PrintVersion() const { data_.VersionPrinter(*this); }
 
 MultiToolInterface& MultiToolInterface::RegisterVersionPrinter(
     MultiToolVersionPrinterCallback printer)
 {
-    data_.versionPrinter_ = printer;
+    data_.VersionPrinter = printer;
     return *this;
 }
 
 const internal::OptionData& MultiToolInterface::ShowAllHelpOption() const
 {
-    return data_.showAllHelpOption_;
+    return data_.ShowAllHelpOption;
 }
 
 const Tool& MultiToolInterface::ToolFor(const std::string& toolName) const
 {
-    for (const auto& tool : data_.tools_) {
+    for (const auto& tool : data_.Tools) {
         if (tool.name == toolName) {
             return tool;
         }
@@ -111,11 +111,11 @@ const Tool& MultiToolInterface::ToolFor(const std::string& toolName) const
                              "' requested"};
 }
 
-const std::vector<Tool>& MultiToolInterface::Tools() const { return data_.tools_; }
+const std::vector<Tool>& MultiToolInterface::Tools() const { return data_.Tools; }
 
 const internal::OptionData& MultiToolInterface::VersionOption() const
 {
-    return data_.versionOption_;
+    return data_.VersionOption;
 }
 
 }  // namespace CLI_v2

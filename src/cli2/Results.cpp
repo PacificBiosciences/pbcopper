@@ -22,13 +22,13 @@ Results& Results::AddPositionalArgument(std::string arg)
 Results& Results::AddDefaultOption(const internal::OptionData& opt)
 {
     // make default value
-    auto result = std::make_shared<Result>(*opt.defaultValue, SetByMode::DEFAULT);
+    auto result = std::make_shared<Result>(*opt.DefaultValue, SetByMode::DEFAULT);
 
     // add for all option names
-    for (const auto& name : opt.names) {
+    for (const auto& name : opt.Names) {
         results_.insert({name, result});
     }
-    for (const auto& hiddenName : opt.hiddenNames) {
+    for (const auto& hiddenName : opt.HiddenNames) {
         results_.insert({hiddenName, result});
     }
     return *this;
@@ -158,7 +158,7 @@ const std::vector<std::string>& Results::PositionalArguments() const { return po
 Results& Results::PositionalArguments(const std::vector<internal::PositionalArgumentData>& posArgs)
 {
     for (const auto& posArg : posArgs) {
-        posArgNames_.push_back(posArg.name);
+        posArgNames_.push_back(posArg.Name);
     }
     return *this;
 }

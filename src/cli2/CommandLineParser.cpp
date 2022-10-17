@@ -54,7 +54,7 @@ OptionValue ValueFromString(const OptionData& option, const std::string valueStr
         return s.find_first_of("eE") != std::string::npos;
     };
 
-    switch (option.type) {
+    switch (option.Type) {
         case OptionValueType::INT: {
             if (IsScientificNotation(valueString)) {
                 return OptionValue{PacBio::Utility::ScientificNotationToInt(valueString)};
@@ -147,10 +147,10 @@ CommandLineParser::CommandLineParser(Interface interface) : interface_{std::move
 {
     options_ = interface_.Options();
     for (const auto& option : options_) {
-        for (const auto& name : option.names) {
+        for (const auto& name : option.Names) {
             optionsByName_.insert({name, option});
         }
-        for (const auto& hiddenName : option.hiddenNames) {
+        for (const auto& hiddenName : option.HiddenNames) {
             optionsByName_.insert({hiddenName, option});
         }
     }
@@ -242,7 +242,7 @@ void CommandLineParser::ParseLongOption(const std::string& arg, std::deque<std::
 
     // boolean options do not require a value
     const auto& option = OptionFor(optionName);
-    if (option.type == OptionValueType::BOOL) {
+    if (option.Type == OptionValueType::BOOL) {
         results.AddObservedFlag(optionName, SetByMode::USER);
     }
 
@@ -253,7 +253,7 @@ void CommandLineParser::ParseLongOption(const std::string& arg, std::deque<std::
             valueString = args.front();
 
             // parse value for option
-            EnsureOptionValue(valueString, optionName, option.type);
+            EnsureOptionValue(valueString, optionName, option.Type);
             auto value = ValueFromString(option, valueString);
             results.AddObservedValue(optionName, value, SetByMode::USER);
             args.pop_front();
@@ -282,7 +282,7 @@ void CommandLineParser::ParseShortOption(const std::string& arg, std::deque<std:
         const auto& option = OptionFor(optionName);
 
         // boolean options do not require a value
-        if (option.type == OptionValueType::BOOL) {
+        if (option.Type == OptionValueType::BOOL) {
             results.AddObservedFlag(optionName, SetByMode::USER);
             valueExpected = false;
         }
@@ -311,7 +311,7 @@ void CommandLineParser::ParseShortOption(const std::string& arg, std::deque<std:
         args.pop_front();
 
         // parse value for option
-        EnsureOptionValue(valueString, optionName, option.type);
+        EnsureOptionValue(valueString, optionName, option.Type);
         auto value = ValueFromString(option, valueString);
         results.AddObservedValue(optionName, value, SetByMode::USER);
     }

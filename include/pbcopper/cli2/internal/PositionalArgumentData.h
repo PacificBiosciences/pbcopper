@@ -18,15 +18,15 @@ namespace internal {
 ///
 struct PositionalArgumentData
 {
-    std::string name;
-    std::string description;
-    bool required = true;
+    std::string Name;
+    std::string Description;
+    bool Required = true;
 
-    OptionValueType type = OptionValueType::STRING;
+    OptionValueType Type = OptionValueType::STRING;
 
     bool operator==(const PositionalArgumentData& other) const noexcept
     {
-        return name == other.name;
+        return Name == other.Name;
     }
 };
 
@@ -41,7 +41,7 @@ struct hash<PacBio::CLI_v2::internal::PositionalArgumentData>
 {
     size_t operator()(const PacBio::CLI_v2::internal::PositionalArgumentData& k) const noexcept
     {
-        return std::hash<std::string>()(k.name);
+        return std::hash<std::string>()(k.Name);
     }
 };
 

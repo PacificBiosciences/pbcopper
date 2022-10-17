@@ -19,20 +19,20 @@ namespace internal {
 ///
 struct OptionData
 {
-    std::vector<std::string> names;
-    std::vector<std::string> hiddenNames;
-    std::string description;
+    std::vector<std::string> Names;
+    std::vector<std::string> HiddenNames;
+    std::string Description;
 
-    OptionValueType type = OptionValueType::BOOL;
-    std::optional<OptionValue> defaultValue;
+    OptionValueType Type = OptionValueType::BOOL;
+    std::optional<OptionValue> DefaultValue;
 
-    bool isHidden = false;
-    bool isDefaultValueHidden = false;
+    bool IsHidden = false;
+    bool IsDefaultValueHidden = false;
 
-    std::vector<OptionValue> choices;
-    bool isChoicesHidden = false;
+    std::vector<OptionValue> Choices;
+    bool IsChoicesHidden = false;
 
-    bool operator==(const OptionData& other) const noexcept { return names == other.names; }
+    bool operator==(const OptionData& other) const noexcept { return Names == other.Names; }
 };
 
 ///
@@ -43,11 +43,11 @@ struct OptionGroupData
     OptionGroupData() = default;
 
     OptionGroupData(std::string n, std::vector<OptionData> opts)
-        : name{std::move(n)}, options{std::move(opts)}
+        : Name{std::move(n)}, Options{std::move(opts)}
     {}
 
-    std::string name;
-    std::vector<OptionData> options;
+    std::string Name;
+    std::vector<OptionData> Options;
 };
 
 }  // namespace internal
@@ -61,7 +61,7 @@ struct hash<PacBio::CLI_v2::internal::OptionData>
 {
     size_t operator()(const PacBio::CLI_v2::internal::OptionData& k) const noexcept
     {
-        return std::hash<std::string>()(k.names[0]);
+        return std::hash<std::string>()(k.Names[0]);
     }
 };
 
