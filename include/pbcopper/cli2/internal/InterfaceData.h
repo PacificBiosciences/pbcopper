@@ -11,6 +11,7 @@
 #include <pbcopper/logging/LogConfig.h>
 
 #include <optional>
+#include <set>
 #include <string>
 #include <vector>
 
@@ -71,6 +72,7 @@ struct InterfaceData
 
     std::vector<OptionGroupData> OptionGroups;
     std::vector<PositionalArgumentData> PositionalArgs;
+    std::set<std::string> AllOptionNames;
 
     VersionPrinterCallback VersionPrinter;
 };

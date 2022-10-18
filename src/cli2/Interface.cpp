@@ -6,6 +6,7 @@
 #include <pbcopper/cli2/internal/PositionalArgumentTranslator.h>
 
 #include <map>
+#include <set>
 #include <stdexcept>
 #include <type_traits>
 
@@ -35,8 +36,17 @@ Interface::Interface(std::string name, std::string description, std::string vers
 {
     if (data_.AppName.empty()) {
         throw std::runtime_error{
-            "[pbcopper] command line interface ERROR: application name must not be empty"};
+            "[pbcopper] command line interface setup ERROR: application name must not be empty"};
     }
+
+    EnsureUniqueOptionNames(data_.HelpOption);
+    EnsureUniqueOptionNames(data_.VersionOption);
+    EnsureUniqueOptionNames(data_.NumThreadsOption.value());
+    EnsureUniqueOptionNames(data_.LogFileOption.value());
+    EnsureUniqueOptionNames(data_.LogLevelOption.value());
+    EnsureUniqueOptionNames(data_.AlarmsOption);
+    EnsureUniqueOptionNames(data_.ExceptionPassthroughOption);
+    EnsureUniqueOptionNames(data_.ShowAllHelpOption);
 }
 
 Interface& Interface::AddOption(const Option& option)
@@ -44,7 +54,9 @@ Interface& Interface::AddOption(const Option& option)
     if (data_.OptionGroups.empty()) {
         data_.OptionGroups.push_back(OptionGroupData{});
     }
-    data_.OptionGroups[0].Options.push_back(OptionTranslator::Translate(option));
+    internal::OptionData optionData = OptionTranslator::Translate(option);
+    EnsureUniqueOptionNames(optionData);
+    data_.OptionGroups[0].Options.push_back(std::move(optionData));
     return *this;
 }
 
@@ -58,7 +70,10 @@ Interface& Interface::AddOptions(const std::vector<Option>& options)
 
 Interface& Interface::AddOptionGroup(const std::string& title, const std::vector<Option>& options)
 {
-    data_.OptionGroups.emplace_back(title, OptionTranslator::Translate(options));
+    std::vector<internal::OptionData> groupOptions = OptionTranslator::Translate(options);
+    EnsureUniqueOptionNames(groupOptions);
+    EnsureUniqueOptionGroups(title);
+    data_.OptionGroups.emplace_back(title, std::move(groupOptions));
     return *this;
 }
 
@@ -131,6 +146,41 @@ Interface& Interface::EnableVerboseOption()
 {
     data_.VerboseOption = OptionTranslator::Translate(Builtin::Verbose);
     return *this;
+}
+
+void Interface::EnsureUniqueOptionGroups(const std::string& title) const
+{
+    for (const auto& group : data_.OptionGroups) {
+        if (group.Name == title) {
+            throw std::runtime_error{
+                "[pbcopper] command line interface setup ERROR: option groups must be unique"};
+        }
+    }
+}
+
+void Interface::EnsureUniqueOptionNames(const internal::OptionData& option)
+{
+    for (const std::string& name : option.Names) {
+        const auto insertResult = data_.AllOptionNames.insert(name);
+        if (!insertResult.second) {
+            throw std::runtime_error{
+                "[pbcopper] command line interface setup ERROR: option names must be unique"};
+        }
+    }
+    for (const std::string& name : option.HiddenNames) {
+        const auto insertResult = data_.AllOptionNames.insert(name);
+        if (!insertResult.second) {
+            throw std::runtime_error{
+                "[pbcopper] command line interface setup ERROR: option names must be unique"};
+        }
+    }
+}
+
+void Interface::EnsureUniqueOptionNames(const std::vector<internal::OptionData>& options)
+{
+    for (const auto& option : options) {
+        EnsureUniqueOptionNames(option);
+    }
 }
 
 const std::string& Interface::Example() const { return data_.Example; }

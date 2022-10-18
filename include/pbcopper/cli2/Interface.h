@@ -247,6 +247,10 @@ public:
     ///
     Results MakeDefaultResults() const;
 
+    void EnsureUniqueOptionGroups(const std::string& title) const;
+    void EnsureUniqueOptionNames(const internal::OptionData& option);
+    void EnsureUniqueOptionNames(const std::vector<internal::OptionData>& options);
+
 private:
     internal::InterfaceData data_;
 };

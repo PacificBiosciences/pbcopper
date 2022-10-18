@@ -28,6 +28,7 @@ pbcopper_test_cpp_sources = files([
   # cli2
   'src/cli2/test_CLI.cpp',
   'src/cli2/test_CommandLineParser.cpp',
+  'src/cli2/test_Interface.cpp',
   'src/cli2/test_InterfaceHelpPrinter.cpp',
   'src/cli2/test_MultiToolInterfaceHelpPrinter.cpp',
   'src/cli2/test_OptionTranslator.cpp',
