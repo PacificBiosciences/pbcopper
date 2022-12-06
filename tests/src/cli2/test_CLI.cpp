@@ -900,4 +900,19 @@ TEST(CLI2_CLI, show_all_help_displays_hidden_subtools)
     }
 }
 
+TEST(CLI2_CLI, print_rather_than_terminate_on_CLI_parsing_error)
+{
+    std::ostringstream s;
+    PacBio::Utility::CerrRedirect redirect{s.rdbuf()};
+    std::ignore = redirect;
+
+    PacBio::CLI_v2::Interface i{"myapp", "Frob all the things.", "v3.1"};
+    auto runner = [](const PacBio::CLI_v2::Results&) { return EXIT_SUCCESS; };
+
+    const std::vector<std::string> args{"myapp", "--blah"};
+    const int result = PacBio::CLI_v2::Run(args, i, runner);
+    EXPECT_EQ(result, EXIT_FAILURE);
+    EXPECT_EQ(s.str().find("terminate"), std::string::npos);
+}
+
 // clang-format on

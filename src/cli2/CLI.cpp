@@ -56,8 +56,17 @@ int Run(const std::vector<std::string>& args, const Interface& interface,
     }
 
     // parse command line args
-    CommandLineParser parser{interface};
-    Results results = parser.Parse(args);
+    Results results;
+    try {
+        CommandLineParser parser{interface};
+        results = parser.Parse(args);
+    } catch (const std::exception& e) {
+        // No logging or application workflow error-handling (e.g. alarms) have
+        // been configured yet. Print a graceful message rather than let any
+        // uncaught CLI parsing exceptions trigger terminate().
+        std::cerr << interface.ApplicationName() << " ERROR: " << e.what() << '\n';
+        return EXIT_FAILURE;
+    }
 
     // help
     if (results[Builtin::Help] || results[Builtin::ShowAllHelp]) {
