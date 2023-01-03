@@ -2,6 +2,11 @@
 
 ## Active
 
+## [2.2.0] - 2022-01-03
+
+### Changed
+ - Cleaned up CLI parsing error messages
+
 ## [2.1.0] - 2022-07-26
 
 ### Added
