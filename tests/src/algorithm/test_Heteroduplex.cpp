@@ -11,7 +11,7 @@ using namespace PacBio;
 
 // clang-format off
 
-TEST(Algorithm_Heteroduplex, can_determine_most_common_base) 
+TEST(Algorithm_Heteroduplex, can_determine_most_common_base)
 {
     const Algorithm::internal::BaseCount bc{2,4,0,1,1};
     const auto mbc = Algorithm::internal::MostCommonBase(bc, 'A');
@@ -19,21 +19,21 @@ TEST(Algorithm_Heteroduplex, can_determine_most_common_base)
     EXPECT_EQ(4, mbc.second);
 }
 
-TEST(Algorithm_Heteroduplex, most_common_base_is_ref_for_tie) 
+TEST(Algorithm_Heteroduplex, most_common_base_is_ref_for_tie)
 {
     const Algorithm::internal::BaseCount bc{4,4,0,1,1};
     const auto mbc = Algorithm::internal::MostCommonBase(bc, 'A');
     EXPECT_EQ('A', mbc.first);
-    EXPECT_EQ(4, mbc.second);  
+    EXPECT_EQ(4, mbc.second);
 }
 
-TEST(Algorithm_Heteroduplex, most_common_base_is_ref_for_no_coverage) 
+TEST(Algorithm_Heteroduplex, most_common_base_is_ref_for_no_coverage)
 {
     // should not happen, but stranger things have
     const Algorithm::internal::BaseCount bc{0,0,0,0,0};
     const auto mbc = Algorithm::internal::MostCommonBase(bc, 'A');
     EXPECT_EQ('A', mbc.first);
-    EXPECT_EQ(0, mbc.second); 
+    EXPECT_EQ(0, mbc.second);
 }
 
 TEST(Algorithm_Heteroduplex, empty_strand_raw_data_from_empty_input)
@@ -43,7 +43,7 @@ TEST(Algorithm_Heteroduplex, empty_strand_raw_data_from_empty_input)
     const std::vector<Data::Cigar> cigars;
     const std::vector<int32_t> positions;
 
-    const auto rawData = 
+    const auto rawData =
         Algorithm::internal::CalculateStrandRawData(
             reference, {seqs, cigars, positions});
 
@@ -60,7 +60,7 @@ TEST(Algorithm_Heteroduplex, strand_raw_data_from_perfect_match_cigar_counts)
     // mm:  00000000000000
     // ref: GATTACAGATTACA
     // -----------------------
-    //      GATTACAGATTACA   
+    //      GATTACAGATTACA
     //       ATTACAGATTAC
     //      GATTACAGATTA
     //        TTACAGATTACA
@@ -104,7 +104,7 @@ TEST(Algorithm_Heteroduplex, strand_raw_data_from_perfect_match_cigar_counts)
     const auto rawData =
         Algorithm::internal::CalculateStrandRawData(
             reference, {inputSeqs, inputCigars, inputPositions});
-    
+
     EXPECT_EQ(expectedNumReads, rawData.NumReads);
     EXPECT_EQ(expectedPotentialMismatches, rawData.PotentialMismatches);
     EXPECT_EQ(rawData.BaseCounts, expectedBaseCounts);
@@ -368,7 +368,7 @@ TEST(Algorithm_Heteroduplex, skip_deletion_fwd)
     const std::vector<int32_t> fwdPositions{0, 0, 0, 0};
     const std::vector<int32_t> revPositions{0, 0, 0, 0};
 
-    // adjust for small dataset, with most permissive alpha to ensure no 
+    // adjust for small dataset, with most permissive alpha to ensure no
     // mismatch gets that far
     Algorithm::HeteroduplexSettings settings;
     settings.IgnoreEndBases = 0;
@@ -404,7 +404,7 @@ TEST(Algorithm_Heteroduplex, skip_deletion_rev)
     const std::vector<int32_t> fwdPositions{0, 0, 0, 0};
     const std::vector<int32_t> revPositions{0, 0, 0, 0};
 
-    // adjust for small dataset, with most permissive alpha to ensure no 
+    // adjust for small dataset, with most permissive alpha to ensure no
     // mismatch gets that far
     Algorithm::HeteroduplexSettings settings;
     settings.IgnoreEndBases = 0;
@@ -510,7 +510,7 @@ TEST(Algorithm_Heteroduplex, skip_overhang_snp_fwd)
     const std::vector<int32_t> fwdPositions{0, 0, 0, 0};
     const std::vector<int32_t> revPositions{0, 0, 0, 0};
 
-    // adjust for small dataset, with most permissive alpha to ensure no 
+    // adjust for small dataset, with most permissive alpha to ensure no
     // mismatch gets that far
     Algorithm::HeteroduplexSettings settings;
     settings.IgnoreEndBases = 0;
@@ -542,11 +542,11 @@ TEST(Algorithm_Heteroduplex, skip_overhang_snp_rev)
     const std::vector<Data::Cigar> revCigars{
         Data::Cigar{"7="}, Data::Cigar{"7="}, Data::Cigar{"7="},
         Data::Cigar{"7="},
-    };  
+    };
     const std::vector<int32_t> fwdPositions{0, 0, 0, 0};
     const std::vector<int32_t> revPositions{0, 0, 0, 0};
 
-    // adjust for small dataset, with most permissive alpha to ensure no 
+    // adjust for small dataset, with most permissive alpha to ensure no
     // mismatch gets that far
     Algorithm::HeteroduplexSettings settings;
     settings.IgnoreEndBases = 0;
@@ -555,6 +555,38 @@ TEST(Algorithm_Heteroduplex, skip_overhang_snp_rev)
 
     EXPECT_FALSE(Algorithm::IsHeteroduplex(reference, fwdSeqs, revSeqs, fwdCigars, revCigars,
                                           fwdPositions, revPositions, settings));
+}
+
+TEST(Algorithm_Heteroduplex, non_hd_bad_reference)
+{
+    // reference does not represent the most common overall bases
+    // ties should go to most common overall base not ref base
+    const std::string reference{"GACGCA"};
+    const std::vector<std::string> fwdSeqs{
+        "GATGCA", "GACGCA", "GATGCA", "GACGCA",
+    };
+    const std::vector<std::string> revSeqs{
+        "GATGCA", "GATGCA", "GATGCA", "GATGCA",
+    };
+    const std::vector<Data::Cigar> fwdCigars{
+        Data::Cigar{"2=1X3="}, Data::Cigar{"6="}, Data::Cigar{"2=1X3="},
+        Data::Cigar{"6="},
+    };
+    const std::vector<Data::Cigar> revCigars{
+        Data::Cigar{"6="}, Data::Cigar{"6="}, Data::Cigar{"6="},
+        Data::Cigar{"6="},
+    };
+    const std::vector<int32_t> fwdPositions{0, 0, 0, 0};
+    const std::vector<int32_t> revPositions{0, 0, 0, 0};
+
+    // adjust for small dataset
+    Algorithm::HeteroduplexSettings settings;
+    settings.IgnoreEndBases = 0;
+    settings.AlphaLevel = 0.1;
+    settings.MinimumPerStrandSubreadCoverage = 4;
+
+    EXPECT_FALSE(Algorithm::IsHeteroduplex(reference, fwdSeqs, revSeqs, fwdCigars, revCigars,
+                                           fwdPositions, revPositions, settings));
 }
 
 // clang-format on

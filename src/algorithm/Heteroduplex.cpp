@@ -205,14 +205,42 @@ HeteroduplexResults FindHeteroduplex(
         return HeteroduplexResults{};
     }
 
-    // gather pileup and potential mismatch sites from CIGARs
-    const internal::StrandRawData fwdStrand = internal::CalculateStrandRawData(
-        reference, internal::StrandInput{fwdSequences, fwdCigars, fwdPositions});
-    const internal::StrandRawData revStrand = internal::CalculateStrandRawData(
-        reference, internal::StrandInput{revSequences, revCigars, revPositions});
+    // combine fwd and rev input
+    std::vector<std::string> combinedSequences = fwdSequences;
+    combinedSequences.insert(combinedSequences.end(), revSequences.begin(), revSequences.end());
+    std::vector<Data::Cigar> combinedCigars = fwdCigars;
+    combinedCigars.insert(combinedCigars.end(), revCigars.begin(), revCigars.end());
+    std::vector<int32_t> combinedPositions = fwdPositions;
+    combinedPositions.insert(combinedPositions.end(), revPositions.begin(), revPositions.end());
 
-    std::string fwdMostCommonBases = reference;
-    std::string revMostCommonBases = reference;
+    // get data from CIGARs for base counts from combined strand input
+    const internal::StrandRawData& combinedStrands = internal::CalculateStrandRawData(
+        reference, internal::StrandInput{combinedSequences, combinedCigars, combinedPositions});
+
+    // get string of most common bases
+    const auto BaseCountsToMostCommonBasesString =
+        [](const std::vector<internal::BaseCount>& counts, const std::string_view& ref) {
+            std::string res;
+            res.reserve(counts.size());
+            for (int i = 0; i < Utility::Ssize(counts); ++i) {
+                res.push_back(internal::MostCommonBase(counts[i], ref[i]).first);
+            }
+            return res;
+        };
+
+    // recalculate reference by counting the most common base at each position
+    // since input reference does not represent the most common bases overall
+    const std::string& recalculatedReference =
+        BaseCountsToMostCommonBasesString(combinedStrands.BaseCounts, reference);
+
+    // gather pileup and potential mismatch sites from CIGARs for stranded input
+    const internal::StrandRawData fwdStrand = internal::CalculateStrandRawData(
+        recalculatedReference, internal::StrandInput{fwdSequences, fwdCigars, fwdPositions});
+    const internal::StrandRawData revStrand = internal::CalculateStrandRawData(
+        recalculatedReference, internal::StrandInput{revSequences, revCigars, revPositions});
+
+    std::string fwdMostCommonBases = recalculatedReference;
+    std::string revMostCommonBases = recalculatedReference;
 
     std::vector<int32_t> variableSites;
     std::vector<int32_t> significantSites;
@@ -239,7 +267,7 @@ HeteroduplexResults FindHeteroduplex(
         }
 
         // compute most common bases at position
-        const char refBase = reference[i];
+        const char refBase = recalculatedReference[i];
 
         const auto fwdMostCommonBaseCount =
             internal::MostCommonBase(fwdStrand.BaseCounts[i], refBase);
@@ -266,10 +294,12 @@ HeteroduplexResults FindHeteroduplex(
         //      AAT
         // rev: ATT
         //      ATT
-        if ((fwdMostCommonBase == reference[i - 1]) && (revMostCommonBase == reference[i + 1])) {
+        if ((fwdMostCommonBase == recalculatedReference[i - 1]) &&
+            (revMostCommonBase == recalculatedReference[i + 1])) {
             continue;
         }
-        if ((revMostCommonBase == reference[i - 1]) && (fwdMostCommonBase == reference[i + 1])) {
+        if ((revMostCommonBase == recalculatedReference[i - 1]) &&
+            (fwdMostCommonBase == recalculatedReference[i + 1])) {
             continue;
         }
 
