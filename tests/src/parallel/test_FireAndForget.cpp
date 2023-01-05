@@ -117,3 +117,14 @@ TEST(Parallel_FireAndForget, dispatch)
 
     faf.Finalize();
 }
+
+TEST(Parallel_FireAndForget, dispatchSingleException)
+{
+    PacBio::Parallel::FireAndForget faf{1};
+
+    auto SubmitExc = [](const int32_t) { throw std::runtime_error("faf abort"); };
+
+    EXPECT_ANY_THROW(PacBio::Parallel::Dispatch(&faf, 1, SubmitExc));
+
+    faf.Finalize();
+}
