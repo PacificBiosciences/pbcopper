@@ -36,7 +36,7 @@ struct MappedRead : public Read
     MappedRead(Read read, enum Strand strand, Position templateStart, Position templateEnd,
                Cigar cigar, uint8_t mapQV);
 
-    int32_t RefId;
+    int32_t RefId = 0;
     enum Strand Strand = Strand::UNMAPPED;
     Position TemplateStart = UNMAPPED_POSITION;
     Position TemplateEnd = UNMAPPED_POSITION;
