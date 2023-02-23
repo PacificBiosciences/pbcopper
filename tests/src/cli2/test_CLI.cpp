@@ -915,4 +915,56 @@ TEST(CLI2_CLI, print_rather_than_terminate_on_CLI_parsing_error)
     EXPECT_EQ(s.str().find("terminate"), std::string::npos);
 }
 
+TEST(CLI2_CLI, print_help_on_missing_required_pos_arg)
+{
+    const PacBio::CLI_v2::PositionalArgument Arg {
+R"({
+    "name" : "source",
+    "description" : "Source file to copy.",
+    "syntax" : "FILE",
+    "required" : true
+})"};
+
+    std::ostringstream s;
+    PacBio::Utility::CoutRedirect redirect{s.rdbuf()};
+
+    PacBio::CLI_v2::Interface i{"myapp", "Frob all the things.", "v3.1"};
+    i.AddPositionalArgument(Arg);
+    auto runner = [](const PacBio::CLI_v2::Results&) { 
+        // should not get run
+        return EXIT_FAILURE; 
+    };
+
+    const std::vector<std::string> args{"myapp"};
+    const int result = PacBio::CLI_v2::Run(args, i, runner);
+    EXPECT_EQ(result, EXIT_SUCCESS);
+    EXPECT_NE(s.str().find("Usage"), std::string::npos);
+}
+
+TEST(CLI2_CLI, print_help_on_missing_required_options)
+{
+        const PacBio::CLI_v2::Option Opt {
+R"({
+    "names" : ["source"],
+    "description" : "Source file to copy.",
+    "syntax" : "FILE",
+    "required" : true
+})"};
+
+    std::ostringstream s;
+    PacBio::Utility::CoutRedirect redirect{s.rdbuf()};
+
+    PacBio::CLI_v2::Interface i{"myapp", "Frob all the things.", "v3.1"};
+    i.AddOption(Opt);
+    auto runner = [](const PacBio::CLI_v2::Results&) { 
+        // should not get run
+        return EXIT_FAILURE; 
+    };
+
+    const std::vector<std::string> args{"myapp"};
+    const int result = PacBio::CLI_v2::Run(args, i, runner);
+    EXPECT_EQ(result, EXIT_SUCCESS);
+    EXPECT_NE(s.str().find("Usage"), std::string::npos);
+}
+
 // clang-format on

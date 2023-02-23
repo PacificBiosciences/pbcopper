@@ -152,6 +152,12 @@ OptionData OptionTranslator::Translate(const Option& option)
             }
         }
 
+        // required
+        const auto required = root.find("required");
+        if (required != root.cend()) {
+            result.IsRequired = *required;
+        }
+
         // hidden
         const auto hidden = root.find("hidden");
         if (hidden != root.cend()) {

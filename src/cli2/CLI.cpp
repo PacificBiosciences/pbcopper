@@ -49,7 +49,7 @@ int Run(const std::vector<std::string>& args, const Interface& interface,
     // This allows, for example, tools that to stream stdin without requiring
     // input filenames.
     //
-    if (args.size() == 1 && interface.HasRequiredPosArgs()) {
+    if (args.size() == 1 && (interface.HasRequiredPosArgs() || interface.HasRequiredOptions())) {
         const InterfaceHelpPrinter help{interface, internal::HiddenOptionMode::HIDE};
         std::cout << help;
         return EXIT_SUCCESS;

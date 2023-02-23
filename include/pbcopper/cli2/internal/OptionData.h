@@ -25,7 +25,7 @@ struct OptionData
 
     OptionValueType Type = OptionValueType::BOOL;
     std::optional<OptionValue> DefaultValue;
-
+    bool IsRequired = false;
     bool IsHidden = false;
     bool IsDefaultValueHidden = false;
 

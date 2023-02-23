@@ -196,6 +196,8 @@ const internal::OptionData& Interface::ExceptionsPassthroughOption() const
     return data_.ExceptionPassthroughOption;
 }
 
+bool Interface::HasRequiredOptions() const { return NumRequiredOptions() > 0; }
+
 bool Interface::HasRequiredPosArgs() const { return NumRequiredPosArgs() > 0; }
 
 const std::string& Interface::HelpFooter() const { return data_.Footer; }
@@ -242,6 +244,19 @@ Results Interface::MakeDefaultResults() const
     }
     results.PositionalArguments(PositionalArguments());
     return results;
+}
+
+size_t Interface::NumRequiredOptions() const
+{
+    size_t count = 0;
+    for (const auto& group : data_.OptionGroups) {
+        for (const auto& opt : group.Options) {
+            if (opt.IsRequired) {
+                ++count;
+            }
+        }
+    }
+    return count;
 }
 
 size_t Interface::NumRequiredPosArgs() const

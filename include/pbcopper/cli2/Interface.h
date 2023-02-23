@@ -155,6 +155,11 @@ public:
     const std::string& Example() const;
 
     ///
+    /// \return true if any options are required
+    ///
+    bool HasRequiredOptions() const;
+
+    ///
     /// \return true if any positional arguments are required
     ///
     bool HasRequiredPosArgs() const;
@@ -170,6 +175,11 @@ public:
     /// Default Logging::LogConfig if not otherwise specified.
     ///
     const Logging::LogConfig& LogConfig() const;
+
+    ///
+    /// \return number of options that are required
+    ///
+    size_t NumRequiredOptions() const;
 
     ///
     /// \return number of positional arguments that are required
