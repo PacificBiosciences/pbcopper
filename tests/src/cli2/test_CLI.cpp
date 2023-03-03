@@ -812,6 +812,31 @@ TEST(CLI2_CLI, populates_alarm_owner_field_with_application_name) {
     EXPECT_TRUE(alarmText.str().find("\"name\": \"alarm type\"") != std::string::npos);
 }
 
+TEST(CLI2_CLI, handle_empty_alarm_filename) 
+{
+    const std::string alarmFilename;
+    const std::vector<std::string> args {"owner-check"};
+    auto runner = [](const PacBio::CLI_v2::Results&)
+    {
+        throw PB_ALARM("alarm type", "alarm information from application");
+        return 0;
+    };
+
+    std::ostringstream logOutput;
+    PacBio::Utility::CerrRedirect redirect{logOutput.rdbuf()};
+    std::ignore = redirect;
+
+    PacBio::CLI_v2::Interface i{"owner-check", "Check owner in alarm.", "v3.1"};
+    const int result = PacBio::CLI_v2::Run(args, i, runner);
+    EXPECT_EQ(EXIT_FAILURE, result);
+
+    // indicate lack of alarm file in log
+    EXPECT_TRUE(logOutput.str().find("cannot write JSON to empty alarm filename") != std::string::npos);
+
+    // ensure exception information is still in the log
+    EXPECT_TRUE(logOutput.str().find("alarm information from application") != std::string::npos);
+}
+
 TEST(CLI2_CLI, show_all_help_displays_hidden_options)
 {
     using namespace PacBio;
