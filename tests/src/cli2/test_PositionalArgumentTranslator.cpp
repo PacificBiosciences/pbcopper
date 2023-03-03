@@ -137,4 +137,31 @@ TEST(CLI2_PositionalArgumentTranslator, creates_optional_positional_arg)
     EXPECT_EQ(PacBio::CLI_v2::OptionValueType::STRING, posArgData.Type);
 }
 
+TEST(CLI2_PositionalArgumentTranslator, can_create_description_from_array)
+{
+    const std::string expectedText{
+        "Specifies the level of info which will be output produced on stderr. "
+        "0 turns all output off, 1 outputs only warnings, while levels 2 and "
+        "above outputs a status message every 1000000 (2), 100000 (3), 1000 (4), "
+        "100 (5), 10 (6) and 1 (7) reads."
+    };
+
+    const PositionalArgument testArg
+    {
+     R"({
+        "name" : "test_name",
+        "description" : [
+            "Specifies the level of info which will be output produced on stderr. ",
+            "0 turns all output off, 1 outputs only warnings, while levels 2 and ",
+            "above outputs a status message every 1000000 (2), 100000 (3), 1000 (4), ",
+            "100 (5), 10 (6) and 1 (7) reads."
+        ],
+        "required" : false
+     })"
+    };
+
+    const auto testOptionData = PositionalArgumentTranslator::Translate(testArg);
+    EXPECT_EQ(expectedText, testOptionData.Description);
+}
+
 // clang-format on

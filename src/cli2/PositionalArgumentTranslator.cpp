@@ -69,7 +69,13 @@ PositionalArgumentData PositionalArgumentTranslator::Translate(const PositionalA
         // description
         const auto description = root.find("description");
         if (description != root.cend()) {
-            result.Description = description->get<std::string>();
+            if (description->is_array()) {
+                for (const auto& line : *description) {
+                    result.Description += line.get<std::string>();
+                }
+            } else {
+                result.Description = description->get<std::string>();
+            }
         }
 
         // type
