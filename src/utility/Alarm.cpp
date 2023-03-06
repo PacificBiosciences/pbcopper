@@ -120,6 +120,10 @@ void Alarm::Print(std::ostream& out) const
 void Alarm::WriteAlarms(const std::string& fn, const std::vector<Alarm>& alarms,
                         const std::string& applicationName)
 {
+    if (fn.empty()) {
+        throw std::runtime_error{"[pbcopper] alarm ERROR: cannot write to empty alarm filename"};
+    }
+
     std::ofstream f{fn};
     WriteAlarms(f, alarms, applicationName);
 }

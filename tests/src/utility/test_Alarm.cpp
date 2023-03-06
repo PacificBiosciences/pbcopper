@@ -1,6 +1,7 @@
 #include <pbcopper/utility/Alarm.h>
 
 #include <sstream>
+#include <stdexcept>
 #include <string>
 #include <vector>
 
@@ -99,6 +100,17 @@ R"([
         PacBio::Utility::Alarm::WriteAlarms(s, {alarm});
         EXPECT_EQ(s.str(), expectedText);
     }
+}
+
+TEST(Utility_Alarm, throws_on_empty_alarm_filename) 
+{
+    const std::vector<PacBio::Utility::Alarm> alarms {
+        PacBio::Utility::Alarm{"test_alarm1", "Hello world!"},
+        PacBio::Utility::Alarm{"test_alarm2", "Hello again!"},
+    };
+
+    std::string fn;
+    EXPECT_THROW(PacBio::Utility::Alarm::WriteAlarms(fn, alarms), std::runtime_error);
 }
 
 // clang-format on

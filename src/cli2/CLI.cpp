@@ -146,9 +146,6 @@ int Run(const std::vector<std::string>& args, const Interface& interface,
         if (!alarmsOutputFilename.empty()) {
             printToAlarmFile(
                 Utility::Alarm{a.Name(), a.Message(), a.Severity(), a.Info(), a.Exception()});
-        } else {
-            PBLOG_WARN << "Caught alarm exception, but cannot write JSON to empty alarm filename. "
-                       << "Please provide one via --alarms option.";
         }
     } catch (const std::exception& e) {
         PBLOG_FATAL << applicationName << " ERROR: " << e.what();
