@@ -119,8 +119,10 @@ uint64_t SubMerSelection::HashedSubseq(uint64_t kmer, int pos) const noexcept
 
 std::string SubMerSelection::ToString() const
 {
-    std::string ret(128, '\0');
-    const int rc = std::sprintf(&ret[0], "%" PRIu64 "\n", pattern_);
+    constexpr size_t BUFFER_SIZE = 128;
+
+    std::string ret(BUFFER_SIZE, '\0');
+    const int rc = std::snprintf(ret.data(), BUFFER_SIZE, "%" PRIu64 "\n", pattern_);
     ret.resize(rc);
     for (uint64_t cv = pattern_; cv;) {
         const int ind = Utility::CountTrailingZeros(cv);
