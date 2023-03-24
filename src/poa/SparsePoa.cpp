@@ -290,13 +290,13 @@ std::string SparsePoa::ToGraphViz(int flags, const PoaConsensus* pc) const
     return graph_->ToGraphViz(flags, pc);
 }
 
-void SparsePoa::WriteGraphVizFile(const std::string& filename, int flags,
+void SparsePoa::WriteGraphVizFile(const std::filesystem::path& filename, int flags,
                                   const PoaConsensus* pc) const
 {
     graph_->WriteGraphVizFile(filename, flags, pc);
 }
 
-void SparsePoa::WriteGraphCsvFile(const std::string& filename) const
+void SparsePoa::WriteGraphCsvFile(const std::filesystem::path& filename) const
 {
     graph_->WriteGraphCsvFile(filename);
 }

@@ -1,16 +1,14 @@
 #ifndef PBCOPPERTESTDATA_H
 #define PBCOPPERTESTDATA_H
 
-#include <string>
+#include <filesystem>
 
 namespace PacBio {
 namespace PbcopperTestsConfig {
 
-const std::string Data_Dir          = std::string("@Pbcopper_TestsDir@/data");
-const std::string Generated_Dir     = std::string("@GeneratedDir@");
-const std::string GeneratedData_Dir = std::string("@GeneratedTestDataDir@");
+const std::filesystem::path Generated_Dir{"@GeneratedDir@"};
 
-} // namespace PbcopperTestsConfig
-} // namespace PacBio
+}  // namespace PbcopperTestsConfig
+}  // namespace PacBio
 
-#endif // PBCOPPERTESTDATA_H
+#endif  // PBCOPPERTESTDATA_H

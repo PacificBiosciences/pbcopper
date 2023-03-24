@@ -147,10 +147,9 @@ size_t Results::NumThreads() const
     return static_cast<size_t>(Parallel::NormalizedThreadCount(requestedNumThreads));
 }
 
-std::string Results::AlarmsFile() const
+std::filesystem::path Results::AlarmsFile() const
 {
-    const auto& alarmsOpt = (*this)[Builtin::Alarms];
-    return alarmsOpt;
+    return static_cast<std::string>((*this)[Builtin::Alarms]);
 }
 
 const std::vector<std::string>& Results::PositionalArguments() const { return posArgValues_; }

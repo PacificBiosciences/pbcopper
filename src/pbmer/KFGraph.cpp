@@ -311,20 +311,16 @@ std::string KFG::Graph2StringDot() const
     return ss.str();
 }
 
-void KFG::WriteDot(std::string fn) const
+void KFG::WriteDot(const std::filesystem::path& filename) const
 {
-    std::ofstream outfile;
-    outfile.open(fn);
+    std::ofstream outfile{filename};
     outfile << Graph2StringDot();
-    outfile.close();
 }
 
-void KFG::WriteUtgsGFA(std::string fn) const
+void KFG::WriteUtgsGFA(const std::filesystem::path& filename) const
 {
-    std::ofstream outfile;
-    outfile.open(fn);
+    std::ofstream outfile{filename};
     outfile << DumpGFAUtgs();
-    outfile.close();
 }
 
 int32_t KFG::MatchCount(const std::vector<DnaBit>& bits) const

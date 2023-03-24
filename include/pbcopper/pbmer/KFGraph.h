@@ -17,6 +17,7 @@
 #include <pbcopper/pbmer/Parser.h>
 #include <pbcopper/third-party/robin_hood/robin_hood.h>
 
+#include <filesystem>
 #include <map>
 #include <string>
 #include <tuple>
@@ -164,12 +165,12 @@ public:
     /*!
        \brief write the graph to a dot format file.
     */
-    void WriteDot(std::string fn) const;
+    void WriteDot(const std::filesystem::path& filename) const;
 
     /*!
        \brief write the unitigs to a GFA, there are kmer length overlaps on the unitigs.
     */
-    void WriteUtgsGFA(std::string fn) const;
+    void WriteUtgsGFA(const std::filesystem::path& filename) const;
 
 private:
     /*!

@@ -10,6 +10,7 @@
 #include <pbcopper/utility/Alarm.h>
 
 #include <exception>
+#include <filesystem>
 #include <fstream>
 #include <iostream>
 #include <string>
@@ -84,7 +85,7 @@ int Run(const std::vector<std::string>& args, const Interface& interface,
         return EXIT_SUCCESS;
     }
 
-    const std::string alarmsOutputFilename{results.AlarmsFile()};
+    const std::filesystem::path alarmsOutputFilename{results.AlarmsFile()};
     const bool allowExceptionsPassthrough{results.ExceptionPassthrough()};
 
     //

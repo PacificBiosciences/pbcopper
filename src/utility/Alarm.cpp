@@ -105,9 +105,9 @@ Alarm& Alarm::Severity(std::string severity)
     return *this;
 }
 
-void Alarm::Print(const std::string& fn) const
+void Alarm::Print(const std::filesystem::path& filename) const
 {
-    std::ofstream f{fn};
+    std::ofstream f{filename};
     Print(f);
 }
 
@@ -117,14 +117,14 @@ void Alarm::Print(std::ostream& out) const
     out << result.dump(4);
 }
 
-void Alarm::WriteAlarms(const std::string& fn, const std::vector<Alarm>& alarms,
+void Alarm::WriteAlarms(const std::filesystem::path& filename, const std::vector<Alarm>& alarms,
                         const std::string& applicationName)
 {
-    if (fn.empty()) {
+    if (filename.empty()) {
         throw std::runtime_error{"[pbcopper] alarm ERROR: cannot write to empty alarm filename"};
     }
 
-    std::ofstream f{fn};
+    std::ofstream f{filename};
     WriteAlarms(f, alarms, applicationName);
 }
 

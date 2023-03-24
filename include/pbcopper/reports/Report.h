@@ -5,6 +5,7 @@
 
 #include <pbcopper/PbcopperConfig.h>
 
+#include <filesystem>
 #include <iosfwd>
 #include <string>
 #include <variant>
@@ -125,11 +126,11 @@ public:
     Report& Tables(std::vector<Table> tables);
 
     // print pbreport format
-    void Print(const std::string& fn, const std::string& prefix = "") const;
+    void Print(const std::filesystem::path& filename, const std::string& prefix = "") const;
     void Print(std::ostream& out, const std::string& prefix = "") const;
 
     // print (diffable) attributes only
-    void PrintSummary(const std::string& fn) const;
+    void PrintSummary(const std::filesystem::path& filename) const;
     void PrintSummary(std::ostream& out) const;
 
 private:
@@ -146,7 +147,7 @@ class TaskReport
 public:
     TaskReport(int nproc, double runTime, int exitCode, int64_t peakRss);
 
-    void Print(const std::string& fn, const std::string& prefix = "") const;
+    void Print(const std::filesystem::path& filename, const std::string& prefix = "") const;
     void Print(std::ostream& out, const std::string& prefix = "") const;
 
 private:

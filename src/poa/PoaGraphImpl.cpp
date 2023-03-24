@@ -472,17 +472,16 @@ std::string PoaGraphImpl::ToGraphViz(int flags, const PoaConsensus* pc) const
     return ss.str();
 }
 
-void PoaGraphImpl::WriteGraphVizFile(const std::string& filename, int flags,
+void PoaGraphImpl::WriteGraphVizFile(const std::filesystem::path& filename, int flags,
                                      const PoaConsensus* pc) const
 {
-    std::ofstream outfile(filename.c_str());
+    std::ofstream outfile{filename};
     outfile << ToGraphViz(flags, pc);
-    outfile.close();
 }
 
-void PoaGraphImpl::WriteGraphCsvFile(const std::string& filename) const
+void PoaGraphImpl::WriteGraphCsvFile(const std::filesystem::path& filename) const
 {
-    std::ofstream outfile(filename.c_str());
+    std::ofstream outfile{filename};
 
     std::list<VD> sortedVerticesLocal(num_vertices(g_));
     topological_sort(g_, sortedVerticesLocal.rbegin());
@@ -493,8 +492,6 @@ void PoaGraphImpl::WriteGraphCsvFile(const std::string& filename) const
         outfile << vi.Id << ',' << vi.Base << ',' << vi.Reads << ',' << vi.SpanningReads << ','
                 << vi.Score << ',' << vi.ReachingScore << std::endl;
     }
-
-    outfile.close();
 }
 
 }  // namespace detail

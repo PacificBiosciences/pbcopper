@@ -153,9 +153,9 @@ Report& Report::Tables(std::vector<Table> tables)
     return *this;
 }
 
-void Report::Print(const std::string& fn, const std::string& prefix) const
+void Report::Print(const std::filesystem::path& filename, const std::string& prefix) const
 {
-    std::ofstream f{fn};
+    std::ofstream f{filename};
     Print(f, prefix);
 }
 
@@ -164,9 +164,9 @@ void Report::Print(std::ostream& out, const std::string& prefix) const
     internal::ReportPrinter::Print(out, *this, prefix);
 }
 
-void Report::PrintSummary(const std::string& fn) const
+void Report::PrintSummary(const std::filesystem::path& filename) const
 {
-    std::ofstream f{fn};
+    std::ofstream f{filename};
     PrintSummary(f);
 }
 

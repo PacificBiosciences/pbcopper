@@ -5,6 +5,7 @@
 
 #include <pbcopper/align/AlignConfig.h>
 
+#include <filesystem>
 #include <limits>
 #include <memory>
 #include <string>
@@ -91,10 +92,10 @@ public:
 
     std::string ToGraphViz(int flags = 0, const PoaConsensus* pc = NULL) const;
 
-    void WriteGraphVizFile(const std::string& filename, int flags = 0,
+    void WriteGraphVizFile(const std::filesystem::path& filename, int flags = 0,
                            const PoaConsensus* pc = NULL) const;
 
-    void WriteGraphCsvFile(const std::string& filename) const;
+    void WriteGraphCsvFile(const std::filesystem::path& filename) const;
 
     const PoaConsensus* FindConsensus(const Align::AlignConfig& config,
                                       int minCoverage = -INT_MAX) const;

@@ -49,13 +49,13 @@ std::string PoaGraph::ToGraphViz(int flags, const PoaConsensus* pc) const
     return impl_->ToGraphViz(flags, pc);
 }
 
-void PoaGraph::WriteGraphVizFile(const std::string& filename, int flags,
+void PoaGraph::WriteGraphVizFile(const std::filesystem::path& filename, int flags,
                                  const PoaConsensus* pc) const
 {
     impl_->WriteGraphVizFile(filename, flags, pc);
 }
 
-void PoaGraph::WriteGraphCsvFile(const std::string& filename) const
+void PoaGraph::WriteGraphCsvFile(const std::filesystem::path& filename) const
 {
     impl_->WriteGraphCsvFile(filename);
 }

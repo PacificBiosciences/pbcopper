@@ -19,7 +19,7 @@ namespace Logging {
 
 Logger::Logger(std::ostream& out, const LogLevel level) : Logger{out, LogConfig{level}} {}
 
-Logger::Logger(const std::string& filename, const LogLevel level)
+Logger::Logger(const std::filesystem::path& filename, const LogLevel level)
     : Logger{filename, LogConfig{level}}
 {}
 
@@ -27,7 +27,7 @@ Logger::Logger(std::ostream& out, const LogConfig& config)
     : stream_{out}, config_{config}, writer_{&Logger::MessageWriter, this}
 {}
 
-Logger::Logger(const std::string& filename, const LogConfig& config)
+Logger::Logger(const std::filesystem::path& filename, const LogConfig& config)
     : logFile_{filename}, stream_{logFile_}, config_{config}, writer_{&Logger::MessageWriter, this}
 {}
 

@@ -3,6 +3,7 @@
 
 #include <pbcopper/PbcopperConfig.h>
 
+#include <filesystem>
 #include <iosfwd>
 #include <string>
 #include <vector>
@@ -17,7 +18,7 @@ class AlarmException;
 class Alarm
 {
 public:
-    static void WriteAlarms(const std::string& fn, const std::vector<Alarm>& alarms,
+    static void WriteAlarms(const std::filesystem::path& filename, const std::vector<Alarm>& alarms,
                             const std::string& applicationName = "");
     static void WriteAlarms(std::ostream& out, const std::vector<Alarm>& alarms,
                             const std::string& applicationName = "");
@@ -50,7 +51,7 @@ public:
     Alarm& Severity(std::string severity);
 
     // print json format
-    void Print(const std::string& fn) const;
+    void Print(const std::filesystem::path& filename) const;
     void Print(std::ostream& out) const;
 
 private:

@@ -10,6 +10,7 @@
 #include <pbcopper/pbmer/Mers.h>
 #include <pbcopper/pbmer/Parser.h>
 
+#include <filesystem>
 #include <map>
 #include <string>
 #include <tuple>
@@ -77,7 +78,7 @@ public:
     ///
     /// \param fn   filename
     ///
-    void WriteGraph(std::string fn);
+    void WriteGraph(const std::filesystem::path& filename);
 
     ///
     /// Remove kmers with fewer than N reads covering it. This resets the edges

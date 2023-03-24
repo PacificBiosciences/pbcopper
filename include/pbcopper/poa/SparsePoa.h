@@ -7,6 +7,7 @@
 #include <pbcopper/poa/PoaConsensus.h>
 #include <pbcopper/poa/RangeFinder.h>
 
+#include <filesystem>
 #include <memory>
 #include <string>
 #include <vector>
@@ -104,10 +105,10 @@ public:
     //
     // Serialize the POA graph to a file
     //
-    void WriteGraphVizFile(const std::string& filename, int flags = 0,
+    void WriteGraphVizFile(const std::filesystem::path& filename, int flags = 0,
                            const Poa::PoaConsensus* pc = nullptr) const;
 
-    void WriteGraphCsvFile(const std::string& filename) const;
+    void WriteGraphCsvFile(const std::filesystem::path& filename) const;
 
     //
     // Clean up the POA graph, pruning minority paths, to speed up

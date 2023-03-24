@@ -32,9 +32,9 @@ TaskReport::TaskReport(int nproc, double runTime, int exitCode, int64_t peakRss)
                         {"peak_rss", peakRssGb, "Peak RSS (GB)"}});
 }
 
-void TaskReport::Print(const std::string& fn, const std::string& prefix) const
+void TaskReport::Print(const std::filesystem::path& filename, const std::string& prefix) const
 {
-    report_.Print(fn, prefix);
+    report_.Print(filename, prefix);
 }
 
 void TaskReport::Print(std::ostream& out, const std::string& prefix) const

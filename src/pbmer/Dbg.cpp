@@ -522,13 +522,10 @@ bool Dbg::ValidateLoad() const
                        [](const auto& x) { return x.second.readIds2_.count() != 0; });
 }
 
-void Dbg::WriteGraph(std::string fn)
+void Dbg::WriteGraph(const std::filesystem::path& filename)
 {
-    std::ofstream outfile;
-    outfile.open(fn);
+    std::ofstream outfile{filename};
     outfile << Dbg::Graph2StringDot();
-
-    outfile.close();
 }
 
 }  // namespace Pbmer

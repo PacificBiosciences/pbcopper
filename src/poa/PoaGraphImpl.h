@@ -12,6 +12,8 @@
 #include <boost/format.hpp>
 #include <boost/type_traits.hpp>
 
+#include <filesystem>
+#include <string>
 #include <vector>
 
 #include <cfloat>
@@ -209,8 +211,9 @@ public:
 
     size_t NumReads() const;
     std::string ToGraphViz(int flags, const PoaConsensus* pc) const;
-    void WriteGraphVizFile(const std::string& filename, int flags, const PoaConsensus* pc) const;
-    void WriteGraphCsvFile(const std::string& filename) const;
+    void WriteGraphVizFile(const std::filesystem::path& filename, int flags,
+                           const PoaConsensus* pc) const;
+    void WriteGraphCsvFile(const std::filesystem::path& filename) const;
 };
 
 // free functions, we should put these all in traversals

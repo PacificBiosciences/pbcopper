@@ -1,5 +1,6 @@
 #include <pbcopper/cli2/CLI.h>
 
+#include <filesystem>
 #include <iostream>
 #include <sstream>
 #include <string>
@@ -758,7 +759,7 @@ TEST(CLI2_CLI, can_use_custom_version_callback)
 
 TEST(CLI2_CLI, creates_alarm_for_all_exceptions_when_given_alarm_file_arg) {
 
-    const std::string alarmFilename{PacBio::PbcopperTestsConfig::Generated_Dir + "/std_exception_alarm.json"};
+    const std::filesystem::path alarmFilename{PacBio::PbcopperTestsConfig::Generated_Dir / "std_exception_alarm.json"};
 
     const std::vector<std::string> args {"frobber", "--alarms", alarmFilename};
     auto runner = [](const PacBio::CLI_v2::Results&)
@@ -787,7 +788,7 @@ TEST(CLI2_CLI, creates_alarm_for_all_exceptions_when_given_alarm_file_arg) {
 
 TEST(CLI2_CLI, populates_alarm_owner_field_with_application_name) {
 
-    const std::string alarmFilename{PacBio::PbcopperTestsConfig::Generated_Dir + "/add_owner_alarm.json"};
+    const std::filesystem::path alarmFilename{PacBio::PbcopperTestsConfig::Generated_Dir / "add_owner_alarm.json"};
     const std::vector<std::string> args {"owner-check", "--alarms", alarmFilename};
     auto runner = [](const PacBio::CLI_v2::Results&)
     {

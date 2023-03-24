@@ -8,12 +8,12 @@
 #include <pbcopper/logging/LogMessage.h>
 
 #include <condition_variable>
+#include <filesystem>
 #include <fstream>
 #include <memory>
 #include <mutex>
 #include <ostream>
 #include <queue>
-#include <string>
 #include <thread>
 
 namespace PacBio {
@@ -35,10 +35,10 @@ public:
     static Logger& Default(Logger* logger = nullptr);
 
     Logger(std::ostream& out, LogLevel level);
-    Logger(const std::string& filename, LogLevel level);
+    Logger(const std::filesystem::path& filename, LogLevel level);
 
     Logger(std::ostream& out, const LogConfig& config);
-    Logger(const std::string& filename, const LogConfig& config);
+    Logger(const std::filesystem::path& filename, const LogConfig& config);
 
     Logger(const Logger&) = delete;
     Logger& operator=(const Logger&) = delete;

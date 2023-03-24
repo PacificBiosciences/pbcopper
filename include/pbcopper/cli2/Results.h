@@ -11,6 +11,7 @@
 #include <pbcopper/cli2/internal/PositionalArgumentData.h>
 #include <pbcopper/logging/Logging.h>
 
+#include <filesystem>
 #include <memory>
 #include <string>
 #include <type_traits>
@@ -65,7 +66,7 @@ public:
     ///
     /// \return requested alarms JSON file (empty string if not provided)
     ///
-    std::string AlarmsFile() const;
+    std::filesystem::path AlarmsFile() const;
 
     ///
     /// \return full list of positional argument values
