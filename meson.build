@@ -81,6 +81,12 @@ subdir('include')
 
 subdir('src')
 
+###############
+# third-party #
+###############
+
+subdir('third-party')
+
 ##########
 # extras #
 ##########

@@ -173,12 +173,6 @@ if not meson.is_subproject()
       'pbcopper/json/JSON.h']),
     subdir : 'pbcopper/json')
 
-  # pbcopper/json/internal
-  install_headers(
-    files([
-      'pbcopper/json/internal/json.hpp']),
-    subdir : 'pbcopper/json/internal')
-
   # pbcopper/library
   install_headers(
     files([

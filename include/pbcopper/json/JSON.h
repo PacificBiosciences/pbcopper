@@ -22,7 +22,7 @@
 #pragma GCC diagnostic ignored "-Wdocumentation"
 #endif
 
-#include <pbcopper/json/internal/json.hpp>
+#include "../third-party/json.hpp"
 
 // restore GCC/clang diagnostic settings
 #if defined(__clang__) || defined(__GNUC__) || defined(__GNUG__)
