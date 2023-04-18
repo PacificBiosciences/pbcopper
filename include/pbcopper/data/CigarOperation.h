@@ -95,12 +95,19 @@ public:
 
     CigarOperation() = default;
 
-    PB_CUDA_HOST PB_CUDA_DEVICE constexpr CigarOperation(const char c, const uint32_t length)
+    PB_CUDA_HOST PB_CUDA_DEVICE
+#ifdef __cpp_lib_is_constant_evaluated
+        constexpr
+#endif
+        CigarOperation(const char c, const uint32_t length)
         : CigarOperation{CigarOperation::CharToType(c), length}
     {}
 
-    PB_CUDA_HOST PB_CUDA_DEVICE constexpr CigarOperation(const CigarOperationType op,
-                                                         const uint32_t length)
+    PB_CUDA_HOST PB_CUDA_DEVICE
+#ifdef __cpp_lib_is_constant_evaluated
+        constexpr
+#endif
+        CigarOperation(const CigarOperationType op, const uint32_t length)
         : data_{(length << 4) | static_cast<uint32_t>(op)}
     {
 #ifndef __CUDA_ARCH__  // host
@@ -111,8 +118,7 @@ public:
             AutoValidateCigar && (Type() == CigarOperationType::ALIGNMENT_MATCH)) {
             throw std::runtime_error{
                 "[pbcopper] CIGAR operation ERROR: 'M' is not allowed in PacBio BAM files. Use "
-                "'X/=' "
-                "instead."};
+                "'X/=' instead."};
         }
 #endif
     }
