@@ -1,7 +1,7 @@
 project(
   'pbcopper',
   ['cpp', 'c'],
-  version : '2.2.0',
+  version : '2.3.0',
   default_options : [
     'buildtype=release',
     'warning_level=3',

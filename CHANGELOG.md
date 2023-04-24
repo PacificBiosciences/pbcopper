@@ -4,8 +4,14 @@
 
 ## [2.2.0] - 2022-01-03
 
+### Added
+ - Allow description array in positional args
+
 ### Changed
  - Cleaned up CLI parsing error messages
+ - Fixed FireAndForget exception handling
+ - Fixed alarm API for empty file
+ - Update nlohmann/json to 3.11.2
 
 ## [2.1.0] - 2022-07-26
 
