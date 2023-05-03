@@ -115,6 +115,7 @@ if not meson.is_subproject()
     files([
       'pbcopper/cuda/AsciiConversion.h',
       'pbcopper/cuda/Cuda.h',
+      'pbcopper/cuda/ThreadBlockHelper.h',
     ]),
     subdir : 'pbcopper/cuda')
 
