@@ -200,6 +200,13 @@ if not meson.is_subproject()
     ]),
     subdir : 'pbcopper/math')
 
+  # pbcopper/numeric
+  install_headers(
+    files([
+      'pbcopper/numeric/Helper.h',
+    ]),
+    subdir : 'pbcopper/numeric')
+
   # pbcopper/parallel
   install_headers(
     files([

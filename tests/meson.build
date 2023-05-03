@@ -70,6 +70,9 @@ pbcopper_test_cpp_sources = files([
   'src/math/test_ConfusionMatrix.cpp',
   'src/math/test_FishersExact.cpp',
 
+  # numeric
+  'src/numeric/test_Helper.cpp',
+
   # parallel
   'src/parallel/test_WorkQueue.cpp',
   'src/parallel/test_FireAndForget.cpp',
