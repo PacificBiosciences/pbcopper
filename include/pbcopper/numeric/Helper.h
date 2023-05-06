@@ -55,6 +55,16 @@ PB_CUDA_HOST PB_CUDA_DEVICE constexpr T RoundUpToNextMultiple(const T x) noexcep
     return RoundUpDivision<multiple>(x) * MULTIPLE;
 }
 
+template <uint32_t multiple, typename T>
+PB_CUDA_HOST PB_CUDA_DEVICE constexpr T RoundDownToNextMultiple(const T x) noexcept
+{
+    static_assert(std::is_integral_v<T>, "T is not an integral type");
+
+    constexpr std::make_unsigned_t<std::common_type_t<T, decltype(multiple)>> MULTIPLE = multiple;
+
+    return RoundDownDivision<multiple>(x) * MULTIPLE;
+}
+
 }  // namespace Numeric
 }  // namespace PacBio
 

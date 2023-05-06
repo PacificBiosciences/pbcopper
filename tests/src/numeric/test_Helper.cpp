@@ -122,3 +122,34 @@ TEST(Numeric, RoundUpToNextMultiple_nonpoweroftwo_test)
     EXPECT_EQ(PacBio::Numeric::RoundUpToNextMultiple<7>(9), 14);
     EXPECT_EQ(PacBio::Numeric::RoundUpToNextMultiple<7>(14), 14);
 }
+
+TEST(Numeric, RoundDownToNextMultiple_poweroftwo_test)
+{
+    EXPECT_EQ(PacBio::Numeric::RoundDownToNextMultiple<1>(0), 0);
+    EXPECT_EQ(PacBio::Numeric::RoundDownToNextMultiple<1>(1), 1);
+    EXPECT_EQ(PacBio::Numeric::RoundDownToNextMultiple<1>(2), 2);
+    EXPECT_EQ(PacBio::Numeric::RoundDownToNextMultiple<1>(3), 3);
+    EXPECT_EQ(PacBio::Numeric::RoundDownToNextMultiple<1>(4), 4);
+
+    EXPECT_EQ(PacBio::Numeric::RoundDownToNextMultiple<4>(0), 0);
+    EXPECT_EQ(PacBio::Numeric::RoundDownToNextMultiple<4>(1), 0);
+    EXPECT_EQ(PacBio::Numeric::RoundDownToNextMultiple<4>(2), 0);
+    EXPECT_EQ(PacBio::Numeric::RoundDownToNextMultiple<4>(3), 0);
+    EXPECT_EQ(PacBio::Numeric::RoundDownToNextMultiple<4>(4), 4);
+    EXPECT_EQ(PacBio::Numeric::RoundDownToNextMultiple<4>(5), 4);
+    EXPECT_EQ(PacBio::Numeric::RoundDownToNextMultiple<4>(7), 4);
+    EXPECT_EQ(PacBio::Numeric::RoundDownToNextMultiple<4>(8), 8);
+}
+
+TEST(Numeric, RoundDownToNextMultiple_nonpoweroftwo_test)
+{
+    EXPECT_EQ(PacBio::Numeric::RoundDownToNextMultiple<7>(0), 0);
+    EXPECT_EQ(PacBio::Numeric::RoundDownToNextMultiple<7>(1), 0);
+    EXPECT_EQ(PacBio::Numeric::RoundDownToNextMultiple<7>(2), 0);
+    EXPECT_EQ(PacBio::Numeric::RoundDownToNextMultiple<7>(5), 0);
+    EXPECT_EQ(PacBio::Numeric::RoundDownToNextMultiple<7>(6), 0);
+    EXPECT_EQ(PacBio::Numeric::RoundDownToNextMultiple<7>(7), 7);
+    EXPECT_EQ(PacBio::Numeric::RoundDownToNextMultiple<7>(8), 7);
+    EXPECT_EQ(PacBio::Numeric::RoundDownToNextMultiple<7>(9), 7);
+    EXPECT_EQ(PacBio::Numeric::RoundDownToNextMultiple<7>(14), 14);
+}
