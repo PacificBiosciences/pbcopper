@@ -86,4 +86,6 @@
 
 constexpr unsigned int PB_CUDA_WARP_SIZE = 32U;
 
+constexpr unsigned int PB_CUDA_FULL_MASK = 0xFFFF'FFFFU;
+
 #endif  // PBCOPPER_PBCOPPERCONFIG_H
