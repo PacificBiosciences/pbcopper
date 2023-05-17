@@ -25,7 +25,7 @@ public:
     /// \param beginPosV
     /// \param seedLength
     ///
-    Seed(uint64_t beginPosH, uint64_t beginPosV, uint64_t seedLength);
+    Seed(std::uint64_t beginPosH, std::uint64_t beginPosV, std::uint64_t seedLength);
 
     ///
     /// \brief Seed
@@ -34,26 +34,27 @@ public:
     /// \param endPosH
     /// \param endPosV
     ///
-    Seed(uint64_t beginPosH, uint64_t beginPosV, uint64_t endPosH, uint64_t endPosV);
+    Seed(std::uint64_t beginPosH, std::uint64_t beginPosV, std::uint64_t endPosH,
+         std::uint64_t endPosV);
 
 public:
     ///
     /// \brief BeginDiagonal
     /// \return
     ///
-    int64_t BeginDiagonal() const;
+    std::int64_t BeginDiagonal() const;
 
     ///
     /// \brief BeginPositionH
     /// \return
     ///
-    uint64_t BeginPositionH() const;
+    std::uint64_t BeginPositionH() const;
 
     ///
     /// \brief BeginPositionV
     /// \return
     ///
-    uint64_t BeginPositionV() const;
+    std::uint64_t BeginPositionV() const;
 
     ///
     /// \brief Diagonal
@@ -64,52 +65,52 @@ public:
     /// High numbers are closer to the upper-right, negative numbers
     /// closer to the lower-left.
     ///
-    /// \return int64_t The distance from the seed's upper-left corner and
+    /// \return std::int64_t The distance from the seed's upper-left corner and
     ///                 the diagonal axis of the matrix.
     ///
-    int64_t Diagonal() const;
+    std::int64_t Diagonal() const;
 
     ///
     /// \brief EndDiagonal
     /// \return
     ///
-    int64_t EndDiagonal() const;
+    std::int64_t EndDiagonal() const;
 
     ///
     /// \brief EndPositionH
     /// \return
     ///
-    uint64_t EndPositionH() const;
+    std::uint64_t EndPositionH() const;
 
     ///
     /// \brief EndPositionV
     /// \return
     ///
-    uint64_t EndPositionV() const;
+    std::uint64_t EndPositionV() const;
 
     ///
     /// \brief LowerDiagonal
     /// \return
     ///
-    int64_t LowerDiagonal() const;
+    std::int64_t LowerDiagonal() const;
 
     ///
     /// \brief UpperDiagonal
     /// \return
     ///
-    int64_t UpperDiagonal() const;
+    std::int64_t UpperDiagonal() const;
 
     ///
     /// \brief Score
     /// \return
     ///
-    int32_t Score() const;
+    std::int32_t Score() const;
 
     ///
     /// \brief Size
     /// \return
     ///
-    uint64_t Size() const;
+    std::uint64_t Size() const;
 
 public:
     ///
@@ -117,49 +118,49 @@ public:
     /// \param beginPosH
     /// \return
     ///
-    Seed& BeginPositionH(uint64_t beginPosH);
+    Seed& BeginPositionH(std::uint64_t beginPosH);
 
     ///
     /// \brief BeginPositionV
     /// \param beginPosV
     /// \return
     ///
-    Seed& BeginPositionV(uint64_t beginPosV);
+    Seed& BeginPositionV(std::uint64_t beginPosV);
 
     ///
     /// \brief EndPositionH
     /// \param endPosH
     /// \return
     ///
-    Seed& EndPositionH(uint64_t endPosH);
+    Seed& EndPositionH(std::uint64_t endPosH);
 
     ///
     /// \brief EndPositionV
     /// \param endPosV
     /// \return
     ///
-    Seed& EndPositionV(uint64_t endPosV);
+    Seed& EndPositionV(std::uint64_t endPosV);
 
     ///
     /// \brief LowerDiagonal
     /// \param lowerDiagonal
     /// \return
     ///
-    Seed& LowerDiagonal(int64_t lowerDiagonal);
+    Seed& LowerDiagonal(std::int64_t lowerDiagonal);
 
     ///
     /// \brief UpperDiagonal
     /// \param upperDiagonal
     /// \return
     ///
-    Seed& UpperDiagonal(int64_t upperDiagonal);
+    Seed& UpperDiagonal(std::int64_t upperDiagonal);
 
     ///
     /// \brief Score
     /// \param score
     /// \return
     ///
-    Seed& Score(int32_t score);
+    Seed& Score(std::int32_t score);
 
 public:
     ///
@@ -183,13 +184,13 @@ public:
     Seed operator+(const Seed& other) const;
 
 private:
-    uint64_t beginPositionH_ = 0;
-    uint64_t beginPositionV_ = 0;
-    uint64_t endPositionH_ = 0;
-    uint64_t endPositionV_ = 0;
-    int64_t lowerDiagonal_ = 0;
-    int64_t upperDiagonal_ = 0;
-    int32_t score_ = 0;
+    std::uint64_t beginPositionH_ = 0;
+    std::uint64_t beginPositionV_ = 0;
+    std::uint64_t endPositionH_ = 0;
+    std::uint64_t endPositionV_ = 0;
+    std::int64_t lowerDiagonal_ = 0;
+    std::int64_t upperDiagonal_ = 0;
+    std::int32_t score_ = 0;
 };
 
 ///

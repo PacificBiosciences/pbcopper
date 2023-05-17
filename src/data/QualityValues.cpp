@@ -21,14 +21,14 @@ QualityValues::QualityValues(std::vector<QualityValue> quals)
     : std::vector<QualityValue>{std::move(quals)}
 {}
 
-QualityValues::QualityValues(const std::vector<uint8_t>& quals)
+QualityValues::QualityValues(const std::vector<std::uint8_t>& quals)
     : std::vector<QualityValue>(quals.size())
 {
     std::copy(quals.cbegin(), quals.cend(), begin());
 }
 
-QualityValues::QualityValues(const std::vector<uint8_t>::const_iterator first,
-                             const std::vector<uint8_t>::const_iterator last)
+QualityValues::QualityValues(const std::vector<std::uint8_t>::const_iterator first,
+                             const std::vector<std::uint8_t>::const_iterator last)
     : std::vector<QualityValue>(first, last)
 {}
 
@@ -81,7 +81,7 @@ std::string QualityValues::Fastq() const
 {
     std::string result;
     result.resize(size());
-    int32_t counter = 0;
+    std::int32_t counter = 0;
     for (const auto& qv : *this) {
         result[counter++] = qv.Fastq();
     }

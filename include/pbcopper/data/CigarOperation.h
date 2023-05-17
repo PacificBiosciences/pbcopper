@@ -99,7 +99,7 @@ public:
 #ifdef __cpp_lib_is_constant_evaluated
         constexpr
 #endif
-        CigarOperation(const char c, const uint32_t length)
+        CigarOperation(const char c, const std::uint32_t length)
         : CigarOperation{CigarOperation::CharToType(c), length}
     {}
 
@@ -107,8 +107,8 @@ public:
 #ifdef __cpp_lib_is_constant_evaluated
         constexpr
 #endif
-        CigarOperation(const CigarOperationType op, const uint32_t length)
-        : data_{(length << 4) | static_cast<uint32_t>(op)}
+        CigarOperation(const CigarOperationType op, const std::uint32_t length)
+        : data_{(length << 4) | static_cast<std::uint32_t>(op)}
     {
 #ifndef __CUDA_ARCH__  // host
         if (
@@ -130,7 +130,10 @@ public:
     char Char() const;
 
     /// \returns operation length
-    PB_CUDA_HOST PB_CUDA_DEVICE constexpr uint32_t Length() const noexcept { return data_ >> 4; }
+    PB_CUDA_HOST PB_CUDA_DEVICE constexpr std::uint32_t Length() const noexcept
+    {
+        return data_ >> 4;
+    }
 
     /// \returns operation type as CigarOperationType enum value
     PB_CUDA_HOST PB_CUDA_DEVICE constexpr CigarOperationType Type() const noexcept
@@ -157,7 +160,7 @@ public:
     ///
     /// \param[in] length
     /// \returns reference to this operation
-    constexpr CigarOperation& Length(const uint32_t length) noexcept
+    constexpr CigarOperation& Length(const std::uint32_t length) noexcept
     {
         data_ = (data_ & 0b1111U) | (length << 4);
         return *this;
@@ -169,7 +172,7 @@ public:
     /// \returns reference to this operation
     constexpr CigarOperation& Type(const CigarOperationType opType) noexcept
     {
-        data_ = (data_ & ~0b1111U) | static_cast<uint32_t>(opType);
+        data_ = (data_ & ~0b1111U) | static_cast<std::uint32_t>(opType);
         return *this;
     }
 
@@ -198,7 +201,7 @@ private:
     // 4 least significant bits: the operation
     // 28 most significant bits: the length
 
-    uint32_t data_ = static_cast<uint32_t>(CigarOperationType::UNKNOWN_OP);
+    std::uint32_t data_ = static_cast<std::uint32_t>(CigarOperationType::UNKNOWN_OP);
 };
 
 bool ConsumesQuery(CigarOperationType type) noexcept;

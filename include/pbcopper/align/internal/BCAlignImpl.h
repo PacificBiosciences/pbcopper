@@ -60,7 +60,7 @@ private:
     StandardGlobalAlignBlock gapBlock_;
     BandedGlobalAlignBlock seedBlock_;
     std::string globalTranscript_;
-    int64_t globalScore_;
+    std::int64_t globalScore_;
     std::size_t gapBlockBeginH_;
     std::size_t gapBlockBeginV_;
     Sequences sequences_;

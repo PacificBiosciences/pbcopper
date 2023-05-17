@@ -10,7 +10,7 @@ namespace Pbmer {
  * The bases are duplicated for the iterator, avoiding strand checking
  */
 constexpr std::array<char, 8> BASES{'A', 'C', 'G', 'T', 'A', 'C', 'G', 'T'};
-constexpr std::array<uint8_t, 256> CLZ_LOOKUP{
+constexpr std::array<std::uint8_t, 256> CLZ_LOOKUP{
     8, 7, 6, 6, 5, 5, 5, 5, 4, 4, 4, 4, 4, 4, 4, 4, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3,
     2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
     1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
@@ -20,12 +20,12 @@ constexpr std::array<uint8_t, 256> CLZ_LOOKUP{
     0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
     0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
 
-DbgNode::DbgNode(const DnaBit& d, uint8_t o, uint32_t n) : dna_{d}, edges_{o}
+DbgNode::DbgNode(const DnaBit& d, std::uint8_t o, std::uint32_t n) : dna_{d}, edges_{o}
 {
     readIds2_.resize(n);
 }
 
-bool DbgNode::AddLoad(uint32_t rid)
+bool DbgNode::AddLoad(std::uint32_t rid)
 {
     readIds2_[rid - 1] = 1;
     return true;
@@ -51,7 +51,7 @@ int DbgNode::RightEdgeCount() const
     return Utility::PopCount(edges_ & 15);
 }
 
-void DbgNode::SetEdges(uint8_t o) { edges_ |= o; }
+void DbgNode::SetEdges(std::uint8_t o) { edges_ |= o; }
 
 int DbgNode::TotalEdgeCount() const { return Utility::PopCount(edges_ & 255); }
 

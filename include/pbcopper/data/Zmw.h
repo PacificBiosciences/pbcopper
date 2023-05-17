@@ -8,7 +8,7 @@
 namespace PacBio {
 namespace Data {
 
-typedef int32_t Zmw;
+typedef std::int32_t Zmw;
 
 }  // namespace Data
 }  // namespace PacBio

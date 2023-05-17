@@ -13,7 +13,7 @@ using namespace PacBio;
 
 TEST(Container_CapacityPointer, Basic)
 {
-    static int32_t deallocations = 0;
+    static std::int32_t deallocations = 0;
 
     {
         struct DummyAllocate

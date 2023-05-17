@@ -61,7 +61,7 @@ void AlignmentGraph::AddAlignment(Alignment& alignment, bool useLocalMerge)
 {
     const IndexMap index = boost::get(boost::vertex_index, graph_);
     // tracks the position on the backbone
-    uint32_t bbPos = alignment.Start;
+    std::uint32_t bbPos = alignment.Start;
     VertexIndex prevVtx = enterVertex_;
 
     if (useLocalMerge) {
@@ -419,7 +419,7 @@ void AlignmentGraph::ConsensusWithMinFlankCoverage(std::vector<ConsensusResult>&
         return;
     }
 
-    int64_t numClippedFront = 0;
+    std::int64_t numClippedFront = 0;
     auto startNode = path.begin();
     for (; startNode != path.end(); ++startNode, ++numClippedFront) {
         const AlignmentNode& n = *startNode;
@@ -429,8 +429,8 @@ void AlignmentGraph::ConsensusWithMinFlankCoverage(std::vector<ConsensusResult>&
     }
 
     auto endNode = path.end();
-    int64_t numClippedBack = 0;
-    for (int64_t i = pathLength - 1; i >= 0; --i, ++numClippedBack) {
+    std::int64_t numClippedBack = 0;
+    for (std::int64_t i = pathLength - 1; i >= 0; --i, ++numClippedBack) {
         if (path[i].Coverage >= minFlankCoverage) {
             break;
         }

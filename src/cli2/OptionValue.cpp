@@ -45,14 +45,14 @@ public:
 class Int64Converter
 {
 public:
-    int64_t operator()(int8_t x) const noexcept { return x; }
-    int64_t operator()(int16_t x) const noexcept { return x; }
-    int64_t operator()(int32_t x) const noexcept { return x; }
-    int64_t operator()(int64_t x) const noexcept { return x; }
+    std::int64_t operator()(std::int8_t x) const noexcept { return x; }
+    std::int64_t operator()(std::int16_t x) const noexcept { return x; }
+    std::int64_t operator()(std::int32_t x) const noexcept { return x; }
+    std::int64_t operator()(std::int64_t x) const noexcept { return x; }
 
     // anything else always throws
     template <typename T>
-    int64_t operator()(const T&) const
+    std::int64_t operator()(const T&) const
     {
         throw std::runtime_error{
             "[pbcopper] command line option ERROR: cannot convert value to integer"};
@@ -63,14 +63,14 @@ public:
 class UInt64Converter
 {
 public:
-    uint64_t operator()(uint8_t x) const noexcept { return x; }
-    uint64_t operator()(uint16_t x) const noexcept { return x; }
-    uint64_t operator()(uint32_t x) const noexcept { return x; }
-    uint64_t operator()(uint64_t x) const noexcept { return x; }
+    std::uint64_t operator()(std::uint8_t x) const noexcept { return x; }
+    std::uint64_t operator()(std::uint16_t x) const noexcept { return x; }
+    std::uint64_t operator()(std::uint32_t x) const noexcept { return x; }
+    std::uint64_t operator()(std::uint64_t x) const noexcept { return x; }
 
     // anything else always throws
     template <typename T>
-    uint64_t operator()(const T&) const
+    std::uint64_t operator()(const T&) const
     {
         throw std::runtime_error{
             "[pbcopper] command line option ERROR: cannot convert value to unsigned integer"};
@@ -106,8 +106,8 @@ const std::unordered_map<std::string, OptionValueType> stringToType{
 
 const std::vector<std::string> typeToString{
     // index follows our std::variant
-    "int8_t", "int16_t", "int32_t", "int64_t",
-    "uint8_t", "uint16_t", "uint32_t", "uint64_t",
+    "std::int8_t", "std::int16_t", "std::int32_t", "std::int64_t",
+    "std::uint8_t", "std::uint16_t", "std::uint32_t", "std::uint64_t",
     "double", "bool", "string"
 };
 // clang-format on
@@ -151,7 +151,7 @@ std::ostream& operator<<(std::ostream& out, const OptionValue& value)
 {
     const auto typeIndex = value.index();
     switch (typeIndex) {
-        // int8_t, int16_t, int32_t, int64_t
+        // std::int8_t, std::int16_t, std::int32_t, int64_t
         case 0:
         case 1:
         case 2:
@@ -160,7 +160,7 @@ std::ostream& operator<<(std::ostream& out, const OptionValue& value)
             break;
         }
 
-        // uint8_t, uint16_t, uint32_t, uint64_t
+        // std::uint8_t, std::uint16_t, std::uint32_t, uint64_t
         case 4:
         case 5:
         case 6:

@@ -190,7 +190,7 @@ private:
     VertexIndex exitVertex_;
     std::map<VertexIndex, VertexIndex> bbMap_;
     std::vector<VertexIndex> reaperBag_;
-    uint64_t backboneLength_;
+    std::uint64_t backboneLength_;
 };
 
 }  // namespace Dagcon

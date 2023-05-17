@@ -46,7 +46,7 @@ public:
     std::string alignedTarget_;
     std::string alignedQuery_;
     std::string transcript_;
-    int64_t score_;
+    std::int64_t score_;
 
 public:
     BandedChainAlignment() = default;
@@ -58,7 +58,7 @@ public:
 
 public:
     float Identity() const;
-    int64_t Score() const;
+    std::int64_t Score() const;
 };
 
 ///

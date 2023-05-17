@@ -31,7 +31,7 @@ public:
     /// \param kmerSize     kmer size in bp
     /// \param nr           number of sequences/reads
     ///
-    Dbg(uint8_t kmerSize, uint32_t nr);
+    Dbg(std::uint8_t kmerSize, std::uint32_t nr);
 
     ///
     /// Adds a Mers object to dbg
@@ -42,9 +42,9 @@ public:
     ///             -1 : kmer is too large.
     ///             -2 : kmer length is not odd.
     ///
-    int AddKmers(const PacBio::Pbmer::Mers& m, uint32_t rid);
+    int AddKmers(const PacBio::Pbmer::Mers& m, std::uint32_t rid);
 
-    void AddVerifedKmerPairs(std::vector<PacBio::Pbmer::DnaBit>& bits, uint32_t rid);
+    void AddVerifedKmerPairs(std::vector<PacBio::Pbmer::DnaBit>& bits, std::uint32_t rid);
 
     ///
     /// Iterates over node kmers and checks for all possible out/in bases
@@ -56,7 +56,7 @@ public:
     /// Iterates over node kmers and checks for all possible out/in bases
     /// {A, C, G, T} and sets the out/in edges based on neighbors.
     ///
-    std::vector<uint8_t> BuildVerifiedEdges(const std::vector<PacBio::Pbmer::DnaBit>& bits);
+    std::vector<std::uint8_t> BuildVerifiedEdges(const std::vector<PacBio::Pbmer::DnaBit>& bits);
 
     ///
     /// \return number of nodes in the graph
@@ -126,7 +126,7 @@ public:
     /// \brief Get the linear path vector
     ///
     /// \param x  the starting point of the search (lex smaller kmer) - uint64_t
-    std::vector<DnaBit> LinearPath(uint64_t x) const;
+    std::vector<DnaBit> LinearPath(std::uint64_t x) const;
 
     ///
     /// \return simple bubbles
@@ -151,19 +151,19 @@ public:
     ///
     /// \param n1       kmer1 - node key (lex smaller kmer) - uint64_t
     /// \param n2       kmer2 - node key (lex smaller kmer) - uint64_t
-    /// \param shared   node - uint64_t, the common neighbor
+    /// \param shared   node - std::uint64_t, the common neighbor
     ///
     /// \return true if two nodes share a neighbor
     ///
-    bool OneIntermediateNode(uint64_t n1, uint64_t n2, uint64_t* shared) const;
+    bool OneIntermediateNode(std::uint64_t n1, std::uint64_t n2, std::uint64_t* shared) const;
 
 private:
     // the whole graph structure and colors are stored here.
-    using rh = Container::UnorderedMap<uint64_t, DbgNode>;
+    using rh = Container::UnorderedMap<std::uint64_t, DbgNode>;
     rh dbg_;
     // kmer size up to 32
-    uint8_t kmerSize_;
-    uint32_t nReads_;
+    std::uint8_t kmerSize_;
+    std::uint32_t nReads_;
 
 public:
     using iterator = rh::iterator;

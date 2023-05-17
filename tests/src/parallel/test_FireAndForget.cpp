@@ -102,7 +102,7 @@ TEST(Parallel_FireAndForget, dispatch)
         vec.emplace_back(std::to_string(i));
     }
 
-    const auto Submit = [&vec](const int32_t i) {
+    const auto Submit = [&vec](const std::int32_t i) {
         std::string& input = vec[i];
         input = "done-" + input;
     };
@@ -122,7 +122,7 @@ TEST(Parallel_FireAndForget, dispatchSingleException)
 {
     PacBio::Parallel::FireAndForget faf{1};
 
-    auto SubmitExc = [](const int32_t) { throw std::runtime_error("faf abort"); };
+    auto SubmitExc = [](const std::int32_t) { throw std::runtime_error("faf abort"); };
 
     EXPECT_ANY_THROW(PacBio::Parallel::Dispatch(&faf, 1, SubmitExc));
 

@@ -18,7 +18,7 @@ namespace {
 constexpr std::array<char, 5> BASES{'A', 'C', 'G', 'T', '-'};
 
 // clang-format off
-constexpr std::array<uint8_t, 256> BASE_TABLE{
+constexpr std::array<std::uint8_t, 256> BASE_TABLE{
     255,255,255,255, 255,255,255,255, 255,255,255,255, 255,255,255,255,  // 15
     255,255,255,255, 255,255,255,255, 255,255,255,255, 255,255,255,255,  // 31
     //                                                     -
@@ -129,14 +129,14 @@ StrandRawData CalculateStrandRawData(const std::string& reference, const StrandI
             switch (opType) {
                 case Data::CigarOperationType::SEQUENCE_MATCH: {
                     for (int j = 0; j < opLength; ++j) {
-                        const int8_t base = seq[queryPos + j];
+                        const std::int8_t base = seq[queryPos + j];
                         ++result.BaseCounts[targetPos + j][BASE_TABLE[base]];
                     }
                     break;
                 }
                 case Data::CigarOperationType::SEQUENCE_MISMATCH: {
                     for (int j = 0; j < opLength; ++j) {
-                        const int8_t base = seq[queryPos + j];
+                        const std::int8_t base = seq[queryPos + j];
                         ++result.BaseCounts[targetPos + j][BASE_TABLE[base]];
                         result.PotentialMismatches[targetPos + j] = 1;
                     }
@@ -189,8 +189,8 @@ StrandRawData CalculateStrandRawData(const std::string& reference, const StrandI
 HeteroduplexResults FindHeteroduplex(
     const std::string& reference, const std::vector<std::string>& fwdSequences,
     const std::vector<std::string>& revSequences, const std::vector<Data::Cigar>& fwdCigars,
-    const std::vector<Data::Cigar>& revCigars, const std::vector<int32_t>& fwdPositions,
-    const std::vector<int32_t>& revPositions, const HeteroduplexSettings& settings)
+    const std::vector<Data::Cigar>& revCigars, const std::vector<std::int32_t>& fwdPositions,
+    const std::vector<std::int32_t>& revPositions, const HeteroduplexSettings& settings)
 {
     assert(fwdSequences.size() == fwdCigars.size());
     assert(fwdSequences.size() == fwdPositions.size());
@@ -210,7 +210,7 @@ HeteroduplexResults FindHeteroduplex(
     combinedSequences.insert(combinedSequences.end(), revSequences.begin(), revSequences.end());
     std::vector<Data::Cigar> combinedCigars = fwdCigars;
     combinedCigars.insert(combinedCigars.end(), revCigars.begin(), revCigars.end());
-    std::vector<int32_t> combinedPositions = fwdPositions;
+    std::vector<std::int32_t> combinedPositions = fwdPositions;
     combinedPositions.insert(combinedPositions.end(), revPositions.begin(), revPositions.end());
 
     // get data from CIGARs for base counts from combined strand input
@@ -242,8 +242,8 @@ HeteroduplexResults FindHeteroduplex(
     std::string fwdMostCommonBases = recalculatedReference;
     std::string revMostCommonBases = recalculatedReference;
 
-    std::vector<int32_t> variableSites;
-    std::vector<int32_t> significantSites;
+    std::vector<std::int32_t> variableSites;
+    std::vector<std::int32_t> significantSites;
     std::vector<char> significantBases;
 
     const int refLength = Utility::Ssize(reference);
@@ -364,14 +364,14 @@ HeteroduplexResults FindHeteroduplex(
     }
 
     // calculate results summary & return
-    const uint32_t numSignificantSites = significantSites.size();
-    const uint32_t numVariableSites = variableSites.size();
+    const std::uint32_t numSignificantSites = significantSites.size();
+    const std::uint32_t numVariableSites = variableSites.size();
     const double fractionSites =
         static_cast<double>(numSignificantSites) / std::max(1u, numVariableSites);
 
     return HeteroduplexResults{numSignificantSites,
                                numVariableSites,
-                               static_cast<uint32_t>(refLength),
+                               static_cast<std::uint32_t>(refLength),
                                fractionSites,
                                std::move(variableSites),
                                std::move(significantSites),
@@ -384,8 +384,9 @@ bool IsHeteroduplex(const std::string& reference, const std::vector<std::string>
                     const std::vector<std::string>& revSequences,
                     const std::vector<Data::Cigar>& fwdCigars,
                     const std::vector<Data::Cigar>& revCigars,
-                    const std::vector<int32_t>& fwdPositions,
-                    const std::vector<int32_t>& revPositions, const HeteroduplexSettings& settings)
+                    const std::vector<std::int32_t>& fwdPositions,
+                    const std::vector<std::int32_t>& revPositions,
+                    const HeteroduplexSettings& settings)
 {
     const HeteroduplexResults results =
         FindHeteroduplex(reference, fwdSequences, revSequences, fwdCigars, revCigars, fwdPositions,

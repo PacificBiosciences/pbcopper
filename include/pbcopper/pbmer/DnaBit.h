@@ -17,16 +17,16 @@ class DnaBit
 {
 public:
     // 32 DNA bases are packed into a uint64 (<<), empty slots are on the left.
-    uint64_t mer = 0;
+    std::uint64_t mer = 0;
     // Strand and size (in bp; bits = 2*bp).
     // Keeping the mer size in the class makes life a lot easier.
     // 0:+ forward strand ; 1:- reverse strand
-    uint8_t strand = 0;
-    uint8_t msize = 0;
+    std::uint8_t strand = 0;
+    std::uint8_t msize = 0;
 
     DnaBit();
 
-    DnaBit(uint64_t k, uint8_t strand, uint8_t size);
+    DnaBit(std::uint64_t k, std::uint8_t strand, std::uint8_t size);
 
     // Ignores strand, compares hashed kmer.
     bool operator>(DnaBit const& b) const noexcept;
@@ -56,12 +56,12 @@ public:
     ///
     /// \return the hashed kmer
     ///
-    uint64_t HashedKmer() const;
+    std::uint64_t HashedKmer() const;
 
     ///
     /// \return the rc hashed kmer
     ///
-    uint64_t RCHashedKmer() const;
+    std::uint64_t RCHashedKmer() const;
 
     ///
     /// \return the smaller DnaBit (forward/reverse).
@@ -74,14 +74,14 @@ public:
     DnaBit LexSmallerEqHashed() const;
 
     ///
-    /// \return the smaller uint64_t (forward/reverse).
+    /// \return the smaller std::uint64_t (forward/reverse).
     ///
-    uint64_t LexSmallerEq64() const;
+    std::uint64_t LexSmallerEq64() const;
 
     ///
-    /// \return the hashed smaller uint64_t (forward/reverse).
+    /// \return the hashed smaller std::uint64_t (forward/reverse).
     ///
-    uint64_t LexSmallerEq64Hashed() const;
+    std::uint64_t LexSmallerEq64Hashed() const;
 
     ///
     /// \places the smaller kmer (forward/reverse).
@@ -96,7 +96,7 @@ public:
     ///
     /// Count the longest di nuclotide run (AA,AT,AC,...)
     ///
-    uint8_t LongestDiNucRun() const;
+    std::uint8_t LongestDiNucRun() const;
 
     ///
     /// \return the kmer as a printable string;
@@ -111,38 +111,38 @@ public:
     ///
     /// Put a base at the end of the kmer
     //
-    void AppendBase(uint8_t c);
+    void AppendBase(std::uint8_t c);
     void AppendBase(char c);
 
     ///
     /// Put a base at the beginning of kmer
     ///
-    void PrependBase(uint8_t c);
+    void PrependBase(std::uint8_t c);
     void PrependBase(char c);
 
     ///
     /// Get the first idx
     /// \note see constexpr const std::array<char, 8> bases in cpp
     ///
-    uint8_t FirstBaseIdx() const;
+    std::uint8_t FirstBaseIdx() const;
 
     ///
     /// Get the last idx
     /// \note see constexpr const std::array<char, 8> bases in cpp
     ///
-    uint8_t LastBaseIdx() const;
+    std::uint8_t LastBaseIdx() const;
 
     ///
     /// Get the first idx
     /// \note see constexpr const std::array<char, 8> bases in cpp
     ///
-    uint8_t FirstBaseRCIdx() const;
+    std::uint8_t FirstBaseRCIdx() const;
 
     ///
     /// Get the last idx
     /// \note see constexpr const std::array<char, 8> bases in cpp
     ///
-    uint8_t LastBaseRCIdx() const;
+    std::uint8_t LastBaseRCIdx() const;
 
     ///
     /// Pack a DnaBit to an int128
@@ -169,7 +169,7 @@ public:
     ///
     /// Generate a bitmask for specific length of k-mer
     ///
-    uint64_t BitMask() const noexcept;
+    std::uint64_t BitMask() const noexcept;
 
     ///
     /// Return all kmers off by one base, includes the source kmer. NO indels.
@@ -178,12 +178,12 @@ public:
 };
 
 // This should remain a function, it has a lot of general utility.
-uint64_t ReverseComp64(uint64_t mer, uint8_t kmerSize);
+uint64_t ReverseComp64(std::uint64_t mer, std::uint8_t kmerSize);
 // This should remain a function, it has a lot of general utility.
-uint64_t Mix64Masked(uint64_t key, uint8_t kmerSize) noexcept;
+uint64_t Mix64Masked(std::uint64_t key, std::uint8_t kmerSize) noexcept;
 
 // Removed from DnaBit, allows you to compute Hamming Distance without a DnaBit object.
-int HammingDistance(uint64_t, uint64_t, int) noexcept;
+int HammingDistance(std::uint64_t, std::uint64_t, int) noexcept;
 
 ///
 /// Turn path to a DNA string.

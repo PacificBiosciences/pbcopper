@@ -5,17 +5,17 @@
 
 namespace PacBio {
 namespace Parallel {
-void Dispatch(Parallel::FireAndForget* const faf, const int32_t numEntries,
-              const std::function<void(int32_t)>& callback)
+void Dispatch(Parallel::FireAndForget* const faf, const std::int32_t numEntries,
+              const std::function<void(std::int32_t)>& callback)
 {
     if (faf) {
         std::exception_ptr exc;
         std::atomic_bool abort{false};
 
-        int32_t fafCounter{0};
+        std::int32_t fafCounter{0};
         std::condition_variable condVar;
         std::mutex m;
-        const auto Submit = [&](int32_t i) {
+        const auto Submit = [&](std::int32_t i) {
             try {
                 callback(i);
             } catch (...) {
@@ -32,7 +32,7 @@ void Dispatch(Parallel::FireAndForget* const faf, const int32_t numEntries,
             }
         };
 
-        for (int32_t i = 0; i < numEntries; ++i) {
+        for (std::int32_t i = 0; i < numEntries; ++i) {
             faf->ProduceWith(Submit, i);
         }
 
@@ -47,7 +47,7 @@ void Dispatch(Parallel::FireAndForget* const faf, const int32_t numEntries,
             std::rethrow_exception(exc);
         }
     } else {
-        for (int32_t i = 0; i < numEntries; ++i) {
+        for (std::int32_t i = 0; i < numEntries; ++i) {
             callback(i);
         }
     }

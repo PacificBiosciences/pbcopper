@@ -301,7 +301,7 @@ TEST(Pbmer_DnaBit, correct_dinuc_count_zero)
 TEST(Pbmer_DnaBit, correct_dinuc_long_kmer)
 {
     const std::string kmerstr = "TCAGAGCGCTGTGAGACAGCACTCTGA";
-    const PacBio::Pbmer::Parser parser{static_cast<uint8_t>(27)};
+    const PacBio::Pbmer::Parser parser{static_cast<std::uint8_t>(27)};
     std::vector<PacBio::Pbmer::DnaBit> one = parser.ParseDnaBit(kmerstr);
     EXPECT_EQ(int(one.front().LongestDiNucRun()), 2);
 }
@@ -309,7 +309,7 @@ TEST(Pbmer_DnaBit, correct_dinuc_long_kmer)
 TEST(Pbmer_DnaBit, DnaBitVec2String)
 {
     const std::string kmerstr = "TCAGAGCGCTGTGAGATTTAAACAGCACTCTGA";
-    const PacBio::Pbmer::Parser parser{static_cast<uint8_t>(27)};
+    const PacBio::Pbmer::Parser parser{static_cast<std::uint8_t>(27)};
     std::vector<PacBio::Pbmer::DnaBit> kms = parser.ParseDnaBit(kmerstr);
     EXPECT_EQ(PacBio::Pbmer::DnaBitVec2String(kms), kmerstr);
 }
@@ -317,7 +317,7 @@ TEST(Pbmer_DnaBit, DnaBitVec2String)
 TEST(Pbmer_DnaBit, DnaBitVec2String_lex)
 {
     const std::string kmerstr = "TCAGAGCGCTGTGAGATTTAAACAGCACTCTGA";
-    const PacBio::Pbmer::Parser parser{static_cast<uint8_t>(27)};
+    const PacBio::Pbmer::Parser parser{static_cast<std::uint8_t>(27)};
     std::vector<PacBio::Pbmer::DnaBit> kms = parser.ParseDnaBit(kmerstr);
     for (auto i : kms) {
         i.MakeLexSmaller();

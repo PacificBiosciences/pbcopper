@@ -21,7 +21,7 @@ namespace Container {
 /// tightly packed std::vector that is constexpr and GPU friendly. It is the
 /// semantic equivalent of boost::container::static_vector<TotalBits / ElementBits>.
 ///
-template <int32_t TotalBits, int32_t ElementBits>
+template <std::int32_t TotalBits, std::int32_t ElementBits>
 class BitContainer : protected BitmaskContainer<TotalBits, ElementBits>
 {
 private:
@@ -38,7 +38,7 @@ public:
     constexpr BitContainer() noexcept = default;
 
     PB_CUDA_HOST PB_CUDA_DEVICE constexpr BitContainer(const UnderlyingType val,
-                                                       const int32_t size) noexcept
+                                                       const std::int32_t size) noexcept
         : Base{val}, size_{size}
     {
         assert(size_ >= 0);
@@ -53,7 +53,8 @@ public:
     }
 
 protected:
-    constexpr BitContainer(const Base val, const int32_t size) noexcept : Base(val), size_{size}
+    constexpr BitContainer(const Base val, const std::int32_t size) noexcept
+        : Base(val), size_{size}
     {
         assert(size_ >= 0);
         assert(size_ <= Capacity());
@@ -63,7 +64,7 @@ public:
     template <typename Callable, typename T>
     constexpr static BitContainer MakeFromTransform(Callable transform, const T& input) noexcept
     {
-        return {Base::MakeFromTransform(transform, input), static_cast<int32_t>(input.size())};
+        return {Base::MakeFromTransform(transform, input), static_cast<std::int32_t>(input.size())};
     }
 
     template <typename... Args>
@@ -76,9 +77,10 @@ public:
     using Base::Capacity;
     using Base::MAXIMUM_VALUE;
 
-    PB_CUDA_HOST PB_CUDA_DEVICE constexpr int32_t Size() const noexcept { return size_; }
+    PB_CUDA_HOST PB_CUDA_DEVICE constexpr std::int32_t Size() const noexcept { return size_; }
 
-    PB_CUDA_HOST PB_CUDA_DEVICE constexpr ValueType operator[](const int32_t idx) const noexcept
+    PB_CUDA_HOST PB_CUDA_DEVICE constexpr ValueType operator[](
+        const std::int32_t idx) const noexcept
     {
         assert(idx < Size());
 
@@ -92,14 +94,15 @@ public:
         size_ = 0;
     }
 
-    PB_CUDA_HOST PB_CUDA_DEVICE constexpr void Set(const int32_t idx, const ValueType val) noexcept
+    PB_CUDA_HOST PB_CUDA_DEVICE constexpr void Set(const std::int32_t idx,
+                                                   const ValueType val) noexcept
     {
         assert(idx < Size());
 
         Base::Set(idx, val);
     }
 
-    PB_CUDA_HOST PB_CUDA_DEVICE constexpr void Remove(const int32_t idx) noexcept
+    PB_CUDA_HOST PB_CUDA_DEVICE constexpr void Remove(const std::int32_t idx) noexcept
     {
         assert(idx < Size());
 
@@ -107,7 +110,7 @@ public:
         --size_;
     }
 
-    PB_CUDA_HOST PB_CUDA_DEVICE constexpr void Insert(const int32_t idx,
+    PB_CUDA_HOST PB_CUDA_DEVICE constexpr void Insert(const std::int32_t idx,
                                                       const ValueType val) noexcept
     {
         assert(idx <= Size());
@@ -136,12 +139,12 @@ public:
 
         Base::Reverse();
 
-        const int32_t unusedElems = Capacity() - max(1, Size());
+        const std::int32_t unusedElems = Capacity() - max(1, Size());
         Base::data_ >>= (ElementBits * unusedElems);
     }
 
-    PB_CUDA_HOST PB_CUDA_DEVICE constexpr BitContainer Range(const int32_t pos,
-                                                             const int32_t len) const noexcept
+    PB_CUDA_HOST PB_CUDA_DEVICE constexpr BitContainer Range(const std::int32_t pos,
+                                                             const std::int32_t len) const noexcept
     {
 #ifndef __CUDA_ARCH__  // host
         using std::min;
@@ -151,8 +154,8 @@ public:
         assert(pos <= Size());
         assert(len >= 0);
 
-        const int32_t pastEndIdx = min(Size(), pos + len);
-        const int32_t unusedElems = Capacity() - pastEndIdx;
+        const std::int32_t pastEndIdx = min(Size(), pos + len);
+        const std::int32_t unusedElems = Capacity() - pastEndIdx;
 
         if ((unusedElems == Capacity()) || (pos == Capacity())) {
             // avoid UB by shifting TotalBits
@@ -184,14 +187,14 @@ public:
     friend std::ostream& operator<<(std::ostream& os, const BitContainer& cont)
     {
         os << "BitContainer(Size=" << cont.Size() << ", BitmaskContainer(";
-        for (int32_t i = 0; i < cont.Size(); ++i) {
+        for (std::int32_t i = 0; i < cont.Size(); ++i) {
             os << (i ? ", " : "") << cont[i];
         }
         return os << ')';
     }
 
 protected:
-    int32_t size_ = 0;
+    std::int32_t size_ = 0;
 };
 
 }  // namespace Container

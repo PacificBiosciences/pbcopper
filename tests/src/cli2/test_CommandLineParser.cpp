@@ -772,8 +772,8 @@ TEST(CLI2_CommandLineParser, can_interpret_numerics_with_si_suffix)
         "-z", "3.14G"
     });
 
-    const uint64_t x = results[UIntOption];
-    const int64_t y = results[IntOption];
+    const std::uint64_t x = results[UIntOption];
+    const std::int64_t y = results[IntOption];
     const double z = results[FloatOption];
 
     EXPECT_EQ(x, 42'000);
@@ -822,8 +822,8 @@ TEST(CLI2_CommandLineParser, can_interpret_numerics_with_scientific_notation)
         "-z", "1.2e-4"
     });
 
-    const uint64_t x = results[UIntOption];
-    const int64_t y = results[IntOption];
+    const std::uint64_t x = results[UIntOption];
+    const std::int64_t y = results[IntOption];
     const double z = results[FloatOption];
 
     EXPECT_EQ(x, 1'500'000);

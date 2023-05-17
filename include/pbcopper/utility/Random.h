@@ -8,7 +8,7 @@
 namespace PacBio {
 namespace Utility {
 
-uint64_t WyHash64Step(uint64_t& seed) noexcept;
+uint64_t WyHash64Step(std::uint64_t& seed) noexcept;
 
 }  // namespace Utility
 }  // namespace PacBio

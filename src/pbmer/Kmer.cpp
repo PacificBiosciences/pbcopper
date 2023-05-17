@@ -14,7 +14,8 @@ Kmer::Kmer() = default;
 
 Kmer::Kmer(Data::Strand s) : strand{std::move(s)} {}
 
-Kmer::Kmer(uint64_t k, uint32_t p, Data::Strand s) : mer{k}, pos{p}, strand{std::move(s)} {}
+Kmer::Kmer(std::uint64_t k, std::uint32_t p, Data::Strand s) : mer{k}, pos{p}, strand{std::move(s)}
+{}
 
 bool Kmer::operator==(const Kmer& b) const noexcept
 {
@@ -23,15 +24,15 @@ bool Kmer::operator==(const Kmer& b) const noexcept
 
 bool Kmer::operator!=(const Kmer& b) const noexcept { return !(*this == b); }
 
-std::string Kmer::KmerToStr(uint8_t kmerSize) const
+std::string Kmer::KmerToStr(std::uint8_t kmerSize) const
 {
     std::string bases;
     bases.resize(kmerSize);
 
     constexpr std::array<char, 4> LOOKUP_TABLE{'A', 'C', 'G', 'T'};
-    uint8_t i = 0;
-    uint64_t tmp = 0;
-    uint64_t offset = 0;
+    std::uint8_t i = 0;
+    std::uint64_t tmp = 0;
+    std::uint64_t offset = 0;
 
     while (i < kmerSize) {
         tmp = mer;
@@ -44,16 +45,16 @@ std::string Kmer::KmerToStr(uint8_t kmerSize) const
     return bases;
 }
 
-bool Kmer::LexSmaller(const Kmer& b, uint8_t kmerSize) const
+bool Kmer::LexSmaller(const Kmer& b, std::uint8_t kmerSize) const
 {
-    const uint64_t mask = (1ull << 2 * kmerSize) - 1;
+    const std::uint64_t mask = (1ull << 2 * kmerSize) - 1;
     return Mers::Mix64Masked(mer, mask) <= Mers::Mix64Masked(b.mer, mask);
 }
 
-void Kmer::ReverseComp(uint8_t kmerSize)
+void Kmer::ReverseComp(std::uint8_t kmerSize)
 {
-    const uint64_t tmp = ~mer;
-    uint64_t rv = 0;
+    const std::uint64_t tmp = ~mer;
+    std::uint64_t rv = 0;
 
     for (std::size_t i = 0; i < kmerSize; i++) {
         rv <<= 2;

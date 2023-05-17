@@ -10,7 +10,7 @@ TEST(Container_DNAString, ConstexprFixed32)
 {
     constexpr Container::DNA2bitStringFixed32 CONSTEXPR_BCT{"TCAGAGTCGTCCAAGG"};
 
-    EXPECT_EQ(sizeof(CONSTEXPR_BCT), sizeof(uint32_t));
+    EXPECT_EQ(sizeof(CONSTEXPR_BCT), sizeof(std::uint32_t));
     EXPECT_EQ(CONSTEXPR_BCT.Capacity(), 16);
 
     EXPECT_EQ(CONSTEXPR_BCT[0], 3);
@@ -41,7 +41,7 @@ TEST(Container_DNAString, ConstexprVariable32)
 {
     constexpr Container::DNA2bitStringVariable32 CONSTEXPR_BCT{"TCAGAGTCGTCCAAGG"};
 
-    EXPECT_EQ(sizeof(CONSTEXPR_BCT), 2 * sizeof(uint32_t));
+    EXPECT_EQ(sizeof(CONSTEXPR_BCT), 2 * sizeof(std::uint32_t));
     EXPECT_EQ(CONSTEXPR_BCT.Capacity(), 16);
     EXPECT_EQ(CONSTEXPR_BCT.Size(), 16);
     EXPECT_EQ(CONSTEXPR_BCT.Size(), CONSTEXPR_BCT.Length());
@@ -68,7 +68,7 @@ TEST(Container_DNAString, ConstexprVariable64ReverseCompl)
 {
     constexpr Container::DNA2bitStringVariable64 CONSTEXPR_BCT{"TCAG"};
 
-    EXPECT_EQ(sizeof(CONSTEXPR_BCT), 2 * sizeof(uint64_t));
+    EXPECT_EQ(sizeof(CONSTEXPR_BCT), 2 * sizeof(std::uint64_t));
     EXPECT_EQ(CONSTEXPR_BCT.Capacity(), 32);
     EXPECT_EQ(CONSTEXPR_BCT.Size(), 4);
     EXPECT_EQ(CONSTEXPR_BCT.Size(), CONSTEXPR_BCT.Length());

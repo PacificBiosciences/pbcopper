@@ -76,7 +76,7 @@ Read::Read(const std::string& name, std::string seq, QualityValues qualities, SN
     , SignalToNoise{std::move(snr)}
 {}
 
-Read Read::ClipTo(const int32_t begin, const int32_t end) const
+Read Read::ClipTo(const std::int32_t begin, const std::int32_t end) const
 {
     Read copy{this->Id,
               this->Seq.substr(begin, end - begin),

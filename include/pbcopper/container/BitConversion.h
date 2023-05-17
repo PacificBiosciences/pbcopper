@@ -60,22 +60,23 @@ namespace Container {
 //    31:   09 d0                   or     eax,edx
 //    33:   c3                      ret
 template <bool complement = false, bool checked = false>
-PB_CUDA_HOST PB_CUDA_DEVICE constexpr int32_t ConvertAsciiTo2bit(const unsigned char base) noexcept
+PB_CUDA_HOST PB_CUDA_DEVICE constexpr std::int32_t ConvertAsciiTo2bit(
+    const unsigned char base) noexcept
 {
-    const int32_t truncatedBase = base & 0b1'1111;
+    const std::int32_t truncatedBase = base & 0b1'1111;
 
-    uint32_t invalidBits = 0;
+    std::uint32_t invalidBits = 0;
     if constexpr (checked) {
         // check the least-significant 5 bits
         constexpr auto LSB_INVALID_LOOKUP_TABLE = Container::BitmaskContainer<32, 1>::MakeFromArray(
             1, 0 /*A*/, 1, 0 /*C*/, 1, 1, 1, 0 /*G*/, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0 /*T*/,
             1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1);
-        const uint32_t lsbCheckResult = 4 * LSB_INVALID_LOOKUP_TABLE[truncatedBase];
+        const std::uint32_t lsbCheckResult = 4 * LSB_INVALID_LOOKUP_TABLE[truncatedBase];
 
         // check the most-significant 3 bits
         constexpr auto MSB_INVALID_LOOKUP_TABLE =
             Container::BitmaskContainer<32, 4>::MakeFromArray(4, 4, 0, 0, 4, 4, 4, 4);
-        const uint32_t msbCheckResult = MSB_INVALID_LOOKUP_TABLE[base >> 5];
+        const std::uint32_t msbCheckResult = MSB_INVALID_LOOKUP_TABLE[base >> 5];
 
         invalidBits = lsbCheckResult | msbCheckResult;
     } else {
@@ -83,12 +84,12 @@ PB_CUDA_HOST PB_CUDA_DEVICE constexpr int32_t ConvertAsciiTo2bit(const unsigned 
                (base == 'c') || (base == 'g') || (base == 't'));
     }
 
-    constexpr uint32_t LOOKUP_TABLE{complement
-                                        //  _^]\[ZYXWVUTSRQPONMLKJIHGFEDCBA@ [64, 96)
-                                        //   ~}|{zyxwvutsrqponmlkjihgfedcba` [96, 128)
-                                        //            ┌┤           ┌┤  ┌┤┌┤
-                                        ? 0b00000000000000000000000010010110
-                                        : 0b00000000001100000000000100001000};
+    constexpr std::uint32_t LOOKUP_TABLE{complement
+                                             //  _^]\[ZYXWVUTSRQPONMLKJIHGFEDCBA@ [64, 96)
+                                             //   ~}|{zyxwvutsrqponmlkjihgfedcba` [96, 128)
+                                             //            ┌┤           ┌┤  ┌┤┌┤
+                                             ? 0b00000000000000000000000010010110
+                                             : 0b00000000001100000000000100001000};
 
     return invalidBits | ((LOOKUP_TABLE >> truncatedBase) & 0b11);
 }
@@ -100,7 +101,7 @@ PB_CUDA_HOST PB_CUDA_DEVICE constexpr int32_t ConvertAsciiTo2bit(const unsigned 
 //   3:   b8 41 43 47 54          mov    eax,0x54474341
 //   8:   c4 e2 43 f7 c0          shrx   eax,eax,edi
 //   d:   c3                      ret
-PB_CUDA_HOST PB_CUDA_DEVICE constexpr char Convert2bitToAscii(const int32_t val) noexcept
+PB_CUDA_HOST PB_CUDA_DEVICE constexpr char Convert2bitToAscii(const std::int32_t val) noexcept
 {
     constexpr auto LOOKUP_TABLE =
         Container::BitmaskContainer<32, 8>::MakeFromArray('A', 'C', 'G', 'T');

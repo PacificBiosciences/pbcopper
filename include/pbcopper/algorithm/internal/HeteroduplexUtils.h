@@ -39,7 +39,7 @@ struct StrandInput
 {
     const std::vector<std::string>& Sequences;
     const std::vector<Data::Cigar>& Cigars;
-    const std::vector<int32_t>& Positions;
+    const std::vector<std::int32_t>& Positions;
 };
 
 ///
@@ -52,7 +52,7 @@ struct StrandRawData
 
     std::vector<int> NumReads;  // includes reads with deletion at position
     std::vector<BaseCount> BaseCounts;
-    std::vector<uint8_t> PotentialMismatches;
+    std::vector<std::uint8_t> PotentialMismatches;
     std::vector<std::vector<std::string_view>> Insertions;
 };
 

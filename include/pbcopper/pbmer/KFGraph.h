@@ -38,7 +38,7 @@ public:
        \param kmerSize     kmer size in bp
        \param nr           number of sequences/reads
     */
-    KFG(uint8_t kmerSize, std::size_t nr);
+    KFG(std::uint8_t kmerSize, std::size_t nr);
 
 public:
     /*!
@@ -90,7 +90,7 @@ public:
        \param x  the starting point of the search (lex smaller kmer) - uint64_t
        \return nodes in the path including the starting node
     */
-    std::vector<KFNode> LinearPath(uint64_t x) const;
+    std::vector<KFNode> LinearPath(std::uint64_t x) const;
 
     /*!
        \brief write the graph to a dot file.
@@ -108,7 +108,7 @@ public:
        \brief Get the number of in-edges across entire graph
        \return number (sum) of in edges across the graph
     */
-    int32_t InEdgeCount() const;
+    std::int32_t InEdgeCount() const;
 
     /*!
        \brief Checks to see if a node is present and then checks the kmers match. It's a nuisance function needed for resolving repeats.
@@ -116,14 +116,14 @@ public:
        \param hashedKmer the hashed kmer value, used as the key in the graph rather than the kmer sequence
        \return The node key
     */
-    uint64_t Knock(const DnaBit& b, uint64_t hashedKmer) const;
+    std::uint64_t Knock(const DnaBit& b, std::uint64_t hashedKmer) const;
 
     /*!
        \brief Get the number of matching kmers in the KFG
        \param bits Dnabit (kmer) vector
        \return count of matches
     */
-    int32_t MatchCount(const std::vector<DnaBit>& bits) const;
+    std::int32_t MatchCount(const std::vector<DnaBit>& bits) const;
 
     /*!
        \brief Checks the number of forward and reverse matching nodes in the graph
@@ -135,19 +135,19 @@ public:
        \brief Get node count in the graph (DNABit/Kmer count)
        \return number of nodes in the graph
     */
-    int32_t NNodes() const;
+    std::int32_t NNodes() const;
 
     /*!
        \brief Resolve repeat function. This function should only be used by advanced users.
     */
-    uint64_t OpenDoor(const std::vector<DnaBit>& bits, uint64_t hashedKmer, uint32_t rid,
-                      std::size_t i, std::size_t j) const;
+    std::uint64_t OpenDoor(const std::vector<DnaBit>& bits, std::uint64_t hashedKmer,
+                           std::uint32_t rid, std::size_t i, std::size_t j) const;
 
     /*!
        \brief Get number of out-edges across the graph
        \return number (sum) of out edges across the graph
     */
-    int32_t OutEdgeCount() const;
+    std::int32_t OutEdgeCount() const;
 
     /*!
        \brief Checks the the edges describe links to valid nodes (i.e. in the robin_map). Only useful for development.
@@ -161,7 +161,7 @@ public:
     */
     bool ValidateLoad() const;
 
-    std::unordered_map<std::string, uint32_t> Header() const;
+    std::unordered_map<std::string, std::uint32_t> Header() const;
 
     /*!
        \brief write the graph to a dot format file.
@@ -177,19 +177,19 @@ private:
     /*!
        \brief the recursive function to generate unitigs
     */
-    bool NextUtg(uint64_t currentNode, std::unordered_set<uint64_t>& seen,
+    bool NextUtg(std::uint64_t currentNode, std::unordered_set<std::uint64_t>& seen,
                  std::vector<std::string>& segments, std::vector<std::string>& links) const;
 
 private:
     // the whole graph structure and colors are stored here.
-    using rh = robin_hood::unordered_map<uint64_t, KFNode>;
+    using rh = robin_hood::unordered_map<std::uint64_t, KFNode>;
     rh kfg_;
     // kmer size up to 32
-    uint8_t kmerSize_;
+    std::uint8_t kmerSize_;
     std::size_t nReads_;
     // header information
-    std::unordered_map<std::string, uint32_t> nameToId_;
-    std::unordered_map<uint32_t, std::string> idToName_;
+    std::unordered_map<std::string, std::uint32_t> nameToId_;
+    std::unordered_map<std::uint32_t, std::string> idToName_;
 
 public:
     using iterator = rh::iterator;

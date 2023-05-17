@@ -10,7 +10,7 @@
 namespace PacBio {
 namespace Data {
 
-using Position = int32_t;
+using Position = std::int32_t;
 
 constexpr inline Position UNMAPPED_POSITION = -1;
 constexpr inline Position MAXIMUM_POSITION = std::numeric_limits<decltype(MAXIMUM_POSITION)>::max();

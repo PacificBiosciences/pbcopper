@@ -149,7 +149,7 @@ std::ostream& operator<<(std::ostream& out, const Alarm& alarm)
 }
 
 AlarmException::AlarmException(std::string sourceFilename, std::string functionName,
-                               int32_t lineNumber, std::string name, std::string message,
+                               std::int32_t lineNumber, std::string name, std::string message,
                                std::string severity, std::string info,
                                std::string exception) noexcept
     : sourceFilename_{std::move(sourceFilename)}
@@ -163,7 +163,7 @@ AlarmException::AlarmException(std::string sourceFilename, std::string functionN
 {}
 
 AlarmException::AlarmException(std::string sourceFilename, std::string functionName,
-                               int32_t lineNumber, AlarmType type, std::string message,
+                               std::int32_t lineNumber, AlarmType type, std::string message,
                                std::string severity, std::string info,
                                std::string exception) noexcept
     : AlarmException{std::move(sourceFilename), std::move(functionName), lineNumber,

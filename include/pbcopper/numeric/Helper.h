@@ -10,18 +10,18 @@
 namespace PacBio {
 namespace Numeric {
 
-PB_CUDA_HOST PB_CUDA_DEVICE constexpr bool IsPowerOfTwo(const uint32_t x) noexcept
+PB_CUDA_HOST PB_CUDA_DEVICE constexpr bool IsPowerOfTwo(const std::uint32_t x) noexcept
 {
     return (x != 0) && ((x & (x - 1)) == 0);
 }
 
-constexpr uint32_t NextPowerOfTwo(const uint32_t x) noexcept
+constexpr std::uint32_t NextPowerOfTwo(const std::uint32_t x) noexcept
 {
     assert(x > 1);
     return 1U << (32 - __builtin_clz(x - 1));
 }
 
-template <uint32_t multiple, typename T>
+template <std::uint32_t multiple, typename T>
 PB_CUDA_HOST PB_CUDA_DEVICE constexpr T RoundUpDivision(const T x) noexcept
 {
     static_assert(multiple > 0, "multiple is 0");
@@ -33,7 +33,7 @@ PB_CUDA_HOST PB_CUDA_DEVICE constexpr T RoundUpDivision(const T x) noexcept
     return (x + (MULTIPLE - 1U)) / MULTIPLE;
 }
 
-template <uint32_t multiple, typename T>
+template <std::uint32_t multiple, typename T>
 PB_CUDA_HOST PB_CUDA_DEVICE constexpr T RoundDownDivision(const T x) noexcept
 {
     static_assert(multiple > 0, "multiple is 0");
@@ -45,7 +45,7 @@ PB_CUDA_HOST PB_CUDA_DEVICE constexpr T RoundDownDivision(const T x) noexcept
     return x / MULTIPLE;
 }
 
-template <uint32_t multiple, typename T>
+template <std::uint32_t multiple, typename T>
 PB_CUDA_HOST PB_CUDA_DEVICE constexpr T RoundUpToNextMultiple(const T x) noexcept
 {
     static_assert(std::is_integral_v<T>, "T is not an integral type");
@@ -55,7 +55,7 @@ PB_CUDA_HOST PB_CUDA_DEVICE constexpr T RoundUpToNextMultiple(const T x) noexcep
     return RoundUpDivision<multiple>(x) * MULTIPLE;
 }
 
-template <uint32_t multiple, typename T>
+template <std::uint32_t multiple, typename T>
 PB_CUDA_HOST PB_CUDA_DEVICE constexpr T RoundDownToNextMultiple(const T x) noexcept
 {
     static_assert(std::is_integral_v<T>, "T is not an integral type");

@@ -19,9 +19,9 @@ public:
     /// A special hash function `cuz u64 kmers requires a mix_64_masked
     /// BADBOY: https://gist.github.com/badboy/6267743#64-bit-mix-functions
     ///
-    static uint64_t Mix64Masked(uint64_t key, uint64_t mask);
+    static std::uint64_t Mix64Masked(std::uint64_t key, std::uint64_t mask);
 
-    explicit Mers(uint8_t /*kmerSize*/ kSize);
+    explicit Mers(std::uint8_t /*kmerSize*/ kSize);
 
     ///
     /// Insert a new kmer into the mers lists
@@ -44,7 +44,7 @@ public:
     ///
     std::vector<Kmer> BuildNMPs() const;
 
-    uint8_t kmerSize;  // width of the kmers - must be smaller than 32 DNA bases
+    std::uint8_t kmerSize;  // width of the kmers - must be smaller than 32 DNA bases
     std::vector<Kmer> forward;
     std::vector<Kmer> reverse;
     std::vector<Kmer> minimizers;

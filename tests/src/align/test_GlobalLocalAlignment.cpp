@@ -103,25 +103,25 @@ TEST(Align_GlobalLocalAlignment, random)
     const std::string query{"GTGTTAAAGTGTTAAA"};
     std::string target2{
         "GTATGAGTAGAGGTAGTAGTATGTAGTAGTAGTGTAGTAGTGTAGTAGTAGTGTAGTAGTGTATGGATAGTAGAGTAGAT"};
-    for (int32_t i = 0; i < 8; ++i) {
+    for (std::int32_t i = 0; i < 8; ++i) {
         target2 = target2 + target2;
     }
     std::cerr << target2.size() << '\n';
     const std::string query2{"TGATAGAGTATGAGTA"};
     GlobalLocalParameters params{4, -4, -3, -3, -2, -2};
     GlobalLocalResult result;
-    std::vector<int32_t> matrix;
+    std::vector<std::int32_t> matrix;
     PacBio::Utility::Stopwatch t;
-    const int32_t rounds = 5000;
+    const std::int32_t rounds = 5000;
     GlobalLocalStorage storage{};
-    for (int32_t i = 0; i < rounds * 1000; ++i) {
+    for (std::int32_t i = 0; i < rounds * 1000; ++i) {
         result = GlobalLocalAlign(query, target, params, storage);
     }
     t.Freeze();
-    int64_t time = t.ElapsedNanoseconds() / rounds / 1000;
+    std::int64_t time = t.ElapsedNanoseconds() / rounds / 1000;
     std::cerr << t.PrettyPrintNanoseconds(time) << '\n';
     t.Reset();
-    for (int32_t i = 0; i < rounds; ++i) {
+    for (std::int32_t i = 0; i < rounds; ++i) {
         result = GlobalLocalAlign(query2, target2, params, storage);
     }
     t.Freeze();

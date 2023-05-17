@@ -14,7 +14,7 @@
 namespace PacBio {
 namespace Pbmer {
 
-constexpr std::array<uint8_t, 256> ASCII_TO_DNA{
+constexpr std::array<std::uint8_t, 256> ASCII_TO_DNA{
     0, 1, 2, 3, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4,
     4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4,
     4, 0, 4, 1, 4, 4, 4, 2, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 3, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4,
@@ -27,7 +27,7 @@ constexpr std::array<uint8_t, 256> ASCII_TO_DNA{
 class Parser
 {
 public:
-    explicit Parser(uint8_t kmerSize);
+    explicit Parser(std::uint8_t kmerSize);
 
     ///
     /// Converts a std::string into a mers (lists of forward and reverse kmers)
@@ -55,9 +55,9 @@ public:
     void RLE(std::string& dna) const;
 
 private:
-    uint8_t kmerSize_;
-    uint64_t mask_;
-    uint64_t shift1_;
+    std::uint8_t kmerSize_;
+    std::uint64_t mask_;
+    std::uint64_t shift1_;
 };
 
 }  // namespace Pbmer

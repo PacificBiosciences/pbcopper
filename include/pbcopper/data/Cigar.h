@@ -146,8 +146,8 @@ bool ConvertCigarToM5(const std::string& ref, const std::string& query, bool qRe
 ///
 /// \return success/failure
 ///
-bool ConvertCigarToM5(const std::string& ref, const std::string& query, int32_t rStart,
-                      int32_t rEnd, int32_t qStart, int32_t qEnd, bool qReversed,
+bool ConvertCigarToM5(const std::string& ref, const std::string& query, std::int32_t rStart,
+                      std::int32_t rEnd, std::int32_t qStart, std::int32_t qEnd, bool qReversed,
                       const Data::Cigar& cigar, std::string& retRefAln, std::string& retQueryAln);
 
 /// \brief Check Cigar validity.

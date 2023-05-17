@@ -19,7 +19,7 @@ Json VariantToJson(const PacBio::Reports::ReportValue& value)
         case 0 : return Json{};
         case 1 : return Json::number_integer_t{std::get<int>(value)};
         case 2 : return Json::number_unsigned_t{std::get<unsigned int>(value)};
-        case 3 : return Json::number_integer_t{std::get<int64_t>(value)};
+        case 3 : return Json::number_integer_t{std::get<std::int64_t>(value)};
         case 4 : return Json::number_float_t{std::get<double>(value)};
         case 5 : return Json::boolean_t{std::get<bool>(value)};
         case 6 : return Json::string_t{std::get<std::string>(value)};

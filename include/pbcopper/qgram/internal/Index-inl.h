@@ -20,7 +20,7 @@ class IndexImpl
 {
 public:
     using SuffixArray_t = std::vector<IndexHit>;
-    using HashLookup_t = std::vector<uint64_t>;
+    using HashLookup_t = std::vector<std::uint64_t>;
 
 public:
     // ctor
@@ -64,7 +64,7 @@ inline void IndexImpl::Init()
     // init hash lookup (and calculate totalNumQGrams for later suffixArray)
     const auto lookupSize = static_cast<std::size_t>(std::pow(4, q_) + 1);
     hashLookup_.resize(lookupSize, 0);
-    uint32_t totalNumQGrams = 0;
+    std::uint32_t totalNumQGrams = 0;
     for (const auto& seq : seqs_) {
 
         const auto seqLength = seq.size();
@@ -83,9 +83,9 @@ inline void IndexImpl::Init()
     }
 
     // update hash lookup values (cumulative sum along the table)
-    uint64_t prevDiff = 0;
-    uint64_t prevDiff2 = 0;
-    uint64_t sum = 0;
+    std::uint64_t prevDiff = 0;
+    std::uint64_t prevDiff2 = 0;
+    std::uint64_t sum = 0;
     for (auto& hash : hashLookup_) {
         sum += prevDiff2;
         prevDiff2 = prevDiff;
@@ -95,13 +95,13 @@ inline void IndexImpl::Init()
 
     // init suffix array
     suffixArray_.resize(totalNumQGrams);
-    uint32_t seqNo = 0;
+    std::uint32_t seqNo = 0;
     for (const auto& seq : seqs_) {
         const auto seqLength = seq.size();
 
         Shape shape{q_, seq};
         const auto numQGrams = seqLength - q_ + 1;
-        for (uint32_t i = 0; i < numQGrams; ++i) {
+        for (std::uint32_t i = 0; i < numQGrams; ++i) {
             suffixArray_[hashLookup_[shape.HashNext() + 1]++] = IndexHit{seqNo, i};
         }
 

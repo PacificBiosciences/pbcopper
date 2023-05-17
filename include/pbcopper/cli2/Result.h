@@ -77,14 +77,14 @@ public:
     operator bool() const;
     operator std::string() const;
 
-    operator int8_t() const;
-    operator uint8_t() const;
-    operator int16_t() const;
-    operator uint16_t() const;
-    operator int32_t() const;
-    operator uint32_t() const;
-    operator int64_t() const;
-    operator uint64_t() const;
+    operator std::int8_t() const;
+    operator std::uint8_t() const;
+    operator std::int16_t() const;
+    operator std::uint16_t() const;
+    operator std::int32_t() const;
+    operator std::uint32_t() const;
+    operator std::int64_t() const;
+    operator std::uint64_t() const;
 
     std::size_t which() const;
     ///

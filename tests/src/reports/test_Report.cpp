@@ -124,9 +124,9 @@ TEST(Reports_Report, can_report_longints)
     Report report{"isoseq3_flnca", "Report isoseq3"};
     // clang-format off
     report.Attributes({
-        {"foo", 0xffffffffu, "Foo Title for uint32_t"},
-        {"bar", static_cast<int64_t>(0xffffffffffff), "Bar Title for long long"},
-        {"bar2", static_cast<int64_t>(1) << 62, "Bar Title for long long"},
+        {"foo", 0xffffffffu, "Foo Title for std::uint32_t"},
+        {"bar", static_cast<std::int64_t>(0xffffffffffff), "Bar Title for long long"},
+        {"bar2", static_cast<std::int64_t>(1) << 62, "Bar Title for long long"},
     });
     report.Uuid("fakeitem");
     // clang-format on

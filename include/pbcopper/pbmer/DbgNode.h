@@ -25,14 +25,14 @@ public:
     /// \param o    out edges
     /// \param n    number of read ids;
     ///
-    DbgNode(const DnaBit& d, uint8_t o, uint32_t n);
+    DbgNode(const DnaBit& d, std::uint8_t o, std::uint32_t n);
 
     ///
     /// \brief Adds a read id to the readIds_ variable. Read ids are one based.
     ///
     /// \param rid  read id
     ///
-    bool AddLoad(uint32_t rid);
+    bool AddLoad(std::uint32_t rid);
 
     ///
     /// \brief Finds the first read Id set.
@@ -42,9 +42,9 @@ public:
     std::size_t FirstRId() const;
 
     ///
-    /// \returns Returns the uint64_t packed kmer;
+    /// \returns Returns the std::uint64_t packed kmer;
     ///
-    uint64_t Kmer() const;
+    std::uint64_t Kmer() const;
 
     ///
     /// \brief Uses a bit field to set out edges, possibilities {bit0:A, bit2:C,
@@ -52,7 +52,7 @@ public:
     ///
     /// \param o    out edges to set: `outEdges_ |= o`
     ///
-    void SetEdges(uint8_t o);
+    void SetEdges(std::uint8_t o);
 
     ///
     /// \return number of left edges
@@ -91,7 +91,7 @@ public:
 
     protected:
         DbgNode* node_ = nullptr;
-        uint8_t index_ = 0;
+        std::uint8_t index_ = 0;
         DnaBit value_;
     };
 
@@ -135,7 +135,7 @@ public:
 
 private:
     DnaBit dna_;
-    uint8_t edges_;
+    std::uint8_t edges_;
     // ReadIds must be one based - internally they are converted.
     boost::dynamic_bitset<> readIds2_;
     friend class Dbg;

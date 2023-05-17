@@ -25,22 +25,22 @@ namespace Container {
 /// representation at all times. It is the semantic equivalent of
 /// std::array<TotalBits / ElementBits>.
 ///
-template <int32_t TotalBits, int32_t ElementBits>
+template <std::int32_t TotalBits, std::int32_t ElementBits>
 class BitmaskContainer
 {
 public:
     using UnderlyingType = std::conditional_t<
-        TotalBits == 8, uint8_t,
+        TotalBits == 8, std::uint8_t,
         std::conditional_t<
-            TotalBits == 16, uint16_t,
+            TotalBits == 16, std::uint16_t,
             std::conditional_t<
-                TotalBits == 32, uint32_t,
-                std::conditional_t<TotalBits == 64, uint64_t,
+                TotalBits == 32, std::uint32_t,
+                std::conditional_t<TotalBits == 64, std::uint64_t,
                                    std::conditional_t<TotalBits == 128, __uint128_t, void> > > > >;
 
     // We cap the working value type to a minimum of 32 bits. C++ is full
     // of extremely surprising behavior, and integer promotion is one of
-    // them. By only using uint32_t as a minimum type, we can avoid these
+    // them. By only using std::uint32_t as a minimum type, we can avoid these
     // kinds of pitfalls.
     using ValueType = typename boost::uint_t<std::max(32, ElementBits)>::exact;
 
@@ -48,12 +48,12 @@ protected:
     using ComputationType = std::common_type_t<UnderlyingType, ValueType>;
 
 private:
-    constexpr static int32_t CAPACITY_ = TotalBits / ElementBits;
+    constexpr static std::int32_t CAPACITY_ = TotalBits / ElementBits;
     static_assert(CAPACITY_ >= 2, "TotalBits is not >= 2 * ElementBits");
     static_assert(TotalBits % ElementBits == 0, "Cannot handle padding bits");
 
 public:
-    PB_CUDA_HOST PB_CUDA_DEVICE constexpr static int32_t Capacity() { return CAPACITY_; }
+    PB_CUDA_HOST PB_CUDA_DEVICE constexpr static std::int32_t Capacity() { return CAPACITY_; }
 
     constexpr static ComputationType MAXIMUM_VALUE{
         std::numeric_limits<UnderlyingType>::max() >>
@@ -71,12 +71,12 @@ public:
     template <typename Callable, typename T>
     constexpr static BitmaskContainer MakeFromTransform(Callable transform, const T& input) noexcept
     {
-        const int32_t inputSize = input.size();
+        const std::int32_t inputSize = input.size();
         assert(inputSize <= Capacity());
 
         UnderlyingType data{};
 
-        for (int32_t i = inputSize - 1; i >= 0; --i) {
+        for (std::int32_t i = inputSize - 1; i >= 0; --i) {
             data <<= ElementBits;
 
             const ComputationType val = transform(input[i]);
@@ -96,7 +96,7 @@ public:
 
         UnderlyingType data{};
 
-        int32_t idx = 0;
+        std::int32_t idx = 0;
         (..., (assert(static_cast<ComputationType>(args) <= MAXIMUM_VALUE), data |= (args << idx),
                idx += ElementBits));
 
@@ -104,30 +104,31 @@ public:
     }
 
 public:
-    PB_CUDA_HOST PB_CUDA_DEVICE constexpr ValueType operator[](const int32_t idx) const noexcept
+    PB_CUDA_HOST PB_CUDA_DEVICE constexpr ValueType operator[](
+        const std::int32_t idx) const noexcept
     {
         assert(idx >= 0);
         assert(idx < Capacity());
 
-        const int32_t shiftBits = ElementBits * idx;
+        const std::int32_t shiftBits = ElementBits * idx;
         return (data_ >> shiftBits) & MAXIMUM_VALUE;
     }
 
 public:
     PB_CUDA_HOST PB_CUDA_DEVICE constexpr void Clear() noexcept { data_ = 0; }
 
-    PB_CUDA_HOST PB_CUDA_DEVICE constexpr void Set(const int32_t idx,
+    PB_CUDA_HOST PB_CUDA_DEVICE constexpr void Set(const std::int32_t idx,
                                                    const ComputationType val) noexcept
     {
         assert(idx >= 0);
         assert(idx < Capacity());
         assert(val <= MAXIMUM_VALUE);
 
-        const int32_t shiftBits = ElementBits * idx;
+        const std::int32_t shiftBits = ElementBits * idx;
         data_ = (val << shiftBits) | (data_ & ~(MAXIMUM_VALUE << shiftBits));
     }
 
-    PB_CUDA_HOST PB_CUDA_DEVICE constexpr void Remove(const int32_t idx) noexcept
+    PB_CUDA_HOST PB_CUDA_DEVICE constexpr void Remove(const std::int32_t idx) noexcept
     {
         assert(idx >= 0);
         assert(idx < Capacity());
@@ -149,20 +150,20 @@ public:
         //
         //                                    3  2  1  0
         // lower | upper:                 00'11'01'00'10
-        const int32_t shiftBits = ElementBits * idx;
+        const std::int32_t shiftBits = ElementBits * idx;
         const auto lowerBitMask = (ComputationType{1} << shiftBits) - 1;
 
         data_ = (data_ & lowerBitMask) | ((data_ >> ElementBits) & ~lowerBitMask);
     }
 
-    PB_CUDA_HOST PB_CUDA_DEVICE constexpr void Insert(const int32_t idx,
+    PB_CUDA_HOST PB_CUDA_DEVICE constexpr void Insert(const std::int32_t idx,
                                                       const ComputationType val) noexcept
     {
         assert(idx >= 0);
         assert(idx < Capacity());
         assert(val <= MAXIMUM_VALUE);
 
-        const int32_t shiftBits = ElementBits * idx;
+        const std::int32_t shiftBits = ElementBits * idx;
         const auto lowerBitMask = (ComputationType{1} << shiftBits) - 1;
 
         data_ =
@@ -171,7 +172,7 @@ public:
 
 protected:
     PB_CUDA_HOST PB_CUDA_DEVICE constexpr static ComputationType GenerateMovePattern(
-        const int32_t round)
+        const std::int32_t round)
     {
         // TotalBits = 32
         // ElementBits = 2
@@ -185,12 +186,12 @@ protected:
         assert(1 << (round + 1) <= Capacity());
 
         ComputationType result{};
-        const int32_t lengthOnes = ElementBits * (1 << round);
-        const int32_t lengthPattern = 2 * lengthOnes;
-        const int32_t numRepeats = TotalBits / lengthPattern;
+        const std::int32_t lengthOnes = ElementBits * (1 << round);
+        const std::int32_t lengthPattern = 2 * lengthOnes;
+        const std::int32_t numRepeats = TotalBits / lengthPattern;
         const auto repeatPattern = (ComputationType{1} << lengthOnes) - 1;
 
-        for (int32_t i = 0; i < numRepeats; ++i) {
+        for (std::int32_t i = 0; i < numRepeats; ++i) {
             result |= (repeatPattern << (lengthPattern * i));
         }
         return result;
@@ -200,12 +201,12 @@ protected:
     // for loop, even though the compile-time bounds are all known. By using this
     // template, we can force all computation into a constexpr context, which is
     // a lot easier for the optimizer.
-    template <int32_t round, int32_t capacity>
+    template <std::int32_t round, std::int32_t capacity>
     PB_CUDA_HOST PB_CUDA_DEVICE constexpr void ReverseImpl() noexcept
     {
         if constexpr (capacity > 0) {
             constexpr ComputationType BIT_PATTERN = GenerateMovePattern(round);
-            constexpr int32_t BITS_TO_SHIFT = ElementBits * (1 << round);
+            constexpr std::int32_t BITS_TO_SHIFT = ElementBits * (1 << round);
 
             data_ = ((data_ & ~BIT_PATTERN) >> BITS_TO_SHIFT) |
                     ((data_ & BIT_PATTERN) << BITS_TO_SHIFT);
@@ -233,7 +234,7 @@ public:
     friend std::ostream& operator<<(std::ostream& os, const BitmaskContainer cont)
     {
         os << "BitmaskContainer(" << cont[0];
-        for (int32_t i = 1; i < cont.Capacity(); ++i) {
+        for (std::int32_t i = 1; i < cont.Capacity(); ++i) {
             os << ", " << cont[i];
         }
         return os << ')';

@@ -47,7 +47,7 @@ std::vector<std::unique_ptr<EdlibAlignment>> EdlibAlign(const std::vector<std::s
 /// Convert edlib alignment result to CIGAR
 ///
 Data::Cigar EdlibAlignmentToCigar(const EdlibAlignment& alignment);
-Data::Cigar EdlibAlignmentToCigar(const unsigned char* alignment, int32_t alignmentLength);
+Data::Cigar EdlibAlignmentToCigar(const unsigned char* alignment, std::int32_t alignmentLength);
 
 }  // namespace Align
 }  // namespace PacBio

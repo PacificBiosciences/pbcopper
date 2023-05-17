@@ -15,11 +15,11 @@ using namespace PacBio;
 namespace PacBio {
 namespace Container {
 
-template <int32_t TotalBits, int32_t ElementBits>
+template <std::int32_t TotalBits, std::int32_t ElementBits>
 bool operator==(const BitContainer<TotalBits, ElementBits>& lhs,
                 const std::vector<typename BitContainer<TotalBits, ElementBits>::ValueType>& rhs)
 {
-    if (lhs.Size() != static_cast<int32_t>(rhs.size())) {
+    if (lhs.Size() != static_cast<std::int32_t>(rhs.size())) {
         return false;
     }
 
@@ -40,7 +40,7 @@ TEST(Container_BitContainer, Constexpr)
     //                                                        3  2  1  0
     constexpr Container::BitContainer<32, 8> CONSTEXPR_BCT{0x54'47'43'41U, 4};
 
-    EXPECT_EQ(sizeof(CONSTEXPR_BCT), 2 * sizeof(uint32_t));
+    EXPECT_EQ(sizeof(CONSTEXPR_BCT), 2 * sizeof(std::uint32_t));
     EXPECT_EQ(CONSTEXPR_BCT.Capacity(), 4);
     EXPECT_EQ(CONSTEXPR_BCT.Size(), 4);
 
@@ -79,7 +79,7 @@ TEST(Container_BitContainer, VariadicCtor)
     constexpr auto CONSTEXPR_BCT =
         Container::BitContainer<32, 8>::MakeFromArray('G', 'A', 'T', 'C');
 
-    EXPECT_EQ(sizeof(CONSTEXPR_BCT), 2 * sizeof(uint32_t));
+    EXPECT_EQ(sizeof(CONSTEXPR_BCT), 2 * sizeof(std::uint32_t));
     EXPECT_EQ(CONSTEXPR_BCT.Capacity(), 4);
     EXPECT_EQ(CONSTEXPR_BCT.Size(), 4);
 
@@ -109,7 +109,7 @@ TEST(Container_BitContainer, ConstexprDependencyInjection)
 
     constexpr auto CONSTEXPR_BCT_DI =
         Container::BitContainer<8, 2>::MakeFromTransform(CONVERTER, STR);
-    EXPECT_EQ(sizeof(CONSTEXPR_BCT_DI), 2 * sizeof(uint32_t));
+    EXPECT_EQ(sizeof(CONSTEXPR_BCT_DI), 2 * sizeof(std::uint32_t));
     EXPECT_EQ(CONSTEXPR_BCT_DI.Capacity(), 4);
     EXPECT_EQ(CONSTEXPR_BCT_DI.Size(), 4);
 
@@ -128,7 +128,7 @@ TEST(Container_BitContainer, ConstexprDependencyInjection)
 TEST(Container_BitContainer, Basic)
 {
     Container::BitContainer<8, 2> bct{0b11'00'10'01, 4};
-    EXPECT_EQ(sizeof(bct), 2 * sizeof(uint32_t));
+    EXPECT_EQ(sizeof(bct), 2 * sizeof(std::uint32_t));
     EXPECT_EQ(bct.Capacity(), 4);
     EXPECT_EQ(bct.Size(), 4);
 
@@ -161,7 +161,7 @@ TEST(Container_BitContainer, Basic)
 TEST(Container_BitContainer, PushBack)
 {
     Container::BitContainer<8, 2> bct{0b11, 1};
-    EXPECT_EQ(sizeof(bct), 2 * sizeof(uint32_t));
+    EXPECT_EQ(sizeof(bct), 2 * sizeof(std::uint32_t));
     EXPECT_EQ(bct.Capacity(), 4);
     EXPECT_EQ(bct.Size(), 1);
 
@@ -181,7 +181,7 @@ TEST(Container_BitContainer, Range)
     using ContType = Container::BitContainer<32, 4>;
 
     const auto bct = ContType::MakeFromArray(1, 7, 9, 15, 3, 6, 5, 4);
-    EXPECT_EQ(sizeof(bct), 2 * sizeof(uint32_t));
+    EXPECT_EQ(sizeof(bct), 2 * sizeof(std::uint32_t));
     EXPECT_EQ(bct.Capacity(), 8);
     EXPECT_EQ(bct.Size(), 8);
 
@@ -258,13 +258,13 @@ TEST(Container_BitContainer, Range)
     }
 }
 
-template <int32_t TotalBits, int32_t ElementBits>
+template <std::int32_t TotalBits, std::int32_t ElementBits>
 void TestBitContainer()
 {
     std::random_device rd;
     std::mt19937 gen{rd()};
 
-    constexpr int32_t ROUNDS = 100'000;
+    constexpr std::int32_t ROUNDS = 100'000;
 
     Container::BitContainer<TotalBits, ElementBits> bct{};
     std::vector<typename decltype(bct)::ValueType> vec;
@@ -272,7 +272,7 @@ void TestBitContainer()
     std::uniform_int_distribution<typename decltype(bct)::ValueType> elementDistribution{
         0, bct.MAXIMUM_VALUE};
 
-    for (int32_t i = 0; i < ROUNDS; ++i) {
+    for (std::int32_t i = 0; i < ROUNDS; ++i) {
         const auto randVal = elementDistribution(gen);
 
         if (vec.size() == 0) {
@@ -280,11 +280,11 @@ void TestBitContainer()
             bct.Insert(0, randVal);
             vec.insert(std::begin(vec), randVal);
         } else {
-            std::uniform_int_distribution<int32_t> moveDistribution{
-                0, 1 + (static_cast<int32_t>(vec.size()) < bct.Capacity())};
-            std::uniform_int_distribution<int32_t> posDistribution(0, vec.size() - 1);
-            const int32_t moveType = moveDistribution(gen);
-            const int32_t pos = posDistribution(gen);
+            std::uniform_int_distribution<std::int32_t> moveDistribution{
+                0, 1 + (static_cast<std::int32_t>(vec.size()) < bct.Capacity())};
+            std::uniform_int_distribution<std::int32_t> posDistribution(0, vec.size() - 1);
+            const std::int32_t moveType = moveDistribution(gen);
+            const std::int32_t pos = posDistribution(gen);
 
             switch (moveType) {
                 case 0:  // Set
@@ -352,28 +352,28 @@ TEST(Container_BitContainer, ReverseOne)
     EXPECT_EQ(bct.RawData(), 255U);
 }
 
-template <int32_t TotalBits, int32_t ElementBits>
+template <std::int32_t TotalBits, std::int32_t ElementBits>
 void TestBitReverse()
 {
     std::random_device rd;
     std::mt19937 gen{rd()};
 
-    constexpr int32_t ROUNDS = 100'000;
+    constexpr std::int32_t ROUNDS = 100'000;
 
     using BitVec = typename Container::BitContainer<TotalBits, ElementBits>;
-    constexpr int32_t CAPACITY = BitVec::Capacity();
+    constexpr std::int32_t CAPACITY = BitVec::Capacity();
 
     std::uniform_int_distribution<typename BitVec::ValueType> elementDistribution{
         0, BitVec::MAXIMUM_VALUE};
-    std::uniform_int_distribution<int32_t> lengthDistribution{1, CAPACITY};
+    std::uniform_int_distribution<std::int32_t> lengthDistribution{1, CAPACITY};
 
-    for (int32_t i = 0; i < ROUNDS; ++i) {
-        const int32_t length = lengthDistribution(gen);
+    for (std::int32_t i = 0; i < ROUNDS; ++i) {
+        const std::int32_t length = lengthDistribution(gen);
 
         BitVec fwdBct{0, length};
         std::vector<typename BitVec::ValueType> fwdVec(length);
 
-        for (int32_t j = 0; j < length; ++j) {
+        for (std::int32_t j = 0; j < length; ++j) {
             const auto val = elementDistribution(gen);
 
             fwdBct.Set(j, val);

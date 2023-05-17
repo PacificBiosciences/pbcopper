@@ -20,10 +20,10 @@ static LocalAlignment FromSSW(StripedSmithWaterman::Alignment&& sswAl)
 
 LocalAlignConfig LocalAlignConfig::Default() { return LocalAlignConfig{2, 2, 3, 1}; }
 
-LocalAlignment::LocalAlignment(const int32_t targetBegin, const int32_t targetEnd,
-                               const int32_t queryBegin, const int32_t queryEnd,
-                               const int32_t mismatches, const uint16_t score,
-                               std::vector<uint32_t> cigar, std::string cigarString)
+LocalAlignment::LocalAlignment(const std::int32_t targetBegin, const std::int32_t targetEnd,
+                               const std::int32_t queryBegin, const std::int32_t queryEnd,
+                               const std::int32_t mismatches, const std::uint16_t score,
+                               std::vector<std::uint32_t> cigar, std::string cigarString)
     : targetBegin_(targetBegin)
     , targetEnd_(targetEnd)
     , queryBegin_(queryBegin)

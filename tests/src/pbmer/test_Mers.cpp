@@ -249,7 +249,7 @@ TEST(Pbmer_Mers, test_nmps_hashing)
     m2.WindowMin(3);
     m2.WindowMin(2);
 
-    std::unordered_set<uint64_t> mins;
+    std::unordered_set<std::uint64_t> mins;
 
     for (const auto& x : m1.minimizers) {
         mins.insert(x.mer);

@@ -12,9 +12,9 @@
 namespace PacBio {
 namespace Pbmer {
 
-Dbg::Dbg(uint8_t k, uint32_t nr) : kmerSize_{k}, nReads_{nr} {}
+Dbg::Dbg(std::uint8_t k, std::uint32_t nr) : kmerSize_{k}, nReads_{nr} {}
 
-int Dbg::AddKmers(const PacBio::Pbmer::Mers& m, const uint32_t rid)
+int Dbg::AddKmers(const PacBio::Pbmer::Mers& m, const std::uint32_t rid)
 {
     // cover the cases where the kmers are not suitable for the Dbg.
     if ((m.kmerSize > 31)) {
@@ -26,7 +26,7 @@ int Dbg::AddKmers(const PacBio::Pbmer::Mers& m, const uint32_t rid)
     }
 
     for (const auto& x : m.forward) {
-        DnaBit niby{x.mer, static_cast<uint8_t>(x.strand == Data::Strand::FORWARD ? 0 : 1),
+        DnaBit niby{x.mer, static_cast<std::uint8_t>(x.strand == Data::Strand::FORWARD ? 0 : 1),
                     kmerSize_};
 
         niby.MakeLexSmaller();
@@ -42,7 +42,7 @@ int Dbg::AddKmers(const PacBio::Pbmer::Mers& m, const uint32_t rid)
     return 1;
 }
 
-void Dbg::AddVerifedKmerPairs(std::vector<DnaBit>& bits, const uint32_t rid)
+void Dbg::AddVerifedKmerPairs(std::vector<DnaBit>& bits, const std::uint32_t rid)
 {
 
     for (auto& bit : bits) {
@@ -69,8 +69,8 @@ void Dbg::AddVerifedKmerPairs(std::vector<DnaBit>& bits, const uint32_t rid)
 
 uint8_t SetRevEdge(const DnaBit& a, const DnaBit& b)
 {
-    uint8_t c = (a.strand << 1) | (b.strand);
-    uint8_t es = 1;
+    std::uint8_t c = (a.strand << 1) | (b.strand);
+    std::uint8_t es = 1;
 
     DnaBit newNib = a;
 
@@ -110,8 +110,8 @@ uint8_t SetRevEdge(const DnaBit& a, const DnaBit& b)
 
 uint8_t SetForEdge(const DnaBit& a, const DnaBit& b)
 {
-    uint8_t c = (a.strand << 1) | (b.strand);
-    uint8_t es = 1;
+    std::uint8_t c = (a.strand << 1) | (b.strand);
+    std::uint8_t es = 1;
 
     DnaBit newNib = a;
 
@@ -150,10 +150,10 @@ uint8_t SetForEdge(const DnaBit& a, const DnaBit& b)
     return es;
 }
 
-std::vector<uint8_t> Dbg::BuildVerifiedEdges(const std::vector<PacBio::Pbmer::DnaBit>& bits)
+std::vector<std::uint8_t> Dbg::BuildVerifiedEdges(const std::vector<PacBio::Pbmer::DnaBit>& bits)
 {
 
-    std::vector<uint8_t> edges(bits.size(), 0);
+    std::vector<std::uint8_t> edges(bits.size(), 0);
 
     // set back edges
     for (std::size_t i = 1; i < bits.size(); ++i) {
@@ -172,7 +172,7 @@ void Dbg::BuildEdges()
 {
     for (auto& x : dbg_) {
         // all 8 possible edges
-        for (uint8_t y = 0; y < 8; ++y) {
+        for (std::uint8_t y = 0; y < 8; ++y) {
 
             DnaBit niby = x.second.dna_;
             // pre-prending base
@@ -195,7 +195,7 @@ void Dbg::BuildEdges()
 
             if (dbg_.find(niby.mer) != dbg_.end()) {
                 //setting the edges
-                x.second.SetEdges((uint8_t(1) << y));
+                x.second.SetEdges((std::uint8_t(1) << y));
             }
         }
     }
@@ -217,7 +217,7 @@ void Dbg::FrequencyFilterNodes(unsigned long n)
 {
     this->ResetEdges();
 
-    std::vector<uint64_t> toRemove;
+    std::vector<std::uint64_t> toRemove;
 
     for (auto& x : dbg_) {
         if (x.second.readIds2_.count() < n) {
@@ -234,7 +234,7 @@ void Dbg::FrequencyFilterNodes2(unsigned long n) { Dbg::FrequencyFilterNodes2(n,
 void Dbg::FrequencyFilterNodes2(unsigned long n, bool gt)
 {
 
-    std::vector<uint64_t> toRemove;
+    std::vector<std::uint64_t> toRemove;
 
     auto filterDirection = [&](const auto count) { return gt ? (count > n) : (count < n); };
 
@@ -247,10 +247,10 @@ void Dbg::FrequencyFilterNodes2(unsigned long n, bool gt)
         dbg_.erase(x);
     }
 
-    uint64_t lexSmall = 0;
+    std::uint64_t lexSmall = 0;
 
     for (auto& x : dbg_) {
-        for (uint8_t y = 0; y < 8; ++y) {
+        for (std::uint8_t y = 0; y < 8; ++y) {
             if (((1 << y) & x.second.edges_) == 0) {
                 continue;
             }
@@ -268,7 +268,7 @@ void Dbg::FrequencyFilterNodes2(unsigned long n, bool gt)
             lexSmall = niby.LexSmallerEq64();
 
             if (dbg_.find(lexSmall) == dbg_.end()) {
-                uint8_t turnOff = ~(uint8_t(1) << y);
+                std::uint8_t turnOff = ~(std::uint8_t(1) << y);
                 x.second.edges_ &= turnOff;
             }
         }
@@ -282,11 +282,11 @@ Bubbles Dbg::FindBubbles() const
 
     // keeping track of read id counts over linear paths
     // these variables are reused
-    Container::UnorderedMap<uint32_t, int> leftReads;
-    Container::UnorderedMap<uint32_t, int> rightReads;
+    Container::UnorderedMap<std::uint32_t, int> leftReads;
+    Container::UnorderedMap<std::uint32_t, int> rightReads;
 
     // keep track of the used head/tails of bubbles.
-    Container::UnorderedSet<uint64_t> usedBranchNode;
+    Container::UnorderedSet<std::uint64_t> usedBranchNode;
 
     // reused variables
 
@@ -301,7 +301,7 @@ Bubbles Dbg::FindBubbles() const
         if (x.second.TotalEdgeCount() < 3) {
             continue;
         }
-        std::vector<std::tuple<uint64_t, uint64_t>> pathInfo;
+        std::vector<std::tuple<std::uint64_t, std::uint64_t>> pathInfo;
 
         // loop over neighboring nodes collecting the start and end node of
         // linear paths. I.E. looping over all linear paths coming out of a node.
@@ -325,7 +325,7 @@ Bubbles Dbg::FindBubbles() const
             hasBubble = false;
             for (const auto& [s2, e2] : pathInfo) {
                 // check if the paths converge on a common neighboring node.
-                if (uint64_t shared; OneIntermediateNode(e1, e2, &shared)) {
+                if (std::uint64_t shared; OneIntermediateNode(e1, e2, &shared)) {
                     // the paths are not stored in the first loop, maybe the should?
                     left = LinearPath(s1);
                     right = LinearPath(s2);
@@ -385,7 +385,7 @@ Bubbles Dbg::FindBubbles() const
     return result;
 }  // namespace Pbmer
 
-std::vector<DnaBit> Dbg::LinearPath(uint64_t x) const { return LinearPath(dbg_.at(x).dna_); }
+std::vector<DnaBit> Dbg::LinearPath(std::uint64_t x) const { return LinearPath(dbg_.at(x).dna_); }
 
 std::vector<DnaBit> Dbg::LinearPath(const DnaBit& niby) const
 {
@@ -396,9 +396,9 @@ std::vector<DnaBit> Dbg::LinearPath(const DnaBit& niby) const
     }
 
     // lookup for which nodes we've seen to prevent loops
-    Container::UnorderedSet<uint64_t> seen;
+    Container::UnorderedSet<std::uint64_t> seen;
 
-    uint64_t past = niby.mer;
+    std::uint64_t past = niby.mer;
 
     while (seen.find(past) == seen.end()) {
         seen.insert(past);
@@ -448,9 +448,9 @@ std::size_t Dbg::NEdges() const
         [](std::size_t sum, const auto& x) { return sum + x.second.TotalEdgeCount(); });
 }
 
-bool Dbg::OneIntermediateNode(uint64_t n1, uint64_t n2, uint64_t* shared) const
+bool Dbg::OneIntermediateNode(std::uint64_t n1, std::uint64_t n2, std::uint64_t* shared) const
 {
-    Container::UnorderedSet<uint64_t> seen;
+    Container::UnorderedSet<std::uint64_t> seen;
     if (n1 == n2) {
         return false;
     }
@@ -470,7 +470,7 @@ int Dbg::RemoveSpurs(unsigned int maxLength)
 {
     int nSpurs = 0;
 
-    Container::UnorderedSet<uint64_t> toDelete;
+    Container::UnorderedSet<std::uint64_t> toDelete;
 
     for (auto& node : dbg_) {
         // Starting at tip nodes with a degree of one.

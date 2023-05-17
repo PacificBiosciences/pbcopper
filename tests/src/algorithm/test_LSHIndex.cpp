@@ -15,14 +15,14 @@ using namespace PacBio;
 TEST(Algorithm_lsh_index, lsh_index_test_accuracy) {
     static constexpr int NF = 100;
     static constexpr int NL = 200;
-    std::vector<uint64_t> kmerFounders(NF);
-    uint64_t seed = 13;
+    std::vector<std::uint64_t> kmerFounders(NF);
+    std::uint64_t seed = 13;
     auto sample = [&]() {return Utility::WyHash64Step(seed);};
     for(auto& x: kmerFounders) {
         x = sample() >> 4;
     }
     const int bk = 16;
-    std::vector<std::vector<uint64_t>> kmerSets(NL, kmerFounders);
+    std::vector<std::vector<std::uint64_t>> kmerSets(NL, kmerFounders);
     for(int i = 0; i < NL; ++i) {
         auto& ks =kmerSets[i];
         for(int j = 0; j < i + 5; ++j) {
@@ -33,10 +33,10 @@ TEST(Algorithm_lsh_index, lsh_index_test_accuracy) {
         ks.resize(bk);
     }
     // Test that building the index twice yields the same index
-    Algorithm::LSHIndex<uint64_t, uint32_t> bkidx = Algorithm::LSHIndex<uint64_t, uint32_t>::CreateBottomK(bk);
+    Algorithm::LSHIndex<std::uint64_t, std::uint32_t> bkidx = Algorithm::LSHIndex<std::uint64_t, std::uint32_t>::CreateBottomK(bk);
     bkidx.Insert(kmerSets.begin(), kmerSets.end());
     {
-        Algorithm::LSHIndex<uint64_t, uint32_t> bkidx2;
+        Algorithm::LSHIndex<std::uint64_t, std::uint32_t> bkidx2;
         bkidx2.Insert(kmerSets.begin(), kmerSets.end());
         EXPECT_EQ(bkidx, bkidx2);
     }

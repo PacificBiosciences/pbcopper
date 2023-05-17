@@ -10,7 +10,7 @@ namespace Utility {
 
 struct MemoryConsumption
 {
-    static int64_t PeakRss();
+    static std::int64_t PeakRss();
 };
 
 }  // namespace Utility

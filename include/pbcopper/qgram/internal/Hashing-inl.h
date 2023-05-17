@@ -16,11 +16,11 @@ namespace PacBio {
 namespace QGram {
 namespace internal {
 
-constexpr uint8_t ALPHABET_SIZE = 4;  // {A,C,G,T}
+constexpr std::uint8_t ALPHABET_SIZE = 4;  // {A,C,G,T}
 
-constexpr uint8_t BaseCode(const char c)
+constexpr std::uint8_t BaseCode(const char c)
 {
-    constexpr std::array<uint8_t, 128> BASE_CODE = {
+    constexpr std::array<std::uint8_t, 128> BASE_CODE = {
         // C->1, G->2, T->3, else 0
         {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
          0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
@@ -32,7 +32,7 @@ constexpr uint8_t BaseCode(const char c)
 }
 
 // recursive q-gram hash calculator
-inline uint64_t HashImpl(uint64_t hash, std::string::const_iterator iter, std::size_t q)
+inline std::uint64_t HashImpl(std::uint64_t hash, std::string::const_iterator iter, std::size_t q)
 {
     if (q == 1) {
         return hash;
@@ -46,10 +46,10 @@ struct Shape
 {
 public:
     const std::size_t q_;               // q-gram size
-    const uint32_t hashFactor_;         // hash multiplier
+    const std::uint32_t hashFactor_;    // hash multiplier
     const std::string& seq_;            // input sequence
     std::string::const_iterator iter_;  // sequence iterator
-    uint64_t currentHash_;              // current hash value
+    std::uint64_t currentHash_;         // current hash value
     char leftChar_;                     // leftmost character
 
 public:
@@ -59,7 +59,7 @@ public:
             // need to perform the range check before initializing,
             // as this would trigger undefined behavior otherwise
             ((1 <= q_) && (q_ <= 16))
-                          ? static_cast<uint32_t>(std::pow(ALPHABET_SIZE, q_ - 1))
+                          ? static_cast<std::uint32_t>(std::pow(ALPHABET_SIZE, q_ - 1))
                           : throw std::invalid_argument{"[pbcopper] qgram ERROR: qgram size (" + std::to_string(q_) +
                                                         ") must be in the range [1,16]"}}
         , seq_(seq)
@@ -80,7 +80,7 @@ public:
         currentHash_ = HashImpl(BaseCode(*iter_), iter_, q_ - 1);
     }
 
-    uint64_t HashNext()
+    std::uint64_t HashNext()
     {
         currentHash_ = ((currentHash_ - BaseCode(leftChar_) * hashFactor_) * ALPHABET_SIZE) +
                        BaseCode(*(iter_ + (q_ - 1)));
@@ -104,13 +104,13 @@ public:
         }
     }
 
-    bool operator()(const uint64_t h) const noexcept
+    bool operator()(const std::uint64_t h) const noexcept
     {
         return (h == hashes[0] || h == hashes[1] || h == hashes[2] || h == hashes[3]);
     }
 
 private:
-    uint64_t hashes[ALPHABET_SIZE];
+    std::uint64_t hashes[ALPHABET_SIZE];
 };
 
 }  // namespace internal

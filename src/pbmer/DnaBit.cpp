@@ -21,14 +21,14 @@ namespace PacBio {
 namespace Pbmer {
 
 // all bits set to one for a uint64_t
-constexpr uint64_t ALL_BITS_ON = std::numeric_limits<uint64_t>::max();
+constexpr std::uint64_t ALL_BITS_ON = std::numeric_limits<std::uint64_t>::max();
 
 void DnaBit::SetBase(const char c, const int position)
 {
     assert(position >= 0);
     assert(position < msize);
 
-    const uint64_t base = ASCII_TO_DNA[c];
+    const std::uint64_t base = ASCII_TO_DNA[c];
     const int step = position * 2;
 
     mer = (mer & ~(0b11ULL << step)) | (base << step);
@@ -59,7 +59,7 @@ void DnaBit::DeleteBase(const int position)
     //                             3  2  1  0
     // lower | upper:          00'11'01'00'10
     //                             T  C  A  G
-    const uint64_t lowerBitMask{(1ull << (2 * position)) - 1};
+    const std::uint64_t lowerBitMask{(1ull << (2 * position)) - 1};
 
     mer = (mer & lowerBitMask) | ((mer >> 2) & (~lowerBitMask));
     --msize;
@@ -71,7 +71,7 @@ void DnaBit::InsertBase(const char c, const int position)
     assert(position <= msize);
     assert(position < 32);
 
-    const uint64_t lowerBitMask{(1ull << (2 * position)) - 1};
+    const std::uint64_t lowerBitMask{(1ull << (2 * position)) - 1};
 
     mer = (mer & lowerBitMask) | ((mer & ~lowerBitMask) << 2);
     ++msize;
@@ -82,7 +82,7 @@ void DnaBit::InsertBase(const char c, const int position)
 // https://gist.github.com/badboy/6267743
 // This is a multiplication method for hashing. Minimap2 uses this function, but
 // this function does not mask, no constraining the bitrange.
-uint64_t Hash64shift(uint64_t key)
+uint64_t Hash64shift(std::uint64_t key)
 {
     key = (~key) + (key << 21);  // key = (key << 21) - key - 1;
     key = key ^ (key >> 24);
@@ -94,9 +94,9 @@ uint64_t Hash64shift(uint64_t key)
     return key;
 }
 
-uint64_t Mix64Masked(const uint64_t key, const uint8_t kmerSize) noexcept
+uint64_t Mix64Masked(const std::uint64_t key, const std::uint8_t kmerSize) noexcept
 {
-    uint64_t res = key;
+    std::uint64_t res = key;
     res = (~res + (res << 21)) & ((1ull << 2 * kmerSize) - 1);  // key = (key << 21) - key - 1;
     res = res ^ (res >> 24);
     res = ((res + (res << 3)) + (res << 8)) & ((1ull << 2 * kmerSize) - 1);  // key * 265
@@ -108,11 +108,11 @@ uint64_t Mix64Masked(const uint64_t key, const uint8_t kmerSize) noexcept
 }
 
 // thanks to https://www.biostars.org/p/113640/ <- and a slight mod!
-uint64_t ReverseComp64(const uint64_t mer, const uint8_t kmerSize)
+uint64_t ReverseComp64(const std::uint64_t mer, const std::uint8_t kmerSize)
 {
     assert((0 < kmerSize) && (kmerSize <= 32));
 
-    uint64_t res = ~mer;
+    std::uint64_t res = ~mer;
 
     res = ((res >> 2 & 0x3333333333333333) | (res & 0x3333333333333333) << 2);
     res = ((res >> 4 & 0x0F0F0F0F0F0F0F0F) | (res & 0x0F0F0F0F0F0F0F0F) << 4);
@@ -125,7 +125,7 @@ uint64_t ReverseComp64(const uint64_t mer, const uint8_t kmerSize)
 
 DnaBit::DnaBit() = default;
 
-DnaBit::DnaBit(uint64_t k, uint8_t t, uint8_t i) : mer{k}, strand{t}, msize{i} {}
+DnaBit::DnaBit(std::uint64_t k, std::uint8_t t, std::uint8_t i) : mer{k}, strand{t}, msize{i} {}
 
 bool DnaBit::operator<(const DnaBit& b) const noexcept
 {
@@ -145,7 +145,7 @@ bool DnaBit::operator==(const DnaBit& b) const noexcept
 
 bool DnaBit::operator!=(const DnaBit& b) const noexcept { return !(*this == b); }
 
-void DnaBit::AppendBase(const uint8_t b)
+void DnaBit::AppendBase(const std::uint8_t b)
 {
     mer = ((mer << 2) & (ALL_BITS_ON >> (64 - (2 * msize)))) | (b % 4);
 }
@@ -157,9 +157,9 @@ void DnaBit::AppendBase(const char b)
 
 void DnaBit::Bin2DnaBit(BI bin)
 {
-    msize = static_cast<uint8_t>(bin >> 48);
-    strand = static_cast<uint8_t>(bin >> 56);
-    mer = static_cast<uint64_t>(bin >> 64);
+    msize = static_cast<std::uint8_t>(bin >> 48);
+    strand = static_cast<std::uint8_t>(bin >> 56);
+    mer = static_cast<std::uint64_t>(bin >> 64);
 }
 
 BI DnaBit::DnaBit2Bin() const
@@ -177,11 +177,11 @@ BI DnaBit::DnaBit2Bin() const
 
 uint8_t DnaBit::FirstBaseIdx() const
 {
-    return static_cast<uint8_t>(((mer >> ((2 * msize) - 2)) & 3));
+    return static_cast<std::uint8_t>(((mer >> ((2 * msize) - 2)) & 3));
 }
 uint8_t DnaBit::FirstBaseRCIdx() const { return 3 & ~LastBaseIdx(); }
 
-uint8_t DnaBit::LastBaseIdx() const { return static_cast<uint8_t>(mer & 3); }
+uint8_t DnaBit::LastBaseIdx() const { return static_cast<std::uint8_t>(mer & 3); }
 
 uint8_t DnaBit::LastBaseRCIdx() const { return 3 & ~FirstBaseIdx(); }
 
@@ -195,9 +195,9 @@ std::string DnaBit::KmerToStr(void) const
     bases.resize(msize);
 
     constexpr std::array<char, 4> LOOKUP_TABLE{'A', 'C', 'G', 'T'};
-    uint8_t i = 0;
-    uint64_t tmp = 0;
-    uint64_t offset = 0;
+    std::uint8_t i = 0;
+    std::uint64_t tmp = 0;
+    std::uint64_t offset = 0;
 
     while (i < msize) {
         tmp = mer;
@@ -232,7 +232,7 @@ DnaBit DnaBit::LexSmallerEqHashed(void) const
 
 uint64_t DnaBit::LexSmallerEq64() const
 {
-    uint64_t rc = ReverseComp64(mer, msize);
+    std::uint64_t rc = ReverseComp64(mer, msize);
     if (rc < mer) {
         return rc;
     }
@@ -241,7 +241,7 @@ uint64_t DnaBit::LexSmallerEq64() const
 
 uint64_t DnaBit::LexSmallerEq64Hashed() const
 {
-    uint64_t rc = ReverseComp64(mer, msize);
+    std::uint64_t rc = ReverseComp64(mer, msize);
     if (Mix64Masked(rc, msize) <= Mix64Masked(mer, msize)) {
         return rc;
     }
@@ -250,7 +250,7 @@ uint64_t DnaBit::LexSmallerEq64Hashed() const
 
 void DnaBit::MakeLexSmaller()
 {
-    uint64_t rc = ReverseComp64(mer, msize);
+    std::uint64_t rc = ReverseComp64(mer, msize);
     if (rc <= mer) {
         mer = rc;
         strand = !strand;
@@ -275,15 +275,15 @@ uint8_t DnaBit::LongestDiNucRun() const
         return 1;
     }
 
-    uint8_t runLength = 0;
-    uint8_t tmpRun = 1;
+    std::uint8_t runLength = 0;
+    std::uint8_t tmpRun = 1;
 
     // four bit mask
-    constexpr uint8_t MASK = 0b1111;
-    uint8_t i = 0;
-    uint64_t tmp1 = 0;
-    uint64_t tmp2 = 0;
-    uint8_t upperBound = (msize * 2) - 4;
+    constexpr std::uint8_t MASK = 0b1111;
+    std::uint8_t i = 0;
+    std::uint64_t tmp1 = 0;
+    std::uint64_t tmp2 = 0;
+    std::uint8_t upperBound = (msize * 2) - 4;
 
     //first frame
     while (i < upperBound) {
@@ -328,15 +328,15 @@ uint8_t DnaBit::LongestDiNucRun() const
     return runLength;
 }
 
-void DnaBit::PrependBase(const uint8_t b)
+void DnaBit::PrependBase(const std::uint8_t b)
 {
-    mer = (uint64_t(b % 4) << 2 * (msize - 1)) | (mer >> 2);
+    mer = (std::uint64_t(b % 4) << 2 * (msize - 1)) | (mer >> 2);
 }
 
 void DnaBit::PrependBase(const char b)
 {
     assert(msize > 0);
-    mer = (uint64_t(ASCII_TO_DNA[b]) << 2 * (msize - 1)) | (mer >> 2);
+    mer = (std::uint64_t(ASCII_TO_DNA[b]) << 2 * (msize - 1)) | (mer >> 2);
 }
 
 void DnaBit::ReverseComp(void)
@@ -356,7 +356,7 @@ std::string DnaBitVec2String(const std::vector<DnaBit>& bits)
     if (bits.size() == 1) {
         return rv;
     }
-    const uint8_t lastStrand = bits.front().strand;
+    const std::uint8_t lastStrand = bits.front().strand;
     for (std::size_t i = 1; i < bits.size(); ++i) {
         DnaBit d = bits[i];
         if (d.strand != lastStrand) {
@@ -373,7 +373,7 @@ std::vector<DnaBit> DnaBit::Neighbors() const
 {
     std::vector<DnaBit> results;
     results.reserve(4 * msize);
-    Container::UnorderedSet<uint64_t> seen;
+    Container::UnorderedSet<std::uint64_t> seen;
 
     for (int i = 0; i < msize; ++i) {
         for (int j = 0; j < 4; ++j) {
@@ -387,7 +387,7 @@ std::vector<DnaBit> DnaBit::Neighbors() const
     }
     return results;
 }
-uint64_t DnaBit::BitMask() const noexcept { return uint64_t(-1) >> (64 - 2 * msize); }
+uint64_t DnaBit::BitMask() const noexcept { return std::uint64_t(-1) >> (64 - 2 * msize); }
 
 int DnaBit::HammingDistance(const DnaBit other) const noexcept
 {
@@ -398,17 +398,17 @@ int DnaBit::HammingDistance(const DnaBit other) const noexcept
     // and anding it with 0x5555555555555555,
     // but that requires storing in memory.
     // I would hope that the compiler can do this for us. - DB
-    uint64_t x0 = ~(mer ^ other.mer);
+    std::uint64_t x0 = ~(mer ^ other.mer);
     // Now we want to find bit pairs of 0 in x ^ y
-    uint64_t x1 = (x0 >> 1);
-    uint64_t x2 = x1 & (0x5555555555555555);
+    std::uint64_t x1 = (x0 >> 1);
+    std::uint64_t x2 = x1 & (0x5555555555555555);
     return msize - Utility::PopCount(x0 & x2 & BitMask());
 }
 
-int HammingDistance(const uint64_t x, const uint64_t y, int k) noexcept
+int HammingDistance(const std::uint64_t x, const std::uint64_t y, int k) noexcept
 {
-    const uint64_t bitMask = (uint64_t(0x5555555555555555) >> (2 * k));
-    const uint64_t x0 = ~(x ^ y);
+    const std::uint64_t bitMask = (std::uint64_t(0x5555555555555555) >> (2 * k));
+    const std::uint64_t x0 = ~(x ^ y);
     return k - Utility::PopCount(x0 & (x0 >> 1) & bitMask);
 }
 
@@ -419,9 +419,9 @@ int DnaBit::EditDistance(const DnaBit other) const noexcept
     // We have to pay a little cost to convert the DnaBits to std::strings
     // but then we have the 
     const int m = msize, n = other.msize;
-    auto scratch = std::make_unique<int8_t[]>((n + 1) * 2);
-    int8_t* row1 = scratch.get();
-    int8_t* row2 = row1 + n + 1;
+    auto scratch = std::make_unique<std::int8_t[]>((n + 1) * 2);
+    std::int8_t* row1 = scratch.get();
+    std::int8_t* row2 = row1 + n + 1;
     std::iota(row1, row1 + n + 1, 0);
     for (int i = 0; i < m; ++i) {
         row2[i] = i + 1;

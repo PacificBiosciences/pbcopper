@@ -36,7 +36,7 @@ TEST(Container_BitConversion, ConvertAsciiTo2bitChecked)
 {
     const auto f = ConvertAsciiTo2bit<false, true>;
 
-    for (int32_t i = 0; i < 256; ++i) {
+    for (std::int32_t i = 0; i < 256; ++i) {
         switch (i) {
             case 'A':
             case 'a':
@@ -65,7 +65,7 @@ TEST(Container_BitConversion, ConvertAsciiTo2bitComplementChecked)
 {
     const auto f = ConvertAsciiTo2bit<true, true>;
 
-    for (int32_t i = 0; i < 256; ++i) {
+    for (std::int32_t i = 0; i < 256; ++i) {
         switch (i) {
             case 'A':
             case 'a':

@@ -243,11 +243,11 @@ TEST(Data_Cigar, can_convert_cigar_to_m5)
 {
     struct TestData {
         std::string reference;
-        int32_t rStart;
-        int32_t rEnd;
+        std::int32_t rStart;
+        std::int32_t rEnd;
         std::string query;
-        int32_t qStart;
-        int32_t qEnd;
+        std::int32_t qStart;
+        std::int32_t qEnd;
         Cigar cigar;
         std::string expectedReference;
         std::string expectedQuery;

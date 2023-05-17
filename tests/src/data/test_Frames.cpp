@@ -13,14 +13,14 @@ using Frames = PacBio::Data::Frames;
 // clang-format off
 namespace FramesTests {
 
-const std::vector<uint16_t> RawFrames{
+const std::vector<std::uint16_t> RawFrames{
     0,  8,  140, 0,  0,   7,  4,  0,  85, 2,  1,  3,  2,   10, 1,  20, 47,   10,  9,  60, 20,
     3,  12, 5,   13, 165, 6,  14, 22, 12, 2,  4,  9,  218, 27, 3,  15, 2,    17,  2,  45, 24,
     89, 10, 7,   1,  11,  15, 0,  7,  0,  28, 17, 12, 6,   10, 37, 0,  12,   52,  0,  7,  1,
     14, 3,  26,  12, 0,   20, 17, 2,  13, 2,  9,  13, 7,   15, 29, 3,  6,    2,   1,  28, 10,
     3,  14, 7,   1,  22,  1,  6,  6,  0,  19, 31, 6,  2,   14, 0,  0,  1000, 947, 948};
 
-const std::vector<uint8_t> EncodedFrames{
+const std::vector<std::uint8_t> EncodedFrames{
     0,  8,  102, 0,  0,   7,  4,  0,  75, 2,  1,  3,  2,   10, 1,  20, 47,  10,  9,  60, 20,
     3,  12, 5,   13, 115, 6,  14, 22, 12, 2,  4,  9,  135, 27, 3,  15, 2,   17,  2,  45, 24,
     77, 10, 7,   1,  11,  15, 0,  7,  0,  28, 17, 12, 6,   10, 37, 0,  12,  52,  0,  7,  1,
@@ -72,11 +72,11 @@ TEST(Data_FrameEncoder, decode_throws_if_out_of_range)
 
 TEST(Data_FrameEncoder, v2_encoder_produces_expected_values)
 {
-    std::vector<uint16_t> input(240);
+    std::vector<std::uint16_t> input(240);
     std::iota(input.begin(), input.end(), 0);
 
     // clang-format off
-    const std::vector<uint8_t> expectedEncoded{
+    const std::vector<std::uint8_t> expectedEncoded{
         // 0 - 15
         0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15,
         // 16 - 31
@@ -118,8 +118,8 @@ TEST(Data_FrameEncoder, v2_encoder_produces_expected_values)
 
 TEST(Data_FrameEncoder, v2_encoder_clamps_to_max)
 {
-    const std::vector<uint16_t> outOfRange{240, 256, 400};
-    const std::vector<uint8_t> clamped{63, 63, 63};
+    const std::vector<std::uint16_t> outOfRange{240, 256, 400};
+    const std::vector<std::uint8_t> clamped{63, 63, 63};
 
     PacBio::Data::V2FrameEncoder v2{2, 4};
     const auto encoded = v2.Encode(outOfRange);
@@ -128,11 +128,11 @@ TEST(Data_FrameEncoder, v2_encoder_clamps_to_max)
 
 TEST(Data_FrameEncoder, v2_decoder_produces_expected_values)
 {
-    std::vector<uint8_t> input(64);
+    std::vector<std::uint8_t> input(64);
     std::iota(input.begin(), input.end(), 0);
 
     // clang-format off
-    const std::vector<uint16_t> expectedDecoded{
+    const std::vector<std::uint16_t> expectedDecoded{
         0,   1,   2,   3,   4,   5,   6,   7,   8,   9,   10,  11,  12,  13,  14,  15,
         16,  18,  20,  22,  24,  26,  28,  30,  32,  34,  36,  38,  40,  42,  44,  46,
         48,  52,  56,  60,  64,  68,  72,  76,  80,  84,  88,  92,  96,  100, 104, 108,
@@ -145,6 +145,6 @@ TEST(Data_FrameEncoder, v2_decoder_produces_expected_values)
     EXPECT_EQ(decoded.Data(), expectedDecoded);
 
     // out-of-range
-    std::vector<uint8_t> outOfRange{64, 65, 66};
+    std::vector<std::uint8_t> outOfRange{64, 65, 66};
     EXPECT_THROW(v2.Decode(outOfRange), std::runtime_error);
 }

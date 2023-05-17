@@ -14,15 +14,15 @@
 namespace PacBio {
 namespace Pbmer {
 
-KFG::KFG(uint8_t k, std::size_t nr) : kmerSize_{k}, nReads_{nr} {}
+KFG::KFG(std::uint8_t k, std::size_t nr) : kmerSize_{k}, nReads_{nr} {}
 
 bool KFG::HasNode(const DnaBit& bit) const { return (kfg_.find(bit.HashedKmer()) != kfg_.cend()); }
 
 bool KFG::MoreRCHits(const std::vector<DnaBit>& bits) const
 {
 
-    uint32_t fs = 0;
-    uint32_t rs = 0;
+    std::uint32_t fs = 0;
+    std::uint32_t rs = 0;
 
     for (const auto& k : bits) {
         auto rc = k;
@@ -40,7 +40,7 @@ bool KFG::MoreRCHits(const std::vector<DnaBit>& bits) const
     return false;
 }
 
-uint64_t KFG::Knock(const DnaBit& b, uint64_t hashedKmer) const
+uint64_t KFG::Knock(const DnaBit& b, std::uint64_t hashedKmer) const
 {
     auto node = kfg_.find(hashedKmer);
     if (node == kfg_.end()) {
@@ -53,7 +53,7 @@ uint64_t KFG::Knock(const DnaBit& b, uint64_t hashedKmer) const
     return hashedKmer;
 }
 
-uint64_t KFG::OpenDoor(const std::vector<DnaBit>& bits, uint64_t hashedKmer, uint32_t rid,
+uint64_t KFG::OpenDoor(const std::vector<DnaBit>& bits, std::uint64_t hashedKmer, std::uint32_t rid,
                        std::size_t i, std::size_t j) const
 {
     if (j == 0) {
@@ -81,9 +81,9 @@ void KFG::AddSeq(const std::vector<DnaBit>& bits, const std::size_t rid, const s
     nameToId_[rn] = rid;
     idToName_[rid] = rn;
 
-    uint64_t last = 0;
+    std::uint64_t last = 0;
     for (std::size_t i = 0; i < bits.size(); ++i) {
-        uint64_t nextHashedKmer = OpenDoor(bits, bits[i].HashedKmer(), rid, i, i);
+        std::uint64_t nextHashedKmer = OpenDoor(bits, bits[i].HashedKmer(), rid, i, i);
         if (nextHashedKmer == 0) {
             throw std::runtime_error{"[pbcopper] knock graph ERROR: zero hash value"};
         }
@@ -133,7 +133,7 @@ bool KFG::ValidateLoad() const
 
 void KFG::CleanUpEdges()
 {
-    std::vector<uint64_t> toRemove;
+    std::vector<std::uint64_t> toRemove;
     for (auto& node : kfg_) {
         toRemove.clear();
         for (const auto& e : node.second.inEdges_) {
@@ -156,7 +156,7 @@ void KFG::CleanUpEdges()
 
 void KFG::SeqCountFilter(int n, bool gt)
 {
-    std::vector<uint64_t> toRemove;
+    std::vector<std::uint64_t> toRemove;
 
     auto filterDirection = [&](const auto count) {
         if (gt) {
@@ -178,7 +178,7 @@ void KFG::SeqCountFilter(int n, bool gt)
     CleanUpEdges();
 }
 
-std::vector<KFNode> KFG::LinearPath(uint64_t x) const { return LinearPath(kfg_.at(x)); }
+std::vector<KFNode> KFG::LinearPath(std::uint64_t x) const { return LinearPath(kfg_.at(x)); }
 
 std::vector<KFNode> KFG::LinearPath(const KFNode& node) const
 {
@@ -189,9 +189,9 @@ std::vector<KFNode> KFG::LinearPath(const KFNode& node) const
     }
 
     // lookup for which nodes we've seen to prevent loops
-    std::unordered_set<uint64_t> seen;
+    std::unordered_set<std::uint64_t> seen;
 
-    uint64_t past = node.Key();
+    std::uint64_t past = node.Key();
 
     while (1) {
         if (seen.find(past) != seen.end()) {
@@ -218,11 +218,11 @@ Bubbles KFG::FindBubbles() const
 
     // keeping track of read id counts over linear paths
     // these variables are reused
-    robin_hood::unordered_map<uint32_t, int> left_reads;
-    robin_hood::unordered_map<uint32_t, int> right_reads;
+    robin_hood::unordered_map<std::uint32_t, int> left_reads;
+    robin_hood::unordered_map<std::uint32_t, int> right_reads;
 
     // keep track of the used head/tails of bubbles.
-    std::unordered_set<uint64_t> used_branch_node;
+    std::unordered_set<std::uint64_t> used_branch_node;
 
     for (const auto& node : kfg_) {
 
@@ -236,7 +236,7 @@ Bubbles KFG::FindBubbles() const
             continue;
         }
 
-        std::unordered_set<uint64_t>::const_iterator paths = node.second.begin();
+        std::unordered_set<std::uint64_t>::const_iterator paths = node.second.begin();
 
         std::vector<KFNode> left = LinearPath(*paths);
         ++paths;
@@ -325,7 +325,7 @@ void KFG::WriteUtgsGFA(const std::filesystem::path& filename) const
 
 int32_t KFG::MatchCount(const std::vector<DnaBit>& bits) const
 {
-    uint32_t nHits = 0;
+    std::uint32_t nHits = 0;
     for (const auto& b : bits) {
         if (HasNode(b)) {
             ++nHits;
@@ -342,7 +342,7 @@ void KFG::DumpHeader() const
     }
 }
 
-bool KFG::NextUtg(uint64_t currentNode, std::unordered_set<uint64_t>& seen,
+bool KFG::NextUtg(std::uint64_t currentNode, std::unordered_set<std::uint64_t>& seen,
                   std::vector<std::string>& segments, std::vector<std::string>& links) const
 {
     if (seen.find(currentNode) != seen.end()) {
@@ -362,7 +362,7 @@ bool KFG::NextUtg(uint64_t currentNode, std::unordered_set<uint64_t>& seen,
 
     // We need to get the branch node.
     if (fullPath.back().OutEdgeCount() == 1) {
-        uint64_t tail = (*fullPath.back().outEdges_.begin());
+        std::uint64_t tail = (*fullPath.back().outEdges_.begin());
         if (tail != fullPath.back().Key() && seen.find(fullPath.back().Key()) == seen.end()) {
             fullPath.push_back(kfg_.at(tail));
         }
@@ -407,12 +407,12 @@ bool KFG::NextUtg(uint64_t currentNode, std::unordered_set<uint64_t>& seen,
 
 std::string KFG::DumpGFAUtgs() const
 {
-    std::unordered_set<uint64_t> seen;
+    std::unordered_set<std::uint64_t> seen;
 
     std::vector<std::string> segments;
     std::vector<std::string> links;
 
-    std::set<uint64_t> keys;
+    std::set<std::uint64_t> keys;
 
     //maintain an order for testing and consistency
     for (const auto& node : kfg_) {
@@ -447,7 +447,7 @@ std::string KFG::DumpGFAUtgs() const
     return ss.str();
 }
 
-std::unordered_map<std::string, uint32_t> KFG::Header() const { return nameToId_; }
+std::unordered_map<std::string, std::uint32_t> KFG::Header() const { return nameToId_; }
 
 }  // namespace Pbmer
 }  // namespace PacBio

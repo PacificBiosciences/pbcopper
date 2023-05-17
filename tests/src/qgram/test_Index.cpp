@@ -21,7 +21,7 @@ TEST(QGram_Index, shape_hash_factors)
 
 TEST(QGram_Index, shape_hashing)
 {
-    auto check = [](const std::size_t q, std::vector<uint64_t> expected) {
+    auto check = [](const std::size_t q, std::vector<std::uint64_t> expected) {
         ASSERT_EQ(4, expected.size());
 
         const std::string seqA(q, 'A');
@@ -48,7 +48,7 @@ TEST(QGram_Index, shape_hashing)
 
 TEST(QGram_Index, homopolymer_hasher)
 {
-    using HashHit = std::pair<uint64_t, bool>;
+    using HashHit = std::pair<std::uint64_t, bool>;
 
     // clang-format off
     const std::vector<HashHit> input
@@ -76,7 +76,7 @@ TEST(QGram_Index, homopolymer_hasher)
 
 TEST(QGram_Index, shape_hash_iteration)
 {
-    using HashHit = std::pair<uint64_t, bool>;
+    using HashHit = std::pair<std::uint64_t, bool>;
 
     // clang-format off
     const std::vector<HashHit> input
@@ -112,7 +112,7 @@ TEST(QGram_Index, shape_hash_iteration)
 TEST(QGram_Index, index_construct)
 {
     auto check = [](const PacBio::QGram::internal::IndexImpl& index,
-                    const uint32_t expectedQGramCount, const std::size_t expectedDirLength,
+                    const std::uint32_t expectedQGramCount, const std::size_t expectedDirLength,
                     const PacBio::QGram::internal::IndexImpl::HashLookup_t& expectedHL,
                     const PacBio::QGram::internal::IndexImpl::SuffixArray_t& expectedSA) {
         const auto& sa = index.SuffixArray();
@@ -219,10 +219,10 @@ TEST(QGram_Index, index_construct)
 
 TEST(QGram_Index, index_copy)
 {
-    const std::vector<uint64_t> expected{118, 119, 120, 121, 122, 123, 124, 125, 126, 127,
-                                         128, 129, 130, 131, 51,  132, 133, 134, 135, 266,
-                                         136, 137, 138, 139, 140, 141, 142, 143, 144, 145,
-                                         146, 147, 148, 149, 150, 151, 152, 153, 154};
+    const std::vector<std::uint64_t> expected{118, 119, 120, 121, 122, 123, 124, 125, 126, 127,
+                                              128, 129, 130, 131, 51,  132, 133, 134, 135, 266,
+                                              136, 137, 138, 139, 140, 141, 142, 143, 144, 145,
+                                              146, 147, 148, 149, 150, 151, 152, 153, 154};
 
     const std::string inputSeq{
         "TCCAACTTAGGCATAAACCTGCATGCTACCTTGTCAGACCCACTCTGCACGAAGTAA"
@@ -238,8 +238,8 @@ TEST(QGram_Index, index_copy)
     const std::string query{"GATTGGTGGCACATAAGTAATACCATGGTCCCTGAAATTCGG"};
 
     auto checkIndexHits = [](const PacBio::QGram::Index& index, const std::string& querySeq,
-                             const std::vector<uint64_t>& expectedVec) {
-        std::vector<uint64_t> observed;
+                             const std::vector<std::uint64_t>& expectedVec) {
+        std::vector<std::uint64_t> observed;
         for (const auto& hits : index.Hits(querySeq)) {
             for (const auto& hit : hits) {
                 EXPECT_EQ(0, hit.Id());
@@ -269,7 +269,7 @@ TEST(QGram_Index, index_hits_INTERNAL_from_shape_short_seq)
     const auto isHomopolymer = PacBio::QGram::internal::HpHasher{q};
     const auto end = PacBio::Utility::SafeSubtract(seq.size() + 1, q);
 
-    for (uint32_t i = 0; i < end; ++i) {
+    for (std::uint32_t i = 0; i < end; ++i) {
         if (isHomopolymer(shape.HashNext())) {
             continue;
         }
@@ -285,10 +285,10 @@ TEST(QGram_Index, index_hits_INTERNAL_from_shape_short_seq)
 
 TEST(QGram_Index, index_hits_INTERNAL_from_shape_longer_seq)
 {
-    const std::vector<uint64_t> expected{118, 119, 120, 121, 122, 123, 124, 125, 126, 127,
-                                         128, 129, 130, 131, 51,  132, 133, 134, 135, 266,
-                                         136, 137, 138, 139, 140, 141, 142, 143, 144, 145,
-                                         146, 147, 148, 149, 150, 151, 152, 153, 154};
+    const std::vector<std::uint64_t> expected{118, 119, 120, 121, 122, 123, 124, 125, 126, 127,
+                                              128, 129, 130, 131, 51,  132, 133, 134, 135, 266,
+                                              136, 137, 138, 139, 140, 141, 142, 143, 144, 145,
+                                              146, 147, 148, 149, 150, 151, 152, 153, 154};
     const PacBio::QGram::internal::IndexImpl idx{
         6,
         {"TCCAACTTAGGCATAAACCTGCATGCTACCTTGTCAGACCCACTCTGCACGAAGTAA"
@@ -303,12 +303,12 @@ TEST(QGram_Index, index_hits_INTERNAL_from_shape_longer_seq)
 
     const std::string seq{"GATTGGTGGCACATAAGTAATACCATGGTCCCTGAAATTCGG"};
 
-    std::vector<uint64_t> observed;
+    std::vector<std::uint64_t> observed;
 
     const auto q = idx.Size();
     auto shape = PacBio::QGram::internal::Shape{q, seq};
     const auto end = PacBio::Utility::SafeSubtract(seq.size() + 1, q);
-    for (uint32_t j = 0; j < end; ++j) {
+    for (std::uint32_t j = 0; j < end; ++j) {
         shape.HashNext();
         const auto hits = idx.Hits(shape, j);
         for (std::size_t i = 0; i < hits.size(); ++i) {
@@ -321,10 +321,10 @@ TEST(QGram_Index, index_hits_INTERNAL_from_shape_longer_seq)
 
 TEST(QGram_Index, index_hits_PUBLIC_API_from_seq)
 {
-    const std::vector<uint64_t> expected{118, 119, 120, 121, 122, 123, 124, 125, 126, 127,
-                                         128, 129, 130, 131, 51,  132, 133, 134, 135, 266,
-                                         136, 137, 138, 139, 140, 141, 142, 143, 144, 145,
-                                         146, 147, 148, 149, 150, 151, 152, 153, 154};
+    const std::vector<std::uint64_t> expected{118, 119, 120, 121, 122, 123, 124, 125, 126, 127,
+                                              128, 129, 130, 131, 51,  132, 133, 134, 135, 266,
+                                              136, 137, 138, 139, 140, 141, 142, 143, 144, 145,
+                                              146, 147, 148, 149, 150, 151, 152, 153, 154};
 
     const PacBio::QGram::Index idx{6,
                                    "TCCAACTTAGGCATAAACCTGCATGCTACCTTGTCAGACCCACTCTGCACGAAGTAA"
@@ -339,7 +339,7 @@ TEST(QGram_Index, index_hits_PUBLIC_API_from_seq)
 
     const std::string seq{"GATTGGTGGCACATAAGTAATACCATGGTCCCTGAAATTCGG"};
 
-    std::vector<uint64_t> observed;
+    std::vector<std::uint64_t> observed;
     for (const auto& hits : idx.Hits(seq)) {
         for (const auto& hit : hits) {
             EXPECT_EQ(0, hit.Id());

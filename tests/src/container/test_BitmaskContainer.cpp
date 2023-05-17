@@ -17,7 +17,7 @@ using namespace PacBio;
 namespace PacBio {
 namespace Container {
 
-template <int32_t TotalBits, int32_t ElementBits>
+template <std::int32_t TotalBits, std::int32_t ElementBits>
 bool operator==(
     const BitmaskContainer<TotalBits, ElementBits>& lhs,
     const std::vector<typename BitmaskContainer<TotalBits, ElementBits>::ValueType>& rhs)
@@ -41,7 +41,7 @@ TEST(Container_BitmaskContainer, Constexpr)
     //                                                             3  2  1  0
     constexpr Container::BitmaskContainer<32, 8> CONSTEXPR_BMCT{0x54'47'43'41U};
 
-    EXPECT_EQ(sizeof(CONSTEXPR_BMCT), sizeof(uint32_t));
+    EXPECT_EQ(sizeof(CONSTEXPR_BMCT), sizeof(std::uint32_t));
     EXPECT_EQ(CONSTEXPR_BMCT.Capacity(), 4);
 
     EXPECT_EQ(CONSTEXPR_BMCT[0], 'A');
@@ -55,7 +55,7 @@ TEST(Container_BitmaskContainer, VariadicCtor)
     constexpr auto CONSTEXPR_BMCT =
         Container::BitmaskContainer<32, 8>::MakeFromArray('G', 'A', 'T', 'C');
 
-    EXPECT_EQ(sizeof(CONSTEXPR_BMCT), sizeof(uint32_t));
+    EXPECT_EQ(sizeof(CONSTEXPR_BMCT), sizeof(std::uint32_t));
     EXPECT_EQ(CONSTEXPR_BMCT.Capacity(), 4);
 
     EXPECT_EQ(CONSTEXPR_BMCT[0], 'G');
@@ -84,7 +84,7 @@ TEST(Container_BitmaskContainer, ConstexprDependencyInjection)
 
     constexpr auto CONSTEXPR_BMCT_DI =
         Container::BitmaskContainer<8, 2>::MakeFromTransform(CONVERTER, STR);
-    EXPECT_EQ(sizeof(CONSTEXPR_BMCT_DI), sizeof(uint8_t));
+    EXPECT_EQ(sizeof(CONSTEXPR_BMCT_DI), sizeof(std::uint8_t));
     EXPECT_EQ(CONSTEXPR_BMCT_DI.Capacity(), 4);
 
     EXPECT_EQ(CONSTEXPR_BMCT_DI[0], 3);
@@ -102,7 +102,7 @@ TEST(Container_BitmaskContainer, ConstexprDependencyInjection)
 TEST(Container_BitmaskContainer, Basic)
 {
     Container::BitmaskContainer<8, 2> bmct{0b11'00'10'01};
-    EXPECT_EQ(sizeof(bmct), sizeof(uint8_t));
+    EXPECT_EQ(sizeof(bmct), sizeof(std::uint8_t));
     EXPECT_EQ(bmct.Capacity(), 4);
 
     EXPECT_EQ(bmct[0], 0b01);
@@ -126,13 +126,13 @@ TEST(Container_BitmaskContainer, Basic)
     EXPECT_EQ(bmct.RawData(), 0);
 }
 
-template <int32_t TotalBits, int32_t ElementBits>
+template <std::int32_t TotalBits, std::int32_t ElementBits>
 void TestBitmaskContainer()
 {
     std::random_device rd;
     std::mt19937 gen{rd()};
 
-    constexpr int32_t ROUNDS = 100'000;
+    constexpr std::int32_t ROUNDS = 100'000;
 
     Container::BitmaskContainer<TotalBits, ElementBits> bmct{};
     std::vector<typename decltype(bmct)::ValueType> vec;
@@ -140,7 +140,7 @@ void TestBitmaskContainer()
     std::uniform_int_distribution<typename decltype(bmct)::ValueType> elementDistribution{
         0, bmct.MAXIMUM_VALUE};
 
-    for (int32_t i = 0; i < ROUNDS; ++i) {
+    for (std::int32_t i = 0; i < ROUNDS; ++i) {
         const auto randVal = elementDistribution(gen);
 
         if (vec.size() == 0) {
@@ -148,11 +148,11 @@ void TestBitmaskContainer()
             bmct.Insert(0, randVal);
             vec.insert(std::begin(vec), randVal);
         } else {
-            std::uniform_int_distribution<int32_t> moveDistribution{
-                0, 1 + (static_cast<int32_t>(vec.size()) < bmct.Capacity())};
-            std::uniform_int_distribution<int32_t> posDistribution(0, vec.size() - 1);
-            const int32_t moveType = moveDistribution(gen);
-            const int32_t pos = posDistribution(gen);
+            std::uniform_int_distribution<std::int32_t> moveDistribution{
+                0, 1 + (static_cast<std::int32_t>(vec.size()) < bmct.Capacity())};
+            std::uniform_int_distribution<std::int32_t> posDistribution(0, vec.size() - 1);
+            const std::int32_t moveType = moveDistribution(gen);
+            const std::int32_t pos = posDistribution(gen);
 
             switch (moveType) {
                 case 0:  // Set

@@ -11,27 +11,29 @@
 namespace PacBio {
 namespace Data {
 
-Frames::Frames(std::vector<uint16_t> frames) noexcept : std::vector<uint16_t>{std::move(frames)} {}
+Frames::Frames(std::vector<std::uint16_t> frames) noexcept
+    : std::vector<std::uint16_t>{std::move(frames)}
+{}
 
-const std::vector<uint16_t>& Frames::Data() const { return *this; }
+const std::vector<std::uint16_t>& Frames::Data() const { return *this; }
 
-std::vector<uint16_t>& Frames::Data() { return *this; }
+std::vector<std::uint16_t>& Frames::Data() { return *this; }
 
-std::vector<uint16_t>& Frames::DataRaw() { return *this; }
+std::vector<std::uint16_t>& Frames::DataRaw() { return *this; }
 
-Frames Frames::Decode(const std::vector<uint8_t>& codedData)
+Frames Frames::Decode(const std::vector<std::uint8_t>& codedData)
 {
     return Decode(codedData, V1FrameEncoder{});
 }
 
-std::vector<uint8_t> Frames::Encode(const std::vector<uint16_t>& frames)
+std::vector<std::uint8_t> Frames::Encode(const std::vector<std::uint16_t>& frames)
 {
     return Encode(frames, V1FrameEncoder{});
 }
 
-std::vector<uint8_t> Frames::Encode(FrameCodec /*unused*/) const { return Encode(*this); }
+std::vector<std::uint8_t> Frames::Encode(FrameCodec /*unused*/) const { return Encode(*this); }
 
-Frames& Frames::Data(std::vector<uint16_t> frames)
+Frames& Frames::Data(std::vector<std::uint16_t> frames)
 {
     *this = std::move(frames);
     return *this;
@@ -39,8 +41,8 @@ Frames& Frames::Data(std::vector<uint16_t> frames)
 
 bool Frames::operator==(const Frames& other) const noexcept
 {
-    return static_cast<const std::vector<uint16_t>&>(*this) ==
-           static_cast<const std::vector<uint16_t>&>(other);
+    return static_cast<const std::vector<std::uint16_t>&>(*this) ==
+           static_cast<const std::vector<std::uint16_t>&>(other);
 }
 
 bool Frames::operator!=(const Frames& other) const noexcept { return !(*this == other); }
@@ -48,8 +50,9 @@ bool Frames::operator!=(const Frames& other) const noexcept { return !(*this == 
 std::ostream& operator<<(std::ostream& os, const Frames& frames)
 {
     return os << "Frames("
-              << boost::algorithm::join(frames | boost::adaptors::transformed(
-                                                     [](uint16_t i) { return std::to_string(i); }),
+              << boost::algorithm::join(frames | boost::adaptors::transformed([](std::uint16_t i) {
+                                            return std::to_string(i);
+                                        }),
                                         ", ")
               << ')';
 }

@@ -5,14 +5,14 @@
 namespace PacBio {
 namespace Pbmer {
 
-KFNode::KFNode(const DnaBit& d, std::size_t n, uint64_t k) : key_{k}, dna_{d}
+KFNode::KFNode(const DnaBit& d, std::size_t n, std::uint64_t k) : key_{k}, dna_{d}
 {
     readIds_.resize(n);
 }
 
-bool KFNode::ContainsSeq(uint32_t rid) const { return readIds_[rid - 1] == 1; }
+bool KFNode::ContainsSeq(std::uint32_t rid) const { return readIds_[rid - 1] == 1; }
 
-bool KFNode::AddLoad(uint32_t rid)
+bool KFNode::AddLoad(std::uint32_t rid)
 {
     readIds_[rid - 1] = 1;
     return true;
@@ -27,9 +27,9 @@ std::size_t KFNode::FirstRId() const
 
 int KFNode::SeqCount() const { return readIds_.count(); }
 
-void KFNode::AddOutEdge(uint64_t e) { outEdges_.insert(e); }
+void KFNode::AddOutEdge(std::uint64_t e) { outEdges_.insert(e); }
 
-void KFNode::AddInEdge(uint64_t e) { inEdges_.insert(e); }
+void KFNode::AddInEdge(std::uint64_t e) { inEdges_.insert(e); }
 
 uint64_t KFNode::Kmer() const { return dna_.mer; }
 

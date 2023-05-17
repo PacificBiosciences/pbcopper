@@ -22,13 +22,13 @@ struct BubbleInfo
     // sequence of right path
     std::string RSeq;
     // count of kmers along left paths
-    int32_t LKmerCount;
+    std::int32_t LKmerCount;
     // count of kmers along right path
-    int32_t RKmerCount;
+    std::int32_t RKmerCount;
 
     // READID, KMER_COUNT
-    std::vector<std::pair<uint32_t, int32_t>> LData;
-    std::vector<std::pair<uint32_t, int32_t>> RData;
+    std::vector<std::pair<std::uint32_t, std::int32_t>> LData;
+    std::vector<std::pair<std::uint32_t, std::int32_t>> RData;
     // K-mers from the left-hand side
     std::vector<DnaBit> LVec;
     // K-mers from the right-hand side

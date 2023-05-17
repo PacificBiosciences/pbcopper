@@ -18,10 +18,10 @@ template<typename IndexType>
 void TestKMerIndex(int bottomKValue=-1) {
     static constexpr int NUMBER_OF_FOUNDERS = 2500;
     constexpr int K = 31;
-    std::vector<uint64_t> kmerFounders(NUMBER_OF_FOUNDERS);
-    uint64_t seed = 0;
-    const uint64_t kmerMask = uint64_t(-1) >> ((32 - K) * 2);
-    for(uint64_t& x: kmerFounders) {
+    std::vector<std::uint64_t> kmerFounders(NUMBER_OF_FOUNDERS);
+    std::uint64_t seed = 0;
+    const std::uint64_t kmerMask = std::uint64_t(-1) >> ((32 - K) * 2);
+    for(std::uint64_t& x: kmerFounders) {
         x = Utility::WyHash64Step(seed) & kmerMask;
     }
     const std::vector<SubMerSelection> submerSelection{SubMerSelection(K, 0x3fffffff)};
@@ -36,7 +36,7 @@ void TestKMerIndex(int bottomKValue=-1) {
     constexpr int NUM_CHOICES = 128;
     for(int i = 0; i < NUM_CHOICES; ++i) {
         const int pos = Utility::WyHash64Step(seed) % kmerFounders.size();
-        uint64_t kmer = kmerFounders[pos];
+        std::uint64_t kmer = kmerFounders[pos];
         auto ret = index.Query(kmer);
         EXPECT_EQ(static_cast<int>(ret.front().first), pos);
     }
@@ -56,10 +56,10 @@ void TestFlexibleIndex(int bottomKValue=-1) {
     constexpr int SUBK = 17;
     constexpr int NUM_SPACINGS = 32;
     using Algorithm::SubMerSelection;
-    std::vector<uint64_t> kmerFounders(NUMBER_OF_FOUNDERS);
-    uint64_t seed = 0;
-    const uint64_t kmerMask = uint64_t(-1) >> ((32 - K) * 2);
-    for(uint64_t& x: kmerFounders) {
+    std::vector<std::uint64_t> kmerFounders(NUMBER_OF_FOUNDERS);
+    std::uint64_t seed = 0;
+    const std::uint64_t kmerMask = std::uint64_t(-1) >> ((32 - K) * 2);
+    for(std::uint64_t& x: kmerFounders) {
         x = Utility::WyHash64Step(seed) & kmerMask;
     }
     std::vector<SubMerSelection> submerSelection{Algorithm::FlatSubMer(K, SUBK)};
@@ -77,7 +77,7 @@ void TestFlexibleIndex(int bottomKValue=-1) {
     constexpr int MAX_NEIGHBORS = 10;
     for(int i = 0; i < NUM_CHOICES; ++i) {
         const int pos = Utility::WyHash64Step(seed) % kmerFounders.size();
-        const uint64_t kmer = kmerFounders[pos];
+        const std::uint64_t kmer = kmerFounders[pos];
         auto ret = index.Query(kmer);
         EXPECT_EQ(static_cast<int>(ret.front().first), pos);
         int nNeighborsQueried = 0;

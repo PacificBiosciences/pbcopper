@@ -32,18 +32,19 @@ struct MappedRead : public Read
     MappedRead(Read read) noexcept;
     MappedRead(Read read, enum Strand strand, Position templateStart, Position templateEnd,
                bool pinStart = false, bool pinEnd = false) noexcept;
-    MappedRead(Read read, enum Strand strand, Position templateStart, Cigar cigar, uint8_t mapQV);
+    MappedRead(Read read, enum Strand strand, Position templateStart, Cigar cigar,
+               std::uint8_t mapQV);
     MappedRead(Read read, enum Strand strand, Position templateStart, Position templateEnd,
-               Cigar cigar, uint8_t mapQV);
+               Cigar cigar, std::uint8_t mapQV);
 
-    int32_t RefId = 0;
+    std::int32_t RefId = 0;
     enum Strand Strand = Strand::UNMAPPED;
     Position TemplateStart = UNMAPPED_POSITION;
     Position TemplateEnd = UNMAPPED_POSITION;
     bool PinStart = false;
     bool PinEnd = false;
     class Cigar Cigar;
-    uint8_t MapQuality = 0;
+    std::uint8_t MapQuality = 0;
 
     Position AlignedStart() const;
     Position AlignedEnd() const;
@@ -70,7 +71,7 @@ struct MappedRead : public Read
         GapBehavior gapBehavior = GapBehavior::IGNORE,
         SoftClipBehavior softClipBehavior = SoftClipBehavior::KEEP) const;
 
-    int32_t NumMismatches() const;
+    std::int32_t NumMismatches() const;
 };
 
 ///

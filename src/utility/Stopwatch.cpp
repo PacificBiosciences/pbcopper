@@ -6,7 +6,7 @@
 namespace PacBio {
 namespace Utility {
 
-std::string Stopwatch::PrettyPrintNanoseconds(int64_t nanosecs)
+std::string Stopwatch::PrettyPrintNanoseconds(std::int64_t nanosecs)
 {
     auto d = nanosecs / 1000 / 1000 / 1000 / 60 / 60 / 24;
     auto h = (nanosecs / 1000 / 1000 / 1000 / 60 / 60) % 24;

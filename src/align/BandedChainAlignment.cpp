@@ -245,15 +245,15 @@ std::size_t BandedGlobalAlignBlock::InitLookup(const std::size_t tLen, const std
     lookup_.clear();
     lookup_.reserve(qLen + 1);
 
-    const auto t = static_cast<int64_t>(tLen);
-    const auto q = static_cast<int64_t>(qLen);
-    const auto k = static_cast<int64_t>(config_.bandExtend_);
+    const auto t = static_cast<std::int64_t>(tLen);
+    const auto q = static_cast<std::int64_t>(qLen);
+    const auto k = static_cast<std::int64_t>(config_.bandExtend_);
     assert(t >= q);
 
     std::size_t arrayStart = 0;
-    int64_t jBegin = 0;
-    int64_t jEnd = 0;
-    for (int64_t i = 0; i < q + 1; ++i) {
+    std::int64_t jBegin = 0;
+    std::int64_t jEnd = 0;
+    for (std::int64_t i = 0; i < q + 1; ++i) {
 
         // jBegin
         jBegin = i - k;
@@ -577,7 +577,7 @@ void BandedChainAlignerImpl::Initialize(const char* target, const std::size_t ta
                                         const char* query, const std::size_t queryLen)
 {
     globalTranscript_.clear();
-    globalScore_ = std::numeric_limits<int64_t>::min();
+    globalScore_ = std::numeric_limits<std::int64_t>::min();
     gapBlockBeginH_ = 0;
     gapBlockBeginV_ = 0;
 

@@ -15,7 +15,7 @@
 namespace PacBio {
 namespace Container {
 
-template <int32_t TotalBits, int32_t ElementBits, bool FixedWidth>
+template <std::int32_t TotalBits, std::int32_t ElementBits, bool FixedWidth>
 class DNA2bitStringImpl
     : public std::conditional_t<FixedWidth, BitmaskContainer<TotalBits, ElementBits>,
                                 BitContainer<TotalBits, ElementBits>>
@@ -26,7 +26,7 @@ private:
     using UnderlyingType = typename Base::UnderlyingType;
 
 private:
-    PB_CUDA_HOST PB_CUDA_DEVICE constexpr int32_t SizeImpl() const noexcept
+    PB_CUDA_HOST PB_CUDA_DEVICE constexpr std::int32_t SizeImpl() const noexcept
     {
         if constexpr (FixedWidth) {
             return this->Capacity();
@@ -40,14 +40,14 @@ public:
         : Base{base}
     {}
 
-    PB_CUDA_HOST PB_CUDA_DEVICE constexpr explicit DNA2bitStringImpl(const UnderlyingType val,
-                                                                     const int32_t size) noexcept
+    PB_CUDA_HOST PB_CUDA_DEVICE constexpr explicit DNA2bitStringImpl(
+        const UnderlyingType val, const std::int32_t size) noexcept
         : Base{val, size}
     {}
 
     constexpr explicit DNA2bitStringImpl(const std::string_view str) noexcept
     {
-        const int32_t strSize = str.size();
+        const std::int32_t strSize = str.size();
         assert(strSize <= this->Capacity());
 
         // variable-width
@@ -55,15 +55,15 @@ public:
             this->size_ = strSize;
         }
 
-        for (int32_t i = 0; i < strSize; ++i) {
+        for (std::int32_t i = 0; i < strSize; ++i) {
             this->Set(i, ConvertAsciiTo2bit(str[i]));
         }
     }
 
     // variable-width
-    template <bool F = FixedWidth, typename std::enable_if_t<!F, int32_t> = 0>
+    template <bool F = FixedWidth, typename std::enable_if_t<!F, std::int32_t> = 0>
     constexpr DNA2bitStringImpl(const DNA2bitStringImpl<TotalBits, ElementBits, true> cont,
-                                const int32_t size) noexcept
+                                const std::int32_t size) noexcept
         : Base{cont, size}
     {}
 
@@ -73,7 +73,7 @@ public:
         std::string result;
         result.reserve(this->Capacity());
 
-        for (int32_t i = 0; i < this->SizeImpl(); ++i) {
+        for (std::int32_t i = 0; i < this->SizeImpl(); ++i) {
             result.push_back(Container::Convert2bitToAscii((*this)[i]));
         }
 
@@ -81,7 +81,10 @@ public:
     }
 
 public:
-    PB_CUDA_HOST PB_CUDA_DEVICE constexpr int32_t Length() const noexcept { return SizeImpl(); }
+    PB_CUDA_HOST PB_CUDA_DEVICE constexpr std::int32_t Length() const noexcept
+    {
+        return SizeImpl();
+    }
 
     PB_CUDA_HOST PB_CUDA_DEVICE constexpr void ReverseComplement() noexcept
     {
@@ -89,8 +92,8 @@ public:
         this->Reverse();
     }
 
-    PB_CUDA_HOST PB_CUDA_DEVICE constexpr DNA2bitStringImpl Range(const int32_t pos,
-                                                                  const int32_t len) const noexcept
+    PB_CUDA_HOST PB_CUDA_DEVICE constexpr DNA2bitStringImpl Range(
+        const std::int32_t pos, const std::int32_t len) const noexcept
     {
         return DNA2bitStringImpl{Base::Range(pos, len)};
     }

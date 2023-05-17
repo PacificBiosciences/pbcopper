@@ -416,9 +416,9 @@ TEST(Pbmer_Dbg, Bubbles_mismatch_found)
     auto bubbles = dg.FindBubbles();
     EXPECT_EQ(bubbles.size(), 1);
     const auto& bubble = bubbles.front();
-    std::vector<uint64_t> integers{334033404, 11588667, 46354668,  185418674, 741674696,
-                                   819215136, 55635075, 64769955,  553063400, 339419382,
-                                   283935704, 62000992, 248003971, 64503236,  16125809};
+    std::vector<std::uint64_t> integers{334033404, 11588667, 46354668,  185418674, 741674696,
+                                        819215136, 55635075, 64769955,  553063400, 339419382,
+                                        283935704, 62000992, 248003971, 64503236,  16125809};
     const std::vector<bool> strands{true, false, false, false, false, false, false, true,
                                     true, false, false, false, false, true,  true};
     std::vector<DnaBit> rightTruth{
@@ -554,7 +554,7 @@ TEST(Pbmer_Dbg, SpurRemoval_spur_found)
     dg.BuildEdges();
     auto spurCount = dg.RemoveSpurs(1);
 
-    std::vector<std::pair<uint64_t, uint64_t>> edgePairs;
+    std::vector<std::pair<std::uint64_t, std::uint64_t>> edgePairs;
     for (const auto& [key, value] : dg) {
         for (const PacBio::Pbmer::DnaBit db : value) {
             edgePairs.emplace_back(key, db.mer);
@@ -562,7 +562,7 @@ TEST(Pbmer_Dbg, SpurRemoval_spur_found)
     }
     std::sort(std::begin(edgePairs), std::end(edgePairs));
 
-    const std::vector<std::pair<uint64_t, uint64_t>> expected{
+    const std::vector<std::pair<std::uint64_t, std::uint64_t>> expected{
         {713, 7293},  {729, 2439},  {729, 6269},   {2004, 8693}, {2004, 10284},
         {2439, 729},  {6269, 729},  {6269, 8693},  {7293, 713},  {7293, 10284},
         {8693, 2004}, {8693, 6269}, {10284, 2004}, {10284, 7293}};

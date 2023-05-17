@@ -39,14 +39,15 @@ public:
     operator std::vector<float>() const;
 
 public:
-    PB_CUDA_HOST PB_CUDA_DEVICE constexpr const float& operator[](const int32_t i) const noexcept
+    PB_CUDA_HOST PB_CUDA_DEVICE constexpr const float& operator[](
+        const std::int32_t i) const noexcept
     {
         assert(i >= 0);
         assert(i < 4);
         return data_[i];
     }
 
-    PB_CUDA_HOST PB_CUDA_DEVICE constexpr float& operator[](const int32_t i) noexcept
+    PB_CUDA_HOST PB_CUDA_DEVICE constexpr float& operator[](const std::int32_t i) noexcept
     {
         // casting away const when underlying object is non-const, is well-defined
         // Effective C++ (Third Edition) - Item 3
@@ -84,7 +85,7 @@ PB_CUDA_HOST PB_CUDA_DEVICE constexpr SNR ClampSNR(SNR v, const SNR& lo, const S
     using std::min;
 #endif
 
-    for (int32_t i = 0; i < 4; ++i) {
+    for (std::int32_t i = 0; i < 4; ++i) {
         const float lowerBound = lo[i];
         const float upperBound = hi[i];
         assert(lowerBound < upperBound);

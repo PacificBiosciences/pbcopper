@@ -21,9 +21,9 @@ std::vector<SubMerSelection> GenerateContiguous(const int k, const int subK)
         throw std::invalid_argument(
             "[pbcopper] generate contiguous submers ERROR: subK must be <= k");
     }
-    const uint64_t completePattern = (1ull << k) - 1;
+    const std::uint64_t completePattern = (1ull << k) - 1;
     const int diff = k - subK;
-    const uint64_t subPattern = completePattern >> diff;
+    const std::uint64_t subPattern = completePattern >> diff;
     std::vector<SubMerSelection> ret;
     ret.reserve(diff + 1);
     for (int i = 0; i < diff + 1; ++i) {
@@ -33,7 +33,8 @@ std::vector<SubMerSelection> GenerateContiguous(const int k, const int subK)
 }
 
 std::vector<SubMerSelection> GenerateRandomSubsequences(const int k, const int subK,
-                                                        int64_t numSequences, uint64_t seed)
+                                                        std::int64_t numSequences,
+                                                        std::uint64_t seed)
 {
     seed = std::mt19937_64(seed)();
     if (numSequences > MaxNumSpacings(k, subK)) {
@@ -44,15 +45,15 @@ std::vector<SubMerSelection> GenerateRandomSubsequences(const int k, const int s
             std::to_string(numSequences));
     }
     if (numSequences == 0) {
-        numSequences = std::max(int64_t((1LL << (k - subK)) / 20 * 5), int64_t(1));
+        numSequences = std::max(std::int64_t((1LL << (k - subK)) / 20 * 5), std::int64_t(1));
     }
-    Container::UnorderedSet<uint64_t> keys;
-    const uint64_t randomValueMask = (uint64_t(1) << k) - 1;
+    Container::UnorderedSet<std::uint64_t> keys;
+    const std::uint64_t randomValueMask = (std::uint64_t(1) << k) - 1;
     for (;;) {
         //This RNG is not as fast as possible, uses rejection sampling.
         //And we randomly generate bit-strings until we have
-        uint64_t randomValue = Utility::WyHash64Step(seed);
-        uint64_t rmask = randomValue & randomValueMask;
+        std::uint64_t randomValue = Utility::WyHash64Step(seed);
+        std::uint64_t rmask = randomValue & randomValueMask;
         auto popCount = Utility::PopCount(rmask);
         if (popCount != subK) {
             // if the number of 1s is wrong, flip. Otherwise we'll have to generate more numbers.
@@ -68,7 +69,7 @@ std::vector<SubMerSelection> GenerateRandomSubsequences(const int k, const int s
     }
     std::vector<SubMerSelection> ret;
     std::transform(keys.begin(), keys.end(), std::back_inserter(ret),
-                   [k](const uint64_t x) { return SubMerSelection(k, x); });
+                   [k](const std::uint64_t x) { return SubMerSelection(k, x); });
     return ret;
 }
 
@@ -79,12 +80,15 @@ SubMerSelection FlatSubMer(const int k, const int subK)
             std::string("[pbcopper] kmer index ERROR: FlatSubMer expects subK to be >= k. k = ") +
             std::to_string(k) + ", subk = " + std::to_string(subK));
     }
-    return {k, (uint64_t(1) << subK) - 1};
+    return {k, (std::uint64_t(1) << subK) - 1};
 }
 
-uint64_t SubMerSelection::SelectSubseq(uint64_t kmer) const noexcept { return kmer & pattern_; }
+uint64_t SubMerSelection::SelectSubseq(std::uint64_t kmer) const noexcept
+{
+    return kmer & pattern_;
+}
 
-uint64_t SubMerSelection::SelectSubseq(uint64_t kmer, int position) const noexcept
+uint64_t SubMerSelection::SelectSubseq(std::uint64_t kmer, int position) const noexcept
 {
     const int bitshift = position * 2;
     return (kmer & (pattern_ << bitshift)) >> bitshift;
@@ -105,14 +109,14 @@ SubMerSelection& SubMerSelection::Normalize() noexcept
     return *this;
 }
 
-uint64_t SubMerSelection::HashedSubseq(uint64_t kmer) const noexcept
+uint64_t SubMerSelection::HashedSubseq(std::uint64_t kmer) const noexcept
 {
     return WangHash(SelectSubseq(kmer));
 }
 
-uint64_t SubMerSelection::Subseq(uint64_t kmer) const noexcept { return SelectSubseq(kmer); }
+uint64_t SubMerSelection::Subseq(std::uint64_t kmer) const noexcept { return SelectSubseq(kmer); }
 
-uint64_t SubMerSelection::HashedSubseq(uint64_t kmer, int pos) const noexcept
+uint64_t SubMerSelection::HashedSubseq(std::uint64_t kmer, int pos) const noexcept
 {
     return WangHash(SelectSubseq(kmer, pos));
 }
@@ -124,7 +128,7 @@ std::string SubMerSelection::ToString() const
     std::string ret(BUFFER_SIZE, '\0');
     const int rc = std::snprintf(ret.data(), BUFFER_SIZE, "%" PRIu64 "\n", pattern_);
     ret.resize(rc);
-    for (uint64_t cv = pattern_; cv;) {
+    for (std::uint64_t cv = pattern_; cv;) {
         const int ind = Utility::CountTrailingZeros(cv);
         int kmerIndex = ind >> 1;
         ret += "Pos";
@@ -135,9 +139,9 @@ std::string SubMerSelection::ToString() const
     return ret;
 }
 
-uint64_t SubMerSelection::MakePattern(uint64_t bitPattern) noexcept
+uint64_t SubMerSelection::MakePattern(std::uint64_t bitPattern) noexcept
 {
-    uint64_t ret = 0;
+    std::uint64_t ret = 0;
     for (int i = 0; i < 32; ++i) {
         if ((bitPattern >> i) & 1) {
             ret |= 0x3ull << (i * 2);
@@ -148,7 +152,8 @@ uint64_t SubMerSelection::MakePattern(uint64_t bitPattern) noexcept
 
 int SubMerSelection::PopCount() const noexcept { return Utility::PopCount(pattern_) >> 1; }
 
-SubMerSelection::SubMerSelection(int k, uint64_t bitPattern) : pattern_(MakePattern(bitPattern))
+SubMerSelection::SubMerSelection(int k, std::uint64_t bitPattern)
+    : pattern_(MakePattern(bitPattern))
 {
     if (k > 32) {
         throw std::invalid_argument(
@@ -162,9 +167,9 @@ SubMerSelection::SubMerSelection(int k, uint64_t bitPattern) : pattern_(MakePatt
     }
 }
 
-SubMerSelection::operator uint64_t() const noexcept { return this->pattern_; }
+SubMerSelection::operator std::uint64_t() const noexcept { return this->pattern_; }
 
-SubMerSelection::SubMerSelection(uint64_t x) noexcept : pattern_(x) {}
+SubMerSelection::SubMerSelection(std::uint64_t x) noexcept : pattern_(x) {}
 
 bool SubMerSelection::operator<(const SubMerSelection o) const noexcept
 {
@@ -176,8 +181,8 @@ bool SubMerSelection::operator<(const SubMerSelection o) const noexcept
     const int otherPopCount = o.PopCount();
     const int myKernelWidth = KernelWidth();
     const int otherKernelWidth = KernelWidth();
-    const uint64_t myInvertedN = uint64_t(-1) - *this;
-    const uint64_t otherInvertedN = uint64_t(-1) - o;
+    const std::uint64_t myInvertedN = std::uint64_t(-1) - *this;
+    const std::uint64_t otherInvertedN = std::uint64_t(-1) - o;
     return std::tie(myPopCount, myKernelWidth, myInvertedN) >
            std::tie(otherPopCount, otherKernelWidth, otherInvertedN);
 }
@@ -187,7 +192,7 @@ bool SubMerSelection::operator==(const SubMerSelection o) const noexcept
     return pattern_ == o.pattern_;
 }
 
-void BottomKKmerQ::Update(uint64_t item) noexcept
+void BottomKKmerQ::Update(std::uint64_t item) noexcept
 {
     if (const std::ptrdiff_t osize = Utility::Ssize(*this); osize < nitems_) {
         return Super::push(item);
@@ -198,11 +203,11 @@ void BottomKKmerQ::Update(uint64_t item) noexcept
     }
 }
 
-std::vector<uint64_t>&& BottomKKmerQ::ToVec() noexcept { return std::move(this->c); }
+std::vector<std::uint64_t>&& BottomKKmerQ::ToVec() noexcept { return std::move(this->c); }
 
 void BottomKKmerQ::Sort() noexcept { std::sort(this->c.begin(), this->c.end()); }
 
-std::vector<uint64_t>&& BottomKKmerQ::ToSortedVec() noexcept
+std::vector<std::uint64_t>&& BottomKKmerQ::ToSortedVec() noexcept
 {
     Sort();
     return ToVec();

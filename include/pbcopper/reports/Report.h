@@ -18,7 +18,7 @@ namespace PacBio {
 namespace Reports {
 
 using ReportValue =
-    std::variant<std::monostate, int, unsigned int, int64_t, double, bool, std::string>;
+    std::variant<std::monostate, int, unsigned int, std::int64_t, double, bool, std::string>;
 
 class BaseReportElement
 {
@@ -39,7 +39,7 @@ public:
     // conversion
     operator int() const;
     operator unsigned int() const;
-    operator int64_t() const;
+    operator std::int64_t() const;
     operator double() const;
     operator bool() const;
     operator std::string() const;
@@ -145,7 +145,7 @@ private:
 class TaskReport
 {
 public:
-    TaskReport(int nproc, double runTime, int exitCode, int64_t peakRss);
+    TaskReport(int nproc, double runTime, int exitCode, std::int64_t peakRss);
 
     void Print(const std::filesystem::path& filename, const std::string& prefix = "") const;
     void Print(std::ostream& out, const std::string& prefix = "") const;

@@ -35,7 +35,7 @@ Attribute::operator int() const { return std::get<int>(value_); }
 
 Attribute::operator unsigned int() const { return std::get<unsigned int>(value_); }
 
-Attribute::operator int64_t() const { return std::get<int64_t>(value_); }
+Attribute::operator std::int64_t() const { return std::get<std::int64_t>(value_); }
 
 Attribute::operator double() const { return std::get<double>(value_); }
 

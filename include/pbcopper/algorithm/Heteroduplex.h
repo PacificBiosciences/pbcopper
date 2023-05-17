@@ -43,13 +43,14 @@ struct HeteroduplexSettings
 
 struct HeteroduplexResults
 {
-    uint32_t NumSignificantSites = 0;  // count of variable sites with p-value below alpha level
-    uint32_t NumVariableSites = 0;     // total number of variable sites
-    uint32_t SequenceLength = 0;       // length of consensus sequence used
-    double FractionSites = 0.0;        // numSignificantSites / numVariableSites
+    std::uint32_t NumSignificantSites =
+        0;                               // count of variable sites with p-value below alpha level
+    std::uint32_t NumVariableSites = 0;  // total number of variable sites
+    std::uint32_t SequenceLength = 0;    // length of consensus sequence used
+    double FractionSites = 0.0;          // numSignificantSites / numVariableSites
 
-    std::vector<int32_t> VariableSites;
-    std::vector<int32_t> SignificantSites;
+    std::vector<std::int32_t> VariableSites;
+    std::vector<std::int32_t> SignificantSites;
     std::vector<char> SignificantBases;
 
     std::string FwdMostCommonBases;
@@ -64,8 +65,8 @@ HeteroduplexResults FindHeteroduplex(const std::string& reference,
                                      const std::vector<std::string>& revSequences,
                                      const std::vector<Data::Cigar>& fwdCigars,
                                      const std::vector<Data::Cigar>& revCigars,
-                                     const std::vector<int32_t>& fwdPositions,
-                                     const std::vector<int32_t>& revPositions,
+                                     const std::vector<std::int32_t>& fwdPositions,
+                                     const std::vector<std::int32_t>& revPositions,
                                      const HeteroduplexSettings& settings = HeteroduplexSettings{});
 
 ///
@@ -78,8 +79,8 @@ bool IsHeteroduplex(const std::string& reference, const std::vector<std::string>
                     const std::vector<std::string>& revSequences,
                     const std::vector<Data::Cigar>& fwdCigars,
                     const std::vector<Data::Cigar>& revCigars,
-                    const std::vector<int32_t>& fwdPositions,
-                    const std::vector<int32_t>& revPositions,
+                    const std::vector<std::int32_t>& fwdPositions,
+                    const std::vector<std::int32_t>& revPositions,
                     const HeteroduplexSettings& settings = HeteroduplexSettings{});
 
 }  // namespace Algorithm

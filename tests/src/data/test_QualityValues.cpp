@@ -23,7 +23,7 @@ TEST(Data_QualityValue, can_be_constructed_from_integers)
     const QualityValue valid{42};
     const QualityValue max{93};
     const QualityValue tooHigh{94};
-    const QualityValue wayTooHigh{std::numeric_limits<int8_t>::max()};
+    const QualityValue wayTooHigh{std::numeric_limits<std::int8_t>::max()};
 
     EXPECT_EQ(0, zero);
     EXPECT_EQ(33, thirtyThree);
@@ -62,7 +62,7 @@ TEST(Data_QualityValues, default_is_empty)
 
 TEST(Data_QualityValues, can_be_constructed_from_integers)
 {
-    const std::vector<uint8_t> values{93, 93, 93, 42, 42, 33, 33, 0, 0};
+    const std::vector<std::uint8_t> values{93, 93, 93, 42, 42, 33, 33, 0, 0};
 
     QualityValues qvs;
     for (auto qv : values) {
@@ -74,7 +74,7 @@ TEST(Data_QualityValues, can_be_constructed_from_integers)
 
 TEST(Data_QualityValues, can_be_constructed_from_integer_vector)
 {
-    const std::vector<uint8_t> values{93, 93, 93, 42, 42, 33, 33, 0, 0};
+    const std::vector<std::uint8_t> values{93, 93, 93, 42, 42, 33, 33, 0, 0};
     const QualityValues qvs{values};
     EXPECT_EQ("~~~KKBB!!", qvs.Fastq());
 }
@@ -89,7 +89,7 @@ TEST(Data_QualityValues, can_be_constructed_from_quality_value_vector)
 TEST(Data_QualityValues, can_be_constructed_from_fastq_string)
 {
     const std::string fastqString{"~~~KKBB!!"};
-    const std::vector<uint8_t> expected{93, 93, 93, 42, 42, 33, 33, 0, 0};
+    const std::vector<std::uint8_t> expected{93, 93, 93, 42, 42, 33, 33, 0, 0};
 
     const QualityValues qvs = QualityValues::FromFastq(fastqString);
     EXPECT_EQ(fastqString.size(), qvs.size());

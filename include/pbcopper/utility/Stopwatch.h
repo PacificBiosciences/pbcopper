@@ -39,7 +39,7 @@ public:
     std::string ElapsedTime() const;
 
     /// \returns the elapsed time (in string) given input nanoseconds
-    static std::string PrettyPrintNanoseconds(int64_t nanosecs);
+    static std::string PrettyPrintNanoseconds(std::int64_t nanosecs);
 
     /// \returns the CPU time (in nanoseconds) between tick tock.
     static double CpuTime();

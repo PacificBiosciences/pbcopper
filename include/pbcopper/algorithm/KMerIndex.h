@@ -26,17 +26,17 @@
 namespace PacBio {
 namespace Algorithm {
 
-struct BottomKKmerQ : public std::priority_queue<uint64_t>
+struct BottomKKmerQ : public std::priority_queue<std::uint64_t>
 {
 private:
-    using Super = std::priority_queue<uint64_t>;
+    using Super = std::priority_queue<std::uint64_t>;
     const int nitems_;
 
 public:
     BottomKKmerQ(int nitems);
-    void Update(uint64_t item) noexcept;
-    std::vector<uint64_t>&& ToVec() noexcept;
-    std::vector<uint64_t>&& ToSortedVec() noexcept;
+    void Update(std::uint64_t item) noexcept;
+    std::vector<std::uint64_t>&& ToVec() noexcept;
+    std::vector<std::uint64_t>&& ToSortedVec() noexcept;
     void Sort() noexcept;
 };
 
@@ -44,7 +44,7 @@ struct SubMerSelection
 {
     // Method for selecting a subset of k-mer elements to include
 private:
-    uint64_t pattern_;
+    std::uint64_t pattern_;
 
     /// Returns the number of set positions in the k-mer
     ///
@@ -53,16 +53,16 @@ private:
 
     // MakePattern makes the 64-bit bitmask for a given
     // bitpattern for subsets of 32-mers to save.
-    static uint64_t MakePattern(uint64_t bitpattern) noexcept;
+    static std::uint64_t MakePattern(std::uint64_t bitpattern) noexcept;
 
 public:
-    operator uint64_t() const noexcept;
+    operator std::uint64_t() const noexcept;
     // Standard way to generate
     // This requires the k-mer length and the bitpattern.
-    SubMerSelection(int k, uint64_t bitpattern);
+    SubMerSelection(int k, std::uint64_t bitpattern);
     // Create a SubMerSelection from an existing bitpattern
     // This simply copies the 64-bit integer
-    SubMerSelection(uint64_t x) noexcept;
+    SubMerSelection(std::uint64_t x) noexcept;
 
     SubMerSelection(SubMerSelection&& o) noexcept = default;
     SubMerSelection(const SubMerSelection& o) noexcept = default;
@@ -70,10 +70,10 @@ public:
     SubMerSelection& operator=(SubMerSelection&& o) noexcept = default;
 
     // First SelectSubseq is for bit-sampling LSH
-    uint64_t SelectSubseq(uint64_t kmer) const noexcept;
+    std::uint64_t SelectSubseq(std::uint64_t kmer) const noexcept;
 
     // Second SelectSubseq is for k-mer set LSH, which is translationally invariant
-    uint64_t SelectSubseq(uint64_t kmer, int position) const noexcept;
+    std::uint64_t SelectSubseq(std::uint64_t kmer, int position) const noexcept;
 
     // The number of sliding windows contained in the full k-mer
     // as selected by the bitpattern pattern_;
@@ -87,7 +87,7 @@ public:
     // Reversible Bijection Hash
     // c/o http://web.archive.org/web/20071223173210/http://www.concentric.net/~Ttwang/tech/inthash.htm
     // Also used in klib, cqf, and within PacBio's pbmer
-    static constexpr uint64_t WangHash(uint64_t key) noexcept
+    static constexpr std::uint64_t WangHash(std::uint64_t key) noexcept
     {
         key = (~key) + (key << 21);  // key = (key << 21) - key - 1;
         key = key ^ (key >> 24);
@@ -101,32 +101,33 @@ public:
     // Select the subsequence corresponding to the k-mer
     // This function is only for the isSliding_ == false mode. (Hamming distance)
     // HashedSubseq is the same, but fed through WangHash.
-    uint64_t Subseq(uint64_t kmer) const noexcept;
-    uint64_t HashedSubseq(uint64_t kmer) const noexcept;
+    std::uint64_t Subseq(std::uint64_t kmer) const noexcept;
+    std::uint64_t HashedSubseq(std::uint64_t kmer) const noexcept;
 
     // This function taking an int is for the k-mer LSH mode, in which
     // isSliding_ is true.
-    uint64_t HashedSubseq(uint64_t kmer, int pos) const noexcept;
+    std::uint64_t HashedSubseq(std::uint64_t kmer, int pos) const noexcept;
     bool operator<(const SubMerSelection o) const noexcept;
     bool operator==(const SubMerSelection o) const noexcept;
     std::string ToString() const;
 };
 
-static_assert(sizeof(SubMerSelection) == sizeof(uint64_t));
+static_assert(sizeof(SubMerSelection) == sizeof(std::uint64_t));
 
 // Generate a vector of contiguous bit-strings spanning the super-Kmer
 std::vector<SubMerSelection> GenerateContiguous(int k, int subK);
 // Generate a vector of random (non-contiguous) bitstrings contained in the super-Kmer with population count equal to subK
 // Set the number of sequences with numSequences and (optionally) set the seed.
 // Defaults to 0 for the seed.
-std::vector<SubMerSelection> GenerateRandomSubsequences(int k, int subK, int64_t numSequences = 0,
-                                                        uint64_t seed = 0);
+std::vector<SubMerSelection> GenerateRandomSubsequences(int k, int subK,
+                                                        std::int64_t numSequences = 0,
+                                                        std::uint64_t seed = 0);
 // Generate the single flat sub k-mer for k and subK
 SubMerSelection FlatSubMer(int k, int subK);
 // Compute the number of spacings possible
 long double MaxNumSpacings(int superK, int subK) noexcept;
 
-template <typename IDType, typename KeyType = uint64_t>
+template <typename IDType, typename KeyType = std::uint64_t>
 class KMerLSHTable
 {
     //
@@ -143,7 +144,7 @@ class KMerLSHTable
     // only return the bottom-k hashes
     // from all tables
     const int isSliding_;
-    int64_t id_ = 0;
+    std::int64_t id_ = 0;
     std::unique_ptr<std::mutex[]> mutexes_;
 
 public:
@@ -184,26 +185,27 @@ public:
         , mutexes_(std::make_unique<std::mutex[]>(Utility::Ssize(maps_)))
     {}
 
-    int64_t Size() const noexcept { return id_; }
+    std::int64_t Size() const noexcept { return id_; }
 
-    int64_t MapSize() const noexcept
+    std::int64_t MapSize() const noexcept
     {
-        return std::accumulate(std::begin(maps_), std::end(maps_), int64_t(0),
-                               [](int64_t x, const auto& map) { return x += map.size(); });
+        return std::accumulate(std::begin(maps_), std::end(maps_), std::int64_t(0),
+                               [](std::int64_t x, const auto& map) { return x += map.size(); });
     }
 
-    int64_t NextId() noexcept { return id_++; }
+    std::int64_t NextId() noexcept { return id_++; }
 
-    int64_t NextIdThreadSafe() noexcept
+    std::int64_t NextIdThreadSafe() noexcept
     {
-        return std::atomic_fetch_add(reinterpret_cast<std::atomic<int64_t>*>(&id_), int64_t(1));
+        return std::atomic_fetch_add(reinterpret_cast<std::atomic<std::int64_t>*>(&id_),
+                                     std::int64_t(1));
     }
 
-    int64_t TotalNumKernels() const
+    std::int64_t TotalNumKernels() const
     {
         if (IsSliding()) {
-            return std::accumulate(subMers_.begin(), subMers_.end(), int64_t(0),
-                                   [kl = kmerLength_](int64_t x, const auto& mer) {
+            return std::accumulate(subMers_.begin(), subMers_.end(), std::int64_t(0),
+                                   [kl = kmerLength_](std::int64_t x, const auto& mer) {
                                        return x + mer.NumberOfKernels(kl);
                                    });
         } else {
@@ -231,10 +233,10 @@ public:
 
     bool operator!=(const KMerLSHTable& o) const noexcept { return !(*this == o); }
 
-    std::vector<uint64_t> generatePooledBottomK(const uint64_t mer) const
+    std::vector<std::uint64_t> generatePooledBottomK(const std::uint64_t mer) const
     {
-        std::vector<uint64_t> ret;
-        if (const int64_t numKernels = TotalNumKernels(); numKernels <= 1024) {
+        std::vector<std::uint64_t> ret;
+        if (const std::int64_t numKernels = TotalNumKernels(); numKernels <= 1024) {
             ret.reserve(numKernels);
             if (isSliding_) {
                 for (const SubMerSelection& k : subMers_) {
@@ -274,7 +276,7 @@ public:
         return ret;
     }
 
-    void Insert(const Pbmer::DnaBit cb, const int64_t given_id) { Insert(cb.mer, given_id); }
+    void Insert(const Pbmer::DnaBit cb, const std::int64_t given_id) { Insert(cb.mer, given_id); }
 
     void Insert(const Pbmer::DnaBit cb) { Insert(cb.mer, NextId()); }
 
@@ -349,7 +351,7 @@ public:
         if ((numPerThread == 1) && (n < numThreads)) {
             numThreads = n;
         }
-        const int64_t oldID = id_;
+        const std::int64_t oldID = id_;
 
         std::vector<std::thread> threads;
         threads.reserve(numThreads);
@@ -387,16 +389,16 @@ public:
         Insert(x.begin(), x.end());
     }
     // K-mer overload
-    void Insert(const uint64_t mer) { Insert(mer, NextId()); }
+    void Insert(const std::uint64_t mer) { Insert(mer, NextId()); }
 
     // Actual insert code
-    void InsertThreadSafe(const uint64_t mer, const int64_t myID)
+    void InsertThreadSafe(const std::uint64_t mer, const std::int64_t myID)
     {
         if (bottomK_ > 0) {
             assert(Utility::Ssize(maps_) == 1);
-            const std::vector<uint64_t> sampleSet = generatePooledBottomK(mer);
+            const std::vector<std::uint64_t> sampleSet = generatePooledBottomK(mer);
             std::lock_guard<std::mutex> lock(mutexes_[0]);
-            for (const uint64_t v : sampleSet) {
+            for (const std::uint64_t v : sampleSet) {
                 maps_.front()[v].push_back(myID);
             }
         } else {
@@ -404,9 +406,9 @@ public:
         }
     }
 
-    void InsertThreadSafe(const uint64_t mer) { InsertThreadSafe(mer, NextIdThreadSafe()); }
+    void InsertThreadSafe(const std::uint64_t mer) { InsertThreadSafe(mer, NextIdThreadSafe()); }
 
-    void Insert(const uint64_t mer, const int64_t myID)
+    void Insert(const std::uint64_t mer, const std::int64_t myID)
     {
         if (bottomK_ > 0) {
             if (Utility::Ssize(maps_) != 1u) {
@@ -414,7 +416,7 @@ public:
                     "[pbcopper] lsh index bottom-k insert ERROR: maps_ must be of size 1 for "
                     "bottom-k indexing.");
             }
-            for (const uint64_t v : generatePooledBottomK(mer)) {
+            for (const std::uint64_t v : generatePooledBottomK(mer)) {
                 maps_.front()[v].push_back(myID);
             }
         } else {
@@ -425,27 +427,30 @@ public:
     // Return a vector of tuples for matches
     // These consist of <ID, numberOfMatches>
     std::vector<std::pair<IDType, int>> Query(const Pbmer::DnaBit mer,
-                                              int64_t stopThreshold = -1) const
+                                              std::int64_t stopThreshold = -1) const
     {
         return Query(mer.mer, stopThreshold);
     }
 
     // Return a vector of tuples for matches
     // These consist of <ID, numberOfMatches>
-    // uint64_t overload
-    std::vector<std::pair<IDType, int>> Query(const uint64_t mer, int64_t stopThreshold = -1) const
+    // std::uint64_t overload
+    std::vector<std::pair<IDType, int>> Query(const std::uint64_t mer,
+                                              std::int64_t stopThreshold = -1) const
     {
         std::vector<std::pair<IDType, int>> ret;
         Query(ret, mer, stopThreshold);
         return ret;
     }
 
-    std::map<IDType, int> MapQuery(const Pbmer::DnaBit mer, const int64_t stopThreshold = -1) const
+    std::map<IDType, int> MapQuery(const Pbmer::DnaBit mer,
+                                   const std::int64_t stopThreshold = -1) const
     {
         return MapQuery(mer.mer, stopThreshold);
     }
 
-    std::map<IDType, int> MapQuery(const uint64_t mer, const int64_t stopThreshold = -1) const
+    std::map<IDType, int> MapQuery(const std::uint64_t mer,
+                                   const std::int64_t stopThreshold = -1) const
     {
         std::map<IDType, int> ret;
         MapQuery(ret, mer, stopThreshold);
@@ -455,7 +460,7 @@ public:
     // This is like MapQuery, but you provide the container.
     // As long as it's an associative container, it should work.
     template <typename MapType>
-    void MapQuery(MapType& hits, const uint64_t mer, int64_t stopThreshold = -1) const
+    void MapQuery(MapType& hits, const std::uint64_t mer, std::int64_t stopThreshold = -1) const
     {
         const int thresholdIncrement = stopThreshold < 0 ? bottomK_ * 2 : stopThreshold;
         std::ptrdiff_t hitsSize = Utility::Ssize(hits);
@@ -468,7 +473,7 @@ public:
             }
             const auto& singleMap = maps_.front();
             assert(Utility::Ssize(maps_) == 1);
-            for (const uint64_t v : generatePooledBottomK(mer)) {
+            for (const std::uint64_t v : generatePooledBottomK(mer)) {
                 if (auto it = singleMap.find(v); it != singleMap.end()) {
                     for (const IDType id : it->second) {
                         ++hits[id];
@@ -479,8 +484,8 @@ public:
                 }
             }
         } else {
-            const int64_t e = Utility::Ssize(maps_);
-            for (int64_t i = 0; i < e; ++i) {
+            const std::int64_t e = Utility::Ssize(maps_);
+            for (std::int64_t i = 0; i < e; ++i) {
                 singleMapQuery(maps_[i], hits, subMers_[i], mer);
                 if ((stopThreshold > 0) && (Utility::Ssize(hits) >= threshold)) {
                     break;
@@ -492,9 +497,9 @@ public:
 private:
     template <typename Map, typename ReturnMap>
     void singleMapQuery(const Map& indexMap, ReturnMap& retMap, const SubMerSelection sel,
-                        const uint64_t mer) const
+                        const std::uint64_t mer) const
     {
-        auto update = [&](uint64_t hash) {
+        auto update = [&](std::uint64_t hash) {
             if (auto it = indexMap.find(hash); it != indexMap.end()) {
                 for (const auto id : it->second) {
                     ++retMap[id];
@@ -512,7 +517,7 @@ private:
     }
 
     template <bool ThreadSafe>
-    void singleMapInsert(const int index, const uint64_t mer, const int64_t id)
+    void singleMapInsert(const int index, const std::uint64_t mer, const std::int64_t id)
     {
         // Get max/submer pattern
         auto& map(maps_[index]);
@@ -522,7 +527,7 @@ private:
         using OptLock = std::optional<std::lock_guard<std::mutex>>;
         const OptLock lock(ThreadSafe ? OptLock(mutexes_[index]) : OptLock());
 
-        auto insert = [&map, id](uint64_t hash) { map[hash].emplace_back(id); };
+        auto insert = [&map, id](std::uint64_t hash) { map[hash].emplace_back(id); };
         if (isSliding_) {
             const int ke = sel.NumberOfKernels(kmerLength_);
             for (int ki = 0; ki < ke; ++ki) {
@@ -533,7 +538,7 @@ private:
         }
     }
     template <bool ThreadSafe>
-    void allMapsInsert(const uint64_t mer, const int64_t id)
+    void allMapsInsert(const std::uint64_t mer, const std::int64_t id)
     {
         const int nMaps = Utility::Ssize(maps_);
         for (int i = 0; i < nMaps; ++i) {
@@ -542,8 +547,8 @@ private:
     }
 
 public:
-    void Query(std::vector<std::pair<IDType, int>>& ret, const uint64_t mer,
-               const int64_t stopThreshold = -1) const
+    void Query(std::vector<std::pair<IDType, int>>& ret, const std::uint64_t mer,
+               const std::int64_t stopThreshold = -1) const
     {
         std::map<IDType, int> hits;
         MapQuery(hits, mer, stopThreshold);
@@ -555,23 +560,23 @@ public:
     }
 
     void Query(std::vector<std::pair<IDType, int>>& ret, const Pbmer::DnaBit mer,
-               int64_t stopThreshold = -1) const
+               std::int64_t stopThreshold = -1) const
     {
         Query(ret, mer.mer, stopThreshold);
     }
 };
 
 // 32-bit IDs
-using KMerLSH32 = KMerLSHTable<uint32_t, uint32_t>;
+using KMerLSH32 = KMerLSHTable<std::uint32_t, std::uint32_t>;
 using KMerLSH32_32 = KMerLSH32;
 
-using KMerLSH32_64 = KMerLSHTable<uint32_t, uint64_t>;
+using KMerLSH32_64 = KMerLSHTable<std::uint32_t, std::uint64_t>;
 
 // 64-bit IDs
-using KMerLSH64 = KMerLSHTable<uint64_t, uint64_t>;
+using KMerLSH64 = KMerLSHTable<std::uint64_t, std::uint64_t>;
 using KMerLSH64_64 = KMerLSH64;
 
-using KMerLSH64_32 = KMerLSHTable<uint64_t, uint32_t>;
+using KMerLSH64_32 = KMerLSHTable<std::uint64_t, std::uint32_t>;
 using KMerIndex = KMerLSH64_64;
 // Default to 64-bit IDs and 64-bit hashes
 // Users can opt-in to more compact tables by using 32/32

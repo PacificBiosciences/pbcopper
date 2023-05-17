@@ -23,7 +23,7 @@ namespace Data {
 class QualityValue
 {
 public:
-    static const uint8_t MAX;
+    static const std::uint8_t MAX;
 
 public:
     /// \name Conversion Methods
@@ -46,7 +46,7 @@ public:
     ///
     /// \param[in] value    quality value
     ///
-    QualityValue(uint8_t value);
+    QualityValue(std::uint8_t value);
     QualityValue() = default;
 
     /// \}
@@ -59,12 +59,12 @@ public:
     char Fastq() const;
 
     /// \returns the integer value of this QualityValue
-    operator uint8_t() const noexcept;
+    operator std::uint8_t() const noexcept;
 
     /// \}
 
 private:
-    uint8_t value_ = 0;
+    std::uint8_t value_ = 0;
 };
 
 }  // namespace Data

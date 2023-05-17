@@ -21,11 +21,11 @@ struct Alignment
     Alignment() = default;  // icpc
 
     // length of the sequence we are trying to correct
-    uint32_t TargetLength = 0;
+    std::uint32_t TargetLength = 0;
 
     // conforming offsets are 1-based
-    uint32_t Start = 0;
-    uint32_t End = 0;
+    std::uint32_t Start = 0;
+    std::uint32_t End = 0;
 
     // ID of the read we're trying to correct (target)
     std::string Id;

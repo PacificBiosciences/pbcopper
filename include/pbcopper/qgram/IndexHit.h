@@ -30,24 +30,24 @@ public:
     /// \param[in] id   index number of input sequence
     /// \param[in] pos  position in input sequence
     ///
-    IndexHit(const uint32_t id, const uint64_t pos) : id_(id), position_(pos) {}
+    IndexHit(const std::uint32_t id, const std::uint64_t pos) : id_(id), position_(pos) {}
 
 public:
     ///
     /// \brief Id
     /// \return id (index number) of Index input sequence containing this hit
     ///
-    uint32_t Id() const { return id_; }
+    std::uint32_t Id() const { return id_; }
 
     ///
     /// \brief Position
     /// \return position of hit
     ///
-    uint64_t Position() const { return position_; }
+    std::uint64_t Position() const { return position_; }
 
 private:
-    uint32_t id_ = 0;
-    uint64_t position_ = 0;
+    std::uint32_t id_ = 0;
+    std::uint64_t position_ = 0;
 };
 
 ///

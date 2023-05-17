@@ -113,7 +113,7 @@ inline void ReverseComplementCaseSens(std::string& seq)
         78, 4, 4, 4, 4, 4, 65, 65, 4, 4, 4, 4, 4,  4,  4, 4,  4,  4, 4, 116, 4, 103, 4, 4, 4, 99,
         4,  4, 4, 4, 4, 4, 4,  4,  4, 4, 4, 4, 97, 97, 4, 4,  4,  4, 4, 4,   4, 4,   4, 4};
     std::string reverseCompl(original.length(), 'N');
-    for (uint32_t i = 0; i < original.length(); ++i) {
+    for (std::uint32_t i = 0; i < original.length(); ++i) {
         reverseCompl[original.length() - i - 1] = RC_TABLE[static_cast<unsigned char>(original[i])];
     }
     seq = reverseCompl;

@@ -31,32 +31,32 @@ public:
        \param n    number of seq/read ids;
        \param k    node key
     */
-    KFNode(const DnaBit& d, std::size_t n, uint64_t k);
+    KFNode(const DnaBit& d, std::size_t n, std::uint64_t k);
 
     /*!
-       \brief Adds an in edge, encoded as a uint64_t - see KFGraph AddSeq
+       \brief Adds an in edge, encoded as a std::uint64_t - see KFGraph AddSeq
        \param edge - previous node key
     */
-    void AddInEdge(uint64_t e);
+    void AddInEdge(std::uint64_t e);
 
     /*!
-       \brief Adds an in edge, encoded as a uint64_t - see KFGraph AddSeq
+       \brief Adds an in edge, encoded as a std::uint64_t - see KFGraph AddSeq
        \param edge - next node key
     */
-    void AddOutEdge(uint64_t e);
+    void AddOutEdge(std::uint64_t e);
 
     /*!
        \brief Adds a read/seq id to the readIds_ variable. Read/Seq ids are one based.
        \param rid  read/seq id
     */
-    bool AddLoad(uint32_t rid);
+    bool AddLoad(std::uint32_t rid);
 
 public:
     /*!
        \brief  Is the read/seq id (one based) set
        \return true is the read/seq is represented in the node
     */
-    bool ContainsSeq(uint32_t rid) const;
+    bool ContainsSeq(std::uint32_t rid) const;
 
     /*!
        \brief Finds the first read/seq id in the set.
@@ -72,12 +72,12 @@ public:
     /*!
        \return The node key - a hashed uint64_t
     */
-    uint64_t Key() const;
+    std::uint64_t Key() const;
 
     /*!
-       \return "the uint64_t packed kmer"
+       \return "the std::uint64_t packed kmer"
     */
-    uint64_t Kmer() const;
+    std::uint64_t Kmer() const;
 
     /*!
        \return number of out edges
@@ -95,13 +95,13 @@ public:
     DnaBit Bit() const;
 
 private:
-    uint64_t key_;
+    std::uint64_t key_;
     DnaBit dna_;
     // Read/Seq ids must be one based - internally they are converted.
     boost::dynamic_bitset<> readIds_;
     // edges are stored in sets
     // TODO sets are are not ideal here, slow?
-    using oe = std::unordered_set<uint64_t>;
+    using oe = std::unordered_set<std::uint64_t>;
     oe outEdges_;
     oe inEdges_;
 

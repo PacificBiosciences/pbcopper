@@ -76,7 +76,7 @@ int64_t SIStringToInt(const std::string& input)
         return std::stoll(input);
     }
 
-    int64_t result = std::stoll(input.substr(0, input.size() - 1));
+    std::int64_t result = std::stoll(input.substr(0, input.size() - 1));
     switch (suffix) {
         case 'K':
         case 'k':
@@ -111,7 +111,7 @@ uint64_t SIStringToUInt(const std::string& input)
         return std::stoull(input);
     }
 
-    uint64_t result = std::stoull(input.substr(0, input.size() - 1));
+    std::uint64_t result = std::stoull(input.substr(0, input.size() - 1));
     switch (suffix) {
         case 'K':
         case 'k':

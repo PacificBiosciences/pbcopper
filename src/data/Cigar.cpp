@@ -24,7 +24,7 @@ Cigar::Cigar(const char* str) : std::vector<CigarOperation>{}
     for (const char* c = str; *c; ++i, ++c) {
         if (!std::isdigit(*c)) {
             const std::size_t distance = i - numberStart;
-            const uint32_t length = std::stoul(std::string{str, numberStart, distance});
+            const std::uint32_t length = std::stoul(std::string{str, numberStart, distance});
             push_back(CigarOperation(*c, length));
             numberStart = i + 1;
         }
@@ -73,7 +73,7 @@ CigarBaseCounts CigarOpsCalculator(const Cigar& cigar)
     CigarBaseCounts results = {};
 
     for (const auto& c : cigar) {
-        int32_t len = c.Length();
+        std::int32_t len = c.Length();
         switch (c.Type()) {
             case Data::CigarOperationType::INSERTION:
                 results.InsertionBases += len;
@@ -123,8 +123,8 @@ bool ConvertCigarToM5(const std::string& ref, const std::string& query, bool qRe
                             retQueryAln);
 }
 
-bool ConvertCigarToM5(const std::string& ref, const std::string& query, const int32_t rStart,
-                      const int32_t rEnd, const int32_t qStart, const int32_t qEnd,
+bool ConvertCigarToM5(const std::string& ref, const std::string& query, const std::int32_t rStart,
+                      const std::int32_t rEnd, const std::int32_t qStart, const std::int32_t qEnd,
                       const bool qReversed, const Data::Cigar& cigar, std::string& retRefAln,
                       std::string& retQueryAln)
 {
@@ -136,8 +136,8 @@ bool ConvertCigarToM5(const std::string& ref, const std::string& query, const in
 
     // Calculate the query and reference length from the CIGAR
     // to check for sanity.
-    int32_t calcRefLen = 0;
-    int32_t calcQueryLen = 0;
+    std::int32_t calcRefLen = 0;
+    std::int32_t calcQueryLen = 0;
     for (const auto& cigarOp : cigar) {
         const auto op = cigarOp.Type();
         switch (op) {
@@ -176,8 +176,8 @@ bool ConvertCigarToM5(const std::string& ref, const std::string& query, const in
         querySub = Utility::ReverseComplemented(querySub);
     }
 
-    int32_t qPos = 0;  // We extracted the entire subsequence.
-    int32_t rPos = rStart;
+    std::int32_t qPos = 0;  // We extracted the entire subsequence.
+    std::int32_t rPos = rStart;
 
     for (auto& cigarOp : cigar) {
         auto op = cigarOp.Type();
@@ -226,15 +226,15 @@ bool ValidateCigar(const Data::Cigar& cigar, const std::string_view ref,
     const auto cigarBegin = std::cbegin(cigar);
     const auto cigarEnd = std::cend(cigar);
 
-    const int32_t refLen = Utility::Ssize(ref);
-    const int32_t queryLen = Utility::Ssize(query);
+    const std::int32_t refLen = Utility::Ssize(ref);
+    const std::int32_t queryLen = Utility::Ssize(query);
 
-    int32_t refPos = 0;
-    int32_t queryPos = 0;
+    std::int32_t refPos = 0;
+    std::int32_t queryPos = 0;
 
     for (auto it = cigarBegin; it != cigarEnd; ++it) {
         const Data::CigarOperationType type = it->Type();
-        const int32_t length = it->Length();
+        const std::int32_t length = it->Length();
 
         if ((it != cigarBegin) && (type == std::prev(it)->Type())) {
             return false;
@@ -264,7 +264,7 @@ bool ValidateCigar(const Data::Cigar& cigar, const std::string_view ref,
             continue;
 
         } else if (type == Data::CigarOperationType::SEQUENCE_MATCH) {
-            for (int32_t i = 0; i < length; ++i, ++refPos, ++queryPos) {
+            for (std::int32_t i = 0; i < length; ++i, ++refPos, ++queryPos) {
                 if ((refPos >= refLen) || (queryPos >= queryLen) ||
                     (ref[refPos] != query[queryPos])) {
                     return false;
@@ -272,7 +272,7 @@ bool ValidateCigar(const Data::Cigar& cigar, const std::string_view ref,
             }
 
         } else if (type == Data::CigarOperationType::SEQUENCE_MISMATCH) {
-            for (int32_t i = 0; i < length; ++i, ++refPos, ++queryPos) {
+            for (std::int32_t i = 0; i < length; ++i, ++refPos, ++queryPos) {
                 if ((refPos >= refLen) || (queryPos >= queryLen) ||
                     (ref[refPos] == query[queryPos])) {
                     return false;
@@ -294,13 +294,13 @@ Data::Cigar LeftAlignCigar(const Data::Cigar& cigar, const std::string_view ref,
 
     std::stack<Data::CigarOperation> cigarStack;
 
-    int32_t refBegin = 0;
-    int32_t refEnd = Utility::Ssize(ref);
-    int32_t refLoan = 0;
+    std::int32_t refBegin = 0;
+    std::int32_t refEnd = Utility::Ssize(ref);
+    std::int32_t refLoan = 0;
 
-    int32_t queryBegin = 0;
-    int32_t queryEnd = Utility::Ssize(query);
-    int32_t queryLoan = 0;
+    std::int32_t queryBegin = 0;
+    std::int32_t queryEnd = Utility::Ssize(query);
+    std::int32_t queryLoan = 0;
 
     Data::Cigar result;
     result.reserve(std::size(cigar) * 1.5);
@@ -322,11 +322,11 @@ Data::Cigar LeftAlignCigar(const Data::Cigar& cigar, const std::string_view ref,
             }
 
             cigarStack.pop();
-            int32_t length = op.Length();
+            std::int32_t length = op.Length();
 
             if ((type == Data::CigarOperationType::SEQUENCE_MATCH) ||
                 (type == Data::CigarOperationType::SEQUENCE_MISMATCH)) {
-                const int32_t loan = std::min(queryLoan, refLoan);
+                const std::int32_t loan = std::min(queryLoan, refLoan);
                 if (loan >= length) {
                     queryLoan -= length;
                     refLoan -= length;
@@ -409,8 +409,8 @@ Data::Cigar LeftAlignCigar(const Data::Cigar& cigar, const std::string_view ref,
         }
 
         if (replaceMismatches && (type == Data::CigarOperationType::SEQUENCE_MISMATCH)) {
-            const int32_t length = it.Length();
-            for (int32_t i = 0; i < length; ++i) {
+            const std::int32_t length = it.Length();
+            for (std::int32_t i = 0; i < length; ++i) {
                 cigarStack.emplace(Data::CigarOperationType::INSERTION, 1);
                 cigarStack.emplace(Data::CigarOperationType::DELETION, 1);
             }
@@ -424,7 +424,7 @@ Data::Cigar LeftAlignCigar(const Data::Cigar& cigar, const std::string_view ref,
             cigarStack.pop();
 
             type = op.Type();
-            const int32_t length = op.Length();
+            const std::int32_t length = op.Length();
 
             if ((type == Data::CigarOperationType::SEQUENCE_MATCH) ||
                 (type == Data::CigarOperationType::SEQUENCE_MISMATCH)) {
@@ -433,7 +433,7 @@ Data::Cigar LeftAlignCigar(const Data::Cigar& cigar, const std::string_view ref,
                 queryBegin += length;
 
             } else if (type == Data::CigarOperationType::INSERTION) {
-                for (int32_t i = 0; i < length; ++i, ++queryBegin) {
+                for (std::int32_t i = 0; i < length; ++i, ++queryBegin) {
                     if ((refBegin < refEnd) && (ref[refBegin] == query[queryBegin])) {
                         // left align
                         updateOrAppendToResult(
@@ -448,7 +448,7 @@ Data::Cigar LeftAlignCigar(const Data::Cigar& cigar, const std::string_view ref,
 
             } else if ((type == Data::CigarOperationType::DELETION) ||
                        (type == Data::CigarOperationType::REFERENCE_SKIP)) {
-                for (int32_t i = 0; i < length; ++i, ++refBegin) {
+                for (std::int32_t i = 0; i < length; ++i, ++refBegin) {
                     if ((queryBegin < queryEnd) && (ref[refBegin] == query[queryBegin])) {
                         // left align
                         updateOrAppendToResult(

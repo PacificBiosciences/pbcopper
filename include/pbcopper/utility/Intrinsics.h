@@ -36,13 +36,14 @@ int PopCount(T x) noexcept
         std::is_integral_v<T> || std::is_same_v<T, __uint128_t> || std::is_same_v<T, __int128_t>,
         "Must be integral, U128 or I128");
     if constexpr (sizeof(T) == 16) {
-        return PopCount(static_cast<uint64_t>(x)) + PopCount(static_cast<uint64_t>(x >> 64));
+        return PopCount(static_cast<std::uint64_t>(x)) +
+               PopCount(static_cast<std::uint64_t>(x >> 64));
     } else {
 #ifdef PB_BITOPS_ENABLED
         if constexpr (std::is_integral_v<T>) {
             return std::popcount(static_cast<std::make_unsigned_t<T>>(x));
         } else {
-            return PopCount(uint64_t(x)) + PopCount(uint64_t(x >> 64));
+            return PopCount(std::uint64_t(x)) + PopCount(std::uint64_t(x >> 64));
         }
 #else
         if constexpr (std::is_same_v<std::make_signed_t<T>, long signed int>) {
@@ -62,11 +63,11 @@ template <typename T>
 int CountTrailingZeros(T x) noexcept
 {
     if constexpr (sizeof(T) == 16) {
-        const int trailingLow = CountTrailingZeros(uint64_t(x));
+        const int trailingLow = CountTrailingZeros(std::uint64_t(x));
         if (trailingLow != static_cast<int>(sizeof(T) * 8)) {
             return trailingLow;
         }
-        return CountTrailingZeros(uint64_t(x >> 64)) + 64;
+        return CountTrailingZeros(std::uint64_t(x >> 64)) + 64;
     } else {
 #ifdef PB_BITOPS_ENABLED
         return std::countr_zero(x);
@@ -86,11 +87,11 @@ template <typename T>
 int CountLeadingZeros(T x) noexcept
 {
     if constexpr (sizeof(T) == 16) {
-        const int leadingHi = CountLeadingZeros(uint64_t(x >> 64));
+        const int leadingHi = CountLeadingZeros(std::uint64_t(x >> 64));
         if (leadingHi != static_cast<int>(sizeof(T) * 8)) {
             return leadingHi;
         }
-        return CountLeadingZeros(uint64_t(x)) + 64;
+        return CountLeadingZeros(std::uint64_t(x)) + 64;
     } else {
 #ifdef PB_BITOPS_ENABLED
         return std::countl_zero(x);

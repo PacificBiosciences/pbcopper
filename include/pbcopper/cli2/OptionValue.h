@@ -31,14 +31,14 @@ enum class OptionValueType
 /// command line or a resolved tool contract.
 ///
 using OptionValue = std::variant<
-    int8_t,
-    int16_t,
-    int32_t,
-    int64_t,
-    uint8_t,
-    uint16_t,
-    uint32_t,
-    uint64_t,
+    std::int8_t,
+    std::int16_t,
+    std::int32_t,
+    std::int64_t,
+    std::uint8_t,
+    std::uint16_t,
+    std::uint32_t,
+    std::uint64_t,
     double,
     bool,
     std::string>;
@@ -77,13 +77,13 @@ constexpr bool IsStringLike(OptionValueType type) {
 }
 
 ///
-/// \return int64_t value of option
+/// \return std::int64_t value of option
 /// \throws if not a signed integer type (any width)
 ///
 int64_t OptionValueToInt(const OptionValue& value);
 
 ///
-/// \return uint64_t value of option
+/// \return std::uint64_t value of option
 /// \throws if not an unsigned integer type (any width)
 ///
 uint64_t OptionValueToUInt(const OptionValue& value);

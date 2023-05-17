@@ -20,8 +20,8 @@ class V1FrameEncoder
 public:
     V1FrameEncoder() = default;
 
-    std::vector<uint8_t> Encode(const std::vector<uint16_t>& rawFrames) const;
-    Frames Decode(const std::vector<uint8_t>& encodedFrames) const;
+    std::vector<std::uint8_t> Encode(const std::vector<std::uint16_t>& rawFrames) const;
+    Frames Decode(const std::vector<std::uint8_t>& encodedFrames) const;
     std::string Name() const;
 };
 
@@ -30,8 +30,8 @@ struct V2FrameEncoder
 public:
     V2FrameEncoder(int exponentBits, int mantissaBits);
 
-    std::vector<uint8_t> Encode(const std::vector<uint16_t>& rawFrames) const;
-    Frames Decode(const std::vector<uint8_t>& encodedFrames) const;
+    std::vector<std::uint8_t> Encode(const std::vector<std::uint16_t>& rawFrames) const;
+    Frames Decode(const std::vector<std::uint8_t>& encodedFrames) const;
     std::string Name() const;
 
     int ExponentBits() const;
@@ -41,7 +41,7 @@ private:
     const int exponentBits_;
     const int mantissaBits_;
     const int base_;
-    const uint8_t max_;
+    const std::uint8_t max_;
 };
 
 // ---------------------
@@ -64,12 +64,12 @@ public:
     FrameEncoder& operator=(FrameEncoder&&) noexcept = default;
 
 public:
-    std::vector<uint8_t> Encode(const std::vector<uint16_t>& rawFrames) const
+    std::vector<std::uint8_t> Encode(const std::vector<std::uint16_t>& rawFrames) const
     {
         return self_->Encode(rawFrames);
     }
 
-    Frames Decode(const std::vector<uint8_t>& encodedFrames) const
+    Frames Decode(const std::vector<std::uint8_t>& encodedFrames) const
     {
         return self_->Decode(encodedFrames);
     }
@@ -81,8 +81,9 @@ private:
     {
         virtual ~EncoderInterface() = default;
         virtual EncoderInterface* Clone() const = 0;
-        virtual std::vector<uint8_t> Encode(const std::vector<uint16_t>& rawFrames) const = 0;
-        virtual Frames Decode(const std::vector<uint8_t>& encodedFrames) const = 0;
+        virtual std::vector<std::uint8_t> Encode(
+            const std::vector<std::uint16_t>& rawFrames) const = 0;
+        virtual Frames Decode(const std::vector<std::uint8_t>& encodedFrames) const = 0;
         virtual std::string Name() const = 0;
     };
 
@@ -92,11 +93,11 @@ private:
         EncoderImpl(T codec) : EncoderInterface{}, codec_(std::move(codec)) {}
         EncoderImpl(const EncoderImpl& other) : EncoderInterface{}, codec_(other.codec_) {}
         EncoderImpl* Clone() const override { return new EncoderImpl(*this); }
-        std::vector<uint8_t> Encode(const std::vector<uint16_t>& rawFrames) const override
+        std::vector<std::uint8_t> Encode(const std::vector<std::uint16_t>& rawFrames) const override
         {
             return codec_.Encode(rawFrames);
         }
-        Frames Decode(const std::vector<uint8_t>& encodedFrames) const override
+        Frames Decode(const std::vector<std::uint8_t>& encodedFrames) const override
         {
             return codec_.Decode(encodedFrames);
         }

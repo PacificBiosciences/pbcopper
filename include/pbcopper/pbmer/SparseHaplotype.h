@@ -25,7 +25,7 @@ public:
        \param id seq/read id
        \param nvars the number of variant sites
     */
-    SparseHaplotype(std::string name, uint32_t id, int32_t nvars);
+    SparseHaplotype(std::string name, std::uint32_t id, std::int32_t nvars);
 
     /*!
        \brief Constructor of SparseHaplotype
@@ -34,7 +34,7 @@ public:
        \param nvars the number of variant sites
        \param seq a binary string "010101..."
     */
-    SparseHaplotype(std::string name, uint32_t id, const std::string& seq);
+    SparseHaplotype(std::string name, std::uint32_t id, const std::string& seq);
 
 public:
     /*!
@@ -43,20 +43,20 @@ public:
     */
     void LoadVariants(const Bubbles& bubs);
 
-    void InitializeMembership(int32_t nClusters);
+    void InitializeMembership(std::int32_t nClusters);
 
-    void InitializeMembership(int32_t nClusters, int prior);
+    void InitializeMembership(std::int32_t nClusters, int prior);
 
     void SetMembershipProb(int index, double val);
 
-    void SetCluster(int32_t index);
+    void SetCluster(std::int32_t index);
 
 public:
     /*!
        \brief Get cluster ID
        \return cluster id
     */
-    int32_t ClusterId() const;
+    std::int32_t ClusterId() const;
 
     /*!
        \brief provides a printable string for the haplotype information
@@ -76,7 +76,7 @@ public:
        \brief Get number of variants
        \return number of variants
     */
-    int32_t NVariants() const;
+    std::int32_t NVariants() const;
 
     /*!
        \brief Get the membership fraction, the probability of haplotype being part of a cluster.
@@ -86,9 +86,9 @@ public:
 
 private:
     std::string name_;
-    int32_t cluster_{0};
-    uint32_t haplotypeId_;
-    int32_t nVariants_;
+    std::int32_t cluster_{0};
+    std::uint32_t haplotypeId_;
+    std::int32_t nVariants_;
     std::vector<double> fractionalMembership_;
     boost::dynamic_bitset<> variants_;
 };

@@ -15,9 +15,9 @@ namespace PacBio {
 namespace Data {
 namespace {
 
-static std::vector<uint16_t> framepoints;
-static std::vector<uint8_t> frameToCode;
-static uint16_t maxFramepoint;
+static std::vector<std::uint16_t> framepoints;
+static std::vector<std::uint8_t> frameToCode;
+static std::uint16_t maxFramepoint;
 
 static int InitIpdDownsampling()
 {
@@ -36,22 +36,22 @@ static int InitIpdDownsampling()
     const int end = 256 / T;
     for (int i = 0; i < end; ++i) {
         grain = std::pow(B, i);
-        std::vector<uint16_t> nextOnes;
+        std::vector<std::uint16_t> nextOnes;
         for (double j = 0; j < T; ++j) {
             nextOnes.push_back(j * grain + next);
         }
         next = nextOnes.back() + grain;
         framepoints.insert(framepoints.end(), nextOnes.cbegin(), nextOnes.cend());
     }
-    assert(framepoints.size() - 1 <= std::numeric_limits<uint8_t>::max());
+    assert(framepoints.size() - 1 <= std::numeric_limits<std::uint8_t>::max());
 
-    const uint16_t maxElement = (*std::max_element(framepoints.cbegin(), framepoints.cend()));
+    const std::uint16_t maxElement = (*std::max_element(framepoints.cbegin(), framepoints.cend()));
     frameToCode.assign(maxElement + 1, 0);
 
     const int fpEnd = framepoints.size() - 1;
-    uint8_t i = 0;
-    uint16_t fl = 0;
-    uint16_t fu = 0;
+    std::uint8_t i = 0;
+    std::uint16_t fl = 0;
+    std::uint16_t fu = 0;
     for (; i < fpEnd; ++i) {
         fl = framepoints[i];
         fu = framepoints[i + 1];
@@ -84,21 +84,22 @@ static const int initV1Frames = InitIpdDownsampling();
 // V1 frame codec
 // ----------------
 
-Frames V1FrameEncoder::Decode(const std::vector<uint8_t>& encodedFrames) const
+Frames V1FrameEncoder::Decode(const std::vector<std::uint8_t>& encodedFrames) const
 {
-    std::vector<uint16_t> rawFrames;
+    std::vector<std::uint16_t> rawFrames;
     rawFrames.reserve(encodedFrames.size());
     std::transform(encodedFrames.cbegin(), encodedFrames.cend(), std::back_inserter(rawFrames),
-                   [&](uint8_t code) { return framepoints[code]; });
+                   [&](std::uint8_t code) { return framepoints[code]; });
     return rawFrames;
 }
 
-std::vector<uint8_t> V1FrameEncoder::Encode(const std::vector<uint16_t>& rawFrames) const
+std::vector<std::uint8_t> V1FrameEncoder::Encode(const std::vector<std::uint16_t>& rawFrames) const
 {
-    std::vector<uint8_t> encoded;
+    std::vector<std::uint8_t> encoded;
     encoded.reserve(rawFrames.size());
-    std::transform(rawFrames.cbegin(), rawFrames.cend(), std::back_inserter(encoded),
-                   [&](uint16_t frame) { return frameToCode[std::min(maxFramepoint, frame)]; });
+    std::transform(
+        rawFrames.cbegin(), rawFrames.cend(), std::back_inserter(encoded),
+        [&](std::uint16_t frame) { return frameToCode[std::min(maxFramepoint, frame)]; });
     return encoded;
 }
 
@@ -115,37 +116,37 @@ V2FrameEncoder::V2FrameEncoder(int exponentBits, int mantissaBits)
     , max_((1 << (exponentBits_ + mantissaBits_)) - 1)
 {}
 
-Frames V2FrameEncoder::Decode(const std::vector<uint8_t>& encodedFrames) const
+Frames V2FrameEncoder::Decode(const std::vector<std::uint8_t>& encodedFrames) const
 {
-    std::vector<uint16_t> decoded;
+    std::vector<std::uint16_t> decoded;
     decoded.reserve(encodedFrames.size());
     std::transform(encodedFrames.cbegin(), encodedFrames.cend(), std::back_inserter(decoded),
-                   [&](uint8_t x) -> uint16_t {
+                   [&](std::uint8_t x) -> std::uint16_t {
                        if (x > max_) {
                            throw std::runtime_error{
                                "[pbcopper] invalid frame encoding ERROR: " + std::to_string(x) +
                                " is out of range [0," + std::to_string(max_) + ']'};
                        }
-                       const uint8_t mantissa = x & static_cast<uint8_t>((base_ - 1));
-                       const uint8_t exponent = (x ^ mantissa) >> mantissaBits_;
+                       const std::uint8_t mantissa = x & static_cast<std::uint8_t>((base_ - 1));
+                       const std::uint8_t exponent = (x ^ mantissa) >> mantissaBits_;
                        return (base_ * (std::pow(2, exponent) - 1)) +
                               ((std::pow(2, exponent)) * mantissa);
                    });
     return Frames{decoded};
 }
 
-std::vector<uint8_t> V2FrameEncoder::Encode(const std::vector<uint16_t>& rawFrames) const
+std::vector<std::uint8_t> V2FrameEncoder::Encode(const std::vector<std::uint16_t>& rawFrames) const
 {
     // NOTE: nothing compressed here yet in output bytes, regardless of bitsPerPulse
 
-    std::vector<uint8_t> encoded;
+    std::vector<std::uint8_t> encoded;
     encoded.reserve(rawFrames.size());
     std::transform(
-        rawFrames.cbegin(), rawFrames.cend(), std::back_inserter(encoded), [&](uint16_t x) {
+        rawFrames.cbegin(), rawFrames.cend(), std::back_inserter(encoded), [&](std::uint16_t x) {
             const int exponent = std::log2(x / base_ + 1);
             const int mantissa =
-                (x - base_ * (static_cast<uint8_t>(std::pow(2, exponent)) - 1)) >> exponent;
-            const uint8_t result = (exponent << mantissaBits_) | mantissa;
+                (x - base_ * (static_cast<std::uint8_t>(std::pow(2, exponent)) - 1)) >> exponent;
+            const std::uint8_t result = (exponent << mantissaBits_) | mantissa;
             return std::min(result, max_);
         });
     return encoded;

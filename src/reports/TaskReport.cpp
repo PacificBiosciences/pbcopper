@@ -11,7 +11,7 @@
 namespace PacBio {
 namespace Reports {
 
-TaskReport::TaskReport(int nproc, double runTime, int exitCode, int64_t peakRss)
+TaskReport::TaskReport(int nproc, double runTime, int exitCode, std::int64_t peakRss)
     : report_{"workflow_task", "Task Report"}
 {
 #if defined(_POSIX_VERSION)

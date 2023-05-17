@@ -144,7 +144,7 @@ MappedRead::MappedRead(Read read, enum Strand strand, Position templateStart, Po
 {}
 
 MappedRead::MappedRead(Read read, PacBio::Data::Strand strand, Position templateStart,
-                       PacBio::Data::Cigar cigar, uint8_t mapQV)
+                       PacBio::Data::Cigar cigar, std::uint8_t mapQV)
     : MappedRead{std::move(read), strand, templateStart, UNMAPPED_POSITION, std::move(cigar), mapQV}
 {
     if (!Cigar.empty()) {
@@ -175,7 +175,7 @@ MappedRead::MappedRead(Read read, PacBio::Data::Strand strand, Position template
 }
 
 MappedRead::MappedRead(Read read, PacBio::Data::Strand strand, Position templateStart,
-                       Position templateEnd, PacBio::Data::Cigar cigar, uint8_t mapQV)
+                       Position templateEnd, PacBio::Data::Cigar cigar, std::uint8_t mapQV)
     : Read{std::move(read)}
     , Strand{strand}
     , TemplateStart{templateStart}
@@ -378,7 +378,7 @@ Strand MappedRead::AlignedStrand() const { return Strand; }
 
 int32_t MappedRead::NumMismatches() const
 {
-    int32_t result = 0;
+    std::int32_t result = 0;
 
     for (const auto& op : Cigar) {
         const auto type = op.Type();

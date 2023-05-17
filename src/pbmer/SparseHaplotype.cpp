@@ -8,14 +8,14 @@
 namespace PacBio {
 namespace Pbmer {
 
-SparseHaplotype::SparseHaplotype(std::string name, uint32_t id, int32_t nvars)
+SparseHaplotype::SparseHaplotype(std::string name, std::uint32_t id, std::int32_t nvars)
     : name_{std::move(name)}, haplotypeId_{id}, nVariants_{nvars}
 {
     variants_.resize(nvars);
 }
 
-SparseHaplotype::SparseHaplotype(std::string name, uint32_t id, const std::string& seq)
-    : name_{std::move(name)}, haplotypeId_{id}, nVariants_{static_cast<int32_t>(seq.size())}
+SparseHaplotype::SparseHaplotype(std::string name, std::uint32_t id, const std::string& seq)
+    : name_{std::move(name)}, haplotypeId_{id}, nVariants_{static_cast<std::int32_t>(seq.size())}
 {
     variants_.resize(seq.size());
 
@@ -35,7 +35,7 @@ SparseHaplotype::SparseHaplotype(std::string name, uint32_t id, const std::strin
     }
 }
 
-void SparseHaplotype::InitializeMembership(int32_t nClusters)
+void SparseHaplotype::InitializeMembership(std::int32_t nClusters)
 {
     cluster_ = 0;
     fractionalMembership_.resize(0);
@@ -55,7 +55,7 @@ void SparseHaplotype::InitializeMembership(int32_t nClusters)
     }
 }
 
-void SparseHaplotype::InitializeMembership(int32_t nClusters, int prior)
+void SparseHaplotype::InitializeMembership(std::int32_t nClusters, int prior)
 {
     cluster_ = 0;
     fractionalMembership_.resize(0);
@@ -80,7 +80,7 @@ void SparseHaplotype::InitializeMembership(int32_t nClusters, int prior)
 
 void SparseHaplotype::LoadVariants(const Bubbles& bubs)
 {
-    uint32_t bubIdx = 0;
+    std::uint32_t bubIdx = 0;
     for (const auto& b : bubs) {
         for (const auto& l : b.LData) {
             auto id = std::get<0>(l);
@@ -149,7 +149,7 @@ void SparseHaplotype::SetMembershipProb(int index, double val)
     fractionalMembership_[index] = val;
 }
 
-void SparseHaplotype::SetCluster(int32_t index) { cluster_ = index; }
+void SparseHaplotype::SetCluster(std::int32_t index) { cluster_ = index; }
 
 }  // namespace Pbmer
 }  // namespace PacBio

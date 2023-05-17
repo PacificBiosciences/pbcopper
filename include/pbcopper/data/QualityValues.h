@@ -51,7 +51,7 @@ public:
     ///
     /// \param[in] quals    vector of quality value numbers
     ///
-    explicit QualityValues(const std::vector<uint8_t>& quals);
+    explicit QualityValues(const std::vector<std::uint8_t>& quals);
 
     /// \brief Creates a QualityValues object from the contents of the range:
     ///        [first, last)
@@ -59,8 +59,8 @@ public:
     /// \param[in] first    input iterator, whose element is a numeric quality
     /// \param[in] last     input iterator, whose element is a numeric quality
     ///
-    QualityValues(std::vector<uint8_t>::const_iterator first,
-                  std::vector<uint8_t>::const_iterator last);
+    QualityValues(std::vector<std::uint8_t>::const_iterator first,
+                  std::vector<std::uint8_t>::const_iterator last);
 
     /// \brief Creates a QualityValues object from the contents of the range:
     ///        [first, last)

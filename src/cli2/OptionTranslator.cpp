@@ -68,11 +68,11 @@ OptionValue MakeOptionValue(const Json& value, const OptionValueType type)
 {
     switch (type) {
         case OptionValueType::INT: {
-            const int64_t i = value;
+            const std::int64_t i = value;
             return OptionValue{i};
         }
         case OptionValueType::UINT: {
-            const uint64_t u = value;
+            const std::uint64_t u = value;
             return OptionValue{u};
         }
         case OptionValueType::FLOAT: {

@@ -85,18 +85,18 @@ std::string NameForAlarmType(AlarmType type);
 class AlarmException
 {
 public:
-    AlarmException(std::string sourceFilename, std::string functionName, int32_t lineNumber,
+    AlarmException(std::string sourceFilename, std::string functionName, std::int32_t lineNumber,
                    std::string name, std::string message, std::string severity, std::string info,
                    std::string exception) noexcept;
 
-    AlarmException(std::string sourceFilename, std::string functionName, int32_t lineNumber,
+    AlarmException(std::string sourceFilename, std::string functionName, std::int32_t lineNumber,
                    AlarmType type, std::string message, std::string severity, std::string info,
                    std::string exception) noexcept;
 
     // Debugging Info
     const char* SourceFilename() const noexcept;
     const char* FunctionName() const noexcept;
-    int32_t LineNumber() const noexcept;
+    std::int32_t LineNumber() const noexcept;
 
     // Used by Alarms API
     const char* Name() const noexcept;  // this is the error type sent to TS
@@ -108,7 +108,7 @@ public:
 protected:
     std::string sourceFilename_;
     std::string functionName_;
-    int32_t lineNumber_;
+    std::int32_t lineNumber_;
 
     std::string name_;
     std::string message_;

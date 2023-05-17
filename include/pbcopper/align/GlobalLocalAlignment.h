@@ -11,24 +11,24 @@ namespace Align {
 // Scores and penalties
 struct GlobalLocalParameters
 {
-    int32_t MatchScore{};
-    int32_t MismatchPenalty{};
-    int32_t DeletionPenalty{};
-    int32_t InsertionPenalty{};
-    int32_t BranchPenalty{};
-    int32_t MergePenalty{};
+    std::int32_t MatchScore{};
+    std::int32_t MismatchPenalty{};
+    std::int32_t DeletionPenalty{};
+    std::int32_t InsertionPenalty{};
+    std::int32_t BranchPenalty{};
+    std::int32_t MergePenalty{};
 };
 
 struct GlobalLocalResult
 {
-    int32_t MaxScore{};
-    int32_t EndPos{};
+    std::int32_t MaxScore{};
+    std::int32_t EndPos{};
 };
 
 // This storage can be used to further improve runtime
 struct GlobalLocalStorage
 {
-    std::vector<int32_t> Columns;
+    std::vector<std::int32_t> Columns;
 };
 
 /// \brief Align a known query against read given the parameters.
@@ -36,8 +36,8 @@ struct GlobalLocalStorage
 ///        Local in the read.
 ///        Return a max score in the last row and its read position.
 ///        Attention: This is the slower API, requiring memory allocation.
-GlobalLocalResult GlobalLocalAlign(const char* query, int32_t queryLength, const char* read,
-                                   int32_t readLength,
+GlobalLocalResult GlobalLocalAlign(const char* query, std::int32_t queryLength, const char* read,
+                                   std::int32_t readLength,
                                    const GlobalLocalParameters& parameters) noexcept;
 
 /// \brief Align a known query against read given the parameters.
@@ -53,8 +53,8 @@ GlobalLocalResult GlobalLocalAlign(const std::string& query, const std::string& 
 ///        Local in the read.
 ///        Return a max score in the last row and its read position.
 ///        Attention: This is the faster API, as memory can be reused.
-GlobalLocalResult GlobalLocalAlign(const char* query, int32_t queryLength, const char* read,
-                                   int32_t readLength, const GlobalLocalParameters& parameters,
+GlobalLocalResult GlobalLocalAlign(const char* query, std::int32_t queryLength, const char* read,
+                                   std::int32_t readLength, const GlobalLocalParameters& parameters,
                                    GlobalLocalStorage& storage) noexcept;
 
 /// \brief Align a known query against read given the parameters.

@@ -9,7 +9,7 @@
 namespace PacBio {
 namespace Pbmer {
 
-Mers::Mers(const uint8_t kSize) : kmerSize{kSize} {}
+Mers::Mers(const std::uint8_t kSize) : kmerSize{kSize} {}
 
 void Mers::AddKmer(const Kmer& k)
 {
@@ -60,7 +60,7 @@ void Mers::AWWindowMin(unsigned int winSize)
     std::vector<Kmer> windowMinimizers;        // minimizers in current window
 
     // Find the new set of minimizers
-    for (uint32_t i = 0; i < winSize && i < minimizers.size();
+    for (std::uint32_t i = 0; i < winSize && i < minimizers.size();
          ++i) {  // add kmers from first window
         window.emplace(minimizers[i]);
     }
@@ -73,7 +73,7 @@ void Mers::AWWindowMin(unsigned int winSize)
         newMinimizers.emplace_back(*it);  // added in proper order by position
     }
 
-    for (uint32_t i = winSize; i < minimizers.size();
+    for (std::uint32_t i = winSize; i < minimizers.size();
          ++i) {  // minimizer for window ending at kmer `i`, inclusive
         // Advance window to include kmer i
         window.erase(minimizers[i - winSize]);
@@ -103,12 +103,12 @@ std::vector<Kmer> Mers::BuildNMPs() const
     }
 
     // no mask because we are merging to minimizers up to 32 bits.
-    const uint64_t mask = ~uint64_t(0);
+    const std::uint64_t mask = ~std::uint64_t(0);
 
     std::vector<Kmer> nmps;
 
-    uint64_t minA;
-    uint64_t minB;
+    std::uint64_t minA;
+    std::uint64_t minB;
 
     for (std::size_t i = 1; i < minimizers.size(); ++i) {
         Kmer nm{minimizers[i].mer, 0, Data::Strand::FORWARD};
@@ -131,7 +131,7 @@ void Mers::HashKmers()
 {
     hashed_ = true;
     level_ = 0;
-    const uint64_t mask = (1ull << 2 * kmerSize) - 1;
+    const std::uint64_t mask = (1ull << 2 * kmerSize) - 1;
 
     for (auto& f : forward) {
         f.mer = Mix64Masked(f.mer, mask);
@@ -164,7 +164,7 @@ void Mers::HashKmers()
     }
 }
 
-uint64_t Mers::Mix64Masked(uint64_t key, const uint64_t mask)
+uint64_t Mers::Mix64Masked(std::uint64_t key, const std::uint64_t mask)
 {
     key = (~key + (key << 21)) & mask;  // key = (key << 21) - key - 1;
     key = key ^ (key >> 24);

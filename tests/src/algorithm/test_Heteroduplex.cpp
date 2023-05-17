@@ -41,7 +41,7 @@ TEST(Algorithm_Heteroduplex, empty_strand_raw_data_from_empty_input)
     const std::string reference;
     const std::vector<std::string> seqs;
     const std::vector<Data::Cigar> cigars;
-    const std::vector<int32_t> positions;
+    const std::vector<std::int32_t> positions;
 
     const auto rawData =
         Algorithm::internal::CalculateStrandRawData(
@@ -80,14 +80,14 @@ TEST(Algorithm_Heteroduplex, strand_raw_data_from_perfect_match_cigar_counts)
         Data::Cigar{"12="},
         Data::Cigar{"12="},
     };
-    const std::vector<int32_t> inputPositions{0, 1, 0, 2};
+    const std::vector<std::int32_t> inputPositions{0, 1, 0, 2};
 
     // expected
 
     const std::vector<int> expectedNumReads{
         2,3,4,4,4,4,4,4,4,4,4,4,3,2
     };
-    const std::vector<uint8_t> expectedPotentialMismatches{
+    const std::vector<std::uint8_t> expectedPotentialMismatches{
         0,0,0,0,0,0,0,0,0,0,0,0,0,0
     };
     const std::vector<Algorithm::internal::BaseCount> expectedBaseCounts{
@@ -138,14 +138,14 @@ TEST(Algorithm_Heteroduplex, strand_raw_data_with_mismatches_and_indels)
         Data::Cigar{"9=1D2="},
         Data::Cigar{"3=1D8="},
     };
-    const std::vector<int32_t> inputPositions{0, 1, 0, 2};
+    const std::vector<std::int32_t> inputPositions{0, 1, 0, 2};
 
     // expected
 
     const std::vector<int> expectedNumReads{
         2,3,4,4,4,4,4,4,4,4,4,4,3,2
     };
-    const std::vector<uint8_t> expectedPotentialMismatches{
+    const std::vector<std::uint8_t> expectedPotentialMismatches{
         0,0,0,1,0,1,0,1,0,1,0,0,0,0,
     };
 
@@ -175,8 +175,8 @@ TEST(Algorithm_Heteroduplex, empty_reference_yields_no_call)
     const std::vector<std::string> revSeqs{"ACGT"};
     const std::vector<Data::Cigar> fwdCigars{Data::Cigar{"4="}};
     const std::vector<Data::Cigar> revCigars{Data::Cigar{"4="}};
-    const std::vector<int32_t> fwdPositions{0};
-    const std::vector<int32_t> revPositions{0};
+    const std::vector<std::int32_t> fwdPositions{0};
+    const std::vector<std::int32_t> revPositions{0};
 
     EXPECT_FALSE(Algorithm::IsHeteroduplex(reference, fwdSeqs, revSeqs, fwdCigars, revCigars,
                                            fwdPositions, revPositions));
@@ -189,8 +189,8 @@ TEST(Algorithm_Heteroduplex, empty_fwd_input_yields_no_call)
     const std::vector<std::string> revSeqs{"ACGT"};
     const std::vector<Data::Cigar> fwdCigars;
     const std::vector<Data::Cigar> revCigars{Data::Cigar{"4="}};
-    const std::vector<int32_t> fwdPositions;
-    const std::vector<int32_t> revPositions{0};
+    const std::vector<std::int32_t> fwdPositions;
+    const std::vector<std::int32_t> revPositions{0};
 
     EXPECT_FALSE(Algorithm::IsHeteroduplex(reference, fwdSeqs, revSeqs, fwdCigars, revCigars,
                                            fwdPositions, revPositions));
@@ -203,8 +203,8 @@ TEST(Algorithm_Heteroduplex, empty_rev_input_yields_no_call)
     const std::vector<std::string> revSeqs;
     const std::vector<Data::Cigar> fwdCigars{Data::Cigar{"4="}};
     const std::vector<Data::Cigar> revCigars;
-    const std::vector<int32_t> fwdPositions{0};
-    const std::vector<int32_t> revPositions;
+    const std::vector<std::int32_t> fwdPositions{0};
+    const std::vector<std::int32_t> revPositions;
 
     EXPECT_FALSE(Algorithm::IsHeteroduplex(reference, fwdSeqs, revSeqs, fwdCigars, revCigars,
                                            fwdPositions, revPositions));
@@ -232,8 +232,8 @@ TEST(Algorithm_Heteroduplex, returns_false_on_insufficient_coverage)
         Data::Cigar{"7="}, Data::Cigar{"7="}, Data::Cigar{"7="},
         Data::Cigar{"7="},
     };
-    const std::vector<int32_t> fwdPositions{0, 0, 0, 0};
-    const std::vector<int32_t> revPositions{0, 0, 0, 0};
+    const std::vector<std::int32_t> fwdPositions{0, 0, 0, 0};
+    const std::vector<std::int32_t> revPositions{0, 0, 0, 0};
 
     // minimum coverage requirement is higher than provided
     Algorithm::HeteroduplexSettings settings;
@@ -260,8 +260,8 @@ TEST(Algorithm_Heteroduplex, no_call_on_mismatches_but_non_hd)
         Data::Cigar{"7="}, Data::Cigar{"4=1D2="}, Data::Cigar{"4=2D1="},
         Data::Cigar{"7="},
     };
-    const std::vector<int32_t> fwdPositions{0, 0, 0, 0};
-    const std::vector<int32_t> revPositions{0, 0, 0, 0};
+    const std::vector<std::int32_t> fwdPositions{0, 0, 0, 0};
+    const std::vector<std::int32_t> revPositions{0, 0, 0, 0};
 
     // adjust for small dataset
     Algorithm::HeteroduplexSettings settings;
@@ -295,8 +295,8 @@ TEST(Algorithm_Heteroduplex, call_simple_mismatch_heteroduplex_fwd)
         Data::Cigar{"7="}, Data::Cigar{"7="}, Data::Cigar{"7="},
         Data::Cigar{"7="},
     };
-    const std::vector<int32_t> fwdPositions{0, 0, 0, 0};
-    const std::vector<int32_t> revPositions{0, 0, 0, 0};
+    const std::vector<std::int32_t> fwdPositions{0, 0, 0, 0};
+    const std::vector<std::int32_t> revPositions{0, 0, 0, 0};
 
     // adjust for small dataset
     Algorithm::HeteroduplexSettings settings;
@@ -330,8 +330,8 @@ TEST(Algorithm_Heteroduplex, call_simple_mismatch_heteroduplex_rev)
         Data::Cigar{"7="}, Data::Cigar{"3=1X3="}, Data::Cigar{"3=1X3="},
         Data::Cigar{"3=1X3="},
     };
-    const std::vector<int32_t> fwdPositions{0, 0, 0, 0};
-    const std::vector<int32_t> revPositions{0, 0, 0, 0};
+    const std::vector<std::int32_t> fwdPositions{0, 0, 0, 0};
+    const std::vector<std::int32_t> revPositions{0, 0, 0, 0};
 
     // adjust for small dataset
     Algorithm::HeteroduplexSettings settings;
@@ -365,8 +365,8 @@ TEST(Algorithm_Heteroduplex, skip_deletion_fwd)
         Data::Cigar{"7="}, Data::Cigar{"7="}, Data::Cigar{"7="},
         Data::Cigar{"7="},
     };
-    const std::vector<int32_t> fwdPositions{0, 0, 0, 0};
-    const std::vector<int32_t> revPositions{0, 0, 0, 0};
+    const std::vector<std::int32_t> fwdPositions{0, 0, 0, 0};
+    const std::vector<std::int32_t> revPositions{0, 0, 0, 0};
 
     // adjust for small dataset, with most permissive alpha to ensure no
     // mismatch gets that far
@@ -401,8 +401,8 @@ TEST(Algorithm_Heteroduplex, skip_deletion_rev)
         Data::Cigar{"4=1D2="}, Data::Cigar{"4=1D2="}, Data::Cigar{"4=1D2="},
         Data::Cigar{"4=1D2="},
     };
-    const std::vector<int32_t> fwdPositions{0, 0, 0, 0};
-    const std::vector<int32_t> revPositions{0, 0, 0, 0};
+    const std::vector<std::int32_t> fwdPositions{0, 0, 0, 0};
+    const std::vector<std::int32_t> revPositions{0, 0, 0, 0};
 
     // adjust for small dataset, with most permissive alpha to ensure no
     // mismatch gets that far
@@ -437,8 +437,8 @@ TEST(Algorithm_Heteroduplex, call_snp_left_adjacent_of_del)
         Data::Cigar{"3=1X3="}, Data::Cigar{"3=1X3="}, Data::Cigar{"3=1X3="},
         Data::Cigar{"3=1X3="},
     };
-    const std::vector<int32_t> fwdPositions{0, 0, 0, 0};
-    const std::vector<int32_t> revPositions{0, 0, 0, 0};
+    const std::vector<std::int32_t> fwdPositions{0, 0, 0, 0};
+    const std::vector<std::int32_t> revPositions{0, 0, 0, 0};
 
     // adjacent for small dataset
     Algorithm::HeteroduplexSettings settings;
@@ -472,8 +472,8 @@ TEST(Algorithm_Heteroduplex, call_snp_right_adjacent_of_del)
         Data::Cigar{"3=1D3="}, Data::Cigar{"3=1D3="}, Data::Cigar{"3=1D3="},
         Data::Cigar{"3=1D3="},
     };
-    const std::vector<int32_t> fwdPositions{0, 0, 0, 0};
-    const std::vector<int32_t> revPositions{0, 0, 0, 0};
+    const std::vector<std::int32_t> fwdPositions{0, 0, 0, 0};
+    const std::vector<std::int32_t> revPositions{0, 0, 0, 0};
 
     // adjacent for small dataset
     Algorithm::HeteroduplexSettings settings;
@@ -507,8 +507,8 @@ TEST(Algorithm_Heteroduplex, skip_overhang_snp_fwd)
         Data::Cigar{"7="}, Data::Cigar{"3=1X3="}, Data::Cigar{"3=1X3="},
         Data::Cigar{"3=1X3="},
     };
-    const std::vector<int32_t> fwdPositions{0, 0, 0, 0};
-    const std::vector<int32_t> revPositions{0, 0, 0, 0};
+    const std::vector<std::int32_t> fwdPositions{0, 0, 0, 0};
+    const std::vector<std::int32_t> revPositions{0, 0, 0, 0};
 
     // adjust for small dataset, with most permissive alpha to ensure no
     // mismatch gets that far
@@ -543,8 +543,8 @@ TEST(Algorithm_Heteroduplex, skip_overhang_snp_rev)
         Data::Cigar{"7="}, Data::Cigar{"7="}, Data::Cigar{"7="},
         Data::Cigar{"7="},
     };
-    const std::vector<int32_t> fwdPositions{0, 0, 0, 0};
-    const std::vector<int32_t> revPositions{0, 0, 0, 0};
+    const std::vector<std::int32_t> fwdPositions{0, 0, 0, 0};
+    const std::vector<std::int32_t> revPositions{0, 0, 0, 0};
 
     // adjust for small dataset, with most permissive alpha to ensure no
     // mismatch gets that far
@@ -576,8 +576,8 @@ TEST(Algorithm_Heteroduplex, non_hd_bad_reference)
         Data::Cigar{"6="}, Data::Cigar{"6="}, Data::Cigar{"6="},
         Data::Cigar{"6="},
     };
-    const std::vector<int32_t> fwdPositions{0, 0, 0, 0};
-    const std::vector<int32_t> revPositions{0, 0, 0, 0};
+    const std::vector<std::int32_t> fwdPositions{0, 0, 0, 0};
+    const std::vector<std::int32_t> revPositions{0, 0, 0, 0};
 
     // adjust for small dataset
     Algorithm::HeteroduplexSettings settings;

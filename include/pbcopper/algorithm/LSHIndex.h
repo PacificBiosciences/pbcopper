@@ -46,19 +46,19 @@ namespace Algorithm {
  * and then you query with new hashes, which you can use for filtration of potential
  * near-neighbors.
  */
-template <typename KeyT = uint64_t, typename IdT = uint32_t>
+template <typename KeyT = std::uint64_t, typename IdT = std::uint32_t>
 class LSHIndex
 {
 private:
-    int64_t sketchSize_;
+    std::int64_t sketchSize_;
     using HashV = std::vector<Container::UnorderedMap<KeyT, std::vector<IdT>>>;
     std::vector<HashV> packedMaps_;
-    std::vector<int64_t> registersPerTable_;
-    int64_t totalIDs_;
+    std::vector<std::int64_t> registersPerTable_;
+    std::int64_t totalIDs_;
     std::vector<std::vector<std::mutex>> mutexes_;
     bool isBottomKOnly_{false};
 
-    static constexpr uint64_t wangHash(uint64_t key) noexcept
+    static constexpr std::uint64_t wangHash(std::uint64_t key) noexcept
     {
         key = (~key) + (key << 21);  // key = (key << 21) - key - 1;
         key = key ^ (key >> 24);
@@ -70,9 +70,9 @@ private:
         return key;
     }
 
-    static void BufferedFWrite(std::FILE* fp, const void* ptr, int64_t nb)
+    static void BufferedFWrite(std::FILE* fp, const void* ptr, std::int64_t nb)
     {
-        if (const int64_t nWritten = std::fwrite(ptr, 1, nb, fp); nWritten != nb) {
+        if (const std::int64_t nWritten = std::fwrite(ptr, 1, nb, fp); nWritten != nb) {
             throw std::runtime_error(
                 std::string(
                     "[pbcopper] std::fwrite ERROR: Failed to BufferedFWrite from file; read ") +
@@ -81,9 +81,9 @@ private:
         }
     }
 
-    static void BufferedFRead(std::FILE* fp, void* ptr, int64_t nb)
+    static void BufferedFRead(std::FILE* fp, void* ptr, std::int64_t nb)
     {
-        if (const int64_t nRead = std::fread(ptr, 1, nb, fp); nRead != nb) {
+        if (const std::int64_t nRead = std::fread(ptr, 1, nb, fp); nRead != nb) {
             throw std::runtime_error(
                 std::string(
                     "[pbcopper] std::fread ERROR: Failed to BufferedFRead from file; read ") +
@@ -95,13 +95,13 @@ public:
     using key_type = KeyT;
     using id_type = IdT;
 
-    int64_t M() const noexcept { return sketchSize_; }
+    std::int64_t M() const noexcept { return sketchSize_; }
 
-    int64_t Size() const noexcept { return totalIDs_; }
+    std::int64_t Size() const noexcept { return totalIDs_; }
 
-    int64_t Size(int64_t totalIDs) noexcept { return totalIDs_ = totalIDs; }
+    std::int64_t Size(std::int64_t totalIDs) noexcept { return totalIDs_ = totalIDs; }
 
-    int64_t NTables() const noexcept { return Utility::Ssize(packedMaps_); }
+    std::int64_t NTables() const noexcept { return Utility::Ssize(packedMaps_); }
 
     bool IsBottomK() const noexcept { return isBottomKOnly_; }
 
@@ -110,7 +110,7 @@ public:
     // and grouping sampling counts from numberSignaturesPerRows
     // For more advanced usage.
     template <typename IT, typename Alloc, typename OIT, typename OAlloc>
-    LSHIndex(int64_t m, const std::vector<IT, Alloc>& numberHashesPerSignatures,
+    LSHIndex(std::int64_t m, const std::vector<IT, Alloc>& numberHashesPerSignatures,
              const std::vector<OIT, OAlloc>& numberSignaturesPerRows)
         : sketchSize_(m)
     {
@@ -144,7 +144,8 @@ public:
     // dictated by numberHashesPerSignatures
     // The number of signatures per row defaults to m / size
     template <typename IT, typename Alloc>
-    LSHIndex(int64_t m, const std::vector<IT, Alloc>& numberHashesPerSignatures) : sketchSize_(m)
+    LSHIndex(std::int64_t m, const std::vector<IT, Alloc>& numberHashesPerSignatures)
+        : sketchSize_(m)
     {
         totalIDs_ = 0;
         for (const auto v : numberHashesPerSignatures) {
@@ -158,14 +159,15 @@ public:
     // and floor(log2(m)) register groupings
     // If densified = true, this uses ranges of integers (1, 2, 3, 4...)
     // instead of the default powers of 2 (1, 2, 4, 8, 16...)
-    LSHIndex(int64_t m, bool densified = false) : sketchSize_(m)
+    LSHIndex(std::int64_t m, bool densified = false) : sketchSize_(m)
     {
         totalIDs_ = 0;
-        const int64_t numRegisterSizes =
-            densified ? m : static_cast<int64_t>(Utility::IntegralLog2(Utility::BitCeiling(m)));
+        const std::int64_t numRegisterSizes =
+            densified ? m
+                      : static_cast<std::int64_t>(Utility::IntegralLog2(Utility::BitCeiling(m)));
         registersPerTable_.reserve(numRegisterSizes);
         packedMaps_.reserve(numRegisterSizes);
-        for (int64_t registersPerHash = 1; registersPerHash <= sketchSize_;) {
+        for (std::int64_t registersPerHash = 1; registersPerHash <= sketchSize_;) {
             registersPerTable_.push_back(registersPerHash);
             packedMaps_.emplace_back(HashV(sketchSize_ / registersPerHash));
             mutexes_.emplace_back(HashV(sketchSize_ / registersPerHash));
@@ -191,7 +193,7 @@ public:
 
     LSHIndex(LSHIndex&& o) = default;
 
-    static LSHIndex CreateBottomK(int64_t k)
+    static LSHIndex CreateBottomK(std::int64_t k)
     {
         LSHIndex ret;
         ret.sketchSize_ = k;
@@ -222,7 +224,7 @@ public:
         LSHIndex res;
         res.packedMaps_.resize(Utility::Ssize(o.packedMaps_));
         res.registersPerTable_ = o.registersPerTable_;
-        for (int64_t i = 0; i < Utility::Ssize(o.packedMaps_); ++i) {
+        for (std::int64_t i = 0; i < Utility::Ssize(o.packedMaps_); ++i) {
             res.packedMaps_[i].resize(o.packedMaps_[i].size());
         }
         res.mutexes_.clear();
@@ -237,39 +239,39 @@ public:
     // Read a serialized LSHIndex
     LSHIndex(std::FILE* fp)
     {
-        int64_t numberMapSets;
-        std::vector<int64_t> mapSizes;
+        std::int64_t numberMapSets;
+        std::vector<std::int64_t> mapSizes;
         registersPerTable_.clear();
 
         BufferedFRead(fp, &totalIDs_, sizeof(totalIDs_));
-        BufferedFRead(fp, &numberMapSets, sizeof(int64_t));
+        BufferedFRead(fp, &numberMapSets, sizeof(std::int64_t));
         mapSizes.reserve(numberMapSets);
         packedMaps_.resize(mapSizes.size());
         while (mapSizes.size() < numberMapSets) {
-            int64_t v;
-            BufferedFRead(fp, &v, sizeof(int64_t));
+            std::int64_t v;
+            BufferedFRead(fp, &v, sizeof(std::int64_t));
             mapSizes.push_back(v);
             packedMaps_.emplace_back(HashV(v));
         }
         while (Utility::Ssize(registersPerTable_) < numberMapSets) {
-            int64_t v;
-            BufferedFRead(fp, &v, sizeof(int64_t));
+            std::int64_t v;
+            BufferedFRead(fp, &v, sizeof(std::int64_t));
             registersPerTable_.push_back(v);
         }
-        uint8_t isBottomK;
-        uint8_t islocked;
+        std::uint8_t isBottomK;
+        std::uint8_t islocked;
         BufferedFRead(fp, &isBottomK, 1);
         BufferedFRead(fp, &islocked, 1);
         isBottomKOnly_ = isBottomK;
-        const int64_t packedMapSize = Utility::Ssize(packedMaps_);
-        for (int64_t i = 0; i < packedMapSize; ++i) {
+        const std::int64_t packedMapSize = Utility::Ssize(packedMaps_);
+        for (std::int64_t i = 0; i < packedMapSize; ++i) {
             auto& mapVec = packedMaps_[i];
-            const int64_t je = Utility::Ssize(packedMaps_[i]);
-            for (int64_t j = 0; j < je; ++j) {
-                int64_t sz;
+            const std::int64_t je = Utility::Ssize(packedMaps_[i]);
+            for (std::int64_t j = 0; j < je; ++j) {
+                std::int64_t sz;
                 BufferedFRead(fp, &sz, sizeof(sz));
-                for (int64_t k = 0; k < sz; ++k) {
-                    int64_t psz;
+                for (std::int64_t k = 0; k < sz; ++k) {
+                    std::int64_t psz;
                     KeyT key;
                     BufferedFRead(fp, &psz, sizeof(psz));
                     BufferedFRead(fp, &key, sizeof(key));
@@ -300,8 +302,8 @@ public:
     // (IE, there is no early stopping.)
     // It returns:
     //    std::vector<IdT> - matching IDs
-    //    std::vector<int32_t> - matching counts
-    //    std::vector<int32_t> - number of matches per rows
+    //    std::vector<std::int32_t> - matching counts
+    //    std::vector<std::int32_t> - number of matches per rows
     // The first two are sufficient to order the matches by counts
     // and the last is used for identifying which matching IDs were found
     // in which row, which tells us how strong the matches are.
@@ -309,8 +311,8 @@ public:
     // For simply querying, use Query.
     // For simply inserting, use Insert.
     template <typename Sketch>
-    std::tuple<std::vector<IdT>, std::vector<int32_t>, std::vector<int32_t>> UpdateQuery(
-        const Sketch& item, int64_t maxCandidates)
+    std::tuple<std::vector<IdT>, std::vector<std::int32_t>, std::vector<std::int32_t>> UpdateQuery(
+        const Sketch& item, std::int64_t maxCandidates)
     {
         // Check exceptions
         if (!isBottomKOnly_ && Utility::Ssize(item) < sketchSize_) {
@@ -319,25 +321,25 @@ public:
                 std::to_string(Utility::Ssize(item)) + ", expected" + std::to_string(sketchSize_));
         }
 
-        const int64_t myID = NextID();
+        const std::int64_t myID = NextID();
 
         // Initialize return structures
-        Container::UnorderedMap<IdT, int32_t> returnSet;
+        Container::UnorderedMap<IdT, std::int32_t> returnSet;
         std::vector<IdT> passingIDs;
-        std::vector<int32_t> itemsPerRow;
+        std::vector<std::int32_t> itemsPerRow;
 
         returnSet.reserve(maxCandidates);
         passingIDs.reserve(maxCandidates);
 
         // For each subtable, insert the item into the table
         // and return matching IDs
-        const int64_t nSubTableLists = Utility::Ssize(registersPerTable_);
-        for (int64_t i = 0; i < nSubTableLists; ++i) {
+        const std::int64_t nSubTableLists = Utility::Ssize(registersPerTable_);
+        for (std::int64_t i = 0; i < nSubTableLists; ++i) {
             auto& subTable = packedMaps_[i];
             std::vector<std::mutex>* const mptr =
                 mutexes_.size() > i ? static_cast<std::vector<std::mutex>*>(nullptr) : &mutexes_[i];
-            const int64_t numberSubTables = Utility::Ssize(subTable);
-            for (int64_t j = 0; j < numberSubTables; ++j) {
+            const std::int64_t numberSubTables = Utility::Ssize(subTable);
+            for (std::int64_t j = 0; j < numberSubTables; ++j) {
                 assert(j < Utility::Ssize(subTable));
                 auto& table = subTable[j];
                 KeyT myHash = hashIndex(item, i, j);
@@ -363,7 +365,7 @@ public:
                 }
             }
         }
-        std::vector<int32_t> passingCounts;
+        std::vector<std::int32_t> passingCounts;
         if (!passingIDs.empty()) {
             passingCounts.resize(Utility::Ssize(passingIDs));
             std::transform(cbegin(passingIDs), cend(passingIDs), begin(passingCounts),
@@ -373,22 +375,22 @@ public:
     }
 
     // Uses atomic increment to provide thread-safe access to numeric IDs
-    int64_t NextID() noexcept
+    std::int64_t NextID() noexcept
     {
-        return std::atomic_fetch_add(reinterpret_cast<std::atomic<int64_t>*>(&totalIDs_),
-                                     int64_t(1));
+        return std::atomic_fetch_add(reinterpret_cast<std::atomic<std::int64_t>*>(&totalIDs_),
+                                     std::int64_t(1));
     };
 
     template <typename Sketch>
-    std::tuple<std::vector<IdT>, std::vector<int32_t>, std::vector<int32_t>> UpdateQueryBottomK(
-        const Sketch& item, int64_t maxToQuery = -1)
+    std::tuple<std::vector<IdT>, std::vector<std::int32_t>, std::vector<std::int32_t>>
+    UpdateQueryBottomK(const Sketch& item, std::int64_t maxToQuery = -1)
     {
         if (maxToQuery < 0) {
-            maxToQuery = std::numeric_limits<int64_t>::max();
+            maxToQuery = std::numeric_limits<std::int64_t>::max();
         }
-        std::map<IdT, int32_t> matches;
+        std::map<IdT, std::int32_t> matches;
         auto& map = packedMaps_.front().front();
-        const int64_t myID = NextID();
+        const std::int64_t myID = NextID();
         for (const auto v : item) {
             auto it = map.find(v);
             if (it == map.end()) {
@@ -400,17 +402,17 @@ public:
                 it->second.emplace_back(myID);
             }
         }
-        std::tuple<std::vector<IdT>, std::vector<int32_t>, std::vector<int32_t>> ret;
-        std::vector<std::pair<IdT, int32_t>> mvec(matches.cbegin(), matches.cend());
+        std::tuple<std::vector<IdT>, std::vector<std::int32_t>, std::vector<std::int32_t>> ret;
+        std::vector<std::pair<IdT, std::int32_t>> mvec(matches.cbegin(), matches.cend());
         std::sort(mvec.cbegin(), mvec.cend(),
-                  [](std::pair<IdT, int32_t> x, std::pair<IdT, int32_t> y) {
+                  [](std::pair<IdT, std::int32_t> x, std::pair<IdT, std::int32_t> y) {
                       return std::tie(x.second, x.first) > std::tie(y.second, y.first);
                   });
         auto& first = std::get<0>(ret);
         auto& second = std::get<1>(ret);
         first.resize(matches.size());
         second.resize(matches.size());
-        int64_t i = 0;
+        std::int64_t i = 0;
         for (const auto& pair : mvec) {
             first[i] = pair.first;
             second[i] = pair.second;
@@ -426,7 +428,7 @@ public:
     // Used to insert into bottom-k only structures.
     // Is slower in multithreaded scenarios because there is only one map.
     template <typename Sketch>
-    void InsertBottomK(const Sketch& item, int64_t myID)
+    void InsertBottomK(const Sketch& item, std::int64_t myID)
     {
         auto& map = packedMaps_.front().front();
         using LockT = std::lock_guard<std::mutex>;
@@ -439,7 +441,7 @@ public:
     }
 
     template <typename Sketch>
-    int64_t UpdateMultiThreaded(const Sketch& item, int nthreads = -1)
+    std::int64_t UpdateMultiThreaded(const Sketch& item, int nthreads = -1)
     {
         if (!isBottomKOnly_ && Utility::Ssize(item) < sketchSize_) {
             throw std::invalid_argument(
@@ -447,7 +449,7 @@ public:
                 std::to_string(Utility::Ssize(item)) + ", expected" + std::to_string(sketchSize_));
         }
 
-        const int64_t myID = NextID();
+        const std::int64_t myID = NextID();
         if (isBottomKOnly_) {
             InsertBottomK(item, myID);
             return myID;
@@ -463,15 +465,15 @@ public:
                 nthreads = std::thread::hardware_concurrency();
             }
         }
-        const int64_t e = Utility::Ssize(registersPerTable_);
-        for (int64_t i = 0; i < e; ++i) {
+        const std::int64_t e = Utility::Ssize(registersPerTable_);
+        for (std::int64_t i = 0; i < e; ++i) {
             auto& subTable = packedMaps_[i];
             std::vector<std::mutex>* const mptr =
                 mutexes_.size() > i ? static_cast<std::vector<std::mutex>*>(nullptr) : &mutexes_[i];
-            const int64_t numberSubTables = Utility::Ssize(subTable);
+            const std::int64_t numberSubTables = Utility::Ssize(subTable);
 #ifdef _OPENMP
 #pragma omp parallel for
-            for (int64_t j = 0; j < numberSubTables; ++j) {
+            for (std::int64_t j = 0; j < numberSubTables; ++j) {
                 KeyT myHash = hashIndex(item, i, j);
                 auto& subSubTable = subTable[j];
                 std::optional<std::lock_guard<std::mutex>> lock(
@@ -516,11 +518,11 @@ public:
         return myID;
     }
 
-    static constexpr int64_t DEFAULT_ID = std::numeric_limits<int64_t>::max();
+    static constexpr std::int64_t DEFAULT_ID = std::numeric_limits<std::int64_t>::max();
     // Insert a single-item with the specific ID.
     // If no ID is provided, the structure provides a thread-safe ID
     template <typename Sketch>
-    int64_t Insert(const Sketch& item, int64_t myID = DEFAULT_ID)
+    std::int64_t Insert(const Sketch& item, std::int64_t myID = DEFAULT_ID)
     {
         return Update(item, myID);
     }
@@ -538,9 +540,9 @@ public:
     // General update code.
     // Handles both BottomK and regular insertion.
     template <typename Sketch>
-    int64_t Update(const Sketch& item, int64_t myID = DEFAULT_ID)
+    std::int64_t Update(const Sketch& item, std::int64_t myID = DEFAULT_ID)
     {
-        if (!isBottomKOnly_ && int64_t(Utility::Ssize(item)) < sketchSize_) {
+        if (!isBottomKOnly_ && std::int64_t(Utility::Ssize(item)) < sketchSize_) {
             throw std::invalid_argument(
                 std::string("[pbcopper] lsh index ERROR: Item has wrong size: ") +
                 std::to_string(Utility::Ssize(item)) + ", expected" + std::to_string(sketchSize_));
@@ -555,13 +557,13 @@ public:
             return myID;
         }
 
-        const int64_t nSubTableLists = Utility::Ssize(registersPerTable_);
-        for (int64_t i = 0; i < nSubTableLists; ++i) {
+        const std::int64_t nSubTableLists = Utility::Ssize(registersPerTable_);
+        for (std::int64_t i = 0; i < nSubTableLists; ++i) {
             auto& subTable = packedMaps_[i];
             std::vector<std::mutex>* mptr = nullptr;
             if (Utility::Ssize(mutexes_) > i) mptr = &mutexes_[i];
-            const int64_t numberSubTables = Utility::Ssize(subTable);
-            for (int64_t j = 0; j < numberSubTables; ++j) {
+            const std::int64_t numberSubTables = Utility::Ssize(subTable);
+            for (std::int64_t j = 0; j < numberSubTables; ++j) {
                 const KeyT myHash = hashIndex(item, i, j);
                 const std::optional<std::lock_guard<std::mutex>> lock(
                     mptr ? std::optional<std::lock_guard<std::mutex>>((*mptr)[j])
@@ -573,41 +575,41 @@ public:
     }
 
 private:
-    uint64_t simpleFastHash(uint64_t x) const
+    std::uint64_t simpleFastHash(std::uint64_t x) const
     {
-        return (((x ^ static_cast<uint64_t>(0x533f8c2151b20f97)) * 0x9a98567ed20c127dull) ^
+        return (((x ^ static_cast<std::uint64_t>(0x533f8c2151b20f97)) * 0x9a98567ed20c127dull) ^
                 0x691a9d706391077a);
     }
 
-    inline KeyT hashMemory256(const uint64_t* x) const
+    inline KeyT hashMemory256(const std::uint64_t* x) const
     {
-        uint64_t v[4];
+        std::uint64_t v[4];
         std::memcpy(&v, x, sizeof(v));
         return wangHash(simpleFastHash(v[0]) ^
                         (simpleFastHash(v[1]) * simpleFastHash(v[2]) - v[3]));
     }
 
-    inline KeyT hashMemory128(const uint64_t* x) const
+    inline KeyT hashMemory128(const std::uint64_t* x) const
     {
-        uint64_t v[2];
+        std::uint64_t v[2];
         std::memcpy(&v, x, sizeof(v));
         v[0] = simpleFastHash(v[0]);
         v[1] = simpleFastHash(v[1] ^ v[0]);
         return wangHash(v[0] ^ v[1]);
     }
 
-    inline KeyT hashMemory64(const uint64_t* x) const
+    inline KeyT hashMemory64(const std::uint64_t* x) const
     {
-        uint64_t v;
+        std::uint64_t v;
         std::memcpy(&v, x, sizeof(v));
         v = wangHash(v);
         return v;
     }
 
-    inline KeyT hashMemory32(const uint32_t* x) const
+    inline KeyT hashMemory32(const std::uint32_t* x) const
     {
         // MurMur3 finalizer
-        uint32_t v;
+        std::uint32_t v;
         std::memcpy(&v, x, sizeof(v));
         v ^= v >> 16;
         v *= 0x85ebca6b;
@@ -618,19 +620,19 @@ private:
     }
 
     template <typename T>
-    inline KeyT hashMemory(const T& x, int64_t n) const noexcept
+    inline KeyT hashMemory(const T& x, std::int64_t n) const noexcept
     {
         // n must be > 0
         // This is enforced by registersPerTable_ checking in the constructor, which
         // throws a std::invalid_argument
         KeyT ret = 0;
-        int64_t nb = sizeof(T) * n;
+        std::int64_t nb = sizeof(T) * n;
         if (nb <= 4) {
-            uint32_t v = 0;
+            std::uint32_t v = 0;
             std::memcpy(&v, &x, nb);
             return hashMemory32(&v);
         }
-        const uint64_t* xptr = reinterpret_cast<const uint64_t*>(&x);
+        const std::uint64_t* xptr = reinterpret_cast<const std::uint64_t*>(&x);
         switch (nb) {
             case 8:
                 ret = hashMemory64(xptr);
@@ -643,7 +645,7 @@ private:
                 break;
             default: {
                 while (nb >= 32) {
-                    const uint64_t newHash = hashMemory256(xptr);
+                    const std::uint64_t newHash = hashMemory256(xptr);
                     ret ^= (ret >> 31);
                     ret += newHash;
                     xptr += 4;
@@ -652,7 +654,7 @@ private:
                 if (nb > 0) {
                     std::array<char, 32> chars{0};
                     std::memcpy(chars.data(), xptr, nb);
-                    ret *= hashMemory256(reinterpret_cast<const uint64_t*>(chars.data()));
+                    ret *= hashMemory256(reinterpret_cast<const std::uint64_t*>(chars.data()));
                     ret ^= (ret >> 31);
                 }
             } break;
@@ -661,33 +663,34 @@ private:
     }
 
     template <typename RegT>
-    static inline uint64_t seedUpdate(uint64_t& seed, const RegT& item) noexcept
+    static inline std::uint64_t seedUpdate(std::uint64_t& seed, const RegT& item) noexcept
     {
-        seed += static_cast<uint64_t>(item);
+        seed += static_cast<std::uint64_t>(item);
         return Utility::WyHash64Step(seed);
     }
 
     template <typename Sketch>
-    inline KeyT hashIndex(const Sketch& item, int64_t i, int64_t j) const noexcept
+    inline KeyT hashIndex(const Sketch& item, std::int64_t i, std::int64_t j) const noexcept
     {
         if (isBottomKOnly_) {
             return item[j];
         }
-        const int64_t nreg = registersPerTable_[i];
-        if (const int64_t offset = j * nreg; offset + nreg <= sketchSize_) {
+        const std::int64_t nreg = registersPerTable_[i];
+        if (const std::int64_t offset = j * nreg; offset + nreg <= sketchSize_) {
             return hashMemory(item[offset], nreg);
         }
-        uint64_t seed = simpleFastHash(((i << 32) ^ (i >> 32)) | j);
-        uint64_t pos = seedUpdate(seed, 137u);
-        using VT = std::variant<Utility::FastMod<uint32_t>, Utility::FastMod<uint64_t>>;
-        const VT divVariant(sketchSize_ > 0xFFFFFFFF ? VT(Utility::FastMod<uint64_t>(sketchSize_))
-                                                     : VT(Utility::FastMod<uint32_t>(sketchSize_)));
+        std::uint64_t seed = simpleFastHash(((i << 32) ^ (i >> 32)) | j);
+        std::uint64_t pos = seedUpdate(seed, 137u);
+        using VT = std::variant<Utility::FastMod<std::uint32_t>, Utility::FastMod<std::uint64_t>>;
+        const VT divVariant(sketchSize_ > 0xFFFFFFFF
+                                ? VT(Utility::FastMod<std::uint64_t>(sketchSize_))
+                                : VT(Utility::FastMod<std::uint32_t>(sketchSize_)));
         auto singleUpdate = [&]() {
             std::visit([&seed, &item,
                         &pos](const auto& div) { pos = seedUpdate(seed, item[div.Modulus(pos)]); },
                        divVariant);
         };
-        for (int64_t ri8 = nreg / 8; ri8--;) {
+        for (std::int64_t ri8 = nreg / 8; ri8--;) {
             singleUpdate();
             singleUpdate();  // 2
             singleUpdate();
@@ -697,7 +700,7 @@ private:
             singleUpdate();
             singleUpdate();  // 8
         }
-        for (int64_t ri = (nreg / 8) * 8; ri < nreg; ++ri) {
+        for (std::int64_t ri = (nreg / 8) * 8; ri < nreg; ++ri) {
             singleUpdate();
         }
         return seedUpdate(seed, 137u);
@@ -710,25 +713,25 @@ public:
      *  Can be then used, along with sketches, to select nearest neighbors
      *  */
     template <typename Sketch>
-    std::tuple<std::vector<IdT>, std::vector<int32_t>, std::vector<int32_t>> Query(
-        const Sketch& item, int64_t maxCandidates = 0, int64_t startingIdx = int64_t(-1),
-        bool earlyStop = true) const
+    std::tuple<std::vector<IdT>, std::vector<std::int32_t>, std::vector<std::int32_t>> Query(
+        const Sketch& item, std::int64_t maxCandidates = 0,
+        std::int64_t startingIdx = std::int64_t(-1), bool earlyStop = true) const
     {
         if (startingIdx < 0 || startingIdx > Utility::Ssize(registersPerTable_)) {
             startingIdx = Utility::Ssize(registersPerTable_);
         }
-        Container::UnorderedMap<IdT, int32_t> returnSet;
+        Container::UnorderedMap<IdT, std::int32_t> returnSet;
         std::vector<IdT> passingIDs;
-        std::vector<int32_t> itemsPerRow;
+        std::vector<std::int32_t> itemsPerRow;
         returnSet.reserve(maxCandidates);
         passingIDs.reserve(maxCandidates);
         if (maxCandidates == 0) {
-            maxCandidates = std::numeric_limits<int64_t>::max();
+            maxCandidates = std::numeric_limits<std::int64_t>::max();
         }
         itemsPerRow.reserve(startingIdx);
         if (isBottomKOnly_) {
             auto& m = packedMaps_.front().front();
-            for (int64_t j = 0;
+            for (std::int64_t j = 0;
                  j < Utility::Ssize(item) && Utility::Ssize(returnSet) < maxCandidates; ++j) {
                 if (auto it = m.find(item[j]); it != cend(m)) {
                     for (const auto id : it->second) {
@@ -752,9 +755,9 @@ public:
             for (std::ptrdiff_t i = startingIdx;
                  --i >= 0 && Utility::Ssize(returnSet) < maxCandidates;) {
                 auto& m = packedMaps_[i];
-                const int64_t numberSubTables = m.size();
-                const int64_t itemsBefore = Utility::Ssize(passingIDs);
-                for (int64_t j = 0; j < numberSubTables; ++j) {
+                const std::int64_t numberSubTables = m.size();
+                const std::int64_t itemsBefore = Utility::Ssize(passingIDs);
+                for (std::int64_t j = 0; j < numberSubTables; ++j) {
                     const KeyT myHash = hashIndex(item, i, j);
                     if (auto it = m[j].find(myHash); it != m[j].cend()) {
                         for (const auto id : it->second) {
@@ -775,7 +778,7 @@ public:
             }
         end:;
         }
-        std::vector<int32_t> passingCounts(Utility::Ssize(passingIDs));
+        std::vector<std::int32_t> passingCounts(Utility::Ssize(passingIDs));
         std::transform(cbegin(passingIDs), cend(passingIDs), begin(passingCounts),
                        [&returnSet](auto x) { return returnSet[x]; });
         return std::make_tuple(passingIDs, passingCounts, itemsPerRow);
@@ -792,25 +795,25 @@ public:
     void Write(std::FILE* fp) const
     {
         BufferedFWrite(fp, &totalIDs_, sizeof(totalIDs_));
-        int64_t nms = packedMaps_.size();
+        std::int64_t nms = packedMaps_.size();
         BufferedFWrite(fp, &nms, sizeof(nms));
         for (auto& map : packedMaps_) {
-            const int64_t v = Utility::Ssize(map);
+            const std::int64_t v = Utility::Ssize(map);
             BufferedFWrite(fp, &v, sizeof(v));
         }
         BufferedFWrite(fp, registersPerTable_.data(),
                        Utility::Ssize(registersPerTable_) * sizeof(registersPerTable_.front()));
-        const uint8_t isBottomK = isBottomKOnly_;
-        const uint8_t islocked = !mutexes_.empty();
+        const std::uint8_t isBottomK = isBottomKOnly_;
+        const std::uint8_t islocked = !mutexes_.empty();
         BufferedFWrite(fp, &isBottomK, 1);
         BufferedFWrite(fp, &islocked, 1);
-        for (int64_t i = 0; i < packedMaps_.size(); ++i) {
-            for (int64_t j = 0; j < packedMaps_[i].size(); ++j) {
+        for (std::int64_t i = 0; i < packedMaps_.size(); ++i) {
+            for (std::int64_t j = 0; j < packedMaps_[i].size(); ++j) {
                 auto& map = packedMaps_[i][j];
-                const uint64_t sz = map.size();
+                const std::uint64_t sz = map.size();
                 BufferedFWrite(fp, &sz, sizeof(sz));
                 for (auto& pair : map) {
-                    uint64_t psz = pair.second.size();
+                    std::uint64_t psz = pair.second.size();
                     BufferedFWrite(fp, &psz, sizeof(psz));
                     BufferedFWrite(fp, &pair.first, sizeof(pair.first));
                     BufferedFWrite(fp, pair.second.data(), sizeof(KeyT) * pair.second.size());

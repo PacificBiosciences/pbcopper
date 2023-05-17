@@ -17,8 +17,8 @@ TEST(Data_Read, ClipRead)
     const SNR snr{0.9, 0.9, 0.9, 0.9};
     const Position qStart = 500;
     const Position qEnd = 510;
-    const std::vector<uint16_t> pw{10, 20, 30, 40, 50, 60, 70, 80, 90, 100};
-    const std::vector<uint16_t> ipd{10, 20, 30, 40, 50, 60, 70, 80, 90, 100};
+    const std::vector<std::uint16_t> pw{10, 20, 30, 40, 50, 60, 70, 80, 90, 100};
+    const std::vector<std::uint16_t> ipd{10, 20, 30, 40, 50, 60, 70, 80, 90, 100};
 
     // ClipToQuery(read, 502, 509);
     const std::size_t clipStart = 502;
@@ -33,8 +33,8 @@ TEST(Data_Read, ClipRead)
     const SNR expectedSnr{0.9, 0.9, 0.9, 0.9};
     const Position expectedQStart = 502;
     const Position expectedQEnd = 509;
-    const std::vector<uint16_t> expectedPw{30, 40, 50, 60, 70, 80, 90};
-    const std::vector<uint16_t> expectedIpd{30, 40, 50, 60, 70, 80, 90};
+    const std::vector<std::uint16_t> expectedPw{30, 40, 50, 60, 70, 80, 90};
+    const std::vector<std::uint16_t> expectedIpd{30, 40, 50, 60, 70, 80, 90};
 
     EXPECT_EQ("name/0/500_510", read.FullName());
     EXPECT_EQ(expectedSeq, read.Seq);
@@ -55,13 +55,13 @@ TEST(Data_Read, ClipMappedRead)
     const SNR snr{0.9, 0.9, 0.9, 0.9};
     const Position qStart = 500;
     const Position qEnd = 510;
-    const std::vector<uint16_t> pw{10, 20, 30, 40, 50, 60, 70, 80, 90, 100};
-    const std::vector<uint16_t> ipd{10, 20, 30, 40, 50, 60, 70, 80, 90, 100};
+    const std::vector<std::uint16_t> pw{10, 20, 30, 40, 50, 60, 70, 80, 90, 100};
+    const std::vector<std::uint16_t> ipd{10, 20, 30, 40, 50, 60, 70, 80, 90, 100};
     const Strand strand = Strand::FORWARD;
     const Position tStart = 100;
     const Position tEnd = 111;
     const Cigar cigar{"4=1D2I2D4="};
-    const uint8_t mapQV = 80;
+    const std::uint8_t mapQV = 80;
 
     // ClipToReference(read, 102, 107);
     const ClipResult clipResult{2, 502, 507, 102, Cigar{"2=1D2I2D"}};
@@ -79,13 +79,13 @@ TEST(Data_Read, ClipMappedRead)
     const SNR expectedSnr{0.9, 0.9, 0.9, 0.9};
     const Position expectedQStart = 502;
     const Position expectedQEnd = 507;
-    const std::vector<uint16_t> expectedPw{30, 40, 50, 60, 70};
-    const std::vector<uint16_t> expectedIpd{30, 40, 50, 60, 70};
+    const std::vector<std::uint16_t> expectedPw{30, 40, 50, 60, 70};
+    const std::vector<std::uint16_t> expectedIpd{30, 40, 50, 60, 70};
     const Strand expectedStrand = Strand::FORWARD;
     const Position expectedTStart = 102;
     const Position expectedTEnd = 107;
     const Cigar expectedCigar{"2=1D2I2D"};
-    const uint8_t expectedMapQV = 80;
+    const std::uint8_t expectedMapQV = 80;
 
     EXPECT_EQ("name/0/500_510", read.FullName());
     EXPECT_EQ(expectedSeq, read.Seq);
@@ -109,26 +109,26 @@ TEST(Data_Read, ClipToReferenceOutsideAlignedRegion)
     const SNR snr{0.9, 0.9, 0.9, 0.9};
     const Position qStart = 500;
     const Position qEnd = 507;
-    const std::vector<uint16_t> pw{10, 20, 30, 40, 50, 60, 70};
-    const std::vector<uint16_t> ipd{10, 20, 30, 40, 50, 60, 70};
+    const std::vector<std::uint16_t> pw{10, 20, 30, 40, 50, 60, 70};
+    const std::vector<std::uint16_t> ipd{10, 20, 30, 40, 50, 60, 70};
     const Strand strand = Strand::FORWARD;
     const Position tStart = 200;
     const Position tEnd = 207;
     const Cigar cigar{"7="};
-    const uint8_t mapQV = 99;
+    const std::uint8_t mapQV = 99;
 
     const std::string expectedSeq;
     const QualityValues expectedQuals{""};
     const SNR expectedSnr{0.9, 0.9, 0.9, 0.9};
     const Position expectedQStart = -1;
     const Position expectedQEnd = -1;
-    const std::vector<uint16_t> expectedPw{};
-    const std::vector<uint16_t> expectedIpd{};
+    const std::vector<std::uint16_t> expectedPw{};
+    const std::vector<std::uint16_t> expectedIpd{};
     const Strand expectedStrand = Strand::FORWARD;
     const Position expectedTStart = -1;
     const Position expectedTEnd = -1;
     const Cigar expectedCigar{""};
-    const uint8_t expectedMapQV = 255;
+    const std::uint8_t expectedMapQV = 255;
 
     auto shouldClipToEmptyRead = [&](Position start, Position end) {
         MappedRead read{Read{"name/0/500_507", seq, quals, snr, qStart, qEnd, pw, ipd},
@@ -180,13 +180,13 @@ TEST(Data_Read, MultipleClipsToReference)
     const SNR snr{0.9, 0.9, 0.9, 0.9};
     const Position qStart = 0;
     const Position qEnd = 1200;
-    const std::vector<uint16_t> pw(1200, 20);
-    const std::vector<uint16_t> ipd(1200, 20);
+    const std::vector<std::uint16_t> pw(1200, 20);
+    const std::vector<std::uint16_t> ipd(1200, 20);
     const Strand strand = Strand::FORWARD;
     const Position tStart = 0;
     const Position tEnd = 1200;
     const Cigar cigar{"1200="};
-    const uint8_t mapQV = 99;
+    const std::uint8_t mapQV = 99;
 
     // intial read, aligned to reference: [0, 1200)
     MappedRead read{Read{"name/0/0_1200", seq, quals, snr, qStart, qEnd, pw, ipd},
@@ -204,13 +204,13 @@ TEST(Data_Read, MultipleClipsToReference)
     const SNR expectedSnr{0.9, 0.9, 0.9, 0.9};
     Position expectedQStart = 0;
     Position expectedQEnd = 1000;
-    std::vector<uint16_t> expectedPw(1000, 20);
-    std::vector<uint16_t> expectedIpd(1000, 20);
+    std::vector<std::uint16_t> expectedPw(1000, 20);
+    std::vector<std::uint16_t> expectedIpd(1000, 20);
     const Strand expectedStrand = Strand::FORWARD;
     Position expectedTStart = 0;
     Position expectedTEnd = 1000;
     Cigar expectedCigar{"1000="};
-    const uint8_t expectedMapQV = 99;
+    const std::uint8_t expectedMapQV = 99;
 
     EXPECT_EQ("name/0/0_1200", read.FullName());
     EXPECT_EQ(expectedSeq, read.Seq);
@@ -233,8 +233,8 @@ TEST(Data_Read, MultipleClipsToReference)
     expectedQuals = QualityValues{std::string(900, 'Z')};
     expectedQStart = 100;
     expectedQEnd = 1000;
-    expectedPw = std::vector<uint16_t>(900, 20);
-    expectedIpd = std::vector<uint16_t>(900, 20);
+    expectedPw = std::vector<std::uint16_t>(900, 20);
+    expectedIpd = std::vector<std::uint16_t>(900, 20);
     expectedTStart = 100;
     expectedTEnd = 1000;
     expectedCigar = Cigar{"900="};
@@ -260,8 +260,8 @@ TEST(Data_Read, MultipleClipsToReference)
     expectedQuals = QualityValues{std::string(600, 'Z')};
     expectedQStart = 200;
     expectedQEnd = 800;
-    expectedPw = std::vector<uint16_t>(600, 20);
-    expectedIpd = std::vector<uint16_t>(600, 20);
+    expectedPw = std::vector<std::uint16_t>(600, 20);
+    expectedIpd = std::vector<std::uint16_t>(600, 20);
     expectedTStart = 200;
     expectedTEnd = 800;
     expectedCigar = Cigar{"600="};
@@ -288,13 +288,13 @@ TEST(Data_Read, MultipleClipsToReference_WithLargeDeletion)
     const SNR snr{0.9, 0.9, 0.9, 0.9};
     const Position qStart = 0;
     const Position qEnd = 1000;
-    const std::vector<uint16_t> pw(1200, 20);
-    const std::vector<uint16_t> ipd(1200, 20);
+    const std::vector<std::uint16_t> pw(1200, 20);
+    const std::vector<std::uint16_t> ipd(1200, 20);
     const Strand strand = Strand::FORWARD;
     const Position tStart = 0;
     const Position tEnd = 1200;
     const Cigar cigar{"400=200D600="};
-    const uint8_t mapQV = 99;
+    const std::uint8_t mapQV = 99;
 
     // intial read, aligned to reference: [0, 1200)
     MappedRead read{Read{"name/0/0_1000", seq, quals, snr, qStart, qEnd, pw, ipd},
@@ -312,13 +312,13 @@ TEST(Data_Read, MultipleClipsToReference_WithLargeDeletion)
     const SNR expectedSnr{0.9, 0.9, 0.9, 0.9};
     Position expectedQStart = 0;
     Position expectedQEnd = 800;
-    std::vector<uint16_t> expectedPw(800, 20);
-    std::vector<uint16_t> expectedIpd(800, 20);
+    std::vector<std::uint16_t> expectedPw(800, 20);
+    std::vector<std::uint16_t> expectedIpd(800, 20);
     const Strand expectedStrand = Strand::FORWARD;
     Position expectedTStart = 0;
     Position expectedTEnd = 1000;
     Cigar expectedCigar{"400=200D400="};
-    const uint8_t expectedMapQV = 99;
+    const std::uint8_t expectedMapQV = 99;
 
     EXPECT_EQ("name/0/0_1000", read.FullName());
     EXPECT_EQ(expectedSeq, read.Seq);
@@ -341,8 +341,8 @@ TEST(Data_Read, MultipleClipsToReference_WithLargeDeletion)
     expectedQuals = QualityValues{std::string(700, 'Z')};
     expectedQStart = 100;
     expectedQEnd = 800;
-    expectedPw = std::vector<uint16_t>(700, 20);
-    expectedIpd = std::vector<uint16_t>(700, 20);
+    expectedPw = std::vector<std::uint16_t>(700, 20);
+    expectedIpd = std::vector<std::uint16_t>(700, 20);
     expectedTStart = 100;
     expectedTEnd = 1000;
     expectedCigar = Cigar{"300=200D400="};
@@ -368,8 +368,8 @@ TEST(Data_Read, MultipleClipsToReference_WithLargeDeletion)
     expectedQuals = QualityValues{std::string(400, 'Z')};
     expectedQStart = 200;
     expectedQEnd = 600;
-    expectedPw = std::vector<uint16_t>(400, 20);
-    expectedIpd = std::vector<uint16_t>(400, 20);
+    expectedPw = std::vector<std::uint16_t>(400, 20);
+    expectedIpd = std::vector<std::uint16_t>(400, 20);
     expectedTStart = 200;
     expectedTEnd = 800;
     expectedCigar = Cigar{"200=200D200="};
@@ -395,11 +395,11 @@ TEST(Data_Read, BamRecordFunctions)
     const Position qEnd = 510;
     const std::string seq{"AACCGTTAGC"};
     const std::string quals{"?]?]?]?]?*"};
-    const std::vector<uint8_t> frames = {10, 10, 20, 20, 30, 40, 40, 10, 30, 20};
+    const std::vector<std::uint8_t> frames = {10, 10, 20, 20, 30, 40, 40, 10, 30, 20};
 
     const std::string seq_rev{"GCTAACGGTT"};
     const std::string quals_rev{"*?]?]?]?]?"};
-    const std::vector<uint8_t> frames_rev = {20, 30, 10, 40, 40, 30, 20, 20, 10, 10};
+    const std::vector<std::uint8_t> frames_rev = {20, 30, 10, 40, 40, 30, 20, 20, 10, 10};
 
     const std::string s1_cigar{"10="};
     const std::string s2_cigar{"5=3D5="};
@@ -502,13 +502,13 @@ TEST(Data_Read, BamRecordFunctions_Clip)
     const Position qEnd = 515;
     const std::string seq{"TTAACCGTTAGCAAA"};
     const std::string quals{"--?]?]?]?]?*+++"};
-    const std::vector<uint8_t> frames = {40, 40, 10, 10, 20, 20, 30, 40,
-                                         40, 10, 30, 20, 10, 10, 10};
+    const std::vector<std::uint8_t> frames = {40, 40, 10, 10, 20, 20, 30, 40,
+                                              40, 10, 30, 20, 10, 10, 10};
 
     const std::string seq_rev{"TTTGCTAACGGTTAA"};
     const std::string quals_rev{"+++*?]?]?]?]?--"};
-    const std::vector<uint8_t> frames_rev = {10, 10, 10, 20, 30, 10, 40, 40,
-                                             30, 20, 20, 10, 10, 40, 40};
+    const std::vector<std::uint8_t> frames_rev = {10, 10, 10, 20, 30, 10, 40, 40,
+                                                  30, 20, 20, 10, 10, 40, 40};
 
     const std::string s1_cigar{"2S10=3S"};
     const std::string s2_cigar{"2S5=3D5=3S"};
@@ -608,7 +608,7 @@ TEST(Data_Read, BamRecordFunctions_Clip)
 // clang-format off
 TEST(Data_Read, can_set_query_start_and_end_from_id)
 {
-    const int32_t holeNumber = 77;
+    const std::int32_t holeNumber = 77;
     const PacBio::Data::Position qStart = 1000;
     const PacBio::Data::Position qEnd = 1010;
     const PacBio::Data::LocalContextFlags ctxtFlags =

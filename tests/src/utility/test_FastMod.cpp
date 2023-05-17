@@ -9,7 +9,7 @@ using namespace PacBio;
 template <typename T>
 void TestFM()
 {
-    uint64_t seed = 0;
+    std::uint64_t seed = 0;
     for (int i = 0; i < 1000000; ++i) {
         const T modV = Utility::WyHash64Step(seed);
         Utility::FastMod<T> fm(modV);
@@ -25,6 +25,6 @@ void TestFM()
 
 TEST(Utility_FastMod, fm)
 {
-    TestFM<uint32_t>();
-    TestFM<uint64_t>();
+    TestFM<std::uint32_t>();
+    TestFM<std::uint64_t>();
 }

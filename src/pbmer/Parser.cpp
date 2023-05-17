@@ -11,7 +11,7 @@
 namespace PacBio {
 namespace Pbmer {
 
-Parser::Parser(uint8_t kmerSize)
+Parser::Parser(std::uint8_t kmerSize)
     : kmerSize_{kmerSize}
     , mask_{((0 < kmerSize) && (kmerSize <= 32))
                 ? std::numeric_limits<decltype(mask_)>::max() >> (64 - 2 * kmerSize)
@@ -30,7 +30,7 @@ Mers Parser::Parse(const std::string& dna) const
     Kmer forwardKmer{Data::Strand::FORWARD};
     Kmer reverseKmer{Data::Strand::REVERSE};
 
-    uint8_t c;
+    std::uint8_t c;
     // The length of the current kmer buffer, lk needs to be >= to kmer_size
     // before a kmer is complete. Remember the kmer is build in a sliding fashion
     int lk = 0;
@@ -77,7 +77,7 @@ std::vector<DnaBit> Parser::ParseDnaBit(const std::string& dna) const
     forwardKmer.strand = 0;
     forwardKmer.msize = kmerSize_;
 
-    uint8_t c;
+    std::uint8_t c;
     // The length of the current kmer buffer, lk needs to be >= to kmer_size
     // before a kmer is complete. Remember the kmer is build in a sliding fashion
     int lk = 0;
@@ -115,7 +115,7 @@ void Parser::ParseDnaBit(const std::string& dna, std::vector<DnaBit>& kms) const
     forwardKmer.strand = 0;
     forwardKmer.msize = kmerSize_;
 
-    uint8_t c;
+    std::uint8_t c;
     // The length of the current kmer buffer, lk needs to be >= to kmer_size
     // before a kmer is complete. Remember the kmer is build in a sliding fashion
     int lk = 0;

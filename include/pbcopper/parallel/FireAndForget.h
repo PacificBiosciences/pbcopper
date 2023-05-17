@@ -171,8 +171,8 @@ private:
 /// \param numEntries  number of submissions
 /// \param callback    function to be dispatched to FaF
 ///
-void Dispatch(Parallel::FireAndForget* faf, int32_t numEntries,
-              const std::function<void(int32_t)>& callback);
+void Dispatch(Parallel::FireAndForget* faf, std::int32_t numEntries,
+              const std::function<void(std::int32_t)>& callback);
 
 }  // namespace Parallel
 }  // namespace PacBio

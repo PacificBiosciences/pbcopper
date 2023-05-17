@@ -32,52 +32,52 @@ Result::operator bool() const { return OptionValueToBool(data_); }
 
 Result::operator std::string() const { return OptionValueToString(data_); }
 
-Result::operator int8_t() const
+Result::operator std::int8_t() const
 {
     const auto x = OptionValueToInt(data_);
-    return static_cast<int8_t>(x);
+    return static_cast<std::int8_t>(x);
 }
 
-Result::operator uint8_t() const
+Result::operator std::uint8_t() const
 {
     const auto x = OptionValueToUInt(data_);
-    return static_cast<uint8_t>(x);
+    return static_cast<std::uint8_t>(x);
 }
 
-Result::operator int16_t() const
+Result::operator std::int16_t() const
 {
     const auto x = OptionValueToInt(data_);
-    return static_cast<int16_t>(x);
+    return static_cast<std::int16_t>(x);
 }
 
-Result::operator uint16_t() const
+Result::operator std::uint16_t() const
 {
     const auto x = OptionValueToUInt(data_);
-    return static_cast<uint16_t>(x);
+    return static_cast<std::uint16_t>(x);
 }
 
-Result::operator int32_t() const
+Result::operator std::int32_t() const
 {
     const auto x = OptionValueToInt(data_);
-    return static_cast<int32_t>(x);
+    return static_cast<std::int32_t>(x);
 }
 
-Result::operator uint32_t() const
+Result::operator std::uint32_t() const
 {
     const auto x = OptionValueToUInt(data_);
-    return static_cast<uint32_t>(x);
+    return static_cast<std::uint32_t>(x);
 }
 
-Result::operator int64_t() const
+Result::operator std::int64_t() const
 {
     const auto x = OptionValueToInt(data_);
-    return static_cast<int64_t>(x);
+    return static_cast<std::int64_t>(x);
 }
 
-Result::operator uint64_t() const
+Result::operator std::uint64_t() const
 {
     const auto x = OptionValueToUInt(data_);
-    return static_cast<uint64_t>(x);
+    return static_cast<std::uint64_t>(x);
 }
 
 std::size_t Result::which() const { return data_.index(); }

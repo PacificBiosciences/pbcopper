@@ -109,7 +109,7 @@ R"({
 const Option Int8{
 R"({
     "names" : ["int8"],
-    "description" : "int8_t",
+    "description" : "std::int8_t",
     "type" : "int",
     "default" : 0
 })"
@@ -118,7 +118,7 @@ R"({
 const Option UInt8{
 R"({
     "names" : ["uint8"],
-    "description" : "uint8_t",
+    "description" : "std::uint8_t",
     "type" : "unsigned int",
     "default" : 0
 })"
@@ -127,7 +127,7 @@ R"({
 const Option Int16{
 R"({
     "names" : ["int16"],
-    "description" : "int16_t",
+    "description" : "std::int16_t",
     "type" : "int",
     "default" : 0
 })"
@@ -136,7 +136,7 @@ R"({
 const Option UInt16{
 R"({
     "names" : ["uint16"],
-    "description" : "uint16_t",
+    "description" : "std::uint16_t",
     "type" : "unsigned int",
     "default" : 0
 })"
@@ -145,7 +145,7 @@ R"({
 const Option Int32{
 R"({
     "names" : ["int32"],
-    "description" : "int32_t",
+    "description" : "std::int32_t",
     "type" : "int",
     "default" : 0
 })"
@@ -154,7 +154,7 @@ R"({
 const Option UInt32{
 R"({
     "names" : ["uint32"],
-    "description" : "uint32_t",
+    "description" : "std::uint32_t",
     "type" : "unsigned int",
     "default" : 0
 })"
@@ -163,7 +163,7 @@ R"({
 const Option Int64{
 R"({
     "names" : ["int64"],
-    "description" : "int64_t",
+    "description" : "std::int64_t",
     "type" : "int",
     "default" : 0
 })"
@@ -172,7 +172,7 @@ R"({
 const Option UInt64{
 R"({
     "names" : ["uint64"],
-    "description" : "uint64_t",
+    "description" : "std::uint64_t",
     "type" : "unsigned int",
     "default" : 0
 })"
@@ -325,14 +325,14 @@ TEST(CLI2_Results, can_add_and_fetch_option_values)
         std::string ploidy;
 
         // specific-width integer types
-        int8_t int8;
-        uint8_t uint8;
-        int16_t int16;
-        uint16_t uint16;
-        int32_t int32;
-        uint32_t uint32;
-        int64_t int64;
-        uint64_t uint64;
+        std::int8_t int8;
+        std::uint8_t uint8;
+        std::int16_t int16;
+        std::uint16_t uint16;
+        std::int32_t int32;
+        std::uint32_t uint32;
+        std::int64_t int64;
+        std::uint64_t uint64;
     };
 
     const bool force = true;
@@ -341,14 +341,14 @@ TEST(CLI2_Results, can_add_and_fetch_option_values)
     const float delta = 2.77;
     const double doubleDelta = 35.6;
     const std::string ploidy{"dipoid"};
-    const int8_t int8 = -1;
-    const uint8_t uint8 = 1;
-    const int16_t int16 = -1;
-    const uint16_t uint16 = 1;
-    const int32_t int32 = -1;
-    const uint32_t uint32 = 1;
-    const int64_t int64 = -1;
-    const uint64_t uint64 = 1;
+    const std::int8_t int8 = -1;
+    const std::uint8_t uint8 = 1;
+    const std::int16_t int16 = -1;
+    const std::uint16_t uint16 = 1;
+    const std::int32_t int32 = -1;
+    const std::uint32_t uint32 = 1;
+    const std::int64_t int64 = -1;
+    const std::uint64_t uint64 = 1;
 
     Results results;
     results.AddObservedValue("force", force, SetByMode::USER);

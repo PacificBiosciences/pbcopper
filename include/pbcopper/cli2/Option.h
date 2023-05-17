@@ -112,14 +112,14 @@ struct Option
     /// Option opt{ "...JSON...", MyDefaults::MinValue};
     ///
     Option(std::string def, bool on);
-    Option(std::string def, int8_t val);
-    Option(std::string def, int16_t val);
-    Option(std::string def, int32_t val);
-    Option(std::string def, int64_t val);
-    Option(std::string def, uint8_t val);
-    Option(std::string def, uint16_t val);
-    Option(std::string def, uint32_t val);
-    Option(std::string def, uint64_t val);
+    Option(std::string def, std::int8_t val);
+    Option(std::string def, std::int16_t val);
+    Option(std::string def, std::int32_t val);
+    Option(std::string def, std::int64_t val);
+    Option(std::string def, std::uint8_t val);
+    Option(std::string def, std::uint16_t val);
+    Option(std::string def, std::uint32_t val);
+    Option(std::string def, std::uint64_t val);
     Option(std::string def, float val);
     Option(std::string def, double val);
     Option(std::string def, std::string val);

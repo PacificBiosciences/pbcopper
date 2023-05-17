@@ -13,10 +13,10 @@ namespace Utility {
 namespace internal {
 
 template <typename Iter>
-void ShuffleImpl(Iter begin, int64_t seed, int64_t size, std::mt19937_64& eng)
+void ShuffleImpl(Iter begin, std::int64_t seed, std::int64_t size, std::mt19937_64& eng)
 {
-    const uint64_t usingSeed =
-        (seed < 0) ? std::mt19937_64::default_seed : static_cast<uint64_t>(seed);
+    const std::uint64_t usingSeed =
+        (seed < 0) ? std::mt19937_64::default_seed : static_cast<std::uint64_t>(seed);
     eng.seed(usingSeed);
 
     for (int i = 0; i < size; ++i) {
@@ -27,7 +27,7 @@ void ShuffleImpl(Iter begin, int64_t seed, int64_t size, std::mt19937_64& eng)
 }
 
 template <typename Iter>
-void ShuffleImpl(Iter begin, int64_t seed, int64_t size)
+void ShuffleImpl(Iter begin, std::int64_t seed, std::int64_t size)
 {
     std::mt19937_64 eng;
     ShuffleImpl(begin, seed, size, eng);
@@ -50,7 +50,7 @@ void ShuffleImpl(Iter begin, int64_t seed, int64_t size)
 ///                     default seeding, zero or greater for user-defined value.
 ///
 template <typename T>
-void Shuffle(T& container, int64_t seed = -1)
+void Shuffle(T& container, std::int64_t seed = -1)
 {
     internal::ShuffleImpl(container.begin(), seed, Utility::Ssize(container));
 }
@@ -71,7 +71,7 @@ void Shuffle(T& container, int64_t seed = -1)
 ///                     default seeding, zero or greater for user-defined value.
 ///
 template <typename T>
-void Shuffle(T& container, std::mt19937_64& eng, int64_t seed = -1)
+void Shuffle(T& container, std::mt19937_64& eng, std::int64_t seed = -1)
 {
     internal::ShuffleImpl(container.begin(), seed, Utility::Ssize(container), eng);
 }
@@ -92,7 +92,7 @@ void Shuffle(T& container, std::mt19937_64& eng, int64_t seed = -1)
 ///                 default seeding, zero or greater for user-defined value.
 ///
 template <typename Iter>
-void Shuffle(Iter begin, Iter end, int64_t seed = -1)
+void Shuffle(Iter begin, Iter end, std::int64_t seed = -1)
 {
     internal::ShuffleImpl(begin, seed, std::distance(begin, end));
 }
@@ -114,7 +114,7 @@ void Shuffle(Iter begin, Iter end, int64_t seed = -1)
 ///                 default seeding, zero or greater for user-defined value.
 ///
 template <typename Iter>
-void Shuffle(Iter begin, Iter end, std::mt19937_64& eng, int64_t seed = -1)
+void Shuffle(Iter begin, Iter end, std::mt19937_64& eng, std::int64_t seed = -1)
 {
     internal::ShuffleImpl(begin, seed, std::distance(begin, end), eng);
 }
