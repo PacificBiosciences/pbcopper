@@ -21,8 +21,8 @@ TEST(Data_Read, ClipRead)
     const std::vector<uint16_t> ipd{10, 20, 30, 40, 50, 60, 70, 80, 90, 100};
 
     // ClipToQuery(read, 502, 509);
-    const size_t clipStart = 502;
-    const size_t clipEnd = 509;
+    const std::size_t clipStart = 502;
+    const std::size_t clipEnd = 509;
     const ClipResult clipResult{2, 502, 509};
 
     Read read{"name/0/500_510", seq, quals, snr, qStart, qEnd, pw, ipd};

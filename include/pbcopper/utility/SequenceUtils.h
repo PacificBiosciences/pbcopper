@@ -137,8 +137,8 @@ inline std::string ReverseComplemented(const std::string& input)
 #if __cplusplus >= 201703L
 inline std::string_view ReverseComplement(const std::string_view input, char* output)
 {
-    const size_t strLen = input.length();
-    for (size_t i = 0; i < strLen; ++i) {
+    const std::size_t strLen = input.length();
+    for (std::size_t i = 0; i < strLen; ++i) {
         output[i] = Complement(input[strLen - 1 - i]);
     }
     return {output, strLen};

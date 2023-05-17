@@ -75,7 +75,7 @@ TEST(Align_EdlibAlign, can_align_subreads_list)
 
     const auto alignments = PacBio::Align::EdlibAlign(queries, target, config);
     ASSERT_EQ(expectedCigars.size(), alignments.size());
-    for (size_t i = 0; i < alignments.size(); ++i) {
+    for (std::size_t i = 0; i < alignments.size(); ++i) {
         const auto& cigarStr = PacBio::Align::EdlibAlignmentToCigar(*alignments[i]).ToStdString();
         EXPECT_EQ(cigarStr, expectedCigars[i]);
     }

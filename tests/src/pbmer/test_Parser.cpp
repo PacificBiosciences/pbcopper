@@ -35,7 +35,7 @@ TEST(Pbmer_Parser, compare_dnabit_parser)
     const std::string td1{"ACGACCCTGAGCCCCCAGAGTCATCTAAAAAAATTCTCTCCTCT"};
     PacBio::Pbmer::Mers mers{parser.Parse(td1)};
     std::vector<PacBio::Pbmer::DnaBit> dnaBits = parser.ParseDnaBit(td1);
-    for (size_t i = 0; i < mers.forward.size(); ++i) {
+    for (std::size_t i = 0; i < mers.forward.size(); ++i) {
         EXPECT_EQ(dnaBits[i].mer, mers.forward[i].mer);
     }
 }

@@ -25,7 +25,7 @@ private:
     typedef std::optional<std::packaged_task<void()>> TTask;
 
 public:
-    FireAndForget(const size_t size, const size_t mul = 2)
+    FireAndForget(const std::size_t size, const std::size_t mul = 2)
         : exc{nullptr}
         , numThreads{size}
         , sz{size * mul}
@@ -33,7 +33,7 @@ public:
         , thrown{false}
         , acceptingJobs{true}
     {
-        for (size_t i = 0; i < size; ++i) {
+        for (std::size_t i = 0; i < size; ++i) {
             threads.emplace_back(std::thread([this]() {
                 TTask task;
                 do {
@@ -124,7 +124,7 @@ public:
         }
     }
 
-    size_t NumThreads() const { return numThreads; }
+    std::size_t NumThreads() const { return numThreads; }
 
 private:
     TTask PopTask()
@@ -156,8 +156,8 @@ private:
     std::condition_variable pushed;
     std::exception_ptr exc;
     std::mutex m;
-    size_t numThreads;
-    size_t sz;
+    std::size_t numThreads;
+    std::size_t sz;
     std::atomic_bool abort;
     std::atomic_bool thrown;
     std::atomic_bool acceptingJobs;

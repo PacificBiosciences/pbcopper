@@ -17,7 +17,7 @@ namespace Poa {
 namespace detail {
 
 // an Anchor represents a point (cssPos, readPos)
-using SdpAnchor = std::pair<size_t, size_t>;
+using SdpAnchor = std::pair<std::size_t, std::size_t>;
 using SdpAnchorVector = std::vector<SdpAnchor>;
 
 class PoaGraphImpl;

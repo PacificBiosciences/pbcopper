@@ -119,7 +119,7 @@ uint64_t SubMerSelection::HashedSubseq(uint64_t kmer, int pos) const noexcept
 
 std::string SubMerSelection::ToString() const
 {
-    constexpr size_t BUFFER_SIZE = 128;
+    constexpr std::size_t BUFFER_SIZE = 128;
 
     std::string ret(BUFFER_SIZE, '\0');
     const int rc = std::snprintf(ret.data(), BUFFER_SIZE, "%" PRIu64 "\n", pattern_);

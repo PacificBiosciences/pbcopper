@@ -18,7 +18,7 @@ TEST(Container_CapacityPointer, Basic)
     {
         struct DummyAllocate
         {
-            std::byte* operator()(const ptrdiff_t size) const noexcept
+            std::byte* operator()(const std::ptrdiff_t size) const noexcept
             {
                 return static_cast<std::byte*>(std::malloc(size));
             }

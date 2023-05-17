@@ -32,7 +32,8 @@ constexpr int ArgMax3(int a, int b, int c)
 
 namespace internal {
 
-bool Rewrite2L(std::string* target, std::string* query, std::string* transcript, const size_t i)
+bool Rewrite2L(std::string* target, std::string* query, std::string* transcript,
+               const std::size_t i)
 {
     char& t0 = (*target)[i];
     char& t1 = (*target)[i + 1];
@@ -60,7 +61,8 @@ bool Rewrite2L(std::string* target, std::string* query, std::string* transcript,
     return false;
 }
 
-bool Rewrite3L(std::string* target, std::string* query, std::string* transcript, const size_t i)
+bool Rewrite3L(std::string* target, std::string* query, std::string* transcript,
+               const std::size_t i)
 {
     char& t0 = (*target)[i];
     char& t2 = (*target)[i + 2];
@@ -88,7 +90,8 @@ bool Rewrite3L(std::string* target, std::string* query, std::string* transcript,
     return false;
 }
 
-bool Rewrite2R(std::string* target, std::string* query, std::string* transcript, const size_t i)
+bool Rewrite2R(std::string* target, std::string* query, std::string* transcript,
+               const std::size_t i)
 {
     char& t0 = (*target)[i];
     char& t1 = (*target)[i + 1];
@@ -116,7 +119,8 @@ bool Rewrite2R(std::string* target, std::string* query, std::string* transcript,
     return false;
 }
 
-bool Rewrite3R(std::string* target, std::string* query, std::string* transcript, const size_t i)
+bool Rewrite3R(std::string* target, std::string* query, std::string* transcript,
+               const std::size_t i)
 {
     char& t0 = (*target)[i];
     char& t2 = (*target)[i + 2];
@@ -150,9 +154,9 @@ std::string PairwiseAlignment::Target() const { return target_; }
 
 std::string PairwiseAlignment::Query() const { return query_; }
 
-size_t PairwiseAlignment::ReferenceStart() const { return refStart_; }
+std::size_t PairwiseAlignment::ReferenceStart() const { return refStart_; }
 
-size_t PairwiseAlignment::ReferenceEnd() const { return refEnd_; }
+std::size_t PairwiseAlignment::ReferenceEnd() const { return refEnd_; }
 
 float PairwiseAlignment::Accuracy() const { return (static_cast<float>(Matches())) / Length(); }
 
@@ -182,7 +186,7 @@ int PairwiseAlignment::Deletions() const
 
 void PairwiseAlignment::Justify(const LRType lr)
 {
-    const size_t L = Length();
+    const std::size_t L = Length();
 
     if (L < 2) {
         return;
@@ -192,12 +196,12 @@ void PairwiseAlignment::Justify(const LRType lr)
         bool goAgain = false;
         if (lr == LRType::LEFT) {
             goAgain |= internal::Rewrite2L(&target_, &query_, &transcript_, L - 2);
-            for (size_t i = L - 2; i > 0; --i) {
+            for (std::size_t i = L - 2; i > 0; --i) {
                 goAgain |= internal::Rewrite2L(&target_, &query_, &transcript_, i - 1);
                 goAgain |= internal::Rewrite3L(&target_, &query_, &transcript_, i - 1);
             }
         } else {
-            for (size_t i = 0; i < L - 2; ++i) {
+            for (std::size_t i = 0; i < L - 2; ++i) {
                 goAgain |= internal::Rewrite2R(&target_, &query_, &transcript_, i);
                 goAgain |= internal::Rewrite3R(&target_, &query_, &transcript_, i);
             }
@@ -211,8 +215,8 @@ void PairwiseAlignment::Justify(const LRType lr)
 
 int PairwiseAlignment::Length() const { return target_.length(); }
 
-PairwiseAlignment::PairwiseAlignment(std::string target, std::string query, const size_t refStart,
-                                     const size_t refEnd)
+PairwiseAlignment::PairwiseAlignment(std::string target, std::string query,
+                                     const std::size_t refStart, const std::size_t refEnd)
     : target_(std::move(target))
     , query_(std::move(query))
     , transcript_(target_.length(), 'Z')
@@ -268,23 +272,23 @@ std::vector<int> PairwiseAlignment::TargetPositions() const
     return pos;
 }
 
-PairwiseAlignment PairwiseAlignment::ClippedTo(const size_t refStart, const size_t refEnd)
+PairwiseAlignment PairwiseAlignment::ClippedTo(const std::size_t refStart, const std::size_t refEnd)
 {
     if (refStart >= refEnd || refStart >= ReferenceEnd() || refEnd <= ReferenceStart()) {
         throw std::runtime_error{
             "[pbcopper] pairwise alignment ERROR: requested clip range does not overlap alignment"};
     }
 
-    const size_t clipRefStart = std::max(refStart, ReferenceStart());
-    const size_t clipRefEnd = std::min(refEnd, ReferenceEnd());
+    const std::size_t clipRefStart = std::max(refStart, ReferenceStart());
+    const std::size_t clipRefEnd = std::min(refEnd, ReferenceEnd());
 
     const std::vector<int> pos = TargetPositions();
-    size_t clipStart =
+    std::size_t clipStart =
         std::distance(pos.begin(), std::upper_bound(pos.begin(), pos.end(), clipRefStart));
     clipStart = clipStart > 0 ? clipStart - 1 : 0;
-    const size_t clipEnd =
+    const std::size_t clipEnd =
         std::distance(pos.begin(), std::lower_bound(pos.begin(), pos.end(), clipRefEnd));
-    const size_t clipLength = clipEnd - clipStart;
+    const std::size_t clipLength = clipEnd - clipStart;
 
     const std::string& clippedQuery = Query().substr(clipStart, clipLength);
     const std::string& clippedTarget = Target().substr(clipStart, clipLength);

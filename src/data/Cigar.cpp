@@ -19,11 +19,11 @@ namespace Data {
 
 Cigar::Cigar(const char* str) : std::vector<CigarOperation>{}
 {
-    size_t numberStart = 0;
-    size_t i = 0;
+    std::size_t numberStart = 0;
+    std::size_t i = 0;
     for (const char* c = str; *c; ++i, ++c) {
         if (!std::isdigit(*c)) {
-            const size_t distance = i - numberStart;
+            const std::size_t distance = i - numberStart;
             const uint32_t length = std::stoul(std::string{str, numberStart, distance});
             push_back(CigarOperation(*c, length));
             numberStart = i + 1;
@@ -50,9 +50,9 @@ std::string Cigar::ToStdString() const
     return s.str();
 }
 
-size_t ReferenceLength(const Cigar& cigar)
+std::size_t ReferenceLength(const Cigar& cigar)
 {
-    size_t length = 0;
+    std::size_t length = 0;
     for (const auto& op : cigar) {
         if (ConsumesReference(op.Type())) {
             length += op.Length();

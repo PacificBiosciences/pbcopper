@@ -22,7 +22,7 @@ MultiToolInterfaceHelpPrinter::MultiToolInterfaceHelpPrinter(MultiToolInterface 
 }
 
 MultiToolInterfaceHelpPrinter::MultiToolInterfaceHelpPrinter(MultiToolInterface multiToolInterface,
-                                                             const size_t maxColumn,
+                                                             const std::size_t maxColumn,
                                                              HiddenOptionMode hiddenOptionMode)
     : metrics_{multiToolInterface, maxColumn, hiddenOptionMode}
     , interface_{std::move(multiToolInterface)}

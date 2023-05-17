@@ -13,7 +13,7 @@ namespace Data {
 struct ClipToQueryConfig
 {
     // all clipping
-    size_t seqLength_;
+    std::size_t seqLength_;
     Position original_qStart_;
     Position original_qEnd_;
     Position target_qStart_;
@@ -39,10 +39,11 @@ struct ClipToReferenceConfig : public ClipToQueryConfig
 
 struct ClipResult
 {
-    ClipResult(size_t clipOffset, Position qStart, Position qEnd);
-    ClipResult(size_t clipOffset, Position qStart, Position qEnd, Position refPos, Cigar cigar);
+    ClipResult(std::size_t clipOffset, Position qStart, Position qEnd);
+    ClipResult(std::size_t clipOffset, Position qStart, Position qEnd, Position refPos,
+               Cigar cigar);
 
-    size_t clipOffset_;
+    std::size_t clipOffset_;
     Position qStart_;
     Position qEnd_;
     Position refPos_;

@@ -59,7 +59,7 @@ TEST(IntervalTest, Merging3)
 TEST(IntervalTest, Iteration)
 {
     Interval interval(0, 11);
-    size_t i = interval.Start();
+    std::size_t i = interval.Start();
 
     for (const auto j : interval) {
         EXPECT_EQ(j, i++);
@@ -78,8 +78,8 @@ TEST(IntervalTest, Gaps)
 
     EXPECT_EQ(gaps.size(), 2);
 
-    size_t l = 3;
-    size_t r = 5;
+    std::size_t l = 3;
+    std::size_t r = 5;
 
     for (const auto& i : gaps) {
         EXPECT_EQ(i.Start(), l);
@@ -109,8 +109,8 @@ TEST(IntervalTest, Gaps2)
 
     EXPECT_EQ(gaps.size(), 2);
 
-    size_t l = 1;
-    size_t r = 3;
+    std::size_t l = 1;
+    std::size_t r = 3;
 
     for (const auto& i : gaps) {
         EXPECT_EQ(i.Start(), l);
@@ -169,7 +169,7 @@ TEST(IntervalTest, FromString)
 
     IntervalTree tree = IntervalTree::FromString("1,3-4");
 
-    size_t l = 1, r = 2;
+    std::size_t l = 1, r = 2;
 
     for (const auto& i : tree) {
         EXPECT_EQ(i.Start(), l);

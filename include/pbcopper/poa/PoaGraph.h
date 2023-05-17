@@ -33,8 +33,8 @@ class PoaAlignmentMatrix
 public:
     virtual ~PoaAlignmentMatrix() = default;
     virtual float Score() const = 0;
-    virtual size_t NumRows() const = 0;
-    virtual size_t NumCols() const = 0;
+    virtual std::size_t NumRows() const = 0;
+    virtual std::size_t NumCols() const = 0;
     virtual void Print() const = 0;
 };
 
@@ -42,8 +42,8 @@ public:
 class PoaGraph
 {
 public:
-    using Vertex = size_t;
-    using ReadId = size_t;
+    using Vertex = std::size_t;
+    using ReadId = std::size_t;
 
     static const Vertex NullVertex = std::numeric_limits<Vertex>::max();
 
@@ -88,7 +88,7 @@ public:
 
     // ----------
 
-    size_t NumReads() const;
+    std::size_t NumReads() const;
 
     std::string ToGraphViz(int flags = 0, const PoaConsensus* pc = NULL) const;
 

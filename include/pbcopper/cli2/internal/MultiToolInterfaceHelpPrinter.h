@@ -18,7 +18,7 @@ class MultiToolInterfaceHelpPrinter
 public:
     MultiToolInterfaceHelpPrinter(MultiToolInterface multiToolInterface,
                                   HiddenOptionMode hiddenOptionMode);
-    MultiToolInterfaceHelpPrinter(MultiToolInterface interface, size_t maxColumn,
+    MultiToolInterfaceHelpPrinter(MultiToolInterface interface, std::size_t maxColumn,
                                   HiddenOptionMode hiddenOptionMode);
 
     void Print(std::ostream& out) const;

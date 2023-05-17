@@ -18,8 +18,8 @@ void WorkerThread(PacBio::Parallel::WorkQueue<std::string>& queue, std::vector<s
 
 TEST(Parallel_WorkQueue, strings)
 {
-    static const size_t numThreads = 3;
-    static const size_t numElements = 10000;
+    static const std::size_t numThreads = 3;
+    static const std::size_t numElements = 10000;
     PacBio::Parallel::WorkQueue<std::string> workQueue{numThreads};
 
     std::vector<std::string> output;
@@ -34,7 +34,7 @@ TEST(Parallel_WorkQueue, strings)
 
     std::vector<std::string> expected;
     expected.reserve(numElements);
-    for (size_t i = 0; i < numElements; ++i) {
+    for (std::size_t i = 0; i < numElements; ++i) {
         std::string tmp = std::to_string(i);
         expected.emplace_back(tmp + "-done");
         workQueue.ProduceWith(Submit, std::move(tmp));
@@ -63,7 +63,7 @@ void WorkerThreadException(PacBio::Parallel::WorkQueue<std::string>& queue,
 
 TEST(Parallel_WorkQueue, exceptionProduceWith)
 {
-    static const size_t numThreads = 3;
+    static const std::size_t numThreads = 3;
     PacBio::Parallel::WorkQueue<std::string> workQueue{numThreads, 1};
     std::vector<std::string> output;
     std::future<void> workerThread =
@@ -94,7 +94,7 @@ TEST(Parallel_WorkQueue, exceptionProduceWith)
 
 TEST(Parallel_WorkQueue, exceptionFinalize)
 {
-    static const size_t numThreads = 3;
+    static const std::size_t numThreads = 3;
     PacBio::Parallel::WorkQueue<std::string> workQueue{numThreads, 1};
     std::vector<std::string> output;
     std::future<void> workerThread =
@@ -135,7 +135,7 @@ void WorkerThreadThrowException(PacBio::Parallel::WorkQueue<std::string>& queue,
 
 TEST(Parallel_WorkQueue, exceptionConsumer)
 {
-    static const size_t numThreads = 3;
+    static const std::size_t numThreads = 3;
     PacBio::Parallel::WorkQueue<std::string> workQueue{numThreads, 1};
     std::vector<std::string> output;
     std::future<void> workerThread =
@@ -163,7 +163,7 @@ TEST(Parallel_WorkQueue, exceptionConsumer)
 
 TEST(Parallel_WorkQueue, exceptionProduceWithCannotEscapeDestructor)
 {
-    static const size_t numThreads = 3;
+    static const std::size_t numThreads = 3;
     bool caughtException = false;
     try {
         PacBio::Parallel::WorkQueue<std::string> workQueue{numThreads, 1};

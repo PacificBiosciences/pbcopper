@@ -38,8 +38,8 @@ std::string BandedGlobalAlignBlock::Align(const char* target, const char* query,
 
     // ensure horizontal sequence length is >= vertical
     // (simplifies band calculations)
-    const size_t qLen = seed.EndPositionV() - seed.BeginPositionV();
-    const size_t tLen = seed.EndPositionH() - seed.BeginPositionH();
+    const std::size_t qLen = seed.EndPositionV() - seed.BeginPositionV();
+    const std::size_t tLen = seed.EndPositionH() - seed.BeginPositionH();
     if (qLen == 0) {
         return std::string(tLen, 'D');
     } else if (tLen == 0) {
@@ -53,18 +53,18 @@ std::string BandedGlobalAlignBlock::Align(const char* target, const char* query,
         (seqsFlipped ? (target + seed.BeginPositionH()) : (query + seed.BeginPositionV()));
     const char* seq2 =
         (seqsFlipped ? (query + seed.BeginPositionV()) : (target + seed.BeginPositionH()));
-    const size_t seq1Len = (seqsFlipped ? tLen : qLen);
-    const size_t seq2Len = (seqsFlipped ? qLen : tLen);
+    const std::size_t seq1Len = (seqsFlipped ? tLen : qLen);
+    const std::size_t seq2Len = (seqsFlipped ? qLen : tLen);
 
     // Initialize space & scores
     Init(seq2Len, seq1Len);
 
     // for each row
-    for (size_t i = 1; i <= seq1Len; ++i) {
+    for (std::size_t i = 1; i <= seq1Len; ++i) {
 
         // foreach column within band
         const auto& e = lookup_[i];
-        for (size_t j = e.jBegin_; j <= e.jEnd_; ++j) {
+        for (std::size_t j = e.jBegin_; j <= e.jEnd_; ++j) {
 
             if (j == 0) {
                 continue;
@@ -90,30 +90,31 @@ std::string BandedGlobalAlignBlock::Align(const char* target, const char* query,
     }
 
     // Traceback
-    const size_t MATCH_MATRIX = 1;
-    const size_t GAP_MATRIX = 2;
+    const std::size_t MATCH_MATRIX = 1;
+    const std::size_t GAP_MATRIX = 2;
 
     // find traceback start
     const auto btStart = BacktraceStart(seq2Len, seq1Len);
-    size_t i = btStart.first;
-    size_t j = btStart.second;
-    const size_t backtraceStartIdx = IndexFor(btStart.first, btStart.second);
+    std::size_t i = btStart.first;
+    std::size_t j = btStart.second;
+    const std::size_t backtraceStartIdx = IndexFor(btStart.first, btStart.second);
 
-    size_t mat = (matchScores_[backtraceStartIdx] >= gapScores_[backtraceStartIdx] ? MATCH_MATRIX
-                                                                                   : GAP_MATRIX);
-    size_t iPrev;
-    size_t jPrev;
-    size_t matPrev;
+    std::size_t mat =
+        (matchScores_[backtraceStartIdx] >= gapScores_[backtraceStartIdx] ? MATCH_MATRIX
+                                                                          : GAP_MATRIX);
+    std::size_t iPrev;
+    std::size_t jPrev;
+    std::size_t matPrev;
 
     // if not beginning at bottom right)
     if (i < seq1Len) {
         const auto op = (seqsFlipped ? 'D' : 'I');
-        for (size_t k = seq1Len - i; k > 0; --k) {
+        for (std::size_t k = seq1Len - i; k > 0; --k) {
             addAlignmentOp(&result, op);
         }
     } else if (j < seq2Len) {
         const auto op = (seqsFlipped ? 'I' : 'D');
-        for (size_t k = seq2Len - j; k > 0; --k) {
+        for (std::size_t k = seq2Len - j; k > 0; --k) {
             addAlignmentOp(&result, op);
         }
     }
@@ -178,19 +179,19 @@ std::string BandedGlobalAlignBlock::Align(const char* target, const char* query,
     return result;
 }
 
-std::pair<size_t, size_t> BandedGlobalAlignBlock::BacktraceStart(const size_t tLen,
-                                                                 const size_t qLen) const
+std::pair<std::size_t, std::size_t> BandedGlobalAlignBlock::BacktraceStart(
+    const std::size_t tLen, const std::size_t qLen) const
 {
     // NOTE: Finding backtrace start this way allows us to not penalize end-gaps.
-    const size_t maxIndex = std::min(qLen, tLen);
+    const std::size_t maxIndex = std::min(qLen, tLen);
 
     // find max score in last column
-    std::pair<size_t, size_t> maxCellRight{maxIndex, maxIndex};
+    std::pair<std::size_t, std::size_t> maxCellRight{maxIndex, maxIndex};
     float maxScoreRight = -FLT_MAX;
     {
-        for (size_t i = 1; i <= maxIndex; ++i) {
+        for (std::size_t i = 1; i <= maxIndex; ++i) {
             const auto& e = lookup_[i];
-            const size_t lastColumn = e.jEnd_;
+            const std::size_t lastColumn = e.jEnd_;
             const auto idx = IndexFor(i, lastColumn);
             if (matchScores_[idx] > maxScoreRight) {
                 maxScoreRight = matchScores_[idx];
@@ -200,12 +201,12 @@ std::pair<size_t, size_t> BandedGlobalAlignBlock::BacktraceStart(const size_t tL
     }
 
     // find max score in last row
-    std::pair<size_t, size_t> maxCellBottom{maxIndex, maxIndex};
+    std::pair<std::size_t, std::size_t> maxCellBottom{maxIndex, maxIndex};
     float maxScoreBottom = -FLT_MAX;
     {
-        const size_t lastRow = maxIndex;
+        const std::size_t lastRow = maxIndex;
         const auto& lookupElement = lookup_[lastRow];
-        for (size_t j = lookupElement.jBegin_; j < lookupElement.jEnd_; ++j) {
+        for (std::size_t j = lookupElement.jBegin_; j < lookupElement.jEnd_; ++j) {
             const auto idx = IndexFor(lastRow, j);
             if (matchScores_[idx] > maxScoreBottom) {
                 maxScoreBottom = matchScores_[idx];
@@ -217,7 +218,7 @@ std::pair<size_t, size_t> BandedGlobalAlignBlock::BacktraceStart(const size_t tL
     return (maxScoreBottom > maxScoreRight ? maxCellBottom : maxCellRight);
 }
 
-size_t BandedGlobalAlignBlock::IndexFor(const size_t i, const size_t j) const
+std::size_t BandedGlobalAlignBlock::IndexFor(const std::size_t i, const std::size_t j) const
 {
     // if in matrix
     if (i != std::string::npos && j != std::string::npos) {
@@ -232,13 +233,13 @@ size_t BandedGlobalAlignBlock::IndexFor(const size_t i, const size_t j) const
     return std::string::npos;
 }
 
-void BandedGlobalAlignBlock::Init(const size_t tLen, const size_t qLen)
+void BandedGlobalAlignBlock::Init(const std::size_t tLen, const std::size_t qLen)
 {
     const auto numElements = InitLookup(tLen, qLen);
     InitScores(tLen, qLen, numElements);
 }
 
-size_t BandedGlobalAlignBlock::InitLookup(const size_t tLen, const size_t qLen)
+std::size_t BandedGlobalAlignBlock::InitLookup(const std::size_t tLen, const std::size_t qLen)
 {
     // ensure space
     lookup_.clear();
@@ -249,7 +250,7 @@ size_t BandedGlobalAlignBlock::InitLookup(const size_t tLen, const size_t qLen)
     const auto k = static_cast<int64_t>(config_.bandExtend_);
     assert(t >= q);
 
-    size_t arrayStart = 0;
+    std::size_t arrayStart = 0;
     int64_t jBegin = 0;
     int64_t jEnd = 0;
     for (int64_t i = 0; i < q + 1; ++i) {
@@ -272,17 +273,19 @@ size_t BandedGlobalAlignBlock::InitLookup(const size_t tLen, const size_t qLen)
         assert(jEnd >= jBegin);
 
         // store lookup values
-        lookup_.emplace_back(arrayStart, static_cast<size_t>(jBegin), static_cast<size_t>(jEnd));
+        lookup_.emplace_back(arrayStart, static_cast<std::size_t>(jBegin),
+                             static_cast<std::size_t>(jEnd));
 
         // update arrayStart for next row (or 'numElements' on exit)
-        const auto rowElements = static_cast<size_t>(jEnd - jBegin) + 1;
+        const auto rowElements = static_cast<std::size_t>(jEnd - jBegin) + 1;
         arrayStart += (rowElements);
     }
 
     return arrayStart;
 }
 
-void BandedGlobalAlignBlock::InitScores(const size_t tLen, const size_t qLen, const size_t n)
+void BandedGlobalAlignBlock::InitScores(const std::size_t tLen, const std::size_t qLen,
+                                        const std::size_t n)
 {
     matchScores_.resize(n);
     gapScores_.resize(n);
@@ -293,13 +296,13 @@ void BandedGlobalAlignBlock::InitScores(const size_t tLen, const size_t qLen, co
     const auto maxQ = std::min(qLen, config_.bandExtend_);
     const auto maxT = std::min(tLen, config_.bandExtend_);
 
-    for (size_t i = 1; i <= maxQ; ++i) {
+    for (std::size_t i = 1; i <= maxQ; ++i) {
         const auto idx = IndexFor(i, 0);
         matchScores_[idx] = -FLT_MAX;
         gapScores_[idx] = config_.gapOpenPenalty_ + (i - 1) * config_.gapExtendPenalty_;
     }
 
-    for (size_t j = 1; j <= maxT; ++j) {
+    for (std::size_t j = 1; j <= maxT; ++j) {
         const auto idx = IndexFor(0, j);
         matchScores_[idx] = -FLT_MAX;
         gapScores_[idx] = config_.gapOpenPenalty_ + (j - 1) * config_.gapExtendPenalty_;
@@ -310,15 +313,15 @@ void BandedGlobalAlignBlock::InitScores(const size_t tLen, const size_t qLen, co
 // StandardGlobalAlignBlock
 // --------------------------
 
-std::string StandardGlobalAlignBlock::Align(const char* target, const size_t tLen,
-                                            const char* query, const size_t qLen)
+std::string StandardGlobalAlignBlock::Align(const char* target, const std::size_t tLen,
+                                            const char* query, const std::size_t qLen)
 {
     // Initialize space & scores
     Init(tLen, qLen);
 
     // Main loop
-    for (size_t i = 1; i <= qLen; ++i) {
-        for (size_t j = 1; j <= tLen; ++j) {
+    for (std::size_t i = 1; i <= qLen; ++i) {
+        for (std::size_t j = 1; j <= tLen; ++j) {
             const auto s = score(target[j - 1], query[i - 1], config_);
             matchScores_[i][j] =
                 (std::max(matchScores_[i - 1][j - 1], gapScores_[i - 1][j - 1]) + s);
@@ -330,30 +333,30 @@ std::string StandardGlobalAlignBlock::Align(const char* target, const size_t tLe
     }
 
     // Traceback
-    const size_t MATCH_MATRIX = 1;
-    const size_t GAP_MATRIX = 2;
+    const std::size_t MATCH_MATRIX = 1;
+    const std::size_t GAP_MATRIX = 2;
 
     // find traceback start
     const auto btStart = BacktraceStart(tLen, qLen);
-    size_t i = btStart.first;
-    size_t j = btStart.second;
-    size_t mat =
+    std::size_t i = btStart.first;
+    std::size_t j = btStart.second;
+    std::size_t mat =
         (matchScores_[btStart.first][btStart.second] >= gapScores_[btStart.first][btStart.second]
              ? MATCH_MATRIX
              : GAP_MATRIX);
-    size_t iPrev;
-    size_t jPrev;
-    size_t matPrev;
+    std::size_t iPrev;
+    std::size_t jPrev;
+    std::size_t matPrev;
 
     std::string result;
 
     // if not beginning at bottom right, add corresponding indel
     if (i < qLen) {
-        for (size_t k = qLen - i; k > 0; --k) {
+        for (std::size_t k = qLen - i; k > 0; --k) {
             addAlignmentOp(&result, 'I');
         }
     } else if (j < tLen) {
-        for (size_t k = tLen - j; k > 0; --k) {
+        for (std::size_t k = tLen - j; k > 0; --k) {
             addAlignmentOp(&result, 'D');
         }
     }
@@ -402,16 +405,16 @@ std::string StandardGlobalAlignBlock::Align(const char* target, const size_t tLe
     return result;
 }
 
-std::pair<size_t, size_t> StandardGlobalAlignBlock::BacktraceStart(const size_t tLen,
-                                                                   const size_t qLen) const
+std::pair<std::size_t, std::size_t> StandardGlobalAlignBlock::BacktraceStart(
+    const std::size_t tLen, const std::size_t qLen) const
 {
     // NOTE: Finding backtrace start this way allows us to not penalize end-gaps.
 
     // find max score in last column
-    std::pair<size_t, size_t> maxCellRight{qLen, tLen};
+    std::pair<std::size_t, std::size_t> maxCellRight{qLen, tLen};
     float maxScoreRight = -FLT_MAX;
-    const size_t lastColumn = tLen;
-    for (size_t i = 1; i <= qLen; ++i) {
+    const std::size_t lastColumn = tLen;
+    for (std::size_t i = 1; i <= qLen; ++i) {
         if (matchScores_[i][lastColumn] > maxScoreRight) {
             maxScoreRight = matchScores_[i][lastColumn];
             maxCellRight = std::make_pair(i, lastColumn);
@@ -419,10 +422,10 @@ std::pair<size_t, size_t> StandardGlobalAlignBlock::BacktraceStart(const size_t 
     }
 
     // find max score in last row
-    std::pair<size_t, size_t> maxCellBottom{qLen, tLen};
+    std::pair<std::size_t, std::size_t> maxCellBottom{qLen, tLen};
     float maxScoreBottom = -FLT_MAX;
-    const size_t lastRow = qLen;
-    for (size_t j = 1; j <= tLen; ++j) {
+    const std::size_t lastRow = qLen;
+    for (std::size_t j = 1; j <= tLen; ++j) {
         if (matchScores_[lastRow][j] > maxScoreBottom) {
             maxScoreBottom = matchScores_[lastRow][j];
             maxCellBottom = std::make_pair(lastRow, j);
@@ -432,7 +435,7 @@ std::pair<size_t, size_t> StandardGlobalAlignBlock::BacktraceStart(const size_t 
     return (maxScoreBottom > maxScoreRight ? maxCellBottom : maxCellRight);
 }
 
-void StandardGlobalAlignBlock::Init(const size_t tLen, const size_t qLen)
+void StandardGlobalAlignBlock::Init(const std::size_t tLen, const std::size_t qLen)
 {
     // ensure space
     matchScores_.resize(qLen + 1);
@@ -441,7 +444,7 @@ void StandardGlobalAlignBlock::Init(const size_t tLen, const size_t qLen)
     assert(matchScores_.size() == qLen + 1);
     assert(gapScores_.size() == qLen + 1);
 
-    for (size_t i = 0; i < qLen + 1; ++i) {
+    for (std::size_t i = 0; i < qLen + 1; ++i) {
         matchScores_[i].resize(tLen + 1);
         gapScores_[i].resize(tLen + 1);
     }
@@ -449,11 +452,11 @@ void StandardGlobalAlignBlock::Init(const size_t tLen, const size_t qLen)
     // fill out initial scores
     matchScores_[0][0] = 0;
     gapScores_[0][0] = -FLT_MAX;
-    for (size_t i = 1; i <= qLen; ++i) {
+    for (std::size_t i = 1; i <= qLen; ++i) {
         matchScores_[i][0] = -FLT_MAX;
         gapScores_[i][0] = config_.gapOpenPenalty_ + (i - 1) * config_.gapExtendPenalty_;
     }
-    for (size_t j = 1; j <= tLen; ++j) {
+    for (std::size_t j = 1; j <= tLen; ++j) {
         matchScores_[0][j] = -FLT_MAX;
         gapScores_[0][j] = config_.gapOpenPenalty_ + (j - 1) * config_.gapExtendPenalty_;
     }
@@ -464,7 +467,7 @@ void StandardGlobalAlignBlock::Init(const size_t tLen, const size_t qLen)
 // ------------------------
 
 static std::vector<Align::Seed>::const_iterator FirstAnchorSeed(
-    const std::vector<Align::Seed>& seeds, const size_t band)
+    const std::vector<Align::Seed>& seeds, const std::size_t band)
 {
     return std::find_if(seeds.cbegin(), seeds.cend(), [band](const Align::Seed& seed) {
         return seed.BeginPositionH() >= band && seed.BeginPositionV() >= band;
@@ -472,7 +475,8 @@ static std::vector<Align::Seed>::const_iterator FirstAnchorSeed(
 }
 
 static std::vector<Align::Seed>::const_iterator LastAnchorSeed(
-    const std::vector<Align::Seed>& seeds, const size_t tLen, const size_t qLen, const size_t band)
+    const std::vector<Align::Seed>& seeds, const std::size_t tLen, const std::size_t qLen,
+    const std::size_t band)
 {
     return std::find_if(seeds.crbegin(), seeds.crend(),
                         [tLen, qLen, band](const Align::Seed& seed) {
@@ -486,8 +490,8 @@ BandedChainAlignerImpl::BandedChainAlignerImpl(const BandedChainAlignConfig& con
     : config_(config), gapBlock_(config), seedBlock_(config), gapBlockBeginH_(0), gapBlockBeginV_(0)
 {}
 
-BandedChainAlignment BandedChainAlignerImpl::Align(const char* target, const size_t targetLen,
-                                                   const char* query, const size_t queryLen,
+BandedChainAlignment BandedChainAlignerImpl::Align(const char* target, const std::size_t targetLen,
+                                                   const char* query, const std::size_t queryLen,
                                                    const std::vector<Align::Seed>& seeds)
 {
     // return empty alignment on empty seeds
@@ -515,7 +519,7 @@ BandedChainAlignment BandedChainAlignerImpl::Align(const char* target, const siz
     return Result();
 }
 
-void BandedChainAlignerImpl::AlignGapBlock(const size_t hLength, const size_t vLength)
+void BandedChainAlignerImpl::AlignGapBlock(const std::size_t hLength, const std::size_t vLength)
 {
     // do 'standard' DP align
     auto transcript = gapBlock_.Align(sequences_.target + gapBlockBeginH_, hLength,
@@ -527,15 +531,15 @@ void BandedChainAlignerImpl::AlignGapBlock(const size_t hLength, const size_t vL
 
 void BandedChainAlignerImpl::AlignGapBlock(const Align::Seed& nextSeed)
 {
-    const size_t hLength = nextSeed.BeginPositionH() - gapBlockBeginH_;
-    const size_t vLength = nextSeed.BeginPositionV() - gapBlockBeginV_;
+    const std::size_t hLength = nextSeed.BeginPositionH() - gapBlockBeginH_;
+    const std::size_t vLength = nextSeed.BeginPositionV() - gapBlockBeginV_;
     AlignGapBlock(hLength, vLength);
 }
 
 void BandedChainAlignerImpl::AlignLastGapBlock()
 {
-    const size_t hLength = sequences_.targetLen - gapBlockBeginH_;
-    const size_t vLength = sequences_.queryLen - gapBlockBeginV_;
+    const std::size_t hLength = sequences_.targetLen - gapBlockBeginH_;
+    const std::size_t vLength = sequences_.queryLen - gapBlockBeginV_;
     AlignGapBlock(hLength, vLength);
 }
 
@@ -549,8 +553,8 @@ void BandedChainAlignerImpl::AlignSeedBlock(const Align::Seed& seed)
 
     // see if we ended with an indel, if so remove that and try re-aligning that
     // portion in the next alignment phase
-    size_t hOffset = 0;
-    size_t vOffset = 0;
+    std::size_t hOffset = 0;
+    std::size_t vOffset = 0;
     const auto& lastOp = globalTranscript_.back();
     if (lastOp == 'D') {
         while (globalTranscript_.back() == 'D') {
@@ -569,8 +573,8 @@ void BandedChainAlignerImpl::AlignSeedBlock(const Align::Seed& seed)
     gapBlockBeginV_ = seed.EndPositionV() - vOffset;
 }
 
-void BandedChainAlignerImpl::Initialize(const char* target, const size_t targetLen,
-                                        const char* query, const size_t queryLen)
+void BandedChainAlignerImpl::Initialize(const char* target, const std::size_t targetLen,
+                                        const char* query, const std::size_t queryLen)
 {
     globalTranscript_.clear();
     globalScore_ = std::numeric_limits<int64_t>::min();
@@ -668,8 +672,8 @@ BandedChainAlignment::BandedChainAlignment(const BandedChainAlignConfig& config,
 
     score_ = 0;
     TranscriptState state = TranscriptState::Match_Mismatch;
-    size_t tPos = 0;
-    size_t qPos = 0;
+    std::size_t tPos = 0;
+    std::size_t qPos = 0;
     for (const auto& c : transcript_) {
         switch (c) {
             case 'M': {
@@ -739,8 +743,9 @@ BandedChainAlignment::BandedChainAlignment(const BandedChainAlignConfig& config,
 }
 
 BandedChainAlignment::BandedChainAlignment(const BandedChainAlignConfig& config, const char* target,
-                                           const size_t targetLen, const char* query,
-                                           const size_t queryLen, const std::string& transcript)
+                                           const std::size_t targetLen, const char* query,
+                                           const std::size_t queryLen,
+                                           const std::string& transcript)
     : BandedChainAlignment(config, std::string{target, targetLen}, std::string{query, queryLen},
                            transcript)
 {}
@@ -749,9 +754,9 @@ float BandedChainAlignment::Identity() const
 {
     assert(alignedQuery_.length() == alignedTarget_.length());
 
-    size_t numMatches = 0;
-    const size_t len = alignedQuery_.length();
-    for (size_t i = 0; i < len; ++i) {
+    std::size_t numMatches = 0;
+    const std::size_t len = alignedQuery_.length();
+    for (std::size_t i = 0; i < len; ++i) {
         if (alignedQuery_[i] == alignedTarget_[i]) {
             ++numMatches;
         }
@@ -775,8 +780,9 @@ BandedChainAlignConfig BandedChainAlignConfig::Default()
 // alignment free functions
 // --------------------------
 
-BandedChainAlignment BandedChainAlign(const char* target, const size_t targetLen, const char* query,
-                                      const size_t queryLen, const std::vector<Align::Seed>& seeds,
+BandedChainAlignment BandedChainAlign(const char* target, const std::size_t targetLen,
+                                      const char* query, const std::size_t queryLen,
+                                      const std::vector<Align::Seed>& seeds,
                                       const BandedChainAlignConfig& config)
 {
     Internal::BandedChainAlignerImpl impl{config};

@@ -81,14 +81,14 @@ std::vector<std::string> Split(const std::string& line, char delim = '\t');
 /// line exceeds the requested width. If a particular word covers this boundary,
 /// the newline is inserted before that word.
 ///
-std::string WordWrapped(const std::string& input, size_t maxColumns);
+std::string WordWrapped(const std::string& input, std::size_t maxColumns);
 
 ///
 /// Generates a list of strings from the input, such that no string element
 /// exceeds the requested width. If a particular word covers this boundary,
 /// then a new string is created, beginning with that word.
 ///
-std::vector<std::string> WordWrappedLines(const std::string& input, size_t maxColumns);
+std::vector<std::string> WordWrappedLines(const std::string& input, std::size_t maxColumns);
 
 }  // namespace Utility
 }  // namespace PacBio

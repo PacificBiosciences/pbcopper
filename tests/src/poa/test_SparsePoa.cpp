@@ -104,12 +104,12 @@ TEST(SparsePoaTest, TestOrientation)
 
 std::string rc(const std::string& a)
 {
-    const size_t len = a.length();
+    const std::size_t len = a.length();
     std::string b;
 
     b.reserve(len);
 
-    for (size_t i = 0; i < len; ++i) {
+    for (std::size_t i = 0; i < len; ++i) {
         char c = a[len - 1 - i];
         switch (c) {
             case 'A':
@@ -132,21 +132,21 @@ std::string rc(const std::string& a)
 }
 
 #if EXTENSIVE_TESTING
-constexpr size_t NUM_ITERATIONS = 100;
+constexpr std::size_t NUM_ITERATIONS = 100;
 #else
-constexpr size_t NUM_ITERATIONS = 10;
+constexpr std::size_t NUM_ITERATIONS = 10;
 #endif
 
 TEST(SparsePoaTest, SingleReadNTimes)
 {
     std::mt19937 gen(42);
-    std::uniform_int_distribution<size_t> d(2000, 20000);
-    std::uniform_int_distribution<size_t> b(0, 3);
+    std::uniform_int_distribution<std::size_t> d(2000, 20000);
+    std::uniform_int_distribution<std::size_t> b(0, 3);
 
     const std::string bases = "ACGT";
 
-    for (size_t i = 0; i < NUM_ITERATIONS; ++i) {
-        size_t len = 0;
+    for (std::size_t i = 0; i < NUM_ITERATIONS; ++i) {
+        std::size_t len = 0;
         std::string seq;
 
         while (len < 300) {
@@ -155,7 +155,7 @@ TEST(SparsePoaTest, SingleReadNTimes)
 
         seq.reserve(len);
 
-        for (size_t j = 0; j < len; ++j) {
+        for (std::size_t j = 0; j < len; ++j) {
             seq.push_back(bases[b(gen)]);
         }
 
@@ -175,13 +175,13 @@ TEST(SparsePoaTest, SingleReadNTimes)
 TEST(SparsePoaTest, SingleAndHalfNTimes)
 {
     std::mt19937 gen(42);
-    std::uniform_int_distribution<size_t> d(1000, 5000);
-    std::uniform_int_distribution<size_t> b(0, 3);
+    std::uniform_int_distribution<std::size_t> d(1000, 5000);
+    std::uniform_int_distribution<std::size_t> b(0, 3);
 
     const std::string bases = "ACGT";
 
-    for (size_t i = 0; i < NUM_ITERATIONS; ++i) {
-        size_t len = 0;
+    for (std::size_t i = 0; i < NUM_ITERATIONS; ++i) {
+        std::size_t len = 0;
         std::string seq1, seq2;
 
         while (len < 300) {
@@ -191,7 +191,7 @@ TEST(SparsePoaTest, SingleAndHalfNTimes)
         seq1.reserve(len);
         seq2.reserve(len / 3);
 
-        for (size_t j = 0; j < len; ++j) {
+        for (std::size_t j = 0; j < len; ++j) {
             seq1.push_back(bases[b(gen)]);
         }
 

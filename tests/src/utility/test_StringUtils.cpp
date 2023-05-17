@@ -7,7 +7,7 @@
 namespace StringUtilsTests {
 
 void checkWrappedLines(const std::string& input, const std::vector<std::string>& expected,
-                       const size_t maxColumns)
+                       const std::size_t maxColumns)
 {
     const auto lines = PacBio::Utility::WordWrappedLines(input, maxColumns);
     EXPECT_TRUE(std::equal(lines.cbegin(), lines.cend(), expected.cbegin()));

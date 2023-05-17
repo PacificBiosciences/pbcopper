@@ -40,7 +40,7 @@ public:
     iterator end();
     const_iterator end() const;
 
-    size_t size() const;
+    std::size_t size() const;
 
     static IntervalTree FromString(const std::string& str);
 

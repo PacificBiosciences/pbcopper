@@ -80,7 +80,7 @@ Result::operator uint64_t() const
     return static_cast<uint64_t>(x);
 }
 
-size_t Result::which() const { return data_.index(); }
+std::size_t Result::which() const { return data_.index(); }
 
 const OptionValue& Result::RawValue() const { return data_; }
 

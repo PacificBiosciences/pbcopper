@@ -43,15 +43,15 @@ public:
     float ReachingScore;
 
     PoaNode() : PoaNode(0, 'N', 0, 0) {}
-    explicit PoaNode(size_t id, char base) : PoaNode(id, base, 1, 0) {}
-    explicit PoaNode(size_t id, char base, int reads) : PoaNode(id, base, reads, 0) {}
-    explicit PoaNode(size_t id, char base, int reads, int spanning)
+    explicit PoaNode(std::size_t id, char base) : PoaNode(id, base, 1, 0) {}
+    explicit PoaNode(std::size_t id, char base, int reads) : PoaNode(id, base, reads, 0) {}
+    explicit PoaNode(std::size_t id, char base, int reads, int spanning)
         : Id{id}, Base{base}, Reads{reads}, SpanningReads{spanning}, Score{0}, ReachingScore{0}
     {}
 };
 
 // External-facing vertex id type
-using Vertex = size_t;
+using Vertex = std::size_t;
 
 struct EdgeComparator
 {
@@ -100,9 +100,9 @@ class PoaGraphImpl
     index_map_t indexMap_;
     VD enterVertex_;
     VD exitVertex_;
-    size_t numReads_;
-    size_t totalVertices_;               // includes "ex"-vertices which have since been removed
-    size_t liveVertices_;                // vertices that are in the graph.  this is needed
+    std::size_t numReads_;
+    std::size_t totalVertices_;          // includes "ex"-vertices which have since been removed
+    std::size_t liveVertices_;           // vertices that are in the graph.  this is needed
                                          // for algorithms.
     std::map<Vertex, VD> vertexLookup_;  // external ID -> internal ID
 
@@ -155,7 +155,7 @@ public:
     std::vector<Vertex> externalizePath(const std::vector<VD>& vds) const
     {
         std::vector<Vertex> out(vds.size(), 0);
-        for (size_t i = 0; i < vds.size(); i++) {
+        for (std::size_t i = 0; i < vds.size(); i++) {
             out[i] = externalize(vds[i]);
         }
         return out;
@@ -164,7 +164,7 @@ public:
     std::vector<VD> internalizePath(const std::vector<Vertex>& vertices) const
     {
         std::vector<VD> out(vertices.size(), null_vertex);
-        for (size_t i = 0; i < vertices.size(); i++) {
+        for (std::size_t i = 0; i < vertices.size(); i++) {
             out[i] = internalize(vertices[i]);
         }
         return out;
@@ -209,7 +209,7 @@ public:
                                                 int minCoverage = -INT_MAX);
     void PruneGraph(const int minCoverage);
 
-    size_t NumReads() const;
+    std::size_t NumReads() const;
     std::string ToGraphViz(int flags, const PoaConsensus* pc) const;
     void WriteGraphVizFile(const std::filesystem::path& filename, int flags,
                            const PoaConsensus* pc) const;

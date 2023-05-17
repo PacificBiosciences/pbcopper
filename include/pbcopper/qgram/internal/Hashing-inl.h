@@ -32,7 +32,7 @@ constexpr uint8_t BaseCode(const char c)
 }
 
 // recursive q-gram hash calculator
-inline uint64_t HashImpl(uint64_t hash, std::string::const_iterator iter, size_t q)
+inline uint64_t HashImpl(uint64_t hash, std::string::const_iterator iter, std::size_t q)
 {
     if (q == 1) {
         return hash;
@@ -45,7 +45,7 @@ inline uint64_t HashImpl(uint64_t hash, std::string::const_iterator iter, size_t
 struct Shape
 {
 public:
-    const size_t q_;                    // q-gram size
+    const std::size_t q_;               // q-gram size
     const uint32_t hashFactor_;         // hash multiplier
     const std::string& seq_;            // input sequence
     std::string::const_iterator iter_;  // sequence iterator
@@ -53,7 +53,7 @@ public:
     char leftChar_;                     // leftmost character
 
 public:
-    Shape(const size_t q, const std::string& seq)
+    Shape(const std::size_t q, const std::string& seq)
         : q_{q}
         , hashFactor_{
             // need to perform the range check before initializing,
@@ -93,10 +93,10 @@ public:
 class HpHasher
 {
 public:
-    HpHasher(const size_t q)
+    HpHasher(const std::size_t q)
     {
         constexpr std::array<char, ALPHABET_SIZE> DNA = {'A', 'C', 'G', 'T'};
-        for (size_t i = 0; i < ALPHABET_SIZE; i++) {
+        for (std::size_t i = 0; i < ALPHABET_SIZE; i++) {
             const std::string s = std::string(q, DNA[i]);
             const auto it = s.cbegin();
             const auto h = BaseCode(*it);

@@ -14,7 +14,7 @@
 namespace PacBio {
 namespace Pbmer {
 
-KFG::KFG(uint8_t k, size_t nr) : kmerSize_{k}, nReads_{nr} {}
+KFG::KFG(uint8_t k, std::size_t nr) : kmerSize_{k}, nReads_{nr} {}
 
 bool KFG::HasNode(const DnaBit& bit) const { return (kfg_.find(bit.HashedKmer()) != kfg_.cend()); }
 
@@ -53,8 +53,8 @@ uint64_t KFG::Knock(const DnaBit& b, uint64_t hashedKmer) const
     return hashedKmer;
 }
 
-uint64_t KFG::OpenDoor(const std::vector<DnaBit>& bits, uint64_t hashedKmer, uint32_t rid, size_t i,
-                       size_t j) const
+uint64_t KFG::OpenDoor(const std::vector<DnaBit>& bits, uint64_t hashedKmer, uint32_t rid,
+                       std::size_t i, std::size_t j) const
 {
     if (j == 0) {
         return hashedKmer;
@@ -75,14 +75,14 @@ uint64_t KFG::OpenDoor(const std::vector<DnaBit>& bits, uint64_t hashedKmer, uin
     return hashedKmer;
 }
 
-void KFG::AddSeq(const std::vector<DnaBit>& bits, const size_t rid, const std::string& rn)
+void KFG::AddSeq(const std::vector<DnaBit>& bits, const std::size_t rid, const std::string& rn)
 {
 
     nameToId_[rn] = rid;
     idToName_[rid] = rn;
 
     uint64_t last = 0;
-    for (size_t i = 0; i < bits.size(); ++i) {
+    for (std::size_t i = 0; i < bits.size(); ++i) {
         uint64_t nextHashedKmer = OpenDoor(bits, bits[i].HashedKmer(), rid, i, i);
         if (nextHashedKmer == 0) {
             throw std::runtime_error{"[pbcopper] knock graph ERROR: zero hash value"};
@@ -105,7 +105,7 @@ int32_t KFG::NNodes() const { return kfg_.size(); }
 
 int32_t KFG::InEdgeCount() const
 {
-    size_t edgeCount = 0;
+    std::size_t edgeCount = 0;
     for (const auto& x : kfg_) {
         edgeCount += x.second.inEdges_.size();
     }
@@ -114,7 +114,7 @@ int32_t KFG::InEdgeCount() const
 
 int32_t KFG::OutEdgeCount() const
 {
-    size_t edgeCount = 0;
+    std::size_t edgeCount = 0;
     for (const auto& x : kfg_) {
         edgeCount += x.second.outEdges_.size();
     }
@@ -258,7 +258,7 @@ Bubbles KFG::FindBubbles() const
         right_reads.clear();
 
         for (auto const& l : left) {
-            size_t i = l.readIds_.find_first();
+            std::size_t i = l.readIds_.find_first();
             while (i != l.readIds_.npos) {
                 ++left_reads[i + 1];
                 i = l.readIds_.find_next(i);
@@ -266,7 +266,7 @@ Bubbles KFG::FindBubbles() const
         }
 
         for (auto const& r : right) {
-            size_t i = r.readIds_.find_first();
+            std::size_t i = r.readIds_.find_first();
             while (i != r.readIds_.npos) {
                 ++right_reads[i + 1];
                 i = r.readIds_.find_next(i);

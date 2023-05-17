@@ -20,7 +20,7 @@ namespace internal {
 
 namespace {
 
-size_t AdjustedMaxColumn(size_t maxColumn)
+std::size_t AdjustedMaxColumn(std::size_t maxColumn)
 {
     // if column count is explicitly set (i.e. for testing), use that
     if (HelpMetrics::TestingFixedWidth != 0) {
@@ -33,7 +33,7 @@ size_t AdjustedMaxColumn(size_t maxColumn)
     if (ws.ws_col >= 2) {
         maxColumn = ws.ws_col - 1;
     }
-    constexpr size_t MAX_COLUMN = 119;
+    constexpr std::size_t MAX_COLUMN = 119;
     return std::min(maxColumn, MAX_COLUMN);
 }
 
@@ -65,7 +65,7 @@ std::string DisplayName(const OptionValueType type)
 // explicit column count (i.e. CLI::Run()). Setting this value beforehand provides
 // this testing hook. The default of 0 leaves auto-detection enabled.
 //
-size_t HelpMetrics::TestingFixedWidth = 0;
+std::size_t HelpMetrics::TestingFixedWidth = 0;
 
 HelpMetrics::HelpMetrics(const Interface& interface, HiddenOptionMode hiddenOptionMode)
     : ShowHiddenOptions{hiddenOptionMode == HiddenOptionMode::SHOW}
@@ -81,14 +81,14 @@ HelpMetrics::HelpMetrics(const MultiToolInterface& interface, HiddenOptionMode h
     Calculate(interface);
 }
 
-HelpMetrics::HelpMetrics(const Interface& interface, const size_t explicitMaxColumn,
+HelpMetrics::HelpMetrics(const Interface& interface, const std::size_t explicitMaxColumn,
                          HiddenOptionMode hiddenOptionMode)
     : MaxColumn{explicitMaxColumn}, ShowHiddenOptions{hiddenOptionMode == HiddenOptionMode::SHOW}
 {
     Calculate(interface);
 }
 
-HelpMetrics::HelpMetrics(const MultiToolInterface& interface, const size_t explicitMaxColumn,
+HelpMetrics::HelpMetrics(const MultiToolInterface& interface, const std::size_t explicitMaxColumn,
                          HiddenOptionMode hiddenOptionMode)
     : MaxColumn{explicitMaxColumn}, ShowHiddenOptions{hiddenOptionMode == HiddenOptionMode::SHOW}
 {
@@ -168,11 +168,11 @@ std::string HelpMetrics::HelpEntry(std::string name, std::string type,
 
     // maybe wrap description
     const auto indent = out.str().length();
-    const size_t max = MaxColumn - indent;
+    const std::size_t max = MaxColumn - indent;
     const auto wrappedLines = PacBio::Utility::WordWrappedLines(description, max);
     if (!wrappedLines.empty()) {
         out << wrappedLines.at(0);
-        for (size_t i = 1; i < wrappedLines.size(); ++i) {
+        for (std::size_t i = 1; i < wrappedLines.size(); ++i) {
             out << '\n' << std::string(indent, ' ') << wrappedLines.at(i);
         }
     }

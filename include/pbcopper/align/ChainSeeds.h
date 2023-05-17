@@ -86,9 +86,9 @@ long LinkScore(const Seed& lhs, const Seed& rhs, const ChainSeedsConfig& config)
 ///
 struct SDPHit : public Seed
 {
-    size_t Index;
+    std::size_t Index;
 
-    SDPHit(const Seed& seed, size_t index);
+    SDPHit(const Seed& seed, std::size_t index);
     bool operator<(const SDPHit& other) const noexcept;
 };
 
@@ -113,9 +113,9 @@ bool IndexCompare(const SDPHit& lhs, const SDPHit& rhs);
 struct SDPColumn
 {
     std::optional<SDPHit> Seed;
-    size_t Column;
+    std::size_t Column;
 
-    SDPColumn(size_t column, std::optional<SDPHit> seed = std::nullopt);
+    SDPColumn(std::size_t column, std::optional<SDPHit> seed = std::nullopt);
     bool operator<(const SDPColumn& other) const noexcept;
 };
 
@@ -140,8 +140,8 @@ std::vector<std::optional<SDPHit>> ComputeVisibilityLeft(const std::vector<SDPHi
 ///
 struct ChainHit
 {
-    size_t seedSetIdx;
-    size_t endIndex;
+    std::size_t seedSetIdx;
+    std::size_t endIndex;
     long score;
 };
 
@@ -194,8 +194,8 @@ void InitializeSeedsAndScores(const Seeds& seedSet, std::vector<SDPHit>* seeds,
 ///                   a lower diagonal than the 'downstream' seed.
 void __attribute__((__unused__))
 ChainSeedsImpl(std::priority_queue<ChainHit, std::vector<ChainHit>, ChainHitCompare>* chainHits,
-               std::vector<std::optional<size_t>>* chainPred, std::vector<SDPHit>* seeds,
-               std::vector<long>& scores, size_t seedSetIdx, const ChainSeedsConfig& config);
+               std::vector<std::optional<std::size_t>>* chainPred, std::vector<SDPHit>* seeds,
+               std::vector<long>& scores, std::size_t seedSetIdx, const ChainSeedsConfig& config);
 
 /// Search a Seed set for the best numCandidates sets of locally-chainable
 /// seeds according to some scoring criteria.  Seed chains are scored based
@@ -240,8 +240,8 @@ std::vector<Seeds> ChainedSeedSets(const Seeds& seedSet, const ChainSeedsConfig&
 ///
 /// \return  A vector of SeedSets containing locally chained seeds.
 ///
-std::vector<std::pair<size_t, Seeds>> ChainSeeds(std::map<size_t, Seeds> seedSets,
-                                                 ChainSeedsConfig config);
+std::vector<std::pair<std::size_t, Seeds>> ChainSeeds(std::map<std::size_t, Seeds> seedSets,
+                                                      ChainSeedsConfig config);
 
 }  // namespace Align
 }  // namespace PacBio

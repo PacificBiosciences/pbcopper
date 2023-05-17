@@ -27,7 +27,7 @@ InterfaceHelpPrinter::InterfaceHelpPrinter(Interface interface, HiddenOptionMode
     MakeHelpText();
 }
 
-InterfaceHelpPrinter::InterfaceHelpPrinter(Interface interface, const size_t maxColumn,
+InterfaceHelpPrinter::InterfaceHelpPrinter(Interface interface, const std::size_t maxColumn,
                                            HiddenOptionMode hiddenOptionMode)
     : metrics_{interface, maxColumn, hiddenOptionMode}
     , interface_{std::move(interface)}
@@ -124,7 +124,7 @@ std::string InterfaceHelpPrinter::Description()
     const auto wrappedLines = Utility::WordWrappedLines(description, max);
     if (!wrappedLines.empty()) {
         out << wrappedLines.at(0);
-        for (size_t i = 1; i < wrappedLines.size(); ++i) {
+        for (std::size_t i = 1; i < wrappedLines.size(); ++i) {
             out << '\n' << std::string(indent, ' ') << wrappedLines.at(i);
         }
     }

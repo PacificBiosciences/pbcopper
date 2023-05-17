@@ -15,7 +15,7 @@ struct MappedRead;
 
 namespace internal {
 
-void ClipRead(Read& read, const ClipResult& result, size_t start, size_t end);
+void ClipRead(Read& read, const ClipResult& result, std::size_t start, std::size_t end);
 
 // NOTE: 'result' is moved into here, so we can take the CIGAR
 void ClipMappedRead(MappedRead& read, ClipResult result);

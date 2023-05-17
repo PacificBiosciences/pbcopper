@@ -93,7 +93,7 @@ StrandCounts::StrandCounts(const std::string& ref)
     assert(ref.size() == MostCommonBases.size());
 }
 
-StrandRawData::StrandRawData(const size_t refLength)
+StrandRawData::StrandRawData(const std::size_t refLength)
     : NumReads(refLength, 0)
     , BaseCounts{refLength, BaseCount{}}
     , PotentialMismatches(refLength, 0)

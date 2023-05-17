@@ -30,10 +30,10 @@ private:
     using TFuture = std::optional<std::future<T>>;
 
 public:
-    WorkQueue(const size_t size, const size_t mul = 2)
+    WorkQueue(const std::size_t size, const std::size_t mul = 2)
         : exc{nullptr}, sz{size * mul}, abort{false}, thrown{false}, workersFinalized{false}
     {
-        for (size_t i = 0; i < size; ++i) {
+        for (std::size_t i = 0; i < size; ++i) {
             threads.emplace_back(std::thread([this]() {
                 try {
                     if (abort) {
@@ -198,7 +198,7 @@ private:
     std::condition_variable pushed;
     std::exception_ptr exc;
     std::mutex m;
-    size_t sz;
+    std::size_t sz;
     std::atomic_bool abort;
     std::atomic_bool thrown;
     std::atomic_bool workersFinalized;

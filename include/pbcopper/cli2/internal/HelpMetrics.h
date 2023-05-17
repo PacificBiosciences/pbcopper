@@ -28,16 +28,16 @@ struct FormattedEntry
 class HelpMetrics
 {
 public:
-    static size_t TestingFixedWidth;
+    static std::size_t TestingFixedWidth;
 
     static std::string OptionNames(const OptionData& option);
 
     HelpMetrics(const Interface& interface, HiddenOptionMode hiddenOptionMode);
     HelpMetrics(const MultiToolInterface& interface, HiddenOptionMode hiddenOptionMode);
 
-    HelpMetrics(const Interface& interface, size_t explicitMaxColumn,
+    HelpMetrics(const Interface& interface, std::size_t explicitMaxColumn,
                 HiddenOptionMode hiddenOptionMode);
-    HelpMetrics(const MultiToolInterface& interface, size_t explicitMaxColumn,
+    HelpMetrics(const MultiToolInterface& interface, std::size_t explicitMaxColumn,
                 HiddenOptionMode hiddenOptionMode);
 
     void Calculate(const Interface& interface);
@@ -48,9 +48,9 @@ public:
 
     std::unordered_map<OptionData, FormattedEntry> FormattedOptionNames;
     std::unordered_map<PositionalArgumentData, FormattedEntry> FormattedPosArgNames;
-    size_t MaxNameLength = 0;
-    size_t MaxTypeLength = 0;
-    size_t MaxColumn = 79;
+    std::size_t MaxNameLength = 0;
+    std::size_t MaxTypeLength = 0;
+    std::size_t MaxColumn = 79;
     bool ShowHiddenOptions = false;
 };
 

@@ -14,7 +14,7 @@ namespace Utility {
 /// \param k
 /// \return
 ///
-inline size_t SafeSubtract(size_t size, size_t k) { return size > k ? size - k : 0; }
+inline std::size_t SafeSubtract(std::size_t size, std::size_t k) { return size > k ? size - k : 0; }
 
 }  // namespace Utility
 }  // namespace PacBio

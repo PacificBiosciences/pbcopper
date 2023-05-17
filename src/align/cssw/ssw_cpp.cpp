@@ -204,8 +204,8 @@ void SetFlag(const StripedSmithWaterman::Filter& filter, uint8_t* flag)
 }
 
 // http://www.cplusplus.com/faq/sequences/arrays/sizeof-array/#cpp
-template <typename T, size_t N>
-inline size_t SizeOfArray(const T (&)[N])
+template <typename T, std::size_t N>
+inline std::size_t SizeOfArray(const T (&)[N])
 {
     return N;
 }

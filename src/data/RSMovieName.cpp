@@ -38,11 +38,11 @@ void RSMovieName::UpdatePartsCache() const
 
     // calculate name parts
     const char underscore = '_';
-    const size_t firstUnderscore = movieName_.find(underscore);
-    const size_t secondUnderscore = movieName_.find(underscore, firstUnderscore + 1);
-    const size_t thirdUnderscore = movieName_.find(underscore, secondUnderscore + 1);
-    const size_t fourthUnderscore = movieName_.find(underscore, thirdUnderscore + 1);
-    const size_t fifthUnderscore = movieName_.find(underscore, fourthUnderscore + 1);
+    const std::size_t firstUnderscore = movieName_.find(underscore);
+    const std::size_t secondUnderscore = movieName_.find(underscore, firstUnderscore + 1);
+    const std::size_t thirdUnderscore = movieName_.find(underscore, secondUnderscore + 1);
+    const std::size_t fourthUnderscore = movieName_.find(underscore, thirdUnderscore + 1);
+    const std::size_t fifthUnderscore = movieName_.find(underscore, fourthUnderscore + 1);
 
     const char* movieCStr = movieName_.c_str();
     const char* rstStart = movieCStr + 1;  // skip 'm' and include first '_'
@@ -50,11 +50,11 @@ void RSMovieName::UpdatePartsCache() const
     const char* scbStart = movieCStr + thirdUnderscore + 1;         // skip '_'
     const char* setNumStart = movieCStr + fourthUnderscore + 1;     // skip '_'
     const char* partNumStart = movieCStr + fifthUnderscore + 1;     // skip '_'
-    const size_t rstSize = (secondUnderscore - 1);
-    const size_t serialNumSize = (thirdUnderscore - secondUnderscore) - 1;  // skip '_'
-    const size_t scbSize = (fourthUnderscore - thirdUnderscore) - 1;        // skip '_'
-    const size_t setNumSize = (fifthUnderscore - fourthUnderscore) - 1;     // skip '_'
-    const size_t partNumSize = (movieName_.size() - fifthUnderscore) - 1;   // skip '\0 '
+    const std::size_t rstSize = (secondUnderscore - 1);
+    const std::size_t serialNumSize = (thirdUnderscore - secondUnderscore) - 1;  // skip '_'
+    const std::size_t scbSize = (fourthUnderscore - thirdUnderscore) - 1;        // skip '_'
+    const std::size_t setNumSize = (fifthUnderscore - fourthUnderscore) - 1;     // skip '_'
+    const std::size_t partNumSize = (movieName_.size() - fifthUnderscore) - 1;   // skip '\0 '
 
     // cache name parts
     partsCache_.reset(new RSMovieName::PartsCache{

@@ -39,8 +39,8 @@ void ClipAndGapify(F* seq, const Cigar& cigar, const GapBehavior gapBehavior,
 
     // clang-format off
     // determine output container's length
-    const size_t outputLength = std::accumulate(cigar.cbegin(), cigar.cend(), 0,
-        [&](size_t totalLength, const CigarOperation& op) {
+    const std::size_t outputLength = std::accumulate(cigar.cbegin(), cigar.cend(), 0,
+        [&](std::size_t totalLength, const CigarOperation& op) {
             const auto opLength = op.Length();
             switch (op.Type())
             {
@@ -70,8 +70,8 @@ void ClipAndGapify(F* seq, const Cigar& cigar, const GapBehavior gapBehavior,
     seq->resize(outputLength);
 
     // apply CIGAR ops
-    size_t srcIndex = 0;
-    size_t dstIndex = 0;
+    std::size_t srcIndex = 0;
+    std::size_t dstIndex = 0;
     for (const auto& op : cigar) {
         const auto opLength = op.Length();
         const auto opType = op.Type();
@@ -88,7 +88,7 @@ void ClipAndGapify(F* seq, const Cigar& cigar, const GapBehavior gapBehavior,
 
             // maybe add deletions
         } else if (opType == CigarOperationType::DELETION && showGaps) {
-            for (size_t i = 0; i < opLength; ++i) {
+            for (std::size_t i = 0; i < opLength; ++i) {
                 (*seq)[dstIndex] = deletionNullValue;
                 ++dstIndex;
             }
@@ -96,7 +96,7 @@ void ClipAndGapify(F* seq, const Cigar& cigar, const GapBehavior gapBehavior,
 
         // maybe add padding
         else if (opType == CigarOperationType::PADDING && showGaps) {
-            for (size_t i = 0; i < opLength; ++i) {
+            for (std::size_t i = 0; i < opLength; ++i) {
                 (*seq)[dstIndex] = paddingNullValue;
                 ++dstIndex;
             }

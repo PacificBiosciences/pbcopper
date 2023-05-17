@@ -19,12 +19,12 @@ Align::AlignConfig DefaultPoaConfig(Align::AlignMode mode)
     return config;
 }
 
-PoaConsensus::PoaConsensus(std::string css, const PoaGraph& g, std::vector<size_t> cssPath)
+PoaConsensus::PoaConsensus(std::string css, const PoaGraph& g, std::vector<std::size_t> cssPath)
     : Sequence(std::move(css)), Graph(g), Path(std::move(cssPath))
 {}
 
 PoaConsensus::PoaConsensus(std::string css, const detail::PoaGraphImpl& gi,
-                           std::vector<size_t> cssPath)
+                           std::vector<std::size_t> cssPath)
     : Sequence(std::move(css)), Graph(gi), Path(std::move(cssPath))
 {}
 

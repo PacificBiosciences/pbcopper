@@ -27,7 +27,7 @@ public:
     /// \param source
     /// \param seqPos
     ///
-    IndexHits(const std::vector<IndexHit>* source, const size_t queryPos)
+    IndexHits(const std::vector<IndexHit>* source, const std::size_t queryPos)
         : IndexHits(source, 0, source->size(), queryPos)
     {}
 
@@ -37,8 +37,8 @@ public:
     /// \param beginPos
     /// \param endPos
     ///
-    IndexHits(const std::vector<IndexHit>* source, const size_t beginPos, const size_t endPos,
-              const size_t queryPos)
+    IndexHits(const std::vector<IndexHit>* source, const std::size_t beginPos,
+              const std::size_t endPos, const std::size_t queryPos)
         : source_(source), begin_(beginPos), end_(endPos), queryPos_(queryPos)
     {
         assert(source_);
@@ -46,7 +46,7 @@ public:
     }
 
 public:
-    size_t QueryPosition() const { return queryPos_; }
+    std::size_t QueryPosition() const { return queryPos_; }
 
 public:
     /// \name STL compatibility
@@ -79,9 +79,9 @@ public:
 
 private:
     const std::vector<IndexHit>* source_;
-    const size_t begin_;
-    const size_t end_;
-    const size_t queryPos_;
+    const std::size_t begin_;
+    const std::size_t end_;
+    const std::size_t queryPos_;
 };
 
 }  // namespace QGram

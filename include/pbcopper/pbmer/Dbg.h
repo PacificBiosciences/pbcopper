@@ -61,12 +61,12 @@ public:
     ///
     /// \return number of nodes in the graph
     ///
-    size_t NNodes() const;
+    std::size_t NNodes() const;
 
     ///
     /// \return number of edges
     ///
-    size_t NEdges() const;
+    std::size_t NEdges() const;
 
     ///
     /// Resets all the edges to zero, meaning no outgoing/incoming edges.

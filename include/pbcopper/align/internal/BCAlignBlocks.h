@@ -27,9 +27,9 @@ namespace Internal {
 struct AlignInput
 {
     const char* target;
-    size_t tLen;
+    std::size_t tLen;
     const char* query;
-    size_t qLen;
+    std::size_t qLen;
 };
 
 ///
@@ -59,13 +59,13 @@ public:
     std::string Align(const char* target, const char* query, PacBio::Align::Seed seed);
 
 private:
-    std::pair<size_t, size_t> BacktraceStart(size_t tLen, size_t qLen) const;
+    std::pair<std::size_t, std::size_t> BacktraceStart(std::size_t tLen, std::size_t qLen) const;
 
-    size_t IndexFor(size_t i, size_t j) const;
+    std::size_t IndexFor(std::size_t i, std::size_t j) const;
 
-    void Init(size_t tLen, size_t qLen);
-    size_t InitLookup(size_t tLen, size_t qLen);
-    void InitScores(size_t tLen, size_t qLen, size_t n);
+    void Init(std::size_t tLen, std::size_t qLen);
+    std::size_t InitLookup(std::size_t tLen, std::size_t qLen);
+    void InitScores(std::size_t tLen, std::size_t qLen, std::size_t n);
 
 private:
     BandedChainAlignConfig config_;
@@ -78,11 +78,11 @@ private:
     ///
     struct LookupElement
     {
-        size_t arrayStart_;
-        size_t jBegin_;
-        size_t jEnd_;
+        std::size_t arrayStart_;
+        std::size_t jBegin_;
+        std::size_t jEnd_;
 
-        LookupElement(const size_t start, const size_t jBeg, const size_t jEnd)
+        LookupElement(const std::size_t start, const std::size_t jBeg, const std::size_t jEnd)
             : arrayStart_{start}, jBegin_{jBeg}, jEnd_{jEnd}
         {}
     };
@@ -118,12 +118,12 @@ public:
     /// \param qLen
     /// \return
     ///
-    std::string Align(const char* target, size_t tLem, const char* query, size_t qLen);
+    std::string Align(const char* target, std::size_t tLem, const char* query, std::size_t qLen);
 
 private:
-    std::pair<size_t, size_t> BacktraceStart(size_t tLen, size_t qLen) const;
+    std::pair<std::size_t, std::size_t> BacktraceStart(std::size_t tLen, std::size_t qLen) const;
 
-    void Init(size_t tLen, size_t qLen);
+    void Init(std::size_t tLen, std::size_t qLen);
 
 private:
     BandedChainAlignConfig config_;

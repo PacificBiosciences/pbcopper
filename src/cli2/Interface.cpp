@@ -246,9 +246,9 @@ Results Interface::MakeDefaultResults() const
     return results;
 }
 
-size_t Interface::NumRequiredOptions() const
+std::size_t Interface::NumRequiredOptions() const
 {
-    size_t count = 0;
+    std::size_t count = 0;
     for (const auto& group : data_.OptionGroups) {
         for (const auto& opt : group.Options) {
             if (opt.IsRequired) {
@@ -259,9 +259,9 @@ size_t Interface::NumRequiredOptions() const
     return count;
 }
 
-size_t Interface::NumRequiredPosArgs() const
+std::size_t Interface::NumRequiredPosArgs() const
 {
-    size_t count = 0;
+    std::size_t count = 0;
     for (const auto& posArg : data_.PositionalArgs) {
         if (posArg.Required) {
             ++count;

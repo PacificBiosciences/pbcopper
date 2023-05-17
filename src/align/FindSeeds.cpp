@@ -7,10 +7,11 @@
 namespace PacBio {
 namespace Align {
 
-std::map<size_t, Seeds> FindSeeds(const PacBio::QGram::Index& index, const std::string& seq,
-                                  const std::optional<size_t> qIdx, const bool filterHomopolymers)
+std::map<std::size_t, Seeds> FindSeeds(const PacBio::QGram::Index& index, const std::string& seq,
+                                       const std::optional<std::size_t> qIdx,
+                                       const bool filterHomopolymers)
 {
-    std::map<size_t, Seeds> seeds;
+    std::map<std::size_t, Seeds> seeds;
 
     for (const auto& hits : index.Hits(seq, filterHomopolymers)) {
         const auto queryPos = hits.QueryPosition();
@@ -34,24 +35,24 @@ std::map<size_t, Seeds> FindSeeds(const PacBio::QGram::Index& index, const std::
     return seeds;
 }
 
-std::map<size_t, Seeds> FindSeeds(const PacBio::QGram::Index& index, const std::string& seq,
-                                  const std::optional<size_t> qIdx)
+std::map<std::size_t, Seeds> FindSeeds(const PacBio::QGram::Index& index, const std::string& seq,
+                                       const std::optional<std::size_t> qIdx)
 {
     return FindSeeds(index, seq, qIdx, Default::FILTER_HOMOPOLYMERS);
 }
 
-std::map<size_t, Seeds> FindSeeds(const PacBio::QGram::Index& index, const std::string& seq,
-                                  const bool filterHomopolymers)
+std::map<std::size_t, Seeds> FindSeeds(const PacBio::QGram::Index& index, const std::string& seq,
+                                       const bool filterHomopolymers)
 {
     return FindSeeds(index, seq, std::nullopt, filterHomopolymers);
 }
 
-std::map<size_t, Seeds> FindSeeds(const PacBio::QGram::Index& index, const std::string& seq)
+std::map<std::size_t, Seeds> FindSeeds(const PacBio::QGram::Index& index, const std::string& seq)
 {
     return FindSeeds(index, seq, std::nullopt, Default::FILTER_HOMOPOLYMERS);
 }
 
-Seeds FindSeeds(const size_t qGramSize, const std::string& seq1, const std::string& seq2,
+Seeds FindSeeds(const std::size_t qGramSize, const std::string& seq1, const std::string& seq2,
                 const bool filterHomopolymers)
 {
     if (seq2.length() < qGramSize) {
@@ -62,7 +63,7 @@ Seeds FindSeeds(const size_t qGramSize, const std::string& seq1, const std::stri
     return (multiSeeds.empty() ? Seeds{} : multiSeeds.cbegin()->second);
 }
 
-Seeds FindSeeds(const size_t qGramSize, const std::string& seq1, const std::string& seq2)
+Seeds FindSeeds(const std::size_t qGramSize, const std::string& seq1, const std::string& seq2)
 {
     return FindSeeds(qGramSize, seq1, seq2, Default::FILTER_HOMOPOLYMERS);
 }

@@ -32,12 +32,12 @@ namespace Parallel {
 class FireAndForgetIndexed
 {
 public:
-    using Index = size_t;
+    using Index = std::size_t;
     using TFunc = std::function<void(Index)>;
     using TPTask = std::packaged_task<void(Index)>;
 
 public:
-    FireAndForgetIndexed(const size_t size, const size_t mul = 2,
+    FireAndForgetIndexed(const std::size_t size, const std::size_t mul = 2,
                          TFunc finish = TFunc{[](Index) {}})
         : exc{nullptr}, sz{size * mul}, abort{false}, thrown{false}
     {
@@ -169,7 +169,7 @@ private:
     std::condition_variable pushed;
     std::exception_ptr exc;
     std::mutex m;
-    size_t sz;
+    std::size_t sz;
     std::atomic_bool abort;
     std::atomic_bool thrown;
 };

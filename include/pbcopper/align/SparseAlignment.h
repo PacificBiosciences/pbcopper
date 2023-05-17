@@ -21,7 +21,7 @@ namespace Align {
 ///
 /// \returns   The SDP alignment as a vector of Seeds
 ///
-std::vector<Seed> SparseAlignSeeds(size_t qGramSize, const std::string& seq1,
+std::vector<Seed> SparseAlignSeeds(std::size_t qGramSize, const std::string& seq1,
                                    const std::string& seq2, bool filterHomopolymers);
 
 /// \brief Generate an SDP alignment from two sequences
@@ -34,7 +34,7 @@ std::vector<Seed> SparseAlignSeeds(size_t qGramSize, const std::string& seq1,
 ///
 /// \returns   The SDP alignment as a vector of Seeds
 ///
-std::vector<Seed> SparseAlignSeeds(size_t qGramSize, const std::string& seq1,
+std::vector<Seed> SparseAlignSeeds(std::size_t qGramSize, const std::string& seq1,
                                    const std::string& seq2);
 
 /// \brief Generate an SDP alignment from the best orientation of two sequences
@@ -46,9 +46,9 @@ std::vector<Seed> SparseAlignSeeds(size_t qGramSize, const std::string& seq1,
 /// \returns   A flag for the best orientation found, and the SDP alignment
 ///             from that orientation as a SeedString, in an std::pair
 ///
-std::pair<size_t, std::vector<Seed>> BestSparseAlign(const std::string& seq1,
-                                                     const std::string& seq2,
-                                                     bool filterHomopolymers);
+std::pair<std::size_t, std::vector<Seed>> BestSparseAlign(const std::string& seq1,
+                                                          const std::string& seq2,
+                                                          bool filterHomopolymers);
 
 /// \brief Generate an SDP alignment from the best orientation of two sequences
 ///
@@ -60,8 +60,8 @@ std::pair<size_t, std::vector<Seed>> BestSparseAlign(const std::string& seq1,
 /// \returns   A flag for the best orientation found, and the SDP alignment
 ///             from that orientation as a SeedString, in an std::pair
 ///
-std::pair<size_t, std::vector<Seed>> BestSparseAlign(const std::string& seq1,
-                                                     const std::string& seq2);
+std::pair<std::size_t, std::vector<Seed>> BestSparseAlign(const std::string& seq1,
+                                                          const std::string& seq2);
 
 /// \brief Generate an SDP alignment from two sequences and hide the
 ///         SeqAn library dependencies
@@ -74,9 +74,10 @@ std::pair<size_t, std::vector<Seed>> BestSparseAlign(const std::string& seq1,
 /// \returns   A vector of pairs, representing Kmer start positions
 ///             that match in the query and reference sequences
 ///
-std::vector<std::pair<size_t, size_t>> SparseAlign(size_t qGramSize, const std::string& seq1,
-                                                   const std::string& seq2,
-                                                   bool filterHomopolymers);
+std::vector<std::pair<std::size_t, std::size_t>> SparseAlign(std::size_t qGramSize,
+                                                             const std::string& seq1,
+                                                             const std::string& seq2,
+                                                             bool filterHomopolymers);
 
 /// \brief Generate an SDP alignment from two sequences and hide the
 ///         SeqAn library dependencies
@@ -90,8 +91,9 @@ std::vector<std::pair<size_t, size_t>> SparseAlign(size_t qGramSize, const std::
 /// \returns   A vector of pairs, representing Kmer start positions
 ///             that match in the query and reference sequences
 ///
-std::vector<std::pair<size_t, size_t>> SparseAlign(size_t qGramSize, const std::string& seq1,
-                                                   const std::string& seq2);
+std::vector<std::pair<std::size_t, std::size_t>> SparseAlign(std::size_t qGramSize,
+                                                             const std::string& seq1,
+                                                             const std::string& seq2);
 
 }  // namespace Align
 }  // namespace PacBio

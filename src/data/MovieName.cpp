@@ -29,13 +29,13 @@ void MovieName::UpdatePartsCache() const
 
     // calculate name parts
     const char underscore = '_';
-    const size_t firstUnderscore = movieName_.find(underscore);
+    const std::size_t firstUnderscore = movieName_.find(underscore);
 
     const char* movieCStr = movieName_.c_str();
     const char* nameStart = movieCStr + 1;
     const char* rstStart = movieCStr + firstUnderscore + 1;  // skip '_'
-    const size_t nameSize = (firstUnderscore - 1);
-    const size_t rstSize = (movieName_.size() - firstUnderscore) - 1;  // skip '\0 '
+    const std::size_t nameSize = (firstUnderscore - 1);
+    const std::size_t rstSize = (movieName_.size() - firstUnderscore) - 1;  // skip '\0 '
 
     // cache name parts
     partsCache_.reset(new PartsCache{

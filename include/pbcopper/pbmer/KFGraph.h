@@ -38,7 +38,7 @@ public:
        \param kmerSize     kmer size in bp
        \param nr           number of sequences/reads
     */
-    KFG(uint8_t kmerSize, size_t nr);
+    KFG(uint8_t kmerSize, std::size_t nr);
 
 public:
     /*!
@@ -46,7 +46,8 @@ public:
        \param bits Dnabit (kmer) vector
        \param rid Read Id / index, one based.
     */
-    void AddSeq(const std::vector<PacBio::Pbmer::DnaBit>& bits, size_t rid, const std::string& rn);
+    void AddSeq(const std::vector<PacBio::Pbmer::DnaBit>& bits, std::size_t rid,
+                const std::string& rn);
 
     /*!
        \brief After nodes are removed this method removes edges that link to a deleted node.
@@ -139,8 +140,8 @@ public:
     /*!
        \brief Resolve repeat function. This function should only be used by advanced users.
     */
-    uint64_t OpenDoor(const std::vector<DnaBit>& bits, uint64_t hashedKmer, uint32_t rid, size_t i,
-                      size_t j) const;
+    uint64_t OpenDoor(const std::vector<DnaBit>& bits, uint64_t hashedKmer, uint32_t rid,
+                      std::size_t i, std::size_t j) const;
 
     /*!
        \brief Get number of out-edges across the graph
@@ -185,7 +186,7 @@ private:
     rh kfg_;
     // kmer size up to 32
     uint8_t kmerSize_;
-    size_t nReads_;
+    std::size_t nReads_;
     // header information
     std::unordered_map<std::string, uint32_t> nameToId_;
     std::unordered_map<uint32_t, std::string> idToName_;

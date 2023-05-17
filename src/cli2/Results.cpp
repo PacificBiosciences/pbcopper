@@ -141,10 +141,10 @@ PacBio::Logging::LogLevel Results::LogLevel() const
     return PacBio::Logging::LogLevel(logLevelStr);
 }
 
-size_t Results::NumThreads() const
+std::size_t Results::NumThreads() const
 {
     const unsigned int requestedNumThreads = (*this)[Builtin::NumThreads];
-    return static_cast<size_t>(Parallel::NormalizedThreadCount(requestedNumThreads));
+    return static_cast<std::size_t>(Parallel::NormalizedThreadCount(requestedNumThreads));
 }
 
 std::filesystem::path Results::AlarmsFile() const
@@ -211,7 +211,7 @@ const Result& Results::operator[](const Option& opt) const
 const std::string& Results::operator[](const PositionalArgument& posArg) const
 {
     const auto name = internal::PositionalArgumentTranslator::PositionalArgName(posArg);
-    for (size_t i = 0; i < posArgNames_.size(); ++i) {
+    for (std::size_t i = 0; i < posArgNames_.size(); ++i) {
         if (posArgNames_.at(i) == name) {
             if (i >= posArgValues_.size()) {
                 throw std::runtime_error{

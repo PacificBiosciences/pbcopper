@@ -112,7 +112,7 @@ public:
     ///
     /// \param blen length of the reference sequence.
     ///
-    explicit AlignmentGraph(size_t backboneLength);
+    explicit AlignmentGraph(std::size_t backboneLength);
 
     /// Add alignment to the graph.
     ///
@@ -167,13 +167,14 @@ public:
     /// Generates all consensus sequences from a target that meet the minimum
     /// weight requirement.
     ///
-    void Consensus(std::vector<ConsensusResult>& seqs, int minWeight = 0, size_t minLength = 500);
+    void Consensus(std::vector<ConsensusResult>& seqs, int minWeight = 0,
+                   std::size_t minLength = 500);
 
     /// Generates all consensus sequences from a target that meet the minimum
     /// weight requirement and minimum coverage requirement.
     ///
     void ConsensusWithMinFlankCoverage(std::vector<ConsensusResult>& seqs, int minWeight = 0,
-                                       int minFlankCoverage = 0, size_t minLen = 500);
+                                       int minFlankCoverage = 0, std::size_t minLen = 500);
 
     /// Locates the optimal path through the graph.  Called by consensus()
     ///

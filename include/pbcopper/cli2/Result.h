@@ -86,7 +86,7 @@ public:
     operator int64_t() const;
     operator uint64_t() const;
 
-    size_t which() const;
+    std::size_t which() const;
     ///
     /// \}
 

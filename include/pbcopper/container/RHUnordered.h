@@ -8,25 +8,29 @@
 namespace PacBio {
 namespace Container {
 
-static constexpr size_t DefaultMaxLoadFactor100 = 80;
+static constexpr std::size_t DefaultMaxLoadFactor100 = 80;
 
 // To use a specific hash map:
 // RHUnordered{Set,Map}
 
 template <typename Key, typename Hash = robin_hood::hash<Key>,
-          typename KeyEqual = std::equal_to<Key>, size_t MaxLoadFactor100 = DefaultMaxLoadFactor100>
+          typename KeyEqual = std::equal_to<Key>,
+          std::size_t MaxLoadFactor100 = DefaultMaxLoadFactor100>
 using RHSetBase = robin_hood::unordered_set<Key, Hash, KeyEqual, MaxLoadFactor100>;
 
 template <typename Key, typename Value, typename Hash = robin_hood::hash<Key>,
-          typename KeyEqual = std::equal_to<Key>, size_t MaxLoadFactor100 = DefaultMaxLoadFactor100>
+          typename KeyEqual = std::equal_to<Key>,
+          std::size_t MaxLoadFactor100 = DefaultMaxLoadFactor100>
 using RHMapBase = robin_hood::unordered_map<Key, Value, Hash, KeyEqual, MaxLoadFactor100>;
 
 template <typename Key, typename Hash = robin_hood::hash<Key>,
-          typename KeyEqual = std::equal_to<Key>, size_t MaxLoadFactor100 = DefaultMaxLoadFactor100>
+          typename KeyEqual = std::equal_to<Key>,
+          std::size_t MaxLoadFactor100 = DefaultMaxLoadFactor100>
 using RHUnorderedSet = RHSetBase<Key, Hash, KeyEqual, MaxLoadFactor100>;
 
 template <typename Key, typename Value, typename Hash = robin_hood::hash<Key>,
-          typename KeyEqual = std::equal_to<Key>, size_t MaxLoadFactor100 = DefaultMaxLoadFactor100>
+          typename KeyEqual = std::equal_to<Key>,
+          std::size_t MaxLoadFactor100 = DefaultMaxLoadFactor100>
 using RHUnorderedMap = RHMapBase<Key, Value, Hash, KeyEqual, MaxLoadFactor100>;
 
 // To use the "default" hash map.

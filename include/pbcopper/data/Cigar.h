@@ -97,9 +97,9 @@ CigarBaseCounts CigarOpsCalculator(const Cigar& cigar);
 /// \brief
 ///
 /// \param cigar
-/// \return size_t
+/// \return std::size_t
 ///
-size_t ReferenceLength(const Cigar& cigar);
+std::size_t ReferenceLength(const Cigar& cigar);
 
 std::ostream& operator<<(std::ostream& os, const Cigar& cigar);
 

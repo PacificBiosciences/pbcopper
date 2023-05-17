@@ -17,7 +17,7 @@ namespace Container {
 class OneHalfGrowthPolicy
 {
 public:
-    constexpr ptrdiff_t operator()(const ptrdiff_t currentCapacity) const noexcept
+    constexpr std::ptrdiff_t operator()(const std::ptrdiff_t currentCapacity) const noexcept
     {
         assert(currentCapacity >= 0);
         return currentCapacity * 3 / 2ULL;
@@ -37,7 +37,7 @@ class CapacityPointer : private std::unique_ptr<T, Deleter>, private Allocator, 
 public:
     constexpr CapacityPointer() = default;
 
-    CapacityPointer(const ptrdiff_t capacity)
+    CapacityPointer(const std::ptrdiff_t capacity)
         : std::unique_ptr<T, Deleter>{static_cast<const Allocator&>(*this)(capacity)}
         , capacity_{capacity}
     {
@@ -48,17 +48,18 @@ public:
     using std::unique_ptr<T, Deleter>::get;
 
 public:
-    ptrdiff_t Capacity() const noexcept { return capacity_; }
+    std::ptrdiff_t Capacity() const noexcept { return capacity_; }
 
-    void Reserve(const ptrdiff_t capacity)
+    void Reserve(const std::ptrdiff_t capacity)
     {
         assert(capacity >= 0);
 
         if (capacity > capacity_) {
-            const ptrdiff_t putativeCapacity = static_cast<const GrowthPolicy&>(*this)(capacity_);
+            const std::ptrdiff_t putativeCapacity =
+                static_cast<const GrowthPolicy&>(*this)(capacity_);
             assert(putativeCapacity >= capacity_);
 
-            const ptrdiff_t newCapacity = std::max(capacity, putativeCapacity);
+            const std::ptrdiff_t newCapacity = std::max(capacity, putativeCapacity);
 
             T* newPtr = static_cast<const Allocator&>(*this)(newCapacity);
             assert(newPtr);
@@ -69,7 +70,7 @@ public:
     }
 
 private:
-    ptrdiff_t capacity_ = 0;
+    std::ptrdiff_t capacity_ = 0;
 };
 
 }  // namespace Container

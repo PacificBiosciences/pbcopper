@@ -110,7 +110,7 @@ std::vector<Kmer> Mers::BuildNMPs() const
     uint64_t minA;
     uint64_t minB;
 
-    for (size_t i = 1; i < minimizers.size(); ++i) {
+    for (std::size_t i = 1; i < minimizers.size(); ++i) {
         Kmer nm{minimizers[i].mer, 0, Data::Strand::FORWARD};
         minA = minimizers[i - 1].mer;
         minB = nm.mer;

@@ -74,7 +74,7 @@ public:
     bool IsValid() const;
 
     /// \returns length of underlying
-    size_t Length() const;
+    std::size_t Length() const;
 
     /// \}
 

@@ -13,7 +13,7 @@ namespace Utility {
 std::string Join(const std::vector<std::string>& input, const std::string& separator)
 {
     // determine total joined length
-    size_t totalLen = 0;
+    std::size_t totalLen = 0;
     for (const auto& s : input) {
         totalLen += s.size();
     }
@@ -24,7 +24,7 @@ std::string Join(const std::vector<std::string>& input, const std::string& separ
     // join input strings
     std::string result;
     result.reserve(totalLen);
-    for (size_t i = 0; i < input.size(); ++i) {
+    for (std::size_t i = 0; i < input.size(); ++i) {
         if (i != 0) {
             result += separator;
         }
@@ -180,7 +180,7 @@ std::vector<std::string> Split(const std::string& line, const char delim)
     return tokens;
 }
 
-std::string WordWrapped(const std::string& input, const size_t maxColumns)
+std::string WordWrapped(const std::string& input, const std::size_t maxColumns)
 {
     std::ostringstream result;
 
@@ -191,12 +191,12 @@ std::string WordWrapped(const std::string& input, const size_t maxColumns)
     if (in >> word) {
 
         result << word;
-        size_t available = maxColumns - word.size();
+        std::size_t available = maxColumns - word.size();
 
         // continue until input exhausted
         while (in >> word) {
 
-            const size_t wordLength = word.size();
+            const std::size_t wordLength = word.size();
 
             // line break before word if overhanging
             if (available < (wordLength + 1)) {
@@ -213,7 +213,7 @@ std::string WordWrapped(const std::string& input, const size_t maxColumns)
     return result.str();
 }
 
-std::vector<std::string> WordWrappedLines(const std::string& input, const size_t maxColumns)
+std::vector<std::string> WordWrappedLines(const std::string& input, const std::size_t maxColumns)
 {
     return PacBio::Utility::Split(WordWrapped(input, maxColumns), '\n');
 }

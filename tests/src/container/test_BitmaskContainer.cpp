@@ -24,7 +24,7 @@ bool operator==(
 {
     EXPECT_TRUE(rhs.size() <= lhs.Capacity());
 
-    for (size_t i = 0; i < rhs.size(); ++i) {
+    for (std::size_t i = 0; i < rhs.size(); ++i) {
         if (lhs[i] != rhs[i]) {
             return false;
         }

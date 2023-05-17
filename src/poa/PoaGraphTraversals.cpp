@@ -205,7 +205,7 @@ void PoaGraphImpl::tracebackAndThread(std::string sequence,
 
     if (outputPath) {
         outputPath->resize(I);
-        std::fill(outputPath->begin(), outputPath->end(), std::numeric_limits<size_t>::max());
+        std::fill(outputPath->begin(), outputPath->end(), std::numeric_limits<std::size_t>::max());
     }
 
 #define READPOS (i - 1)
@@ -312,8 +312,8 @@ void PoaGraphImpl::tracebackAndThread(std::string sequence,
 
     // all filled in?
     assert(outputPath == nullptr ||
-           std::find(outputPath->begin(), outputPath->end(), std::numeric_limits<size_t>::max()) ==
-               outputPath->end());
+           std::find(outputPath->begin(), outputPath->end(),
+                     std::numeric_limits<std::size_t>::max()) == outputPath->end());
 
 #undef READPOS
 #undef VERTEX_ON_PATH

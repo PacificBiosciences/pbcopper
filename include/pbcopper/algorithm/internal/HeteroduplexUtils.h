@@ -48,7 +48,7 @@ struct StrandInput
 ///
 struct StrandRawData
 {
-    explicit StrandRawData(size_t refLength);
+    explicit StrandRawData(std::size_t refLength);
 
     std::vector<int> NumReads;  // includes reads with deletion at position
     std::vector<BaseCount> BaseCounts;

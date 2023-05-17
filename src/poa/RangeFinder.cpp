@@ -32,7 +32,7 @@ bool compareAnchorsOnCssPos(const SdpAnchor& a1, const SdpAnchor& a2)
     return a1.first < a2.first;
 }
 
-const SdpAnchor* binarySearchAnchors(const SdpAnchorVector& anchors, size_t cssPosition)
+const SdpAnchor* binarySearchAnchors(const SdpAnchorVector& anchors, std::size_t cssPosition)
 {
     auto found = std::lower_bound(anchors.begin(), anchors.end(), std::make_pair(cssPosition, -1),
                                   compareAnchorsOnCssPos);
@@ -132,7 +132,7 @@ void SdpRangeFinder::InitRangeFinder(const PoaGraphImpl& poaGraph,
 
     // Find the "direct ranges" implied by the anchors between the
     // css and this read.  Possibly null.
-    for (size_t cssPos = 0; cssPos < consensusPath.size(); cssPos++) {
+    for (std::size_t cssPos = 0; cssPos < consensusPath.size(); cssPos++) {
         Vertex vExt = consensusPath[cssPos];
         VD v = poaGraph.internalize(vExt);
         const SdpAnchor* anchor = binarySearchAnchors(anchors, cssPos);

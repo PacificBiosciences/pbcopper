@@ -9,7 +9,7 @@
 namespace PacBio {
 namespace Align {
 
-std::vector<Seed> SparseAlignSeeds(const size_t qGramSize, const std::string& seq1,
+std::vector<Seed> SparseAlignSeeds(const std::size_t qGramSize, const std::string& seq1,
                                    const std::string& seq2, const bool filterHomopolymers)
 {
     const auto seeds = FindSeeds(qGramSize, seq1, seq2, filterHomopolymers);
@@ -20,15 +20,15 @@ std::vector<Seed> SparseAlignSeeds(const size_t qGramSize, const std::string& se
     return chains[0];
 }
 
-std::vector<Seed> SparseAlignSeeds(const size_t qGramSize, const std::string& seq1,
+std::vector<Seed> SparseAlignSeeds(const std::size_t qGramSize, const std::string& seq1,
                                    const std::string& seq2)
 {
     return SparseAlignSeeds(qGramSize, seq1, seq2, Default::FILTER_HOMOPOLYMERS);
 }
 
-std::pair<size_t, std::vector<Seed>> BestSparseAlign(const std::string& seq1,
-                                                     const std::string& seq2,
-                                                     const bool filterHomopolymers)
+std::pair<std::size_t, std::vector<Seed>> BestSparseAlign(const std::string& seq1,
+                                                          const std::string& seq2,
+                                                          const bool filterHomopolymers)
 {
     const auto seq2rc = PacBio::Utility::ReverseComplemented(seq2);
 
@@ -41,17 +41,18 @@ std::pair<size_t, std::vector<Seed>> BestSparseAlign(const std::string& seq1,
     return std::make_pair(1, rev);
 }
 
-std::pair<size_t, std::vector<Seed>> BestSparseAlign(const std::string& seq1,
-                                                     const std::string& seq2)
+std::pair<std::size_t, std::vector<Seed>> BestSparseAlign(const std::string& seq1,
+                                                          const std::string& seq2)
 {
     return BestSparseAlign(seq1, seq2, Default::FILTER_HOMOPOLYMERS);
 }
 
-std::vector<std::pair<size_t, size_t>> SparseAlign(const size_t qGramSize, const std::string& seq1,
-                                                   const std::string& seq2,
-                                                   const bool filterHomopolymers)
+std::vector<std::pair<std::size_t, std::size_t>> SparseAlign(const std::size_t qGramSize,
+                                                             const std::string& seq1,
+                                                             const std::string& seq2,
+                                                             const bool filterHomopolymers)
 {
-    std::vector<std::pair<size_t, size_t>> result;
+    std::vector<std::pair<std::size_t, std::size_t>> result;
 
     const auto chain = SparseAlignSeeds(qGramSize, seq1, seq2, filterHomopolymers);
     for (const auto& s : chain) {
@@ -61,8 +62,9 @@ std::vector<std::pair<size_t, size_t>> SparseAlign(const size_t qGramSize, const
     return result;
 }
 
-std::vector<std::pair<size_t, size_t>> SparseAlign(const size_t qGramSize, const std::string& seq1,
-                                                   const std::string& seq2)
+std::vector<std::pair<std::size_t, std::size_t>> SparseAlign(const std::size_t qGramSize,
+                                                             const std::string& seq1,
+                                                             const std::string& seq2)
 {
     return SparseAlign(qGramSize, seq1, seq2, Default::FILTER_HOMOPOLYMERS);
 }

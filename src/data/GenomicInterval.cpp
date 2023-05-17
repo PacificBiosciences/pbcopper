@@ -119,7 +119,7 @@ bool GenomicInterval::IsValid() const
             interval_.IsValid());
 }
 
-size_t GenomicInterval::Length() const { return interval_.Length(); }
+std::size_t GenomicInterval::Length() const { return interval_.Length(); }
 
 std::string GenomicInterval::Name() const { return name_; }
 

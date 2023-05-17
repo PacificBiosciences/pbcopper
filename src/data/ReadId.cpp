@@ -14,26 +14,26 @@ ReadId::ReadId(const std::string& readName) : ReadName{readName}
     if (!readName.empty()) {
         Data::ReadName rName{readName};
         MovieName = rName.MovieName().ToStdString();
-        HoleNumber = static_cast<size_t>(rName.Zmw());
+        HoleNumber = static_cast<std::size_t>(rName.Zmw());
         if (!rName.IsCCS()) {
             ZmwInterval = rName.QueryInterval();
         }
     }
 }
 
-ReadId::ReadId(const std::string& movieName, size_t holeNumber)
+ReadId::ReadId(const std::string& movieName, std::size_t holeNumber)
     : MovieName{movieName}, HoleNumber{holeNumber}
 {}
 
-ReadId::ReadId(const std::string& movieName, size_t holeNumber, const Interval& interval)
+ReadId::ReadId(const std::string& movieName, std::size_t holeNumber, const Interval& interval)
     : MovieName{movieName}, HoleNumber{holeNumber}, ZmwInterval{interval}
 {}
 
-ReadId::ReadId(const std::shared_ptr<std::string>& movieName, size_t holeNumber)
+ReadId::ReadId(const std::shared_ptr<std::string>& movieName, std::size_t holeNumber)
     : ReadId{*movieName, holeNumber}
 {}
 
-ReadId::ReadId(const std::shared_ptr<std::string>& movieName, size_t holeNumber,
+ReadId::ReadId(const std::shared_ptr<std::string>& movieName, std::size_t holeNumber,
                const Interval& interval)
     : ReadId{*movieName, holeNumber, interval}
 {}

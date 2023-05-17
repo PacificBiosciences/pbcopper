@@ -61,7 +61,7 @@ public:
     /// \return number of threads to use, resolved from user-requested count and
     //          C++ implementation hints (see std::thread::hardware_concurrency)
     ///
-    size_t NumThreads() const;
+    std::size_t NumThreads() const;
 
     ///
     /// \return requested alarms JSON file (empty string if not provided)

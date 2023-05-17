@@ -65,9 +65,9 @@ public:
         return *this;
     }
 
-    size_t BeginRow() const { return Score.BeginRow(); }
-    size_t EndRow() const { return Score.EndRow(); }
-    bool HasRow(size_t i) const { return (BeginRow() <= i) && (i < EndRow()); }
+    std::size_t BeginRow() const { return Score.BeginRow(); }
+    std::size_t EndRow() const { return Score.EndRow(); }
+    bool HasRow(std::size_t i) const { return (BeginRow() <= i) && (i < EndRow()); }
 };
 
 using AlignmentColumnMap = std::unordered_map<VD, std::unique_ptr<const AlignmentColumn>>;
@@ -78,8 +78,8 @@ public:
     virtual ~PoaAlignmentMatrixImpl() = default;
 
     virtual float Score() const { return score_; }
-    size_t NumRows() const { return readSequence_.length() + 1; }
-    size_t NumCols() const { return columns_.size(); }
+    std::size_t NumRows() const { return readSequence_.length() + 1; }
+    std::size_t NumCols() const { return columns_.size(); }
     void Print() const;
 
     // TODO: why did I leave these public?  why is there no

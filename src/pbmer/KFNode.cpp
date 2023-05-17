@@ -5,7 +5,10 @@
 namespace PacBio {
 namespace Pbmer {
 
-KFNode::KFNode(const DnaBit& d, size_t n, uint64_t k) : key_{k}, dna_{d} { readIds_.resize(n); }
+KFNode::KFNode(const DnaBit& d, std::size_t n, uint64_t k) : key_{k}, dna_{d}
+{
+    readIds_.resize(n);
+}
 
 bool KFNode::ContainsSeq(uint32_t rid) const { return readIds_[rid - 1] == 1; }
 
@@ -14,7 +17,7 @@ bool KFNode::AddLoad(uint32_t rid)
     readIds_[rid - 1] = 1;
     return true;
 }
-size_t KFNode::FirstRId() const
+std::size_t KFNode::FirstRId() const
 {
     if (readIds_.none()) {
         return 0;
@@ -48,7 +51,7 @@ std::string Vec2String(const std::vector<KFNode>& nodes)
         return rv;
     }
 
-    for (size_t i = 1; i < nodes.size(); ++i) {
+    for (std::size_t i = 1; i < nodes.size(); ++i) {
         DnaBit d = nodes[i].Bit();
         if (!d.KmerToStr().empty()) {
             rv += d.KmerToStr().back();

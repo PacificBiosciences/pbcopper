@@ -24,11 +24,11 @@ public:
 
 public:
     // ctor
-    IndexImpl(size_t q, std::vector<std::string> seqs);
+    IndexImpl(std::size_t q, std::vector<std::string> seqs);
 
     // index lookup API
     IndexHit Hit(const Shape& shape) const;
-    IndexHits Hits(const Shape& shape, size_t queryPos) const;
+    IndexHits Hits(const Shape& shape, std::size_t queryPos) const;
     std::vector<IndexHits> Hits(const std::string& seq, bool filterHomopolymers) const;
 
     // "private" method(s) - index construction
@@ -36,17 +36,18 @@ public:
 
     // "private" method(s) - purely for testing access
     const HashLookup_t& HashLookup() const;
-    size_t Size() const;
+    std::size_t Size() const;
     const SuffixArray_t& SuffixArray() const;
 
 private:
-    size_t q_;                       // qGramSize
+    std::size_t q_;                  // qGramSize
     std::vector<std::string> seqs_;  // underlying text
     SuffixArray_t suffixArray_;      // suffix array sorted by the first q chars
     HashLookup_t hashLookup_;        // hash value -> SA index
 };
 
-inline IndexImpl::IndexImpl(size_t q, std::vector<std::string> seqs) : q_{q}, seqs_{std::move(seqs)}
+inline IndexImpl::IndexImpl(std::size_t q, std::vector<std::string> seqs)
+    : q_{q}, seqs_{std::move(seqs)}
 {
     Init();
 }
@@ -61,7 +62,7 @@ inline void IndexImpl::Init()
     }
 
     // init hash lookup (and calculate totalNumQGrams for later suffixArray)
-    const auto lookupSize = static_cast<size_t>(std::pow(4, q_) + 1);
+    const auto lookupSize = static_cast<std::size_t>(std::pow(4, q_) + 1);
     hashLookup_.resize(lookupSize, 0);
     uint32_t totalNumQGrams = 0;
     for (const auto& seq : seqs_) {
@@ -75,7 +76,7 @@ inline void IndexImpl::Init()
 
         const auto numQGrams = seqLength - q_ + 1;
         Shape shape{q_, seq};
-        for (size_t i = 0; i < numQGrams; ++i) {
+        for (std::size_t i = 0; i < numQGrams; ++i) {
             ++hashLookup_[shape.HashNext()];
         }
         totalNumQGrams += numQGrams;
@@ -115,7 +116,7 @@ inline IndexHit IndexImpl::Hit(const Shape& shape) const
     return suffixArray_[i];
 }
 
-inline IndexHits IndexImpl::Hits(const Shape& shape, const size_t queryPos) const
+inline IndexHits IndexImpl::Hits(const Shape& shape, const std::size_t queryPos) const
 {
     const auto b = shape.currentHash_;
     const auto iter = hashLookup_[b];
@@ -136,13 +137,13 @@ inline std::vector<IndexHits> IndexImpl::Hits(const std::string& seq,
     Shape shape{q_, seq};
 
     if (!filterHomopolymers) {
-        for (size_t i = 0; i < end; ++i) {
+        for (std::size_t i = 0; i < end; ++i) {
             shape.HashNext();
             result.emplace_back(Hits(shape, i));
         }
     } else {
         HpHasher isHomopolymer(q_);
-        for (size_t i = 0; i < end; ++i) {
+        for (std::size_t i = 0; i < end; ++i) {
             if (!isHomopolymer(shape.HashNext())) {
                 result.emplace_back(Hits(shape, i));
             }
@@ -151,15 +152,15 @@ inline std::vector<IndexHits> IndexImpl::Hits(const std::string& seq,
     return result;
 }
 
-inline size_t IndexImpl::Size() const { return q_; }
+inline std::size_t IndexImpl::Size() const { return q_; }
 
 inline const IndexImpl::SuffixArray_t& IndexImpl::SuffixArray() const { return suffixArray_; }
 
 }  // namespace internal
 
-inline Index::Index(size_t q, std::string seq) : Index{q, {1, std::move(seq)}} {}
+inline Index::Index(std::size_t q, std::string seq) : Index{q, {1, std::move(seq)}} {}
 
-inline Index::Index(size_t q, std::vector<std::string> seqs)
+inline Index::Index(std::size_t q, std::vector<std::string> seqs)
     : d_{std::make_unique<internal::IndexImpl>(q, std::move(seqs))}
 {}
 
@@ -186,7 +187,7 @@ inline std::vector<IndexHits> Index::Hits(const std::string& seq,
     return d_->Hits(seq, filterHomopolymers);
 }
 
-inline size_t Index::Size() const
+inline std::size_t Index::Size() const
 {
     assert(d_);
     return d_->Size();

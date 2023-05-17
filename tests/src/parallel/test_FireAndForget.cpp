@@ -10,8 +10,8 @@
 
 TEST(Parallel_FireAndForget, strings)
 {
-    static const size_t numThreads = 3;
-    static const size_t numElements = 10000;
+    static const std::size_t numThreads = 3;
+    static const std::size_t numElements = 10000;
     PacBio::Parallel::FireAndForget faf{numThreads};
 
     std::atomic_int waiting{0};
@@ -22,7 +22,7 @@ TEST(Parallel_FireAndForget, strings)
 
     std::vector<std::string> vec;
 
-    for (size_t i = 0; i < numElements; ++i) {
+    for (std::size_t i = 0; i < numElements; ++i) {
         vec.emplace_back(std::to_string(i));
     }
 
@@ -43,7 +43,7 @@ TEST(Parallel_FireAndForget, strings)
 
 TEST(Parallel_FireAndForget, exceptionFinalize)
 {
-    static const size_t numThreads = 3;
+    static const std::size_t numThreads = 3;
     PacBio::Parallel::FireAndForget faf{numThreads, 1};
 
     std::atomic_int counter{0};
@@ -67,7 +67,7 @@ TEST(Parallel_FireAndForget, exceptionFinalize)
 
 TEST(Parallel_FireAndForget, exceptionProduceWith)
 {
-    static const size_t numThreads = 3;
+    static const std::size_t numThreads = 3;
     PacBio::Parallel::FireAndForget faf{numThreads, 1};
 
     std::atomic_int counter{0};
@@ -93,12 +93,12 @@ TEST(Parallel_FireAndForget, exceptionProduceWith)
 
 TEST(Parallel_FireAndForget, dispatch)
 {
-    static const size_t numThreads = 3;
-    static const size_t numElements = 1000;
+    static const std::size_t numThreads = 3;
+    static const std::size_t numElements = 1000;
     PacBio::Parallel::FireAndForget faf{numThreads};
 
     std::vector<std::string> vec;
-    for (size_t i = 0; i < numElements; ++i) {
+    for (std::size_t i = 0; i < numElements; ++i) {
         vec.emplace_back(std::to_string(i));
     }
 

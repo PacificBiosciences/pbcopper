@@ -13,7 +13,7 @@ namespace Data {
 namespace {
 
 template <typename T>
-T clipContainer(const T& input, const size_t pos, const size_t len)
+T clipContainer(const T& input, const std::size_t pos, const std::size_t len)
 {
     if (input.empty()) {
         return {};
@@ -23,10 +23,10 @@ T clipContainer(const T& input, const size_t pos, const size_t len)
 }
 
 // returns reference positions removed from beginning
-size_t ClipToQueryImpl(Cigar& cigar, size_t startOffset, size_t endOffset)
+std::size_t ClipToQueryImpl(Cigar& cigar, std::size_t startOffset, std::size_t endOffset)
 {
-    size_t refPosRemoved = 0;
-    size_t remaining = startOffset;
+    std::size_t refPosRemoved = 0;
+    std::size_t remaining = startOffset;
 
     // clip CIGAR ops from beginning of query sequence
     while ((remaining > 0) && !cigar.empty()) {
@@ -73,8 +73,8 @@ size_t ClipToQueryImpl(Cigar& cigar, size_t startOffset, size_t endOffset)
     return refPosRemoved;
 }
 
-void ClipToReferenceImpl(ClipToReferenceConfig& config, size_t* queryPosRemovedFront,
-                         size_t* queryPosRemovedBack)
+void ClipToReferenceImpl(ClipToReferenceConfig& config, std::size_t* queryPosRemovedFront,
+                         std::size_t* queryPosRemovedBack)
 {
 
     const Position newTStart = std::max(config.original_tStart_, config.target_tStart_);
@@ -87,7 +87,7 @@ void ClipToReferenceImpl(ClipToReferenceConfig& config, size_t* queryPosRemovedF
     // clip leading CIGAR ops
     // ------------------------
 
-    size_t remaining = newTStart - config.original_tStart_;
+    std::size_t remaining = newTStart - config.original_tStart_;
     while (remaining > 0 && !cigar.empty()) {
         CigarOperation& firstOp = cigar.front();
         const auto firstOpLength = firstOp.Length();
@@ -198,7 +198,7 @@ void ClipToReferenceImpl(ClipToReferenceConfig& config, size_t* queryPosRemovedF
 
 namespace internal {
 
-void ClipRead(Read& read, const ClipResult& result, size_t start, size_t end)
+void ClipRead(Read& read, const ClipResult& result, std::size_t start, std::size_t end)
 {
     const auto clipFrom = result.clipOffset_;
     const auto clipLength = (end - start);
@@ -228,11 +228,11 @@ void ClipMappedRead(MappedRead& read, ClipResult result)
 
 }  // namespace internal
 
-ClipResult::ClipResult(size_t clipOffset, Position qStart, Position qEnd)
+ClipResult::ClipResult(std::size_t clipOffset, Position qStart, Position qEnd)
     : clipOffset_{clipOffset}, qStart_{qStart}, qEnd_{qEnd}
 {}
 
-ClipResult::ClipResult(size_t clipOffset, Position qStart, Position qEnd, Position refPos,
+ClipResult::ClipResult(std::size_t clipOffset, Position qStart, Position qEnd, Position refPos,
                        Cigar cigar)
     : clipOffset_{clipOffset}
     , qStart_{qStart}
@@ -254,7 +254,7 @@ ClipToReferenceConfig::ClipToReferenceConfig(const ClipToQueryConfig& queryConfi
 ClipResult ClipToQuery(ClipToQueryConfig& config)
 {
     // easy out for unmapped reads
-    const size_t startOffset = (config.target_qStart_ - config.original_qStart_);
+    const std::size_t startOffset = (config.target_qStart_ - config.original_qStart_);
     if (!config.isMapped_) {
         return ClipResult{startOffset, config.target_qStart_, config.target_qEnd_};
     }
@@ -266,8 +266,8 @@ ClipResult ClipToQuery(ClipToQueryConfig& config)
     }
 
     // do main clipping
-    const size_t endOffset = config.original_qEnd_ - config.target_qEnd_;
-    const size_t refPosRemoved = ClipToQueryImpl(cigar, startOffset, endOffset);
+    const std::size_t endOffset = config.original_qEnd_ - config.target_qEnd_;
+    const std::size_t refPosRemoved = ClipToQueryImpl(cigar, startOffset, endOffset);
 
     // maybe restore CIGAR
     if (config.strand_ == Strand::REVERSE) {
@@ -284,15 +284,15 @@ ClipResult ClipToReference(ClipToReferenceConfig& config)
 {
     assert(config.isMapped_);
 
-    size_t queryPosRemovedFront = 0;
-    size_t queryPosRemovedBack = 0;
+    std::size_t queryPosRemovedFront = 0;
+    std::size_t queryPosRemovedBack = 0;
     if (config.strand_ == Strand::FORWARD) {
         ClipToReferenceImpl(config, &queryPosRemovedFront, &queryPosRemovedBack);
     } else {
         ClipToReferenceImpl(config, &queryPosRemovedBack, &queryPosRemovedFront);
     }
 
-    const size_t clipOffset = queryPosRemovedFront;
+    const std::size_t clipOffset = queryPosRemovedFront;
     const Position qStart = config.original_qStart_ + queryPosRemovedFront;
     const Position qEnd = config.original_qEnd_ - queryPosRemovedBack;
     const Position newPos = std::max(config.original_tStart_, config.target_tStart_);

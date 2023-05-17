@@ -39,7 +39,7 @@ namespace std {
 template <>
 struct hash<PacBio::CLI_v2::internal::PositionalArgumentData>
 {
-    size_t operator()(const PacBio::CLI_v2::internal::PositionalArgumentData& k) const noexcept
+    std::size_t operator()(const PacBio::CLI_v2::internal::PositionalArgumentData& k) const noexcept
     {
         return std::hash<std::string>()(k.Name);
     }

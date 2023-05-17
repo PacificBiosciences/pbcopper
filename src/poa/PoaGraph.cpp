@@ -37,7 +37,7 @@ void PoaGraph::CommitAdd(PoaAlignmentMatrix* mat, std::vector<Vertex>* readPathO
 
 void PoaGraph::PruneGraph(const int minCoverage) { impl_->PruneGraph(minCoverage); }
 
-size_t PoaGraph::NumReads() const { return impl_->NumReads(); }
+std::size_t PoaGraph::NumReads() const { return impl_->NumReads(); }
 
 const PoaConsensus* PoaGraph::FindConsensus(const Align::AlignConfig& config, int minCoverage) const
 {

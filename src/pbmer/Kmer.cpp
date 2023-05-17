@@ -55,7 +55,7 @@ void Kmer::ReverseComp(uint8_t kmerSize)
     const uint64_t tmp = ~mer;
     uint64_t rv = 0;
 
-    for (size_t i = 0; i < kmerSize; i++) {
+    for (std::size_t i = 0; i < kmerSize; i++) {
         rv <<= 2;
         rv |= (tmp >> (i * 2) & 3);
     }

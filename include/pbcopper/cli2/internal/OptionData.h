@@ -59,7 +59,7 @@ namespace std {
 template <>
 struct hash<PacBio::CLI_v2::internal::OptionData>
 {
-    size_t operator()(const PacBio::CLI_v2::internal::OptionData& k) const noexcept
+    std::size_t operator()(const PacBio::CLI_v2::internal::OptionData& k) const noexcept
     {
         return std::hash<std::string>()(k.Names[0]);
     }

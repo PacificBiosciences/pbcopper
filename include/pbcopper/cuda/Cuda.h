@@ -17,7 +17,7 @@ namespace Cuda {
 // Host memory
 struct PinnedWriteCombinedMemoryAllocator
 {
-    std::byte* operator()(const ptrdiff_t size) const
+    std::byte* operator()(const std::ptrdiff_t size) const
     {
         assert(size >= 0);
 
@@ -35,7 +35,7 @@ struct PinnedWriteCombinedMemoryAllocator
 
 struct PinnedMemoryAllocator
 {
-    std::byte* operator()(const ptrdiff_t size) const
+    std::byte* operator()(const std::ptrdiff_t size) const
     {
         assert(size >= 0);
 
@@ -61,7 +61,7 @@ struct PinnedMemoryDeleter
 // Device memory
 struct DeviceMemoryAllocator
 {
-    std::byte* operator()(const ptrdiff_t size) const
+    std::byte* operator()(const std::ptrdiff_t size) const
     {
         assert(size >= 0);
 

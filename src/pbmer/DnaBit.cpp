@@ -357,7 +357,7 @@ std::string DnaBitVec2String(const std::vector<DnaBit>& bits)
         return rv;
     }
     const uint8_t lastStrand = bits.front().strand;
-    for (size_t i = 1; i < bits.size(); ++i) {
+    for (std::size_t i = 1; i < bits.size(); ++i) {
         DnaBit d = bits[i];
         if (d.strand != lastStrand) {
             d.ReverseComp();

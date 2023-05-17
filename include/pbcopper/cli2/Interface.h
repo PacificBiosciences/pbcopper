@@ -179,12 +179,12 @@ public:
     ///
     /// \return number of options that are required
     ///
-    size_t NumRequiredOptions() const;
+    std::size_t NumRequiredOptions() const;
 
     ///
     /// \return number of positional arguments that are required
     ///
-    size_t NumRequiredPosArgs() const;
+    std::size_t NumRequiredPosArgs() const;
 
     /// \internal
     /// \return "flattened" list of all registered options (grouping is ignored)

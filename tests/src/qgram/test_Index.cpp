@@ -21,7 +21,7 @@ TEST(QGram_Index, shape_hash_factors)
 
 TEST(QGram_Index, shape_hashing)
 {
-    auto check = [](const size_t q, std::vector<uint64_t> expected) {
+    auto check = [](const std::size_t q, std::vector<uint64_t> expected) {
         ASSERT_EQ(4, expected.size());
 
         const std::string seqA(q, 'A');
@@ -112,7 +112,7 @@ TEST(QGram_Index, shape_hash_iteration)
 TEST(QGram_Index, index_construct)
 {
     auto check = [](const PacBio::QGram::internal::IndexImpl& index,
-                    const uint32_t expectedQGramCount, const size_t expectedDirLength,
+                    const uint32_t expectedQGramCount, const std::size_t expectedDirLength,
                     const PacBio::QGram::internal::IndexImpl::HashLookup_t& expectedHL,
                     const PacBio::QGram::internal::IndexImpl::SuffixArray_t& expectedSA) {
         const auto& sa = index.SuffixArray();
@@ -275,7 +275,7 @@ TEST(QGram_Index, index_hits_INTERNAL_from_shape_short_seq)
         }
         const auto hits = idx.Hits(shape, i);
         ASSERT_EQ(expected.size(), hits.size());
-        for (size_t j = 0; j < hits.size(); ++j) {
+        for (std::size_t j = 0; j < hits.size(); ++j) {
             const auto& hit = hits.at(j);
             EXPECT_EQ(expected.at(j).Id(), hit.Id());
             EXPECT_EQ(expected.at(j).Position(), hit.Position());
@@ -311,7 +311,7 @@ TEST(QGram_Index, index_hits_INTERNAL_from_shape_longer_seq)
     for (uint32_t j = 0; j < end; ++j) {
         shape.HashNext();
         const auto hits = idx.Hits(shape, j);
-        for (size_t i = 0; i < hits.size(); ++i) {
+        for (std::size_t i = 0; i < hits.size(); ++i) {
             observed.push_back(hits.at(i).Position());
         }
     }

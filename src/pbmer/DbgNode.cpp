@@ -30,7 +30,7 @@ bool DbgNode::AddLoad(uint32_t rid)
     readIds2_[rid - 1] = 1;
     return true;
 }
-size_t DbgNode::FirstRId() const
+std::size_t DbgNode::FirstRId() const
 {
     if (readIds2_.none()) {
         return 0;

@@ -25,8 +25,8 @@ class PoaNode;
 
 // BGL is intimidating, and it *deserves* your hatred.  But it's
 // the only game in town!
-using vertex_property_t =
-    boost::property<boost::vertex_info_t, PoaNode, boost::property<boost::vertex_index_t, size_t> >;
+using vertex_property_t = boost::property<boost::vertex_info_t, PoaNode,
+                                          boost::property<boost::vertex_index_t, std::size_t> >;
 using BoostGraph =
     boost::adjacency_list<boost::setS, boost::listS, boost::bidirectionalS, vertex_property_t>;
 

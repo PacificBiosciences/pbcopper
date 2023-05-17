@@ -22,7 +22,7 @@
 namespace PacBio {
 namespace Poa {
 namespace {
-std::vector<Align::Seed> SparseAlignSeedsUnySpecific(const size_t qGramSize,
+std::vector<Align::Seed> SparseAlignSeedsUnySpecific(const std::size_t qGramSize,
                                                      const std::string& seq1,
                                                      const std::string& seq2)
 {
@@ -35,11 +35,11 @@ std::vector<Align::Seed> SparseAlignSeedsUnySpecific(const size_t qGramSize,
     return chains[0];
 }
 
-std::vector<std::pair<size_t, size_t>> SparseAlignUnySpecific(const size_t qGramSize,
-                                                              const std::string& seq1,
-                                                              const std::string& seq2)
+std::vector<std::pair<std::size_t, std::size_t>> SparseAlignUnySpecific(const std::size_t qGramSize,
+                                                                        const std::string& seq1,
+                                                                        const std::string& seq2)
 {
-    std::vector<std::pair<size_t, size_t>> result;
+    std::vector<std::pair<std::size_t, std::size_t>> result;
     const auto chain = SparseAlignSeedsUnySpecific(qGramSize, seq1, seq2);
     for (const auto& s : chain) {
         result.emplace_back(s.BeginPositionH(), s.BeginPositionV());
@@ -235,7 +235,7 @@ std::shared_ptr<const PoaConsensus> SparsePoa::FindConsensus(
 
         // digest the consensus path consensus into map(vtx, pos)
         // the fold over the readPaths
-        std::map<PoaGraph::Vertex, size_t> cssPosition;
+        std::map<PoaGraph::Vertex, std::size_t> cssPosition;
 
         int i = 0;
         for (PoaGraph::Vertex v : pc->Path) {
@@ -243,17 +243,17 @@ std::shared_ptr<const PoaConsensus> SparsePoa::FindConsensus(
             i++;
         }
 
-        for (size_t readId = 0; readId < graph_->NumReads(); readId++) {
-            size_t readS = 0;
-            size_t readE = 0;
-            size_t cssS = 0;
-            size_t cssE = 0;
+        for (std::size_t readId = 0; readId < graph_->NumReads(); readId++) {
+            std::size_t readS = 0;
+            std::size_t readE = 0;
+            std::size_t cssS = 0;
+            std::size_t cssE = 0;
             bool foundStart = false;
-            size_t nErr = 0;
+            std::size_t nErr = 0;
 
             const std::vector<PoaGraph::Vertex>& readPath = readPaths_[readId];
 
-            for (size_t readPos = 0; readPos < readPath.size(); readPos++) {
+            for (std::size_t readPos = 0; readPos < readPath.size(); readPos++) {
                 PoaGraph::Vertex v = readPath[readPos];
                 if (cssPosition.find(v) != cssPosition.end()) {
                     if (!foundStart) {

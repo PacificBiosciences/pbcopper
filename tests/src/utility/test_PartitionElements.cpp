@@ -264,7 +264,7 @@ TEST(Utility_PartitionElements, input_user_type)
         {{{1, 1.0f}, {2, 2.0f}}}, {{{3, 3.0f}, {4, 4.0f}}}, {{5, 5.0f}}, {{6, 6.0f}}};
 
     ASSERT_EQ(result.size(), expected.size());
-    for (size_t i = 0; i < result.size(); ++i) {
+    for (std::size_t i = 0; i < result.size(); ++i) {
         const auto& o = result[i];
         const auto& e = expected[i];
         EXPECT_EQ(o, e);

@@ -11,7 +11,7 @@ namespace Dagcon {
 void NormalizeGaps(Alignment& alignment, bool push)
 {
     assert(alignment.Query.length() == alignment.Target.length());
-    const size_t queryLength = alignment.Query.length();
+    const std::size_t queryLength = alignment.Query.length();
     if (queryLength == 0) {
         return;
     }
@@ -22,7 +22,7 @@ void NormalizeGaps(Alignment& alignment, bool push)
     tNorm.reserve(queryLength + 100);
 
     // convert mismatches to indels
-    for (size_t i = 0; i < queryLength; i++) {
+    for (std::size_t i = 0; i < queryLength; i++) {
         const char queryBase = alignment.Query[i];
         const char targetBase = alignment.Target[i];
         if (queryBase != targetBase && queryBase != '-' && targetBase != '-') {
@@ -38,14 +38,14 @@ void NormalizeGaps(Alignment& alignment, bool push)
 
     // update length
     assert(qNorm.length() == tNorm.length());
-    const size_t qNormLength = qNorm.length();
+    const std::size_t qNormLength = qNorm.length();
 
     if (push) {
         // push gaps to the right, but not past the end
-        for (size_t i = 0; i < qNormLength - 1; i++) {
+        for (std::size_t i = 0; i < qNormLength - 1; i++) {
             // pushing target gaps
             if (tNorm[i] == '-') {
-                size_t j = i;
+                std::size_t j = i;
                 while (++j < qNormLength) {
                     const char c = tNorm[j];
                     if (c != '-') {
@@ -60,7 +60,7 @@ void NormalizeGaps(Alignment& alignment, bool push)
 
             // pushing query gaps
             if (qNorm[i] == '-') {
-                size_t j = i;
+                std::size_t j = i;
                 while (++j < qNormLength) {
                     const char c = qNorm[j];
                     if (c != '-') {
@@ -80,7 +80,7 @@ void NormalizeGaps(Alignment& alignment, bool push)
     // update alignment sequence
     alignment.Query.clear();
     alignment.Target.clear();
-    for (size_t i = 0; i < qNormLength; ++i) {
+    for (std::size_t i = 0; i < qNormLength; ++i) {
         if (qNorm[i] != '-' || tNorm[i] != '-') {
             alignment.Query += qNorm[i];
             alignment.Target += tNorm[i];
@@ -93,7 +93,7 @@ void TrimAlignment(Alignment& alignment, int trimLength)
     const auto targetLength = alignment.Target.length();
 
     int lbases = 0;
-    size_t lOffset = 0U;
+    std::size_t lOffset = 0U;
     while (lbases < trimLength && lOffset < targetLength) {
         if (alignment.Target[lOffset] != '-') {
             ++lbases;
@@ -102,7 +102,7 @@ void TrimAlignment(Alignment& alignment, int trimLength)
     }
 
     int rbases = 0;
-    size_t rOffset = targetLength;
+    std::size_t rOffset = targetLength;
     while (rbases < trimLength && rOffset > lOffset) {
         --rOffset;
         if (alignment.Target[rOffset] != '-') {

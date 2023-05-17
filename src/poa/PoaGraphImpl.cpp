@@ -368,8 +368,8 @@ std::unique_ptr<PoaAlignmentMatrix> PoaGraphImpl::TryAddRead(
     std::unique_ptr<const AlignmentColumn> curCol;
     for (const auto& v : sortedVerticesLocal) {
         if (v != exitVertex_) {
-            size_t startRow = 0;
-            size_t endRow = readSeq.size() + 1;
+            std::size_t startRow = 0;
+            std::size_t endRow = readSeq.size() + 1;
             if (rangeFinder) {
                 // FindAlignableRange returns an alignable sequence range, which is not the same as
                 // the alignable rows (the end is off-by-one, for a normal interval).
@@ -458,7 +458,7 @@ void PoaGraphImpl::PruneGraph(const int minCoverage)
     }
 }
 
-size_t PoaGraphImpl::NumReads() const { return numReads_; }
+std::size_t PoaGraphImpl::NumReads() const { return numReads_; }
 
 std::string PoaGraphImpl::ToGraphViz(int flags, const PoaConsensus* pc) const
 {

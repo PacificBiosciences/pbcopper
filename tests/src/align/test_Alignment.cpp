@@ -13,10 +13,10 @@ namespace PacBio {
 namespace Align {
 namespace internal {
 
-bool Rewrite2L(std::string* target, std::string* query, std::string* transcript, size_t i);
-bool Rewrite3L(std::string* target, std::string* query, std::string* transcript, size_t i);
-bool Rewrite2R(std::string* target, std::string* query, std::string* transcript, size_t i);
-bool Rewrite3R(std::string* target, std::string* query, std::string* transcript, size_t i);
+bool Rewrite2L(std::string* target, std::string* query, std::string* transcript, std::size_t i);
+bool Rewrite3L(std::string* target, std::string* query, std::string* transcript, std::size_t i);
+bool Rewrite2R(std::string* target, std::string* query, std::string* transcript, std::size_t i);
+bool Rewrite3R(std::string* target, std::string* query, std::string* transcript, std::size_t i);
 
 }  // namespace internal
 }  // namespace Align

@@ -31,7 +31,7 @@ public:
        \param n    number of seq/read ids;
        \param k    node key
     */
-    KFNode(const DnaBit& d, size_t n, uint64_t k);
+    KFNode(const DnaBit& d, std::size_t n, uint64_t k);
 
     /*!
        \brief Adds an in edge, encoded as a uint64_t - see KFGraph AddSeq
@@ -62,7 +62,7 @@ public:
        \brief Finds the first read/seq id in the set.
        \return The index of the first on bit, read/seq id
     */
-    size_t FirstRId() const;
+    std::size_t FirstRId() const;
 
     /*!
        \return number of in-edges for the node.

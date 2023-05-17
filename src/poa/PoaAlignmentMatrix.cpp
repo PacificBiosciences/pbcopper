@@ -51,7 +51,7 @@ void PoaAlignmentMatrixImpl::Print() const
 
     header0 << std::setw(COL_WIDTH) << std::right << "";
     header1 << std::setw(COL_WIDTH) << std::right << "";
-    for (size_t row = 0; row < NumRows(); row++) {
+    for (std::size_t row = 0; row < NumRows(); row++) {
         char readBase;
         if (row == 0) {
             readBase = '-';
@@ -68,7 +68,7 @@ void PoaAlignmentMatrixImpl::Print() const
         header0 << std::setw(COL_WIDTH) << std::right << node.Id;
         header1 << std::setw(COL_WIDTH) << std::right << node.Base;
 
-        for (size_t j = 0; j < NumRows(); j++) {
+        for (std::size_t j = 0; j < NumRows(); j++) {
             if (col.HasRow(j)) {
                 float score = col.Score[j];
                 std::string scoreFmt = score == -FLT_MAX ? "-inf" : std::to_string(int(score));
@@ -82,8 +82,8 @@ void PoaAlignmentMatrixImpl::Print() const
 
     std::cout << header0.str() << std::endl;
     std::cout << header1.str() << std::endl;
-    for (size_t row = 0; row < NumRows(); row++) {
-        for (size_t skip = ROW_HEIGHT; skip > 1; skip--) {
+    for (std::size_t row = 0; row < NumRows(); row++) {
+        for (std::size_t skip = ROW_HEIGHT; skip > 1; skip--) {
             std::cout << std::endl;
         }
         std::cout << outputRows[row].str() << std::endl;

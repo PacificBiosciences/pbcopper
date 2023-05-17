@@ -7,11 +7,12 @@
 namespace PacBio {
 namespace Align {
 
-SDPHit::SDPHit(const Seed& seed, const size_t index) : Seed{seed}, Index{index} {}
+SDPHit::SDPHit(const Seed& seed, const std::size_t index) : Seed{seed}, Index{index} {}
 
 bool SDPHit::operator<(const SDPHit& other) const noexcept { return DiagonalCompare(*this, other); }
 
-SDPColumn::SDPColumn(size_t column, const std::optional<SDPHit> seed) : Seed{seed}, Column{column}
+SDPColumn::SDPColumn(std::size_t column, const std::optional<SDPHit> seed)
+    : Seed{seed}, Column{column}
 {}
 
 bool SDPColumn::operator<(const SDPColumn& other) const noexcept { return Column < other.Column; }
@@ -151,7 +152,7 @@ std::vector<std::optional<SDPHit>> ComputeVisibilityLeft(const std::vector<SDPHi
 void InitializeSeedsAndScores(const Seeds& seedSet, std::vector<SDPHit>* seeds,
                               std::vector<long>* scores)
 {
-    size_t i = 0;
+    std::size_t i = 0;
     for (const auto& seed : seedSet) {
         seeds->push_back(SDPHit(seed, i));
         (*scores)[i] = seed.Size();
@@ -161,8 +162,8 @@ void InitializeSeedsAndScores(const Seeds& seedSet, std::vector<SDPHit>* seeds,
 
 void ChainSeedsImpl(
     std::priority_queue<ChainHit, std::vector<ChainHit>, ChainHitCompare>* chainHits,
-    std::vector<std::optional<size_t>>* chainPred, std::vector<SDPHit>* seeds,
-    std::vector<long>& scores, const size_t seedSetIdx, const ChainSeedsConfig& config)
+    std::vector<std::optional<std::size_t>>* chainPred, std::vector<SDPHit>* seeds,
+    std::vector<long>& scores, const std::size_t seedSetIdx, const ChainSeedsConfig& config)
 {
     // compute visibility left, requires H-sorted seeds
     std::set<SDPHit> sweepSet;
@@ -179,7 +180,7 @@ void ChainSeedsImpl(
     };
 
     for (auto it = seeds->begin(); it != seeds->end();) {
-        const size_t row = (*it).BeginPositionV();
+        const std::size_t row = (*it).BeginPositionV();
         const auto start = it;
 
         for (; it != seeds->end() && row == (*it).BeginPositionV(); ++it) {
@@ -286,7 +287,7 @@ std::vector<std::vector<Seed>> ChainSeeds(const Seeds& seedSet, const ChainSeeds
 {
     // Initialize the work-horse vectors we will actually work with
     std::priority_queue<ChainHit, std::vector<ChainHit>, ChainHitCompare> chainHits;
-    std::vector<std::optional<size_t>> chainPred(seedSet.size());
+    std::vector<std::optional<std::size_t>> chainPred(seedSet.size());
     std::vector<SDPHit> seeds;
     std::vector<long> scores(seedSet.size(), 0L);
     InitializeSeedsAndScores(seedSet, &seeds, &scores);
@@ -305,7 +306,7 @@ std::vector<std::vector<Seed>> ChainSeeds(const Seeds& seedSet, const ChainSeeds
         //std::cout << "b(" << hit.reference << ", " << hit.endIndex << ", " << hit.score << ')' << std::endl;
 
         // While there are additional links in the chain, append them
-        std::optional<size_t> chainEnd = hit.endIndex;
+        std::optional<std::size_t> chainEnd = hit.endIndex;
         while (chainEnd) {
             chains[i].push_back(seeds[*chainEnd]);
             chainEnd = chainPred[*chainEnd];
@@ -325,7 +326,7 @@ std::vector<Seeds> ChainedSeedSets(const Seeds& seedSet, const ChainSeedsConfig&
 {
     // Initialize the work-horse vectors we will actually work with
     std::priority_queue<ChainHit, std::vector<ChainHit>, ChainHitCompare> chainHits;
-    std::vector<std::optional<size_t>> chainPred(seedSet.size());
+    std::vector<std::optional<std::size_t>> chainPred(seedSet.size());
     std::vector<SDPHit> seeds;
     std::vector<long> scores(seedSet.size(), 0L);
     InitializeSeedsAndScores(seedSet, &seeds, &scores);
@@ -343,7 +344,7 @@ std::vector<Seeds> ChainedSeedSets(const Seeds& seedSet, const ChainSeedsConfig&
         const auto hit = chainHits.top();
 
         // While there are additional links in the chain, append them
-        std::optional<size_t> chainEnd = hit.endIndex;
+        std::optional<std::size_t> chainEnd = hit.endIndex;
         while (chainEnd) {
             auto seed = seeds[*chainEnd];
             chains[i].AddSeed(seed);
@@ -356,8 +357,8 @@ std::vector<Seeds> ChainedSeedSets(const Seeds& seedSet, const ChainSeedsConfig&
     return chains;
 }
 
-std::vector<std::pair<size_t, Seeds>> ChainSeeds(const std::map<size_t, Seeds> seedSets,
-                                                 const ChainSeedsConfig config)
+std::vector<std::pair<std::size_t, Seeds>> ChainSeeds(const std::map<std::size_t, Seeds> seedSets,
+                                                      const ChainSeedsConfig config)
 {
     // The queue will accumulat results across SeedSets
     std::priority_queue<ChainHit, std::vector<ChainHit>, ChainHitCompare> chainHits;
@@ -365,12 +366,12 @@ std::vector<std::pair<size_t, Seeds>> ChainSeeds(const std::map<size_t, Seeds> s
     // Our vectors of seeds and chain-links need to persist for eventual
     //  use reconstructing our chains, so we initialize them as
     //  vectors-of-vectors here, 1 per seedSet we will analyze
-    size_t numSeedSets = seedSets.size();
-    std::vector<std::vector<std::optional<size_t>>> chainPred(numSeedSets);
+    std::size_t numSeedSets = seedSets.size();
+    std::vector<std::vector<std::optional<std::size_t>>> chainPred(numSeedSets);
     std::vector<std::vector<SDPHit>> seeds(numSeedSets);
 
     // We also need to record which seedSet came from which reference
-    std::vector<size_t> references(numSeedSets);
+    std::vector<std::size_t> references(numSeedSets);
 
     // Iterate over the multiple SeedSets once to search for chains
     int i = 0;
@@ -380,7 +381,7 @@ std::vector<std::pair<size_t, Seeds>> ChainSeeds(const std::map<size_t, Seeds> s
         const auto& seedSet = it->second;
 
         // Initialize the work-horse vectors we will actually work with
-        chainPred[i] = std::vector<std::optional<size_t>>(seedSet.size());
+        chainPred[i] = std::vector<std::optional<std::size_t>>(seedSet.size());
         std::vector<long> scores(seedSet.size(), 0L);
         InitializeSeedsAndScores(seedSet, &seeds[i], &scores);
 
@@ -389,7 +390,7 @@ std::vector<std::pair<size_t, Seeds>> ChainSeeds(const std::map<size_t, Seeds> s
     }
 
     // Empty and resize the result vector
-    std::vector<std::pair<size_t, Seeds>> chains;
+    std::vector<std::pair<std::size_t, Seeds>> chains;
     chains.resize(chainHits.size());
 
     // Pop our results from our queue and convert them into Seed Chains / Sets
@@ -400,7 +401,7 @@ std::vector<std::pair<size_t, Seeds>> ChainSeeds(const std::map<size_t, Seeds> s
         chains[j].first = references[hit.seedSetIdx];
 
         // While there are additional links in the chain, append them
-        std::optional<size_t> chainEnd = hit.endIndex;
+        std::optional<std::size_t> chainEnd = hit.endIndex;
         while (chainEnd) {
             auto seed = seeds[hit.seedSetIdx][*chainEnd];
             chains[j].second.AddSeed(seed);

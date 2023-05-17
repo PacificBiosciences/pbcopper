@@ -51,7 +51,7 @@ void Dbg::AddVerifedKmerPairs(std::vector<DnaBit>& bits, const uint32_t rid)
 
     auto edges = BuildVerifiedEdges(bits);
 
-    for (size_t i = 0; i < bits.size(); ++i) {
+    for (std::size_t i = 0; i < bits.size(); ++i) {
 
         if (dbg_.find(bits[i].mer) != dbg_.end()) {
             dbg_.at(bits[i].mer).AddLoad(rid);
@@ -156,12 +156,12 @@ std::vector<uint8_t> Dbg::BuildVerifiedEdges(const std::vector<PacBio::Pbmer::Dn
     std::vector<uint8_t> edges(bits.size(), 0);
 
     // set back edges
-    for (size_t i = 1; i < bits.size(); ++i) {
+    for (std::size_t i = 1; i < bits.size(); ++i) {
         edges[i] |= SetRevEdge(bits[i], bits[i - 1]);
     }
 
     // set forward edges
-    for (size_t i = 0; i < bits.size() - 1; ++i) {
+    for (std::size_t i = 0; i < bits.size() - 1; ++i) {
         edges[i] |= SetForEdge(bits[i], bits[i + 1]);
     }
 
@@ -350,7 +350,7 @@ Bubbles Dbg::FindBubbles() const
         rightReads.clear();
 
         for (const auto& l : left) {
-            size_t i = dbg_.at(l.mer).readIds2_.find_first();
+            std::size_t i = dbg_.at(l.mer).readIds2_.find_first();
             while (i != dbg_.at(l.mer).readIds2_.npos) {
                 ++leftReads[i + 1];
                 i = dbg_.at(l.mer).readIds2_.find_next(i);
@@ -358,7 +358,7 @@ Bubbles Dbg::FindBubbles() const
         }
 
         for (const auto& r : right) {
-            size_t i = dbg_.at(r.mer).readIds2_.find_first();
+            std::size_t i = dbg_.at(r.mer).readIds2_.find_first();
             while (i != dbg_.at(r.mer).readIds2_.npos) {
                 ++rightReads[i + 1];
                 i = dbg_.at(r.mer).readIds2_.find_next(i);
@@ -439,13 +439,13 @@ std::string Dbg::Graph2StringDot()
     return ss.str();
 }
 
-size_t Dbg::NNodes() const { return dbg_.size(); }
+std::size_t Dbg::NNodes() const { return dbg_.size(); }
 
-size_t Dbg::NEdges() const
+std::size_t Dbg::NEdges() const
 {
     return std::accumulate(
-        std::begin(dbg_), std::end(dbg_), size_t(0),
-        [](size_t sum, const auto& x) { return sum + x.second.TotalEdgeCount(); });
+        std::begin(dbg_), std::end(dbg_), std::size_t(0),
+        [](std::size_t sum, const auto& x) { return sum + x.second.TotalEdgeCount(); });
 }
 
 bool Dbg::OneIntermediateNode(uint64_t n1, uint64_t n2, uint64_t* shared) const

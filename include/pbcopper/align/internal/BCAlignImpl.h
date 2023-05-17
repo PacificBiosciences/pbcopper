@@ -27,8 +27,8 @@ public:
     BandedChainAlignerImpl(const BandedChainAlignConfig& config);
 
 public:
-    BandedChainAlignment Align(const char* target, size_t targetLen, const char* query,
-                               size_t queryLen, const std::vector<PacBio::Align::Seed>& seeds);
+    BandedChainAlignment Align(const char* target, std::size_t targetLen, const char* query,
+                               std::size_t queryLen, const std::vector<PacBio::Align::Seed>& seeds);
 
     void StitchTranscripts(std::string* global, std::string&& local);
 
@@ -36,18 +36,19 @@ private:
     struct Sequences
     {
         const char* target;
-        size_t targetLen;
+        std::size_t targetLen;
         const char* query;
-        size_t queryLen;
+        std::size_t queryLen;
     };
 
     void AlignGapBlock(const PacBio::Align::Seed& nextSeed);
-    void AlignGapBlock(size_t hLength, size_t vLength);
+    void AlignGapBlock(std::size_t hLength, std::size_t vLength);
     void AlignLastGapBlock();
 
     void AlignSeedBlock(const PacBio::Align::Seed& seed);
 
-    void Initialize(const char* target, size_t targetLen, const char* query, size_t queryLen);
+    void Initialize(const char* target, std::size_t targetLen, const char* query,
+                    std::size_t queryLen);
 
     std::vector<PacBio::Align::Seed> MergeSeeds(const std::vector<PacBio::Align::Seed>& seeds);
 
@@ -60,8 +61,8 @@ private:
     BandedGlobalAlignBlock seedBlock_;
     std::string globalTranscript_;
     int64_t globalScore_;
-    size_t gapBlockBeginH_;
-    size_t gapBlockBeginV_;
+    std::size_t gapBlockBeginH_;
+    std::size_t gapBlockBeginV_;
     Sequences sequences_;
 };
 

@@ -14,11 +14,13 @@ namespace Container {
 // To choose robin-hood specifically, use RHUnorderedSet and RHUnorderedMap
 
 template <typename Key, typename Hash = robin_hood::hash<Key>,
-          typename KeyEqual = std::equal_to<Key>, size_t MaxLoadFactor100 = DefaultMaxLoadFactor100>
+          typename KeyEqual = std::equal_to<Key>,
+          std::size_t MaxLoadFactor100 = DefaultMaxLoadFactor100>
 using UnorderedSet = RHUnorderedSet<Key, Hash, KeyEqual, MaxLoadFactor100>;
 
 template <typename Key, typename Value, typename Hash = robin_hood::hash<Key>,
-          typename KeyEqual = std::equal_to<Key>, size_t MaxLoadFactor100 = DefaultMaxLoadFactor100>
+          typename KeyEqual = std::equal_to<Key>,
+          std::size_t MaxLoadFactor100 = DefaultMaxLoadFactor100>
 using UnorderedMap = RHUnorderedMap<Key, Value, Hash, KeyEqual, MaxLoadFactor100>;
 
 }  // namespace Container

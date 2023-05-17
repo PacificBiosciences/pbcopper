@@ -34,7 +34,7 @@ public:
     /// \param[in] seq  construct index from this sequence
     /// \throws std::runtime_error if q-gram == 0
     ///
-    Index(size_t q, std::string seq);
+    Index(std::size_t q, std::string seq);
 
     ///
     /// \brief Index
@@ -42,7 +42,7 @@ public:
     /// \param[in] seqs     construct index from these sequences
     /// \throws std::runtime_error if q-gram == 0
     ///
-    Index(size_t q, std::vector<std::string> seqs);
+    Index(std::size_t q, std::vector<std::string> seqs);
 
     Index(const Index& other);
     Index(Index&&) noexcept;
@@ -63,7 +63,7 @@ public:
     /// \brief Size
     /// \return q-gram size
     ///
-    size_t Size() const;
+    std::size_t Size() const;
 
 private:
     std::unique_ptr<internal::IndexImpl> d_;

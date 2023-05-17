@@ -107,7 +107,7 @@ IntervalTree::const_iterator IntervalTree::begin() const { return storage.begin(
 IntervalTree::iterator IntervalTree::end() { return storage.end(); }
 IntervalTree::const_iterator IntervalTree::end() const { return storage.end(); }
 
-size_t IntervalTree::size() const { return storage.size(); }
+std::size_t IntervalTree::size() const { return storage.size(); }
 
 IntervalTree IntervalTree::FromString(const std::string& str)
 {

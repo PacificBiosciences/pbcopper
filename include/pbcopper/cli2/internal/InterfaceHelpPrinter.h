@@ -26,7 +26,8 @@ class InterfaceHelpPrinter
 {
 public:
     InterfaceHelpPrinter(Interface interface, HiddenOptionMode hiddenOptionMode);
-    InterfaceHelpPrinter(Interface interface, size_t maxColumn, HiddenOptionMode hiddenOptionMode);
+    InterfaceHelpPrinter(Interface interface, std::size_t maxColumn,
+                         HiddenOptionMode hiddenOptionMode);
 
     ///
     /// Prints formatted text to output stream

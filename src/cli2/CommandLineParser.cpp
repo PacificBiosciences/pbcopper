@@ -277,7 +277,7 @@ void CommandLineParser::ParseShortOption(const std::string& arg, std::deque<std:
     bool valueExpected = true;
 
     // iterate over arg chars, may be a combo of short args (e.g. -xvf)
-    for (size_t i = 1; i < arg.size(); ++i) {
+    for (std::size_t i = 1; i < arg.size(); ++i) {
         optionName = arg.substr(i, 1);
         const auto& option = OptionFor(optionName);
 

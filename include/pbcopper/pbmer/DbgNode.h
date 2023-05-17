@@ -39,7 +39,7 @@ public:
     ///
     /// \returns zero if no read ids are set. Read ids are one based.
 
-    size_t FirstRId() const;
+    std::size_t FirstRId() const;
 
     ///
     /// \returns Returns the uint64_t packed kmer;

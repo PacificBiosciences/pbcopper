@@ -24,8 +24,8 @@ private:
     std::string target_;
     std::string query_;
     std::string transcript_;
-    size_t refStart_;
-    size_t refEnd_;
+    std::size_t refStart_;
+    std::size_t refEnd_;
 
 public:
     // either left- or right- justify indels
@@ -42,10 +42,10 @@ public:
     std::string Transcript() const;
 
     // starting position in the reference sequence
-    size_t ReferenceStart() const;
+    std::size_t ReferenceStart() const;
 
     // ending position in the reference sequence
-    size_t ReferenceEnd() const;
+    std::size_t ReferenceEnd() const;
 
     // vector of target positions for each position in alignment
     std::vector<int> TargetPositions() const;
@@ -60,14 +60,14 @@ public:
     int Length() const;
 
 public:
-    PairwiseAlignment(std::string target, std::string query, size_t refStart = 0,
-                      size_t refEnd = 0);
+    PairwiseAlignment(std::string target, std::string query, std::size_t refStart = 0,
+                      std::size_t refEnd = 0);
 
     static PairwiseAlignment* FromTranscript(const std::string& transcript,
                                              const std::string& unalnTarget,
                                              const std::string& unalnQuery);
 
-    PairwiseAlignment ClippedTo(size_t refStart, size_t refEnd);
+    PairwiseAlignment ClippedTo(std::size_t refStart, std::size_t refEnd);
 };
 
 PairwiseAlignment* Align(const std::string& target, const std::string& query, int* score,

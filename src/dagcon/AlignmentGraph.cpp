@@ -23,7 +23,7 @@ AlignmentGraph::AlignmentGraph(const std::string& backbone) : backboneLength_{ba
 {
     // initialize the graph structure with the backbone length + enter/exit vertex
     graph_ = GraphType{backboneLength_ + 2};
-    for (size_t i = 0; i < backboneLength_ + 1; ++i) {
+    for (std::size_t i = 0; i < backboneLength_ + 1; ++i) {
         boost::add_edge(i, i + 1, graph_);
     }
 
@@ -38,7 +38,7 @@ AlignmentGraph::AlignmentGraph(const std::string& backbone) : backboneLength_{ba
     ++curr;
 
     // internal vertices
-    for (size_t i = 0; i < backboneLength_; ++i) {
+    for (std::size_t i = 0; i < backboneLength_; ++i) {
         VertexIndex v = *curr;
         graph_[v].Backbone = true;
         graph_[v].Weight = 1;
@@ -53,7 +53,7 @@ AlignmentGraph::AlignmentGraph(const std::string& backbone) : backboneLength_{ba
     graph_[exitVertex_].Backbone = true;
 }
 
-AlignmentGraph::AlignmentGraph(const size_t backboneLength)
+AlignmentGraph::AlignmentGraph(const std::size_t backboneLength)
     : AlignmentGraph{std::string(backboneLength, 'N')}
 {}
 
@@ -68,7 +68,7 @@ void AlignmentGraph::AddAlignment(Alignment& alignment, bool useLocalMerge)
         prevVtx = (alignment.Start <= 1) ? enterVertex_ : index[alignment.Start - 1];
     }
 
-    for (size_t i = 0; i < alignment.Query.length(); i++) {
+    for (std::size_t i = 0; i < alignment.Query.length(); i++) {
         const char queryBase = alignment.Query[i];
         const char targetBase = alignment.Target[i];
         assert(queryBase != '.');
@@ -363,7 +363,8 @@ std::string AlignmentGraph::Consensus(int minWeight)
     return cns.substr(bestOffs, length);
 }
 
-void AlignmentGraph::Consensus(std::vector<ConsensusResult>& seqs, int minWeight, size_t minLen)
+void AlignmentGraph::Consensus(std::vector<ConsensusResult>& seqs, int minWeight,
+                               std::size_t minLen)
 {
     seqs.clear();
 
@@ -388,7 +389,7 @@ void AlignmentGraph::Consensus(std::vector<ConsensusResult>& seqs, int minWeight
         } else if (metWeight && n.Weight < minWeight) {
             // concluded minimum weight section, add sequence to supplied vector
             metWeight = false;
-            const size_t length = idx - offs;
+            const std::size_t length = idx - offs;
             if (length >= minLen) {
                 seqs.emplace_back(ConsensusResult{{offs, idx}, cns.substr(offs, length)});
             }
@@ -398,7 +399,7 @@ void AlignmentGraph::Consensus(std::vector<ConsensusResult>& seqs, int minWeight
 
     // include end of sequence
     if (metWeight) {
-        const size_t length = idx - offs;
+        const std::size_t length = idx - offs;
         if (length >= minLen) {
             seqs.emplace_back(ConsensusResult{{offs, idx}, cns.substr(offs, length)});
         }
@@ -407,7 +408,7 @@ void AlignmentGraph::Consensus(std::vector<ConsensusResult>& seqs, int minWeight
 
 void AlignmentGraph::ConsensusWithMinFlankCoverage(std::vector<ConsensusResult>& seqs,
                                                    int minWeight, int minFlankCoverage,
-                                                   size_t minLen)
+                                                   std::size_t minLen)
 {
     seqs.clear();
 
@@ -463,7 +464,7 @@ void AlignmentGraph::ConsensusWithMinFlankCoverage(std::vector<ConsensusResult>&
         } else if (metWeight && n.Weight < minWeight) {
             // concluded minimum weight section, add sequence to supplied vector
             metWeight = false;
-            const size_t length = idx - offs;
+            const std::size_t length = idx - offs;
             if (length >= minLen) {
                 seqs.emplace_back(ConsensusResult{{offs, idx}, cns.substr(offs, length)});
             }
@@ -472,7 +473,7 @@ void AlignmentGraph::ConsensusWithMinFlankCoverage(std::vector<ConsensusResult>&
     }
     // include end of sequence
     if (metWeight) {
-        const size_t length = idx - offs;
+        const std::size_t length = idx - offs;
         if (length >= minLen) {
             seqs.emplace_back(ConsensusResult{{offs, idx}, cns.substr(offs, length)});
         }
