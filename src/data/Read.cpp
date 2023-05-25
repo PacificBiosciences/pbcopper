@@ -78,18 +78,25 @@ Read::Read(const std::string& name, std::string seq, QualityValues qualities, SN
 
 Read Read::ClipTo(const std::int32_t begin, const std::int32_t end) const
 {
-    Read copy{this->Id,
-              this->Seq.substr(begin, end - begin),
-              (this->PulseWidth ? std::optional<Frames>{Frames(this->PulseWidth->cbegin() + begin,
-                                                               this->PulseWidth->cbegin() + end)}
-                                : std::nullopt),
-              (this->IPD ? std::optional<Frames>{Frames(this->IPD->cbegin() + begin,
-                                                        this->IPD->cbegin() + end)}
-                         : std::nullopt),
-              this->Flags,
-              this->ReadAccuracy,
-              this->SignalToNoise,
-              this->Model};
+    Read copy{
+        this->Id,
+        this->Seq.substr(begin, end - begin),
+        (this->PulseWidth ? std::optional<Frames>{Frames(std::cbegin(*this->PulseWidth) + begin,
+                                                         std::cbegin(*this->PulseWidth) + end)}
+                          : std::nullopt),
+        (this->IPD ? std::optional<Frames>{Frames(std::cbegin(*this->IPD) + begin,
+                                                  std::cbegin(*this->IPD) + end)}
+                   : std::nullopt),
+        this->Flags,
+        this->ReadAccuracy,
+        this->SignalToNoise,
+        this->Model};
+
+    if (!Qualities.empty()) {
+        copy.Qualities.assign(std::cbegin(this->Qualities) + begin,
+                              std::cbegin(this->Qualities) + end);
+    }
+
     return copy;
 }
 

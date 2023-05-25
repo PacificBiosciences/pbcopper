@@ -629,6 +629,83 @@ TEST(Data_Read, can_set_query_start_and_end_from_id)
     EXPECT_EQ(qEnd, read.QueryEnd);
 }
 
+TEST(Data_Read, clipto_clips_all_) {
+
+    const std::string seq{"AACCGTTAGC"};
+    const QualityValues quals = QualityValues::FromFastq("0123456789");
+    const Frames pw{0, 1, 2, 3, 4, 5, 6, 7, 8, 9};
+    const Frames ipd{0, 10, 20, 30, 40, 50, 60, 70, 80, 90};
+
+    const Read read{"m54001_160623_195125/553/ccs", seq, quals, 
+                    SNR{0.9, 0.9, 0.9, 0.9}, 0, 0, pw, ipd};
+
+    {
+        const int32_t start = 0;
+        const int32_t end = 10;
+
+        const Read clipped = read.ClipTo(start, end);
+        EXPECT_EQ("AACCGTTAGC", clipped.Seq);
+        EXPECT_EQ("0123456789", clipped.Qualities.Fastq());
+
+        const Frames expectedPw{0, 1, 2, 3, 4, 5, 6, 7, 8, 9};
+        const Frames expectedIpd{0, 10, 20, 30, 40, 50, 60, 70, 80, 90};
+        EXPECT_EQ(expectedPw, clipped.PulseWidth.value());
+        EXPECT_EQ(expectedIpd, clipped.IPD.value());
+    }
+    {
+        const int32_t start = 0;
+        const int32_t end = 0;
+
+        const Read clipped = read.ClipTo(start, end);
+        EXPECT_EQ("", clipped.Seq);
+        EXPECT_EQ("", clipped.Qualities.Fastq());
+
+        const Frames expectedPw;
+        const Frames expectedIpd;
+        EXPECT_EQ(expectedPw, clipped.PulseWidth.value());
+        EXPECT_EQ(expectedIpd, clipped.IPD.value());
+    }
+    {
+        const int32_t start = 1;
+        const int32_t end = 4;
+
+        const Read clipped = read.ClipTo(start, end);
+        EXPECT_EQ("ACC", clipped.Seq);
+        EXPECT_EQ("123", clipped.Qualities.Fastq());
+
+        const Frames expectedPw{1, 2, 3};
+        const Frames expectedIpd{10, 20, 30};
+        EXPECT_EQ(expectedPw, clipped.PulseWidth.value());
+        EXPECT_EQ(expectedIpd, clipped.IPD.value());
+    }
+    {
+        const int32_t start = 9;
+        const int32_t end = 10;
+
+        const Read clipped = read.ClipTo(start, end);
+        EXPECT_EQ("C", clipped.Seq);
+        EXPECT_EQ("9", clipped.Qualities.Fastq());
+
+        const Frames expectedPw{9};
+        const Frames expectedIpd{90};
+        EXPECT_EQ(expectedPw, clipped.PulseWidth.value());
+        EXPECT_EQ(expectedIpd, clipped.IPD.value());
+    }
+    {
+        const int32_t start = 10;
+        const int32_t end = 10;
+
+        const Read clipped = read.ClipTo(start, end);
+        EXPECT_EQ("", clipped.Seq);
+        EXPECT_EQ("", clipped.Qualities.Fastq());
+
+        const Frames expectedPw;
+        const Frames expectedIpd;
+        EXPECT_EQ(expectedPw, clipped.PulseWidth.value());
+        EXPECT_EQ(expectedIpd, clipped.IPD.value());
+    }
+}
+
 TEST(Data_ReadId, can_create_from_subread_name)
 {
     const PacBio::Data::ReadId id{"m54001_160623_195125/553/3100_11230"};

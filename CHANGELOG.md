@@ -2,6 +2,9 @@
 
 ## Active
 
+### Fixed
+ - Data::Read::ClipTo on quality values
+
 ## [2.2.0] - 2022-01-03
 
 ### Added

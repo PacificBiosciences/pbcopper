@@ -53,6 +53,14 @@ struct Read
     std::int32_t Length() const;
     std::string FullName() const;
 
+    ///
+    /// Get a clipped copy of this read.
+    ///
+    /// \note This clipping is done on * internal * coordinates, rather than
+    ///       query/reference coordinates.
+    ///
+    /// \note No bounds checking is performed.
+    ///
     Read ClipTo(std::int32_t begin, std::int32_t end) const;
 };
 
