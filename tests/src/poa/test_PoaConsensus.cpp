@@ -575,7 +575,7 @@ TEST(PoaConsensus, NondeterminismRegressionTest)
             PoaConsensus::FindConsensus(reads, AlignMode::GLOBAL)};
 #if 0
         char fname[100];
-        sprintf(fname, "/tmp/gr%03d.dot", run);
+        std::sprintf(fname, "/tmp/gr%03d.dot", run);
         pc->WriteGraphVizFile(fname, (PoaGraph::VERBOSE_NODES | PoaGraph::COLOR_NODES));
 #endif
         answers.insert(pc->Sequence);
