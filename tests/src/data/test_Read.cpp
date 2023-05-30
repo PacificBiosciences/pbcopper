@@ -640,8 +640,8 @@ TEST(Data_Read, clipto_clips_all_) {
                     SNR{0.9, 0.9, 0.9, 0.9}, 0, 0, pw, ipd};
 
     {
-        const int32_t start = 0;
-        const int32_t end = 10;
+        const std::int32_t start = 0;
+        const std::int32_t end = 10;
 
         const Read clipped = read.ClipTo(start, end);
         EXPECT_EQ("AACCGTTAGC", clipped.Seq);
@@ -653,8 +653,8 @@ TEST(Data_Read, clipto_clips_all_) {
         EXPECT_EQ(expectedIpd, clipped.IPD.value());
     }
     {
-        const int32_t start = 0;
-        const int32_t end = 0;
+        const std::int32_t start = 0;
+        const std::int32_t end = 0;
 
         const Read clipped = read.ClipTo(start, end);
         EXPECT_EQ("", clipped.Seq);
@@ -666,8 +666,8 @@ TEST(Data_Read, clipto_clips_all_) {
         EXPECT_EQ(expectedIpd, clipped.IPD.value());
     }
     {
-        const int32_t start = 1;
-        const int32_t end = 4;
+        const std::int32_t start = 1;
+        const std::int32_t end = 4;
 
         const Read clipped = read.ClipTo(start, end);
         EXPECT_EQ("ACC", clipped.Seq);
@@ -679,8 +679,8 @@ TEST(Data_Read, clipto_clips_all_) {
         EXPECT_EQ(expectedIpd, clipped.IPD.value());
     }
     {
-        const int32_t start = 9;
-        const int32_t end = 10;
+        const std::int32_t start = 9;
+        const std::int32_t end = 10;
 
         const Read clipped = read.ClipTo(start, end);
         EXPECT_EQ("C", clipped.Seq);
@@ -692,8 +692,8 @@ TEST(Data_Read, clipto_clips_all_) {
         EXPECT_EQ(expectedIpd, clipped.IPD.value());
     }
     {
-        const int32_t start = 10;
-        const int32_t end = 10;
+        const std::int32_t start = 10;
+        const std::int32_t end = 10;
 
         const Read clipped = read.ClipTo(start, end);
         EXPECT_EQ("", clipped.Seq);
