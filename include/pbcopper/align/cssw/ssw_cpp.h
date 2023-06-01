@@ -1,9 +1,10 @@
 #ifndef COMPLETE_STRIPED_SMITH_WATERMAN_CPP_H_
 #define COMPLETE_STRIPED_SMITH_WATERMAN_CPP_H_
 
-#include <stdint.h>
 #include <string>
 #include <vector>
+
+#include <cstdint>
 
 namespace StripedSmithWaterman {
 

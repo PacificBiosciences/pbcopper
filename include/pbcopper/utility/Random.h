@@ -5,6 +5,8 @@
 #include <algorithm>
 #include <iterator>
 
+#include <cstdint>
+
 namespace PacBio {
 namespace Utility {
 

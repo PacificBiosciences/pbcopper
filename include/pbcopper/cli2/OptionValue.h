@@ -7,6 +7,8 @@
 #include <string>
 #include <variant>
 
+#include <cstdint>
+
 // clang-format off
 
 namespace PacBio {
