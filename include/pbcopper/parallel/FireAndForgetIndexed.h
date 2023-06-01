@@ -39,7 +39,7 @@ public:
 public:
     FireAndForgetIndexed(const std::size_t size, const std::size_t mul = 2,
                          TFunc finish = TFunc{[](Index) {}})
-        : exc{nullptr}, sz{size * mul}, abort{false}, thrown{false}
+        : exc{nullptr}, sz{size * mul}, abort{false}, thrown{false}, acceptingJobs{true}
     {
         for (Index index = 0; index < size; ++index) {
             threads.emplace_back(std::thread([this, finish, index]() {
@@ -82,6 +82,9 @@ public:
 
     ~FireAndForgetIndexed() noexcept(false)
     {
+        if (acceptingJobs) {
+            Finalize();
+        }
         if (exc && !thrown) {
             std::rethrow_exception(exc);
         }
@@ -90,6 +93,11 @@ public:
     template <typename F, typename... Args>
     void ProduceWith(F&& f, Args&&... args)
     {
+        if (!acceptingJobs) {
+            throw std::runtime_error(
+                "FireAndForgetIndexed error: Cannot dispatch jobs to finalized thread pool!");
+        }
+
         // Create a function taking Index, which delegates to
         // a function taking Index followed by args.
         TPTask task{
@@ -116,6 +124,7 @@ public:
 
     void Finalize()
     {
+        acceptingJobs = false;
         {
             std::lock_guard<std::mutex> g(m);
             // Push sentinel to signal that there are no further tasks
@@ -172,6 +181,7 @@ private:
     std::size_t sz;
     std::atomic_bool abort;
     std::atomic_bool thrown;
+    std::atomic_bool acceptingJobs;
 };
 
 }  // namespace Parallel

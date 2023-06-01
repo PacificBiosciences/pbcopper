@@ -62,6 +62,9 @@ public:
 
     ~FireAndForget() noexcept(false)
     {
+        if (acceptingJobs) {
+            Finalize();
+        }
         if (exc && !thrown) {
             std::rethrow_exception(exc);
         }
