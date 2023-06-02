@@ -37,7 +37,7 @@ public:
     ///
     /// \param[in] fastqString  FASTQ-encoded string
     ///
-    explicit QualityValues(const std::string& fastqString);
+    explicit QualityValues(std::string fastqString);
 
     /// \brief Creates a QualityValues object from a vector of QualityValue
     ///        elements.

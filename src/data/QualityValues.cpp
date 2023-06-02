@@ -5,16 +5,17 @@
 #include <algorithm>
 #include <ostream>
 #include <type_traits>
+#include <utility>
 
 namespace PacBio {
 namespace Data {
 
-QualityValues::QualityValues(const std::string& fastqString) : std::vector<QualityValue>{}
+QualityValues::QualityValues(std::string fastqString) : std::vector<QualityValue>{}
 {
-    std::string fastqString_{std::move(fastqString)};
-    boost::algorithm::trim(fastqString_);
-    resize(fastqString_.size());
-    std::transform(fastqString_.cbegin(), fastqString_.cend(), begin(), QualityValue::FromFastq);
+    boost::algorithm::trim(fastqString);
+    resize(fastqString.size());
+    std::transform(std::cbegin(fastqString), std::cend(fastqString), begin(),
+                   QualityValue::FromFastq);
 }
 
 QualityValues::QualityValues(std::vector<QualityValue> quals)
