@@ -31,7 +31,12 @@ private:
 
 public:
     WorkQueue(const std::size_t size, const std::size_t mul = 2)
-        : exc{nullptr}, sz{size * mul}, abort{false}, thrown{false}, workersFinalized{false}
+        : exc{nullptr}
+        , sz{size * mul}
+        , abort{false}
+        , thrown{false}
+        , workersFinalized{false}
+        , acceptingJobs{true}
     {
         for (std::size_t i = 0; i < size; ++i) {
             threads.emplace_back(std::thread([this]() {
@@ -46,33 +51,34 @@ public:
                         (*task)();
                     }
                 } catch (...) {
-                    {
-                        std::lock_guard<std::mutex> g(m);
-                        exc = std::current_exception();
-                    }
+                    SetFirstException();
                     popped.notify_all();
                 }
             }));
         }
     }
 
-    ~WorkQueue() noexcept(false)
-    {
-        if (exc && !thrown) {
-            std::rethrow_exception(exc);
-        }
-    }
+    ~WorkQueue() noexcept(false) { Finalize(); }
 
     template <typename F, typename... Args>
     void ProduceWith(F&& f, Args&&... args)
     {
+        if (!acceptingJobs) {
+            throw std::runtime_error(
+                "WorkQueue error: Cannot dispatch jobs to finalized work queue!");
+        }
+
         std::packaged_task<T()> task{std::bind(std::forward<F>(f), std::forward<Args>(args)...)};
+
+        // Throw exception every time if abort has been signaled
+        if (abort) {
+            std::rethrow_exception(exc);
+        }
 
         {
             std::unique_lock<std::mutex> lk(m);
             popped.wait(lk, [&task, this]() {
-                if (exc) {
-                    thrown = true;
+                if (abort) {
                     std::rethrow_exception(exc);
                 }
 
@@ -114,11 +120,7 @@ public:
             }
             return true;
         } catch (...) {
-            abort = true;
-            {
-                std::lock_guard<std::mutex> g(m);
-                exc = std::current_exception();
-            }
+            SetFirstException();
             popped.notify_all();
         }
         return false;
@@ -126,7 +128,9 @@ public:
 
     void FinalizeWorkers()
     {
-        if (!workersFinalized) {
+        // Only finalize workers once
+        std::call_once(finalizeWorkersOnceFlag, [&]() {
+            acceptingJobs = false;
             {
                 std::lock_guard<std::mutex> g(m);
                 // Push sentinel to signal that there are no further tasks
@@ -134,24 +138,29 @@ public:
             }
             // Let all workers know that they should look that there is no further work
             pushed.notify_all();
-            workersFinalized = true;
-        }
+        });
     }
 
     void Finalize()
     {
-        FinalizeWorkers();
-        // One last notify in case a consumer exception occured and threads
-        // are still waiting in PopTask wait.
-        pushed.notify_all();
-        // Wait for all threads to join and do not continue before all tasks
-        // have been finished.
-        for (auto& thread : threads) {
-            thread.join();
-        }
+        // Only finalize once
+        std::call_once(finalizeOnceFlag, [&]() {
+            FinalizeWorkers();
+            // One last notify in case a consumer exception occured and threads
+            // are still waiting in PopTask wait.
+            pushed.notify_all();
+            // Wait for all threads to join and do not continue before all tasks
+            // have been finished.
+            for (auto& thread : threads) {
+                if (thread.joinable()) {
+                    thread.join();
+                }
+            }
+        });
 
-        // Is there a final exception, throw if so..
-        if (exc) {
+        // Is there a final exception, throw once. This avoids throwing in the
+        // destructor if Finalize() has been called before.
+        if (abort && !thrown) {
             thrown = true;
             std::rethrow_exception(exc);
         }
@@ -191,17 +200,33 @@ private:
         return task;
     }
 
+    void SetFirstException()
+    {
+        // Only store the first exception
+        std::call_once(exceptionOnceFlag, [&]() {
+            std::unique_lock<std::mutex> lk(m);
+            // Store exception to be rethrown later
+            exc = std::current_exception();
+            // Signal to abort queue
+            abort = true;
+        });
+    }
+
     std::vector<std::thread> threads;
     std::deque<TTask> head;
     std::deque<TFuture> tail;
     std::condition_variable popped;
     std::condition_variable pushed;
     std::exception_ptr exc;
+    std::once_flag exceptionOnceFlag;
+    std::once_flag finalizeOnceFlag;
+    std::once_flag finalizeWorkersOnceFlag;
     std::mutex m;
     std::size_t sz;
     std::atomic_bool abort;
     std::atomic_bool thrown;
     std::atomic_bool workersFinalized;
+    std::atomic_bool acceptingJobs;
 };
 }  // namespace Parallel
 }  // namespace PacBio
