@@ -56,15 +56,7 @@ public:
         }
     }
 
-    ~FireAndForget() noexcept(false)
-    {
-        if (acceptingJobs) {
-            Finalize();
-        }
-        if (exc && !thrown) {
-            std::rethrow_exception(exc);
-        }
-    }
+    ~FireAndForget() noexcept(false) { Finalize(); }
 
     template <typename F, typename... Args>
     void ProduceWith(F&& f, Args&&... args)
@@ -101,23 +93,29 @@ public:
 
     void Finalize()
     {
-        acceptingJobs = false;
-        {
-            std::lock_guard<std::mutex> g(m);
-            // Push sentinel to signal that there are no further tasks
-            head.emplace();
-        }
-        // Let all workers know that they should look that there is no further work
-        pushed.notify_all();
+        // Only finalize once
+        std::call_once(finalizeOnceFlag, [&]() {
+            acceptingJobs = false;
+            {
+                std::lock_guard<std::mutex> g(m);
+                // Push sentinel to signal that there are no further tasks
+                head.emplace();
+            }
+            // Let all workers know that they should look that there is no further work
+            pushed.notify_all();
 
-        // Wait for all threads to join and do not continue before all tasks
-        // have been finished.
-        for (auto& thread : threads) {
-            thread.join();
-        }
+            // Wait for all threads to join and do not continue before all tasks
+            // have been finished.
+            for (auto& thread : threads) {
+                if (thread.joinable()) {
+                    thread.join();
+                }
+            }
+        });
 
-        // Is there a final exception, throw if so..
-        if (exc) {
+        // Is there a final exception, throw once. This avoids throwing in the
+        // destructor if Finalize() has been called before.
+        if (abort && !thrown) {
             thrown = true;
             std::rethrow_exception(exc);
         }
@@ -167,6 +165,7 @@ private:
     std::condition_variable pushed;
     std::exception_ptr exc;
     std::once_flag exceptionOnceFlag;
+    std::once_flag finalizeOnceFlag;
     std::mutex m;
     std::size_t numThreads;
     std::size_t sz;
