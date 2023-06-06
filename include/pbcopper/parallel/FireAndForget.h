@@ -48,11 +48,7 @@ public:
                             task->get_future().get();
                         };
                     } catch (...) {
-                        std::lock_guard<std::mutex> g(m);
-                        // If there is an exception, signal to abort queue
-                        abort = true;
-                        // And store exception
-                        exc = std::current_exception();
+                        SetFirstException();
                         popped.notify_one();
                     }
                 } while (!abort && task);  // Stop if there are no tasks or abort has been signaled
@@ -80,15 +76,15 @@ public:
 
         std::packaged_task<void()> task{std::bind(std::forward<F>(f), std::forward<Args>(args)...)};
 
+        // Throw exception every time if abort has been signaled
+        if (abort) {
+            std::rethrow_exception(exc);
+        }
+
         {
             std::unique_lock<std::mutex> lk(m);
-            if (exc) {
-                thrown = true;
-                std::rethrow_exception(exc);
-            }
-
             popped.wait(lk, [&task, this]() {
-                if (exc) {
+                if (abort) {
                     std::rethrow_exception(exc);
                 }
 
@@ -153,11 +149,24 @@ private:
         return task;
     }
 
+    void SetFirstException()
+    {
+        // Only store the first exception
+        std::call_once(exceptionOnceFlag, [&]() {
+            std::unique_lock<std::mutex> lk(m);
+            // Store exception to be rethrown later
+            exc = std::current_exception();
+            // Signal to abort queue
+            abort = true;
+        });
+    }
+
     std::vector<std::thread> threads;
     std::queue<TTask> head;
     std::condition_variable popped;
     std::condition_variable pushed;
     std::exception_ptr exc;
+    std::once_flag exceptionOnceFlag;
     std::mutex m;
     std::size_t numThreads;
     std::size_t sz;
