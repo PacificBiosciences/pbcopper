@@ -65,6 +65,34 @@ TEST(Parallel_FireAndForget, exceptionFinalize)
     EXPECT_EQ(counter, 2);
 }
 
+TEST(Parallel_FireAndForget, exceptionProduceWithDestructor)
+{
+    static const std::size_t numThreads = 3;
+    auto faf = new PacBio::Parallel::FireAndForget(numThreads, 1);
+
+    std::atomic_int counter{0};
+    auto SubmitSleep = [&counter]() {
+        std::this_thread::sleep_for(std::chrono::milliseconds(100));
+        ++counter;
+    };
+    auto Submit = [&counter]() { ++counter; };
+    auto SubmitExc = [&counter]() {
+        throw std::runtime_error{"faf abort"};
+        ++counter;
+    };
+
+    EXPECT_NO_THROW(faf->ProduceWith(SubmitSleep));
+    EXPECT_NO_THROW(faf->ProduceWith(SubmitSleep));
+    EXPECT_NO_THROW(faf->ProduceWith(SubmitExc));
+    std::this_thread::sleep_for(std::chrono::milliseconds(10));
+    EXPECT_ANY_THROW(faf->ProduceWith(Submit));
+    EXPECT_ANY_THROW(faf->Finalize());
+    EXPECT_NO_THROW(faf->Finalize());
+    EXPECT_NO_THROW(delete faf);
+
+    EXPECT_EQ(counter, 2);
+}
+
 TEST(Parallel_FireAndForget, exceptionProduceWith)
 {
     static const std::size_t numThreads = 3;
@@ -85,7 +113,7 @@ TEST(Parallel_FireAndForget, exceptionProduceWith)
     EXPECT_NO_THROW(faf.ProduceWith(SubmitSleep));
     EXPECT_NO_THROW(faf.ProduceWith(SubmitExc));
     std::this_thread::sleep_for(std::chrono::milliseconds(10));
-    EXPECT_ANY_THROW(faf.ProduceWith(Submit););
+    EXPECT_ANY_THROW(faf.ProduceWith(Submit));
     EXPECT_ANY_THROW(faf.Finalize());
 
     EXPECT_EQ(counter, 2);
