@@ -16,8 +16,10 @@ void Dispatch(Parallel::FireAndForget* const faf, const std::int32_t numEntries,
         std::exception_ptr exc;
         // Flag to abort all threads
         std::atomic_bool abort{false};
-        // Counter to check if all threads finished
-        std::atomic_int32_t fafCounter{0};
+        // Counter to check if all jobs finished
+        std::atomic_int32_t jobsFinished{0};
+        // Counter for number of jobs submitted, in case of exception
+        std::atomic_int32_t jobsSubmitted{0};
         // Mutex and condition variable to wait for all threads to finish
         std::condition_variable condVar;
         std::mutex m;
@@ -42,7 +44,8 @@ void Dispatch(Parallel::FireAndForget* const faf, const std::int32_t numEntries,
 
             // If this is the last entry or something failed, notify about it
             std::unique_lock<std::mutex> lock{m};
-            if ((++fafCounter == numEntries) || abort) {
+            ++jobsFinished;
+            if ((jobsFinished == numEntries) || (abort && (jobsSubmitted == jobsFinished))) {
                 condVar.notify_one();
             }
         };
@@ -55,6 +58,7 @@ void Dispatch(Parallel::FireAndForget* const faf, const std::int32_t numEntries,
             }
             // Submit callback and handle exceptions
             try {
+                ++jobsSubmitted;
                 faf->ProduceWith(Submit, i);
             } catch (...) {
                 SetFirstException();
@@ -62,10 +66,10 @@ void Dispatch(Parallel::FireAndForget* const faf, const std::int32_t numEntries,
         }
 
         // Wait for all threads to finish or abort if something failed
-        if ((fafCounter != numEntries) && !abort) {
+        if ((jobsFinished != numEntries) || (abort && (jobsSubmitted != jobsFinished))) {
             std::unique_lock<std::mutex> lock{m};
-            condVar.wait(lock, [&fafCounter, numEntries, &abort] {
-                return (fafCounter == numEntries) || abort;
+            condVar.wait(lock, [&] {
+                return (jobsFinished == numEntries) || (abort && (jobsSubmitted == jobsFinished));
             });
         }
 
