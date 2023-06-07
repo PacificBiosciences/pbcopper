@@ -67,7 +67,8 @@ R"([
         "owner": "",
         "severity": "FATAL"
     }
-])"};
+]
+)"};
         std::ostringstream s;
         PacBio::Utility::Alarm alarm{e};
         alarm.Id(AlarmTests::TestUuid);
@@ -92,7 +93,8 @@ R"([
         "owner": "",
         "severity": "FATAL"
     }
-])"};
+]
+)"};
         std::ostringstream s;
         PacBio::Utility::Alarm alarm{e};
         alarm.Id(AlarmTests::TestUuid);
@@ -102,7 +104,7 @@ R"([
     }
 }
 
-TEST(Utility_Alarm, throws_on_empty_alarm_filename) 
+TEST(Utility_Alarm, throws_on_empty_alarm_filename)
 {
     const std::vector<PacBio::Utility::Alarm> alarms {
         PacBio::Utility::Alarm{"test_alarm1", "Hello world!"},

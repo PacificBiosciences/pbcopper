@@ -139,7 +139,7 @@ void Alarm::WriteAlarms(std::ostream& out, const std::vector<Alarm>& alarms,
         }
         jsonAlarms.emplace_back(std::move(jsonAlarm));
     }
-    out << jsonAlarms.dump(4);
+    out << jsonAlarms.dump(4) << '\n';
 }
 
 std::ostream& operator<<(std::ostream& out, const Alarm& alarm)
