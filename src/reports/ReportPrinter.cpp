@@ -103,7 +103,7 @@ void ReportPrinter::Print(std::ostream& out, const Report& report, const std::st
 
     result["plotGroups"] = Json::array();
 
-    out << result.dump(4);
+    out << result.dump(4) << '\n';
 }
 
 void ReportPrinter::PrintSummary(std::ostream& out, const Report& report)
@@ -112,7 +112,7 @@ void ReportPrinter::PrintSummary(std::ostream& out, const Report& report)
     for (const auto& attr : report.Attributes()) {
         result[attr.Id()] = VariantToJson(attr.Value());
     }
-    out << result.dump(4);
+    out << result.dump(4) << '\n';
 }
 
 }  // namespace internal

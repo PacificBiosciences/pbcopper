@@ -81,7 +81,8 @@ TEST(Reports_Report, can_print_pbreport)
     "title": "Report isoseq3",
     "uuid": "testable_uuid",
     "version": "1.0.1"
-})"};
+}
+)"};
     expectedText.replace(40, 4, PacBio::Utility::LibraryVersionString());
 
     std::ostringstream s;
@@ -96,7 +97,8 @@ TEST(Reports_Report, can_print_summary)
     "bar": "test",
     "baz": 0.75,
     "foo": 3
-})"};
+}
+)"};
 
     std::ostringstream s;
     const auto report = ReportsTests::MakeReport();
