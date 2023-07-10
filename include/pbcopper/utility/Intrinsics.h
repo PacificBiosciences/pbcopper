@@ -46,21 +46,26 @@ PB_CUDA_HOST PB_CUDA_DEVICE constexpr
     // sign-extend x (increasing the number of set bits) to 32 bits otherwise.
     const unsigned int paddedX = std::make_unsigned_t<T>(x);
 
-    return
 #ifdef __CUDA_ARCH__
-        // device
-        __popc(paddedX)
-#else
+    if (__builtin_is_constant_evaluated()) {
+#endif
+        // constexpr or host
+        return
 #ifdef PB_BITOPS_ENABLED
-        // C++20
-        std::popcount(paddedX)
+            // C++20
+            std::popcount(paddedX)
 #else
         // C++17 and below
         // TODO: remove once we're on C++20 in CUDA too
         __builtin_popcount(paddedX)
 #endif  // PB_BITOPS_ENABLED
-#endif  // __CUDA_ARCH__
-            ;
+                ;
+#ifdef __CUDA_ARCH__
+    } else {
+        // device
+        return __popc(paddedX);
+    }
+#endif
 }
 
 // * std::int64_t/uint64_t
@@ -71,21 +76,26 @@ PB_CUDA_HOST PB_CUDA_DEVICE constexpr
 {
     const unsigned long long int val = x;
 
-    return
 #ifdef __CUDA_ARCH__
-        // device
-        __popcll(val)
-#else
+    if (__builtin_is_constant_evaluated()) {
+#endif
+        // constexpr or host
+        return
 #ifdef PB_BITOPS_ENABLED
-        // C++20
-        std::popcount(val)
+            // C++20
+            std::popcount(val)
 #else
         // C++17 and below
         // TODO: remove once we're on C++20 in CUDA too
         __builtin_popcountll(val)
 #endif  // PB_BITOPS_ENABLED
-#endif  // __CUDA_ARCH__
-            ;
+                ;
+#ifdef __CUDA_ARCH__
+    } else {
+        // device
+        return __popcll(val);
+    }
+#endif
 }
 
 // * __int128_t/__uint128_t
@@ -144,14 +154,14 @@ PB_CUDA_HOST PB_CUDA_DEVICE constexpr
 
     [[maybe_unused]] constexpr int NUM_PADDED_BITS = (4 - sizeof(T)) * CHAR_BIT;
 
-    return
 #ifdef __CUDA_ARCH__
-        // device
-        __clz(paddedX) - NUM_PADDED_BITS
-#else
+    if (__builtin_is_constant_evaluated()) {
+#endif
+        // constexpr or host
+        return
 #ifdef PB_BITOPS_ENABLED
-        // C++20
-        std::countl_zero(unsignedX)
+            // C++20
+            std::countl_zero(unsignedX)
 #else
         // C++17 and below
         // TODO: remove once we're on C++20 in CUDA too
@@ -159,8 +169,13 @@ PB_CUDA_HOST PB_CUDA_DEVICE constexpr
         //   https://gcc.gnu.org/onlinedocs/gcc/Other-Builtins.html#index-_005f_005fbuiltin_005fclz
         (paddedX ? __builtin_clz(paddedX) : 32) - NUM_PADDED_BITS
 #endif  // PB_BITOPS_ENABLED
-#endif  // __CUDA_ARCH__
-        ;
+                ;
+#ifdef __CUDA_ARCH__
+    } else {
+        // device
+        return __clz(paddedX) - NUM_PADDED_BITS;
+    }
+#endif
 }
 
 // * std::int64_t/uint64_t
@@ -171,14 +186,14 @@ PB_CUDA_HOST PB_CUDA_DEVICE constexpr
 {
     const unsigned long long int val = x;
 
-    return
 #ifdef __CUDA_ARCH__
-        // device
-        __clzll(val)
-#else
+    if (__builtin_is_constant_evaluated()) {
+#endif
+        // constexpr or host
+        return
 #ifdef PB_BITOPS_ENABLED
-        // C++20
-        std::countl_zero(val)
+            // C++20
+            std::countl_zero(val)
 #else
         // C++17 and below
         // TODO: remove once we're on C++20 in CUDA too
@@ -186,8 +201,13 @@ PB_CUDA_HOST PB_CUDA_DEVICE constexpr
         //   https://gcc.gnu.org/onlinedocs/gcc/Other-Builtins.html#index-_005f_005fbuiltin_005fclzll
         val ? __builtin_clzll(val) : 64
 #endif  // PB_BITOPS_ENABLED
-#endif  // __CUDA_ARCH__
-            ;
+                ;
+#ifdef __CUDA_ARCH__
+    } else {
+        // device
+        return __clzll(val);
+    }
+#endif
 }
 
 // * __int128_t/__uint128_t
