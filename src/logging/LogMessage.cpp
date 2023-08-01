@@ -45,7 +45,12 @@ LogMessage::LogMessage(const char* file, const char* function, unsigned int line
     }
 
     if (useField(LogField::LOG_LEVEL)) {
-        out << level.ToString() << config.Delimiter;
+        if (logger_.AlignLevel()) {
+            out << std::setw(8) << std::left << std::setfill(' ') << level.ToString() << std::right;
+        } else {
+            out << level.ToString();
+        }
+        out << config.Delimiter;
     }
 
     if (useField(LogField::FUNCTION)) {

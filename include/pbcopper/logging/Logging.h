@@ -16,6 +16,8 @@
 #include <queue>
 #include <thread>
 
+#include <cstdint>
+
 namespace PacBio {
 namespace Logging {
 
@@ -45,6 +47,8 @@ public:
     ~Logger();
 
     LogLevel Level() const;
+    std::int32_t LeftBlockWidth() const;
+    bool AlignLevel() const;
 
 private:
     // output control
@@ -115,6 +119,52 @@ LogLevel CurrentLogLevel();
 #endif
 
 // clang-format on
+
+void LogBlock(const char* file, const char* function, unsigned int line, std::string_view left,
+              std::string_view right = {}, Logging::LogLevel logLevel = Logging::LogLevel::INFO);
+
+#define PBLOG_BLOCK_TRACE(left, right)                                                 \
+    if (Logging::CurrentLogLevel() <= Logging::LogLevel::TRACE) {                      \
+        LogBlock(__FILE__, __func__, __LINE__, left, right, Logging::LogLevel::TRACE); \
+    }
+
+#define PBLOG_BLOCK_DEBUG(left, right)                                                 \
+    if (Logging::CurrentLogLevel() <= Logging::LogLevel::DEBUG) {                      \
+        LogBlock(__FILE__, __func__, __LINE__, left, right, Logging::LogLevel::DEBUG); \
+    }
+
+#define PBLOG_BLOCK_VERBOSE(left, right)                                                 \
+    if (Logging::CurrentLogLevel() <= Logging::LogLevel::VERBOSE) {                      \
+        LogBlock(__FILE__, __func__, __LINE__, left, right, Logging::LogLevel::VERBOSE); \
+    }
+
+#define PBLOG_BLOCK_INFO(left, right)                                                 \
+    if (Logging::CurrentLogLevel() <= Logging::LogLevel::INFO) {                      \
+        LogBlock(__FILE__, __func__, __LINE__, left, right, Logging::LogLevel::INFO); \
+    }
+
+#define PBLOG_BLOCK_NOTICE(left, right)                                                 \
+    if (Logging::CurrentLogLevel() <= Logging::LogLevel::NOTICE) {                      \
+        LogBlock(__FILE__, __func__, __LINE__, left, right, Logging::LogLevel::NOTICE); \
+    }
+
+#define PBLOG_BLOCK_WARN(left, right)                                                 \
+    if (Logging::CurrentLogLevel() <= Logging::LogLevel::WARN) {                      \
+        LogBlock(__FILE__, __func__, __LINE__, left, right, Logging::LogLevel::WARN); \
+    }
+
+#define PBLOG_BLOCK_ERROR(left, right)                                                 \
+    if (Logging::CurrentLogLevel() <= Logging::LogLevel::ERROR) {                      \
+        LogBlock(__FILE__, __func__, __LINE__, left, right, Logging::LogLevel::ERROR); \
+    }
+
+#define PBLOG_BLOCK_CRITICAL(left, right)                                                 \
+    if (Logging::CurrentLogLevel() <= Logging::LogLevel::CRITICAL) {                      \
+        LogBlock(__FILE__, __func__, __LINE__, left, right, Logging::LogLevel::CRITICAL); \
+    }
+
+#define PBLOG_BLOCK_FATAL(left, right) \
+    LogBlock(__FILE__, __func__, __LINE__, left, right, Logging::LogLevel::FATAL);
 
 }  // namespace Logging
 }  // namespace PacBio

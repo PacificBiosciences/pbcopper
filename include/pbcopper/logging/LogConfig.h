@@ -8,6 +8,8 @@
 
 #include <string>
 
+#include <cstdint>
+
 namespace PacBio {
 namespace Logging {
 
@@ -20,6 +22,8 @@ struct LogConfig
     std::string Header;
     std::string Delimiter;
     int Fields;
+    std::int32_t LeftBlockWidth;
+    bool AlignLevel;
 };
 
 }  // namespace Logging

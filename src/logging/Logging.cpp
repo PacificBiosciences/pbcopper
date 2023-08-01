@@ -88,6 +88,10 @@ Logger& Logger::Current(Logger* newLogger)
 
 LogLevel CurrentLogLevel() { return Logger::Current().Level(); }
 
+std::int32_t CurrentLeftBlockWidth() { return Logger::Current().LeftBlockWidth(); }
+
+bool CurrentAlignLevel() { return Logger::Current().AlignLevel(); }
+
 Logger& Logger::Default(Logger* logger)
 {
     static auto logger_ = std::make_unique<Logger>(std::cerr, LogLevel::INFO);
@@ -100,6 +104,10 @@ Logger& Logger::Default(Logger* logger)
 bool Logger::Handles(const LogLevel level) const { return level >= config_.Level; }
 
 LogLevel Logger::Level() const { return config_.Level; }
+
+std::int32_t Logger::LeftBlockWidth() const { return config_.LeftBlockWidth; }
+
+bool Logger::AlignLevel() const { return config_.AlignLevel; }
 
 void Logger::MessageWriter()
 {
@@ -134,6 +142,53 @@ void Logger::MessageWriter()
 
         // and notify flush we delivered a message to os_,
         popped_.notify_all();
+    }
+}
+
+void LogBlock(const char* file, const char* function, unsigned int line,
+              const std::string_view left, const std::string_view right,
+              const Logging::LogLevel logLevel)
+{
+    if (Logging::CurrentLogLevel() > logLevel) {
+        return;
+    }
+
+    std::int32_t LogWidthLeftSideAdjusted = Logging::CurrentLeftBlockWidth();
+    if (!Logging::CurrentAlignLevel()) {
+        switch (logLevel) {
+            case Logging::LogLevel::INFO:
+            case Logging::LogLevel::WARN:
+                LogWidthLeftSideAdjusted -= 4;
+                break;
+            case Logging::LogLevel::ERROR:
+            case Logging::LogLevel::FATAL:
+            case Logging::LogLevel::TRACE:
+            case Logging::LogLevel::DEBUG:
+                LogWidthLeftSideAdjusted -= 5;
+                break;
+            case Logging::LogLevel::NOTICE:
+                LogWidthLeftSideAdjusted -= 6;
+                break;
+            case Logging::LogLevel::VERBOSE:
+                LogWidthLeftSideAdjusted -= 7;
+                break;
+            case Logging::LogLevel::CRITICAL:
+                LogWidthLeftSideAdjusted -= 8;
+                break;
+            default:
+                break;
+        }
+    }
+
+    if (right.empty()) {
+        PacBio::Logging::LogMessage(file, function, line, logLevel,
+                                    PacBio::Logging::Logger::Current())
+            << left;
+    } else {
+        PacBio::Logging::LogMessage(file, function, line, logLevel,
+                                    PacBio::Logging::Logger::Current())
+            << std::setw(LogWidthLeftSideAdjusted) << std::setfill(' ') << std::left << left
+            << " : " << right;
     }
 }
 
