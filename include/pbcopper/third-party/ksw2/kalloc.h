@@ -11,16 +11,16 @@ extern "C"
     typedef struct
     {
         size_t capacity, available, n_blocks, n_cores, largest;
-    } km_stat_t;
+    } pbkm_stat_t;
 
-    void* kmalloc(void* km, size_t size);
-    void* krealloc(void* km, void* ptr, size_t size);
-    void* kcalloc(void* km, size_t count, size_t size);
-    void kfree(void* km, void* ptr);
+    void* pbkmalloc(void* km, size_t size);
+    void* pbkrealloc(void* km, void* ptr, size_t size);
+    void* pbkcalloc(void* km, size_t count, size_t size);
+    void pbkfree(void* km, void* ptr);
 
-    void* km_init(void);
-    void km_destroy(void* km);
-    void km_stat(const void* _km, km_stat_t* s);
+    void* pbkm_init(void);
+    void pbkm_destroy(void* km);
+    void pbkm_stat(const void* _km, pbkm_stat_t* s);
 
 #ifdef __cplusplus
 }

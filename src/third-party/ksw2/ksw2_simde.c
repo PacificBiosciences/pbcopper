@@ -50,7 +50,7 @@ void ksw_extd2_simde(void* km, int qlen, const uint8_t* query, int tlen, const u
     if (q2 + e2 + long_thres * e2 > q + e + long_thres * e) ++long_thres;
     long_diff = long_thres * (e - e2) - (q2 - q) - e2;
 
-    mem = (uint8_t*)kcalloc(km, tlen_ * 8 + qlen_ + 1, 16);
+    mem = (uint8_t*)pbkcalloc(km, tlen_ * 8 + qlen_ + 1, 16);
     u = (simde__m128i*)(((size_t)mem + 15) >> 4 << 4);  // 16-byte aligned
     v = u + tlen_, x = v + tlen_, y = x + tlen_, x2 = y + tlen_, y2 = x2 + tlen_;
     s = y2 + tlen_, sf = (uint8_t*)(s + tlen_), qr = sf + tlen_ * 16;
@@ -61,14 +61,14 @@ void ksw_extd2_simde(void* km, int qlen, const uint8_t* query, int tlen, const u
     memset(x2, -q2 - e2, tlen_ * 16);
     memset(y2, -q2 - e2, tlen_ * 16);
     if (!approx_max) {
-        H = (int32_t*)kmalloc(km, tlen_ * 16 * 4);
+        H = (int32_t*)pbkmalloc(km, tlen_ * 16 * 4);
         for (t = 0; t < tlen_ * 16; ++t)
             H[t] = KSW_NEG_INF;
     }
     if (with_cigar) {
-        mem2 = (uint8_t*)kmalloc(km, ((size_t)(qlen + tlen - 1) * n_col_ + 1) * 16);
+        mem2 = (uint8_t*)pbkmalloc(km, ((size_t)(qlen + tlen - 1) * n_col_ + 1) * 16);
         p = (simde__m128i*)(((size_t)mem2 + 15) >> 4 << 4);
-        off = (int*)kmalloc(km, (qlen + tlen - 1) * sizeof(int) * 2);
+        off = (int*)pbkmalloc(km, (qlen + tlen - 1) * sizeof(int) * 2);
         off_end = off + qlen + tlen - 1;
     }
 
@@ -406,8 +406,8 @@ void ksw_extd2_simde(void* km, int qlen, const uint8_t* query, int tlen, const u
         last_st = st, last_en = en;
         //for (t = st0; t <= en0; ++t) printf("(%d,%d)\t(%d,%d,%d,%d)\t%d\n", r, t, ((int8_t*)u)[t], ((int8_t*)v)[t], ((int8_t*)x)[t], ((int8_t*)y)[t], H[t]); // for debugging
     }
-    kfree(km, mem);
-    if (!approx_max) kfree(km, H);
+    pbkfree(km, mem);
+    if (!approx_max) pbkfree(km, H);
     if (with_cigar) {  // backtrack
         int rev_cigar = !!(flag & KSW_EZ_REV_CIGAR);
         if (!ez->zdropped && !(flag & KSW_EZ_EXTZ_ONLY)) {
@@ -422,8 +422,8 @@ void ksw_extd2_simde(void* km, int qlen, const uint8_t* query, int tlen, const u
             ksw_backtrack(km, 1, rev_cigar, 0, (uint8_t*)p, off, off_end, n_col_ * 16, ez->max_t,
                           ez->max_q, &ez->m_cigar, &ez->n_cigar, &ez->cigar);
         }
-        kfree(km, mem2);
-        kfree(km, off);
+        pbkfree(km, mem2);
+        pbkfree(km, off);
     }
 }
 
@@ -468,19 +468,19 @@ void ksw_extz2_simde(void* km, int qlen, const uint8_t* query, int tlen, const u
     }
     if (-min_sc > 2 * (q + e)) return;  // otherwise, we won't see any mismatches
 
-    mem = (uint8_t*)kcalloc(km, tlen_ * 6 + qlen_ + 1, 16);
+    mem = (uint8_t*)pbkcalloc(km, tlen_ * 6 + qlen_ + 1, 16);
     u = (simde__m128i*)(((size_t)mem + 15) >> 4 << 4);  // 16-byte aligned
     v = u + tlen_, x = v + tlen_, y = x + tlen_, s = y + tlen_, sf = (uint8_t*)(s + tlen_),
     qr = sf + tlen_ * 16;
     if (!approx_max) {
-        H = (int32_t*)kmalloc(km, tlen_ * 16 * 4);
+        H = (int32_t*)pbkmalloc(km, tlen_ * 16 * 4);
         for (t = 0; t < tlen_ * 16; ++t)
             H[t] = KSW_NEG_INF;
     }
     if (with_cigar) {
-        mem2 = (uint8_t*)kmalloc(km, ((size_t)(qlen + tlen - 1) * n_col_ + 1) * 16);
+        mem2 = (uint8_t*)pbkmalloc(km, ((size_t)(qlen + tlen - 1) * n_col_ + 1) * 16);
         p = (simde__m128i*)(((size_t)mem2 + 15) >> 4 << 4);
-        off = (int*)kmalloc(km, (qlen + tlen - 1) * sizeof(int) * 2);
+        off = (int*)pbkmalloc(km, (qlen + tlen - 1) * sizeof(int) * 2);
         off_end = off + qlen + tlen - 1;
     }
 
@@ -741,8 +741,8 @@ void ksw_extz2_simde(void* km, int qlen, const uint8_t* query, int tlen, const u
         last_st = st, last_en = en;
         //for (t = st0; t <= en0; ++t) printf("(%d,%d)\t(%d,%d,%d,%d)\t%d\n", r, t, ((int8_t*)u)[t], ((int8_t*)v)[t], ((int8_t*)x)[t], ((int8_t*)y)[t], H[t]); // for debugging
     }
-    kfree(km, mem);
-    if (!approx_max) kfree(km, H);
+    pbkfree(km, mem);
+    if (!approx_max) pbkfree(km, H);
     if (with_cigar) {  // backtrack
         int rev_cigar = !!(flag & KSW_EZ_REV_CIGAR);
         if (!ez->zdropped && !(flag & KSW_EZ_EXTZ_ONLY)) {
@@ -757,8 +757,8 @@ void ksw_extz2_simde(void* km, int qlen, const uint8_t* query, int tlen, const u
             ksw_backtrack(km, 1, rev_cigar, 0, (uint8_t*)p, off, off_end, n_col_ * 16, ez->max_t,
                           ez->max_q, &ez->m_cigar, &ez->n_cigar, &ez->cigar);
         }
-        kfree(km, mem2);
-        kfree(km, off);
+        pbkfree(km, mem2);
+        pbkfree(km, off);
     }
 }
 
@@ -799,7 +799,7 @@ void ksw_exts2_simde(void* km, int qlen, const uint8_t* query, int tlen, const u
     if (q2 > q + e + long_thres * e) ++long_thres;
     long_diff = long_thres * e - (q2 - q);
 
-    mem = (uint8_t*)kcalloc(km, tlen_ * 9 + qlen_ + 1, 16);
+    mem = (uint8_t*)pbkcalloc(km, tlen_ * 9 + qlen_ + 1, 16);
     u = (simde__m128i*)(((size_t)mem + 15) >> 4 << 4);  // 16-byte aligned
     v = u + tlen_, x = v + tlen_, y = x + tlen_, x2 = y + tlen_;
     donor = x2 + tlen_, acceptor = donor + tlen_;
@@ -807,14 +807,14 @@ void ksw_exts2_simde(void* km, int qlen, const uint8_t* query, int tlen, const u
     memset(u, -q - e, tlen_ * 16 * 4);  // this set u, v, x, y (because they are in the same array)
     memset(x2, -q2, tlen_ * 16);
     if (!approx_max) {
-        H = (int32_t*)kmalloc(km, tlen_ * 16 * 4);
+        H = (int32_t*)pbkmalloc(km, tlen_ * 16 * 4);
         for (t = 0; t < tlen_ * 16; ++t)
             H[t] = KSW_NEG_INF;
     }
     if (with_cigar) {
-        mem2 = (uint8_t*)kmalloc(km, ((size_t)(qlen + tlen - 1) * n_col_ + 1) * 16);
+        mem2 = (uint8_t*)pbkmalloc(km, ((size_t)(qlen + tlen - 1) * n_col_ + 1) * 16);
         p = (simde__m128i*)(((size_t)mem2 + 15) >> 4 << 4);
-        off = (int*)kmalloc(km, (qlen + tlen - 1) * sizeof(int) * 2);
+        off = (int*)pbkmalloc(km, (qlen + tlen - 1) * sizeof(int) * 2);
         off_end = off + qlen + tlen - 1;
     }
 
@@ -1143,8 +1143,8 @@ void ksw_exts2_simde(void* km, int qlen, const uint8_t* query, int tlen, const u
         last_st = st, last_en = en;
         //for (t = st0; t <= en0; ++t) printf("(%d,%d)\t(%d,%d,%d,%d)\t%d\n", r, t, ((int8_t*)u)[t], ((int8_t*)v)[t], ((int8_t*)x)[t], ((int8_t*)y)[t], H[t]); // for debugging
     }
-    kfree(km, mem);
-    if (!approx_max) kfree(km, H);
+    pbkfree(km, mem);
+    if (!approx_max) pbkfree(km, H);
     if (with_cigar) {  // backtrack
         int rev_cigar = !!(flag & KSW_EZ_REV_CIGAR);
         if (!ez->zdropped && !(flag & KSW_EZ_EXTZ_ONLY))
@@ -1153,7 +1153,7 @@ void ksw_exts2_simde(void* km, int qlen, const uint8_t* query, int tlen, const u
         else if (ez->max_t >= 0 && ez->max_q >= 0)
             ksw_backtrack(km, 1, rev_cigar, long_thres, (uint8_t*)p, off, off_end, n_col_ * 16,
                           ez->max_t, ez->max_q, &ez->m_cigar, &ez->n_cigar, &ez->cigar);
-        kfree(km, mem2);
-        kfree(km, off);
+        pbkfree(km, mem2);
+        pbkfree(km, off);
     }
 }

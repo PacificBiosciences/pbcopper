@@ -39,9 +39,9 @@ static void panic(const char* s)
     abort();
 }
 
-void* km_init(void) { return calloc(1, sizeof(kmem_t)); }
+void* pbkm_init(void) { return calloc(1, sizeof(kmem_t)); }
 
-void km_destroy(void* _km)
+void pbkm_destroy(void* _km)
 {
     kmem_t* km = (kmem_t*)_km;
     header_t *p, *q;
@@ -67,11 +67,11 @@ static header_t* morecore(kmem_t* km, size_t nu)
     p = (size_t*)(q + 1);
     *p = nu -
          1; /* the size of the free block; -1 because the first unit is used for the core header */
-    kfree(km, p + 1); /* initialize the new "core"; NB: the core header is not looped. */
+    pbkfree(km, p + 1); /* initialize the new "core"; NB: the core header is not looped. */
     return km->loop_head;
 }
 
-void kfree(void* _km, void* ap) /* kfree() also adds a new core to the circular list */
+void pbkfree(void* _km, void* ap) /* kfree() also adds a new core to the circular list */
 {
     header_t *p, *q;
     kmem_t* km = (kmem_t*)_km;
@@ -123,7 +123,7 @@ void kfree(void* _km, void* ap) /* kfree() also adds a new core to the circular 
         q->ptr = p; /* in two cores, cannot be merged; create a new block in the list */
 }
 
-void* kmalloc(void* _km, size_t n_bytes)
+void* pbkmalloc(void* _km, size_t n_bytes)
 {
     kmem_t* km = (kmem_t*)_km;
     size_t n_units;
@@ -154,43 +154,43 @@ void* kmalloc(void* _km, size_t n_bytes)
     }
 }
 
-void* kcalloc(void* _km, size_t count, size_t size)
+void* pbkcalloc(void* _km, size_t count, size_t size)
 {
     kmem_t* km = (kmem_t*)_km;
     void* p;
     if (size == 0 || count == 0) return 0;
     if (km == NULL) return calloc(count, size);
-    p = kmalloc(km, count * size);
+    p = pbkmalloc(km, count * size);
     memset(p, 0, count * size);
     return p;
 }
 
-void* krealloc(void* _km, void* ap,
+void* pbkrealloc(void* _km, void* ap,
                size_t n_bytes)  // TODO: this can be made more efficient in principle
 {
     kmem_t* km = (kmem_t*)_km;
     size_t n_units, *p, *q;
 
     if (n_bytes == 0) {
-        kfree(km, ap);
+        pbkfree(km, ap);
         return 0;
     }
     if (km == NULL) return realloc(ap, n_bytes);
-    if (ap == NULL) return kmalloc(km, n_bytes);
+    if (ap == NULL) return pbkmalloc(km, n_bytes);
     n_units = (n_bytes + sizeof(size_t) + sizeof(header_t) - 1) / sizeof(header_t);
     p = (size_t*)ap - 1;
     if (*p >= n_units) return ap; /* TODO: this prevents shrinking */
-    q = (size_t*)kmalloc(km, n_bytes);
+    q = (size_t*)pbkmalloc(km, n_bytes);
     memcpy(q, ap, (*p - 1) * sizeof(header_t));
-    kfree(km, ap);
+    pbkfree(km, ap);
     return q;
 }
 
-void km_stat(const void* _km, km_stat_t* s)
+void pbkm_stat(const void* _km, pbkm_stat_t* s)
 {
     kmem_t* km = (kmem_t*)_km;
     header_t* p;
-    memset(s, 0, sizeof(km_stat_t));
+    memset(s, 0, sizeof(pbkm_stat_t));
     if (km == NULL || km->loop_head == NULL) return;
     for (p = km->loop_head;; p = p->ptr) {
         s->available += p->size * sizeof(header_t);
