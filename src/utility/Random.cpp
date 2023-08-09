@@ -1,4 +1,5 @@
 #include <pbcopper/utility/Random.h>
+#include <cstdint>
 
 namespace PacBio {
 namespace Utility {

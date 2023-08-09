@@ -6,6 +6,7 @@
 #include <iosfwd>
 #include <string>
 #include <variant>
+#include <cstdint>
 
 // clang-format off
 
